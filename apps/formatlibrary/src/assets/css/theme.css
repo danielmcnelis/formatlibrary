@@ -1,0 +1,86 @@
+:root {
+	--darken100-color: #000;
+	--darken90-color: #08130b;
+	--darken80-color: #102617;
+	--darken70-color: #173922;
+	--darken60-color: #1f4c2d;
+	--darken50-color: #276039;
+	--darken40-color: #2f7344;
+	--darken30-color: #37864f;
+	--darken20-color: #3e995a;
+	--darken10-color: #46ac66;
+	--base-color: #4ebf71;
+	--lighten10-color: #60c57f;
+	--lighten20-color: #71cc8d;
+	--lighten30-color: #83d29c;
+	--lighten40-color: #95d9aa;
+	--lighten50-color: #a7dfb8;
+	--lighten60-color: #b8e5c6;
+	--lighten70-color: #caecd4;
+	--lighten80-color: #dcf2e3;
+	--lighten90-color: #edf9f1;
+	--lighten100-color: #ffffff;
+}
+darken100 {
+	color: var(--darken100-color);
+}
+darken90 {
+	color: var(--darken90-color);
+}
+darken80 {
+	color: var(--darken80-color);
+}
+darken70 {
+	color: var(--darken70-color);
+}
+darken60 {
+	color: var(--darken60-color);
+}
+darken50 {
+	color: var(--darken50-color);
+}
+darken40 {
+	color: var(--darken40-color);
+}
+darken30 {
+	color: var(--darken30-color);
+}
+darken20 {
+	color: var(--darken20-color);
+}
+darken10 {
+	color: var(--darken10-color);
+}
+base {
+	color: var(--base-color);
+}
+lighten10 {
+	color: var(--lighten10-color);
+}
+lighten20 {
+	color: var(--lighten20-color);
+}
+lighten30 {
+	color: var(--lighten30-color);
+}
+lighten40 {
+	color: var(--lighten40-color);
+}
+lighten50 {
+	color: var(--lighten50-color);
+}
+lighten60 {
+	color: var(--lighten60-color);
+}
+lighten70 {
+	color: var(--lighten70-color);
+}
+lighten80 {
+	color: var(--lighten80-color);
+}
+lighten90 {
+	color: var(--lighten90-color);
+}
+lighten100 {
+	color: var(--lighten100-color);
+}

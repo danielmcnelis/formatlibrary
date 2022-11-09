@@ -1,0 +1,55 @@
+{
+  "name": "jwt",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "scripts/jwt/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/scripts/jwt",
+        "main": "scripts/jwt/src/main.ts",
+        "tsConfig": "scripts/jwt/tsconfig.app.json"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "scripts/jwt/src/environments/environment.ts",
+              "with": "scripts/jwt/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["scripts/jwt/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/scripts/jwt"],
+      "options": {
+        "jestConfig": "scripts/jwt/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "script": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["./node_modules/.bin/nx run jwt:build", "node dist/scripts/jwt/main.js"],
+        "parallel": false
+      }
+    }
+  },
+  "tags": []
+}

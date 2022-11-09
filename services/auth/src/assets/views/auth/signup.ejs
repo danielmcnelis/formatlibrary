@@ -1,0 +1,159 @@
+<div class="card max-card w-50 mx-auto m-0 p-0">
+	<article class="card-body">
+		<div class="d-flex flex-row justify-content-center pt-2 pb-2">
+			<div class="logo"></div>
+		</div>
+		<h4 class="card-title text-center m-0 pt-2 pb-2">
+			Sign up for <%= app %>
+		</h4>
+
+		<% for (const provider of providers) { %>
+			<div class="row w-100 m-0 p-0">
+				<div class="d-flex flex-row w-100 pt-2 pb-2">
+					<a class="provider-btn w-100" href="<%= provider.loginUrl %>">
+						<div style="width: 20px; height: 20px" class="pr-2">
+							<%- provider.image %>
+						</div>
+						<span class="provider-text">Signup with <%= provider.name %></span>
+					</a>
+				</div>
+			</div>
+			<% } %>
+
+				<% if (providers.length> 0) { %>
+					<div class="hrule w-100">
+						<hr class="hrule-grow">
+						<div class="hrule-content">OR</div>
+						<hr class="hrule-grow">
+					</div>
+					<% } %>
+
+						<form class="w-100 mb-2" action="/auth/signup" method="post" novalidate>
+							<fieldset class="w-100 mb-2">
+								<div class="d-flex flex-row">
+									<div
+										class="field-wrapper <%= firstName ? 'hasValue' : '' %> <%= locals.errors && locals.errors.firstNameError ? 'error' : '' %> p-0 mr-1 w-100">
+										<input type="text" class="" value="<%= firstName %>" placeholder="First Name"
+											spellcheck="false" tabindex="1" aria-label="First name" name="firstName"
+											autocapitalize="none" id="firstName" dir="ltr" data-initial-dir="ltr"
+											data-initial-value="" badinput="false" <%=locals.errors &&
+											locals.errors.firstNameError ? 'autofocus' : '' %>
+										>
+									</div>
+									<div
+										class="field-wrapper <%= lastName ? 'hasValue' : '' %> <%= locals.errors && locals.errors.lastNameError ? 'error' : '' %> p-0 ml-1 w-100">
+										<input type="text" class="" value="<%= lastName %>" placeholder="Last Name"
+											spellcheck="false" tabindex="2" aria-label="Last name" name="lastName"
+											autocapitalize="none" id="lastName" dir="ltr" data-initial-dir="ltr"
+											data-initial-value="" badinput="false" <%=locals.errors &&
+											locals.errors.lastNameError ? 'autofocus' : '' %>
+										>
+									</div>
+								</div>
+
+								<% if (locals.errors && locals.errors.firstNameError) { %>
+									<div class="d-flex flex-row pt-0 pb-3">
+										<span class="error-icon">!</span><span class="error-text pl-1">
+											<%= locals.errors.firstNameError %>
+										</span>
+									</div>
+									<% } %>
+
+										<% if (locals.errors && locals.errors.lastNameError) { %>
+											<div class="d-flex flex-row pt-0 pb-3">
+												<span class="error-icon">!</span><span class="error-text pl-1">
+													<%= locals.errors.lastNameError %>
+												</span>
+											</div>
+											<% } %>
+
+												<div class="field-wrapper <%= email ? 'hasValue' : '' %> <%= locals.errors && locals.errors.emailError ? 'error' : '' %>
+					p-0">
+													<input type="email" class="" value="<%= email %>"
+														placeholder="Email" autocomplete="username" spellcheck="false"
+														tabindex="3" aria-label="Email" name="email"
+														autocapitalize="none" id="email" dir="ltr"
+														data-initial-dir="ltr" data-initial-value="" badinput="false"
+														<%=locals.errors && locals.errors.emailError ? 'autofocus' : ''
+														%>
+													>
+												</div>
+
+												<% if (locals.errors && locals.errors.emailError) { %>
+													<div class="d-flex flex-row pt-0 pb-3">
+														<span class="error-icon">!</span><span class="error-text pl-1">
+															<%= locals.errors.emailError %>
+														</span>
+													</div>
+													<% } %>
+
+														<div class="d-flex flex-row">
+															<div class="field-wrapper <%= newPassword ? 'hasValue' : '' %> <%= locals.errors && locals.errors.passwordError ? 'error' : '' %> p-0
+								mr-1 w-100">
+																<input type="password" class=""
+																	value="<%= newPassword %>" placeholder="Password"
+																	autocomplete="new-password" spellcheck="false"
+																	tabindex="5" aria-label="Enter your password"
+																	name="newPassword" autocapitalize="off"
+																	id="newpassword" dir="ltr" data-initial-dir="ltr"
+																	data-initial-value="" badinput="false"
+																	<%=locals.errors && locals.errors.passwordError
+																	? 'autofocus' : '' %>
+																>
+															</div>
+															<div class="field-wrapper <%= confirmPassword ? 'hasValue' : '' %> <%= locals.errors && locals.errors.confirmError ? 'error' : '' %> p-0
+								ml-1 w-100">
+																<input type="password" class=""
+																	value="<%= confirmPassword %>" placeholder="Confirm"
+																	autocomplete="new-password" spellcheck="false"
+																	tabindex="6"
+																	aria-label="Enter your password confirmation"
+																	name="confirmPassword" autocapitalize="off"
+																	id="confirmpassword" dir="ltr"
+																	data-initial-dir="ltr" data-initial-value=""
+																	badinput="false" <%=locals.errors &&
+																	locals.errors.confirmError ? 'autofocus' : '' %> >
+															</div>
+														</div>
+
+
+														<% if (locals.passwordRequirement) { %>
+															<p>
+																<%= passwordRequirement %>
+															</p>
+															<% } %>
+
+
+																<div class="d-flex flex-row pt2 pb-0">
+																	<input class="" type="checkbox" id="showPassword">
+																	<span class="pl-2">Show password</span>
+																</div>
+
+																<% if (locals.errors && locals.errors.passwordError) {
+																	%>
+																	<div class="d-flex flex-row pt-0 pb-3">
+																		<span class="error-icon">!</span><span
+																			class="error-text pl-1">
+																			<%= locals.errors.passwordError %>
+																		</span>
+																	</div>
+																	<% } %>
+
+																		<div class="w-100 mt-2">
+																			<div class="w-100">Have a <%= app %>
+																					account? <a href="/auth/login">Log
+																						in</a>
+																			</div>
+																		</div>
+
+																		<div
+																			class="d-flex flex-row justify-content-end pt-2 pb-2">
+																			<button type="submit"
+																				class="button button-primary"
+																				<%=!locals.errors ? 'autofocus' : '' %>
+																				tabindex="7">Sign Up</button>
+																		</div>
+							</fieldset>
+						</form>
+	</article>
+</div>

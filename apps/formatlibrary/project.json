@@ -1,0 +1,82 @@
+{
+  "name": "formatlibrary",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/formatlibrary/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/formatlibrary",
+        "index": "apps/formatlibrary/src/index.html",
+        "baseHref": "/",
+        "main": "apps/formatlibrary/src/main.tsx",
+        "polyfills": "apps/formatlibrary/src/polyfills.ts",
+        "tsConfig": "apps/formatlibrary/tsconfig.app.json",
+        "assets": ["apps/formatlibrary/src/favicon.ico", "apps/formatlibrary/src/assets"],
+        "styles": ["apps/formatlibrary/src/styles.css"],
+        "scripts": [],
+        "webpackConfig": "apps/formatlibrary/webpack.config.js"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/formatlibrary/src/environments/environment.ts",
+              "with": "apps/formatlibrary/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/webpack:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "formatlibrary:build",
+        "hmr": true,
+        "proxyConfig": "apps/formatlibrary/proxy.conf.json"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "formatlibrary:build:development"
+        },
+        "production": {
+          "buildTarget": "formatlibrary:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/formatlibrary/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/formatlibrary"],
+      "options": {
+        "jestConfig": "apps/formatlibrary/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

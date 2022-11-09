@@ -1,0 +1,89 @@
+<div class="card max-card w-50 mx-auto m-0 p-0">
+	<article class="card-body">
+		<div class="d-flex flex-row justify-content-center pt-2 pb-2">
+			<div class="logo"></div>
+		</div>
+		<h4 class="card-title text-center m-0 pt-2 pb-2">
+			Log in to <%= app %>
+		</h4>
+		<div>
+			<% for (const provider of providers) { %>
+				<div class="row w-100 m-0 p-0">
+					<div class="d-flex flex-row w-100 pt-2 pb-2">
+						<a class="provider-btn w-100" href="<%= provider.loginUrl %>">
+							<div style="width: 20px; height: 20px" class="pr-2">
+								<%- provider.image %>
+							</div>
+							<span class="provider-text">Login with <%= provider.name %></span>
+						</a>
+					</div>
+				</div>
+				<% } %>
+
+					<% if (providers.length> 0) { %>
+						<div class="hrule w-100">
+							<hr class="hrule-grow">
+							<div class="hrule-content">OR</div>
+							<hr class="hrule-grow">
+						</div>
+						<% } %>
+
+							<form class="w-100 mb-2" action="/auth/login" method="post" type="submit" novalidate>
+								<fieldset class="w-100 mb-2">
+									<div class="field-wrapper w-100  <%= locals.errors && locals.errors.accountError ? 'error' : '' %>"
+										pt-1 pb-0">
+										<input type="email" class="" value="" placeholder="Email"
+											autocomplete="username" spellcheck="false" tabindex="0" aria-label="Email"
+											name="email" autocapitalize="none" id="email" dir="ltr"
+											data-initial-dir="ltr" data-initial-value="" badinput="false"
+											<%=locals.errors && locals.errors.accountError ? 'autofocus' : '' %>
+										>
+									</div>
+
+									<div class="field-wrapper w-100  <%= locals.errors && locals.errors.accountError ? 'error' : '' %>"
+										pt-1 pb-0">
+										<input type="password" class="" value="" placeholder="Password"
+											autocomplete="password" spellcheck="false" tabindex="0"
+											aria-label="Password" name="password" autocapitalize="none" id="password"
+											dir="ltr" data-initial-dir="ltr" data-initial-value="" badinput="false"
+											<%=locals.errors && locals.errors.accountError ? 'autofocus' : '' %>
+										>
+									</div>
+
+									<% if (locals.errors && locals.errors.accountError &&
+										locals.errors.accountNotFoundError) { %>
+										<div class="d-flex flex-row pt-0 pb-3">
+											<span class="error-icon">!</span><span class="error-text pl-1">Couldn't
+												find your <%= app %> Account</span>
+										</div>
+										<% } %>
+
+											<div class="d-flex flex-row pt2 pb-0">
+												<input class="" type="checkbox" id="showPassword">
+												<span class="pl-2">Show password</span>
+											</div>
+
+											<div class="w-100">
+												<button type="submit" class="button button-primary w-100">Log
+													in</button>
+											</div>
+
+
+
+								</fieldset>
+							</form>
+
+							<div class="w-100">
+								<div class="w-100"><a href="/auth/forgot">Forgot password?</a></div>
+								<div class="w-100">New to <%= app %>? <a href="/auth/signup">Sign up</a></div>
+							</div>
+
+							<div class="mt-2">
+								By continuing, you agree to <%= app %> <a href="/terms" target="_blank" class="">Terms
+										of
+										Service</a>
+									and
+									<a href="/privacy" target="_blank" class="">Privacy Policy</a>.
+							</div>
+	</article>
+</div>

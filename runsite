@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+cd ~/code/fl/dist/apps/formatlibrary
+authbind --deep pm2 start ../../services/site/main.js --name site 

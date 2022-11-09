@@ -1,0 +1,45 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('/assets/fonts/Roboto/Roboto-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Roboto-Bold';
+    src: url('/assets/fonts/Roboto/Roboto-Bold.ttf');
+}
+
+.player-settings-pfp {
+    width: 150px;
+    height: 150px;
+    border: 2px solid black;
+}
+
+.profile-info {
+    padding: 20px 10px 10px;
+}
+
+.profile-line {
+    padding: 3px 10px;
+}
+
+.country {
+    height: 18px;
+}
+
+.detect-button {
+    border: 1px solid black;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.detect-button:hover {
+    color: white;
+    background-color:#41474f;
+}
+
+.horizontal-flex {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}

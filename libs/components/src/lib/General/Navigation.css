@@ -1,0 +1,232 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('/assets/fonts/Roboto/Roboto-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Roboto-Bold';
+    src: url('/assets/fonts/Roboto/Roboto-Bold.ttf');
+}
+
+/* DESKTOP */
+
+.navigation-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    background-color: #0c0e17;
+    color: #f7f7f7;
+    padding: 5px;
+    margin: 0px;
+}
+
+#logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#logo img {
+    width: 4.4vw;
+    padding: 0px 5px;
+}
+
+#logo h1 {
+    font-size: 2.55vw;
+    font-family: 'Roboto-Bold';
+    color: #4ebf71;
+    padding: 0px 30px 0px 10px;
+    text-align: left;
+}
+
+#login {
+    background-color: #be0e54;
+    font-size: 20px;
+    color: #f7f7f7;
+    padding: 11px;
+    margin: 0px 20px 0px 40px; 
+    text-align: right;
+    border-radius: 5px;
+}
+
+#login:hover {
+    background-color: rgb(209, 156, 70);
+    color: #0c0e17;
+}
+
+#hamburger-menu {
+    display: none;
+}
+
+#navigation-menu {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+    padding: 10px 0px;
+}
+
+.navigation-item {
+    color: #f7f7f7;
+    padding: 10px;
+    margin: 0px 0.7vw;
+    border-radius: 5px;
+    font-size: 22px;
+    text-decoration: none;
+}
+
+.navigation-item:hover {
+    background-color: rgb(209, 156, 70);
+    color: #0c0e17;
+    text-decoration: none;
+}
+
+
+/* LAPTOPS AND SMALLER WINDOWS */
+@media only screen and (max-width: 1000px) {
+    #logo h1 {
+        font-size: 24pt;
+        padding: 10px 0px 10px 10px;
+        min-width: 250px;
+    }
+
+    .navigation-item {
+        font-size: 16pt;
+    }
+}
+
+
+
+/* TABLETS AND SMALL LAPTOPS */
+@media only screen and (max-width: 800px) {
+    #logo {
+        justify-content: space-around;
+    }
+
+    #logo img {
+        width: 50px;
+        height: auto;
+    }
+
+    #logo h1 {
+        font-size: 22pt;
+        min-width: 100px;
+    }
+
+    .navigation-bar {
+        margin: 0px;
+        border: 0px;
+        border-radius: 0px;
+        padding: 5px 0px 5px 15px;
+        justify-content: space-between;
+        min-height: 60px;
+        flex-wrap: nowrap;
+    }
+
+    #navigation-menu {
+        width: 100%;
+        justify-content: space-evenly;
+        text-align: center;
+        padding: 6px 0px 0px;
+    }
+
+
+    .navigation-item {
+        font-size: 14pt;
+        font-weight: normal;
+        padding: 10px;
+    }
+}
+
+/* MEDIUM AND LARGE CELL PHONES */
+@media only screen and (max-width: 600px) {
+    #logo h1 {
+        font-size: 20pt;
+    }
+
+    #navigation-menu {
+        display: none;
+    }
+
+    #hamburger-menu {
+    display: flex;
+    flex-direction: column;
+    height: 60px;
+    z-index: 1;
+    padding: 0px;
+    text-align: center;
+    }
+
+    #hamburger-menu.closed {
+    overflow: hidden;
+    }
+
+    #hamburger-menu.open {
+    overflow: visible;
+    }
+
+    #hamburger-button.open-b {
+    font-size: 36pt;
+    vertical-align: middle;
+    text-align: top;
+    padding-bottom: 2px;
+    }
+
+    #hamburger-button.closed-b {
+    font-size: 36pt;
+    vertical-align: middle;
+    text-align: center;
+    padding-top: 5px;
+      }
+            
+    .hamburger-item {
+        color: #ede6e6;
+        background-color: #000000;
+        overflow: visible;
+        border: 5px solid black;
+        padding: 15px 4px;
+        vertical-align: middle;
+        text-align: center;
+        font-size: 13pt;
+    }
+
+    #hamburger-menu.open div.open-b {
+        display: contents;
+    }
+
+    #hamburger-menu.open div.closed-b {
+        display: none;
+    }
+
+    #hamburger-menu.closed div.open {
+        display: none;
+    }
+
+    #hamburger-menu.closed div.closed {
+        display: contents;
+    }
+}
+
+/* SMALL CELL PHONES */
+@media only screen and (max-width: 375px) {
+    #logo h1 {
+        font-size: 18pt;
+        padding: 10px 0px 10px 5px;
+    }
+
+    #logo img {
+        width: 45px;
+    }
+
+    .navigation-bar {
+        padding: 5px 0px 5px 5px;
+    }
+
+
+    .hamburger-item {
+        font-size: 14pt;
+        border: 2px solid black;
+    }
+}
