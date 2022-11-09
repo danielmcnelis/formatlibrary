@@ -60,7 +60,7 @@
       "options": {
         "commands": [
           {
-            "command": "ln -s $(pwd)/dist/apps/formatlibrary services/site/src/assets"
+            "command": "ln -sf $(pwd)/dist/apps/formatlibrary services/site/src/assets"
           }
         ]
       }
