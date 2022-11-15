@@ -562,11 +562,12 @@ export const decksId = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id)
     const shareLink = req.params.id
+    const isAdmin = req.query.isAdmin
     
     const deck = await Deck.findOne({
         where: !isNaN(id) ? {
             id: id,
-            display: true
+            display: isAdmin === 'true' ? {[Op.or]: [true, false]} : true
         } : {
             shareLink: shareLink,
             linkExpiration: {[Op.gte]: new Date()}

@@ -5,6 +5,7 @@ import { CardImage } from '../Cards/CardImage'
 import { NotFound } from '../General/NotFound'
 import axios from 'axios'
 import { dateToSimple, dateToVerbose, ordinalize } from '@fl/utils'
+import { getCookie } from '@fl/utils'
 
 const emojis = {
   Helmet: 'https://cdn.formatlibrary.com/images/emojis/helmet.png',
@@ -36,7 +37,9 @@ export const SingleDeck = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const {data} = await axios.get(`/api/decks/${id}`)
+        const playerId = getCookie('playerId')
+        const isAdmin = playerId === 'y3DRaewuaK7Pnz2FX75UBK'
+        const {data} = await axios.get(`/api/decks/${id}?isAdmin=${isAdmin}`)
         setDeck(data)
       } catch (err) {
         console.log(err)
