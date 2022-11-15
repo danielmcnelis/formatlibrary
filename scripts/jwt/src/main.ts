@@ -1,6 +1,6 @@
 import { SignJWT, jwtVerify, calculateJwkThumbprint, importJWK, exportJWK } from 'jose'
 import * as minimist from 'minimist'
-import { config } from './config'
+import { config } from '@fl/config'
 ;(async () => {
   const argv = minimist(process.argv.slice(2))
 

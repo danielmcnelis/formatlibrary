@@ -1,5 +1,5 @@
 import axios from 'axios'
-import config from '../config'
+import {config} from '@fl/config'
 
 export const tournamentsChallonge = async (req, res, next) => {
   try {

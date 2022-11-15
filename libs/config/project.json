@@ -1,21 +1,21 @@
 {
-  "name": "jwt",
+  "name": "config",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/jwt/src",
+  "sourceRoot": "libs/config/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/jwt/**/*.ts"]
+        "lintFilePatterns": ["libs/config/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/jwt"],
+      "outputs": ["coverage/libs/config"],
       "options": {
-        "jestConfig": "libs/jwt/jest.config.ts",
+        "jestConfig": "libs/config/jest.config.ts",
         "passWithNoTests": true
       }
     }

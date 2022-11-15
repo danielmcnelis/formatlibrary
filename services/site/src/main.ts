@@ -10,7 +10,7 @@ import * as chalk from 'chalk'
 import { api, auth } from './proxies'
 
 import { error } from './middleware'
-import config from './config'
+import { config } from '@fl/config'
 
 let httpServer
 let httpsServer
@@ -24,7 +24,7 @@ app.use(morgan('dev'))
 app.use(compression())
 
 // proxies
-if (config.service.proxy) {
+if (config.services.site.proxy) {
   const proxies = { api, auth }
   Object.entries(proxies).forEach(([, prxy]) => {
     app.use(proxy(prxy.path, { target: prxy.target, secure: prxy.secure }))
@@ -43,9 +43,9 @@ app.use('*', (req, res) => {
 // error
 app.use(error)
 
-const port = config.service.port
+const port = config.services.site.port
 
-if (config.service.https === '1' || config.service.https === 'true') {
+if (config.services.site.https === '1' || config.services.site.https === 'true') {
   // load key/cert
   const privateKey = existsSync('../../../certs/privkey.pem') ? readFileSync('../../../certs/privkey.pem', 'utf8') : ''
   const certificate = existsSync('../../../certs/fullchain.pem') ? readFileSync('../../../certs/fullchain.pem', 'utf8') : ''
@@ -55,14 +55,14 @@ if (config.service.https === '1' || config.service.https === 'true') {
   httpsServer = https.createServer(credentials, app)
 
   const server = httpsServer.listen(port, () =>
-    console.log(chalk.cyan(`Listening on https://${config.service.host ? config.service.host : '0.0.0.0'}:${port}`))
+    console.log(chalk.cyan(`Listening on https://${config.services.site.host ? config.services.site.host : '0.0.0.0'}:${port}`))
   )
   server.on('error', console.error)
 } else {
   // Wrap(proxy) express with http server
   httpServer = http.createServer(app)
   const server = httpServer.listen(port, () =>
-    console.log(chalk.cyan(`Listening on http://${config.service.host ? config.service.host : '0.0.0.0'}:${port}`))
+    console.log(chalk.cyan(`Listening on http://${config.services.site.host ? config.services.site.host : '0.0.0.0'}:${port}`))
   )
   server.on('error', console.error)
 }

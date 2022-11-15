@@ -135,7 +135,7 @@ export const ImageCreator = () => {
     const findPlayers = async (query) => {
         const {data} = await axios.get(`/api/players/query/${query}`)
         setPlayers(data)
-        setPlayer(data[0])
+        setPlayer(data[0])/logos/nba/1610612765/primary/L/logo.svg
     }
 
     // GET PLAYER

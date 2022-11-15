@@ -1,9 +1,11 @@
 import { Router } from 'express'
-import { getEvents, countEvents, eventsRecent, eventsId, eventsCreate } from '../middleware'
+import { getEvents, countEvents, eventsRecent, eventsId, eventsCreate, eventsCommunity } from '../middleware'
 
 const router = Router()
 
 router.get('/api/events/recent/:format', eventsRecent)
+
+router.post('/api/events/community/:community', eventsCommunity)
 
 router.get('/api/events/count', countEvents)
 

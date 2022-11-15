@@ -1,4 +1,4 @@
-import config from '../config'
+import {config} from '@fl/config'
 
 const secure = config.services.api.https === '1' || config.services.api.https === 'true'
 

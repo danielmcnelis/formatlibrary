@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { oauth2Authorize, oauth2Response, oidcAuthorize, oidcResponse } from '@fl/middleware-auth'
 import { login, logout, signup } from '../middleware'
-import config from '../config'
+import { config } from '@fl/config'
 
 const { siteUrl, google, discord } = config
 

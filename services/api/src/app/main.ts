@@ -17,7 +17,7 @@ import {
   statuses
 } from './routes'
 import { error } from '@fl/middleware'
-import config from './config'
+import { config } from '@fl/config'
 
 const app = express()
 
@@ -65,7 +65,7 @@ Object.values(routes).forEach((route) => {
 // error
 app.use(error)
 
-const port = config.service.port
+const port = config.services.api.port
 const server = app.listen(port, () => {
   console.log(chalk.cyan(`Listening at http://localhost:${port}`))
 })

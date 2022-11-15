@@ -16,12 +16,13 @@
     "baseUrl": ".",
     "paths": {
       "@fl/components": ["libs/components/src/index.ts"],
+      "@fl/config": ["libs/config/src/index.ts"],
       "@fl/errors": ["libs/errors/src/index.ts"],
-      "@fl/jwt": ["libs/jwt/src/index.ts"],
       "@fl/logging": ["libs/logging/src/index.ts"],
       "@fl/middleware": ["libs/middleware/src/index.ts"],
       "@fl/middleware-auth": ["libs/middleware-auth/src/index.ts"],
       "@fl/models": ["libs/models/src/index.ts"],
+      "@fl/tokens": ["libs/tokens/src/index.ts"],
       "@fl/utils": ["libs/utils/src/index.ts"]
     }
   },

@@ -1,6 +1,6 @@
 
 import { Sequelize } from 'sequelize'
-import { config } from './config'
+import { config } from '@fl/config'
 
 export const db = config.database.url
   ? new Sequelize(config.database.url, {
