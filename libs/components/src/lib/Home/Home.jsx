@@ -5,6 +5,7 @@ import { BlogPost } from './BlogPost'
 import { Pagination } from '../General/Pagination'
 
 export const Home = () => {
+    console.log('Hello World')
     const [page, setPage] = useState(1)
     const [count, setCount] = useState(0)
     const [blogPosts, setBlogPosts] = useState([])
