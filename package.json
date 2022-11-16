@@ -6,9 +6,9 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
-    "aws": "nx build formatlibrary --no-cache && nx build site --no-cache && nx build api --no-cache && nx build auth --no-cache && dotenv ./runsite && dotenv ./runapi && dotenv ./runauth",
+    "aws": "nx build formatlibrary --skip-nx-cache && nx build site --skip-nx-cache && nx build api --skip-nx-cache && nx build auth --skip-nx-cache && dotenv ./runsite && dotenv ./runapi && dotenv ./runauth",
     "runall": "dotenv ./runsite && dotenv ./runapi && dotenv ./runauth",
-    "buildall": "nx build formatlibrary --no-cache && nx build site --no-cache && nx build api --no-cache && nx build auth --no-cache"
+    "buildall": "nx build formatlibrary --skip-nx-cache && nx build site --skip-nx-cache && nx build api --skip-nx-cache && nx build auth --skip-nx-cache"
   },
   "private": true,
   "dependencies": {
