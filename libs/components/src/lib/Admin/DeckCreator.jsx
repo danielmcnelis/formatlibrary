@@ -14,6 +14,7 @@ export const DeckCreator = () => {
     const [player, setPlayer] = useState(null)
     const [players, setPlayers] = useState([])
     const [ydk, setYDK] = useState(null)
+    console.log('community', community)
     
     const placementArr = event ? Array.from({length: event.size}, (_, i) => i + 1) : []
 

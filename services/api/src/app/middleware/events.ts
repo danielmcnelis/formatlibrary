@@ -79,6 +79,7 @@ export const getEvents = async (req, res, next) => {
 
 export const eventsCommunity = async (req, res, next) => {
   try {
+    console.log('req.params.community', req.params.community)
     const events = await Event.findAll({
       where: {
         display: true,
