@@ -38,7 +38,7 @@ export const SingleDeck = () => {
     const fetchData = async () => {
       try {
         const playerId = getCookie('playerId')
-        const isAdmin = playerId === 'y3DRaewuaK7Pnz2FX75UBK'
+        const isAdmin = playerId === 'UeyvnNBD6CD53gsqRQsxCY'
         const {data} = await axios.get(`/api/decks/${id}?isAdmin=${isAdmin}`)
         setDeck(data)
       } catch (err) {
