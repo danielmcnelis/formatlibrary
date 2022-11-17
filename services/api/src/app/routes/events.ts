@@ -5,7 +5,7 @@ const router = Router()
 
 router.get('/api/events/recent/:format', eventsRecent)
 
-router.post('/api/events/community/:community', eventsCommunity)
+router.get('/api/events/community/:community', eventsCommunity)
 
 router.get('/api/events/count', countEvents)
 

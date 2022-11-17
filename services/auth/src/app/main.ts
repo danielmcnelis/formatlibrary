@@ -12,21 +12,16 @@ import { config } from '@fl/config'
 
 const app = express()
 
-// if (config.siteProxy === 'true') {
+if (config.siteProxy === 'TRUE') {
     // rewrite
-    console.log('rewrite', config.siteProxy)
     app.use('/auth', (req, _res, next) => {
         const from = req.url
-        console.log('from', from)
         const to = from.replace(/\/auth\//g, '/')
-        console.log('to', to)
         req.url = to
-        console.log('req.url', req.url)
+        console.log(chalk.cyan(`Rewrite to`, req.url))
         next()
     })
-
-//     console.log(chalk.cyan(`Rewrite /auth/* to /`))
-// }
+}
 
 // body parsing
 app.use(express.urlencoded())
