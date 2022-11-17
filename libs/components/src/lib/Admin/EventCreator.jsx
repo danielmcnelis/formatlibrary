@@ -160,14 +160,14 @@ export const EventCreator = () => {
         Community:
         <select id="community" className="login" onChange={(e) => setCommunity(e.target.value)}>
           <option value={null}></option>
-          <option value="Format_Library">Format Library</option>
+          <option value="Format Library">Format Library</option>
           <option value="GoatFormat.com">GoatFormat.com</option>
-          <option value="Goat_Format_Europe">Goat Format Europe</option>
+          <option value="Goat Format Europe">Goat Format Europe</option>
           <option value="EdisonFormat.com">EdisonFormat.com</option>
           <option value="Konami">Konami</option>
-          <option value="Reaper_Format">Reaper Format</option>
-          <option value="Tengu_Plant_Town">Tengu Plant Town</option>
-          <option value="Upper_Deck_Entertainment">Upper Deck Entertainment</option>
+          <option value="Reaper Format">Reaper Format</option>
+          <option value="Tengu Plant Town">Tengu Plant Town</option>
+          <option value="Upper Deck Entertainment">Upper Deck Entertainment</option>
         </select>
       </label>
       <label>

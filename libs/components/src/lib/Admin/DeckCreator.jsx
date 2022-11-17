@@ -14,7 +14,6 @@ export const DeckCreator = () => {
     const [player, setPlayer] = useState(null)
     const [players, setPlayers] = useState([])
     const [ydk, setYDK] = useState(null)
-    console.log('community', community)
     
     const placementArr = event ? Array.from({length: event.size}, (_, i) => i + 1) : []
 
@@ -156,19 +155,19 @@ export const DeckCreator = () => {
                 >
                     <option value={null}></option>
                     <option value="EdisonFormat.com">EdisonFormat.com</option>
-                    <option value="Format_Library">Format Library</option>
+                    <option value="Format Library">Format Library</option>
                     <option value="GoatFormat.com">GoatFormat.com</option>
-                    <option value="Goat_Community_Italia">Goat Community Italia</option>
-                    <option value="Goat_Format_Europe">Goat Format Europe</option>
+                    <option value="Goat Community Italia">Goat Community Italia</option>
+                    <option value="Goat Format Europe">Goat Format Europe</option>
                     <option value="HATFormat.com">HATFormat.com</option>
                     <option value="Konami">Konami</option>
-                    <option value="Reaper_Format">Reaper Format</option>
-                    <option value="Tengu_Plant_Town">Tengu Plant Town</option>
-                    <option value="The_Dice_Jar">The Dice Jar</option>
-                    <option value="The_H.A.T._Alliance">The H.A.T. Alliance</option>
-                    <option value="Upper_Deck_Entertainment">Upper Deck Entertainment</option>
+                    <option value="Reaper Format">Reaper Format</option>
+                    <option value="Tengu Plant Town">Tengu Plant Town</option>
+                    <option value="The Dice Jar">The Dice Jar</option>
+                    <option value="The H.A.T. Alliance">The H.A.T. Alliance</option>
+                    <option value="Upper Deck Entertainment">Upper Deck Entertainment</option>
                     <option value="Yugi-Kaibaland">Yugi-Kaibaland</option>
-                    <option value="Yu-Gi-Oh!_Legacy">Yu-Gi-Oh! Legacy</option>
+                    <option value="Yu-Gi-Oh! Legacy">Yu-Gi-Oh! Legacy</option>
                 </select>
             </label>
             <label>Event:
