@@ -44,7 +44,14 @@ export const imagesCreate = async (req, res, next) => {
         }
     })
 
-    const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/${req.body.folder}/${req.body.fileName}`, Body: buffer, ACL: 'public-read' }).promise()
+    const { Location: uri} = await s3.upload({ 
+        Bucket: 'formatlibrary', 
+        Key: `images/${req.body.folder}/${req.body.fileName}`, 
+        Body: buffer,
+        ContentEncoding: 'base64', 
+        ACL: 'public-read' 
+    }).promise()
+
     console.log('uri', uri)
     res.json({ success: true })
   } catch (err) {
