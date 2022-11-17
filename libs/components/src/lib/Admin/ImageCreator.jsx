@@ -1,8 +1,8 @@
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import axios from 'axios'
 
-const ImageCreator = () => {
+export const ImageCreator = () => {
     const [image, setImage] = useState(null)
     const [fileName, setFileName] = useState(null)
     const [folder, setFolder] = useState(null)
@@ -92,5 +92,3 @@ const ImageCreator = () => {
         </div>
     )
 }
-
-export default ImageCreator
