@@ -21,7 +21,7 @@ import { config } from '@fl/config'
 
 const app = express()
 
-if (config.siteProxy === 'TRUE') {
+if (config.siteProxy === 'true') {
     // rewrite
     app.use('/api', (req, _res, next) => {
         const from = req.url
