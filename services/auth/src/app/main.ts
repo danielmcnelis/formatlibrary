@@ -18,7 +18,6 @@ if (config.siteProxy === 'true') {
         const from = req.url
         const to = from.replace(/\/auth\//g, '/')
         req.url = to
-        console.log(chalk.cyan(`Rewrite to`, req.url))
         next()
     })
 }

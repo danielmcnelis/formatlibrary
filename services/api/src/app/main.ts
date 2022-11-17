@@ -27,7 +27,6 @@ if (config.siteProxy === 'true') {
         const from = req.url
         const to = from.replace(/\/api\//g, '/')
         req.url = to
-        console.log(chalk.cyan(`Rewrite to`, req.url))
         next()
     })
 }

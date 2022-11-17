@@ -1,6 +1,5 @@
 
 import axios from 'axios'
-import * as fs from 'fs'
 import { S3 } from 'aws-sdk'
 import { config } from '@fl/config'
 
@@ -33,9 +32,9 @@ export const imagesUpdateCard = async (req, res, next) => {
 export const imagesCreate = async (req, res, next) => {
   try {
     const buffer = req.body.image
-      .replace(/^data:image\/jpg;base64,/, '')
-      .replace(/^data:image\/jpeg;base64,/, '')
-      .replace(/^data:image\/png;base64,/, '')
+    //   .replace(/^data:image\/jpg;base64,/, '')
+    //   .replace(/^data:image\/jpeg;base64,/, '')
+    //   .replace(/^data:image\/png;base64,/, '')
 
     const s3 = new S3({
         region: config.s3.region,
