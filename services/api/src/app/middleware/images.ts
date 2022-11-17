@@ -2,8 +2,9 @@
 import axios from 'axios'
 import * as fs from 'fs'
 import { S3 } from 'aws-sdk'
-// import { config } from '@fl/config'
+import { config } from '@fl/config'
 
+// IMAGES UPDATE CARD
 export const imagesUpdateCard = async (req, res, next) => {
     try {
         const {data} = await axios({
@@ -12,44 +13,40 @@ export const imagesUpdateCard = async (req, res, next) => {
             responseType: 'stream'
         })
 
-        data.pipe(fs.createWriteStream(`./public/images/cards/${req.query.ypdId}.jpg`))
+        const s3 = new S3({
+            region: config.s3.region,
+            credentials: {
+                accessKeyId: config.s3.credentials.accessKeyId,
+                secretAccessKey: config.s3.credentials.secretAccessKey
+            }
+        })
+    
+        const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${req.query.ypdId}`, Body: data, ACL: 'public-read' }).promise()
+        console.log('uri', uri)
         res.json({success: true})
     } catch (err) {
         next(err)
     }
 }
 
+// IMAGES CREATE
 export const imagesCreate = async (req, res, next) => {
   try {
-
-    // const s3 = new S3({
-    //     region: 'us-east-2',
-    //     credentials: {
-    //         accessKeyId: config.s3AccessKeyId,
-    //         secretAccessKey: config.s3SecretAccessKey
-    //     }
-    // })
-    
-    // const [file] = ctx.request.files
-    // const { path, name } = file
-    
-    // const readStream = fs.createReadStream(path)
-    
-    // const { Location: uri} = await s3
-    //     .upload({ Bucket: 'formatlibrary', Key: `images/${name}`, Body: readStream })
-    //     .promise()
-    
-    // try {
-    //     fs.unlinkSync(path)
-    // } catch(err) {
-    //     console.error(err)
-    // }
-    
     const buffer = req.body.image
       .replace(/^data:image\/jpg;base64,/, '')
       .replace(/^data:image\/jpeg;base64,/, '')
       .replace(/^data:image\/png;base64,/, '')
-    fs.writeFileSync(`https://cdn.formatlibrary.com/images/${req.body.folder}/${req.body.fileName}`, buffer, 'base64')
+
+    const s3 = new S3({
+        region: config.s3.region,
+        credentials: {
+            accessKeyId: config.s3.credentials.accessKeyId,
+            secretAccessKey: config.s3.credentials.secretAccessKey
+        }
+    })
+
+    const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/${req.body.folder}/${req.body.fileName}`, Body: buffer, ACL: 'public-read' }).promise()
+    console.log('uri', uri)
     res.json({ success: true })
   } catch (err) {
     next(err)
