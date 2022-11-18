@@ -31,7 +31,9 @@ export const imagesUpdateCard = async (req, res, next) => {
 // IMAGES CREATE
 export const imagesCreate = async (req, res, next) => {
   try {
-    const buffer = req.body.image
+    console.log('req.body.image', req.body.image)
+    const buffer = Buffer.from(req.body.image.replace(/^data:image\/\w+;base64,/, ''),'base64')
+    console.log('buffer')
 
     const s3 = new S3({
         region: config.s3.region,
