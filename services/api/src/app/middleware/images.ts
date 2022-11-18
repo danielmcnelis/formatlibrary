@@ -49,7 +49,7 @@ export const imagesCreate = async (req, res, next) => {
         Key: `images/${req.body.folder}/${req.body.fileName}`, 
         Body: buffer,
         ContentEncoding: 'base64', 
-        ContentType: 'image/jpeg',
+        ContentType: 'image/jpg',
         ACL: 'public-read' 
     }).promise()
 
