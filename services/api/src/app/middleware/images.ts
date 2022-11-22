@@ -22,11 +22,12 @@ export const imagesUpdateCard = async (req, res, next) => {
     
         const { Location: uri} = await s3.upload({ 
             Bucket: 'formatlibrary', 
-            Key: `images/cards/${req.query.ypdId}`, 
+            Key: `images/cards/${req.query.ypdId}.jpg`, 
             Body: data, 
             ContentType: `image/jpg`,
             ACL: 'public-read' 
         }).promise()
+        
         console.log('uri', uri)
         res.json({success: true})
     } catch (err) {
@@ -39,7 +40,7 @@ export const imagesCreate = async (req, res, next) => {
   try {
     const image = req.body.image
     const buffer = Buffer.from(image.replace(/^data:image\/\w+;base64,/, ''), 'base64')
-    const type = image.split(';')[0].split('/')[1]
+    const [, mimeType] = image.split(';')[0].split(':')
 
     const s3 = new S3({
         region: config.s3.region,
@@ -53,7 +54,7 @@ export const imagesCreate = async (req, res, next) => {
         Bucket: 'formatlibrary', 
         Key: `images/${req.body.folder}/${req.body.fileName}`, 
         Body: buffer,
-        ContentType: `image/${type}`,
+        ContentType: mimeType,
         ACL: 'public-read' 
     }).promise()
 
