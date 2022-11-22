@@ -24,10 +24,9 @@ export const imagesUpdateCard = async (req, res, next) => {
             Bucket: 'formatlibrary', 
             Key: `images/cards/${req.query.ypdId}.jpg`, 
             Body: data, 
-            ContentType: `image/jpg`,
-            ACL: 'public-read' 
+            ContentType: `image/jpg`
         }).promise()
-        
+
         console.log('uri', uri)
         res.json({success: true})
     } catch (err) {
@@ -54,8 +53,7 @@ export const imagesCreate = async (req, res, next) => {
         Bucket: 'formatlibrary', 
         Key: `images/${req.body.folder}/${req.body.fileName}`, 
         Body: buffer,
-        ContentType: mimeType,
-        ACL: 'public-read' 
+        ContentType: mimeType
     }).promise()
 
     console.log('uri', uri)
