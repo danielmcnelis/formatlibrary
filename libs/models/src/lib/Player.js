@@ -3,6 +3,8 @@ import { Op, Sequelize } from 'sequelize'
 import { db } from './db'
 import * as bcrypt from 'bcrypt'
 import { customAlphabet } from 'nanoid'
+import {JWT} from '@fl/tokens'
+
 
 export const Player = db.define('players', {
   id: {
@@ -186,5 +188,14 @@ Player.generateId = async () => {
         return false
     }
   }
+
+//   const jwt = new JWT({
+//     algorithm: 'RS256',
+//    issuer: 'urn:formatlibrary:auth',
+//    audience: 'urn:formatlibrary:api',
+//    jwks: config.siteJWKS
+//  })
+//  const token = jwt.sign('123', { email: 'bob@example.com' })
+//  const payload = jwt.verify(token)
   
   Player.prototype.hide = () => this.update({ hidden: true })
