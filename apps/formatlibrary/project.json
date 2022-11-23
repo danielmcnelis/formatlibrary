@@ -16,7 +16,13 @@
         "main": "apps/formatlibrary/src/main.tsx",
         "polyfills": "apps/formatlibrary/src/polyfills.ts",
         "tsConfig": "apps/formatlibrary/tsconfig.app.json",
-        "assets": ["apps/formatlibrary/src/favicon.ico", "apps/formatlibrary/src/assets"],
+        "assets": [
+            "apps/formatlibrary/src/favicon.ico", 
+            "apps/formatlibrary/src/assets", 
+            "apps/formatlibrary/src/privacy.html", 
+            "apps/formatlibrary/src/terms.html", 
+            "apps/formatlibrary/src/ads.txt"
+        ],
         "styles": ["apps/formatlibrary/src/styles.css"],
         "scripts": [],
         "webpackConfig": "apps/formatlibrary/webpack.config.js"
