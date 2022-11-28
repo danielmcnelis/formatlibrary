@@ -38,9 +38,7 @@ export const SingleDeck = () => {
     const fetchData = async () => {
       try {
         const playerId = getCookie('playerId')
-        console.log('playerId', playerId)
         const isAdmin = playerId === 'UeyvnNBD6CD53gsqRQsxCY'
-        console.log('isAdmin', isAdmin)
         const {data} = await axios.get(`/api/decks/${id}?isAdmin=${isAdmin}`)
         setDeck(data)
       } catch (err) {
@@ -141,10 +139,7 @@ export const SingleDeck = () => {
                       <p>{displayName}</p>
                       <img 
                         className="single-deck-builder-cell-pfp"
-                        src={
-                            deck.player.discordPfp ? `https://cdn.discordapp.com/avatars/${deck.player.discordId}/${deck.player.discordPfp}.webp` :
-                            `https://cdn.formatlibrary.com/images/pfps/${deck.player.discordId || deck.player.name}.png`
-                        }
+                        src={`https://cdn.formatlibrary.com/images/pfps/${deck.player.discordId || deck.player.name}.png`}
                         onError={(e) => {
                                 e.target.onerror = null
                                 e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"

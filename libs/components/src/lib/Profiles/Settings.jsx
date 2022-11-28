@@ -287,7 +287,6 @@ export const Settings = () => {
                         className="player-pfp"
                         src={
                             googlePfp ? `https://lh3.googleusercontent.com/a/${googlePfp}` :
-                            discordPfp && discordId ? `https://cdn.discordapp.com/avatars/${discordId}/${discordPfp}.webp` :
                             `https://cdn.formatlibrary.com/images/pfps/${discordId || name}.png`}
                         onError={(e) => {
                                 e.target.onerror = null

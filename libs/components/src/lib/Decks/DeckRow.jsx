@@ -40,10 +40,7 @@ export const DeckRow = (props) => {
                 <div className="player-cell">
                   <img 
                       className="player-cell-pfp"
-                      src={
-                        deck.player.discordPfp ? `https://cdn.discordapp.com/avatars/${deck.player.discordId}/${deck.player.discordPfp}.webp` :
-                        `https://cdn.formatlibrary.com/images/pfps/${deck.player.discordId || deck.player.name}.png`
-                      }                    
+                      src={`https://cdn.formatlibrary.com/images/pfps/${deck.player.discordId || deck.player.name}.png`}                    
                       alt={`${deck.builder}`}
                       onError={(e) => {
                               e.target.onerror = null

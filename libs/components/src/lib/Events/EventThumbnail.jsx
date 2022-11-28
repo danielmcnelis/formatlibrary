@@ -18,10 +18,7 @@ export const EventThumbnail = (props = {}) => {
                   />
                   <img 
                     className="eventThumbnail-player-pfp" 
-                    src={
-                      winner.discordPfp ? `https://cdn.discordapp.com/avatars/${winner.discordId}/${winner.discordPfp}.webp` :
-                      `https://cdn.formatlibrary.com/images/pfps/${winner.discordId || winner.name}.png`
-                    }
+                    src={`https://cdn.formatlibrary.com/images/pfps/${winner.discordId || winner.name}.png`}
                     onError={(e) => {
                             e.target.onerror = null
                             e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"

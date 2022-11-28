@@ -69,7 +69,7 @@ export const StatsRow = (props) => {
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
     const displayName = player.name.length <= 24 ? player.name : player.name.slice(0, 24).split(' ').slice(0, -1).join(' ')
     const navigate = useNavigate()
-    const goToPlayer = () => navigate(`/players/${extension}`)
+    const goToPlayer = () => navigate(`/players/${extension}`) 
 
     return (
         <tr onClick={() => goToPlayer()} className={`${evenOrOdd}-search-results-row`}>
@@ -78,10 +78,7 @@ export const StatsRow = (props) => {
                 <div className="player-cell">
                     <img
                         className="player-cell-pfp"
-                        src={
-                          stats.player.discordPfp ? `https://cdn.discordapp.com/avatars/${stats.player.discordId}/${stats.player.discordPfp}.webp` :
-                          `https://cdn.formatlibrary.com/images/pfps/${stats.player.name}.png`
-                        }
+                        src={`https://cdn.formatlibrary.com/images/pfps/${stats.player.discordId || stats.player.name}.png`}
                         onError={(e) => {
                                 e.target.onerror = null
                                 e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
