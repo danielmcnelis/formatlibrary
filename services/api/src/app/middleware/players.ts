@@ -1,6 +1,7 @@
 import { Player } from '@fl/models'
 import { Op } from 'sequelize'
-import * as fs from 'fs'
+import { S3 } from 'aws-sdk'
+import { config } from '@fl/config'
 import * as bcrypt from 'bcrypt'
 
 export const playersAdmin = async (req, res, next) => {
@@ -141,7 +142,23 @@ export const playersCreate = async (req, res, next) => {
     try {
         if (req.body.pfp) {
             const buffer = req.body.pfp.replace(/^data:image\/png;base64,/, '')
-            fs.writeFileSync(`./public/images/pfps/${req.body.name}.png`, buffer, 'base64')
+            const s3 = new S3({
+                region: config.s3.region,
+                credentials: {
+                    accessKeyId: config.s3.credentials.accessKeyId,
+                    secretAccessKey: config.s3.credentials.secretAccessKey
+                }
+            })
+        
+            const { Location: uri} = await s3.upload({ 
+                Bucket: 'formatlibrary', 
+                Key: `images/brackets/${req.body.name}.png`, 
+                Body: buffer,
+                ContentType: 'image/png'
+            }).promise()
+        
+            console.log('uri', uri)
+            // fs.writeFileSync(`./public/images/pfps/${req.body.name}.png`, buffer, 'base64')
         }
 
         const alreadyExists = await Player.count({
