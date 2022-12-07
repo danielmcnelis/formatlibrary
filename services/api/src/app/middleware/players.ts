@@ -165,8 +165,8 @@ export const playersCreate = async (req, res, next) => {
             where: {
                 [Op.or]: [
                     {
-                        firstName: req.body.firstName,
-                        lastName: req.body.lastName,
+                        firstName: {[Op.and]: [req.body.firstName, {[Op.not]: null}]},
+                        lastName: {[Op.and]: [req.body.lastName, {[Op.not]: null}]}
                     },
                     {
                         discordName: {[Op.and]: [req.body.discordName, {[Op.not]: null}]},
