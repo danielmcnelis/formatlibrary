@@ -52,7 +52,13 @@ export const Builder = () => {
     // GET DECKS
     const getDecks = async () => {
         try {
-            const {data} = await axios.get(`/api/decks/my-decks?id=${getCookie('playerId')}`)
+            const accessToken = getCookie('access')
+            const {data} = await axios.get(`/api/decks/my-decks`, {
+                headers: {
+                    ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                }
+            })
+            
             setDecks(data)
         } catch (err) {
             console.log(err)
@@ -382,7 +388,12 @@ export const Builder = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const {data} = await axios.get(`/api/decks/my-decks?id=${getCookie('playerId')}`)
+        const accessToken = getCookie('access')
+        const {data} = await axios.get(`/api/decks/my-decks`, {
+            headers: {
+                ...(accessToken && {authorization: `Bearer ${accessToken}`})
+            }
+        })
         setDecks(data)
       } catch (err) {
         console.log(err)

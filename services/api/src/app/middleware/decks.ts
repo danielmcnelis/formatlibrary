@@ -241,10 +241,12 @@ export const decksBuilderId = async (req, res, next) => {
 }
 
 export const decksMyDecks = async (req, res, next) => {
+    const playerId = req.user?.playerId
+    console.log('req.user', req.user)
     try {
         const player = await Player.findOne({
             where: {
-                id: req.query.id
+                id: playerId
             }
         })
 

@@ -3,12 +3,13 @@ import { useState, useEffect, useLayoutEffect } from 'react'
 import axios from 'axios'
 import { BlogPost } from './BlogPost'
 import { Pagination } from '../General/Pagination'
+import { useLocation } from 'react-router-dom'
 
 export const Home = () => {
-    console.log('Hello World')
     const [page, setPage] = useState(1)
     const [count, setCount] = useState(0)
     const [blogPosts, setBlogPosts] = useState([])
+    const location = useLocation()
     
     // GO TO PAGE
     const goToPage = (num) => {
@@ -53,6 +54,11 @@ export const Home = () => {
         fetchData()
       }, [])
   
+    // USE EFFECT
+    useEffect(() => {
+        if (location.state) setPage(location.state.page)
+    }, [location.state])
+
     if (!blogPosts.length) return <div/>
   
     return (

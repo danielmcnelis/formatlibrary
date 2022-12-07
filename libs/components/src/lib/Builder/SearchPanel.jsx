@@ -3,7 +3,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react'
 import {MiniAdvButton} from '../Cards/MiniAdvButton'
 import {CardImage} from '../Cards/CardImage'
-import {PrettoSlider} from '../General/Slider'
+import {Slider} from '../General/Slider'
 import {MiniPagination} from '../General/MiniPagination'
 import axios from 'axios'
 import { capitalize } from '@fl/utils'
@@ -550,7 +550,7 @@ export const SearchPanel = (props) => {
 
                     <div>
                         <div>
-                        <PrettoSlider
+                        <Slider
                             id="level"
                             type="range-slider"
                             symbol={Star}
@@ -563,7 +563,7 @@ export const SearchPanel = (props) => {
                             setSliders = {setSliders}
                             defaultValue = {sliders.level}
                         />
-                        <PrettoSlider
+                        <Slider
                             id="atk"
                             type="range-slider"
                             symbol={Swords}
@@ -576,7 +576,7 @@ export const SearchPanel = (props) => {
                             setSliders = {setSliders}
                             defaultValue = {sliders.atk}
                         />
-                        <PrettoSlider
+                        <Slider
                             id="def"
                             type="range-slider"
                             symbol={Shield}

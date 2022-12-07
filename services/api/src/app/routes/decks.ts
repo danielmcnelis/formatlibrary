@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import {
+  authenticate,
   decksDeleteId,
   decksUpdateId,
   decksPublishId,
@@ -36,7 +37,7 @@ router.put('/api/decks/share/:id', decksShareId)
 
 router.get('/api/decks/builder/:id', decksBuilderId)
 
-router.get('/api/decks/my-decks', decksMyDecks)
+router.get('/api/decks/my-decks', [authenticate, decksMyDecks])
 
 router.get('/api/decks/popular/:format', decksPopular)
 

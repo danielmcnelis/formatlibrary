@@ -1,3 +1,4 @@
+export * from './authenticate'
 export * from './banlists'
 export * from './blogposts'
 export * from './cards'

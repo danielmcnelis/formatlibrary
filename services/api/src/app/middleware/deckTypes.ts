@@ -53,7 +53,7 @@ export const deckTypesSummary = async (req, res, next) => {
       attributes: ['id', 'name', 'banlist', 'date', 'icon']
     })
 
-    const showExtra = format.date >= '2008-08-05'
+    const showExtra = format.date >= '2008-08-05' || !format.date
     const count = freqs[format.name]
     const total = await Deck.count({
       where: {

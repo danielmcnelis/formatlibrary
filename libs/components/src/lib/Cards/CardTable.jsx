@@ -5,14 +5,14 @@ import { AdvButton } from './AdvButton'
 import { CardRow } from './CardRow'
 import { CardImage } from './CardImage'
 import { MobileCardRow } from './MobileCardRow'
-import { PrettoSlider } from '../General/Slider'
+import { Slider } from '../General/Slider'
 import { Pagination } from '../General/Pagination'
 import { capitalize } from '@fl/utils'
 import { useMediaQuery } from 'react-responsive'
 import { useLocation } from 'react-router-dom'
 
 const symbols = {
-  Star: 'https://cdn.formatlibrary.com/images/symbols/star.png'
+  Star: 'https://cdn.formatlibrary.com/images/symbols/star.png',
 }
 
 const { Star } = symbols
@@ -742,7 +742,7 @@ export const CardTable = () => {
   
             <div className="sliderWrapper0">
               <div className="sliderWrapper1">
-                <PrettoSlider
+                <Slider
                   id="level"
                   type="range-slider"
                   symbol={Star}
@@ -754,7 +754,7 @@ export const CardTable = () => {
                   setSliders = {setSliders}
                   defaultValue = {sliders.level}
                 />
-                <PrettoSlider
+                <Slider
                   id="atk"
                   type="range-slider"
                   symbol={Swords}
@@ -766,7 +766,7 @@ export const CardTable = () => {
                   setSliders = {setSliders}
                   defaultValue = {sliders.atk}
                 />
-                <PrettoSlider
+                <Slider
                   id="def"
                   type="range-slider"
                   symbol={Shield}
@@ -781,7 +781,7 @@ export const CardTable = () => {
               </div>
   
               <div className="sliderWrapper1 desktop-only">
-                <PrettoSlider
+                <Slider
                   id="year"
                   type="continuous-slider"
                   symbol={Calendar}
@@ -794,7 +794,7 @@ export const CardTable = () => {
                   setSliders = {setSliders}
                   defaultValue = {sliders.year}
                 />
-                <PrettoSlider
+                <Slider
                   id="month"
                   type="continuous-slider"
                   symbol={Calendar}
@@ -807,7 +807,7 @@ export const CardTable = () => {
                   setSliders = {setSliders}
                   defaultValue = {sliders.month}
                 />
-                <PrettoSlider
+                <Slider
                   id="day"
                   type="continuous-slider"
                   symbol={Calendar}

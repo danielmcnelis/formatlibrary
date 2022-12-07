@@ -1,6 +1,7 @@
 
 import { Player } from "@fl/models"
 import * as bcrypt from 'bcrypt'
+import { config } from '@fl/config'
 
 export const signup = (options) => {
   const { app, providers } = options
@@ -41,14 +42,18 @@ export const signup = (options) => {
             email: email
         })
 
+        const access = await player.getToken()
+
         if (player && player.id) {
-            res.cookie('playerId', player.id, {
-        	    maxAge: 24 * 60 * 60 * 1000
+            res.cookie('access', access, {
+        	    maxAge: 30 * 24 * 60 * 60 * 1000
+            }).cookie('playerId', player.id, {
+        	    maxAge: 30 * 24 * 60 * 60 * 1000
             }).cookie('googleId', player.googleId, {
-        	    maxAge: 24 * 60 * 60 * 1000
+        	    maxAge: 30 * 24 * 60 * 60 * 1000
             }).cookie('playerName', player.name, {
-        	    maxAge: 24 * 60 * 60 * 1000
-            }).redirect(`https://formatlibrary.com`)
+        	    maxAge: 30 * 24 * 60 * 60 * 1000
+            }).redirect(config.siteUrl)
         } else {
             res.status(404).send('Error creating account.')   
         }

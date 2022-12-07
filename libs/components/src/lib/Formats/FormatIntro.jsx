@@ -84,7 +84,7 @@ export const FormatIntro = (props = {}) => {
               <a href={`/cards?format=${format.name.replaceAll(' ', '_')}`}>Card Pool</a>
             </li>
             <li>
-              <a href="#banlist">Ban List</a>
+              <a href={`/formats/${format.name}#banlist`}>Ban List</a>
             </li>
           </div>
           <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} />

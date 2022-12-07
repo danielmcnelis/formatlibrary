@@ -94,7 +94,8 @@ export const Settings = () => {
 
     const logOut = async () => {
         try {
-            await axios.post(`/auth/logout`)
+            const { request } = await axios.post(`/auth/logout`)
+            window.location.href = request.responseURL
         } catch (err) {
             console.log(err)
         }

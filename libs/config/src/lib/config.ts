@@ -3,6 +3,9 @@ export const config = {
     siteProxy: process.env.SITE_PROXY,
     siteJWKS: JSON.parse(process.env.SITE_JWKS),
     siteIKS: JSON.parse(process.env.SITE_IKS),
+    siteAudience: 'urn:formatlibrary:api',
+    siteIssuer: 'urn:formatlibrary:auth',
+    accessExpires: '30d',
     sessionSecret: process.env.SESSION_SECRET,
     // server: {
     //   https: process.env.SERVER_HTTPS,

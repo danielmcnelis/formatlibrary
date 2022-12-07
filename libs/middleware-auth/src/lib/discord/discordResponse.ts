@@ -56,16 +56,20 @@ export const discordResponse = (options) => {
     }
 
     
-    const {id, discordId, discordPfp, name} = await Player.discordLogin(userinfo.data)
-    
-    res.cookie('playerId', id, {
-        maxAge: 24 * 60 * 60 * 1000
+    const player = await Player.discordLogin(userinfo.data)
+    const access = await player.getToken()
+    const {id, discordId, discordPfp, name} = player
+
+    res.cookie('access', access, {
+        maxAge: 30 * 24 * 60 * 60 * 1000
+    }).cookie('playerId', id, {
+        maxAge: 30 * 24 * 60 * 60 * 1000
     }).cookie('discordId', discordId, {
-        maxAge: 24 * 60 * 60 * 1000
+        maxAge: 30 * 24 * 60 * 60 * 1000
     }).cookie('discordPfp', discordPfp, {
-        maxAge: 24 * 60 * 60 * 1000
+        maxAge: 30 * 24 * 60 * 60 * 1000
     }).cookie('playerName', name, {
-        maxAge: 24 * 60 * 60 * 1000
+        maxAge: 30 * 24 * 60 * 60 * 1000
     }).clearCookie('googlePfp')
     .redirect(returnTo || 'https://formatlibrary.com')
   }

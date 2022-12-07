@@ -314,8 +314,10 @@ export const EventTable = (props) => {
               onChange={(e) => {setCommunity(e.target.value); setPage(1)}}
             >
               <option value={null}>All Communities</option>
-              <option value="EdisonFormat.com">EdisonFormat.com</option>
               <option value="Format Library">Format Library</option>
+              <option value="DuelistGroundz">DuelistGroundz</option>
+              <option value="EdisonFormat.com">EdisonFormat.com</option>
+              <option value="Fire-Water Format">Fire-Water Format</option>
               <option value="GoatFormat.com">GoatFormat.com</option>
               <option value="Goat Community Italia">Goat Community Italia</option>
               <option value="Goat Format Europe">Goat Format Europe</option>
@@ -326,6 +328,8 @@ export const EventTable = (props) => {
               <option value="The Dice Jar">The Dice Jar</option>
               <option value="The H.A.T. Alliance">The H.A.T. Alliance</option>
               <option value="Upper Deck Entertainment">Upper Deck Entertainment</option>
+              <option value="Vegas Format">Vegas Format</option>
+              <option value="Wind-Up Factory">Wind-Up Factory</option>
               <option value="Yugi-Kaibaland">Yugi-Kaibaland</option>
               <option value="Yu-Gi-Oh! Legacy">Yu-Gi-Oh! Legacy</option>
             </select>

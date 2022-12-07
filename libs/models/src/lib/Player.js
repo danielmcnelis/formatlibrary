@@ -4,7 +4,7 @@ import { db } from './db'
 import * as bcrypt from 'bcrypt'
 import { customAlphabet } from 'nanoid'
 import {JWT} from '@fl/tokens'
-
+import { config } from '@fl/config'
 
 export const Player = db.define('players', {
   id: {
@@ -175,27 +175,25 @@ Player.generateId = async () => {
       }
   }
 
-  Player.verifyLogin = async (payload) => {
-    const player = await Player.findOne({
-        where: {
-            email: payload.email
-        }
-    })
-    
-    if (player && payload.password && player.hash && await bcrypt.compare(payload.password, player.hash)) {
+  Player.localLogin = async (payload) => {
+    const { email, password } = payload
+    const player = await Player.findOne({ where: { email } })
+
+    if (player && password && player.hash && await bcrypt.compare(password, player.hash)) {
         return player
     } else {
-        return false
+        throw new Error('Player not found.')
     }
   }
 
-//   const jwt = new JWT({
-//     algorithm: 'RS256',
-//    issuer: 'urn:formatlibrary:auth',
-//    audience: 'urn:formatlibrary:api',
-//    jwks: config.siteJWKS
-//  })
-//  const token = jwt.sign('123', { email: 'bob@example.com' })
-//  const payload = jwt.verify(token)
-  
-  Player.prototype.hide = () => this.update({ hidden: true })
+  Player.prototype.getToken = function () {
+    const jwt = new JWT({
+        algorithm: 'RS256',
+        issuer: config.siteIssuer,
+        audience: config.siteAudience,
+        jwks: config.siteJWKS,
+        expires: config.accessExpires
+    })
+
+    return jwt.sign(this.id, { email: this.email })
+  }

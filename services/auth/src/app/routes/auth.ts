@@ -44,7 +44,21 @@ router.get(
   })
 )
 
-router.post('/auth/login', login({}))
+router.post('/auth/login', login({
+    app: 'Format Library',
+    providers: [
+      {
+        image: DISCORD_SVG,
+        loginUrl: '/auth/discord/authorize',
+        name: 'Discord'
+      },
+      {
+        image: GOOGLE_SVG,
+        loginUrl: '/auth/google/authorize',
+        name: 'Google'
+      }
+    ]
+}))
 
 router.post('/auth/logout', logout())
 

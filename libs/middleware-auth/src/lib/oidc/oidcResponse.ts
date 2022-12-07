@@ -38,16 +38,20 @@ export const oidcResponse = (options) => {
     const { id_token: idToken } = tokenSet
     const payload = decodeJwt(idToken)
     
-    const {id, googleId, googlePfp, name} = await Player.googleLogin(payload)
+    const player = await Player.googleLogin(payload)
+    const access = await player.getToken()
+    const {id, googleId, googlePfp, name} = player
     
-    res.cookie('playerId', id, {
-        maxAge: 24 * 60 * 60 * 1000
+    res.cookie('access', access, {
+        maxAge: 30 * 24 * 60 * 60 * 1000
+    }).cookie('playerId', id, {
+        maxAge: 30 * 24 * 60 * 60 * 1000
     }).cookie('googleId', googleId, {
-        maxAge: 24 * 60 * 60 * 1000
+        maxAge: 30 * 24 * 60 * 60 * 1000
     }).cookie('googlePfp', googlePfp, {
-        maxAge: 24 * 60 * 60 * 1000
+        maxAge: 30 * 24 * 60 * 60 * 1000
     }).cookie('playerName', name, {
-        maxAge: 24 * 60 * 60 * 1000
+        maxAge: 30 * 24 * 60 * 60 * 1000
     }).clearCookie('discordPfp')
     .redirect(returnTo || 'https://formatlibrary.com')
   }

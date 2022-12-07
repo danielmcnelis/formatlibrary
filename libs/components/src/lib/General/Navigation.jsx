@@ -25,7 +25,7 @@ export const Navigation = () => {
             </div>
             </Link>
             <div id="navigation-menu">
-                <Link to="/">
+                <Link to="/" state={{ page: 1 }}>
                     <h2 className="navigation-item">HOME</h2>
                 </Link>
                 <Link to="/cards/">
@@ -52,7 +52,7 @@ export const Navigation = () => {
                                 src={
                                     googlePfp ? `https://lh3.googleusercontent.com/a/${googlePfp}` :
                                     discordPfp && discordId ? `https://cdn.discordapp.com/avatars/${discordId}/${discordPfp}.webp` :
-                                    `https://cdn.formatlibrary.com/images/pfps/${discordId || playerName}.png`}
+                                    `https://cdn.formatlibrary.com/images/pfps/${discordId}.png`}
                                 onError={(e) => {
                                         e.target.onerror = null
                                         e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
@@ -75,7 +75,7 @@ export const Navigation = () => {
                 <div id="hamburger-button" className="open-b" style={{fontSize: '44px'}}>
                     ⌄
                 </div>
-                <Link to="/" >
+                <Link to="/" state={{ page: 1 }}>
                     <h3 className="hamburger-item">Home</h3>
                 </Link>
                 <Link to="/cards/">

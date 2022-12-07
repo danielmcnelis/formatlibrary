@@ -1,6 +1,8 @@
-import { SignJWT, jwtVerify, calculateJwkThumbprint, importJWK, exportJWK } from 'jose'
+// import { SignJWT, jwtVerify, calculateJwkThumbprint, importJWK, exportJWK } from 'jose'
 import * as minimist from 'minimist'
 import { config } from '@fl/config'
+import { JWT } from '@fl/tokens'
+
 ;(async () => {
   const argv = minimist(process.argv.slice(2))
 
@@ -21,16 +23,15 @@ import { config } from '@fl/config'
   }
 
   const sign = argv.sign && !argv.verify ? true : !argv.sign && !argv.verify ? true : false
-  const subject = argv.subject || 'Jz9uAKouzDfjEQ5bap1Tgu'
-  const payload = argv.payload ? JSON.parse(argv.payload) : JSON.parse('{"email": "someone@example.com"}')
+  const subject = argv.subject || '123'
+  const payload = argv.payload ? JSON.parse(argv.payload) : JSON.parse('{"email": "bob@example.com"}')
   const verify = argv.verify && !argv.sign ? true : false
-  const jwt =
+  const token =
     argv.jwt ||
-        'eyJhbGciOiJSUzI1NiIsImtpZCI6IjdLS3QxcDBBem9lWnVxV0REdWdfWWxFdFl5Y3Z6SUlqQ2FSd3VVY3c1d0kifQ.eyJlbWFpbCI6InNvbWVvbmVAZXhhbXBsZS5jb20iLCJzdWIiOiJKejl1QUtvdXpEZmpFUTViYXAxVGd1IiwiYXVkIjoidXJuOmZvcm1hdGxpYnJhcnk6YXBpIiwiaXNzIjoidXJuOmZvcm1hdGxpYnJhcnk6YXV0aCIsImlhdCI6MTY2OTE2MzQ5NiwiZXhwIjoxNjY5MTY0Mzk2fQ.nS8BDj-kklHxI9BpgIF6d0_hUMdKXW60S16ev_3JjUP_X8Wg1YWSB2eEFdjxoZzmeUVrI1CgN9jg2sZXfPOBRBEHu3SwspvgRYE2Izt_ko3BXha58k4g3DINQVsbXeB_k4l7IdVBt2IlEpSxLIF1qKNRXeIZE7zpExTM3JZIy6JcwVbwUUzD2Pyzd76W1Ev6BRB_Mj1v5E-KWpLh9aslecckF4fpcCTDUadmPHxLMs9KiZjFKgz4C9k1xY3iCmJHDsjgJFOmU8HBg4TvwzUqGyHlaha_6Ver6MRnAvIGnYrC91OqpWRVUi7XI_ShSzfYcqo0mWhu05Vdz9BFrHzswg'
+        'eyJhbGciOiJSUzI1NiIsImtpZCI6IjdLS3QxcDBBem9lWnVxV0REdWdfWWxFdFl5Y3Z6SUlqQ2FSd3VVY3c1d0kifQ.eyJlbWFpbCI6ImJvYkBleGFtcGxlLmNvbSIsInN1YiI6IjEyMyIsImF1ZCI6InVybjpmb3JtYXRsaWJyYXJ5OmFwaSIsImlzcyI6InVybjpmb3JtYXRsaWJyYXJ5OmF1dGgiLCJpYXQiOjE2Njk4NTk1NTcsImV4cCI6MTY2OTg2MDQ1N30.Zfsq7uH8gljVfUWTItvaRzt4GRt9Us95L4fjTvCxFBYDm48WcLv8V-S-g-ObpEUTGkdv2BwrdK8_x2kSDs2BLtjNyPTBGELhvzkPaT-dv0L1XOuiOwYBf42cfRe39mzTqnmeg3pLEXVUSioDpyWQk2HO4tFdEHCqWomiT8SFd9KEglITZu4RT72Fig7GcsZsmzR6mMAWGZX3I_5eTAjlbvUqy5yZM_Bnqnr4-WQZdkZP9SCZSIxoY3RW-1Bj8Nzkg9-MGTo6NI-ZVBqRoGe4BayUwtYuD4hGQ3CZmCE57_hW0rpxJmEg6mH_9V6ZgFwEjxVxSc1PNEz4IHPqt7LiBQ'
     const expires = argv.expires || '15m'
   const verbose = argv.verbose || false
 
-  // const algorithm = 'RS256'
   const issuer = 'urn:formatlibrary:auth'
   const audience = 'urn:formatlibrary:api'
 
@@ -38,56 +39,43 @@ import { config } from '@fl/config'
   verbose && console.log('jwks (private): ', privateJwks)
   const algorithm = privateJwks[0].alg || 'RS256'
 
-  const keys = await Promise.all(privateJwks.map((privateJwk) => importJWK(privateJwk, algorithm)))
-  verbose && console.log('keys (raw): ', keys)
-
-  const publicKeys = await Promise.all(keys.map((key) => exportJWK(key)))
-  verbose && console.log('jwks (public): ', publicKeys)
-
   if (sign) {
-    console.log('payload: ', payload)
-    const privateJwk = privateJwks[0]
-    verbose && console.log('jwk (private): ', privateJwk)
-    const kid = await calculateJwkThumbprint(privateJwk, 'sha256')
-    verbose && console.log('kid: ', kid)
-    const key = keys[0]
-    verbose && console.log('key (raw): ', key)
+      const jwt = new JWT({
+        algorithm,
+        issuer,
+        audience,
+        jwks: config.siteJWKS,
+        expires
+     })
 
-    let signed
+    let token
     try {
-      signed = await new SignJWT(payload)
-        .setProtectedHeader({ alg: algorithm, kid })
-        .setSubject(subject)
-        .setAudience(audience)
-        .setIssuer(issuer)
-        .setIssuedAt()
-        .setExpirationTime(expires)
-        .sign(key)
-    } catch (error) {
-      console.error(error)
-      throw new Error('Failed to sign JWT!')
+        token = await jwt.sign(subject, payload)
+    } catch (err) {
+        console.error(err)
+        throw new Error('Failed to sign JWT!')
     }
-    console.log('signed: ', signed)
+
+    console.log('token: ', token)
   }
 
   if (verify) {
-    console.log('jwt: ', jwt)
-    const publicKey = publicKeys[0]
-    verbose && console.log('jwk (public): ', publicKey)
-
-    const key = await importJWK(publicKey, algorithm)
-    verbose && console.log('publicKey (raw): ', key)
+    const jwt = new JWT({
+        algorithm,
+        issuer,
+        audience,
+        jwks: config.siteJWKS,
+        expires
+    })
 
     let claims
     try {
-      claims = await jwtVerify(jwt, key, {
-        issuer,
-        audience
-      })
-    } catch (error) {
-      console.error(error)
-      throw new Error('Failed to verify JWT!')
+        claims = await jwt.verify(token)
+    } catch (err) {
+        console.error(err)
+        throw new Error('Failed to verify JWT!')
     }
-    console.log('claims: ', claims && claims.payload)
+
+    console.log('claims: ', claims)
   }
 })()
