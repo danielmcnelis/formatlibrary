@@ -141,7 +141,8 @@ export const playersUpdateId = async (req, res, next) => {
 export const playersCreate = async (req, res, next) => {
     try {
         if (req.body.pfp) {
-            const buffer = req.body.pfp.replace(/^data:image\/png;base64,/, '')
+            const buffer = Buffer.from(req.body.pfp.replace(/^data:image\/\w+;base64,/, ''), 'base64')
+
             const s3 = new S3({
                 region: config.s3.region,
                 credentials: {
@@ -158,7 +159,6 @@ export const playersCreate = async (req, res, next) => {
             }).promise()
         
             console.log('uri', uri)
-            // fs.writeFileSync(`./public/images/pfps/${req.body.name}.png`, buffer, 'base64')
         }
 
         const alreadyExists = await Player.count({

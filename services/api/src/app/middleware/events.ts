@@ -321,8 +321,8 @@ export const eventsId = async (req, res, next) => {
 
 export const eventsCreate = async (req, res, next) => {
   try {
-    const buffer = req.body.bracket.replace(/^data:image\/png;base64,/, '')
-    // fs.writeFileSync(`https://cdn.formatlibrary.com/images/brackets/${req.body.abbreviation}.png`, buffer, 'base64')
+    const buffer = Buffer.from(req.body.bracket.replace(/^data:image\/\w+;base64,/, ''), 'base64')
+
     const s3 = new S3({
         region: config.s3.region,
         credentials: {
