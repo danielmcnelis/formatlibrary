@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const symbols = {
   Aqua: 'https://cdn.formatlibrary.com/images/symbols/aqua.png',
   Beast: 'https://cdn.formatlibrary.com/images/symbols/beast.png',
-  BeastWarrior: 'https://cdn.formatlibrary.com/images/beast-warrior.png',
+  BeastWarrior: 'https://cdn.formatlibrary.com/images/symbols/beast-warrior.png',
   Continuous: 'https://cdn.formatlibrary.com/images/symbols/continuous.png',
   Counter: 'https://cdn.formatlibrary.com/images/symbols/counter.png',
   Cyberse: 'https://cdn.formatlibrary.com/images/symbols/cyberse.png',
