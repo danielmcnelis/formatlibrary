@@ -7,14 +7,18 @@ export const camelize = (str) =>
 
 //CAPITALIZE
 export const capitalize = (str = '', eachWord = false) => {
-  if (!str) return
-  if (eachWord) {
-    const splt = str.split(/[ -]/).map((s) => capitalize(s))
-    return splt.join(' ')
-  } else {
-    const charZero = str.charAt(0) || ''
-    return charZero.toUpperCase() + str.slice(1)
-  }
+    if (!str) return
+    if (eachWord) {
+      return str.split(' ')
+        .map((s) => capitalize(s))
+        .join(' ')
+        .split('-')
+        .map((s) => capitalize(s))
+        .join('-')
+    } else {
+      const charZero = str.charAt(0) || ''
+      return charZero.toUpperCase() + str.slice(1)
+    }
 }
 
 //GET COOKIE
