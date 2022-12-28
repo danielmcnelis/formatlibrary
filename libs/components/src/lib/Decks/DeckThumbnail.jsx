@@ -18,6 +18,7 @@ export const DeckThumbnail = (props) => {
                   e.target.onerror = null
                   e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"
                 }}
+                alt={deck.leftCard}
               />
               <img 
                 className="deckThumbnail-image" 
@@ -26,6 +27,7 @@ export const DeckThumbnail = (props) => {
                   e.target.onerror = null
                   e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"
                 }}
+                alt={deck.centerCard}
               />
               <img 
                 className="deckThumbnail-image" 
@@ -34,6 +36,7 @@ export const DeckThumbnail = (props) => {
                   e.target.onerror = null
                   e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"
                 }}
+                alt={deck.rightCard}
               />
           </div>
         </div>

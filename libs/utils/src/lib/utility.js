@@ -9,7 +9,7 @@ export const camelize = (str) =>
 export const capitalize = (str = '', eachWord = false) => {
   if (!str) return
   if (eachWord) {
-    const splt = str.split(' ').map((s) => capitalize(s))
+    const splt = str.split(/[ -]/).map((s) => capitalize(s))
     return splt.join(' ')
   } else {
     const charZero = str.charAt(0) || ''
@@ -70,6 +70,7 @@ export const dateToVerbose = (date, long = true, ordinal = true, includeYear = t
 
 // ORDINALIZE
 export const ordinalize = (int) => {
+  if (!int) return '-'
   const suffixes = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th']
   switch (int % 100) {
     case 11:

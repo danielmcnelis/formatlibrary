@@ -9,7 +9,7 @@ export const DeckImage = (props) => {
     const displayName = fullName.length <= 17 ? fullName : fullName.slice(0, 17).split(' ').slice(0, -1).join(' ')
     const placement = ordinalize(deck.placement)
     const title = coverage ? `${deck.type} - ${displayName} - ${placement}` :
-      `${deck.type} - ${displayName} - ${deck.eventName}`
+      `${deck.type ? deck.type + ' - ' : ''}${displayName}${deck.eventName ? ' - ' + deck.eventName : ''}`
   
     return (
       <div className="DeckImage-box">
@@ -20,7 +20,7 @@ export const DeckImage = (props) => {
               <div id="main" className="DeckImages">
               <h4 style={{width}}>{title}</h4>
               <div id="main" style={{width, margin, padding}} className="deck-flexbox">
-                  <img src={`https://cdn.formatlibrary.com/images/decks/thumbnails/${deck.id}.png`}></img>
+                  <img src={`https://cdn.formatlibrary.com/images/decks/thumbnails/${deck.id}.png`} alt="deck"></img>
               </div>
               </div>
           </Link>
