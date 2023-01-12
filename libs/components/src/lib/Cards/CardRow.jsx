@@ -1,53 +1,5 @@
-/* eslint-disable max-statements */
 
 import { Link } from 'react-router-dom'
-
-const symbols = {
-  Aqua: 'https://cdn.formatlibrary.com/images/symbols/aqua.png',
-  Beast: 'https://cdn.formatlibrary.com/images/symbols/beast.png',
-  BeastWarrior: 'https://cdn.formatlibrary.com/images/symbols/beast-warrior.png',
-  Continuous: 'https://cdn.formatlibrary.com/images/symbols/continuous.png',
-  Counter: 'https://cdn.formatlibrary.com/images/symbols/counter.png',
-  Cyberse: 'https://cdn.formatlibrary.com/images/symbols/cyberse.png',
-  DARK: 'https://cdn.formatlibrary.com/images/symbols/dark.png',
-  Dinosaur: 'https://cdn.formatlibrary.com/images/symbols/dinosaur.png',
-  DIVINE: 'https://cdn.formatlibrary.com/images/symbols/divine.png',
-  DivineBeast: 'https://cdn.formatlibrary.com/images/symbols/divine-beast.png',
-  Dragon: 'https://cdn.formatlibrary.com/images/symbols/dragon.png',
-  EARTH: 'https://cdn.formatlibrary.com/images/symbols/earth.png',
-  Equip: 'https://cdn.formatlibrary.com/images/symbols/equip.png',
-  Fairy: 'https://cdn.formatlibrary.com/images/symbols/fairy.png',
-  Field: 'https://cdn.formatlibrary.com/images/symbols/field.png',
-  Fiend: 'https://cdn.formatlibrary.com/images/symbols/fiend.png',
-  FIRE: 'https://cdn.formatlibrary.com/images/symbols/fire.png',
-  Fish: 'https://cdn.formatlibrary.com/images/symbols/fish.png',
-  Insect: 'https://cdn.formatlibrary.com/images/symbols/insect.png',
-  LIGHT: 'https://cdn.formatlibrary.com/images/symbols/light.png',
-  LinkSymbol: 'https://cdn.formatlibrary.com/images/symbols/link.png',
-  Machine: 'https://cdn.formatlibrary.com/images/symbols/machine.png',
-  Normal: 'https://cdn.formatlibrary.com/images/symbols/normal.png',
-  Plant: 'https://cdn.formatlibrary.com/images/symbols/plant.png',
-  Psychic: 'https://cdn.formatlibrary.com/images/symbols/psychic.png',
-  Pyro: 'https://cdn.formatlibrary.com/images/symbols/pyro.png',
-  QuickPlay: 'https://cdn.formatlibrary.com/images/symbols/quick-play.png',
-  Rank: 'https://cdn.formatlibrary.com/images/symbols/rank.png',
-  Reptile: 'https://cdn.formatlibrary.com/images/symbols/reptile.png',
-  Ritual: 'https://cdn.formatlibrary.com/images/symbols/ritual.png',
-  Rock: 'https://cdn.formatlibrary.com/images/symbols/rock.png',
-  Scale: 'https://cdn.formatlibrary.com/images/symbols/Scale.png',
-  SeaSerpent: 'https://cdn.formatlibrary.com/images/symbols/sea-serpent.png',
-  Spell: 'https://cdn.formatlibrary.com/images/symbols/spell.png',
-  Spellcaster: 'https://cdn.formatlibrary.com/images/symbols/spellcaster.png',
-  Star: 'https://cdn.formatlibrary.com/images/symbols/star.png',
-  Thunder: 'https://cdn.formatlibrary.com/images/symbols/thunder.png',
-  Trap: 'https://cdn.formatlibrary.com/images/symbols/trap.png',
-  Warrior: 'https://cdn.formatlibrary.com/images/symbols/warrior.png',
-  WATER: 'https://cdn.formatlibrary.com/images/symbols/water.png',
-  WIND: 'https://cdn.formatlibrary.com/images/symbols/wind.png',
-  WingedBeast: 'https://cdn.formatlibrary.com/images/symbols/winged-beast.png',
-  Wyrm: 'https://cdn.formatlibrary.com/images/symbols/wyrm.png',
-  Zombie: 'https://cdn.formatlibrary.com/images/symbols/zombie.png'
-}
 
 export const CardRow = (props) => {
     const { card, status } = props
@@ -73,11 +25,13 @@ export const CardRow = (props) => {
     }
   
     const line = stats.join(' / ')
-    const symbol = symbols[card.attribute] || symbols[card.category]
+    const symbol = card.attribute ? `https://cdn.formatlibrary.com/images/symbols/${card.attribute.toLowerCase()}.png` :
+        `https://cdn.formatlibrary.com/images/symbols/${card.category.toLowerCase()}.png`
+
     const symbol2 = card.link ? `https://cdn.formatlibrary.com/images/arrows/${card.arrows}.png` :
-      card.xyz ? symbols.Rank :
-      category === 'Monster' ? symbols.Star :
-      card.icon ? symbols[card.icon.replace('-', '')] :
+      card.xyz ? `https://cdn.formatlibrary.com/images/symbols/rank.png` :
+      category === 'Monster' ? `https://cdn.formatlibrary.com/images/symbols/star.png` :
+      card.icon ? `https://cdn.formatlibrary.com/images/symbols/${card.icon.toLowerCase()}.png` :
       ''
   
     const line2 = card.link ? `Link ${rating}` :
@@ -85,7 +39,7 @@ export const CardRow = (props) => {
     category === 'Monster' ? `Level ${level}` :
     card.icon
   
-    const symbol3 = category === 'Monster' && card.type ? symbols[card.type.replace(/[\s-]/g, '')] : null
+    const symbol3 = category === 'Monster' && card.type ? `https://cdn.formatlibrary.com/images/symbols/${card.type.toLowerCase()}.png` : null
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
     const filePath = `https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`
     
@@ -216,7 +170,7 @@ export const CardRow = (props) => {
                               <tr>
                               <td height="25px" width="110px" style={{borderRight: '2px solid #CFDCE5', borderTop: '2px solid #CFDCE5'}}>
                                   <img
-                                  src={symbols.Scale}
+                                  src={`https://cdn.formatlibrary.com/images/symbols/scale.png`}
                                   height="24px"
                                   style={{verticalAlign: 'middle'}}
                                   alt="Scale"
@@ -262,7 +216,7 @@ export const CardRow = (props) => {
                                   style={{padding: '10px 20px 20px 10px', fontSize: '16px', borderTop: '2px solid #CFDCE5'}}
                               >
                                   {
-                                  card.normal ? <i>{card.description}</i> : card.description
+                                    card.normal ? <i>{card.description}</i> : card.description
                                   }
                               </td>
                               </tr>

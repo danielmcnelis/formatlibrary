@@ -6,7 +6,7 @@ const Event = require("../server/db/models/Event")
 const Iron = require("../server/db/models/Iron")
 const Membership = require("../server/db/models/Membership")
 const Player = require("../server/db/models/Player")
-const RatedPool = require("../server/db/models/RatedPool")
+const Pool = require("../server/db/models/Pool")
 const Server = require("../server/db/models/Server")
 const Stats = require("../server/db/models/Stats")
 
@@ -66,13 +66,13 @@ module.exports = {
     }
 
     // RATED POOLS
-    await queryInterface.sequelize.query(`ALTER TABLE "public"."ratedPools" ALTER COLUMN "playerId" TYPE character varying(255);`)
-    const ratedPools = await RatedPool.findAll()
-    for (let i = 0; i < ratedPools.length; i++) {
-        const ratedPool = ratedPools[i]
-        const player = await Player.findOne({ where: { id: ratedPool.playerId }})
+    await queryInterface.sequelize.query(`ALTER TABLE "public"."pools" ALTER COLUMN "playerId" TYPE character varying(255);`)
+    const pools = await Pool.findAll()
+    for (let i = 0; i < pools.length; i++) {
+        const pool = pools[i]
+        const player = await Player.findOne({ where: { id: pool.playerId }})
         if (!player || !player.uuid) continue
-        await ratedPool.update({ playerId: player.uuid })
+        await pool.update({ playerId: player.uuid })
     }
 
     // SERVERS

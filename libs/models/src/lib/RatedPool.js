@@ -2,7 +2,7 @@
 import { Sequelize } from 'sequelize'
 import { db } from './db'
 
-export const RatedPool = db.define('ratedPools', {
+export const Pool = db.define('pools', {
     name: {
         type: Sequelize.STRING
     },

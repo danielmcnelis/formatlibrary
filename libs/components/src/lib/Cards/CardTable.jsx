@@ -11,20 +11,6 @@ import { capitalize } from '@fl/utils'
 import { useMediaQuery } from 'react-responsive'
 import { useLocation } from 'react-router-dom'
 
-const symbols = {
-  Star: 'https://cdn.formatlibrary.com/images/symbols/star.png',
-}
-
-const { Star } = symbols
-
-const emojis = {
-  Calendar: 'https://cdn.formatlibrary.com/images/emojis/calendar.png',
-  Shield: 'https://cdn.formatlibrary.com/images/emojis/shield.png',
-  Swords: 'https://cdn.formatlibrary.com/images/emojis/swords.png'
-}
-
-const { Calendar, Shield, Swords } = emojis
-
 const now = new Date()
 
 export const CardTable = () => {
@@ -745,7 +731,7 @@ export const CardTable = () => {
                 <Slider
                   id="level"
                   type="range-slider"
-                  symbol={Star}
+                  symbol="https://cdn.formatlibrary.com/images/symbols/star.png"
                   label="Level"
                   step={1}
                   min={1}
@@ -757,7 +743,7 @@ export const CardTable = () => {
                 <Slider
                   id="atk"
                   type="range-slider"
-                  symbol={Swords}
+                  symbol="https://cdn.formatlibrary.com/images/emojis/swords.png"
                   label="ATK"
                   step={50}
                   min={0}
@@ -769,7 +755,7 @@ export const CardTable = () => {
                 <Slider
                   id="def"
                   type="range-slider"
-                  symbol={Shield}
+                  symbol="https://cdn.formatlibrary.com/images/emojis/shield.png"
                   label="DEF"
                   step={50}
                   min={0}
@@ -784,7 +770,7 @@ export const CardTable = () => {
                 <Slider
                   id="year"
                   type="continuous-slider"
-                  symbol={Calendar}
+                  symbol="https://cdn.formatlibrary.com/images/emojis/Calendar.png"
                   label="Year"
                   step={1}
                   min={2002}
@@ -797,7 +783,7 @@ export const CardTable = () => {
                 <Slider
                   id="month"
                   type="continuous-slider"
-                  symbol={Calendar}
+                  symbol="https://cdn.formatlibrary.com/images/emojis/Calendar.png"
                   label="Month"
                   step={1}
                   min={1}
@@ -810,7 +796,7 @@ export const CardTable = () => {
                 <Slider
                   id="day"
                   type="continuous-slider"
-                  symbol={Calendar}
+                  symbol="https://cdn.formatlibrary.com/images/emojis/Calendar.png"
                   label="Day"
                   step={1}
                   min={1}

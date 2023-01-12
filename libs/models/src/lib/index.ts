@@ -15,7 +15,7 @@ import { Matchup } from './Matchup'
 import { Membership } from './Membership'
 import { Player } from './Player'
 import { Print } from './Print'
-import { RatedPool } from './RatedPool'
+import { Pool } from './Pool'
 import { Role } from './Role'
 import { Server } from './Server'
 import { Set } from './Set'
@@ -44,6 +44,9 @@ Entry.belongsTo(Tournament)
 Tournament.hasMany(Entry)
 
 //EVENT
+Event.hasMany(BlogPost)
+BlogPost.belongsTo(Event)
+
 Event.hasMany(Deck)
 Deck.belongsTo(Event)
 
@@ -97,8 +100,8 @@ Print.belongsTo(Set)
 Set.hasMany(Print)
 
 //RATED POOL
-RatedPool.belongsTo(Player)
-Player.hasMany(RatedPool)
+Pool.belongsTo(Player)
+Player.hasMany(Pool)
 
 //ROLE
 Role.belongsTo(Membership)

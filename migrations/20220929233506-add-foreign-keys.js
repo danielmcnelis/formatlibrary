@@ -17,8 +17,8 @@ module.exports = {
     // MEMBERSHIPS
     await queryInterface.sequelize.query(`ALTER TABLE "public"."memberships" ADD CONSTRAINT "memberships_playerId_fkey" FOREIGN KEY ("playerId") REFERENCES "public"."players"("uuid") ON DELETE SET NULL ON UPDATE CASCADE;`)
     
-    // RATEDPOOLS
-    await queryInterface.sequelize.query(`ALTER TABLE "public"."ratedPools" ADD CONSTRAINT "ratedPools_playerId_fkey" FOREIGN KEY ("playerId") REFERENCES "public"."players"("uuid") ON DELETE SET NULL ON UPDATE CASCADE;`)
+    // POOLS
+    await queryInterface.sequelize.query(`ALTER TABLE "public"."pools" ADD CONSTRAINT "pools_playerId_fkey" FOREIGN KEY ("playerId") REFERENCES "public"."players"("uuid") ON DELETE SET NULL ON UPDATE CASCADE;`)
     
     // SERVERS
     await queryInterface.sequelize.query(`ALTER TABLE "public"."servers" ADD CONSTRAINT "servers_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "public"."players"("uuid") ON DELETE SET NULL ON UPDATE CASCADE;`)
@@ -38,8 +38,8 @@ module.exports = {
     await queryInterface.sequelize.query(`ALTER TABLE "public"."irons" DROP CONSTRAINT "irons_playerId_fkey";`)
     // DROP KEY FROM MEMBERSHIPS
     await queryInterface.sequelize.query(`ALTER TABLE "public"."memberships" DROP CONSTRAINT "memberships_playerId_fkey";`)
-    // DROP KEY FROM RATEDPOOLS
-    await queryInterface.sequelize.query(`ALTER TABLE "public"."ratedPools" DROP CONSTRAINT "ratedPools_playerId_fkey";`)
+    // DROP KEY FROM POOLS
+    await queryInterface.sequelize.query(`ALTER TABLE "public"."pools" DROP CONSTRAINT "pools_playerId_fkey";`)
     // DROP KEY FROM SERVERS
     await queryInterface.sequelize.query(`ALTER TABLE "public"."servers" DROP CONSTRAINT "servers_ownerId_fkey";`)
     // DROP KEY FROM STATS
