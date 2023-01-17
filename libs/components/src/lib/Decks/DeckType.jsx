@@ -13,12 +13,12 @@ const emojis = {
   Lock: 'https://cdn.formatlibrary.com/images/emojis/lock.png',
   Bow: 'https://cdn.formatlibrary.com/images/emojis/bow.png',
   Bolt: 'https://cdn.formatlibrary.com/images/emojis/bolt.png',
-  Palette: 'https://cdn.formatlibrary.com/images/emojis/palette.png',
+  Unicorn: 'https://cdn.formatlibrary.com/images/emojis/unicorn.png',
   Volcano: 'https://cdn.formatlibrary.com/images/emojis/volcano.png',
   Thinking: 'https://cdn.formatlibrary.com/images/emojis/thinking.png'
 }
 
-const { Helmet, Controller, Orb, Lock, Bow, Bolt, Volcano, Palette, Thinking } = emojis
+const { Helmet, Controller, Orb, Lock, Bow, Bolt, Volcano, Unicorn, Thinking } = emojis
 
 export const DeckType = () => {
     const [summary, setSummary] = useState({})
@@ -69,7 +69,7 @@ export const DeckType = () => {
       summary.deckCategory === 'Combo' ? Controller :
       summary.deckCategory === 'Control' ? Orb :
       summary.deckCategory === 'Lockdown' ? Lock :
-      summary.deckCategory === 'Elastic' ? Palette :
+      summary.deckCategory === 'Multiple' ? Unicorn :
       summary.deckCategory === 'Stun' ? Bolt :
       summary.deckCategory === 'Midrange' ? Bow :
       summary.deckCategory === 'Ramp' ? Volcano :

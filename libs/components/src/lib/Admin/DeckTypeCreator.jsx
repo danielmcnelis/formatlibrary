@@ -120,9 +120,9 @@ export const DeckTypeCreator = () => {
                     <option value="Aggro">Aggro</option>
                     <option value="Combo">Combo</option>
                     <option value="Control">Control</option>
-                    <option value="Elastic">Elastic</option>
                     <option value="Lockdown">Lockdown</option>
                     <option value="Midrange">Midrange</option>
+                    <option value="Multiple">Multiple</option>
                     <option value="Ramp">Ramp</option>
                     <option value="Stun">Stun</option>
                 </select>

@@ -11,7 +11,7 @@ const emojis = {
   Helmet: 'https://cdn.formatlibrary.com/images/emojis/helmet.png',
   Controller: 'https://cdn.formatlibrary.com/images/emojis/controller.png',
   Orb: 'https://cdn.formatlibrary.com/images/emojis/orb.png',
-  Palette: 'https://cdn.formatlibrary.com/images/emojis/palette.png',
+  Unicorn: 'https://cdn.formatlibrary.com/images/emojis/unicorn.png',
   Volcano: 'https://cdn.formatlibrary.com/images/emojis/volcano.png',
   Bow: 'https://cdn.formatlibrary.com/images/emojis/bow.png',
   Bolt: 'https://cdn.formatlibrary.com/images/emojis/bolt.png',
@@ -26,7 +26,7 @@ const emojis = {
   Eye: 'https://cdn.formatlibrary.com/images/emojis/eye.png'
 }
 
-const { Palette, Bolt, Bow, Volcano, Helmet, Controller, Orb, Lock, Thinking, First, Second, Third, Consolation, Heart, Disk, Eye } = emojis
+const { Unicorn, Bolt, Bow, Volcano, Helmet, Controller, Orb, Lock, Thinking, First, Second, Third, Consolation, Heart, Disk, Eye } = emojis
 
 export const SingleDeck = () => {
     const [deck, setDeck] = useState({})
@@ -85,9 +85,9 @@ export const SingleDeck = () => {
   const categoryImage = deck.category === 'Aggro' ? Helmet :
     deck.category === 'Combo' ? Controller :
     deck.category === 'Control' ? Orb :
-    deck.category === 'Elastic' ? Palette :
     deck.category === 'Lockdown' ? Lock :
     deck.category === 'Midrange' ? Bow :
+    deck.category === 'Multiple' ? Unicorn :
     deck.category === 'Ramp' ? Volcano :
     deck.category === 'Stun' ? Bolt :
     Thinking
