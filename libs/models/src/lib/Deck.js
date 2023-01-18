@@ -74,6 +74,9 @@ export const Deck = db.define('decks', {
   },
   linkExpiration: {
     type: Sequelize.DATE
+  },
+  url: {
+    type: Sequelize.STRING
   }
 })
 

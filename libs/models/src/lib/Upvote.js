@@ -3,6 +3,9 @@ import { Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const Upvote = db.define('upvotes', {
+  playerId: {
+    type: Sequelize.STRING
+  },
   contentType: {
     type: Sequelize.STRING
   },

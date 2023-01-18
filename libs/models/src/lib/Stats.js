@@ -12,6 +12,10 @@ export const Stats = db.define('stats', {
   backupElo: {
     type: Sequelize.FLOAT
   },
+  bestElo: {
+    type: Sequelize.FLOAT,
+    defaultValue: 500.0
+  },
   wins: {
     type: Sequelize.INTEGER,
     defaultValue: 0
@@ -21,6 +25,18 @@ export const Stats = db.define('stats', {
     defaultValue: 0
   },
   games: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  },
+  streak: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  },
+  bestStreak: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  },
+  vanquished: {
     type: Sequelize.INTEGER,
     defaultValue: 0
   },

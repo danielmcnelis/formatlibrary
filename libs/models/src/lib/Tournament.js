@@ -9,11 +9,17 @@ export const Tournament = db.define('tournaments', {
   name: {
     type: Sequelize.STRING
   },
+  abbreviation: {
+    type: Sequelize.STRING
+  },
   url: {
     type: Sequelize.STRING
   },
   formatName: {
     type: Sequelize.STRING
+  },
+  formatId: {
+    type: Sequelize.INTEGER
   },
   type: {
     type: Sequelize.STRING
