@@ -1,6 +1,7 @@
 
 import { Sequelize } from 'sequelize'
 import { db } from './db'
+//c
 
 export const Article = db.define('articles', {     
   title: {

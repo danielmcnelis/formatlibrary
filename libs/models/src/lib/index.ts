@@ -130,7 +130,7 @@ Player.hasMany(Upvote)
 Video.belongsTo(Player)
 Player.hasMany(Video)
 
-export {
+exports = {
   Article,
   BlogPost,
   Card,
