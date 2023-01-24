@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+pm2 start ~/code/formatlibrary/dist/services/bot/main.js --name bot 
