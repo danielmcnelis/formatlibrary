@@ -3,7 +3,7 @@
 
 //MODULE IMPORTS
 import axios from 'axios'
-import { Op } from 'sequelize'
+import {Op} from 'sequelize'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } from 'discord.js'
 import { Entry, Format, Match, Player, Stats, Server, Tournament } from '@fl/models'
 import { getIssues } from './deck.js'
