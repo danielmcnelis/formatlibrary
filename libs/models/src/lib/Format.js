@@ -37,5 +37,8 @@ export const Format = db.define('formats', {
   popular: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
+  },
+  category: {
+    type: Sequelize.STRING
   }
 })
