@@ -1,5 +1,5 @@
 
-import Canvas from 'canvas'
+const Canvas = require('canvas')
 import { S3 } from 'aws-sdk'
 import { Op } from 'sequelize'
 import { BlogPost, Card, Deck, DeckType, Entry, Player, Tournament, Server }  from '@fl/models'

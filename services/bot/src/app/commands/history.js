@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Format, Match, Player, Server, Stats } from '@fl/models'
-import QuickChart from 'quickchart-js'
+import { Format, Match, Player, Server } from '@fl/models'
+const QuickChart = require('quickchart-js')
 import { capitalize, hasAffiliateAccess } from '../functions/utility'
 import { Op } from 'sequelize'
 import { emojis } from '../emojis/emojis'

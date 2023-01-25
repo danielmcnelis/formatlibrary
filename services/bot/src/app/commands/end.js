@@ -6,7 +6,7 @@ import { isMod, hasPartnerAccess } from '../functions/utility'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { emojis } from '../emojis/emojis'
-import { composeThumbnails, createDecks } from '../functions/coverage'
+import { createDecks } from '../functions/coverage'
 
 export default {
 	data: new SlashCommandBuilder()

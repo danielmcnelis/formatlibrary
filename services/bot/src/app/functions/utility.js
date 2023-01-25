@@ -2,7 +2,7 @@
 //UTILITY FUNCTIONS
 
 //MODULE IMPORTS
-import { Canvas } from 'canvas'
+const Canvas = require('canvas')
 import { ActionRowBuilder, EmbedBuilder, AttachmentBuilder, StringSelectMenuBuilder } from 'discord.js'
 import { Op } from 'sequelize'
 import { Card, Membership, Player, Print, Role, Set, Stats, Status, Tournament } from '@fl/models'
