@@ -53,7 +53,9 @@ export const config = {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       redirectUrl: process.env.GOOGLE_REDIRECT_URL,
-      discoveryUrl: 'https://accounts.google.com/'
+      discoveryUrl: 'https://accounts.google.com/',
+      credentials: process.env.GOOGLE_CREDENTIALS,
+      redirectUris: ["urn:ietf:wg:oauth:2.0:oob","http://localhost"]
     },
     discord: {
       clientId: process.env.DISCORD_CLIENT_ID,

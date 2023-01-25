@@ -146,6 +146,7 @@ export {
   Matchup,
   Membership,
   Player,
+  Pool,
   Print,
   Role,
   Server,
