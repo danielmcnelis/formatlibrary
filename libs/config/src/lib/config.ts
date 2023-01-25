@@ -28,6 +28,10 @@ export const config = {
             host: process.env.SITE_HOST,
             port: process.env.SITE_PORT || 4330,
             proxy: process.env.SITE_PROXY
+        },
+        bot: {
+            token: process.env.DISCORD_BOT_TOKEN,
+            clientId: process.env.DISCORD_BOT_CLIENT_ID
         }
     },
     database: {
@@ -49,7 +53,9 @@ export const config = {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       redirectUrl: process.env.GOOGLE_REDIRECT_URL,
-      discoveryUrl: 'https://accounts.google.com/'
+      discoveryUrl: 'https://accounts.google.com/',
+      credentials: process.env.GOOGLE_CREDENTIALS,
+      redirectUris: ["urn:ietf:wg:oauth:2.0:oob","http://localhost"]
     },
     discord: {
       clientId: process.env.DISCORD_CLIENT_ID,
@@ -63,8 +69,17 @@ export const config = {
     challonge: {
       'Format Library': process.env.CHALLONGE_FORMAT_LIBRARY_API_KEY, // formatLibraryChallongeAPIKey or challongeAPIKeys.'Format Library'
       'GoatFormat.com': process.env.CHALLONGE_GOAT_FORMAT_API_KEY, // goatformatChallongeAPIKey or challongeAPIKeys.'GoatFormat.com'
-      'EdisonFormat.com': process.env.CHALLONGE_EDISON_FORMAT_API_KEY, // challongeAPIKeys.'EdisonFormat.com'
       'Crows Nest': process.env.CHALLONGE_CROWS_NEST_API_KEY // challongeAPIKeys.'Crows Nest'
+    },
+    tcgPlayer: {
+       accessToken: process.env.TCGPLAYER_ACCESS_TOKEN,
+       tokenType : process.env.TCGPLAYER_TOKEN_TYPE,
+       expiresId : process.env.TCGPLAYER_EXPIRES_IN,
+       username : process.env.TCGPLAYER_USERNAME,
+       issued : process.env.TCGPLAYER_ISSUED,
+       expires : process.env.TCGPLAYER_EXPIRES,
+       publicKey : process.env.TCGPLAYER_PUBLIC_KEY,
+       privateKey : process.env.TCGPLAYER_PRIVATE_KEY
     }
   }
   
