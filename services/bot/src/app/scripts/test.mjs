@@ -1,9 +1,9 @@
 
-import { getDeckType } from '../functions/deck'
+import { getDeckType } from '../functions/deck.js'
 import { Deck, DeckType, Entry, Server, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
-import { shuffleArray } from '../functions/utility'
+import { shuffleArray } from '../functions/utility.js'
 
 const testGetDeckType = async (eventId = '') => {
     const decks = await Deck.findAll({
