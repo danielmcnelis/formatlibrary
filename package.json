@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
-    "bot": "nx build bot && dotenv ./runbot",
+    "bot": "nx build bot --skip-nx-cache && dotenv ./runbot",
     "build": "nx build",
     "test": "nx test",
     "aws": "nx build formatlibrary && nx build site && nx build api && nx build auth && dotenv ./runsite && dotenv ./runapi && dotenv ./runauth",
