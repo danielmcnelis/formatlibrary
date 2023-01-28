@@ -1,11 +1,11 @@
 
-// const { getDeckType } = require('../functions/deck')
+import { getDeckType } from './deck'
 import { Deck, DeckType, Entry, Server, Stats, Tournament } from '@fl/models'
-const { Op } = require('sequelize')
-const axios = require('axios')
-const { shuffleArray } = require('./utility')
+import { Op } from 'sequelize'
+import axios from 'axios'
+import { shuffleArray } from './utility'
 
-const testGetDeckType = async (eventId = '') => {
+export const testGetDeckType = async (eventId = '') => {
     const decks = await Deck.findAll({
         where: {
             // eventId: eventId,
@@ -46,7 +46,7 @@ const testGetDeckType = async (eventId = '') => {
 }
 
 //SEED
-const testSeed = async (tournamentId = 12464468, shuffle = false) => {
+export const testSeed = async (tournamentId = 12464468, shuffle = false) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
     const server = await Server.findOne({ where: { name: 'GoatFormat.com' }})
 
@@ -120,5 +120,5 @@ const testSeed = async (tournamentId = 12464468, shuffle = false) => {
     }
 }
 
-testSeed()
+// testSeed()
 // testGetDeckType()
