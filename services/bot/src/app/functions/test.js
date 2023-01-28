@@ -46,9 +46,11 @@ export const testGetDeckType = async (eventId = '') => {
 }
 
 //SEED
-export const testSeed = async (tournamentId = 12464468, shuffle = false) => {
+export const testSeed = async (tournamentId = '12464468', shuffle = false) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
+    console.log('!!tournament', !!tournament)
     const server = await Server.findOne({ where: { name: 'GoatFormat.com' }})
+    console.log('!!server', !!server)
 
     if (shuffle) {
         try {
