@@ -1,8 +1,8 @@
 
 const { getDeckType } = require('../functions/deck')
-import { Deck, DeckType, Entry, Server, Stats, Tournament } from '@fl/models'
-import { Op } from 'sequelize'
-import axios from 'axios'
+const { Deck, DeckType, Entry, Server, Stats, Tournament } = require('@fl/models')
+const { Op } = require('sequelize')
+const axios = require('axios')
 const { shuffleArray } = require('../functions/utility')
 
 const testGetDeckType = async (eventId = '') => {
