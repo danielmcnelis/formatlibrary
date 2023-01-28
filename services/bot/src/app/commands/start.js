@@ -43,10 +43,10 @@ export default {
         const { id, url } = tournament
 
 		const unregCount = await Entry.count({ where: { participantId: null, tournamentId: id } })
-        if (unregCount) return interaction.reply({ content: 'One or more players is not registered with Challonge. Type **/purge** to remove them.'})
+        if (unregCount) return interaction.reply({ content: 'Error: One or more players is not registered with Challonge.'})
 
 		const entryCount = await Entry.count({ where: { tournamentId: id } })
-		if (!entryCount) return interaction.reply({ content: `Error: no entrants found.`})
+		if (!entryCount) return interaction.reply({ content: `Error: No entrants found.`})
 
         const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
         

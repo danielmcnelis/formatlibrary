@@ -646,6 +646,7 @@ export const seed = async (interaction, tournamentId, shuffle = false) => {
         const seeds = [...expEntries.sort((a, b) => b[2] - a[2]), ...shuffleArray(newbieEntries)]  
         let count = 0
         const results = []
+        let e = 0
     
         for (let i = 0; i < seeds.length; i++) {
             const participantId = seeds[i][0]
@@ -665,7 +666,12 @@ export const seed = async (interaction, tournamentId, shuffle = false) => {
                 results.push(`${name} is now the ${i+1} seed.`)
                 count++
             } catch (err) {
-                results.push(`Error: Failed to set ${name} (participantId: ${participantId}) as the ${i+1} seed.`)
+                e++
+                if (e >= (seeds.length / 4)) {
+                    results.push(`Error: Failed to set ${name} (participantId: ${participantId}) as the ${i+1} seed.`)
+                } else {
+                    i--
+                }
             }
         }
     
