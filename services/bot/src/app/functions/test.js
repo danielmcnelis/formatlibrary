@@ -3,7 +3,7 @@
 import { Deck, DeckType, Entry, Server, Stats, Tournament } from '@fl/models'
 const { Op } = require('sequelize')
 const axios = require('axios')
-const { shuffleArray } = require('../functions/utility')
+const { shuffleArray } = require('./utility')
 
 const testGetDeckType = async (eventId = '') => {
     const decks = await Deck.findAll({
