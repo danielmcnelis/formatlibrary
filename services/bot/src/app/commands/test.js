@@ -12,6 +12,7 @@ export default {
         .setDescription('Performs a test. 🧪'),
     async execute(interaction) {
         if (isProgrammer(interaction.member)) {
+            console.log('WTF')
             testSeed()
             await interaction.reply(emojis.yellow)
         } else {
