@@ -1,5 +1,5 @@
 
-const { getDeckType } = require('../functions/deck')
+// const { getDeckType } = require('../functions/deck')
 const { Deck, DeckType, Entry, Server, Stats, Tournament } = require('@fl/models')
 const { Op } = require('sequelize')
 const axios = require('axios')
