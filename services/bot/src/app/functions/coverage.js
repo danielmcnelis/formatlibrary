@@ -5,7 +5,7 @@ import { Op } from 'sequelize'
 import { BlogPost, Card, Deck, DeckType, Entry, Player, Tournament, Server }  from '@fl/models'
 import { capitalize, dateToVerbose } from './utility'
 import { getDeckType } from './deck'
-import { S3Keys } from '@fl/config'
+import { s3 as S3Keys } from '@fl/config'
 import { checkExpiryDate, uploadDeckFolder } from './drive'
 
 // CREATE DECKS
