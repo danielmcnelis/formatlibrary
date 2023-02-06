@@ -1,6 +1,6 @@
 
 const { Op } = require('sequelize')
-const { BlogPost, Card, Deck, DeckType, Entry, Event, Format, Iron, Match, Matchup, Membership, Player, RatedDeck, Pool, Server, Stats, Status, Tournament } = require('@fl/models')
+import { BlogPost, Card, Deck, DeckType, Entry, Event, Format, Iron, Match, Matchup, Membership, Player, RatedDeck, Pool, Server, Stats, Status, Tournament } from '@fl/models'
 const { capitalize } = require('../functions/utility')
 const axios = require('axios')
 const Canvas = require('canvas')
