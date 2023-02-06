@@ -1,13 +1,13 @@
 
-import { Op } from 'sequelize'
-import { BlogPost, Card, Deck, DeckType, Entry, Event, Format, Iron, Match, Matchup, Membership, Player, RatedDeck, Pool, Server, Stats, Status, Tournament } from '@fl/models'
-import { capitalize } from '../functions/utility'
-import axios from 'axios'
-import * as Canvas from 'canvas'
-import * as fs from 'fs'
-import sharp from 'sharp'
-import { S3 } from 'aws-sdk'
-import { config } from '@fl/config'
+const { Op } = require('sequelize')
+const { BlogPost, Card, Deck, DeckType, Entry, Event, Format, Iron, Match, Matchup, Membership, Player, RatedDeck, Pool, Server, Stats, Status, Tournament } = require('@fl/models')
+const { capitalize } = require('../functions/utility')
+const axios = require('axios')
+const Canvas = require('canvas')
+const fs = require('fs')
+const sharp = require('sharp')
+const { S3 } = require('aws-sdk')
+const { config } = require('@fl/config')
 
 const fixFormats = async () => {
     let b = 0
