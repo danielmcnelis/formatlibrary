@@ -329,6 +329,23 @@ export const displayDecks = async (interaction, event) => {
         await deck.update({ display: true })
     }
     
+    return interaction.channel.send(`Displayed ${decks.length} new deck lists for ${event.name}.`)
+}
+
+// PUBLISH DECKS
+export const publishDecks = async (interaction, event) => {
+    const decks = await Deck.findAll({
+        where: {
+            eventId: event.id,
+            publishDate: null
+        }
+    })
+
+    for (let i = 0; i < decks.length; i++) {
+        const deck = decks[i]
+        await deck.update({ publishDate: event.endDate })
+    }
+
     return interaction.channel.send(`Published ${decks.length} new deck lists for ${event.name}.`)
 }
 

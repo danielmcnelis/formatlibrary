@@ -3,7 +3,7 @@ import { SlashCommandBuilder } from 'discord.js'
 import { Event, Format, Player, Server } from '@fl/models'
 import { hasFullAccess, isMod } from '../functions/utility'
 import { Op } from 'sequelize'
-import { composeBlogPost, composeThumbnails, displayDecks } from '../functions/coverage'
+import { composeBlogPost, composeThumbnails, displayDecks, publishDecks } from '../functions/coverage'
 
 export default {
     data: new SlashCommandBuilder()
@@ -39,6 +39,7 @@ export default {
 
         interaction.reply(`Generating coverage for ${event.name}. Please wait.`)
         await displayDecks(interaction, event)
+        await publishDecks(interaction, event)
         await composeThumbnails(interaction, event)
         await composeBlogPost(interaction, event)
         return

@@ -892,7 +892,7 @@ const fixCards = async () => {
 // saveYDKs()
 // downloadYDKs()
 // fixPlayers()
-// fixDecks()
+fixDecks()
 // fixEntries()
 // fixIrons()
 // fixMatches()
