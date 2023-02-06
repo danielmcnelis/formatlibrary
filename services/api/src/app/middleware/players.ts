@@ -153,7 +153,7 @@ export const playersCreate = async (req, res, next) => {
         
             const { Location: uri} = await s3.upload({ 
                 Bucket: 'formatlibrary', 
-                Key: `images/brackets/${req.body.name}.png`, 
+                Key: `images/pfps/${req.body.name}.png`, 
                 Body: buffer,
                 ContentType: 'image/png'
             }).promise()
