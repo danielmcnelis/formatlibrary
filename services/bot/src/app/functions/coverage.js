@@ -274,10 +274,10 @@ export const composeThumbnails = async (interaction, event) => {
             
             const buffer = canvas.toBuffer('image/png')
             const s3 = new S3({
-                region: S3Keys.region,
+                region: config.s3.region,
                 credentials: {
-                    accessKeyId: S3Keys.credentials.accessKeyId,
-                    secretAccessKey: S3Keys.credentials.secretAccessKey
+                    accessKeyId: config.s3.credentials.accessKeyId,
+                    secretAccessKey: config.s3.credentials.secretAccessKey
                 }
             })
 
