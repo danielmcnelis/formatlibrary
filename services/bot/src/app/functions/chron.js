@@ -5,7 +5,7 @@ import { Card, Deck, Entry, Tournament, Match, Membership, Player, Print, Role, 
 import { createMembership, createPlayer } from './utility'
 import { Op } from 'sequelize'
 import { S3 } from 'aws-sdk'
-import { tcgPlayerAPI, S3Keys } from '@fl/config'
+import { config } from '@fl/config'
 
 // GET MIDNIGHT COUNTDOWN
 export const getMidnightCountdown = () => {
@@ -52,10 +52,10 @@ export const updateAvatars = async (client) => {
                         const buffer = await sharp(data).toFormat('png').toBuffer()
     
                         const s3 = new S3({
-                            region: S3Keys.region,
+                            region: config.s3.region,
                             credentials: {
-                                accessKeyId: S3Keys.credentials.accessKeyId,
-                                secretAccessKey: S3Keys.credentials.secretAccessKey
+                                accessKeyId: config.s3.credentials.accessKeyId,
+                                secretAccessKey: config.s3.credentials.secretAccessKey
                             }
                         })
     
@@ -385,7 +385,7 @@ export const findNewPrints = async (set, groupId) => {
         const { data } = await axios.get(endpoint, {
             headers: {
                 "Accept": "application/json",
-                "Authorization": `bearer ${tcgPlayerAPI.access_token}`
+                "Authorization": `bearer ${config.tcgPlayer.access_token}`
             }
         })
         
@@ -464,7 +464,7 @@ export const getNewGroupId = async (setId) => {
         const { data } = await axios.get(endpoint, {
             headers: {
                 "Accept": "application/json",
-                "Authorization": `bearer ${tcgPlayerAPI.access_token}`
+                "Authorization": `bearer ${config.tcgPlayer.access_token}`
             }
         })
     

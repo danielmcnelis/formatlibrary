@@ -7,7 +7,7 @@ import * as Canvas from 'canvas'
 import * as fs from 'fs'
 import sharp from 'sharp'
 import { S3 } from 'aws-sdk'
-import { S3Keys } from '@fl/config'
+import { config } from '@fl/config'
 
 const fixFormats = async () => {
     let b = 0
@@ -641,10 +641,10 @@ const purgePfps = async () => {
     let e = 0
 
     const s3 = new S3({
-        region: S3Keys.region,
+        region: config.s3.region,
         credentials: {
-            accessKeyId: S3Keys.credentials.accessKeyId,
-            secretAccessKey: S3Keys.credentials.secretAccessKey
+            accessKeyId: config.s3.credentials.accessKeyId,
+            secretAccessKey: config.s3.credentials.secretAccessKey
         }
     })
 
@@ -715,10 +715,10 @@ const fixPfps = async () => {
     let e = 0
 
     const s3 = new S3({
-        region: S3Keys.region,
+        region: config.s3.region,
         credentials: {
-            accessKeyId: S3Keys.credentials.accessKeyId,
-            secretAccessKey: S3Keys.credentials.secretAccessKey
+            accessKeyId: config.s3.credentials.accessKeyId,
+            secretAccessKey: config.s3.credentials.secretAccessKey
         }
     })
 

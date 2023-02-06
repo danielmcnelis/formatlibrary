@@ -5,7 +5,7 @@ import { Op } from 'sequelize'
 import { BlogPost, Card, Deck, DeckType, Entry, Player, Tournament, Server }  from '@fl/models'
 import { capitalize, dateToVerbose } from './utility'
 import { getDeckType } from './deck'
-import { s3 as S3Keys } from '@fl/config'
+import { config } from '@fl/config'
 import { checkExpiryDate, uploadDeckFolder } from './drive'
 
 // CREATE DECKS
@@ -202,10 +202,10 @@ export const composeBlogPost = async (interaction, event) => {
     
         const buffer = canvas.toBuffer('image/png')
         const s3 = new S3({
-            region: S3Keys.region,
+            region: config.s3.region,
             credentials: {
-                accessKeyId: S3Keys.credentials.accessKeyId,
-                secretAccessKey: S3Keys.credentials.secretAccessKey
+                accessKeyId: config.s3.credentials.accessKeyId,
+                secretAccessKey: config.s3.credentials.secretAccessKey
             }
         })
 

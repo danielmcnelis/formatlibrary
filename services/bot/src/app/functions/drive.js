@@ -1,7 +1,7 @@
 
 
 import { google as Google } from 'googleapis'
-import { google as credentials } from '@fl/config'       
+import { config } from '@fl/config'       
 import axios from 'axios'
 
 export const generateNewToken = async (server) => {
@@ -9,12 +9,12 @@ export const generateNewToken = async (server) => {
   const { refresh_token } = JSON.parse(server.googleToken)
   try {
     console.log('refresh_token', refresh_token)
-    console.log('installed.client_secret', credentials.client_secret)
-    console.log('installed.client_id', credentials.client_id)
+    console.log('installed.client_secret', config.google.client_secret)
+    console.log('installed.client_id', config.google.client_id)
 
     const { data } = await axios.post('https://www.googleapis.com/oauth2/v4/token', {
-      "installed.client_id": credentials.client_id,
-      "installed.client_secret": credentials.client_secret,
+      "installed.client_id": config.google.client_id,
+      "installed.client_secret": config.google.client_secret,
       "refresh_token": refresh_token,
       "grant_type": "refresh_token"
     })
@@ -49,9 +49,9 @@ export const uploadDeckFolder = async (server, tournamentName, decks) => {
     console.log('refresh_token', refresh_token)
 
     const oAuth2Client = new Google.auth.OAuth2(
-      credentials.client_id, 
-      credentials.client_secret, 
-      credentials.redirect_uris[0], 
+        config.google.client_id, 
+        config.google.client_secret, 
+        config.google.redirect_uris[0], 
       access_token, 
       refresh_token
     )
