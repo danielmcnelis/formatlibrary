@@ -44,6 +44,7 @@ export const deckTypesSummary = async (req, res, next) => {
       (acc, curr) => (acc[curr.formatName] ? acc[curr.formatName]++ : (acc[curr.formatName] = 1), acc),
       {}
     )
+    
     const sortedFreqs = Object.entries(freqs).sort((a: never, b: never) => b[1] - a[1])
     const topFormat = sortedFreqs[0][0]
     const format = await Format.findOne({

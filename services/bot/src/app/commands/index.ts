@@ -35,6 +35,7 @@ import profile from './profile'
 import queue from './queue'
 import rated from './rated'
 import recalculate from './recalculate'
+import records from './records'
 import remove from './remove'
 import rng from './rng'
 import role from './role'
@@ -85,6 +86,7 @@ export default {
     queue,
     rated,
     recalculate,
+    records,
     remove,
     rng,
     role,

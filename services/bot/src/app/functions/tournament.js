@@ -1121,7 +1121,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
         name.toLowerCase().includes('retro world') ? emojis.celtic :
         name.toLowerCase().includes('future world') ? emojis.farqred :
         name.toLowerCase().includes('blazing cheaters') ? emojis.speeder :
-        server.logo || emojis.emojis.legend
+        server.logo || emojis.legend
 
     try {
         const { status, data } = await axios({

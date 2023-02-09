@@ -1,0 +1,55 @@
+{
+  "name": "deploy-commands",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "scripts/deploy-commands",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/scripts/deploy-commands",
+        "main": "scripts/deploy-commands/src/main.ts",
+        "tsConfig": "scripts/deploy-commands/tsconfig.app.json"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "scripts/deploy-commands/src/environments/environment.ts",
+              "with": "scripts/deploy-commands/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["scripts/deploy-commands/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/scripts/deploy-commands"],
+      "options": {
+        "jestConfig": "scripts/deploy-commands/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "script": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["./node_modules/.bin/nx run deploy-commands:build", "node dist/scripts/deploy-commands/main.js"],
+        "parallel": false
+      }
+    }
+  },
+  "tags": []
+}

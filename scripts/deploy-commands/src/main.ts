@@ -1,9 +1,7 @@
 
-const { REST, Routes } = require('discord.js')
-const fs = require('fs')
-
-token: ,
-clientId: process.env.DISCORD_BOT_CLIENT_ID
+import { REST, Routes } from 'discord.js'
+import * as fs from 'fs'
+import { config } from '@fl/config'
 
 const discordBotToken = config.services.bot.token
 const clientId = config.services.bot.clientId
@@ -11,12 +9,12 @@ const clientId = config.services.bot.clientId
 // const guildId = '414551319031054346'
 const commands = [];
 // Grab all the command files from the commands directory you created earlier
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
+const commandFiles = fs.readdirSync('./services/bot/src/app/commands').filter(file => file.endsWith('.js'))
 
 // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
 for (const file of commandFiles) {
     if (file.includes('index')) continue
-	const command = require(`./commands/${file}`)
+	const command = require(`./services/bot/src/app/commands/${file}`)
 	commands.push(command.data.toJSON())
 }
 
@@ -24,12 +22,12 @@ for (const file of commandFiles) {
 const rest = new REST({ version: '10' }).setToken(discordBotToken);
 
 // and deploy your commands!
-(async () => {
+;(async () => {
 	try {
 		console.log(`Started refreshing ${commands.length} application (/) commands.`)
 
 		// The put method is used to fully refresh all commands in the guild with the current set
-		const data = await rest.put(
+		const data: any = await rest.put(
             Routes.applicationCommands(clientId),
             { body: commands },
 		);
