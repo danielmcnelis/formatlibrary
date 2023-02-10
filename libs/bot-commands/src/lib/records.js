@@ -66,19 +66,19 @@ export default {
             const outcome = match.winnerId === player.id ? 'Win' : 'Loss'
             const opponent = match.winnerId === player.id ? match.loser : match.winner
             const emoji = match.winnerId === player.id ? emojis.legend : emojis.mad
-            // const difference = now - match.createdAt
-            // const timeAgo = difference < 1000 * 60 * 60 ?  `${Math.round(difference / (1000 * 60))}m ago` :
-            //     difference >= 1000 * 60 * 60 && difference < 1000 * 60 * 60 * 24 ? `${Math.round(difference / (1000 * 60 * 60))}h ago` :
-            //     difference >= 1000 * 60 * 60 * 24 && difference < 1000 * 60 * 60 * 24 * 30 ? `${Math.round(difference / (1000 * 60 * 60 * 24))}d ago` :
-            //     difference >= 1000 * 60 * 60 * 24 * 30 && difference < 1000 * 60 * 60 * 24 * 365 ? `${Math.round(difference / (1000 * 60 * 60 * 24 * 30))}mo ago` :
-            //     `${Math.round(difference / (1000 * 60 * 60 * 24 * 365))}y ago`
+            const difference = now - match.createdAt
+            const timeAgo = difference < 1000 * 60 * 60 ?  `${Math.round(difference / (1000 * 60))}m ago` :
+                difference >= 1000 * 60 * 60 && difference < 1000 * 60 * 60 * 24 ? `${Math.round(difference / (1000 * 60 * 60))}h ago` :
+                difference >= 1000 * 60 * 60 * 24 && difference < 1000 * 60 * 60 * 24 * 30 ? `${Math.round(difference / (1000 * 60 * 60 * 24))}d ago` :
+                difference >= 1000 * 60 * 60 * 24 * 30 && difference < 1000 * 60 * 60 * 24 * 365 ? `${Math.round(difference / (1000 * 60 * 60 * 24 * 30))}mo ago` :
+                `${Math.round(difference / (1000 * 60 * 60 * 24 * 365))}y ago`
 
-            const record = `${outcome} ${emoji} (${sign}${delta}) vs ${opponent} - ${match.createdAt.toLocaleString()}`
+            const record = `${outcome} ${emoji} vs ${opponent} - ${timeAgo}, ${match.createdAt.toLocaleString()}`
             records.push(record)
         }
 
-        for (let i = 0; i < records.length; i+=30) {
-            interaction.member.send(records.slice(i, i+30).join('\n'))
+        for (let i = 0; i < records.length; i+=10) {
+            interaction.member.send(records.slice(i, i+10).join('\n'))
         }
 
         return interaction.reply(`Please check your DMs.`)
