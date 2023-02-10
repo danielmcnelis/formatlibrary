@@ -51,7 +51,7 @@ export default {
                 ],
                 serverId: serverId
             },
-            limit: 50,
+            limit: 250,
             order: [['createdAt', 'DESC']]
         })
 
@@ -61,8 +61,6 @@ export default {
 
         for (let i = 0; i < matches.length; i++) {
             const match = matches[i]
-            // const delta = Math.round(match.delta)
-            // const sign = match.winnerId === player.id ? '+' : '-'
             const outcome = match.winnerId === player.id ? 'Win' : 'Loss'
             const opponent = match.winnerId === player.id ? match.loser : match.winner
             const emoji = match.winnerId === player.id ? emojis.legend : emojis.mad
