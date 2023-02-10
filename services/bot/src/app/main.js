@@ -23,7 +23,6 @@ import { assignTourRoles, conductCensus, downloadNewCards, getMidnightCountdown,
 import { emojis } from '@fl/bot-emojis'
 import commands from '@fl/bot-commands'
 client.commands = new Collection()
-Object.values(commands).forEach((command) => console.log('command.data.name', command.data.name))
 Object.values(commands).forEach((command) => client.commands.set(command.data.name, command))
 
 // GLOBAL VARIABLES

@@ -40,7 +40,6 @@ export default {
         const discordId = user.id
         const player = await Player.findOne({ where: { discordId: discordId } })
         if (!player) return interaction.reply({ content: "That user is not in the database."})
-        const records = [`__**${format.name} Format ${format.emoji} - Last ${x} Match Records**__`]
         const serverId = server.internalLadder ? server.id : '414551319031054346'
 
         const matches = await Match.findAll({
@@ -52,11 +51,13 @@ export default {
                 ],
                 serverId: serverId
             },
-            limit: x,
+            limit: 50,
             order: [['createdAt', 'DESC']]
         })
 
-        const now = Date.now()
+        const records = [`__**${player.name}'s Last ${matches.length} ${format.name} Format ${format.emoji} Matches**__`]
+
+        // const now = Date.now()
 
         for (let i = 0; i < matches.length; i++) {
             const match = matches[i]
@@ -65,14 +66,14 @@ export default {
             const outcome = match.winnerId === player.id ? 'Win' : 'Loss'
             const opponent = match.winnerId === player.id ? match.loser : match.winner
             const emoji = match.winnerId === player.id ? emojis.legend : emojis.mad
-            const difference = now - match.createdAt
-            const timeAgo = difference < 1000 * 60 * 60 ?  `${Math.round(difference / (1000 * 60))} minute(s)` :
-                difference >= 1000 * 60 * 60 && difference < 1000 * 60 * 60 * 24 ? `${Math.round(difference / (1000 * 60 * 60))} hour(s)` :
-                difference >= 1000 * 60 * 60 * 24 && difference < 1000 * 60 * 60 * 24 * 30 ? `${Math.round(difference / (1000 * 60 * 60 * 24))} day(s)` :
-                difference >= 1000 * 60 * 60 * 24 * 30 && difference < 1000 * 60 * 60 * 24 * 365 ? `${Math.round(difference / (1000 * 60 * 60 * 24 * 30))} month(s)` :
-                `${Math.round(difference / (1000 * 60 * 60 * 24 * 365))} year(s)`
+            // const difference = now - match.createdAt
+            // const timeAgo = difference < 1000 * 60 * 60 ?  `${Math.round(difference / (1000 * 60))}m ago` :
+            //     difference >= 1000 * 60 * 60 && difference < 1000 * 60 * 60 * 24 ? `${Math.round(difference / (1000 * 60 * 60))}h ago` :
+            //     difference >= 1000 * 60 * 60 * 24 && difference < 1000 * 60 * 60 * 24 * 30 ? `${Math.round(difference / (1000 * 60 * 60 * 24))}d ago` :
+            //     difference >= 1000 * 60 * 60 * 24 * 30 && difference < 1000 * 60 * 60 * 24 * 365 ? `${Math.round(difference / (1000 * 60 * 60 * 24 * 30))}mo ago` :
+            //     `${Math.round(difference / (1000 * 60 * 60 * 24 * 365))}y ago`
 
-            const record = `${outcome} ${emoji} vs ${opponent} (${sign}${delta}) - ${timeAgo}`
+            const record = `${outcome} ${emoji} (${sign}${delta}) vs ${opponent} - ${match.createdAt.toLocaleString()}`
             records.push(record)
         }
 
