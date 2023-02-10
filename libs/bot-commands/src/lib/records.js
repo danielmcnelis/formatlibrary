@@ -50,9 +50,9 @@ export default {
                     { winnerId: player.id }, 
                     { loserId: player.id }
                 ],
-                limit: x,
                 serverId: serverId
             },
+            limit: x,
             order: [['createdAt', 'DESC']]
         })
 
