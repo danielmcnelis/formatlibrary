@@ -57,12 +57,12 @@ export default {
 
         const records = [`__**${player.name}'s Last ${matches.length} ${format.name} Format ${format.emoji} Matches**__`]
 
-        // const now = Date.now()
+        const now = Date.now()
 
         for (let i = 0; i < matches.length; i++) {
             const match = matches[i]
-            const delta = Math.round(match.delta)
-            const sign = match.winnerId === player.id ? '+' : '-'
+            // const delta = Math.round(match.delta)
+            // const sign = match.winnerId === player.id ? '+' : '-'
             const outcome = match.winnerId === player.id ? 'Win' : 'Loss'
             const opponent = match.winnerId === player.id ? match.loser : match.winner
             const emoji = match.winnerId === player.id ? emojis.legend : emojis.mad
