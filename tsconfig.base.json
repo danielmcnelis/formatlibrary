@@ -15,6 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@fl/bot-commands": ["libs/bot-commands/src/index.ts"],
+      "@fl/bot-emojis": ["libs/bot-emojis/src/index.ts"],
+      "@fl/bot-functions": ["libs/bot-functions/src/index.ts"],
       "@fl/components": ["libs/components/src/index.ts"],
       "@fl/config": ["libs/config/src/index.ts"],
       "@fl/errors": ["libs/errors/src/index.ts"],

@@ -11,16 +11,19 @@ import { client } from './client'
 import { Membership, Player, Server } from '@fl/models'
 
 // FUNCTION IMPORTS
-import { assignTourRoles, conductCensus, downloadNewCards, getMidnightCountdown, markInactives, purgeEntries, purgeRatedDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateSets, updateServers } from './functions/chron.js' 
-import { fixDeckFolder } from './functions/coverage' 
-import { calculateStandings, checkTimer, closeTournament, createTournament, dropFromTournament, initiateStartTournament, joinTournament, openTournament, processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, startTournament } from './functions/tournament' 
-import { undoMatch } from './functions/undo' 
-import { assignRoles, createMembership, createPlayer, fetchCardNames, hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, isNewUser, setTimers } from './functions/utility.js' 
+import { assignTourRoles, conductCensus, downloadNewCards, getMidnightCountdown, markInactives, purgeEntries, 
+    purgeRatedDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateSets, updateServers, fixDeckFolder,
+    calculateStandings, checkTimer, closeTournament, createTournament, dropFromTournament, initiateStartTournament, 
+    joinTournament, openTournament, processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, 
+    signupForTournament, startTournament, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, 
+    hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, isNewUser, setTimers
+} from '@fl/bot-functions' 
 
 // STATIC IMPORTS
-import { emojis } from './emojis/emojis'
-import commands from './commands'
+import { emojis } from '@fl/bot-emojis'
+import commands from '@fl/bot-commands'
 client.commands = new Collection()
+Object.values(commands).forEach((command) => console.log('command.data.name', command.data.name))
 Object.values(commands).forEach((command) => client.commands.set(command.data.name, command))
 
 // GLOBAL VARIABLES

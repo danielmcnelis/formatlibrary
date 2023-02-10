@@ -2,11 +2,8 @@
 const { REST, Routes } = require('discord.js')
 const fs = require('fs')
 
-token: ,
-clientId: process.env.DISCORD_BOT_CLIENT_ID
-
-const discordBotToken = config.services.bot.token
-const clientId = config.services.bot.clientId
+const discordBotToken = process.env.DISCORD_BOT_TOKEN
+const clientId = process.env.DISCORD_BOT_CLIENT_ID
 
 // const guildId = '414551319031054346'
 const commands = [];
