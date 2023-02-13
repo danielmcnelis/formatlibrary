@@ -73,7 +73,7 @@ export default {
 
         interaction.reply({ content: `Please check your DMs.` })
         const deckAttachments = await drawDeck(entry.ydk) || []
-        const ydkFile = new AttachmentBuilder(entry.ydk.toBuffer(), { name: `${player.discordName}#${player.discriminator}.ydk` })
+        const ydkFile = new AttachmentBuilder(entry.ydk, { name: `${player.discordName}#${player.discriminator}.ydk` })
         return interaction.member.send({ content: `${player.name}'s deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
     }
 }
