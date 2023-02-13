@@ -10,7 +10,7 @@ import { checkExpiryDate, uploadDeckFolder } from './drive'
 
 // CREATE DECKS
 export const createDecks = async (event, data) => {
-    let b = 0 
+    let b = 0
     let c = 0
     let e = 0
     

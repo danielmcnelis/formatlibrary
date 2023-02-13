@@ -4,7 +4,7 @@
 //MODULE IMPORTS
 import axios from 'axios'
 import {Op} from 'sequelize'
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } from 'discord.js'
+import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } from 'discord.js'
 import { Entry, Format, Match, Player, Stats, Server, Tournament } from '@fl/models'
 import { getIssues } from './deck.js'
 import { capitalize, drawDeck, generateRandomString, shuffleArray } from './utility.js'
@@ -133,8 +133,9 @@ export const sendDeck = async (interaction, entryId) => {
     const entry = await Entry.findOne({ where: { id: entryId }, include: [Player, Tournament] })
     interaction.reply({ content: `Please check your DMs.` })
     const deckAttachments = await drawDeck(entry.ydk) || []
+    const ydkFile = new AttachmentBuilder(entry.ydk.toBuffer(), { name: `${entry.player.discordName}#${entry.player.discriminator}.ydk` })
     const isAuthor = interaction.user.id === entry.player.discordId
-    return interaction.member.send({ content: `${isAuthor ? `${entry.player.name}\'s` : 'Your'} deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments]}).catch((err) => console.log(err))
+    return interaction.member.send({ content: `${isAuthor ? `${entry.player.name}\'s` : 'Your'} deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
 }
 
 // SELECT TOURNAMENT FOR DECK CHECK

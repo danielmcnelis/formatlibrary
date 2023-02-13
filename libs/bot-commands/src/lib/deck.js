@@ -1,5 +1,5 @@
 
-import { SlashCommandBuilder } from 'discord.js'
+import { AttachmentBuilder, SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Server, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import { selectTournamentForDeckCheck } from '@fl/bot-functions'
@@ -73,6 +73,7 @@ export default {
 
         interaction.reply({ content: `Please check your DMs.` })
         const deckAttachments = await drawDeck(entry.ydk) || []
-        return interaction.member.send({ content: `${player.name}\'s deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments]}).catch((err) => console.log(err))
+        const ydkFile = new AttachmentBuilder(entry.ydk.toBuffer(), { name: `${player.discordName}#${player.discriminator}.ydk` })
+        return interaction.member.send({ content: `${player.name}'s deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
     }
 }
