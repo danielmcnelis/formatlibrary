@@ -14,6 +14,13 @@ export const BanListCreator = () => {
     const [newStatus, setNewStatus] = useState(null)
     const [cards, setCards] = useState([])
 
+    let currentYear = new Date().getFullYear()
+    const years = []
+    while (currentYear >= 2002) {
+        years.push(currentYear)
+        currentYear--
+    }
+
     // RESET
     const reset = async () => {
         setMonth(null)  
@@ -138,27 +145,9 @@ export const BanListCreator = () => {
                     onChange={(e) => setYear(e.target.value)}
                 >
                     <option value={null}></option>
-                    <option value="22">2022</option>
-                    <option value="21">2021</option>
-                    <option value="20">2020</option>
-                    <option value="19">2019</option>
-                    <option value="18">2018</option>
-                    <option value="17">2017</option>
-                    <option value="16">2016</option>
-                    <option value="15">2015</option>
-                    <option value="14">2014</option>
-                    <option value="13">2013</option>
-                    <option value="12">2012</option>
-                    <option value="11">2011</option>
-                    <option value="10">2010</option>
-                    <option value="09">2009</option>
-                    <option value="08">2008</option>
-                    <option value="07">2007</option>
-                    <option value="06">2006</option>
-                    <option value="05">2005</option>
-                    <option value="04">2004</option>
-                    <option value="03">2003</option>
-                    <option value="02">2002</option>
+                    {
+                        years.map((year) => <option value={year.toString().slice(-2)}>{year}</option>)
+                    }
                 </select>
             </label>
 
