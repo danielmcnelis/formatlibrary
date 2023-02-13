@@ -135,7 +135,7 @@ export const sendDeck = async (interaction, entryId) => {
     const deckAttachments = await drawDeck(entry.ydk) || []
     const ydkFile = new AttachmentBuilder(entry.ydk, { name: `${entry.player.discordName}#${entry.player.discriminator}.ydk` })
     const isAuthor = interaction.user.id === entry.player.discordId
-    return interaction.member.send({ content: `${isAuthor ? `${entry.player.name}\'s` : 'Your'} deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
+    return interaction.member.send({ content: `${isAuthor ? `${entry.player.name}\'s` : 'Your'} deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ...ydkFile]}).catch((err) => console.log(err))
 }
 
 // SELECT TOURNAMENT FOR DECK CHECK
