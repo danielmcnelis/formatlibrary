@@ -20,6 +20,7 @@ export const BanListCreator = () => {
         years.push(currentYear)
         currentYear--
     }
+    console.log('years', years)
 
     // RESET
     const reset = async () => {
