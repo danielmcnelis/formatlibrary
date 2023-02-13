@@ -60,7 +60,7 @@ export const DeckCreator = () => {
                 display: display
             })
 
-            alert(`Success! New Event: https://formatlibrary.com/decks/${data.id}`)
+            alert(`Success! New Deck: https://formatlibrary.com/decks/${data.id}`)
             return reset()
         } catch (err) {
             console.log(err)
