@@ -115,7 +115,6 @@ export const BanListCreator = () => {
 
     return (
         <div className="admin-portal">
-
             <label>Month:
                 <select
                     id="month"
