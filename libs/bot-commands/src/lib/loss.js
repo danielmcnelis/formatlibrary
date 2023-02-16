@@ -18,7 +18,6 @@ export default {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        interaction.deferReply()
         const opponent = interaction.options.getUser('opponent')
         const member = await interaction.guild.members.fetch(interaction.user.id)
         const winner = await interaction.guild.members.fetch(opponent.id)
@@ -27,7 +26,7 @@ export default {
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
     
-            if (!hasAffiliateAccess(server)) return interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+            if (!hasAffiliateAccess(server)) return interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
     
             const format = await Format.findOne({
                 where: {
@@ -38,8 +37,10 @@ export default {
                 }
             })
     
-        if (!format) return interaction.editReply({ content: `Try using /loss in channels like: <#414575168174948372> or <#629464112749084673>.`})
-        if (opponent.id === interaction.user.id) return interaction.editReply({ content: `You cannot lose a match to yourself.`})
+        if (!format) return interaction.reply({ content: `Try using /loss in channels like: <#414575168174948372> or <#629464112749084673>.`})
+        if (opponent.id === interaction.user.id) return interaction.reply({ content: `You cannot lose a match to yourself.`})
+        
+        interaction.reply(`Processing match report. Please wait.`)
         if (await isNewUser(opponent.id)) await createPlayer(winner)
         const winningPlayer = await Player.findOne({ where: { discordId: opponent.id } })
         const serverId = server.internalLadder ? server.id : '414551319031054346'
