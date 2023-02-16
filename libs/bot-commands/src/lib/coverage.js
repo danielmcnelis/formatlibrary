@@ -16,6 +16,7 @@ export default {
                 .setRequired(true)
         ),
     async execute(interaction) {
+        interaction.deferReply()
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })

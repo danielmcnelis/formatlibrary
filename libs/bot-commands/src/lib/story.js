@@ -11,6 +11,7 @@ export default {
 		.setName('story')
 		.setDescription('Posts the Iron Story. 📖'),
 	async execute(interaction) {
+        interaction.deferReply()
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })

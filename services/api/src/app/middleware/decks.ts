@@ -338,7 +338,8 @@ export const decksGallery = async (req, res, next) => {
     const decks = await Deck.findAll({
       where: {
         formatName: { [Op.iLike]: req.params.format },
-        type: { [Op.not]: 'Other' }
+        type: { [Op.not]: 'Other' },
+        origin: 'event'
       },
       attributes: ['id', 'type', 'deckTypeId']
     })
@@ -398,6 +399,7 @@ export const decksFrequent = async (req, res, next) => {
     const decks = await Deck.findAll({
       where: {
         playerId: req.params.id,
+        origin: 'event',
         type: { [Op.not]: 'Other' }
       },
       attributes: ['id', 'type', 'formatName']
@@ -468,6 +470,7 @@ export const decksPlayer = async (req, res, next) => {
     const decks = await Deck.findAll({
       where: {
         playerId: req.params.id,
+        origin: 'event',
         display: true
       },
       attributes: ['placement', 'eventId', 'eventName', 'publishDate'],
@@ -487,8 +490,7 @@ export const decksLike = async (req, res, next) => {
   try {
     const deck = await Deck.findOne({
       where: {
-        id: req.params.id,
-        display: true
+        id: req.params.id
       },
       attributes: ['id', 'display', 'rating']
     })
@@ -505,8 +507,7 @@ export const decksDownload = async (req, res, next) => {
   try {
     const deck = await Deck.findOne({
       where: {
-        id: req.params.id,
-        display: true
+        id: req.params.id
       },
       attributes: ['id', 'display', 'ydk', 'downloads']
     })

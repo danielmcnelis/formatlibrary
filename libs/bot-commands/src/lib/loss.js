@@ -18,6 +18,7 @@ export default {
                 .setRequired(true)
         ),
     async execute(interaction) {
+        interaction.deferReply()
         const opponent = interaction.options.getUser('opponent')
         const member = await interaction.guild.members.fetch(interaction.user.id)
         const winner = await interaction.guild.members.fetch(opponent.id)
@@ -135,7 +136,6 @@ export default {
                         isTournamentMatch = true
                         if (tournament.state === 'pending') return interaction.reply({ content: `Sorry, ${tournament.name} has not started yet.`})
                         if (tournament.state !== 'underway') return interaction.reply({ content: `Sorry, ${tournament.name} is not underway.`})
-                        interaction.reply(`Processing tournament match result. Please wait.`)
                         const success = await processMatchResult(server, interaction, winner, winningPlayer, interaction.member, losingPlayer, tournament)
                         if (!success) return
                     } else {

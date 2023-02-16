@@ -23,6 +23,7 @@ export default {
                 .setRequired(true)
         ),
     async execute(interaction) {
+        interaction.deferReply()
         const winner = interaction.options.getUser('winner')
         const winningMember = await interaction.guild.members.fetch(winner.id)
 
