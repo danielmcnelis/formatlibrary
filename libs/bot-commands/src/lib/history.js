@@ -21,7 +21,7 @@ export default {
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
         
-        if (!hasAffiliateAccess(server)) return interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         
         const format = await Format.findOne({
             where: {
@@ -32,15 +32,15 @@ export default {
             }
         })
 
-        if (!format) return interaction.reply({ content: `Try using **/history** in channels like: <#414575168174948372> or <#629464112749084673>.`})  
+        if (!format) return await interaction.reply({ content: `Try using **/history** in channels like: <#414575168174948372> or <#629464112749084673>.`})  
 
         let x = 250
-        if (x > 2500) return interaction.reply({ content: "Please provide a number less than or equal to 2500."})
+        if (x > 2500) return await interaction.reply({ content: "Please provide a number less than or equal to 2500."})
         
         const user = interaction.options.getUser('player') || interaction.user    
         const discordId = user.id
         const player = await Player.findOne({ where: { discordId: discordId } })
-        if (!player) return interaction.reply({ content: "That user is not in the database."})
+        if (!player) return await interaction.reply({ content: "That user is not in the database."})
         let eloHistory = [500]
         const serverId = server.internalLadder ? server.id : '414551319031054346'
 
@@ -188,7 +188,7 @@ export default {
                 const url = await chart.getShortUrl()
                 const channel = interaction.guild.channels.cache.get(server.botSpamChannel)
                 if (!channel) {
-                    return interaction.reply({ content: `Error: could not find bot-spam channel.`})
+                    return await interaction.reply({ content: `Error: could not find bot-spam channel.`})
                 } else if (i === 0) {
                     interaction.reply({ content: `The chart(s) you requested will appear in <#${botSpamChannel}>.`})
                 }

@@ -16,10 +16,10 @@ export default {
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
 
-        if (!hasPartnerAccess(server)) return interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
 
         const player = await Player.findOne({ where: { discordId: interaction.user.id }})
-        if (!player) return interaction.reply({ content: `You are not in the database.`})
+        if (!player) return await interaction.reply({ content: `You are not in the database.`})
 
         const format = await Format.findOne({
             where: {
@@ -41,7 +41,7 @@ export default {
             })
         ].map((e) => e.tournament)
 
-        if (!tournaments.length) return interaction.reply({ content: `You are not in an active ${format ? `${format.name} tournament` : 'tournament'}.`})
+        if (!tournaments.length) return await interaction.reply({ content: `You are not in an active ${format ? `${format.name} tournament` : 'tournament'}.`})
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
 
@@ -59,7 +59,7 @@ export default {
                 if (match.winnerId === player.id || match.loserId === player.id) success = true 
             })
 
-            if (!success) return interaction.reply({ content: `If you played a match, please report the result before dropping. Otherwise ask a Moderator to remove you.`})
+            if (!success) return await interaction.reply({ content: `If you played a match, please report the result before dropping. Otherwise ask a Moderator to remove you.`})
         }
 
         const entry = await Entry.findOne({ 

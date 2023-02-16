@@ -16,6 +16,6 @@ export default {
         const duelingBook = interaction.options.getString('name')
         const player =  await Player.findOne({ where: { discordId: interaction.user.id } })
         await player.update({ duelingBook })
-        return interaction.reply({ content: `Your DuelingBook username has been set to: ${player.duelingBook}.`})
+        return await interaction.reply({ content: `Your DuelingBook username has been set to: ${player.duelingBook}.`})
 	}
 }

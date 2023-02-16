@@ -10,12 +10,13 @@ export default {
 		.setName('close')
 		.setDescription('Close tournament registration. 🔐'),
 	async execute(interaction) {
+        await interaction.deferReply()
         const server = !interaction.guildId ? {} : 
         await Server.findOne({ where: { id: interaction.guildId }}) || 
         await Server.create({ id: interaction.guildId, name: interaction.guild.name })
 
-        if (!hasPartnerAccess(server)) return interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return interaction.reply({ content: 'You do not have permission to do that.'})
+        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
         
         const format = await Format.findOne({
             where: {
@@ -38,6 +39,6 @@ export default {
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
         await tournament.update({ state: 'standby'})
-        return interaction.reply({ content: `Registration for ${tournament.name} ${tournament.logo} is now closed.`})
+        return await interaction.editReply({ content: `Registration for ${tournament.name} ${tournament.logo} is now closed.`})
 	}
 }

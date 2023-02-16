@@ -25,6 +25,6 @@ export default {
             )
             
         interaction.user.send({ embeds: [botEmbed] }).catch((err) => console.log(err))
-        return interaction.reply({ content: "I messaged you the RetroBot User Guide."})
+        return await interaction.reply({ content: "I messaged you the RetroBot User Guide."})
 	}
 }

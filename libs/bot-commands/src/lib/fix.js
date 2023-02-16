@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { isProgrammer } from '@fl/bot-functions'
-import { Deck, Player, Tournament } from '@fl/models'
+import { Deck, Player, Server, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import { selectTournament } from '@fl/bot-functions'
 import { checkExpiryDate, uploadDeckFolder } from '@fl/bot-functions'
@@ -11,6 +11,7 @@ export default {
         .setName('fix')
         .setDescription('Fix an issue. 🛠️'),
     async execute(interaction) {
+        await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
             const tournaments = await Tournament.findAll({
                 where: {
@@ -22,6 +23,10 @@ export default {
 
             const tournament = await selectTournament(interaction, tournaments)
             if (!tournament) return
+
+            const server = await Server.findOne({ where: {
+                id: interaction.guildId
+            }})
 
             const decks = await Deck.findAll({
                 where: {
@@ -35,13 +40,13 @@ export default {
             try {
                 await checkExpiryDate(server)
                 await uploadDeckFolder(server, tournament.name, decks)
-                return interaction.reply({ content: `Your tournament files have been uploaded! ${server.logo}` })
+                return await interaction.editReply({ content: `Your tournament files have been uploaded! ${server.logo}` })
             } catch (err) {
                 console.log(err)
-                return interaction.reply({ content: `Error. Check bot logs.` })
+                return await interaction.editReply({ content: `Error. Check bot logs.` })
             }
         } else {
-            return interaction.reply('🛠️')
+            return await interaction.editReply('🛠️')
         }
     }
 }

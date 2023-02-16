@@ -11,11 +11,12 @@ export default {
         .setName('standings')
         .setDescription('Post Swiss tournament standings. ⏰'),
     async execute(interaction) {
+        await interaction.deferReply()
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
         
-        if (!hasPartnerAccess(server)) return interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         
         const format = await Format.findOne({
             where: {
@@ -36,13 +37,13 @@ export default {
             order: [['createdAt', 'ASC']]
         })
 
-        if (!tournaments.length && format) return interaction.reply({ content: `There are no active ${format.name} ${server.emoji || format.emoji} Swiss tournaments.`})
-        if (!tournaments.length && !format) return interaction.reply({ content: `There are no active Swiss tournaments.`})
+        if (!tournaments.length && format) return await interaction.editReply({ content: `There are no active ${format.name} ${server.emoji || format.emoji} Swiss tournaments.`})
+        if (!tournaments.length && !format) return await interaction.editReply({ content: `There are no active Swiss tournaments.`})
         
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
 
-        interaction.reply(`Calculating standings, please wait.`)
+        interaction.editReply(`Calculating standings, please wait.`)
 
         const matches = await getMatches(server, tournament.id)
         const participants = await getParticipants(server, tournament.id)

@@ -12,8 +12,8 @@ export default {
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
     
-        if (!hasAffiliateAccess(server)) return interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return interaction.reply({ content: "You do not have permission to do that."})
+        if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!isMod(server, interaction.member)) return await interaction.reply({ content: "You do not have permission to do that."})
 
         const botEmbed = new EmbedBuilder()
 	        .setColor('#38C368')
@@ -28,6 +28,6 @@ export default {
             )
 
         interaction.user.send({ embeds: [botEmbed] }).catch((err) => console.log(err))
-        return interaction.reply({ content: "I messaged you the RetroBot Moderator Guide."})
+        return await interaction.reply({ content: "I messaged you the RetroBot Moderator Guide."})
 	}
 }

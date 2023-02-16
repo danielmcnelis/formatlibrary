@@ -16,6 +16,7 @@ export default {
                 .setRequired(false)
         ),
     async execute(interaction) {
+        await interaction.deferReply()
         const user = interaction.options.getUser('player')
         
         const server = !interaction.guildId ? {} : 
@@ -42,9 +43,9 @@ export default {
             order: [["createdAt", "ASC"]]
         })
 
-        if (!user) return interaction.reply({ content: `Player not found.` })
+        if (!user) return await interaction.editReply({ content: `Player not found.` })
         const discordId = user.id
-        if (!isMod(server, interaction.member)) return interaction.reply({ content: `You do not have permission to do that.` })
+        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.` })
 
         const player = await Player.findOne({ where: { discordId: discordId } })
         if (!player) return
@@ -71,9 +72,9 @@ export default {
         const entry = await selectTournamentForDeckCheck(interaction, entries, format)
         if (!entry) return
 
-        interaction.reply({ content: `Please check your DMs.` })
+        interaction.editReply({ content: `Please check your DMs.` })
         const deckAttachments = await drawDeck(entry.ydk) || []
         const ydkFile = new AttachmentBuilder(Buffer.from(entry.ydk), { name: `${player.discordName}#${player.discriminator}_${entry.tournament.abbreviation || entry.tournament.name}.ydk` })
-        return interaction.member.send({ content: `${player.name}'s deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
+        return await interaction.member.send({ content: `${player.name}'s deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
     }
 }

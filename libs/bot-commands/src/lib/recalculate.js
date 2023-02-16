@@ -18,8 +18,8 @@ export default {
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
     
-        if (!hasAffiliateAccess(server)) return interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return interaction.reply({ content: `You do not have permission to do that.`})
+        if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!isMod(server, interaction.member)) return await interaction.reply({ content: `You do not have permission to do that.`})
         
         const format = await Format.findOne({
             where: {
@@ -30,7 +30,7 @@ export default {
             }
         })
     
-        if (!format) return interaction.reply({ content: `Try using **/recalculate** in channels like: <#414575168174948372> or <#629464112749084673>.`})
+        if (!format) return await interaction.reply({ content: `Try using **/recalculate** in channels like: <#414575168174948372> or <#629464112749084673>.`})
         
         const serverId = server.internalLadder ? server.id : '414551319031054346'
         const count = await Match.count({ where: { format: format.name, serverId: serverId }})
@@ -114,7 +114,7 @@ export default {
             console.log(`${format.name} Match ${i+1}: ${winnerStats.player.name} > ${loserStats.player.name}`)
         }
 
-        return interaction.channel.send({ content: `Recalculation complete!`})	
+        return await interaction.channel.send({ content: `Recalculation complete!`})	
     }
 }
 

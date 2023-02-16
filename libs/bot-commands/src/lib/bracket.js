@@ -14,7 +14,7 @@ export default {
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
         
-        if (!hasPartnerAccess(server)) return interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         
         const format = await Format.findOne({
             where: {
@@ -34,8 +34,8 @@ export default {
             order: [['createdAt', 'ASC']]
         })
 
-        if (!tournaments.length && format) return interaction.reply({ content: `There are no active ${format.name} ${server.emoji || format.emoji} tournaments.`})
-        if (!tournaments.length && !format) return interaction.reply({ content: `There are no active tournaments.`})
+        if (!tournaments.length && format) return await interaction.reply({ content: `There are no active ${format.name} ${server.emoji || format.emoji} tournaments.`})
+        if (!tournaments.length && !format) return await interaction.reply({ content: `There are no active tournaments.`})
         
         const results = []
         for (let i = 0; i < tournaments.length; i++) {
@@ -48,6 +48,6 @@ export default {
             )
         }
 
-        return interaction.reply({ content: results.join('\n\n').toString() })
+        return await interaction.reply({ content: results.join('\n\n').toString() })
     }
 }

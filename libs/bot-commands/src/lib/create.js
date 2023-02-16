@@ -15,8 +15,8 @@ export default {
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
         
-        if (!hasPartnerAccess(server)) return interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return interaction.reply({ content: 'You do not have permission to do that.'})
+        if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        if (!isMod(server, interaction.member)) return await interaction.reply({ content: 'You do not have permission to do that.'})
 
         const format = await Format.findOne({
             where: {

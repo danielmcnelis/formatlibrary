@@ -11,11 +11,12 @@ export default {
 		.setName('join')
 		.setDescription('Join a tournament. ✅'),
 	async execute(interaction) {
+        await interaction.deferReply()
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
 
-        if (!hasPartnerAccess(server)) return interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
 
         let format = await Format.findOne({
             where: {
@@ -36,15 +37,15 @@ export default {
         })
         
         const player = await Player.findOne({ where: { discordId: interaction.user.id }})
-        if (!player) return interaction.reply({ content: `You are not in the database.`})
+        if (!player) return await interaction.editReply({ content: `You are not in the database.`})
         
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
 
         const entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournament.id }})
         if (!format) format = await Format.findOne({ where: { name: {[Op.iLike]: tournament.formatName } }})
-        if (!format) return interaction.reply(`Unable to determine what format is being played in ${tournament.name}. Please contact an administrator.`)
-        interaction.reply({ content: `Please check your DMs.` })
+        if (!format) return await interaction.editReply(`Unable to determine what format is being played in ${tournament.name}. Please contact an administrator.`)
+        interaction.editReply({ content: `Please check your DMs.` })
         
         const dbName = player.duelingBook ? player.duelingBook : await askForDBName(interaction.member, player)
         if (!dbName) return
@@ -55,7 +56,7 @@ export default {
         if (!entry) {
             try {                                
               const { participant } = await postParticipant(server, tournament, player)
-              if (!participant) return interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
+              if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
               
               await Entry.create({
                   playerName: player.name,
@@ -69,15 +70,15 @@ export default {
               const deckAttachments = await drawDeck(ydk) || []
               interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
               interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in the tournament! FYI, this is the deck you submitted:`, files: [...deckAttachments] }).catch((err) => console.log(err))
-              return interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+              return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
             } catch (err) {
               console.log(err)
-              return interaction.member.send({ content: `${emojis.high_alert} Error: Could not save information to the RetroBot Database. ${emojis.high_alert}`})
+              return await interaction.member.send({ content: `${emojis.high_alert} Error: Could not save information to the RetroBot Database. ${emojis.high_alert}`})
             }
         } else if (entry.active === false) {
             try {                                
                 const { participant } = await postParticipant(server, tournament, player)
-                if (!participant) return interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}. ${emojis.high_alert}`})
+                if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}. ${emojis.high_alert}`})
                 
                 await entry.update({
                     url: url,
@@ -89,10 +90,10 @@ export default {
                 const deckAttachments = await drawDeck(ydk) || []
                 interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
                 interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in the tournament! FYI, this is the deck you submitted:`, files: [...deckAttachments] }).catch((err) => console.log(err))
-                return interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+                return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
             } catch (err) {
                 console.log(err)
-                return interaction.member.send({ content: `${emojis.high_alert} Error: Could not save information to the RetroBot Database. ${emojis.high_alert} `})
+                return await interaction.member.send({ content: `${emojis.high_alert} Error: Could not save information to the RetroBot Database. ${emojis.high_alert} `})
             }
         } else {
             try {
@@ -100,10 +101,10 @@ export default {
 
                 const deckAttachments = await drawDeck(ydk) || []
                 interaction.member.send({ content: `Thanks! I have your updated deck list for the tournament:`, files: [...deckAttachments] }).catch((err) => console.log(err))
-                return interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> resubmitted their deck list for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+                return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> resubmitted their deck list for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
             } catch (err) {
                 console.log(err)
-                return interaction.member.send({ content: `${emojis.high_alert} Error: Could not save information to the RetroBot Database. ${emojis.high_alert}`}).catch((err) => console.log(err))
+                return await interaction.member.send({ content: `${emojis.high_alert} Error: Could not save information to the RetroBot Database. ${emojis.high_alert}`}).catch((err) => console.log(err))
             }
         }
 	}

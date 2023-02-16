@@ -10,11 +10,12 @@ export default {
         .setName('undo')
         .setDescription(`Undo a match result. ⏪`),                
     async execute(interaction) {
+        await interaction.deferReply()
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
     
-        if (!hasAffiliateAccess(server)) return interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         
         const format = await Format.findOne({
             where: {
@@ -25,8 +26,8 @@ export default {
             }
         })
     
-        if (!format) return interaction.reply({ content: `Try using **/undo** in channels like: <#414575168174948372> or <#629464112749084673>.`})
-        if (!hasAffiliateAccess(server)) return interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!format) return await interaction.editReply({ content: `Try using **/undo** in channels like: <#414575168174948372> or <#629464112749084673>.`})
+        if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         const serverId = server.internalLadder ? server.id : '414551319031054346'
         
         const matches = await Match.findAll({ where: { format: format.name, serverId: serverId }, order: [['createdAt', 'DESC']]})
@@ -42,9 +43,9 @@ export default {
         const losingPlayer = await Player.findOne({ where: { id: loserId } })
         const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, format: format.name, serverId: serverId } })
 
-        if (interaction.user.id !== losingPlayer.discordId) return interaction.reply({ content: `You did not participate in the last recorded match. Please get a Moderator to help you.`})
-        if (!winnerStats.backupElo) return interaction.reply({ content: `Your last opponent, ${winningPlayer.name}, has no backup stats. Please get a Moderator to help you.`})
-        if (!loserStats.backupElo) return interaction.reply({ content: `You have no backup stats. Please get a Moderator to help you.`})
+        if (interaction.user.id !== losingPlayer.discordId) return await interaction.editReply({ content: `You did not participate in the last recorded match. Please get a Moderator to help you.`})
+        if (!winnerStats.backupElo) return await interaction.editReply({ content: `Your last opponent, ${winningPlayer.name}, has no backup stats. Please get a Moderator to help you.`})
+        if (!loserStats.backupElo) return await interaction.editReply({ content: `You have no backup stats. Please get a Moderator to help you.`})
 
         winnerStats.elo = winnerStats.backupElo
         winnerStats.backupElo = null
@@ -59,6 +60,6 @@ export default {
         await loserStats.save()
 
         await match.destroy()
-        return interaction.reply({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${format.name} match in which ${winningPlayer.name} defeated ${losingPlayer.name} has been erased. ${server.emoji || format.emoji}`})	
+        return await interaction.editReply({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${format.name} match in which ${winningPlayer.name} defeated ${losingPlayer.name} has been erased. ${server.emoji || format.emoji}`})	
     }
 }

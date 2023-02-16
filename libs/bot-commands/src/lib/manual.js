@@ -1,8 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { isMod, isNewUser, hasAffiliateAccess, isIronPlayer, isTourPlayer } from '@fl/bot-functions'
-import { postStory } from '@fl/bot-functions'
-import { checkPairing, getMatches, processMatchResult, selectTournament } from '@fl/bot-functions'
+import { postStory, isMod, isNewUser, hasAffiliateAccess, isIronPlayer, isTourPlayer, checkPairing, getMatches, processMatchResult, selectTournament } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Entry, Format, Iron, Match, Matchup, Player, Pool, Server, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
@@ -23,7 +21,7 @@ export default {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        interaction.deferReply()
+        await interaction.deferReply()
         const winner = interaction.options.getUser('winner')
         const winningMember = await interaction.guild.members.fetch(winner.id)
 
@@ -34,8 +32,8 @@ export default {
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
     
-        if (!hasAffiliateAccess(server)) return interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return interaction.reply({ content: `You do not have permission to do that.`})
+        if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
         
         const format = await Format.findOne({
             where: {
@@ -46,12 +44,12 @@ export default {
             }
         })
     
-        if (!format) return interaction.reply({ content: `Try using **/manual** in channels like: <#414575168174948372> or <#629464112749084673>.`})
+        if (!format) return await interaction.editReply({ content: `Try using **/manual** in channels like: <#414575168174948372> or <#629464112749084673>.`})
         
         const winnerDiscordId = winner.id
         const loserDiscordId = loser.id	
-        if (winnerDiscordId === loserDiscordId) return interaction.reply({ content: `Please specify 2 different players.`})
-        if ((winner.bot) ||  (loser.bot)  ) return interaction.reply({ content: `Sorry, Bots do not play ${format.name} Format... *yet*.`})
+        if (winnerDiscordId === loserDiscordId) return await interaction.editReply({ content: `Please specify 2 different players.`})
+        if ((winner.bot) ||  (loser.bot)  ) return await interaction.editReply({ content: `Sorry, Bots do not play ${format.name} Format... *yet*.`})
 
         if (await isNewUser(winnerDiscordId)) await createPlayer(winningMember)
         if (await isNewUser(loserDiscordId)) await createPlayer(losingMember)
@@ -66,8 +64,8 @@ export default {
         if (!lCount) await Stats.create({ playerId: losingPlayer.id, format: format.name, serverId: serverId, internal: server.internalLadder })
         const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, format: format.name, serverId: serverId } })
 
-        if (!losingPlayer || !loserStats) return interaction.reply({ content: `Sorry, <@${loserDiscordId}> is not in the database.`})
-        if (!winningPlayer || !winnerStats) return interaction.reply({ content: `Sorry, <@${winnerDiscordId}> is not in the database.`})
+        if (!losingPlayer || !loserStats) return await interaction.editReply({ content: `Sorry, <@${loserDiscordId}> is not in the database.`})
+        if (!winningPlayer || !winnerStats) return await interaction.editReply({ content: `Sorry, <@${winnerDiscordId}> is not in the database.`})
 
         const loserHasTourRole = await isTourPlayer(server, losingMember)
         const winnerHasTourRole = await isTourPlayer(server, winningMember)
@@ -147,9 +145,8 @@ export default {
                     const tournament = await selectTournament(interaction, tournaments, interaction.user.id)
                     if (tournament) {
                         isTournamentMatch = true
-                        if (tournament.state === 'pending' || tournament.state === 'standby') return interaction.reply({ content: `Sorry, ${tournament.name} has not started yet.`})
-                        if (tournament.state !== 'underway') return interaction.reply({ content: `Sorry, ${tournament.name} is not underway.`})
-                        interaction.reply(`Processing tournament match result. Please wait.`)
+                        if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
+                        if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
                         const success = await processMatchResult(server, interaction, winningMember, winningPlayer, losingMember, losingPlayer, tournament)
                         if (!success) return
                     } else {
@@ -190,7 +187,7 @@ export default {
                 await ironPersonA.save()
                 setTimeout(() => postStory(interaction.channel, format), 5000)
             } else {
-                return interaction.reply({ content: `Sorry, ${winningPlayer.name} is not ${losingPlayer.name}'s ${format.name} Iron opponent. ${server.emoji || format.emoji} ${emojis.iron}`})
+                return await interaction.editReply({ content: `Sorry, ${winningPlayer.name} is not ${losingPlayer.name}'s ${format.name} Iron opponent. ${server.emoji || format.emoji} ${emojis.iron}`})
             }
         }
         
@@ -257,10 +254,6 @@ export default {
             await rPTU.update({ status: 'pending' })
         }
 
-        if (!interaction.replied) {
-            return interaction.reply({ content: `A manual ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournamentMatch ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss by <@${losingPlayer.discordId}> to <@${winningPlayer.discordId}> has been recorded.`})		
-        } else {
-            return interaction.channel.send({ content: `A manual ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournamentMatch ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss by <@${losingPlayer.discordId}> to <@${winningPlayer.discordId}> has been recorded.`})		
-        }
+        return await interaction.editReply({ content: `A manual ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournamentMatch ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss by <@${losingPlayer.discordId}> to <@${winningPlayer.discordId}> has been recorded.`})		
     }
 }

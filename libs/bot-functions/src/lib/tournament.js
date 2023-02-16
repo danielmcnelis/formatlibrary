@@ -131,17 +131,17 @@ export const getDeckList = async (member, player, format, override = false) => {
 // SEND DECK
 export const sendDeck = async (interaction, entryId) => {
     const entry = await Entry.findOne({ where: { id: entryId }, include: [Player, Tournament] })
-    interaction.reply({ content: `Please check your DMs.` })
+    interaction.editReply({ content: `Please check your DMs.` })
     const deckAttachments = await drawDeck(entry.ydk) || []
     const ydkFile = new AttachmentBuilder(Buffer.from(entry.ydk), { name: `${entry.player.discordName}#${entry.player.discriminator}_${entry.tournament.abbreviation || entry.tournament.name}.ydk` })
     const isAuthor = interaction.user.id === entry.player.discordId
-    return interaction.member.send({ content: `${isAuthor ? `${entry.player.name}\'s` : 'Your'} deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ...ydkFile]}).catch((err) => console.log(err))
+    return await interaction.member.send({ content: `${isAuthor ? `${entry.player.name}\'s` : 'Your'} deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ...ydkFile]}).catch((err) => console.log(err))
 }
 
 // SELECT TOURNAMENT FOR DECK CHECK
 export const selectTournamentForDeckCheck = async (interaction, entries, format) => {
     if (entries.length === 0) {
-        interaction.reply(`That player is not registered for any ${format.name} format ${format.emoji} tournaments in this server.`)
+        interaction.editReply(`That player is not registered for any ${format.name} format ${format.emoji} tournaments in this server.`)
         return false
     } else if (entries.length === 1) {
         return entries[0]
@@ -161,7 +161,7 @@ export const selectTournamentForDeckCheck = async (interaction, entries, format)
                     .addOptions(...options),
             )
     
-        interaction.reply({ content: `Please select a tournament:`, components: [row] })
+        interaction.editReply({ content: `Please select a tournament:`, components: [row] })
         return false
     }
 }
@@ -170,7 +170,7 @@ export const selectTournamentForDeckCheck = async (interaction, entries, format)
 // SELECT TOURNAMENT
 export const selectTournament = async (interaction, tournaments) => {
     if (tournaments.length === 0) {
-        interaction.reply({ content: `There is no tournament that meets this criteria.` })
+        interaction.editReply({ content: `There is no tournament that meets this criteria.` })
         return false
     } else if (tournaments.length === 1)  {
         return tournaments[0]
@@ -192,7 +192,7 @@ export const selectTournament = async (interaction, tournaments) => {
                     .addOptions(...options),
             )
     
-        interaction.reply({ content: `Please select a tournament:`, components: [row] })
+        interaction.editReply({ content: `Please select a tournament:`, components: [row] })
         return false
     }
 }
@@ -201,14 +201,14 @@ export const selectTournament = async (interaction, tournaments) => {
 export const closeTournament = async (interaction, tournamentId) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
     await tournament.update({ state: 'standby' })
-    return interaction.reply({ content: `Registration for ${tournament.name} ${tournament.logo} is now closed.`})
+    return await interaction.editReply({ content: `Registration for ${tournament.name} ${tournament.logo} is now closed.`})
 }
 
 // OPEN TOURNAMENT
 export const openTournament = async (interaction, tournamentId) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
     await tournament.update({ state: 'pending' })
-    return interaction.reply({ content: `Registration for ${tournament.name} ${tournament.logo} is now open.`})
+    return await interaction.editReply({ content: `Registration for ${tournament.name} ${tournament.logo} is now open.`})
 }
 
 // JOIN TOURNAMENT 
@@ -233,8 +233,8 @@ export const joinTournament = async (interaction, tournamentId) => {
 
     const entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournamentId }})
     const format = await Format.findOne({ where: { name: {[Op.iLike]: tournament.formatName } }})
-    if (!format) return interaction.reply(`Unable to determine what format is being played in ${tournament.name}. Please contact an administrator.`)
-    interaction.reply({ content: `Please check your DMs.` })
+    if (!format) return await interaction.editReply(`Unable to determine what format is being played in ${tournament.name}. Please contact an administrator.`)
+    interaction.editReply({ content: `Please check your DMs.` })
     
     const dbName = player.duelingBook ? player.duelingBook : await askForDBName(interaction.member, player)
     if (!dbName) return
@@ -244,7 +244,7 @@ export const joinTournament = async (interaction, tournamentId) => {
     if (!entry) {
         try {                                
           const { participant } = await postParticipant(server, tournament, player)
-          if (!participant) return interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
+          if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
           
           await Entry.create({
               playerName: player.name,
@@ -258,15 +258,15 @@ export const joinTournament = async (interaction, tournamentId) => {
           const deckAttachments = await drawDeck(ydk) || []
           interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
           interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in the tournament! FYI, this is the deck you submitted:`, files: [...deckAttachments] }).catch((err) => console.log(err))
-          return interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+          return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
         } catch (err) {
           console.log(err)
-          return interaction.member.send({ content: `Error: Could not access database.`})
+          return await interaction.member.send({ content: `Error: Could not access database.`})
         }
     } else if (entry.active === false) {
         try {                                
             const { participant } = await postParticipant(server, tournament, player)
-            if (!participant) return interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
+            if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
             
             await entry.update({
                 url: url,
@@ -278,10 +278,10 @@ export const joinTournament = async (interaction, tournamentId) => {
             const deckAttachments = await drawDeck(ydk) || []
             interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in the tournament! FYI, this is the deck you submitted:`, files: [...deckAttachments] }).catch((err) => console.log(err))
-            return interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+            return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
         } catch (err) {
             console.log(err)
-            return interaction.member.send({ content: `Error: Could not access database.`})
+            return await interaction.member.send({ content: `Error: Could not access database.`})
         }
     } else {
         try {
@@ -289,10 +289,10 @@ export const joinTournament = async (interaction, tournamentId) => {
 
             const deckAttachments = await drawDeck(ydk) || []
             interaction.member.send({ content: `Thanks! I have your updated deck list for the tournament:`, files: [...deckAttachments] }).catch((err) => console.log(err))
-            return interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> resubmitted their deck list for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+            return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> resubmitted their deck list for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
         } catch (err) {
             console.log(err)
-            return interaction.member.send({ content: `Error: Could not access database.`}).catch((err) => console.log(err))
+            return await interaction.member.send({ content: `Error: Could not access database.`}).catch((err) => console.log(err))
         }
     }
 }
@@ -323,8 +323,8 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
 
     const entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournamentId }})
     const format = await Format.findOne({ where: { name: {[Op.iLike]: tournament.formatName } }})
-    if (!format) return interaction.reply(`Unable to determine what format is being played in ${tournament.name}. Please contact an administrator.`)
-    interaction.reply({ content: `Please check your DMs.` })
+    if (!format) return await interaction.editReply(`Unable to determine what format is being played in ${tournament.name}. Please contact an administrator.`)
+    interaction.editReply({ content: `Please check your DMs.` })
     
     const dbName = player.duelingBook ? player.duelingBook : await askForDBName(interaction.member, player)
     if (!dbName) return
@@ -334,7 +334,7 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
     if (!entry) {
         try {                                
           const { participant } = await postParticipant(server, tournament, player)
-          if (!participant) return interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
+          if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
           
           await Entry.create({
               playerName: player.name,
@@ -347,15 +347,15 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
     
           member.roles.add(server.tourRole).catch((err) => console.log(err))
           interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
-          return interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+          return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
         } catch (err) {
           console.log(err)
-          return interaction.member.send({ content: `Error: Could not access database.`})
+          return await interaction.member.send({ content: `Error: Could not access database.`})
         }
     } else if (entry.active === false) {
         try {                                
             const { participant } = await postParticipant(server, tournament, player)
-            if (!participant) return interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
+            if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
             
             await entry.update({
                 url: url,
@@ -366,21 +366,21 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
 
             member.roles.add(server.tourRole).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
-            return interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+            return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
         } catch (err) {
             console.log(err)
-            return interaction.member.send({ content: `Error: Could not access database.`})
+            return await interaction.member.send({ content: `Error: Could not access database.`})
         }
     } else {
         try {
             await entry.update({ url: url, ydk: ydk })
 
             interaction.member.send({ content: `Thanks! I have ${player.name}'s updated deck list for the tournament.` }).catch((err) => console.log(err))
-            return interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator resubmitted <@${player.discordId}>'s deck list for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+            return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator resubmitted <@${player.discordId}>'s deck list for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
         
         } catch (err) {
             console.log(err)
-            return interaction.member.send({ content: `Error: Could not access database.`}).catch((err) => console.log(err))
+            return await interaction.member.send({ content: `Error: Could not access database.`}).catch((err) => console.log(err))
         }
     }
 }
@@ -396,8 +396,8 @@ export const checkTimer = async (interaction, tournamentId) => {
     const now = new Date()
     const difference = tournament.deadline - now
 
-    if (difference < 0) return interaction.reply(`The deadline has passed.`)
-    if (difference < 60 * 1000) return interaction.reply(`Remaining time: less than 1 minute.`)
+    if (difference < 0) return await interaction.editReply(`The deadline has passed.`)
+    if (difference < 60 * 1000) return await interaction.editReply(`Remaining time: less than 1 minute.`)
 
     let hours = Math.floor(difference / (1000 * 60 * 60))
     const word1 = hours === 1 ? 'hour' : 'hours'
@@ -410,10 +410,10 @@ export const checkTimer = async (interaction, tournamentId) => {
 
     if (hours < 1) {
         const word2 = minutes === 1 ? 'minute' : 'minutes'
-        return interaction.reply(`Remaining time: ${minutes} ${word2}.`)
+        return await interaction.editReply(`Remaining time: ${minutes} ${word2}.`)
     } else {
         const word2 = minutes === 1 ? 'minute' : 'minutes'
-        return interaction.reply(`Remaining time: ${hours} ${word1} and ${minutes} ${word2}.`)
+        return await interaction.editReply(`Remaining time: ${hours} ${word1} and ${minutes} ${word2}.`)
     }
 }
 
@@ -447,14 +447,14 @@ export const setTimerForTournament = async (interaction, tournamentId, hours = n
     const word2 = minutes === 1 ? 'minute' : 'minutes'
 
     if (hours < 1) {
-        interaction.reply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
+        interaction.editReply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
     } else {
-        interaction.reply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${hours} ${word1} and ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
+        interaction.editReply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${hours} ${word1} and ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
     }
 
     sendPairings(interaction.guild, server, tournament, true)
     return setTimeout(() => {
-        return interaction.reply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`)
+        return await interaction.editReply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`)
     }, timeRemaining)
 }
 
@@ -589,21 +589,21 @@ export const removeParticipant = async (server, interaction, member, entry, tour
             if (!count) member.roles.remove(server.tourRole).catch((err) => console.log(err))
         
             if (drop) {
-                return interaction.reply({ content: `I removed you from ${tournament.name}. Better luck next time! ${tournament.emoji}`})
+                return await interaction.editReply({ content: `I removed you from ${tournament.name}. Better luck next time! ${tournament.emoji}`})
             } else {
-                return interaction.reply({ content: `${member.user.username} has been removed from ${tournament.name}. ${tournament.emoji}`})
+                return await interaction.editReply({ content: `${member.user.username} has been removed from ${tournament.name}. ${tournament.emoji}`})
             }
         } else if (!success && drop) {
-            return interaction.reply({ content: `Hmm... I don't see you in the participants list for ${tournament.name}. ${tournament.emoji}`})
+            return await interaction.editReply({ content: `Hmm... I don't see you in the participants list for ${tournament.name}. ${tournament.emoji}`})
         } else if (!success && !drop) {
-            return interaction.reply({ content: `I could not find ${member.user.username} in the participants list for ${tournament.name}. ${tournament.emoji}`})
+            return await interaction.editReply({ content: `I could not find ${member.user.username} in the participants list for ${tournament.name}. ${tournament.emoji}`})
         }
     } catch (err) {
         console.log(err)
         if (drop) {
-            return interaction.reply({ content: `Hmm... I don't see you in the participants list for ${tournament.name}. ${tournament.emoji}`})
+            return await interaction.editReply({ content: `Hmm... I don't see you in the participants list for ${tournament.name}. ${tournament.emoji}`})
         } else {
-            return interaction.reply({ content: `I could not find ${member.user.username} in the participants list for ${tournament.name}. ${tournament.emoji}`})
+            return await interaction.editReply({ content: `I could not find ${member.user.username} in the participants list for ${tournament.name}. ${tournament.emoji}`})
         }
     }   
 }
@@ -875,13 +875,13 @@ export const processMatchResult = async (server, interaction, winner, winningPla
     const losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id }, include: Player })
     const winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id }, include: Player })
     if (!losingEntry || !winningEntry) {
-        interaction.channel.send({ content: `Sorry I could not find your tournament in the database.`})
+        interaction.editReply({ content: `Sorry I could not find your tournament in the database.`})
         return false
-    } 
+    }
 
     const gameCount = noshow ? [0, 0] : [1, 0]
     if (!gameCount || !gameCount.length) {
-        interaction.channel.send({ content: `Please specify a valid game count.`})
+        interaction.editReply({ content: `Please specify a valid game count.`})
         return false
     }
 
@@ -916,7 +916,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
     }
      
     if (!success) {
-        interaction.channel.send({ content: `Error: could not update bracket for ${tournament.name}.`})
+        interaction.editReply({ content: `Error: could not update bracket for ${tournament.name}.`})
         return false
     }
  
@@ -965,7 +965,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
 
         setTimeout(async () => {
             if (loserEliminated) {
-                return interaction.channel.send({ content: `${losingPlayer.name}, You are eliminated from the tournament. Better luck next time!`})
+                return await interaction.channel.send({ content: `${losingPlayer.name}, You are eliminated from the tournament. Better luck next time!`})
             } else if (loserNextOpponent) {
                 try {
                     console.log(`New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${loserNextOpponent.player.name + '#' + loserNextOpponent.player.discriminator}\nDuelingBook: ${loserNextOpponent.player.duelingBook}`)
@@ -982,18 +982,18 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                     console.log(err)
                 }
         
-                return interaction.channel.send({ content: `New Match: <@${losingPlayer.discordId}> (DB: ${losingPlayer.duelingBook}) vs. <@${loserNextOpponent.player.discordId}> (DB: ${loserNextOpponent.player.duelingBook}). Good luck to both duelists.`})
+                return await interaction.channel.send({ content: `New Match: <@${losingPlayer.discordId}> (DB: ${losingPlayer.duelingBook}) vs. <@${loserNextOpponent.player.discordId}> (DB: ${loserNextOpponent.player.duelingBook}). Good luck to both duelists.`})
             } else if (loserMatchWaitingOn && loserWaitingOnP1 && loserWaitingOnP2) {
-                return interaction.channel.send({ content: `${losingPlayer.name}, You are waiting for the result of ${loserWaitingOnP1.player.name} (DB: ${loserWaitingOnP1.player.duelingBook}) vs ${loserWaitingOnP2.player.name} (DB: ${loserWaitingOnP2.player.duelingBook}).`})
+                return await interaction.channel.send({ content: `${losingPlayer.name}, You are waiting for the result of ${loserWaitingOnP1.player.name} (DB: ${loserWaitingOnP1.player.duelingBook}) vs ${loserWaitingOnP2.player.name} (DB: ${loserWaitingOnP2.player.duelingBook}).`})
             } else {
-                return interaction.channel.send({ content: `${losingPlayer.name}, You are waiting for multiple matches to finish. Grab a snack and stay hydrated.`})
+                return await interaction.channel.send({ content: `${losingPlayer.name}, You are waiting for multiple matches to finish. Grab a snack and stay hydrated.`})
             }
         }, 2000)
         
         if (!winnerNextMatch || (winnerNextMatch && loserNextMatch !== winnerNextMatch)) {
             setTimeout(async () => {
                 if (!winnerNextMatch) {
-                    return interaction.channel.send({ content: `<@${winningPlayer.discordId}>, You won the tournament! Congratulations on your stellar performance! ${emojis.legend}`})
+                    return await interaction.channel.send({ content: `<@${winningPlayer.discordId}>, You won the tournament! Congratulations on your stellar performance! ${emojis.legend}`})
                 } else if (winnerNextOpponent) {
                     try {
                         console.log(`New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${winnerNextOpponent.player.name + '#' + winnerNextOpponent.player.discriminator}\nDuelingBook: ${winnerNextOpponent.player.duelingBook}`)
@@ -1010,11 +1010,11 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                         console.log(err)
                     }
                     
-                    return interaction.channel.send({ content: `New Match: <@${winningPlayer.discordId}> (DB: ${winningPlayer.duelingBook}) vs. <@${winnerNextOpponent.player.discordId}> (DB: ${winnerNextOpponent.player.duelingBook}). Good luck to both duelists.`})
+                    return await interaction.channel.send({ content: `New Match: <@${winningPlayer.discordId}> (DB: ${winningPlayer.duelingBook}) vs. <@${winnerNextOpponent.player.discordId}> (DB: ${winnerNextOpponent.player.duelingBook}). Good luck to both duelists.`})
                 } else if (winnerMatchWaitingOn && winnerWaitingOnP1 && winnerWaitingOnP2) {
-                    return interaction.channel.send({ content: `${winningPlayer.name}, You are waiting for the result of ${winnerWaitingOnP1.player.name} (DB: ${winnerWaitingOnP1.player.duelingBook}) vs ${winnerWaitingOnP2.player.name} (DB: ${winnerWaitingOnP2.player.duelingBook}).`})
+                    return await interaction.channel.send({ content: `${winningPlayer.name}, You are waiting for the result of ${winnerWaitingOnP1.player.name} (DB: ${winnerWaitingOnP1.player.duelingBook}) vs ${winnerWaitingOnP2.player.name} (DB: ${winnerWaitingOnP2.player.duelingBook}).`})
                 } else {
-                    return interaction.channel.send({ content: `${winningPlayer.name}, You are waiting for multiple matches to finish. Grab a snack and stay hydrated.`})
+                    return await interaction.channel.send({ content: `${winningPlayer.name}, You are waiting for multiple matches to finish. Grab a snack and stay hydrated.`})
                 }
             }, 4000)
         }
@@ -1140,7 +1140,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 community: server.name
             })
 
-            return interaction.reply({ content: 
+            return await interaction.editReply({ content: 
                 `You created a new tournament:` + 
                 `\nName: ${name} ${logo}` + 
                 `\nFormat: ${format.name} ${server.emoji || format.emoji}` + 
@@ -1181,7 +1181,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     community: server.name
                 })
 
-                return interaction.reply({ content: 
+                return await interaction.editReply({ content: 
                     `You created a new tournament:` + 
                     `\nName: ${data.tournament.name} ${logo}` + 
                     `\nFormat: ${format.name} ${server.emoji || format.emoji}` + 
@@ -1191,7 +1191,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             } 
         } catch (err) {
             console.log(err)
-            return interaction.reply({ content: `Unable to connect to Challonge account.`})
+            return await interaction.editReply({ content: `Unable to connect to Challonge account.`})
         }
     }
 }
@@ -1232,7 +1232,7 @@ export const dropFromTournament = async (interaction, tournamentId) => {
             if (match.winnerId === player.id || match.loserId === player.id) success = true 
         })
 
-        if (!success) return interaction.reply({ content: `If you played a match, please report the result before dropping. Otherwise ask a Moderator to remove you.`})
+        if (!success) return await interaction.editReply({ content: `If you played a match, please report the result before dropping. Otherwise ask a Moderator to remove you.`})
     }
 
     const entry = await Entry.findOne({ 
@@ -1258,10 +1258,10 @@ export const startTournament = async (interaction, tournamentId) => {
 
     if (status === 200) { 
         await tournament.update({ state: 'underway' })
-        interaction.reply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${tournament.url} ${tournament.emoji}`})
+        interaction.editReply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${tournament.url} ${tournament.emoji}`})
         return sendPairings(interaction.guild, server, tournament, false)
     } else {
-        return interaction.reply({ content: `Error connecting to Challonge.`})
+        return await interaction.editReply({ content: `Error connecting to Challonge.`})
     }
 }
 
@@ -1280,16 +1280,16 @@ export const initiateStartTournament = async (interaction, tournamentId) => {
     })
 
     const unregCount = await Entry.count({ where: { participantId: null, tournamentId: tournamentId } })
-    if (unregCount) return interaction.reply({ content: 'One or more players is not registered with Challonge. Type **/purge** to remove them.'})
+    if (unregCount) return await interaction.editReply({ content: 'One or more players is not registered with Challonge. Type **/purge** to remove them.'})
 
     const entryCount = await Entry.count({ where: { tournamentId: tournamentId } })
-    if (!entryCount) return interaction.reply({ content: `Error: no entrants found.`})
+    if (!entryCount) return await interaction.editReply({ content: `Error: no entrants found.`})
 
     const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
     
     if (data.tournament.state === 'underway') {
         await tournament.update({ state: 'underway' })
-        interaction.reply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${tournament.url} ${tournament.emoji}`})
+        interaction.editReply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${tournament.url} ${tournament.emoji}`})
         return sendPairings(interaction.guild, server, tournament, false)
     } else {
         const row = new ActionRowBuilder()
@@ -1311,7 +1311,7 @@ export const initiateStartTournament = async (interaction, tournamentId) => {
                 .setStyle(ButtonStyle.Primary)
             )
 
-        await interaction.reply({ content: `Should this tournament be seeded by Format Library ${emojis.FL} rankings?`, components: [row] })
+        await interaction.editReply({ content: `Should this tournament be seeded by Format Library ${emojis.FL} rankings?`, components: [row] })
     }
 }
 
@@ -1339,11 +1339,11 @@ export const processNoShow = async (interaction, tournamentId, userId) => {
 
     if (!tournament || !noShowPlayer || !server) return
  
-    if (tournament.state === 'pending' || tournament.state === 'standby') return interaction.reply({ content: `Sorry, ${tournament.name} has not started yet.`})
-    if (tournament.state !== 'underway') return interaction.reply({ content: `Sorry, ${tournament.name} is not underway.`})
+    if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
+    if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
     
     const noShowEntry = await Entry.findOne({ where: { playerId: noShowPlayer.id, tournamentId: tournament.id } })
-    if (!noShowEntry) return interaction.reply({ content: `Sorry I could not find that player's tournament entry in the database.`})
+    if (!noShowEntry) return await interaction.editReply({ content: `Sorry I could not find that player's tournament entry in the database.`})
 
     const matchesArr = await getMatches(server, tournament.id)
     let winnerParticipantId = false
@@ -1355,18 +1355,18 @@ export const processNoShow = async (interaction, tournamentId, userId) => {
     }
 
     const winningEntry = await Entry.findOne({ where: { participantId: winnerParticipantId, tournamentId: tournament.id }, include: Player })
-    if (!winningEntry) return interaction.reply({ content: `Error: could not find opponent.`})
+    if (!winningEntry) return await interaction.editReply({ content: `Error: could not find opponent.`})
     const winningPlayer = winningEntry.player
     const winner = await interaction.guild.members.fetch(winningPlayer.discordId)
     const success = await processMatchResult(server, interaction, winner, winningPlayer, noShow, noShowPlayer, tournament, true)
     if (!success) return
 
-    return interaction.reply({ content: `<@${noShowPlayer.discordId}>, your Tournament loss to <@${winningPlayer.discordId}> has been recorded as a no-show.`})	
+    return await interaction.editReply({ content: `<@${noShowPlayer.discordId}>, your Tournament loss to <@${winningPlayer.discordId}> has been recorded as a no-show.`})	
 }
 
 // CALCULATE STANDINGS
 export const calculateStandings = async (interaction, tournamentId) => {
-    interaction.reply(`Calculating standings, please wait.`)
+    interaction.editReply(`Calculating standings, please wait.`)
 
     const server = await Server.findOne({
         where: {
@@ -1553,5 +1553,5 @@ export const calculateStandings = async (interaction, tournamentId) => {
         results.push(`${s.rank}.  ${s.name}  -  ${s.score.toFixed(1)}  (${s.wins}-${s.losses}-${s.ties})${s.byes ? ` +BYE` : ''}  [${s.medianBuchholz.toFixed(1)} / ${s.winsVsTied}]`)
     }
 
-    return interaction.channel.send(results.join('\n'))
+    return await interaction.channel.send(results.join('\n'))
 }

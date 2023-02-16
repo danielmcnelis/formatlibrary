@@ -23,7 +23,7 @@ export default {
         const user = interaction.options.getUser('player') || interaction.user
         const discordId = user.id	
         const player = await Player.findOne({ where: { discordId: discordId } })
-        if (!player) return interaction.reply({ content: "That user is not in the database."})
+        if (!player) return await interaction.reply({ content: "That user is not in the database."})
 
         const format = await Format.findOne({
             where: {
@@ -99,7 +99,7 @@ export default {
                 { name: `Profile Link`, value: `https://formatlibrary.com/players/${user.username.replaceAll(' ', '_')}#${user.discriminator}` }
             )
 
-            return interaction.reply({ embeds: [embed] })
+            return await interaction.reply({ embeds: [embed] })
         } else {
             const allStats = await Stats.findAll({ 
                 where: { 
@@ -166,7 +166,7 @@ export default {
                 { name: `Profile Link`, value: `https://formatlibrary.com/players/${user.username.replaceAll(' ', '_')}#${user.discriminator}` }
             )
             
-            return interaction.reply({ embeds: [embed] })
+            return await interaction.reply({ embeds: [embed] })
         }
     }
 }

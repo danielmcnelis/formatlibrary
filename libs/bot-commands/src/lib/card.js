@@ -35,7 +35,7 @@ export default {
         } else if (attachment) {
             interaction.reply({ embeds: [cardEmbed], files: [attachment] })
         } else {
-            return interaction.reply({ embeds: [cardEmbed] })
+            return await interaction.reply({ embeds: [cardEmbed] })
         }
 	}
 }

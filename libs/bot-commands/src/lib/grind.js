@@ -14,7 +14,7 @@
                 await Server.findOne({ where: { id: interaction.guildId }}) || 
                 await Server.create({ id: interaction.guildId, name: interaction.guild.name })
 
-            if (!hasFullAccess(server)) return interaction.reply({ content: `This feature is only available in Format Library. ${emojis.FL}`})
+            if (!hasFullAccess(server)) return await interaction.reply({ content: `This feature is only available in Format Library. ${emojis.FL}`})
             const format = await Format.findOne({
                 where: {
                     [Op.or]: {
@@ -24,13 +24,13 @@
                 }
             })
     
-            if (!format) return interaction.reply({ content: `Try using **/grind** in channels like: <#414575168174948372> or <#629464112749084673>.`})
+            if (!format) return await interaction.reply({ content: `Try using **/grind** in channels like: <#414575168174948372> or <#629464112749084673>.`})
             
             const roleId = format.grinders
             const roleName = `${format.name} Grinders`
     
             const membership = await Membership.findOne({ where: { '$player.discordId$': interaction.user.id, serverId: interaction.guildId }, include: Player })
-            if (!membership) return interaction.reply({ content: `You are not in the database.`})
+            if (!membership) return await interaction.reply({ content: `You are not in the database.`})
     
             if (!interaction.member.roles.cache.some(role => role.id === roleId)) {
                 try {
@@ -43,20 +43,20 @@
                             roleName: roleName
                         })
                     }
-                    return interaction.reply({ content: `You now have the ${roleName} role.`})
+                    return await interaction.reply({ content: `You now have the ${roleName} role.`})
                 } catch (err) {
                     console.log(err)
-                    return interaction.reply({ content: `Error: Unable to add ${roleName} role.`})
+                    return await interaction.reply({ content: `Error: Unable to add ${roleName} role.`})
                 }
             } else {
                 try {
                     await interaction.member.roles.remove(roleId)
                     const role = await Role.findOne({ where: { membershipId: membership.id, roleId: roleId } })
                     await role.destroy()
-                    return interaction.reply({ content: `You no longer have the ${roleName} role.`})
+                    return await interaction.reply({ content: `You no longer have the ${roleName} role.`})
                 } catch (err) {
                     console.log(err)
-                    return interaction.reply({ content: `Error: Unable to remove ${roleName} role.`})
+                    return await interaction.reply({ content: `Error: Unable to remove ${roleName} role.`})
                 }
             }
         }

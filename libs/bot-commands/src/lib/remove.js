@@ -17,6 +17,7 @@ export default {
                 .setRequired(true)
         ),
 	async execute(interaction) {
+        await interaction.deferReply()
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
@@ -24,11 +25,11 @@ export default {
         const user = interaction.options.getUser('player')
         const member = await interaction.guild.members.fetch(user.id)
 
-        if (!hasPartnerAccess(server)) return interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return interaction.reply({ content: 'You do not have permission to do that.'})
+        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
 
         const player = await Player.findOne({ where: { discordId: user.id }})
-        if (!player) return interaction.reply(`That player is not in the database.`)
+        if (!player) return await interaction.editReply(`That player is not in the database.`)
 
         const format = await Format.findOne({
             where: {
@@ -50,7 +51,7 @@ export default {
             })
         ].map((e) => e.tournament)
 
-        if (!tournaments.length) return interaction.reply(`That user is not in an active ${format ? `${format.name} tournament` : 'tournament'}.`)
+        if (!tournaments.length) return await interaction.editReply(`That user is not in an active ${format ? `${format.name} tournament` : 'tournament'}.`)
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
 

@@ -14,7 +14,7 @@ export default {
         await Server.findOne({ where: { id: interaction.guildId }}) || 
         await Server.create({ id: interaction.guildId, name: interaction.guild.name })
 
-        if (!hasFullAccess(server)) return interaction.reply({ content: `This feature is only available in Format Library. ${emojis.FL}`})
+        if (!hasFullAccess(server)) return await interaction.reply({ content: `This feature is only available in Format Library. ${emojis.FL}`})
         const format = await Format.findOne({
             where: {
                 [Op.or]: {
@@ -24,9 +24,9 @@ export default {
             }
         })
         
-        if (!format) return interaction.reply({ content: `Try using **/queue** in channels like: <#414575168174948372> or <#629464112749084673>.`})
+        if (!format) return await interaction.reply({ content: `Try using **/queue** in channels like: <#414575168174948372> or <#629464112749084673>.`})
         const queue = [...await Iron.findAll({ where: { format: format.name }})].map((i) => i.name)
-        if (!queue.length) return interaction.reply({ content: `The ${format.name} ${server.emoji || format.emoji} Iron queue is empty. ${emojis.iron}`})
-        return interaction.reply({ content: `${format.name} ${server.emoji || format.emoji} Iron Queue:\n` + queue.join('\n').toString() })
+        if (!queue.length) return await interaction.reply({ content: `The ${format.name} ${server.emoji || format.emoji} Iron queue is empty. ${emojis.iron}`})
+        return await interaction.reply({ content: `${format.name} ${server.emoji || format.emoji} Iron Queue:\n` + queue.join('\n').toString() })
     }
 }

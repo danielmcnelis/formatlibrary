@@ -12,13 +12,13 @@ export default {
 		.setName('start')
 		.setDescription('Start a tournament. 🏎️'),
 	async execute(interaction) {
-        interaction.deferReply()
+        await interaction.deferReply()
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
 
-        if (!hasPartnerAccess(server)) return interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return interaction.reply({ content: 'You do not have permission to do that. Please type **/join** instead.'})   
+        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that. Please type **/join** instead.'})   
 
         const format = await Format.findOne({
             where: {
@@ -44,16 +44,16 @@ export default {
         const { id, url } = tournament
 
 		const unregCount = await Entry.count({ where: { participantId: null, tournamentId: id } })
-        if (unregCount) return interaction.reply({ content: 'Error: One or more players is not registered with Challonge.'})
+        if (unregCount) return await interaction.editReply({ content: 'Error: One or more players is not registered with Challonge.'})
 
 		const entryCount = await Entry.count({ where: { tournamentId: id } })
-		if (!entryCount) return interaction.reply({ content: `Error: No entrants found.`})
+		if (!entryCount) return await interaction.editReply({ content: `Error: No entrants found.`})
 
         const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
         
         if (data.tournament.state === 'underway') {
 			await tournament.update({ state: 'underway' })
-            interaction.reply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${url} ${tournament.emoji}`})
+            interaction.editReply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${url} ${tournament.emoji}`})
             return sendPairings(interaction.guild, server, tournament, false)
         } else {
 		    const row = new ActionRowBuilder()
@@ -75,7 +75,7 @@ export default {
                     .setStyle(ButtonStyle.Primary)
                 )
 
-            await interaction.reply({ content: `Should this tournament be seeded by Format Library ${emojis.FL} rankings?`, components: [row] })
+            await interaction.editReply({ content: `Should this tournament be seeded by Format Library ${emojis.FL} rankings?`, components: [row] })
         }
     }
 }

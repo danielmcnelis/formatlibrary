@@ -19,13 +19,13 @@ export default {
                 .setRequired(true)
         ),
 	async execute(interaction) {
-        interaction.deferReply()
+        await interaction.deferReply()
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
         
-        if (!hasPartnerAccess(server)) return interaction.reply({ content: `This feature is only available in Format Library. ${emojis.FL}`})
-        if (!isMod(server, interaction.member)) return interaction.reply({ content: 'You do not have permission to do that. Please type **/join** instead.'})   
+        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available in Format Library. ${emojis.FL}`})
+        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that. Please type **/join** instead.'})   
         
         const name = interaction.options.getString('tournament')        
 
@@ -58,8 +58,8 @@ export default {
         }) || await selectTournament(interaction, tournaments)
 		if (!tournament) return
         
-        if (tournament.state === 'pending' || tournament.state === 'standby') return interaction.reply({ content: `This tournament has not begun.`})
-        if (tournament.state === 'complete') return interaction.reply({ content: `This tournament has already ended.`})
+        if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `This tournament has not begun.`})
+        if (tournament.state === 'complete') return await interaction.editReply({ content: `This tournament has already ended.`})
 
         try {
             const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
@@ -149,13 +149,13 @@ export default {
                 const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
                 const success = await createDecks(event, data)
                 if (!success) {
-                    return interaction.reply(`Failed to save all decks.`)
+                    return await interaction.editReply(`Failed to save all decks.`)
                 } else {
                     count = event.size
                 }
             } catch (err) {
                 console.log(err)
-                return interaction.reply(`Failed to save all decks.`)
+                return await interaction.editReply(`Failed to save all decks.`)
             }
         }
         
@@ -192,7 +192,7 @@ export default {
             }
 
             await tournament.update({ state: 'complete' })
-            return interaction.reply({ content: `Congrats! The results of ${tournament.name} ${tournament.logo} have been finalized.`})
+            return await interaction.editReply({ content: `Congrats! The results of ${tournament.name} ${tournament.logo} have been finalized.`})
         }
     }
 }

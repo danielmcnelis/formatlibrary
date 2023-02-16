@@ -11,11 +11,12 @@ export default {
         .setName('timer')
         .setDescription('Post time remaining in the round. ⏰'),
     async execute(interaction) {
+        await interaction.deferReply()
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
         
-        if (!hasPartnerAccess(server)) return interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         
         const format = await Format.findOne({
             where: {
@@ -35,8 +36,8 @@ export default {
             order: [['createdAt', 'ASC']]
         })
 
-        if (!tournaments.length && format) return interaction.reply({ content: `There are no active ${format.name} ${server.emoji || format.emoji} tournaments.`})
-        if (!tournaments.length && !format) return interaction.reply({ content: `There are no active tournaments.`})
+        if (!tournaments.length && format) return await interaction.editReply({ content: `There are no active ${format.name} ${server.emoji || format.emoji} tournaments.`})
+        if (!tournaments.length && !format) return await interaction.editReply({ content: `There are no active tournaments.`})
         
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
@@ -44,8 +45,8 @@ export default {
         const now = new Date()
         const difference = tournament.deadline - now
 
-        if (difference < 0) return interaction.reply(`The deadline has passed.`)
-        if (difference < 60 * 1000) return interaction.reply(`Remaining time: less than 1 minute.`)
+        if (difference < 0) return await interaction.editReply(`The deadline has passed.`)
+        if (difference < 60 * 1000) return await interaction.editReply(`Remaining time: less than 1 minute.`)
 
         let hours = Math.floor(difference / (1000 * 60 * 60))
         const word1 = hours === 1 ? 'hour' : 'hours'
@@ -58,10 +59,10 @@ export default {
 
         if (hours < 1) {
             const word2 = minutes === 1 ? 'minute' : 'minutes'
-            return interaction.reply(`Remaining time: ${minutes} ${word2}.`)
+            return await interaction.editReply(`Remaining time: ${minutes} ${word2}.`)
         } else {
             const word2 = minutes === 1 ? 'minute' : 'minutes'
-            return interaction.reply(`Remaining time: ${hours} ${word1} and ${minutes} ${word2}.`)
+            return await interaction.editReply(`Remaining time: ${hours} ${word1} and ${minutes} ${word2}.`)
         }
     }
 }

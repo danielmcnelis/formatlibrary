@@ -23,12 +23,13 @@ export default {
                 .setRequired(true)
         ),
     async execute(interaction) {
+        await interaction.deferReply()
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
         
-        if (!hasPartnerAccess(server)) return interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return interaction.reply({ content: 'You do not have permission to do that.'})
+        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
 
         const format = await Format.findOne({
             where: {
@@ -48,8 +49,8 @@ export default {
             order: [['createdAt', 'ASC']]
         })
 
-        if (!tournaments.length && format) return interaction.reply({ content: `There are no active ${format.name} ${server.emoji || format.emoji} tournaments.`})
-        if (!tournaments.length && !format) return interaction.reply({ content: `There are no active tournaments.`})
+        if (!tournaments.length && format) return await interaction.editReply({ content: `There are no active ${format.name} ${server.emoji || format.emoji} tournaments.`})
+        if (!tournaments.length && !format) return await interaction.editReply({ content: `There are no active tournaments.`})
         
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
@@ -71,14 +72,14 @@ export default {
         const word2 = minutes === 1 ? 'minute' : 'minutes'
 
         if (hours < 1) {
-            interaction.reply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
+            interaction.editReply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
         } else {
-            interaction.reply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${hours} ${word1} and ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
+            interaction.editReply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${hours} ${word1} and ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
         }
 
         sendPairings(interaction.guild, server, tournament, ignoreRound1)
         return setTimeout(() => {
-            return interaction.channel.send(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`)
+            return await interaction.channel.send(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`)
         }, timeRemaining)
     }
 }

@@ -92,7 +92,7 @@ export const composeBlogPost = async (interaction, event) => {
             }
         })
 
-        if (count) return interaction.channel.send(`Blogpost for ${event.name} already exists.`)
+        if (count) return await interaction.channel.send(`Blogpost for ${event.name} already exists.`)
 
         const deck = await Deck.findOne({
             where: {
@@ -211,10 +211,10 @@ export const composeBlogPost = async (interaction, event) => {
 
         const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/decks/previews/${deck.id}.png`, Body: buffer, ContentType: `image/png` }).promise()
         console.log('uri', uri)
-        return interaction.channel.send(`Composed blogpost for ${event.name}.`)
+        return await interaction.channel.send(`Composed blogpost for ${event.name}.`)
     } catch (err) {
         console.log(err)
-        return interaction.channel.send(`Error composing blogpost for ${event.name}.`)
+        return await interaction.channel.send(`Error composing blogpost for ${event.name}.`)
     }
 }
 
@@ -285,10 +285,10 @@ export const composeThumbnails = async (interaction, event) => {
             console.log('uri', uri)
         }
     
-        return interaction.channel.send(`Composed deck thumbnails for ${event.name}.`)
+        return await interaction.channel.send(`Composed deck thumbnails for ${event.name}.`)
     } catch (err) {
         console.log(err)
-        return interaction.channel.send(`Error composing deck thumbnails for ${event.name}.`)
+        return await interaction.channel.send(`Error composing deck thumbnails for ${event.name}.`)
     }
 }
 
@@ -321,7 +321,7 @@ export const displayDecks = async (interaction, event) => {
             }
         })
 
-        return interaction.channel.send(`The top ${count} deck lists for ${event.name} were already published.`)
+        return await interaction.channel.send(`The top ${count} deck lists for ${event.name} were already published.`)
     }
 
     for (let i = 0; i < decks.length; i++) {
@@ -329,7 +329,7 @@ export const displayDecks = async (interaction, event) => {
         await deck.update({ display: true })
     }
     
-    return interaction.channel.send(`Displayed ${decks.length} new deck lists for ${event.name}.`)
+    return await interaction.channel.send(`Displayed ${decks.length} new deck lists for ${event.name}.`)
 }
 
 // PUBLISH DECKS
@@ -346,7 +346,7 @@ export const publishDecks = async (interaction, event) => {
         await deck.update({ publishDate: event.endDate })
     }
 
-    return interaction.channel.send(`Published ${decks.length} new deck lists for ${event.name}.`)
+    return await interaction.channel.send(`Published ${decks.length} new deck lists for ${event.name}.`)
 }
 
 // FIX DECK FOLDER
@@ -375,9 +375,9 @@ export const fixDeckFolder = async (interaction, tournamentId) => {
     try {
         await checkExpiryDate(server)
         await uploadDeckFolder(server, tournament.name, decks)
-        return interaction.reply({ content: `Your tournament files have been uploaded! ${server.logo}` })
+        return await interaction.reply({ content: `Your tournament files have been uploaded! ${server.logo}` })
     } catch (err) {
         console.log(err)
-        return interaction.reply({ content: `Error. Check bot logs.` })
+        return await interaction.reply({ content: `Error. Check bot logs.` })
     }
 }

@@ -15,7 +15,7 @@ export default {
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
         
-        if (!hasAffiliateAccess(server)) return interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         
         const format = await Format.findOne({
             where: {
@@ -26,7 +26,7 @@ export default {
             }
         })
 
-        if (!format) return interaction.reply({ content: `Try using **/activity** in channels like: <#414575168174948372> or <#629464112749084673>.`})  
+        if (!format) return await interaction.reply({ content: `Try using **/activity** in channels like: <#414575168174948372> or <#629464112749084673>.`})  
         
         const today = new Date()
         const cutoff = new Date(
@@ -119,6 +119,6 @@ export default {
         })
 
         const url = await chart.getShortUrl()
-        return interaction.reply({ content: `${url}` })
+        return await interaction.reply({ content: `${url}` })
     }
 }

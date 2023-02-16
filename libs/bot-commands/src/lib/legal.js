@@ -22,8 +22,8 @@ export default {
             }
         })
 
-        if (!format) return interaction.reply({ content: `Try using /legal in channels like: <#414575168174948372> or <#629464112749084673>.`})
-        if (format.category !== 'TCG') return interaction.reply(`Sorry, ${format.category} formats are not supported at this time.`)
+        if (!format) return await interaction.reply({ content: `Try using /legal in channels like: <#414575168174948372> or <#629464112749084673>.`})
+        if (format.category !== 'TCG') return await interaction.reply(`Sorry, ${format.category} formats are not supported at this time.`)
         interaction.reply(`Please check your DMs.`)
         const issues = await checkDeckList(interaction.member, format)
         if (!issues) return
@@ -47,9 +47,9 @@ export default {
         } else if (unrecognizedCards.length) {
             let response = `I'm sorry, ${interaction.user.username}, the following card IDs were not found in our database:\n${unrecognizedCards.join('\n')}`
             response += `\n\nThese cards are either alternate artwork, new to the TCG, OCG only, or incorrect in our database. Please contact the Tournament Organizer or the Admin if you can't resolve this.`
-            return interaction.member.send({ content: response.toString() }).catch((err) => console.log(err))
+            return await interaction.member.send({ content: response.toString() }).catch((err) => console.log(err))
         } else {
-            return interaction.member.send({ content: `Congrats, your ${format.name} Format deck is perfectly legal! ${format.emoji}`}).catch((err) => console.log(err))
+            return await interaction.member.send({ content: `Congrats, your ${format.name} Format deck is perfectly legal! ${format.emoji}`}).catch((err) => console.log(err))
         }
     }
 }

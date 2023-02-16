@@ -17,12 +17,13 @@ export default {
                 .setRequired(true)
         ),
 	async execute(interaction) {
+        await interaction.deferReply()
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
 
-        if (!hasPartnerAccess(server)) return interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return interaction.reply({ content: 'You do not have permission to do that. Please type **/join** instead.'})   
+        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that. Please type **/join** instead.'})   
 
         let format = await Format.findOne({
             where: {
@@ -45,19 +46,19 @@ export default {
         const user = interaction.options.getUser('player')
         const member = await interaction.guild.members.fetch(user.id)
         const player = await Player.findOne({ where: { discordId: user.id }})
-        if (!player) return interaction.reply({ content: `That player is not in the database.`})
+        if (!player) return await interaction.editReply({ content: `That player is not in the database.`})
         
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
 
         const entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournament.id }})
         if (!format) format = await Format.findOne({ where: { name: {[Op.iLike]: tournament.formatName } }})
-        if (!format) return interaction.reply(`Unable to determine what format is being played in ${tournament.name}. Please contact an administrator.`)
+        if (!format) return await interaction.editReply(`Unable to determine what format is being played in ${tournament.name}. Please contact an administrator.`)
         
         if (entry) {
-            interaction.reply({ content: `Please check your DMs.\n\n(FYI: ${player.name} is already registered for ${tournament.name} ${tournament.logo})`})
+            interaction.editReply({ content: `Please check your DMs.\n\n(FYI: ${player.name} is already registered for ${tournament.name} ${tournament.logo})`})
         } else {
-            interaction.reply({ content: `Please check your DMs.`})
+            interaction.editReply({ content: `Please check your DMs.`})
         }
         
         const dbName = player.duelingBook ? player.duelingBook : await askForDBName(interaction.member, player)
@@ -68,7 +69,7 @@ export default {
         if (!entry) {
             try {                                
               const { participant } = await postParticipant(server, tournament, player)
-              if (!participant) return interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
+              if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
               
               await Entry.create({
                   playerName: player.name,
@@ -81,16 +82,16 @@ export default {
         
               member.roles.add(server.tourRole).catch((err) => console.log(err))
               interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
-              return interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+              return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
             
             } catch (err) {
               console.log(err)
-              return interaction.member.send({ content: `${emojis.high_alert} Error: Could not save information to the RetroBot Database. ${emojis.high_alert}`}).catch((err) => console.log(err))
+              return await interaction.member.send({ content: `${emojis.high_alert} Error: Could not save information to the RetroBot Database. ${emojis.high_alert}`}).catch((err) => console.log(err))
             }
         } else if (entry.active === false) {
             try {                                
                 const { participant } = await postParticipant(server, tournament, player)
-                if (!participant) return interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}. ${emojis.high_alert}`})
+                if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}. ${emojis.high_alert}`})
                 
                 await entry.update({
                     url: url,
@@ -101,20 +102,20 @@ export default {
 
                 member.roles.add(server.tourRole).catch((err) => console.log(err))
                 interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.`}).catch((err) => console.log(err))
-                return interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+                return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
             } catch (err) {
                 console.log(err)
-                return interaction.member.send({ content: `${emojis.high_alert} Error: Could not save information to the RetroBot Database. ${emojis.high_alert}`}).catch((err) => console.log(err))
+                return await interaction.member.send({ content: `${emojis.high_alert} Error: Could not save information to the RetroBot Database. ${emojis.high_alert}`}).catch((err) => console.log(err))
             }
         } else {
             try {
                 await entry.update({ url: url, ydk: ydk })
 
                 interaction.member.send({ content: `Thanks! I have ${player.name}'s updated deck list for the tournament.` }).catch((err) => console.log(err))
-                return interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator resubmitted <@${player.discordId}>'s deck list for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+                return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator resubmitted <@${player.discordId}>'s deck list for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
             } catch (err) {
                 console.log(err)
-                return interaction.member.send({ content: `${emojis.high_alert} Error: Could not save information to the RetroBot Database. ${emojis.high_alert}`}).catch((err) => console.log(err))
+                return await interaction.member.send({ content: `${emojis.high_alert} Error: Could not save information to the RetroBot Database. ${emojis.high_alert}`}).catch((err) => console.log(err))
             }
         }
     }

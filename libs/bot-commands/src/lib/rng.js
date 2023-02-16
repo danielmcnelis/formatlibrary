@@ -13,8 +13,8 @@ export default {
         ),
 	async execute(interaction) {
         const num = interaction.options.getNumber('number')
-        if(isNaN(num) || num < 1) return interaction.reply({ content: `Please specify an upper limit.`})
+        if(isNaN(num) || num < 1) return await interaction.reply({ content: `Please specify an upper limit.`})
         const result = Math.floor((Math.random() * num) + 1)
-        return interaction.reply({ content: `You rolled a **${result}** with a ${num}-sided die.`})
+        return await interaction.reply({ content: `You rolled a **${result}** with a ${num}-sided die.`})
 	}
 }

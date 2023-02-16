@@ -23,8 +23,8 @@ export default {
             }
         })
 
-        if (!hasFullAccess(server)) return interaction.reply({ content: `This feature is only available in Format Library. ${emojis.FL}`})
-        if (!format) return interaction.reply({ content: `Try using **/iron** in channels like: <#414575168174948372> or <#629464112749084673>.`})
+        if (!hasFullAccess(server)) return await interaction.reply({ content: `This feature is only available in Format Library. ${emojis.FL}`})
+        if (!format) return await interaction.reply({ content: `Try using **/iron** in channels like: <#414575168174948372> or <#629464112749084673>.`})
         
         const player = await Player.findOne({ where: { discordId: interaction.user.id }})
         const alreadyIn = await Iron.count({ 
@@ -38,13 +38,13 @@ export default {
         const isConfirming = await Iron.count({ where: { format: format.name, status: 'confirming' }})
         const isDrafting = await Iron.count({ where: { format: format.name, status: 'drafting' }})
         const isActive = await Iron.count({ where: { format: format.name, status: 'active' }})
-        if (isDrafting && !alreadyIn) return interaction.reply({ content: 'Please wait until after the drafting process is complete to join the iron.' })
-        if (!isPending && alreadyIn) return interaction.reply({ content: 'Sorry, you cannot leave the iron after it has started.' })
+        if (isDrafting && !alreadyIn) return await interaction.reply({ content: 'Please wait until after the drafting process is complete to join the iron.' })
+        if (!isPending && alreadyIn) return await interaction.reply({ content: 'Sorry, you cannot leave the iron after it has started.' })
         
         if (!alreadyIn) {
             const count = await Iron.count({ where: { format: format.name }})
             if (count >= 10) {
-                return interaction.reply({ content: `Sorry, ${player.discordName}, the ${format.name} ${server.emoji || format.emoji} Iron is full.`})
+                return await interaction.reply({ content: `Sorry, ${player.discordName}, the ${format.name} ${server.emoji || format.emoji} Iron is full.`})
             } else if (count < 10 && count >= 6) {
                 if (isConfirming) {
                     await Iron.create({ 
@@ -54,7 +54,7 @@ export default {
                         confirmed: true
                     })
     
-                    return interaction.reply({ content: `You joined the Iron queue. ${emojis.iron}`})
+                    return await interaction.reply({ content: `You joined the Iron queue. ${emojis.iron}`})
                 } else if (isActive) {
                     const teamACount = await Iron.count({ 
                         where: {
@@ -98,7 +98,7 @@ export default {
 
                         //ADD FORMAT LIBRARY IRON ROLE
                         interaction.member.roles.add('948006324237643806')
-                        return interaction.reply({ content: `You joined the Iron for Team B. ${emojis.iron}`})
+                        return await interaction.reply({ content: `You joined the Iron for Team B. ${emojis.iron}`})
                     } else {
                         await Iron.create({ 
                             name: player.discordName,
@@ -111,7 +111,7 @@ export default {
 
                         // ADD FORMAT LIBRARY IRON ROLE
                         interaction.member.roles.add('948006324237643806')
-                        return interaction.reply({ content: `You joined the Iron for Team A. ${emojis.iron}`})
+                        return await interaction.reply({ content: `You joined the Iron for Team A. ${emojis.iron}`})
                     }
                 }
             } else {
@@ -122,7 +122,7 @@ export default {
                 })
 
                 if (count === 5) confirmIron(interaction.channel, format)
-                return interaction.reply({ content: `You joined the Iron queue. ${emojis.iron}`})
+                return await interaction.reply({ content: `You joined the Iron queue. ${emojis.iron}`})
             }
         } else {
             const ironPerson = await Iron.findOne({ 
@@ -135,7 +135,7 @@ export default {
 
             if (!ironPerson) return
             await ironPerson.destroy()
-            return interaction.reply({ content: `You left the Iron queue. ${emojis.iron}`})
+            return await interaction.reply({ content: `You left the Iron queue. ${emojis.iron}`})
         }
     }
 }

@@ -11,13 +11,13 @@ export default {
 		.setName('story')
 		.setDescription('Posts the Iron Story. 📖'),
 	async execute(interaction) {
-        interaction.deferReply()
+        await interaction.deferReply()
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
 
-        if (!hasFullAccess(server)) return interaction.reply({ content: `This feature is only available in Format Library. ${emojis.FL}`})
-        if (!isMod(server, interaction.member)) return interaction.reply({ content: `You do not have permission to do that.`})
+        if (!hasFullAccess(server)) return await interaction.editReply({ content: `This feature is only available in Format Library. ${emojis.FL}`})
+        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
 
         const format = await Format.findOne({
             where: {

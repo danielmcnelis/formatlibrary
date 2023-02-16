@@ -20,7 +20,7 @@ export default {
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
 
-        if (!hasAffiliateAccess(server)) return interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         const format = await Format.findOne({
             where: {
                 [Op.or]: {
@@ -30,11 +30,11 @@ export default {
             }
         })
 
-        if (!format) return interaction.reply({ content: `Try using **/stats** in channels like: <#414575168174948372> or <#629464112749084673>.`})
+        if (!format) return await interaction.reply({ content: `Try using **/stats** in channels like: <#414575168174948372> or <#629464112749084673>.`})
         const user = interaction.options.getUser('player') || interaction.user
         const discordId = user.id	
         const player = await Player.findOne({ where: { discordId: discordId } })
-        if (!player) return interaction.reply({ content: "That user is not in the database."})
+        if (!player) return await interaction.reply({ content: "That user is not in the database."})
         const serverId = server.internalLadder ? server.id : '414551319031054346'
 
         const stats = await Stats.findOne({ 
@@ -69,7 +69,7 @@ export default {
         const losses = stats ? stats.losses : 0
         const winrate = wins || losses ? `${(100 * wins / (wins + losses)).toFixed(2)}%` : 'N/A'		
 
-        return interaction.reply({ content: 
+        return await interaction.reply({ content: 
             `${server.emoji || format.emoji} --- ${format.name} Stats --- ${server.emoji || format.emoji}`
             + `${server.internalLadder ? `\nServer: ${server.name}` : ''}`
             + `\nName: ${player.name}`

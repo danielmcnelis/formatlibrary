@@ -20,7 +20,7 @@ export default {
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
 
-        if (!hasAffiliateAccess(server)) return interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         const format = await Format.findOne({
             where: {
                 [Op.or]: {
@@ -30,11 +30,11 @@ export default {
             }
         })
 
-        if (!format) return interaction.reply({ content: `Try using **/leaderboard** in channels like: <#414575168174948372> or <#629464112749084673>.`})
+        if (!format) return await interaction.reply({ content: `Try using **/leaderboard** in channels like: <#414575168174948372> or <#629464112749084673>.`})
             
         const x = interaction.options.getNumber('number') || 10
-        if (x < 1) return interaction.reply({ content: "Please provide a number greater than 0."})
-        if (x > 100 || isNaN(x)) return interaction.reply({ content: "Please provide a number less than or equal to 100."})
+        if (x < 1) return await interaction.reply({ content: "Please provide a number greater than 0."})
+        if (x > 100 || isNaN(x)) return await interaction.reply({ content: "Please provide a number less than or equal to 100."})
         const serverId = server.internalLadder ? server.id : '414551319031054346'
 
         const allStats = await Stats.findAll({ 
@@ -50,7 +50,7 @@ export default {
         })
         
         const topStats = allStats.slice(0, x)
-        if (!topStats.length) return interaction.reply({ content: `I'm sorry, we don't have any ${format.name} players.`})
+        if (!topStats.length) return await interaction.reply({ content: `I'm sorry, we don't have any ${format.name} players.`})
         const results = []
         topStats.length === 1 ? results[0] = `${server.emoji || format.emoji} --- The Best ${server.internalLadder ? 'Internal ' : ''}${format.name} Player --- ${server.emoji || format.emoji}`
         : results[0] = `${server.emoji || format.emoji} --- Top ${topStats.length} ${server.internalLadder ? 'Internal ' : ''}${format.name} Players --- ${server.emoji || format.emoji}`

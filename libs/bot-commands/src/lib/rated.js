@@ -12,7 +12,7 @@ import { emojis } from '@fl/bot-emojis'
 
 const getRatedInformation = async (interaction, player) => {
     const format = await getRatedFormat(interaction)
-    if (!format) return interaction.user.send({ content: `Please specify a valid format.`})
+    if (!format) return await interaction.user.send({ content: `Please specify a valid format.`})
     
     const yourServers = [...await Membership.findAll({ 
         where: { 
@@ -28,7 +28,7 @@ const getRatedInformation = async (interaction, player) => {
     
     const yourGuildIds = yourServers.map((s) => s.id) || []
 
-    if (!yourGuildIds.length) return interaction.user.send(`Sorry, you are not a member of a server that supports rated play for ${format.name} Format. ${server.emoji || format.emoji}`)
+    if (!yourGuildIds.length) return await interaction.user.send(`Sorry, you are not a member of a server that supports rated play for ${format.name} Format. ${server.emoji || format.emoji}`)
     const dbName = player.duelingBook ? player.duelingBook : await askForDBName(interaction.user, player)
     if (!dbName) return
 
@@ -72,7 +72,7 @@ const getRatedInformation = async (interaction, player) => {
                 } else if (unrecognizedCards.length) {
                     let response = `I'm sorry, ${interaction.user.username}, the following card IDs were not found in our database:\n${unrecognizedCards.join('\n')}`
                     response += `\n\nThese cards are either alternate artwork, new to the TCG, OCG only, or incorrect in our database. Please contact the Tournament Organizer or the Admin if you can't resolve this.`
-                    return interaction.user.send({ content: response.toString() }).catch((err) => console.log(err))
+                    return await interaction.user.send({ content: response.toString() }).catch((err) => console.log(err))
                 } else {
                     const ydk = ['created by...', '#main', ...main, '#extra', ...extra, '!side', ...side, ''].join('\n')
                     ratedDeck.ydk = ydk
@@ -81,7 +81,7 @@ const getRatedInformation = async (interaction, player) => {
             }
         } catch (err) {
             console.log(err)
-            return interaction.user.send(`Unable to process deck list. Please try again.`)
+            return await interaction.user.send(`Unable to process deck list. Please try again.`)
         }
     } else {
         ratedDeck = await getNewRatedDeck(interaction.user, player, format)
@@ -138,9 +138,9 @@ const getRatedInformation = async (interaction, player) => {
                 }
             }
 
-            return interaction.user.send(`You've joined the ${format.name} Rated Pool. ${format.emoji} You'll receive a DM when you're paired.`)
+            return await interaction.user.send(`You've joined the ${format.name} Rated Pool. ${format.emoji} You'll receive a DM when you're paired.`)
         } else if (!potentialPairs.length && count) {
-            return interaction.user.send(`You've resubmitted your deck for the ${format.name} Rated Pool. ${format.emoji} You'll receive a DM when you're paired.`)
+            return await interaction.user.send(`You've resubmitted your deck for the ${format.name} Rated Pool. ${format.emoji} You'll receive a DM when you're paired.`)
         }
 
         for (let i = 0; i < potentialPairs.length; i++) {
@@ -256,9 +256,9 @@ const getRatedInformation = async (interaction, player) => {
             }
         }
 
-        return interaction.user.send(`You've joined the ${format.name} Rated Pool. ${format.emoji} You'll receive a DM when you're paired.`)
+        return await interaction.user.send(`You've joined the ${format.name} Rated Pool. ${format.emoji} You'll receive a DM when you're paired.`)
     } else {
-        return interaction.user.send(`You've resubmitted your deck for the ${format.name} Rated Pool. ${format.emoji} You'll receive a DM when you're paired.`)
+        return await interaction.user.send(`You've resubmitted your deck for the ${format.name} Rated Pool. ${format.emoji} You'll receive a DM when you're paired.`)
     }
     
 }
@@ -268,9 +268,9 @@ export default {
         .setName('rated')
         .setDescription('Join the rated pool for any format. 🎮'),
     async execute(interaction) {
-        if (interaction.guildId) return interaction.reply(`Try using **/rated** by DM'ing it to me.`)
+        if (interaction.guildId) return await interaction.reply(`Try using **/rated** by DM'ing it to me.`)
         const player = await Player.findOne({ where: { discordId: interaction.user.id } })
-        if (!player) return interaction.reply(`You are not in the database. Please join the Format Library Discord server to register.`)
+        if (!player) return await interaction.reply(`You are not in the database. Please join the Format Library Discord server to register.`)
         interaction.reply('🥸')
         return getRatedInformation(interaction, player)
     }
