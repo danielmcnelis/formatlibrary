@@ -27,7 +27,7 @@ export default {
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
     
-            if (!hasAffiliateAccess(server)) return interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+            if (!hasAffiliateAccess(server)) return interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
     
             const format = await Format.findOne({
                 where: {
@@ -38,8 +38,8 @@ export default {
                 }
             })
     
-        if (!format) return interaction.reply({ content: `Try using /loss in channels like: <#414575168174948372> or <#629464112749084673>.`})
-        if (opponent.id === interaction.user.id) return interaction.reply({ content: `You cannot lose a match to yourself.`})
+        if (!format) return interaction.editReply({ content: `Try using /loss in channels like: <#414575168174948372> or <#629464112749084673>.`})
+        if (opponent.id === interaction.user.id) return interaction.editReply({ content: `You cannot lose a match to yourself.`})
         if (await isNewUser(opponent.id)) await createPlayer(winner)
         const winningPlayer = await Player.findOne({ where: { discordId: opponent.id } })
         const serverId = server.internalLadder ? server.id : '414551319031054346'
@@ -52,9 +52,9 @@ export default {
         if (!lCount) await Stats.create({ playerId: losingPlayer.id, format: format.name, serverId: serverId, internal: server.internalLadder })
         const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, format: format.name, serverId: serverId } })
 
-        if (opponent.bot) return interaction.reply({ content: `Sorry, Bots do not play ${format.name} Format... *yet*.`})
-        if (!losingPlayer || !loserStats) return interaction.reply({ content: `You are not in the database.`})
-        if (!winningPlayer || !winnerStats) return interaction.reply({ content: `That user is not in the database.`})
+        if (opponent.bot) return interaction.editReply({ content: `Sorry, Bots do not play ${format.name} Format... *yet*.`})
+        if (!losingPlayer || !loserStats) return interaction.editReply({ content: `You are not in the database.`})
+        if (!winningPlayer || !winnerStats) return interaction.editReply({ content: `That user is not in the database.`})
 
         const loserHasTourRole = isTourPlayer(server, member)
         const winnerHasTourRole = isTourPlayer(server, winner)
@@ -134,8 +134,8 @@ export default {
                     const tournament = await selectTournament(interaction, tournaments, interaction.member.user.id)
                     if (tournament) {
                         isTournamentMatch = true
-                        if (tournament.state === 'pending') return interaction.reply({ content: `Sorry, ${tournament.name} has not started yet.`})
-                        if (tournament.state !== 'underway') return interaction.reply({ content: `Sorry, ${tournament.name} is not underway.`})
+                        if (tournament.state === 'pending') return interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
+                        if (tournament.state !== 'underway') return interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
                         const success = await processMatchResult(server, interaction, winner, winningPlayer, interaction.member, losingPlayer, tournament)
                         if (!success) return
                     } else {
@@ -176,7 +176,7 @@ export default {
                 await ironPersonA.save()
                 setTimeout(() => postStory(interaction.channel, format), 5000)
             } else {
-                return interaction.reply({ content: `Sorry, ${winningPlayer.name} is not your ${format.name} Iron opponent. ${server.emoji || format.emoji} ${emojis.iron}`})
+                return interaction.editReply({ content: `Sorry, ${winningPlayer.name} is not your ${format.name} Iron opponent. ${server.emoji || format.emoji} ${emojis.iron}`})
             }
         }
             
@@ -244,7 +244,7 @@ export default {
         }
 
         if (!interaction.replied) {
-            return interaction.reply({ content: `${losingPlayer.name}, your ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournamentMatch ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss to <@${winningPlayer.discordId}> has been recorded.`})
+            return interaction.editReply({ content: `${losingPlayer.name}, your ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournamentMatch ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss to <@${winningPlayer.discordId}> has been recorded.`})
         } else {
             return interaction.channel.send({ content: `${losingPlayer.name}, your ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournamentMatch ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss to <@${winningPlayer.discordId}> has been recorded.`})
         }
