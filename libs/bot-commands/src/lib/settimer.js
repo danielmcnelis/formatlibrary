@@ -78,7 +78,7 @@ export default {
         }
 
         sendPairings(interaction.guild, server, tournament, ignoreRound1)
-        return setTimeout(() => {
+        return setTimeout(async () => {
             return await interaction.channel.send(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`)
         }, timeRemaining)
     }
