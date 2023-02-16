@@ -40,7 +40,7 @@ export default {
         if (!format) return interaction.reply({ content: `Try using /loss in channels like: <#414575168174948372> or <#629464112749084673>.`})
         if (opponent.id === interaction.user.id) return interaction.reply({ content: `You cannot lose a match to yourself.`})
         
-        await interaction.reply({ content: `Processing match report. Please wait.`})
+        await interaction.deferReply()
         if (await isNewUser(opponent.id)) await createPlayer(winner)
         const winningPlayer = await Player.findOne({ where: { discordId: opponent.id } })
         const serverId = server.internalLadder ? server.id : '414551319031054346'
