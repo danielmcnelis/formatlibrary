@@ -11,7 +11,7 @@ export default {
 		.setName('drop')
 		.setDescription('Drop from a tournament. 💧'),
 	async execute(interaction) {
-        interaction.deferReply()
+        await interaction.deferReply()
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
