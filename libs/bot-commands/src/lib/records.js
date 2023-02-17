@@ -16,11 +16,12 @@ export default {
                 .setRequired(false)
         ),
     async execute(interaction) {
+        await interaction.deferReply()
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
         
-        if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         
         const format = await Format.findOne({
             where: {
@@ -31,15 +32,15 @@ export default {
             }
         })
 
-        if (!format) return await interaction.reply({ content: `Try using **/history** in channels like: <#414575168174948372> or <#629464112749084673>.`})  
+        if (!format) return await interaction.editReply({ content: `Try using **/history** in channels like: <#414575168174948372> or <#629464112749084673>.`})  
 
         // let x = 50
-        // if (x > 250) return await interaction.reply({ content: "Please provide a number less than or equal to 250."})
+        // if (x > 250) return await interaction.editReply({ content: "Please provide a number less than or equal to 250."})
         
         const user = interaction.options.getUser('player') || interaction.user    
         const discordId = user.id
         const player = await Player.findOne({ where: { discordId: discordId } })
-        if (!player) return await interaction.reply({ content: "That user is not in the database."})
+        if (!player) return await interaction.editReply({ content: "That user is not in the database."})
         const serverId = server.internalLadder ? server.id : '414551319031054346'
 
         const matches = await Match.findAll({
@@ -79,6 +80,6 @@ export default {
             interaction.member.send(records.slice(i, i+10).join('\n'))
         }
 
-        return await interaction.reply(`Please check your DMs.`)
+        return await interaction.editReply(`Please check your DMs.`)
     }
 }
