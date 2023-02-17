@@ -33,8 +33,8 @@ export default {
 
         if (!format) return await interaction.reply({ content: `Try using **/history** in channels like: <#414575168174948372> or <#629464112749084673>.`})  
 
-        let x = 50
-        if (x > 250) return await interaction.reply({ content: "Please provide a number less than or equal to 250."})
+        // let x = 50
+        // if (x > 250) return await interaction.reply({ content: "Please provide a number less than or equal to 250."})
         
         const user = interaction.options.getUser('player') || interaction.user    
         const discordId = user.id
@@ -51,7 +51,7 @@ export default {
                 ],
                 serverId: serverId
             },
-            limit: 250,
+            // limit: 250,
             order: [['createdAt', 'DESC']]
         })
 
