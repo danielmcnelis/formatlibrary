@@ -1074,6 +1074,7 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
 
 // CREATE TOURNAMENT
 export const createTournament = async (interaction, formatName, name, abbreviation, tournament_type, channelName) => {
+    await interaction.deferReply()
     const server = !interaction.guildId ? {} : 
         await Server.findOne({ where: { id: interaction.guildId }}) || 
         await Server.create({ id: interaction.guildId, name: interaction.guild.name })
