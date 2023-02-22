@@ -17,12 +17,12 @@ export default {
         )
         .addUserOption(option =>
             option
-                .setName('teammate 1')
+                .setName('teammate1')
                 .setDescription('Your first teammate.')
                 .setRequired(true))
         .addUserOption(option =>
             option
-                .setName('teammate 2')
+                .setName('teammate2')
                 .setDescription('Your other teammate.')
                 .setRequired(true)
         ),
