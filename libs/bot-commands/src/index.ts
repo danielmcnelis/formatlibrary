@@ -47,6 +47,7 @@ import start from './lib/start'
 import stats from './lib/stats'
 import story from './lib/story'
 import timer from './lib/timer'
+import team from './lib/team'
 import test from './lib/test'
 import undo from './lib/undo'
   
@@ -97,6 +98,7 @@ export default {
     start,
     stats,
     story,
+    team,
     test,
     timer,
     undo
