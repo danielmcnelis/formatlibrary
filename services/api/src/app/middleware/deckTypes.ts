@@ -48,8 +48,6 @@ export const deckTypesDownload = async (req, res, next) => {
           attributes: ['id', 'ydk']
         })) || []
 
-      const showExtra = format.date >= '2008-08-05' || !format.date
-
       const data = {
         analyzed: 0,
         main: {},
@@ -86,9 +84,7 @@ export const deckTypesDownload = async (req, res, next) => {
           .filter((e) => e.length)
   
         const main = mainKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
-        const extra = showExtra
-          ? extraKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
-          : {}
+        const extra = extraKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
         const side = sideKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
 
         Object.entries(main).forEach((e) => {
@@ -258,6 +254,7 @@ export const deckTypesDownload = async (req, res, next) => {
         data.sideTraps.forEach((el) => sideYdk.push(el.card.konamiCode))
 
         const ydk = ['created by...', '#main', ...mainYdk, '#extra', ...extraYdk, '!side', ...sideYdk, ''].join('\n')
+        console.log('YDK', ydk)
         res.send(ydk)
     } catch (err) {
       console.log(err)
