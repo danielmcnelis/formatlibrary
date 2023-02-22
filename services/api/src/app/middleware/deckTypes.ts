@@ -255,30 +255,12 @@ export const deckTypesDownload = async (req, res, next) => {
             for (let i = 0; i < avg; i++) mainYdk.push(el.card.konamiCode)
         })
 
-        if (showExtra) {
-            data.extraMonsters.forEach((el) => {
-                const avg = Math.round(el.total / el.decks)
-                for (let i = 0; i < avg; i++) extraYdk.push(el.card.konamiCode)
-            })
-        }
-
-        data.sideMonsters.forEach((el) => {
-            const avg = Math.round(el.total / el.decks)
-            for (let i = 0; i < avg; i++) sideYdk.push(el.card.konamiCode)
-        })
-
-        data.sideSpells.forEach((el) => {
-            const avg = Math.round(el.total / el.decks)
-            for (let i = 0; i < avg; i++) sideYdk.push(el.card.konamiCode)
-        })
-
-        data.sideTraps.forEach((el) => {
-            const avg = Math.round(el.total / el.decks)
-            for (let i = 0; i < avg; i++) sideYdk.push(el.card.konamiCode)
-        })
+        if (showExtra) data.extraMonsters.forEach((el) => extraYdk.push(el.card.konamiCode))
+        data.sideMonsters.forEach((el) => sideYdk.push(el.card.konamiCode))
+        data.sideSpells.forEach((el) => sideYdk.push(el.card.konamiCode))
+        data.sideTraps.forEach((el) => sideYdk.push(el.card.konamiCode))
 
         const ydk = ['created by...', '#main', ...mainYdk, '#extra', ...extraYdk, '!side', ...sideYdk, ''].join('\n')
-        console.log('ydk', ydk)
         res.send(ydk)
     } catch (err) {
       console.log(err)

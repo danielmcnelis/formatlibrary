@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useLayoutEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { CardImage } from '../Cards/CardImage'
 import { NotFound } from '../General/NotFound'
@@ -119,8 +119,13 @@ export const DeckType = () => {
                     <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`}/>
                 </div>
             </a>
-
             <div className="single-deck-title">{summary.deckType}</div>
+            <Link to="/builder" state={{ deck: {} }} className="desktop-only">                                    
+                <div className="deck-button">
+                    <b style={{padding: '0px 6px'}}>Open Deck</b>
+                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`}/>
+                </div>
+            </Link>
         </div>
         <table className="single-deck-table">
           <tbody>
