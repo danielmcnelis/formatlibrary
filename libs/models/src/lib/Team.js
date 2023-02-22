@@ -2,7 +2,7 @@
 import { Sequelize } from 'sequelize'
 import { db } from './db'
 
-export const Team = db.define('irons', {
+export const Team = db.define('teams', {
     name: {
         type: Sequelize.STRING
     },
