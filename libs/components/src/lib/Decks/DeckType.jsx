@@ -111,7 +111,7 @@ export const DeckType = () => {
             <a
                 className="link desktop-only"
                 href={`/api/deckTypes/download?id=${id}&format=${format}`} 
-                download={`${summary.deckType}-skeleton.ydk`}
+                download={`${summary.deckType} - ${format} skeleton.ydk`}
                 onClick={()=> addDownload()}
             >                                    
                 <div className="deck-button">
