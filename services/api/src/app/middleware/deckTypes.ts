@@ -239,42 +239,42 @@ export const deckTypesDownload = async (req, res, next) => {
         const sideYdk = []
         const extraYdk = []
 
-        data.mainMonsters.forEach((card) => {
-            const avg = Math.round(card.total / card.decks)
-            console.log('avg', avg, 'konamiCode', card.konamiCode)
-            for (let i = 0; i < avg; i++) mainYdk.push(card.konamiCode)
+        data.mainMonsters.forEach((el) => {
+            const avg = Math.round(el.total / el.decks)
+            console.log('avg', avg, 'konamiCode', el.card.konamiCode)
+            for (let i = 0; i < avg; i++) mainYdk.push(el.card.konamiCode)
         })
 
-        data.mainSpells.forEach((card) => {
-            const avg = Math.round(card.total / card.decks)
-            for (let i = 0; i < avg; i++) mainYdk.push(card.konamiCode)
+        data.mainSpells.forEach((el) => {
+            const avg = Math.round(el.total / el.decks)
+            for (let i = 0; i < avg; i++) mainYdk.push(el.card.konamiCode)
         })
 
-        data.mainTraps.forEach((card) => {
-            const avg = Math.round(card.total / card.decks)
-            for (let i = 0; i < avg; i++) mainYdk.push(card.konamiCode)
+        data.mainTraps.forEach((el) => {
+            const avg = Math.round(el.total / el.decks)
+            for (let i = 0; i < avg; i++) mainYdk.push(el.card.konamiCode)
         })
 
         if (showExtra) {
-            data.extraMonsters.forEach((card) => {
-                const avg = Math.round(card.total / card.decks)
-                for (let i = 0; i < avg; i++) extraYdk.push(card.konamiCode)
+            data.extraMonsters.forEach((el) => {
+                const avg = Math.round(el.total / el.decks)
+                for (let i = 0; i < avg; i++) extraYdk.push(el.card.konamiCode)
             })
         }
 
-        data.sideMonsters.forEach((card) => {
-            const avg = Math.round(card.total / card.decks)
-            for (let i = 0; i < avg; i++) sideYdk.push(card.konamiCode)
+        data.sideMonsters.forEach((el) => {
+            const avg = Math.round(el.total / el.decks)
+            for (let i = 0; i < avg; i++) sideYdk.push(el.card.konamiCode)
         })
 
-        data.sideSpells.forEach((card) => {
-            const avg = Math.round(card.total / card.decks)
-            for (let i = 0; i < avg; i++) sideYdk.push(card.konamiCode)
+        data.sideSpells.forEach((el) => {
+            const avg = Math.round(el.total / el.decks)
+            for (let i = 0; i < avg; i++) sideYdk.push(el.card.konamiCode)
         })
 
-        data.sideTraps.forEach((card) => {
-            const avg = Math.round(card.total / card.decks)
-            for (let i = 0; i < avg; i++) sideYdk.push(card.konamiCode)
+        data.sideTraps.forEach((el) => {
+            const avg = Math.round(el.total / el.decks)
+            for (let i = 0; i < avg; i++) sideYdk.push(el.card.konamiCode)
         })
 
         const ydk = ['created by...', '#main', ...mainYdk, '#extra', ...extraYdk, '!side', ...sideYdk, ''].join('\n')
