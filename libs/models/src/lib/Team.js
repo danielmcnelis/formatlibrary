@@ -10,7 +10,7 @@ export const Team = db.define('irons', {
         type: Sequelize.INTEGER
     },
     tournamentId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
     },
     captainId: {
         type: Sequelize.STRING
