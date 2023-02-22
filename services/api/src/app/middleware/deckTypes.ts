@@ -241,6 +241,7 @@ export const deckTypesDownload = async (req, res, next) => {
 
         data.mainMonsters.forEach((card) => {
             const avg = Math.round(card.total / card.decks)
+            console.log('avg', avg, 'konamiCode', card.konamiCode)
             for (let i = 0; i < avg; i++) mainYdk.push(card.konamiCode)
         })
 
@@ -275,8 +276,6 @@ export const deckTypesDownload = async (req, res, next) => {
             const avg = Math.round(card.total / card.decks)
             for (let i = 0; i < avg; i++) sideYdk.push(card.konamiCode)
         })
-
-        console.log('data', data)
 
         const ydk = ['created by...', '#main', ...mainYdk, '#extra', ...extraYdk, '!side', ...sideYdk, ''].join('\n')
         console.log('ydk', ydk)
