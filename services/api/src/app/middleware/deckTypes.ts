@@ -229,6 +229,7 @@ export const deckTypesDownload = async (req, res, next) => {
         .filter((v: any) => v.card.category === 'Trap')
         .sort((a: any, b: any) => b.decks - a.decks)
 
+        console.log('data', data)
       res.json(data)
     } catch (err) {
       console.log(err)
