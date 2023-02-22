@@ -255,7 +255,7 @@ export const deckTypesDownload = async (req, res, next) => {
             for (let i = 0; i < avg; i++) mainYdk.push(el.card.konamiCode)
         })
 
-        if (showExtra) data.extraMonsters.forEach((el) => extraYdk.push(el.card.konamiCode))
+        data.extraMonsters.forEach((el) => extraYdk.push(el.card.konamiCode))
         data.sideMonsters.forEach((el) => sideYdk.push(el.card.konamiCode))
         data.sideSpells.forEach((el) => sideYdk.push(el.card.konamiCode))
         data.sideTraps.forEach((el) => sideYdk.push(el.card.konamiCode))
