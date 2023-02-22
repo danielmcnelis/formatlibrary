@@ -28,6 +28,7 @@ export const DeckType = () => {
     const { id } = useParams()
     const location = useLocation()
     const format = location?.search?.slice(8)
+    console.log('summary', summary)
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
