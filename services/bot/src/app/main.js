@@ -17,7 +17,7 @@ import { assignTourRoles, conductCensus, downloadNewCards, getMidnightCountdown,
     joinTournament, openTournament, processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, 
     signupForTournament, startTournament, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, 
     hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, isNewUser, setTimers
-} from '@fl/bot-functions' 
+} from '@fl/bot-functions'
 
 // STATIC IMPORTS
 import { emojis } from '@fl/bot-emojis'

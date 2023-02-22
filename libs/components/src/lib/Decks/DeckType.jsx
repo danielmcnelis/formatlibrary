@@ -27,6 +27,7 @@ export const DeckType = () => {
     const goToFormat = () => navigate(`/formats/${summary.format ? summary.format.name : ''}`)
     const { id } = useParams()
     const location = useLocation()
+    console.log('summary', summary)
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])

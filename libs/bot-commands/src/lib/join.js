@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Entry, Format, Player, Server, Tournament } from '@fl/models'
+import { Entry, Format, Player, Server, Team, Tournament } from '@fl/models'
 import { askForDBName, getDeckList, postParticipant, selectTournament } from '@fl/bot-functions'
 import { drawDeck, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
@@ -50,30 +50,69 @@ export default {
         const dbName = player.duelingBook ? player.duelingBook : await askForDBName(interaction.member, player)
         if (!dbName) return
 
+        const team = await Team.findOne({
+            where: {
+                tournamentId: tournament.id,
+                [Op.or]: {
+                    playerAId: player.id,
+                    playerBId: player.id,
+                    playerCId: player.id,
+                }
+            }
+        })
+
+        if (tournament.isTeamTournament && !team) return
+
         const { url, ydk } = await getDeckList(interaction.member, player, format)
         if (!url || !ydk) return
 
-        if (!entry) {
+        if (!entry && team) {
+            await Entry.create({
+                playerName: player.name,
+                url: url,
+                ydk: ydk,
+                participantId: team.participantId,
+                playerId: player.id,
+                tournamentId: tournament.id,
+                teamId: team.id
+            })
+        } else if (!entry && !tournament.isTeamTournament) {
             try {                                
-              const { participant } = await postParticipant(server, tournament, player)
-              if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
-              
-              await Entry.create({
-                  playerName: player.name,
-                  url: url,
-                  ydk: ydk,
-                  participantId: participant.id,
-                  playerId: player.id,
-                  tournamentId: tournament.id
-              })
-        
-              const deckAttachments = await drawDeck(ydk) || []
-              interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
-              interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in the tournament! FYI, this is the deck you submitted:`, files: [...deckAttachments] }).catch((err) => console.log(err))
-              return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+                const { participant } = await postParticipant(server, tournament, player)
+                if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
+                
+                await Entry.create({
+                    playerName: player.name,
+                    url: url,
+                    ydk: ydk,
+                    participantId: participant.id,
+                    playerId: player.id,
+                    tournamentId: tournament.id
+                })
+            
+                const deckAttachments = await drawDeck(ydk) || []
+                interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
+                interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in the tournament! FYI, this is the deck you submitted:`, files: [...deckAttachments] }).catch((err) => console.log(err))
+                return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
             } catch (err) {
-              console.log(err)
-              return await interaction.member.send({ content: `${emojis.high_alert} Error: Could not save information to the RetroBot Database. ${emojis.high_alert}`})
+                console.log(err)
+                return await interaction.member.send({ content: `${emojis.high_alert} Error: Could not save information to the RetroBot Database. ${emojis.high_alert}`})
+            }
+        } else if (entry.active === false && team) {
+            try {                                
+                await entry.update({
+                    url: url,
+                    ydk: ydk,
+                    active: true
+                })
+
+                const deckAttachments = await drawDeck(ydk) || []
+                interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
+                interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in the tournament! FYI, this is the deck you submitted:`, files: [...deckAttachments] }).catch((err) => console.log(err))
+                return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+            } catch (err) {
+                console.log(err)
+                return await interaction.member.send({ content: `${emojis.high_alert} Error: Could not save information to the RetroBot Database. ${emojis.high_alert} `})
             }
         } else if (entry.active === false) {
             try {                                
@@ -98,7 +137,6 @@ export default {
         } else {
             try {
                 await entry.update({ url: url, ydk: ydk })
-
                 const deckAttachments = await drawDeck(ydk) || []
                 interaction.member.send({ content: `Thanks! I have your updated deck list for the tournament:`, files: [...deckAttachments] }).catch((err) => console.log(err))
                 return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> resubmitted their deck list for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))

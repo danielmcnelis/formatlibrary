@@ -35,5 +35,11 @@ export const Entry = db.define('entries', {
     },
     tournamentId: {
         type: Sequelize.STRING
+    },
+    teamId: {
+        type: Sequelize.INTEGER
+    },
+    slot: {
+        type: Sequelize.STRING
     }
 })

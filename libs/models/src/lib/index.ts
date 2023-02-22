@@ -21,6 +21,7 @@ import { Server } from './Server'
 import { Set } from './Set'
 import { Stats } from './Stats'
 import { Status } from './Status'
+import { Team } from './Team'
 import { Tournament } from './Tournament'
 import { Upvote } from './Upvote'
 import { Video } from './Video'
@@ -39,6 +40,9 @@ DeckThumb.belongsTo(DeckType)
 //ENTRY
 Entry.belongsTo(Player)
 Player.hasMany(Entry)
+
+Entry.belongsTo(Team)
+Team.hasMany(Entry)
 
 Entry.belongsTo(Tournament)
 Tournament.hasMany(Entry)
@@ -122,6 +126,10 @@ Card.hasMany(Status)
 Tournament.belongsTo(Server)
 Server.hasMany(Tournament)
 
+//TEAM
+Team.belongsTo(Tournament)
+Tournament.hasMany(Team)
+
 //UPVOTE
 Upvote.belongsTo(Player)
 Player.hasMany(Upvote)
@@ -153,6 +161,7 @@ export {
   Set,
   Stats,
   Status,
+  Team,
   Tournament,
   Upvote,
   Video

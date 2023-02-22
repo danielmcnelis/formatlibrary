@@ -5,7 +5,7 @@
 import axios from 'axios'
 import {Op} from 'sequelize'
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } from 'discord.js'
-import { Entry, Format, Match, Player, Stats, Server, Tournament } from '@fl/models'
+import { Entry, Format, Match, Player, Stats, Server, Team, Tournament } from '@fl/models'
 import { getIssues } from './deck.js'
 import { capitalize, drawDeck, generateRandomString, shuffleArray } from './utility.js'
 import { emojis } from '@fl/bot-emojis'
@@ -568,12 +568,12 @@ export const removeParticipant = async (server, interaction, member, entry, tour
         })
 
         if (success) {
-            if (tournament.state === 'pending') {
-                await entry.destroy()
-            } else {
+            if (tournament.state === 'underway') {
                 entry.active = false
                 entry.roundDropped = entry.wins + entry.losses
                 await entry.save()
+            } else {
+                await entry.destroy()
             }
 
             const playerId = entry.playerId
@@ -604,6 +604,52 @@ export const removeParticipant = async (server, interaction, member, entry, tour
             return await interaction.editReply({ content: `Hmm... I don't see you in the participants list for ${tournament.name}. ${tournament.emoji}`})
         } else {
             return await interaction.editReply({ content: `I could not find ${member.user.username} in the participants list for ${tournament.name}. ${tournament.emoji}`})
+        }
+    }   
+}
+
+//REMOVE TEAM
+export const removeTeam = async (server, interaction, team, entries, tournament, drop = false) => {    
+    try {
+        const success = await axios({
+            method: 'delete',
+            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${team.participantId}.json?api_key=${server.challongeAPIKey}`
+        })
+
+        if (success) {
+            for (let i = 0; i < entries.length; i++) {
+                const entry = entries[i]
+
+                if (tournament.state === 'underway') {
+                    await entry.update({
+                        active: false,
+                        roundDropped: entry.wins + entry.losses
+                    })
+
+                    if (!team.roundDropped || entry.roundDropped > team.roundDropped) {
+                        await team.update({ roundDropped: entry.roundDropped })
+                    }
+                } else {
+                    await entry.destroy()
+                }
+            }
+        
+            if (drop) {
+                return await interaction.editReply({ content: `I removed ${team.name} from ${tournament.name}. Better luck next time! ${tournament.emoji}`})
+            } else {
+                return await interaction.editReply({ content: `${team.name} has been removed from ${tournament.name}. ${tournament.emoji}`})
+            }
+        } else if (!success && drop) {
+            return await interaction.editReply({ content: `Hmm... I don't see ${team.name} in the participants list for ${tournament.name}. ${tournament.emoji}`})
+        } else if (!success && !drop) {
+            return await interaction.editReply({ content: `Could not find ${team.name} in the participants list for ${tournament.name}. ${tournament.emoji}`})
+        }
+    } catch (err) {
+        console.log(err)
+        if (drop) {
+            return await interaction.editReply({ content: `Hmm... I don't see ${team.name} in the participants list for ${tournament.name}. ${tournament.emoji}`})
+        } else {
+            return await interaction.editReply({ content: `Could not find ${team.name} in the participants list for ${tournament.name}. ${tournament.emoji}`})
         }
     }   
 }
@@ -734,6 +780,40 @@ export const findNextOpponent = async (tournamentId, matchesArr = [], matchId, p
                 }) 
 
                 return opponentEntry
+            }
+        }
+    }
+
+    return false
+}
+
+//FIND NEXT TEAM
+export const findNextTeam = async (tournamentId, matchesArr = [], matchId, participantId) => {
+    for (let i = 0; i < matchesArr.length; i++) {
+        const match = matchesArr[i].match
+        if (match.id === matchId) {
+            const player1_id = match.player1_id
+            const player2_id = match.player2_id
+            if (player1_id === participantId) {
+                if (!player2_id) return false
+                const team = await Team.findOne({
+                    where: {
+                        tournamentId: tournamentId,
+                        participantId: player2_id
+                    }
+                })
+
+                return team
+            } else if (player2_id === participantId) {
+                if (!player1_id) return false
+                const team = await Team.findOne({
+                    where: {
+                        tournamentId: tournamentId,
+                        participantId: player1_id
+                    }
+                }) 
+
+                return team
             }
         }
     }
@@ -874,8 +954,14 @@ export const getGameCount = async (message, tournament, noshow) => {
 export const processMatchResult = async (server, interaction, winner, winningPlayer, loser, losingPlayer, tournament, noshow = false) => {
     const losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id }, include: Player })
     const winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id }, include: Player })
+    
     if (!losingEntry || !winningEntry) {
         interaction.editReply({ content: `Sorry I could not find your tournament in the database.`})
+        return false
+    }
+
+    if (tournament.isTeamTournament && losingEntry.slot !== winningEntry.slot) {
+        interaction.editReply({ content: `Sorry, ${losingEntry.playerName} (Player ${losingEntry.slot}) and ${winningEntry.playerName} (Player ${winningEntry.slot}) are not paired for ${tournament.name}.`})
         return false
     }
 
@@ -1021,6 +1107,181 @@ export const processMatchResult = async (server, interaction, winner, winningPla
     }
     
     return true
+}
+
+//PROCESS TEAM RESULT
+export const processTeamResult = async (server, interaction, winner, winningPlayer, loser, losingPlayer, tournament, noshow = false) => {
+    const losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id }, include: [Player, Team] })
+    const winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id }, include: [Player, Team] })
+    
+    if (!losingEntry || !winningEntry) {
+        interaction.editReply({ content: `Sorry I could not find your tournament in the database.`})
+        return false
+    }
+
+    if (losingEntry.slot !== winningEntry.slot) {
+        interaction.editReply({ content: `Sorry, ${losingEntry.playerName} (Player ${losingEntry.slot}) and ${winningEntry.playerName} (Player ${winningEntry.slot}) are not paired for ${tournament.name}.`})
+        return false
+    }
+
+    const losingTeam = losingEntry.team
+    const winningTeam = winningEntry.team
+
+    await losingTeam.update({ currentRoundLosses: losingTeam.currentRoundLosses++ })
+    await winningTeam.update({ currentRoundWins: winningTeam.currentRoundWins++ })
+
+    const losingEntries = await Entry.findAll({
+        where: {
+            tournamentId: tournament.id,
+            teamId: losingTeam.id
+        }
+    })
+
+    if (winningTeam.currentRoundWins + winningTeam.currentRoundLosses === 3) {
+        const matchesArr = await getMatches(server, tournament.id) || []
+        let matchId = false
+        let scores = false
+        for (let i = 0; i < matchesArr.length; i++) {
+            const match = matchesArr[i].match
+            if (match.state !== 'open') continue
+            if (checkPairing(match, losingEntry.participantId, winningEntry.participantId)) {
+                matchId = match.id    
+                scores = `${winningTeam.currentRoundWins}-${winningTeam.currentRoundLosses}`
+                break
+            }
+        }
+    
+        let success
+    
+        try {
+            success = await axios({
+                method: 'put',
+                url: `https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${matchId}.json?api_key=${server.challongeAPIKey}`,
+                data: {
+                    match: {
+                        winner_id: winningEntry.participantId,
+                        scores_csv: scores
+                    }
+                }
+            })
+
+            await losingTeam.update({
+                currentRoundWins: 0,
+                currentRoundLosses: 0,
+                losses: losingTeam.losses++
+            })
+
+            await winningTeam.update({
+                currentRoundWins: 0,
+                currentRoundLosses: 0,
+                wins: winningTeam.wins++
+            })
+        } catch (err) {
+            console.log(err)
+        }
+         
+        if (!success) {
+            interaction.editReply({ content: `Error: could not update bracket for ${tournament.name}.`})
+            return false
+        }
+
+        if (tournament.type === 'single elimination' || tournament.type === 'double elimination') {
+            const updatedMatchesArr = await getMatches(server, tournament.id) || []
+            const winnerNextMatch = findNextMatch(updatedMatchesArr, matchId, winningEntry.participantId)
+            const winnerNextTeam = winnerNextMatch ? await findNextTeam(tournament.id, updatedMatchesArr, winnerNextMatch, winningEntry.participantId) : null
+            const winnerMatchWaitingOn = winnerNextTeam ? null : findOtherPreReqMatch(updatedMatchesArr, winnerNextMatch, matchId) 
+            const winnerWaitingOnTeam1 = winnerMatchWaitingOn && winnerMatchWaitingOn.p1 && winnerMatchWaitingOn.p2 ? await Team.findOne({ where: { tournamentId: tournament.id, participantId: winnerMatchWaitingOn.p1 } }) : null
+            const winnerWaitingOnTeam2 = winnerMatchWaitingOn && winnerMatchWaitingOn.p1 && winnerMatchWaitingOn.p2 ? await Team.findOne({ where: { tournamentId: tournament.id, participantId: winnerMatchWaitingOn.p2 } }) : null
+
+            const loserEliminated = tournament.type === 'single elimination' ? true :
+                tournament.type === 'double elimination' && losingEntry.losses >= 2 ? true :
+                false
+
+            if (loserEliminated) {
+                for (let i = 0; i < losingEntries.length; i++) {
+                    const playerId = losingEntries[i].player.id
+                    const discordId = losingEntries[i].player.discordId
+                    const member = interaction.guild.members.cache.get(discordId)
+                    await losingEntries[i].update({ active: false})
+    
+                    const count = await Entry.count({
+                        where: {
+                            playerId: playerId,
+                            active: true,
+                            '$tournament.serverId$': server.id
+                        },
+                        include: Tournament
+                    })
+    
+                    if (member && !count) member.roles.remove(server.tourRole).catch((err) => console.log(err))
+                }
+            }
+
+            const loserNextMatch = loserEliminated ? null : findNextMatch(updatedMatchesArr, matchId, losingEntry.participantId)
+            const loserNextTeam = loserNextMatch ? await findNextTeam(tournament.id, updatedMatchesArr, loserNextMatch, losingEntry.participantId) : null
+            const loserMatchWaitingOn = loserNextTeam ? null : findOtherPreReqMatch(updatedMatchesArr, loserNextMatch, matchId) 
+            const loserWaitingOnTeam1 = loserMatchWaitingOn && loserMatchWaitingOn.p1 && loserMatchWaitingOn.p2 ? await Team.findOne({ where: { tournamentId: tournament.id, participantId: loserMatchWaitingOn.p1 } }) : null
+            const loserWaitingOnTeam2 = loserMatchWaitingOn && loserMatchWaitingOn.p1 && loserMatchWaitingOn.p2 ? await Team.findOne({ where: { tournamentId: tournament.id, participantId: loserMatchWaitingOn.p2 } }) : null
+
+            setTimeout(async () => {
+                if (loserEliminated) {
+                    return await interaction.channel.send({ content: `${losingTeam.name}, You are eliminated from the tournament. Better luck next time!`})
+                } else if (loserNextTeam) {
+                    const playerA1 = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player })
+                    const playerA2 = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player})
+
+                    const playerB1 = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
+                    const playerB2 = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
+
+                    const playerC1 = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
+                    const playerC2 = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
+
+                    return await interaction.channel.send({ 
+                        content: `New Team Match: ${losingTeam.name} vs. ${loserNextTeam.name}. Good luck to both teams.` + 
+                            `\nDuel A: <@${playerA1.player.discordId}> vs <@${playerA2.player.discordId}>`+ 
+                            `\nDuel B: <@${playerB1.player.discordId}> vs <@${playerB2.player.discordId}>`+ 
+                            `\nDuel C: <@${playerC1.player.discordId}> vs <@${playerC2.player.discordId}>`
+                    })
+                } else if (loserMatchWaitingOn && loserWaitingOnTeam1 && loserWaitingOnTeam2) {
+                    return await interaction.channel.send({ content: `${losingTeam.name}, You are waiting for the result of ${loserWaitingOnTeam1.name} vs ${loserWaitingOnTeam2.name}.`})
+                } else {
+                    return await interaction.channel.send({ content: `${losingTeam.name}, You are waiting for multiple matches to finish. Grab a snack and stay hydrated.`})
+                }
+            }, 2000)
+        
+            if (!winnerNextMatch || (winnerNextMatch && loserNextMatch !== winnerNextMatch)) {
+                setTimeout(async () => {
+                    if (!winnerNextMatch) {
+                        return await interaction.channel.send({ content: `${winningTeam.name}, You won the tournament! Congratulations on your stellar performance! ${emojis.legend}`})
+                    } else if (winnerNextTeam) {
+                        const playerA1 = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player })
+                        const playerA2 = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player})
+
+                        const playerB1 = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
+                        const playerB2 = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
+
+                        const playerC1 = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
+                        const playerC2 = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
+                
+                        return await interaction.channel.send({ 
+                            content: `New Team Match: ${winningTeam.name} vs. ${winnerNextTeam.name}. Good luck to both teams.` + 
+                                `\nDuel A: <@${playerA1.player.discordId}> vs <@${playerA2.player.discordId}>`+ 
+                                `\nDuel B: <@${playerB1.player.discordId}> vs <@${playerB2.player.discordId}>`+ 
+                                `\nDuel C: <@${playerC1.player.discordId}> vs <@${playerC2.player.discordId}>`
+                        })
+                    } else if (winnerMatchWaitingOn && winnerWaitingOnTeam1 && winnerWaitingOnTeam2) {
+                        return await interaction.channel.send({ content: `${winningTeam.name}, You are waiting for the result of ${winnerWaitingOnTeam1.name} vs ${winnerWaitingOnTeam2.name}.`})
+                    } else {
+                        return await interaction.channel.send({ content: `${winningTeam.name}, You are waiting for multiple matches to finish. Grab a snack and stay hydrated.`})
+                    }
+                }, 4000)
+            }
+        }
+
+        await losingEntry.udpate({ losses: losingEntry.losses++ })
+        await winningEntry.update({ wins: winningEntry.wins++ })        
+        return true
+    }
 }
 
 // SEND PAIRINGS

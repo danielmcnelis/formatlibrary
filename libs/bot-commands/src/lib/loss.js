@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { checkPairing, getMatches, processMatchResult, selectTournament, postStory, createPlayer, isNewUser, hasAffiliateAccess, isIronPlayer, isTourPlayer } from '@fl/bot-functions'
+import { checkPairing, getMatches, processMatchResult, processTeamResult, selectTournament, postStory, createPlayer, isNewUser, hasAffiliateAccess, isIronPlayer, isTourPlayer } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Entry, Format, Iron, Match, Matchup, Player, Pool, Server, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
@@ -135,7 +135,8 @@ export default {
                         isTournamentMatch = true
                         if (tournament.state === 'pending') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
                         if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
-                        const success = await processMatchResult(server, interaction, winner, winningPlayer, interaction.member, losingPlayer, tournament)
+                        const success = tournament.isTeamTournament ? await processTeamResult(server, interaction, winner, winningPlayer, interaction.member, losingPlayer, tournament) :
+                            await processMatchResult(server, interaction, winner, winningPlayer, interaction.member, losingPlayer, tournament)
                         if (!success) return
                     } else {
                         return
