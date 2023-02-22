@@ -27,7 +27,7 @@ export const DeckType = () => {
     const goToFormat = () => navigate(`/formats/${summary.format ? summary.format.name : ''}`)
     const { id } = useParams()
     const location = useLocation()
-    console.log('summary', summary)
+    const format = location?.search?.slice(8)
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
@@ -35,8 +35,6 @@ export const DeckType = () => {
     // USE EFFECT SET CARD
     useEffect(() => {
       const fetchData = async () => {
-        const format = location?.search?.slice(8)
-  
         try {
           const {data} = await axios.get(`/api/deckTypes/summary?id=${id}&format=${format}`)
           setSummary(data)
@@ -108,7 +106,21 @@ export const DeckType = () => {
   
     return (
       <div className="body">
-        <h1>{summary.deckType}</h1>
+        <div className="single-deck-title-flexbox">
+            <a
+                className="link desktop-only"
+                href={`/api/deckTypes/download?id=${id}&format=${format}`} 
+                download={`${summary.deckType}-skeleton.ydk`}
+                onClick={()=> addDownload()}
+            >                                    
+                <div className="deck-button">
+                    <b style={{padding: '0px 6px'}}>Download</b>
+                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`}/>
+                </div>
+            </a>
+
+            <div className="single-deck-title">{summary.deckType}</div>
+        </div>
         <table className="single-deck-table">
           <tbody>
             <tr className="single-deck-info-1">
