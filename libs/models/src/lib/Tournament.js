@@ -22,7 +22,8 @@ export const Tournament = db.define('tournaments', {
     type: Sequelize.INTEGER
   },
   isTeamTournament: {
-    type: Sequelize.BOOLEAN
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
   },
   type: {
     type: Sequelize.STRING
