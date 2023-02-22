@@ -5,6 +5,7 @@ import axios from 'axios'
 import { CardImage } from '../Cards/CardImage'
 import { NotFound } from '../General/NotFound'
 import { useLocation } from 'react-router-dom'
+import { capitalize } from '@fl/utils'
 
 const emojis = {
   Helmet: 'https://cdn.formatlibrary.com/images/emojis/helmet.png',
@@ -111,7 +112,7 @@ export const DeckType = () => {
             <a
                 className="link desktop-only"
                 href={`/api/deckTypes/download?id=${id}&format=${format}`} 
-                download={`${summary.deckType} - ${format} skeleton.ydk`}
+                download={`${summary.deckType} - ${capitalize(format)} Skeleton.ydk`}
                 onClick={()=> addDownload()}
             >                                    
                 <div className="deck-button">
