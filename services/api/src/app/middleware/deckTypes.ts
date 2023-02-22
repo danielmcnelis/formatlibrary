@@ -71,13 +71,11 @@ export const deckTypesDownload = async (req, res, next) => {
           .split('#extra')[0]
           .split('\n')
           .filter((e) => e.length)
-        const extraKonamiCodes = showExtra
-          ? deck.ydk
+        const extraKonamiCodes = deck.ydk
               .split('#extra')[1]
               .split('!side')[0]
               .split('\n')
               .filter((e) => e.length)
-          : []
         const sideKonamiCodes = deck.ydk
           .split('!side')[1]
           .split('\n')
