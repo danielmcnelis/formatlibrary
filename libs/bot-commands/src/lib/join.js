@@ -76,6 +76,11 @@ export default {
                 tournamentId: tournament.id,
                 teamId: team.id
             })
+
+            const deckAttachments = await drawDeck(ydk) || []
+            interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
+            interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in the tournament! FYI, this is the deck you submitted:`, files: [...deckAttachments] }).catch((err) => console.log(err))
+            return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (${team.name}) is now registered for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
         } else if (!entry && !tournament.isTeamTournament) {
             try {                                
                 const { participant } = await postParticipant(server, tournament, player)
