@@ -121,7 +121,7 @@ export default {
                 playerCId: teammates[2].id,
             })
 
-            return await interaction.editReply({ content: `Congrats! You've registered ${teamName} for ${tournament.name}! ${tournament.logo} ${tournament.emoji}\nCaptain: <@${captain.discordId}>\nTeammate 1: <@${teammate1}>\nTeammate 2: <@${teammate2}>`})    
+            return await interaction.editReply({ content: `Congrats! You've registered ${teamName} for ${tournament.name}! ${tournament.logo} ${tournament.emoji}\nCaptain: <@${captain.discordId}>\nTeammate 1: <@${teammate1.discordId}>\nTeammate 2: <@${teammate2.discordId}>`})    
         }
     }
 }
