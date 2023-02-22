@@ -203,29 +203,27 @@ export const deckTypesDownload = async (req, res, next) => {
         }
       }
   
-      data.mainMonsters = Object.values(data.main)
-        .filter((v: any) => v.card.category === 'Monster')
-        .sort((a: any, b: any) => b.card.name - a.card.name)
-        .sort((a: any, b: any) => b.card.sortPriority - a.card.sortPriority)
-      data.mainSpells = Object.values(data.main)
-        .filter((v: any) => v.card.category === 'Spell')
-        .sort((a: any, b: any) => b.card.name - a.card.name)
-      data.mainTraps = Object.values(data.main)
-        .filter((v: any) => v.card.category === 'Trap')
-        .sort((a: any, b: any) => b.card.name - a.card.name)
-      data.extraMonsters = Object.values(data.extra)
-        .sort((a: any, b: any) => b.card.name - a.card.name)
-        .sort((a: any, b: any) => b.card.sortPriority - a.card.sortPriority)
-      data.sideMonsters = Object.values(data.side)
-        .filter((v: any) => v.card.category === 'Monster')
-        .sort((a: any, b: any) => b.card.name - a.card.name)
-        .sort((a: any, b: any) => b.card.sortPriority - a.card.sortPriority)
-      data.sideSpells = Object.values(data.side)
-        .filter((v: any) => v.card.category === 'Spell')
-        .sort((a: any, b: any) => b.card.name - a.card.name)
-      data.sideTraps = Object.values(data.side)
-        .filter((v: any) => v.card.category === 'Trap')
-        .sort((a: any, b: any) => b.card.name - a.card.name)
+      const sortFn = (a, b) => {
+        if (a.card.sortPriority > b.card.sortPriority) {
+          return 1
+        } else if (b.card.sortPriority > a.card.sortPriority) {
+          return -1
+        } else if (a.card.name > b.card.name) {
+          return 1
+        } else if (b.card.name > a.card.name) {
+          return -1
+        } else {
+          return 0
+        }
+      }
+
+      data.mainMonsters = Object.values(data.main).filter((v: any) => v.card.category === 'Monster').sort(sortFn)
+      data.mainSpells = Object.values(data.main).filter((v: any) => v.card.category === 'Spell').sort(sortFn)
+      data.mainTraps = Object.values(data.main).filter((v: any) => v.card.category === 'Trap').sort(sortFn)
+      data.extraMonsters = Object.values(data.extra).sort(sortFn)
+      data.sideMonsters = Object.values(data.side).filter((v: any) => v.card.category === 'Monster').sort(sortFn)
+      data.sideSpells = Object.values(data.side).filter((v: any) => v.card.category === 'Spell').sort(sortFn)
+      data.sideTraps = Object.values(data.side).filter((v: any) => v.card.category === 'Trap').sort(sortFn)
 
         const mainYdk = []
         const sideYdk = []
