@@ -39,10 +39,6 @@ export const deckTypesDownload = async (req, res, next) => {
         attributes: ['id', 'name', 'banlist', 'date', 'icon']
       })
 
-      console.log('req.query.id', req.query.id)
-      console.log('req.query.format', req.query.format)
-      console.log('!!format', !!format)
-
       const decks =
         (await Deck.findAll({
           where: {
@@ -51,8 +47,6 @@ export const deckTypesDownload = async (req, res, next) => {
           },
           attributes: ['id', 'ydk']
         })) || []
-
-    console.log('decks.length', decks.length)
 
       const showExtra = format.date >= '2008-08-05' || !format.date
 
@@ -166,7 +160,7 @@ export const deckTypesDownload = async (req, res, next) => {
               where: {
                 konamiCode
               },
-              attributes: ['id', 'name', 'category', 'ypdId', 'konamiCode']
+              attributes: ['id', 'name', 'category', 'ypdId', 'konamiCode', 'sortPriority']
             })) || {}
   
           data.main[e[0]].card = card
@@ -187,7 +181,7 @@ export const deckTypesDownload = async (req, res, next) => {
               where: {
                 konamiCode
               },
-              attributes: ['id', 'name', 'category', 'ypdId', 'konamiCode']
+              attributes: ['id', 'name', 'category', 'ypdId', 'konamiCode', 'sortPriority']
             })) || {}
   
           data.extra[e[0]].card = card
@@ -208,7 +202,7 @@ export const deckTypesDownload = async (req, res, next) => {
               where: {
                 konamiCode
               },
-              attributes: ['id', 'name', 'category', 'ypdId', 'konamiCode']
+              attributes: ['id', 'name', 'category', 'ypdId', 'konamiCode', 'sortPriority']
             })) || {}
   
           data.side[e[0]].card = card
@@ -217,23 +211,27 @@ export const deckTypesDownload = async (req, res, next) => {
   
       data.mainMonsters = Object.values(data.main)
         .filter((v: any) => v.card.category === 'Monster')
-        .sort((a: any, b: any) => b.decks - a.decks)
+        .sort((a: any, b: any) => b.card.name - a.card.name)
+        .sort((a: any, b: any) => b.card.sortPriority - a.card.sortPriority)
       data.mainSpells = Object.values(data.main)
         .filter((v: any) => v.card.category === 'Spell')
-        .sort((a: any, b: any) => b.decks - a.decks)
+        .sort((a: any, b: any) => b.card.name - a.card.name)
       data.mainTraps = Object.values(data.main)
         .filter((v: any) => v.card.category === 'Trap')
-        .sort((a: any, b: any) => b.decks - a.decks)
-      data.extraMonsters = Object.values(data.extra).sort((a: any, b: any) => b.decks - a.decks)
+        .sort((a: any, b: any) => b.card.name - a.card.name)
+      data.extraMonsters = Object.values(data.extra)
+        .sort((a: any, b: any) => b.card.name - a.card.name)
+        .sort((a: any, b: any) => b.card.sortPriority - a.card.sortPriority)
       data.sideMonsters = Object.values(data.side)
         .filter((v: any) => v.card.category === 'Monster')
-        .sort((a: any, b: any) => b.decks - a.decks)
+        .sort((a: any, b: any) => b.card.name - a.card.name)
+        .sort((a: any, b: any) => b.card.sortPriority - a.card.sortPriority)
       data.sideSpells = Object.values(data.side)
         .filter((v: any) => v.card.category === 'Spell')
-        .sort((a: any, b: any) => b.decks - a.decks)
+        .sort((a: any, b: any) => b.card.name - a.card.name)
       data.sideTraps = Object.values(data.side)
         .filter((v: any) => v.card.category === 'Trap')
-        .sort((a: any, b: any) => b.decks - a.decks)
+        .sort((a: any, b: any) => b.card.name - a.card.name)
 
         const mainYdk = []
         const sideYdk = []
@@ -241,7 +239,6 @@ export const deckTypesDownload = async (req, res, next) => {
 
         data.mainMonsters.forEach((el) => {
             const avg = Math.round(el.total / el.decks)
-            console.log('avg', avg, 'konamiCode', el.card.konamiCode)
             for (let i = 0; i < avg; i++) mainYdk.push(el.card.konamiCode)
         })
 
