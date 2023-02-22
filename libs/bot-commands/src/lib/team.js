@@ -30,8 +30,8 @@ export default {
         await interaction.deferReply()
         const teamName = interaction.options.getString('name')  
         const captain = await Player.findOne({ where: { discordId: interaction.user.id }})
-        const teammate1 = await Player.findOne({ where: { discordId: interaction.options.getUser('teammate 1').id }})
-        const teammate2 = await Player.findOne({ where: { discordId: interaction.options.getUser('teammate 2').id }})
+        const teammate1 = await Player.findOne({ where: { discordId: interaction.options.getUser('teammate1').id }})
+        const teammate2 = await Player.findOne({ where: { discordId: interaction.options.getUser('teammate2').id }})
 
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
