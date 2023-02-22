@@ -39,6 +39,10 @@ export const deckTypesDownload = async (req, res, next) => {
         attributes: ['id', 'name', 'banlist', 'date', 'icon']
       })
 
+      console.log('req.query.id', req.query.id)
+      console.log('req.query.format', req.query.format)
+      console.log('!!format', !!format)
+
       const decks =
         (await Deck.findAll({
           where: {
@@ -47,7 +51,10 @@ export const deckTypesDownload = async (req, res, next) => {
           },
           attributes: ['id', 'ydk']
         })) || []
-  
+
+
+    console.log('decks.length', decks.length)
+
       const showExtra = format.date >= '2008-08-05' || !format.date
 
       const data = {

@@ -3,14 +3,14 @@ import { deckTypes, deckTypesCreate, deckTypesDownload, deckTypesName, deckTypes
 
 const router = Router()
 
-router.get('/api/decktypes/summary', deckTypesSummary)
+router.get('/api/deckTypes/summary', deckTypesSummary)
 
-router.get('/api/decktypes/download', deckTypesDownload)
+router.get('/api/deckTypes/download', deckTypesDownload)
 
-router.get('/api/decktypes/:name', deckTypesName)
+router.get('/api/deckTypes/:name', deckTypesName)
 
-router.get('/api/decktypes/', deckTypes)
+router.get('/api/deckTypes/', deckTypes)
 
-router.post('/api/decktypes/create', deckTypesCreate)
+router.post('/api/deckTypes/create', deckTypesCreate)
 
 export default router
