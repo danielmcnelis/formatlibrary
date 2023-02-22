@@ -67,6 +67,11 @@ export default {
         if (!url || !ydk) return
 
         if (!entry && team) {
+            const slot = team.playerAId === player.id ? 'A' :
+                team.playerBId === player.id ? 'B' :
+                team.playerCId === player.id ? 'C' :
+                null
+
             await Entry.create({
                 playerName: player.name,
                 url: url,
@@ -74,6 +79,7 @@ export default {
                 participantId: team.participantId,
                 playerId: player.id,
                 tournamentId: tournament.id,
+                slot: slot,
                 teamId: team.id
             })
 
