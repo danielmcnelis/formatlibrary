@@ -141,7 +141,7 @@ export const sendDeck = async (interaction, entryId) => {
 // SELECT TOURNAMENT FOR DECK CHECK
 export const selectTournamentForDeckCheck = async (interaction, entries, format) => {
     if (entries.length === 0) {
-        interaction.reply(`That player is not registered for any ${format.name} format ${format.emoji} tournaments in this server.`)
+        interaction.editReply(`That player is not registered for any ${format.name} format ${format.emoji} tournaments in this server.`)
         return false
     } else if (entries.length === 1) {
         return entries[0]
@@ -161,7 +161,7 @@ export const selectTournamentForDeckCheck = async (interaction, entries, format)
                     .addOptions(...options),
             )
     
-        interaction.reply({ content: `Please select a tournament:`, components: [row] })
+        interaction.editReply({ content: `Please select a tournament:`, components: [row] })
         return false
     }
 }
@@ -201,14 +201,14 @@ export const selectTournament = async (interaction, tournaments) => {
 export const closeTournament = async (interaction, tournamentId) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
     await tournament.update({ state: 'standby' })
-    return await interaction.editReply({ content: `Registration for ${tournament.name} ${tournament.logo} is now closed.`})
+    return await interaction.reply({ content: `Registration for ${tournament.name} ${tournament.logo} is now closed.`})
 }
 
 // OPEN TOURNAMENT
 export const openTournament = async (interaction, tournamentId) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
     await tournament.update({ state: 'pending' })
-    return await interaction.editReply({ content: `Registration for ${tournament.name} ${tournament.logo} is now open.`})
+    return await interaction.reply({ content: `Registration for ${tournament.name} ${tournament.logo} is now open.`})
 }
 
 // JOIN TOURNAMENT 
@@ -496,69 +496,6 @@ export const createSheetData = async (tournament) => {
     }
 }
 
-// GET TOURNAMENT SERIES
-export const getTournamentSeries = async (message) => {
-    const filter = m => m.author.id === message.author.id
-	message.channel.send({ content: `Please select a tournament series:`})
-	return await message.channel.awaitMessages({
-        filter,
-		max: 1,
-		time: 15000
-	}).then(collected => {
-		const response = collected.first().content.toLowerCase()
-        if (response.includes(1) || response.startsWith('single')) return 'single elimination'
-        else return false
-	}).catch(err => {
-		console.log(err)
-        message.channel.send({ content: `Sorry, time's up.`})
-	})
-}
-
-// GET TOURNAMENT TYPE
-export const getTournamentType = async (message) => {
-    const filter = m => m.author.id === message.author.id
-	message.channel.send({ content: `What type of tournament is this?\n(1) Single Elimination\n(2) Double Elimination\n(3) Swiss\n(4) Round Robin`})
-	return await message.channel.awaitMessages({
-        filter,
-		max: 1,
-		time: 15000
-	}).then(collected => {
-		const response = collected.first().content.toLowerCase()
-        if (response.includes(1) || response.startsWith('single')) return 'single elimination'
-        else if (response.includes(2) || response.startsWith('double')) return 'double elimination'
-        else if (response.includes(3) || response.startsWith('swiss')) return 'swiss'
-        else if (response.includes(4) || response.startsWith('round')) return 'round robin'
-        else return false
-	}).catch(err => {
-		console.log(err)
-        message.channel.send({ content: `Sorry, time's up.`})
-	})
-}
-
-// GET TOURNAMENT FORMAT
-export const getTournamentFormat = async (server, message) => {
-    if (server.format) {
-        const format = await Format.findOne({ where: { name: {[Op.iLike]: server.format } }})
-        return format
-    } else {
-        const filter = m => m.author.id === message.author.id
-        message.channel.send({ content: `What format will be played in this tournament?`})
-        return await message.channel.awaitMessages({
-            filter,
-            max: 1,
-            time: 15000
-        }).then(async collected => {
-            const response = collected.first().content.toLowerCase()
-            const format = await Format.findOne({ where: { name: {[Op.iLike]: response } }})
-            return format
-        }).catch(err => {
-            console.log(err)
-            message.channel.send({ content: `Sorry, time's up.`})
-            return false
-        })
-    }
-}
-
 //REMOVE PARTICIPANT
 export const removeParticipant = async (server, interaction, member, entry, tournament, drop = false) => {    
     try {
@@ -589,21 +526,21 @@ export const removeParticipant = async (server, interaction, member, entry, tour
             if (!count) member.roles.remove(server.tourRole).catch((err) => console.log(err))
         
             if (drop) {
-                return await interaction.reply({ content: `I removed you from ${tournament.name}. Better luck next time! ${tournament.emoji}`})
+                return await interaction.editReply({ content: `I removed you from ${tournament.name}. Better luck next time! ${tournament.emoji}`})
             } else {
-                return await interaction.reply({ content: `${member.user.username} has been removed from ${tournament.name}. ${tournament.emoji}`})
+                return await interaction.editReply({ content: `${member.user.username} has been removed from ${tournament.name}. ${tournament.emoji}`})
             }
         } else if (!success && drop) {
-            return await interaction.reply({ content: `Hmm... I don't see you in the participants list for ${tournament.name}. ${tournament.emoji}`})
+            return await interaction.editReply({ content: `Hmm... I don't see you in the participants list for ${tournament.name}. ${tournament.emoji}`})
         } else if (!success && !drop) {
-            return await interaction.reply({ content: `I could not find ${member.user.username} in the participants list for ${tournament.name}. ${tournament.emoji}`})
+            return await interaction.editReply({ content: `I could not find ${member.user.username} in the participants list for ${tournament.name}. ${tournament.emoji}`})
         }
     } catch (err) {
         console.log(err)
         if (drop) {
-            return await interaction.reply({ content: `Hmm... I don't see you in the participants list for ${tournament.name}. ${tournament.emoji}`})
+            return await interaction.editReply({ content: `Hmm... I don't see you in the participants list for ${tournament.name}. ${tournament.emoji}`})
         } else {
-            return await interaction.reply({ content: `I could not find ${member.user.username} in the participants list for ${tournament.name}. ${tournament.emoji}`})
+            return await interaction.editReply({ content: `I could not find ${member.user.username} in the participants list for ${tournament.name}. ${tournament.emoji}`})
         }
     }   
 }
@@ -635,21 +572,21 @@ export const removeTeam = async (server, interaction, team, entries, tournament,
             }
         
             if (drop) {
-                return await interaction.reply({ content: `I removed ${team.name} from ${tournament.name}. Better luck next time! ${tournament.emoji}`})
+                return await interaction.editReply({ content: `I removed ${team.name} from ${tournament.name}. Better luck next time! ${tournament.emoji}`})
             } else {
-                return await interaction.reply({ content: `${team.name} has been removed from ${tournament.name}. ${tournament.emoji}`})
+                return await interaction.editReply({ content: `${team.name} has been removed from ${tournament.name}. ${tournament.emoji}`})
             }
         } else if (!success && drop) {
-            return await interaction.reply({ content: `Hmm... I don't see ${team.name} in the participants list for ${tournament.name}. ${tournament.emoji}`})
+            return await interaction.editReply({ content: `Hmm... I don't see ${team.name} in the participants list for ${tournament.name}. ${tournament.emoji}`})
         } else if (!success && !drop) {
-            return await interaction.reply({ content: `Could not find ${team.name} in the participants list for ${tournament.name}. ${tournament.emoji}`})
+            return await interaction.editReply({ content: `Could not find ${team.name} in the participants list for ${tournament.name}. ${tournament.emoji}`})
         }
     } catch (err) {
         console.log(err)
         if (drop) {
-            return await interaction.reply({ content: `Hmm... I don't see ${team.name} in the participants list for ${tournament.name}. ${tournament.emoji}`})
+            return await interaction.editReply({ content: `Hmm... I don't see ${team.name} in the participants list for ${tournament.name}. ${tournament.emoji}`})
         } else {
-            return await interaction.reply({ content: `Could not find ${team.name} in the participants list for ${tournament.name}. ${tournament.emoji}`})
+            return await interaction.editReply({ content: `Could not find ${team.name} in the participants list for ${tournament.name}. ${tournament.emoji}`})
         }
     }   
 }
@@ -919,55 +856,24 @@ export const postParticipant = async (server, tournament, player) => {
     }   
 }
 
-// GET GAME COUNT
-export const getGameCount = async (message, tournament, noshow) => {
-    if (noshow) return [0, 0]
-    else return [1, 0]
-    // if (tournament.type === 'double elimination' || tournament.type === 'single elimination') return [1, 0]
-    
-    // const filter = m => m.author.id === message.author.id
-    // message.channel.send({ content: `What was the game count (i.e. 2-0, 2-1, etc.)?`})
-    // return await message.channel.awaitMessages({
-    //     filter,
-    //     max: 1,
-    //     time: 15000
-    // }).then(collected => {
-    //     const response = collected.first().content
-    //     const char1 = response.charAt(0)
-    //     const char2 = response.charAt(response.indexOf('-') + 1)
-    //     const num1 = parseInt(char1)
-    //     const num2 = parseInt(char2)
-    //     if (isNaN(num1) || isNaN(num2)) {
-    //         return false
-    //     } else if (num1 > num2) {
-    //         return [num1, num2]
-    //     } else {
-    //         return [num2, num1]
-    //     }
-    // }).catch(err => {
-    //     console.log(err)
-    //     return false
-    // })
-}
-
 //PROCESS MATCH RESULT
 export const processMatchResult = async (server, interaction, winner, winningPlayer, loser, losingPlayer, tournament, noshow = false) => {
     const losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id }, include: Player })
     const winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id }, include: Player })
     
     if (!losingEntry || !winningEntry) {
-        interaction.reply({ content: `Sorry I could not find your tournament in the database.`})
+        interaction.editReply({ content: `Sorry I could not find your tournament in the database.`})
         return false
     }
 
     if (tournament.isTeamTournament && losingEntry.slot !== winningEntry.slot) {
-        interaction.reply({ content: `Sorry, ${losingEntry.playerName} (Player ${losingEntry.slot}) and ${winningEntry.playerName} (Player ${winningEntry.slot}) are not paired for ${tournament.name}.`})
+        interaction.editReply({ content: `Sorry, ${losingEntry.playerName} (Player ${losingEntry.slot}) and ${winningEntry.playerName} (Player ${winningEntry.slot}) are not paired for ${tournament.name}.`})
         return false
     }
 
     const gameCount = noshow ? [0, 0] : [1, 0]
     if (!gameCount || !gameCount.length) {
-        interaction.reply({ content: `Please specify a valid game count.`})
+        interaction.editReply({ content: `Please specify a valid game count.`})
         return false
     }
 
@@ -1002,7 +908,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
     }
      
     if (!success) {
-        interaction.reply({ content: `Error: could not update bracket for ${tournament.name}.`})
+        interaction.editReply({ content: `Error: could not update bracket for ${tournament.name}.`})
         return false
     }
  
@@ -1115,12 +1021,12 @@ export const processTeamResult = async (server, interaction, winner, winningPlay
     const winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id }, include: [Player, Team] })
     
     if (!losingEntry || !winningEntry) {
-        interaction.reply({ content: `Sorry I could not find your tournament in the database.`})
+        interaction.editReply({ content: `Sorry I could not find your tournament in the database.`})
         return false
     }
 
     if (losingEntry.slot !== winningEntry.slot) {
-        interaction.reply({ content: `Sorry, ${losingEntry.playerName} (Player ${losingEntry.slot}) and ${winningEntry.playerName} (Player ${winningEntry.slot}) are not paired for ${tournament.name}.`})
+        interaction.editReply({ content: `Sorry, ${losingEntry.playerName} (Player ${losingEntry.slot}) and ${winningEntry.playerName} (Player ${winningEntry.slot}) are not paired for ${tournament.name}.`})
         return false
     }
 
@@ -1181,7 +1087,7 @@ export const processTeamResult = async (server, interaction, winner, winningPlay
         }
          
         if (!success) {
-            interaction.reply({ content: `Error: could not update bracket for ${tournament.name}.`})
+            interaction.editReply({ content: `Error: could not update bracket for ${tournament.name}.`})
             return false
         }
 
@@ -1402,7 +1308,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 community: server.name
             })
 
-            return await interaction.reply({ content: 
+            return await interaction.editReply({ content: 
                 `You created a new tournament:` + 
                 `\nName: ${name} ${logo}` + 
                 `\nFormat: ${format.name} ${server.emoji || format.emoji}` + 
@@ -1443,7 +1349,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     community: server.name
                 })
 
-                return await interaction.reply({ content: 
+                return await interaction.editReply({ content: 
                     `You created a new tournament:` + 
                     `\nName: ${data.tournament.name} ${logo}` + 
                     `\nFormat: ${format.name} ${server.emoji || format.emoji}` + 
@@ -1453,7 +1359,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             } 
         } catch (err) {
             console.log(err)
-            return await interaction.reply({ content: `Unable to connect to Challonge account.`})
+            return await interaction.editReply({ content: `Unable to connect to Challonge account.`})
         }
     }
 }
