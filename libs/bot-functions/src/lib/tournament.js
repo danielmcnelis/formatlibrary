@@ -170,7 +170,7 @@ export const selectTournamentForDeckCheck = async (interaction, entries, format)
 // SELECT TOURNAMENT
 export const selectTournament = async (interaction, tournaments) => {
     if (tournaments.length === 0) {
-        interaction.reply({ content: `There is no tournament that meets this criteria.` })
+        interaction.editReply({ content: `There is no tournament that meets this criteria.` })
         return false
     } else if (tournaments.length === 1)  {
         return tournaments[0]
@@ -192,7 +192,7 @@ export const selectTournament = async (interaction, tournaments) => {
                     .addOptions(...options),
             )
     
-        interaction.reply({ content: `Please select a tournament:`, components: [row] })
+        interaction.editReply({ content: `Please select a tournament:`, components: [row] })
         return false
     }
 }
@@ -201,14 +201,14 @@ export const selectTournament = async (interaction, tournaments) => {
 export const closeTournament = async (interaction, tournamentId) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
     await tournament.update({ state: 'standby' })
-    return await interaction.reply({ content: `Registration for ${tournament.name} ${tournament.logo} is now closed.`})
+    return await interaction.editReply({ content: `Registration for ${tournament.name} ${tournament.logo} is now closed.`})
 }
 
 // OPEN TOURNAMENT
 export const openTournament = async (interaction, tournamentId) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
     await tournament.update({ state: 'pending' })
-    return await interaction.reply({ content: `Registration for ${tournament.name} ${tournament.logo} is now open.`})
+    return await interaction.editReply({ content: `Registration for ${tournament.name} ${tournament.logo} is now open.`})
 }
 
 // JOIN TOURNAMENT 
