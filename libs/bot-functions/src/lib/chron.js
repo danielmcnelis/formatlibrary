@@ -1,6 +1,6 @@
 
 import axios from 'axios'
-import sharp from 'sharp'
+import * as sharp from 'sharp'
 import { Card, Deck, Entry, Tournament, Match, Membership, Player, Print, Role, Server, Set, Stats, DeckType } from '@fl/models'
 import { createMembership, createPlayer } from './utility'
 import { Op } from 'sequelize'
