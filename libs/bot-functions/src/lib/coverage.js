@@ -213,7 +213,7 @@ export const composeBlogPost = async (interaction, event) => {
         console.log('uri', uri)
         return await interaction.channel.send(`Composed blogpost for ${event.name}.`)
     } catch (err) {
-        console.log(err)
+        console.log('composeBlogpost()', err)
         return await interaction.channel.send(`Error composing blogpost for ${event.name}.`)
     }
 }
@@ -288,6 +288,7 @@ export const composeThumbnails = async (interaction, event) => {
         return await interaction.channel.send(`Composed deck thumbnails for ${event.name}.`)
     } catch (err) {
         console.log(err)
+        console.log('composeThumbnails()', err)
         return await interaction.channel.send(`Error composing deck thumbnails for ${event.name}.`)
     }
 }

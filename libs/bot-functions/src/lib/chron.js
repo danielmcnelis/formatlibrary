@@ -40,8 +40,7 @@ export const updateAvatars = async (client) => {
                     const isActive = player.email || await Deck.count({ where: { playerId: player.id }}) || await Stats.count({ where: { playerId: player.id }})
 
                     if (player && isActive && player.discordPfp !== avatar) {
-                        player.discordPfp = avatar
-                        await player.save()
+                        await player.update({ discordPfp: avatar })
 
                         const {data} = await axios.get(
                             `https://cdn.discordapp.com/avatars/${player.discordId}/${avatar}.webp`, {

@@ -70,7 +70,16 @@ export default {
             try {                                
               const { participant } = await postParticipant(server, tournament, player)
               if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
-              
+                
+                const count = await Entry.count({
+                    where: {
+                        playerId: player.id,
+                        tournamentId: tournament.id,
+                    }
+                })
+
+                if (count) return
+                
               await Entry.create({
                   playerName: player.name,
                   url: url,

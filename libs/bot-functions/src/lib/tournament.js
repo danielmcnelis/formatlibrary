@@ -246,6 +246,15 @@ export const joinTournament = async (interaction, tournamentId) => {
           const { participant } = await postParticipant(server, tournament, player)
           if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
           
+            const count = await Entry.count({
+                where: {
+                    playerId: player.id,
+                    tournamentId: tournament.id,
+                }
+            })
+
+            if (count) return
+            
           await Entry.create({
               playerName: player.name,
               url: url,
@@ -336,6 +345,15 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
           const { participant } = await postParticipant(server, tournament, player)
           if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
           
+          const count = await Entry.count({
+                where: {
+                    playerId: player.id,
+                    tournamentId: tournament.id,
+                }
+            })
+
+            if (count) return
+            
           await Entry.create({
               playerName: player.name,
               url: url,
@@ -651,9 +669,10 @@ export const seed = async (interaction, tournamentId, shuffle = false) => {
                 count++
             } catch (err) {
                 e++
-                if (e >= (seeds.length / 4)) {
+                if (e >= (seeds.length * 10)) {
                     results.push(`Error: Failed to set ${name} (participantId: ${participantId}) as the ${i+1} seed.`)
                 } else {
+                    console.log(`Error: Failed to set ${name} (participantId: ${participantId}) as the ${i+1} seed.`)
                     i--
                 }
             }

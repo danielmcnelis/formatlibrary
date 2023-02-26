@@ -72,6 +72,15 @@ export default {
                 team.playerCId === player.id ? 'C' :
                 null
 
+            const count = await Entry.count({
+                where: {
+                    playerId: player.id,
+                    tournamentId: tournament.id,
+                }
+            })
+
+            if (count) return
+
             await Entry.create({
                 playerName: player.name,
                 url: url,
@@ -100,6 +109,15 @@ export default {
                     playerId: player.id,
                     tournamentId: tournament.id
                 })
+
+                const count = await Entry.count({
+                    where: {
+                        playerId: player.id,
+                        tournamentId: tournament.id,
+                    }
+                })
+
+                if (count) return
             
                 const deckAttachments = await drawDeck(ydk) || []
                 interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
