@@ -221,43 +221,51 @@ export const composeBlogPost = async (interaction, event) => {
 
 // COMPOSE THUMBNAILS
 export const composeThumbnails = async (interaction, event) => {
-    try {
-        const decks = await Deck.findAll({
-            where: {
-                eventId: event.id
+    const decks = await Deck.findAll({
+        where: {
+            eventId: event.id
+        }
+    })
+
+    if (!decks.length) return await interaction.channel.send(`Composed deck thumbnails for ${event.name}.`)
+    
+    const s3 = new S3({
+        region: config.s3.region,
+        credentials: {
+            accessKeyId: config.s3.credentials.accessKeyId,
+            secretAccessKey: config.s3.credentials.secretAccessKey
+        }
+    })
+
+    for (let i = 0; i < decks.length; i++) {
+        const deck = decks[i]
+        console.log(`drawing ${deck.builder}'s deck...`)
+        const main = []
+        const mainKonamiCodes = deck.ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length)
+
+        for (let i = 0; i < mainKonamiCodes.length; i++) {
+            let konamiCode = mainKonamiCodes[i]
+            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+            const card = await Card.findOne({ where: { konamiCode }})
+            if (!card) continue
+            main.push(card)
+        }
+
+        main.sort((a, b) => {
+            if (a.sortPriority > b.sortPriority) {
+                return 1
+            } else if (b.sortPriority > a.sortPriority) {
+                return -1
+            } else if (a.name > b.name) {
+                return 1
+            } else if (b.name > a.name) {
+                return -1
+            } else {
+                return false
             }
         })
-    
-        if (!decks.length) return console.log('no decks found')
-    
-        for (let i = 0; i < decks.length; i++) {
-            const deck = decks[i]
-            console.log(`drawing ${deck.builder}'s deck...`)
-            const main = []
-            const mainKonamiCodes = deck.ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length)
-    
-            for (let i = 0; i < mainKonamiCodes.length; i++) {
-                let konamiCode = mainKonamiCodes[i]
-                while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-                const card = await Card.findOne({ where: { konamiCode }})
-                if (!card) continue
-                main.push(card)
-            }
-    
-            main.sort((a, b) => {
-                if (a.sortPriority > b.sortPriority) {
-                    return 1
-                } else if (b.sortPriority > a.sortPriority) {
-                    return -1
-                } else if (a.name > b.name) {
-                    return 1
-                } else if (b.name > a.name) {
-                    return -1
-                } else {
-                    return false
-                }
-            })
             
+        try {
             const rows = Math.ceil(main.length / 10)
             const card_width = 36
             const card_height = 52.5
@@ -273,26 +281,17 @@ export const composeThumbnails = async (interaction, event) => {
             }
             
             const buffer = canvas.toBuffer('image/png')
-            const s3 = new S3({
-                region: config.s3.region,
-                credentials: {
-                    accessKeyId: config.s3.credentials.accessKeyId,
-                    secretAccessKey: config.s3.credentials.secretAccessKey
-                }
-            })
-
             const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/decks/thumbnails/${deck.id}.png`, Body: buffer, ContentType: `image/png` }).promise()
             console.log('uri', uri)
+        } catch (err) {
+            console.log(`Error composing ${deck.builder}'s deck thumbnail`, err)
         }
-    
-        return await interaction.channel.send(`Composed deck thumbnails for ${event.name}.`)
-    } catch (err) {
-        console.log(err)
-        console.log('composeThumbnails()', err)
-        return await interaction.channel.send(`Error composing deck thumbnails for ${event.name}.`)
     }
+
+    return await interaction.channel.send(`Composed deck thumbnails for ${event.name}.`)
 }
 
+            
 // DISPLAY DECKS
 export const displayDecks = async (interaction, event) => {
     const minPlacement = event.size <= 8 ? 1 :
