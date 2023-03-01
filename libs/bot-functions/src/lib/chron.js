@@ -456,6 +456,7 @@ export const findNewPrints = async (set, groupId) => {
 
 // GET NEW GROUP ID
 export const getNewGroupId = async (setId) => {
+    console.log('config.tcgPlayer.access_token', config.tcgPlayer.access_token)
     const size = 1000
     const categoryId = `2`
     for (let offset = 0; offset < size; offset += 100) {
@@ -549,10 +550,10 @@ export const downloadCardImage = async (id) => {
     })
 
     const s3 = new S3({
-        region: S3Keys.region,
+        region: config.s3.region,
         credentials: {
-            accessKeyId: S3Keys.credentials.accessKeyId,
-            secretAccessKey: S3Keys.credentials.secretAccessKey
+            accessKeyId: config.s3.credentials.accessKeyId,
+            secretAccessKey: config.s3.credentials.secretAccessKey
         }
     })
 
