@@ -9,6 +9,10 @@ export const Card = db.define('cards', {
     unique: true,
     allowNull: false
   },
+  cleanName: {
+    type: Sequelize.STRING,
+    unique: true
+  },
   konamiCode: {
     type: Sequelize.STRING
   },

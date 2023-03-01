@@ -398,29 +398,14 @@ export const findNewPrints = async (set, groupId) => {
                 })
     
                 if (!count) {
-                    const name = result.name.replace(' (UTR)', '')
-                        .replace(' (SE)', '')
-                        .replace(' (Secret)', '')
-                        .replace(' (Shatterfoil)', '')
-                        .replace(' (Starfoil)', '')
-                        .replace(' (Starlight Rare)', '')
-                        .replace(' (Duel Terminal)', '')
-                        .replace(' (CR)', '')
-                        .replace(' (Red)', '')
-                        .replace(' (Blue)', '')
-                        .replace(' (Green)', '')
-                        .replace(' (Purple)', '')
-                        .replace(' (The Sacred Cards)', '')
-                        .replace(' (Dark Duel Stories)', '')
-                        .replace(' (Forbidden Memories)', '')
-                        .replace(' (Power of Chaos: Kaiba the Revenge)', '')
-                        .replace(' (Reshef of Destruction)', '')
-                        .replace(' (Ultra Rare)', '')
-                        .replace(' (Ghost Rare)', '')
+                    const name = result.name.replace(/ *\([^)]*\) */g, '')
                         
                     const card = await Card.findOne({
                         where: {
-                            name: {[Op.iLike]: name }
+                            [Op.or]: {
+                                name: {[Op.iLike]: name },
+                                cleanName: {[Op.iLike]: name }
+                            }
                         }
                     })
     
@@ -445,7 +430,13 @@ export const findNewPrints = async (set, groupId) => {
                     console.log(`created new print: ${print.rarity} ${print.cardCode} - ${print.cardName} (productId: ${print.tcgPlayerProductId})`)
                 }
             } catch (err) {
-                console.log(err)
+                console.log({
+                    status: err.response.status,
+                    statusText: err.response.statusText,
+                    method: err.response.config.method,
+                    url: err.response.config.url,
+                    data: err.response.config.data
+                })
                 e++
             }
         }
@@ -456,7 +447,6 @@ export const findNewPrints = async (set, groupId) => {
 
 // GET NEW GROUP ID
 export const getNewGroupId = async (setId) => {
-    console.log('config.tcgPlayer.accessToken', config.tcgPlayer.accessToken)
     const size = 1000
     const categoryId = `2`
     for (let offset = 0; offset < size; offset += 100) {

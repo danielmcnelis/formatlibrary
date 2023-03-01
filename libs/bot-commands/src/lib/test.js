@@ -10,8 +10,8 @@ export default {
         .setDescription('Performs a test. 🧪'),
     async execute(interaction) {
         if (isProgrammer(interaction.member)) {
-            updateSets()
-            setTimeout(() => downloadNewCards(), 1 * 60 * 1000)
+            downloadNewCards()
+            setTimeout(() => updateSets(), 1 * 60 * 1000)
             await interaction.reply(emojis.yellow)
         } else {
             await interaction.reply('🧪')
