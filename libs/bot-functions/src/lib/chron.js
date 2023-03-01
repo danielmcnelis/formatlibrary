@@ -380,16 +380,16 @@ export const findNewPrints = async (set, groupId) => {
     let e = 0
     const size = set.size
     for (let offset = 0; offset < size; offset += 100) {
-        const endpoint = `https://api.tcgplayer.com/catalog/products?groupId=${groupId}&getExtendedFields=true&offset=${offset}&limit=100`
-        const { data } = await axios.get(endpoint, {
-            headers: {
-                "Accept": "application/json",
-                "Authorization": `bearer ${config.tcgPlayer.accessToken}`
-            }
-        })
+        try {
+            const endpoint = `https://api.tcgplayer.com/catalog/products?groupId=${groupId}&getExtendedFields=true&offset=${offset}&limit=100`
+            const { data } = await axios.get(endpoint, {
+                headers: {
+                    "Accept": "application/json",
+                    "Authorization": `bearer ${config.tcgPlayer.accessToken}`
+                }
+            })
         
-        for (let i = 0; i < data.results.length; i++) {
-            try {
+            for (let i = 0; i < data.results.length; i++) {
                 const result = data.results[i]
                 const count = await Print.count({
                     where: {
@@ -429,16 +429,16 @@ export const findNewPrints = async (set, groupId) => {
                     b++
                     console.log(`created new print: ${print.rarity} ${print.cardCode} - ${print.cardName} (productId: ${print.tcgPlayerProductId})`)
                 }
-            } catch (err) {
-                console.log({
-                    status: err.response.status,
-                    statusText: err.response.statusText,
-                    method: err.response.config.method,
-                    url: err.response.config.url,
-                    data: err.response.config.data
-                })
-                e++
             }
+        } catch (err) {
+            console.log({
+                status: err.response.status,
+                statusText: err.response.statusText,
+                method: err.response.config.method,
+                url: err.response.config.url,
+                data: err.response.config.data
+            })
+            e++
         }
     }
 
