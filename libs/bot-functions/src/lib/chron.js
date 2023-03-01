@@ -456,6 +456,7 @@ export const findNewPrints = async (set, groupId) => {
 
 // GET NEW GROUP ID
 export const getNewGroupId = async (setId) => {
+    console.log('config.tcgPlayer.accessToken', config.tcgPlayer.accessToken)
     const size = 1000
     const categoryId = `2`
     for (let offset = 0; offset < size; offset += 100) {
