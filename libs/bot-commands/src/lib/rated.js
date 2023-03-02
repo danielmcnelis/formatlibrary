@@ -69,6 +69,8 @@ const getRatedInformation = async (interaction, player) => {
                             interaction.user.send({ content: response.slice(i, i+50).join('\n').toString()}).catch((err) => console.log(err))
                         }
                     }
+
+                    return
                 } else if (unrecognizedCards.length) {
                     let response = `I'm sorry, ${interaction.user.username}, the following card IDs were not found in our database:\n${unrecognizedCards.join('\n')}`
                     response += `\n\nThese cards are either alternate artwork, new to the TCG, OCG only, or incorrect in our database. Please contact the Tournament Organizer or the Admin if you can't resolve this.`
@@ -202,8 +204,21 @@ const getRatedInformation = async (interaction, player) => {
                 const opponent = potentialPair.player
                 const opposingMember = await guild.members.fetch(opponent.discordId)
 
-                opposingMember.user.send(`New pairing for Rated ${format.name} Format ${format.emoji}!\nServer: ${commonServer.name} ${commonServer.logo}\nDiscord: <@${player.discordId}>\nDuelingBook: ${player.duelingBook}`).catch((err) => console.log(err))
-                interaction.user.send(`New pairing for Rated ${format.name} Format ${format.emoji}!\nServer: ${commonServer.name} ${commonServer.logo}\nDiscord: <@${opponent.discordId}>\nDuelingBook: ${opponent.duelingBook}`).catch((err) => console.log(err))
+                opposingMember.user.send(
+                    `New pairing for Rated ${format.name} Format ${format.emoji}!` +
+                    `\nServer: ${commonServer.name} ${commonServer.logo}` +
+                    `\nChannel: <#${channelId}>` +
+                    `\nDiscord: ${player.discordName}#${player.discriminator}` +
+                    `\nDuelingBook: ${player.duelingBook}`
+                ).catch((err) => console.log(err))
+
+                interaction.user.send(
+                    `New pairing for Rated ${format.name} Format ${format.emoji}!` + 
+                    `\nServer: ${commonServer.name} ${commonServer.logo}` + 
+                    `\nChannel: <#${channelId}>` +
+                    `\nDiscord: ${opponent.discordName}#${opponent.discriminator}` +
+                    `\nDuelingBook: ${opponent.duelingBook}`
+                ).catch((err) => console.log(err))
                 
                 await potentialPair.destroy()
                 await pool.destroy()

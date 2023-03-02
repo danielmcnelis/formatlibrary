@@ -47,8 +47,21 @@ export const getPotentialPairConfirmation = async (client, format, potentialPair
             const opponent = await Player.findOne({ where: { id: pool.playerId }})
             const opposingMember = await guild.members.fetch(opponent.discordId)
 
-            opposingMember.user.send(`New pairing for Rated ${format.name} Format ${format.emoji}!\nServer: ${commonServer.name} ${commonServer.logo}\nDiscord: <@${player.discordId}>\nDuelingBook: ${player.duelingBook}`).catch((err) => console.log(err))
-            message.channel.send(`New pairing for Rated ${format.name} Format ${format.emoji}!\nServer: ${commonServer.name} ${commonServer.logo}\nDiscord: <@${opponent.discordId}>\nDuelingBook: ${opponent.duelingBook}`).catch((err) => console.log(err))
+            opposingMember.user.send(
+                `New pairing for Rated ${format.name} Format ${format.emoji}!` +
+                `\nServer: ${commonServer.name} ${commonServer.logo}` +
+                `\nChannel: <#${channelId}>` +
+                `\nDiscord: ${player.discordName}#${player.discriminator}` +
+                `\nDuelingBook: ${player.duelingBook}`
+            ).catch((err) => console.log(err))
+            
+            message.channel.send(
+                `New pairing for Rated ${format.name} Format ${format.emoji}!` +
+                `\nServer: ${commonServer.name} ${commonServer.logo}` +
+                `\nChannel: <#${channelId}>` +
+                `\nDiscord: ${opponent.discordName}#${opponent.discriminator}` +
+                `\nDuelingBook: ${opponent.duelingBook}`
+            ).catch((err) => console.log(err))
             
             await potentialPair.destroy()
             await pool.destroy()

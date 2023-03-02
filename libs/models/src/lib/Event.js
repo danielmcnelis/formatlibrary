@@ -35,6 +35,9 @@ export const Event = db.define('events', {
   size: {
     type: Sequelize.INTEGER
   },
+  category: {
+    type: Sequelize.STRING
+  },
   type: {
     type: Sequelize.STRING
   },

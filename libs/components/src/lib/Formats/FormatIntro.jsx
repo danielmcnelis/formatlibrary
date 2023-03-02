@@ -96,11 +96,11 @@ export const FormatIntro = (props = {}) => {
             </div>
           ) : ''
         }
-        <PopularDecks format={format}/>
-        <RecentEvents format={format}/>
+        <PopularDecks id="popular-decks" format={format}/>
+        <RecentEvents id="recent-events" format={format}/>
         <MiniBoard limit={10} format={format}/>
         <div className="divider"/>
-        <BanList format={format}/>
+        <BanList id="banlist" format={format}/>
       </div>
     )
 }

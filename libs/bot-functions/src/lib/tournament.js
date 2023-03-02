@@ -1239,16 +1239,28 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
     
             try {
                 const p1Member = await guild.members.fetch(player1.discordId)
-                console.log(`New pairing for ${round} of ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: <@${player2.discordId}>\nDuelingBook: ${player2.duelingBook}`)
-                p1Member.user.send(`New pairing for ${round} of ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: <@${player2.discordId}>\nDuelingBook: ${player2.duelingBook}`)
+                p1Member.user.send(
+                    `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+                    `\nServer: ${server.name} ${server.logo}` +
+                    `\nChannel: <#${tournament.channelId}>` +
+                    `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                    `\nDiscord: ${player2.discordName}#${player2.discriminator}` +
+                    `\nDuelingBook: ${player2.duelingBook}`
+                )
             } catch (err) {
                 console.log(err)
             }
     
             try {
                 const p2Member = await guild.members.fetch(player2.discordId)
-                console.log(`New pairing for ${round} of ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: <@${player1.discordId}>\nDuelingBook: ${player1.duelingBook}`)
-                p2Member.user.send(`New pairing for ${round} of ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: <@${player1.discordId}>\nDuelingBook: ${player1.duelingBook}`)
+                p2Member.user.send(
+                    `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+                    `\nServer: ${server.name} ${server.logo}` +
+                    `\nChannel: <#${tournament.channelId}>` +
+                    `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                    `\nDiscord: ${player1.discordName}#${player1.discriminator}` +
+                    `\nDuelingBook: ${player1.duelingBook}`
+                )
             } catch (err) {
                 console.log(err)
             }
