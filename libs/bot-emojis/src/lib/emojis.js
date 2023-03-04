@@ -65,6 +65,7 @@ export const emojis = {
     megaphone: "<:megaphone:971647134153732106>",
     mlady: "<:mlady:639565671629324330>",
     Normal: "<:Normal:935749315996053585>",
+    one_week: "<:one_week:964231317078310982>",
     Plant: "<:Plant:935749315731808346>",
     platinum: "<:platinum:580616719714877450>",
     Psychic: "<:Psychic:935749316352557126>",

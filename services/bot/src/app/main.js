@@ -83,19 +83,21 @@ client.on(Events.InteractionCreate, async interaction => {
 // BUTTON SUBMIT
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isButton()) return
-    
+    interaction.message.edit({ components: [] })
+
     const customId = interaction.customId
     const toBeSeeded = customId.charAt(0) !== 'N'
     const toBeShuffled = customId.charAt(0) === 'S'
     const tournamentId = customId.slice(1)
     
+    console.log(`${interaction.member.user.username} pressed the seed button for tournament ${tournamentId}`)
+
     if (toBeSeeded) {
         await seed(interaction, tournamentId, toBeShuffled)
     } else {
         interaction.channel.send(`Okay, your seeds 🌱 will not been changed. 👍`)
     }
 
-    interaction.message.edit({ components: [] })
     return startTournament(interaction, tournamentId)
 })
 
@@ -166,7 +168,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
         } else if (command.data.name === 'start') {
             if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
-            console.log(`${interaction.member.username} pressed the seed button for tournament ${tournamentId}`)
             await initiateStartTournament(interaction, tournamentId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'drop') {
