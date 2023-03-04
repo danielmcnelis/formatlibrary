@@ -32,22 +32,18 @@ export const Entry = db.define('entries', {
     },
     playerId: {
         type: Sequelize.STRING,
-        unique: 'entries_unique',
     },
     tournamentId: {
         type: Sequelize.STRING,
-        unique: 'entries_unique',
+    },
+    compositeKey: {
+        type: Sequelize.STRING,
+        unique: true
     },
     teamId: {
         type: Sequelize.INTEGER
     },
     slot: {
         type: Sequelize.STRING
-    }
-}, {
-    uniqueKeys: {
-        entries_unique: {
-            fields: ['playerId', 'tournamentId']
-        }
     }
 })

@@ -246,24 +246,25 @@ export const joinTournament = async (interaction, tournamentId) => {
           const { participant } = await postParticipant(server, tournament, player)
           if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
           
-            const count = await Entry.count({
-                where: {
-                    playerId: player.id,
-                    tournamentId: tournament.id,
-                }
+          try {
+            await Entry.create({
+                playerName: player.name,
+                url: url,
+                ydk: ydk,
+                participantId: participant.id,
+                playerId: player.id,
+                tournamentId: tournament.id
+            })
+          } catch (err) {
+            console.log(err)
+            await axios({
+                method: 'delete',
+                url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${participant.id}.json?api_key=${server.challongeAPIKey}`
             })
 
-            if (count) return
-            
-          await Entry.create({
-              playerName: player.name,
-              url: url,
-              ydk: ydk,
-              participantId: participant.id,
-              playerId: player.id,
-              tournamentId: tournament.id
-          })
-    
+            return interaction.member.send({ content: `Error: Already registered for ${tournament.name}.`})
+          }
+
           const deckAttachments = await drawDeck(ydk) || []
           interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
           interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in the tournament! FYI, this is the deck you submitted:`, files: [...deckAttachments] }).catch((err) => console.log(err))
@@ -345,23 +346,25 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
           const { participant } = await postParticipant(server, tournament, player)
           if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
           
-          const count = await Entry.count({
-                where: {
-                    playerId: player.id,
-                    tournamentId: tournament.id,
-                }
+          try {
+            await Entry.create({
+                playerName: player.name,
+                url: url,
+                ydk: ydk,
+                participantId: participant.id,
+                playerId: player.id,
+                tournamentId: tournament.id
+            })
+          } catch (err) {
+            console.log(err)
+            await axios({
+                method: 'delete',
+                url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${participant.id}.json?api_key=${server.challongeAPIKey}`
             })
 
-            if (count) return
+            return interaction.member.send({ content: `Error: Already registered for ${tournament.name}.`})
+          }
             
-          await Entry.create({
-              playerName: player.name,
-              url: url,
-              ydk: ydk,
-              participantId: participant.id,
-              playerId: player.id,
-              tournamentId: tournament.id
-          })
     
           member.roles.add(server.tourRole).catch((err) => console.log(err))
           interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))

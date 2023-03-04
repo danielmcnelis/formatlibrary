@@ -5,6 +5,7 @@ import { askForDBName, getDeckList, postParticipant, selectTournament } from '@f
 import { drawDeck, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
+import axios from 'axios'
 
 export default {
 	data: new SlashCommandBuilder()
@@ -72,16 +73,22 @@ export default {
                 team.playerCId === player.id ? 'C' :
                 null
 
-            await Entry.create({
-                playerName: player.name,
-                url: url,
-                ydk: ydk,
-                participantId: team.participantId,
-                playerId: player.id,
-                tournamentId: tournament.id,
-                slot: slot,
-                teamId: team.id
-            })
+            try { 
+                await Entry.create({
+                    playerName: player.name,
+                    url: url,
+                    ydk: ydk,
+                    participantId: team.participantId,
+                    playerId: player.id,
+                    tournamentId: tournament.id,
+                    compositeKey: player.id + tournament.id,
+                    slot: slot,
+                    teamId: team.id
+                })
+            } catch (err) {
+                console.log(err)
+                return interaction.member.send({ content: `Error: Already registered for ${tournament.name}.`})
+            }
 
             const deckAttachments = await drawDeck(ydk) || []
             interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
@@ -92,18 +99,29 @@ export default {
                 const { participant } = await postParticipant(server, tournament, player)
                 if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
                     
-                await Entry.create({
-                    playerName: player.name,
-                    url: url,
-                    ydk: ydk,
-                    participantId: participant.id,
-                    playerId: player.id,
-                    tournamentId: tournament.id
-                })
+                try {
+                    await Entry.create({
+                        playerName: player.name,
+                        url: url,
+                        ydk: ydk,
+                        participantId: participant.id,
+                        playerId: player.id,
+                        compositeKey: player.id + tournament.id,
+                        tournamentId: tournament.id
+                    })
+                } catch (err) {
+                    console.log(err)
+                    await axios({
+                        method: 'delete',
+                        url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${participant.id}.json?api_key=${server.challongeAPIKey}`
+                    })
+
+                    return interaction.member.send({ content: `Error: Already registered for ${tournament.name}.`})
+                }
             
                 const deckAttachments = await drawDeck(ydk) || []
                 interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
-                interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in the tournament! FYI, this is the deck you submitted:`, files: [...deckAttachments] }).catch((err) => console.log(err))
+                interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo} FYI, this is the deck you submitted:`, files: [...deckAttachments] }).catch((err) => console.log(err))
                 return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
             } catch (err) {
                 console.log(err)

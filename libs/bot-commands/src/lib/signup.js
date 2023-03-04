@@ -5,6 +5,7 @@ import { askForDBName, getDeckList, postParticipant, selectTournament } from '@f
 import { isMod, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
+import axios from 'axios'
 
 export default {
 	data: new SlashCommandBuilder()
@@ -71,23 +72,27 @@ export default {
               const { participant } = await postParticipant(server, tournament, player)
               if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
                 
-                const count = await Entry.count({
-                    where: {
+                try {
+                    await Entry.create({
+                        playerName: player.name,
+                        url: url,
+                        ydk: ydk,
+                        participantId: participant.id,
                         playerId: player.id,
                         tournamentId: tournament.id,
-                    }
-                })
+                        compositeKey: player.id + tournament.id
+                    })
+                } catch (err) {
+                    console.log(err)
+                    await axios({
+                        method: 'delete',
+                        url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${participant.id}.json?api_key=${server.challongeAPIKey}`
+                    })
 
-                if (count) return
+                    return interaction.member.send({ content: `Error: Already registered for ${tournament.name}.`})
+                }
                 
-              await Entry.create({
-                  playerName: player.name,
-                  url: url,
-                  ydk: ydk,
-                  participantId: participant.id,
-                  playerId: player.id,
-                  tournamentId: tournament.id
-              })
+            
         
               member.roles.add(server.tourRole).catch((err) => console.log(err))
               interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
