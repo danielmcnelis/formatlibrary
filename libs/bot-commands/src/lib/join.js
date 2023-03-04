@@ -72,15 +72,6 @@ export default {
                 team.playerCId === player.id ? 'C' :
                 null
 
-            const count = await Entry.count({
-                where: {
-                    playerId: player.id,
-                    tournamentId: tournament.id,
-                }
-            })
-
-            if (count) return
-
             await Entry.create({
                 playerName: player.name,
                 url: url,
@@ -100,7 +91,7 @@ export default {
             try {                                
                 const { participant } = await postParticipant(server, tournament, player)
                 if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
-                
+                    
                 await Entry.create({
                     playerName: player.name,
                     url: url,
@@ -109,15 +100,6 @@ export default {
                     playerId: player.id,
                     tournamentId: tournament.id
                 })
-
-                const count = await Entry.count({
-                    where: {
-                        playerId: player.id,
-                        tournamentId: tournament.id,
-                    }
-                })
-
-                if (count) return
             
                 const deckAttachments = await drawDeck(ydk) || []
                 interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
