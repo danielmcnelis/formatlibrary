@@ -107,7 +107,6 @@ export default {
                     playerName: player.name,
                     url: url,
                     ydk: ydk,
-                    participantId: participant.id,
                     playerId: player.id,
                     compositeKey: player.id + tournament.id,
                     tournamentId: tournament.id
@@ -123,6 +122,8 @@ export default {
                 await entry.destroy()
                 return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
             }
+            
+            await entry.update({ participantId: participant.id })
 
             const deckAttachments = await drawDeck(ydk) || []
             interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))

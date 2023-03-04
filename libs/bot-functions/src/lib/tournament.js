@@ -258,7 +258,6 @@ export const joinTournament = async (interaction, tournamentId) => {
                             
         const { participant } = await postParticipant(server, tournament, player)
         if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
-
         await entry.update({ participantId: participant.id })
         
         const deckAttachments = await drawDeck(ydk) || []
@@ -349,62 +348,46 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
     if (!url) return
 
     if (!entry) {
-        try {    
-            try {
-                entry = await Entry.create({
-                    playerName: player.name,
-                    url: url,
-                    ydk: ydk,
-                    playerId: player.id,
-                    tournamentId: tournament.id,
-                    compositeKey: player.id + tournament.id,
-                }) 
-            } catch (err) {
-                console.log(err)
-                return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
-            }
-                  
-            const { participant } = await postParticipant(server, tournament, player)
-            if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})        
-            await entry.update({ participantId: participant.id })
-    
-          member.roles.add(server.tourRole).catch((err) => console.log(err))
-          interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
-          return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
-        } catch (err) {
-          console.log(err)
-          return await interaction.member.send({ content: `Error: Could not access database.`})
-        }
-    } else if (entry.active === false) {
-        try {                                
-            const { participant } = await postParticipant(server, tournament, player)
-            if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
-            
-            await entry.update({
+        try {
+            entry = await Entry.create({
+                playerName: player.name,
                 url: url,
                 ydk: ydk,
-                participantId: participant.id,
-                active: true
-            })
-
-            member.roles.add(server.tourRole).catch((err) => console.log(err))
-            interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
-            return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+                playerId: player.id,
+                tournamentId: tournament.id,
+                compositeKey: player.id + tournament.id,
+            }) 
         } catch (err) {
             console.log(err)
-            return await interaction.member.send({ content: `Error: Could not access database.`})
+            return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
         }
-    } else {
-        try {
-            await entry.update({ url: url, ydk: ydk })
+                  
+        const { participant } = await postParticipant(server, tournament, player)
+        if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})        
+        await entry.update({ participantId: participant.id })
 
-            interaction.member.send({ content: `Thanks! I have ${player.name}'s updated deck list for the tournament.` }).catch((err) => console.log(err))
-            return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator resubmitted <@${player.discordId}>'s deck list for ${tournament.name} ${tournament.logo}!`}).catch((err) => console.log(err))
+        member.roles.add(server.tourRole).catch((err) => console.log(err))
+        interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
+        return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+    } else if (entry && entry.active === false) {
+        const { participant } = await postParticipant(server, tournament, player)
+        if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
         
-        } catch (err) {
-            console.log(err)
-            return await interaction.member.send({ content: `Error: Could not access database.`}).catch((err) => console.log(err))
-        }
+        await entry.update({
+            url: url,
+            ydk: ydk,
+            participantId: participant.id,
+            active: true
+        })
+
+        member.roles.add(server.tourRole).catch((err) => console.log(err))
+        interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
+        return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+    } else if (entry && entry.active === true) {
+        await entry.update({ url: url, ydk: ydk })
+
+        interaction.member.send({ content: `Thanks! I have ${player.name}'s updated deck list for the tournament.` }).catch((err) => console.log(err))
+        return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator resubmitted <@${player.discordId}>'s deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))   
     }
 }
 
