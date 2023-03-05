@@ -1048,7 +1048,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
         where: {
             tournamentId: tournament.id,
             teamId: losingTeam.id
-        }
+        },
+        include: Player
     })
 
     console.log('losingEntries.length', losingEntries.length)
@@ -1132,7 +1133,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
             if (loserEliminated) {
                 for (let i = 0; i < losingEntries.length; i++) {
-                    const playerId = losingEntries[i].player.id
+                    const playerId = losingEntries[i].playerId
                     const discordId = losingEntries[i].player.discordId
                     const member = interaction.guild.members.cache.get(discordId)
                     await losingEntries[i].update({ active: false})
