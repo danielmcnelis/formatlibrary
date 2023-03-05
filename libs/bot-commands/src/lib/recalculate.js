@@ -39,7 +39,7 @@ export default {
         
         const allMatches = await Match.findAll({ 
             where: { formatName: format.name, serverId: serverId }, 
-            attributes: ['id', 'format', 'winnerId', 'loserId', 'delta', 'createdAt'], 
+            attributes: ['id', 'formatName', 'winnerId', 'loserId', 'delta', 'createdAt'], 
             order: [["createdAt", "ASC"]]
         })
 
