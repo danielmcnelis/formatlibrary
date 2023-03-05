@@ -1052,7 +1052,6 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     })
 
     console.log('losingEntries.length', losingEntries.length)
-    console.log('winningTeam.currentRoundWins + winningTeam.currentRoundLosses', winningTeam.currentRoundWins + winningTeam.currentRoundLosses)
 
     const matchesArr = await getMatches(server, tournament.id) || []
     let matchId = false
@@ -1071,6 +1070,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
     console.log('matchId', matchId)
     console.log('scores', scores)
+    
+    console.log('winningTeam.currentRoundWins', winningTeam.currentRoundWins)
 
     if (winningTeam.currentRoundWins >= 2) {
         try {
