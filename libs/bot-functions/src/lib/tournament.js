@@ -1090,13 +1090,13 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
             await losingTeam.update({
                 currentRoundWins: 0,
                 currentRoundLosses: 0,
-                losses: losingTeam.losses++
+                losses: losingTeam.losses + 1
             })
 
             await winningTeam.update({
                 currentRoundWins: 0,
                 currentRoundLosses: 0,
-                wins: winningTeam.wins++
+                wins: winningTeam.wins + 1
             })
         } catch (err) {
             console.log(err)
@@ -1166,20 +1166,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                     return await interaction.channel.send({ content: `${losingTeam.name}, You are eliminated from the tournament. Better luck next time!`})
                 } else if (loserNextTeam) {
                     const {player: playerA1} = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player })
-                    console.log('!!playerA1', !!playerA1)
                     const {player: playerA2} = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player})
-                    console.log('!!playerA2', !!playerA2)
-
+                    
                     const {player: playerB1} = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
-                    console.log('!!playerB1', !!playerB1)
                     const {player: playerB2} = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
-                    console.log('!!playerB2', !!playerB2)
-
+                    
                     const {player: playerC1} = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
-                    console.log('!!playerC1', !!playerC1)
                     const {player: playerC2} = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
-                    console.log('!!playerC2', !!playerC2)
-
+                    
                     return await interaction.channel.send({ 
                         content: `New Team Match: ${losingTeam.name} vs. ${loserNextTeam.name}. Good luck to both teams.` + 
                             `\nDuel A: <@${playerA1.discordId}> vs <@${playerA2.discordId}>`+ 
@@ -1199,26 +1193,22 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                         return await interaction.channel.send({ content: `${winningTeam.name}, You won the tournament! Congratulations on your stellar performance! ${emojis.legend}`})
                     } else if (winnerNextTeam) {
                         const {player: playerA1} = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player })
-                        console.log('!!playerA1', !!playerA1)
                         const {player: playerA2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player})
-                        console.log('!!playerA2', !!playerA2)
 
                         const {player: playerB1} = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
-                        console.log('!!playerB1', !!playerB1)
                         const {player: playerB2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
-                        console.log('!!playerB2', !!playerB2)
 
                         const {player: playerC1} = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
-                        console.log('!!playerC1', !!playerC1)
                         const {player: playerC2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
-                        console.log('!!playerC2', !!playerC2)
 
-                        return await interaction.channel.send({ 
+                        await interaction.channel.send({ 
                             content: `New Team Match: ${winningTeam.name} vs. ${winnerNextTeam.name}. Good luck to both teams.` + 
-                                `\nDuel A: <@${playerA1.player.discordId}> vs <@${playerA2.player.discordId}>`+ 
-                                `\nDuel B: <@${playerB1.player.discordId}> vs <@${playerB2.player.discordId}>`+ 
-                                `\nDuel C: <@${playerC1.player.discordId}> vs <@${playerC2.player.discordId}>`
+                                `\nDuel A: <@${playerA1.discordId}> vs <@${playerA2.discordId}>`+ 
+                                `\nDuel B: <@${playerB1.discordId}> vs <@${playerB2.discordId}>`+ 
+                                `\nDuel C: <@${playerC1.discordId}> vs <@${playerC2.discordId}>`
                         })
+
+                        return sendTeamPairings(interaction.guild, server, tournament, false)
                     } else if (winnerMatchWaitingOn && winnerWaitingOnTeam1 && winnerWaitingOnTeam2) {
                         return await interaction.channel.send({ content: `${winningTeam.name}, You are waiting for the result of ${winnerWaitingOnTeam1.name} vs ${winnerWaitingOnTeam2.name}.`})
                     } else {
