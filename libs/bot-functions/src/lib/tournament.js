@@ -1024,7 +1024,6 @@ export const processMatchResult = async (server, interaction, winner, winningPla
 
 //PROCESS TEAM RESULT
 export const processTeamResult = async (server, interaction, winningPlayer, losingPlayer, tournament, noshow = false) => {
-    console.log('processTeamResult()')
     const losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id }, include: [Player, Team] })
     const winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id }, include: [Player, Team] })
 
@@ -1041,9 +1040,9 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     const losingTeam = losingEntry.team
     const winningTeam = winningEntry.team
 
-    await losingTeam.update({ currentRoundLosses: losingTeam.currentRoundLosses + 1 })
-    await winningTeam.update({ currentRoundWins: winningTeam.currentRoundWins + 1 })
-    const margin = `${winningTeam.currentRoundWins}-${winningTeam.currentRoundLosses}`
+    await losingTeam.update({ matchLosses: losingTeam.matchLosses + 1 })
+    await winningTeam.update({ matchWins: winningTeam.matchWins + 1 })
+    const margin = `${winningTeam.matchWins}-${winningTeam.matchLosses}`
 
     const losingEntries = await Entry.findAll({
         where: {
@@ -1052,8 +1051,6 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
         },
         include: Player
     })
-
-    console.log('losingEntries.length', losingEntries.length)
 
     const matchesArr = await getMatches(server, tournament.id) || []
     let matchId = false
@@ -1066,18 +1063,13 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
         if (checkPairing(match, losingEntry.participantId, winningEntry.participantId)) {
             matchId = match.id    
             scores =  match.player1_id === winningEntry.participantId ? 
-                `${winningTeam.currentRoundWins}-${winningTeam.currentRoundLosses}` : 
-                `${winningTeam.currentRoundLosses}-${winningTeam.currentRoundWins}`
+                `${winningTeam.matchWins}-${winningTeam.matchLosses}` : 
+                `${winningTeam.matchLosses}-${winningTeam.matchWins}`
             break
         }
     }
 
-    console.log('matchId', matchId)
-    console.log('scores', scores)
-
-    console.log('winningTeam.currentRoundWins', winningTeam.currentRoundWins)
-
-    if (winningTeam.currentRoundWins >= 2) {
+    if (winningTeam.matchWins >= 2) {
         try {
             console.log('try 1077')
             success = await axios({
@@ -1092,15 +1084,15 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
             })
 
             await losingTeam.update({
-                currentRoundWins: 0,
-                currentRoundLosses: 0,
-                losses: losingTeam.losses + 1
+                matchWins: 0,
+                matchLosses: 0,
+                teamLosses: losingTeam.teamLosses + 1
             })
 
             await winningTeam.update({
-                currentRoundWins: 0,
-                currentRoundLosses: 0,
-                wins: winningTeam.wins + 1
+                matchWins: 0,
+                matchLosses: 0,
+                teamWins: winningTeam.teamWins + 1
             })
         } catch (err) {
             console.log(err)
@@ -1116,23 +1108,15 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
         if (tournament.type === 'single elimination' || tournament.type === 'double elimination') {
             const updatedMatchesArr = await getMatches(server, tournament.id) || []
-            console.log('updatedMatchesArr.length', updatedMatchesArr.length)
             const winnerNextMatch = findNextMatch(updatedMatchesArr, matchId, winningEntry.participantId)
-            console.log('!!winnerNextMatch', !!winnerNextMatch)
             const winnerNextTeam = winnerNextMatch ? await findNextTeam(tournament.id, updatedMatchesArr, winnerNextMatch, winningEntry.participantId) : null
-            console.log('!!winnerNextTeam', !!winnerNextTeam)
             const winnerMatchWaitingOn = winnerNextTeam ? null : findOtherPreReqMatch(updatedMatchesArr, winnerNextMatch, matchId) 
-            console.log('!!winnerMatchWaitingOn', !!winnerMatchWaitingOn)
             const winnerWaitingOnTeam1 = winnerMatchWaitingOn && winnerMatchWaitingOn.p1 && winnerMatchWaitingOn.p2 ? await Team.findOne({ where: { tournamentId: tournament.id, participantId: winnerMatchWaitingOn.p1 } }) : null
-            console.log('!!winnerWaitingOnTeam1', !!winnerWaitingOnTeam1)
             const winnerWaitingOnTeam2 = winnerMatchWaitingOn && winnerMatchWaitingOn.p1 && winnerMatchWaitingOn.p2 ? await Team.findOne({ where: { tournamentId: tournament.id, participantId: winnerMatchWaitingOn.p2 } }) : null
-            console.log('!!winnerWaitingOnTeam2', !!winnerWaitingOnTeam2)
 
             const loserEliminated = tournament.type === 'single elimination' ? true :
-                tournament.type === 'double elimination' && losingTeam.losses >= 2 ? true :
+                tournament.type === 'double elimination' && losingTeam.teamLosses >= 2 ? true :
                 false
-
-            console.log('loserEliminated', loserEliminated)
 
             if (loserEliminated) {
                 for (let i = 0; i < losingEntries.length; i++) {
@@ -1155,15 +1139,10 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
             }
 
             const loserNextMatch = loserEliminated ? null : findNextMatch(updatedMatchesArr, matchId, losingEntry.participantId)
-            console.log('!!loserNextMatch', !!loserNextMatch)
             const loserNextTeam = loserNextMatch ? await findNextTeam(tournament.id, updatedMatchesArr, loserNextMatch, losingEntry.participantId) : null
-            console.log('!!loserNextTeam', !!loserNextTeam)
             const loserMatchWaitingOn = loserNextTeam ? null : findOtherPreReqMatch(updatedMatchesArr, loserNextMatch, matchId) 
-            console.log('!!loserMatchWaitingOn', !!loserMatchWaitingOn)
             const loserWaitingOnTeam1 = loserMatchWaitingOn && loserMatchWaitingOn.p1 && loserMatchWaitingOn.p2 ? await Team.findOne({ where: { tournamentId: tournament.id, participantId: loserMatchWaitingOn.p1 } }) : null
-            console.log('!!loserWaitingOnTeam1', !!loserWaitingOnTeam1)
             const loserWaitingOnTeam2 = loserMatchWaitingOn && loserMatchWaitingOn.p1 && loserMatchWaitingOn.p2 ? await Team.findOne({ where: { tournamentId: tournament.id, participantId: loserMatchWaitingOn.p2 } }) : null
-            console.log('!!loserWaitingOnTeam2', !!loserWaitingOnTeam2)
 
             setTimeout(async () => {
                 if (loserEliminated) {
@@ -1227,7 +1206,6 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
     await losingEntry.update({ losses: losingEntry.losses + 1 })
     await winningEntry.update({ wins: winningEntry.wins + 1 })   
-    console.log('return matchId', matchId)     
     return matchId
 }
 

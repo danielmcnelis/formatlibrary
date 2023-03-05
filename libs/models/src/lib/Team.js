@@ -18,34 +18,25 @@ export const Team = db.define('teams', {
     playerAId: {
         type: Sequelize.STRING
     },
-    entryAId: {
-        type: Sequelize.INTEGER
-    },
     playerBId: {
         type: Sequelize.STRING
-    },
-    entryBId: {
-        type: Sequelize.INTEGER
     },
     playerCId: {
         type: Sequelize.STRING
     },
-    entryCId: {
-        type: Sequelize.INTEGER
-    },
-    wins: {
+    teamWins: {
         type: Sequelize.INTEGER,
         default: 0
     },
-    losses: {
+    teamLosses: {
         type: Sequelize.INTEGER,
         default: 0
     },
-    currentRoundWins: {
+    matchWins: {
         type: Sequelize.INTEGER,
         default: 0
     },
-    currentRoundLosses: {
+    matchLosses: {
         type: Sequelize.INTEGER,
         default: 0
     }
