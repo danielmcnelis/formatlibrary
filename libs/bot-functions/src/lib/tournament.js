@@ -1024,6 +1024,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
 
 //PROCESS TEAM RESULT
 export const processTeamResult = async (server, interaction, winningPlayer, losingPlayer, tournament, noshow = false) => {
+    console.log('processTeamResult()')
     const losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id }, include: [Player, Team] })
     const winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id }, include: [Player, Team] })
     
