@@ -37,7 +37,7 @@ export default {
 
         const matches = await Match.findAll({
             where: { 
-                format: format.name,
+                formatName: format.name,
                 createdAt: {
                     [Op.gte]: cutoff
                 }

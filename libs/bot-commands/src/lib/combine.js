@@ -64,7 +64,7 @@ export default {
 
         for (let i = 0; i < matches.length; i++) {
             const match = matches[i]
-            const format = match.format
+            const format = match.formatName
             if (!formats.includes(format)) formats.push(format)
             
             if (

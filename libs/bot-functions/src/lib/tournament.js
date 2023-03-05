@@ -1406,7 +1406,7 @@ export const dropFromTournament = async (interaction, tournamentId) => {
     if (!success) {
         const matches = await Match.findAll({ 
             where: { 
-                tournament: true
+                isTournament: true
             },
             limit: 5,
             order: [["createdAt", "DESC"]] 

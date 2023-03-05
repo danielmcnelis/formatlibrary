@@ -38,7 +38,7 @@ export default {
         interaction.reply({ content: `Recalculating data from ${count} ${format.name} ${format.emoji} matches. Please wait...`})
         
         const allMatches = await Match.findAll({ 
-            where: { format: format.name, serverId: serverId }, 
+            where: { formatName: format.name, serverId: serverId }, 
             attributes: ['id', 'format', 'winnerId', 'loserId', 'delta', 'createdAt'], 
             order: [["createdAt", "ASC"]]
         })
@@ -69,7 +69,7 @@ export default {
 
             const prevVanq = await Match.count({
                 where: {
-                    format: match.format,
+                    formatName: match.formatName,
                     winnerId: match.winnerId,
                     loserId: match.loserId,
                     createdAt: {[Op.lt]: match.createdAt}

@@ -217,9 +217,10 @@ export default {
             winnerId: winningPlayer.id,
             loser: losingPlayer.name,
             loserId: losingPlayer.id,
-            tournament: isTournamentMatch,
+            isTournament: isTournamentMatch,
             tournamentMatchId: tournamentMatchId,
-            format: format.name,
+            formatName: format.name,
+            formatId: format.id,
             delta: delta,
             serverId: serverId,
             internal: server.internalLadder

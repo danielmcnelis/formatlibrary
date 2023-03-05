@@ -3,8 +3,11 @@ import { Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const Match = db.define('matches', {
-    format: {
+    formatName: {
         type: Sequelize.STRING
+    },
+    formatId: {
+      type: Sequelize.INTEGER
     },
     winner: {
         type: Sequelize.STRING
@@ -22,7 +25,7 @@ export const Match = db.define('matches', {
         type: Sequelize.FLOAT,  
         defaultValue: 10.00
     },
-    tournament: {
+    isTournament: {
         type: Sequelize.BOOLEAN,   
         defaultValue: false
     },

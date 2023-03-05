@@ -31,13 +31,13 @@ export default {
         if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         const serverId = server.internalLadder ? server.id : '414551319031054346'
         
-        const matches = await Match.findAll({ where: { format: format.name, serverId: serverId }, order: [['createdAt', 'DESC']]})
+        const matches = await Match.findAll({ where: { formatName: format.name, serverId: serverId }, order: [['createdAt', 'DESC']]})
         const authorIsMod = isMod(server, interaction.member)
 
         const match = authorIsMod ? await selectMatch(interaction, matches.slice(0, 10)) :  matches[0]
         if (!match) return
 
-        if (match.tournament && match.tournamentId && match.tournamentMatchId) {
+        if (match.isTournament && match.tournamentId && match.tournamentMatchId) {
             try {
                 await axios({
                     method: 'put',

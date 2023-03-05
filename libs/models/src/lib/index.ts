@@ -64,6 +64,9 @@ Deck.belongsTo(Format)
 Format.hasMany(Event)
 Event.belongsTo(Format)
 
+Format.hasMany(Match)
+Match.belongsTo(Format)
+
 //IRON
 Iron.belongsTo(Player)
 Player.hasMany(Iron)

@@ -180,7 +180,7 @@ const getRatedInformation = async (interaction, player) => {
                         winnerId: player.id,
                         loserId: player.id
                     },
-                    format: format.name,
+                    formatName: format.name,
                     createdAt: {[Op.gte]: oneHourAgo }
                 }
             })].map((m) => {

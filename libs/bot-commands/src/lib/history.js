@@ -46,7 +46,7 @@ export default {
 
         const matches = await Match.findAll({
             where: {
-                format: format.name,
+                formatName: format.name,
                 [Op.or]: [
                     { winnerId: player.id }, 
                     { loserId: player.id }

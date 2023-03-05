@@ -34,13 +34,13 @@ const fixFormats = async () => {
     
             const matches = await Match.findAll({
                 where: {
-                    format: {[Op.iLike]: name }
+                    formatName: {[Op.iLike]: name }
                 }
             }) || []
     
             for (let j = 0; j < matches.length; j++) {
                 const m = matches[j]
-                m.format = f.name
+                m.formatName = f.name
                 await m.save()
                 c++
             }
