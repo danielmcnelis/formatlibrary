@@ -70,7 +70,7 @@ export default {
         const loserHasTourRole = await isTourPlayer(server, losingMember)
         const winnerHasTourRole = await isTourPlayer(server, winningMember)
         const activeTournament = await Tournament.count({ where: { state: 'underway', serverId: interaction.guildId, formatName: format.name } }) 
-        let isTournamentMatch
+        let isTournament
         let winningEntry
         let losingEntry
         let tournament
@@ -146,7 +146,7 @@ export default {
                 if (tournaments.length) {
                     const tournament = await selectTournament(interaction, tournaments, interaction.user.id)
                     if (tournament) {
-                        isTournamentMatch = true
+                        isTournament = true
                         tournamentId = tournament.id
                         if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
                         if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
@@ -231,7 +231,7 @@ export default {
             winnerId: winningPlayer.id,
             loser: losingPlayer.name,
             loserId: losingPlayer.id,
-            isTournament: isTournamentMatch,
+            isTournament: isTournament,
             tournamentId: tournamentId,
             tournamentMatchId: tournamentMatchId,
             formatName: format.name,
@@ -241,7 +241,7 @@ export default {
             internal: server.internalLadder
         })
 
-        if (isTournamentMatch && winningEntry && losingEntry && tournament && match) {
+        if (isTournament && winningEntry && losingEntry && tournament && match) {
             await Matchup.create({
                 matchId: match.id,
                 format: format.name,
@@ -261,6 +261,6 @@ export default {
             await rPTU.update({ status: 'pending' })
         }
 
-        return await interaction.editReply({ content: `A manual ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournamentMatch ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss by <@${losingPlayer.discordId}> to <@${winningPlayer.discordId}> has been recorded.`})		
+        return await interaction.editReply({ content: `A manual ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournament ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss by <@${losingPlayer.discordId}> to <@${winningPlayer.discordId}> has been recorded.`})		
     }
 }
