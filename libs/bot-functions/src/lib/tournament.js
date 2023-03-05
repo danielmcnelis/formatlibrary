@@ -1070,7 +1070,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
     console.log('matchId', matchId)
     console.log('scores', scores)
-    
+
     console.log('winningTeam.currentRoundWins', winningTeam.currentRoundWins)
 
     if (winningTeam.currentRoundWins >= 2) {
@@ -1105,6 +1105,9 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
         if (!success) {
             await interaction.editReply({ content: `Error: could not update bracket for ${tournament.name}.`})
             return false
+        } else {
+            await interaction.channel.send({ content: `Congrats! ${winningTeam.name} has defeated ${losingTeam.name} by a score of ${scores}!`})
+            await interaction.channel.send({ content: `${emojis.koolaid}  ${emojis.dj}  ${emojis.cavebob}`})
         }
 
         if (tournament.type === 'single elimination' || tournament.type === 'double elimination') {
