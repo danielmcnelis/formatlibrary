@@ -1125,7 +1125,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
             console.log('!!winnerWaitingOnTeam2', !!winnerWaitingOnTeam2)
 
             const loserEliminated = tournament.type === 'single elimination' ? true :
-                tournament.type === 'double elimination' && losingEntry.losses >= 2 ? true :
+                tournament.type === 'double elimination' && losingTeam.losses >= 2 ? true :
                 false
 
             console.log('loserEliminated', loserEliminated)
