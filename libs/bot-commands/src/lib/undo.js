@@ -40,14 +40,8 @@ export default {
         if (match.isTournament && match.tournamentId && match.tournamentMatchId) {
             try {
                 await axios({
-                    method: 'put',
-                    url: `https://api.challonge.com/v1/tournaments/${match.tournamentId}/matches/${match.tournamentMatchId}.json?api_key=${server.challongeAPIKey}`,
-                    data: {
-                        match: {
-                            winner_id: null,
-                            scores_csv: ["0-0"]
-                        }
-                    }
+                    method: 'post',
+                    url: `https://api.challonge.com/v1/tournaments/${match.tournamentId}/matches/${match.tournamentMatchId}/reopen.json?api_key=${server.challongeAPIKey}`
                 })
             } catch (err) {
                 console.log(err)
