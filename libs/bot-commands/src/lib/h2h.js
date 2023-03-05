@@ -53,8 +53,8 @@ export default {
         if (!player2 && player2DiscordId === interaction.user.id) return await interaction.reply({ content: `You are not in the database.`})
         if (!player2 && player2DiscordId !== interaction.user.id) return await interaction.reply({ content: `The second user is not in the database.`})
 
-        const p1Wins = await Match.count({ where: { winnerId: player1.id, loserId: player2.id, format: format.name } })
-        const p2Wins = await Match.count({ where: { winnerId: player2.id, loserId: player1.id, format: format.name } })
+        const p1Wins = await Match.count({ where: { winnerId: player1.id, loserId: player2.id, formatName: format.name } })
+        const p2Wins = await Match.count({ where: { winnerId: player2.id, loserId: player1.id, formatName: format.name } })
         
         return await interaction.reply({ content: 
             `${server.emoji || format.emoji} --- H2H ${format.name} Results --- ${server.emoji || format.emoji}`+

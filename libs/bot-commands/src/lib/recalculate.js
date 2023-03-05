@@ -33,7 +33,7 @@ export default {
         if (!format) return await interaction.reply({ content: `Try using **/recalculate** in channels like: <#414575168174948372> or <#629464112749084673>.`})
         
         const serverId = server.internalLadder ? server.id : '414551319031054346'
-        const count = await Match.count({ where: { format: format.name, serverId: serverId }})
+        const count = await Match.count({ where: { formatName: format.name, serverId: serverId }})
 
         interaction.reply({ content: `Recalculating data from ${count} ${format.name} ${format.emoji} matches. Please wait...`})
         

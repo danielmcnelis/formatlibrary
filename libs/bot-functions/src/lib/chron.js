@@ -187,7 +187,7 @@ export const markInactives = async () => {
         const s = stats[i]
         const count = await Match.count({ 
             where: {
-                format: s.format,
+                formatName: s.format,
                 [Op.or]: {
                     winnerId: s.playerId,
                     loserId: s.playerId

@@ -195,7 +195,7 @@ export default {
         
         const prevVanq = await Match.count({
             where: {
-                format: {[Op.iLike]: format.name},
+                formatName: {[Op.iLike]: format.name},
                 winnerId: winningPlayer.id,
                 loserId: losingPlayer.id
             }
