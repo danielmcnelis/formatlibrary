@@ -150,7 +150,7 @@ export default {
                         if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
                         tournamentMatchId = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament) :
                             await processMatchResult(server, interaction, winningMember, winningPlayer, losingMember, losingPlayer, tournament)
-                        if (!success) return
+                        if (!tournamentMatchId) return
                     } else {
                         return
                     }
