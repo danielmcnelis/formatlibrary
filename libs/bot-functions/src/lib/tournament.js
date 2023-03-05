@@ -1072,7 +1072,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     console.log('matchId', matchId)
     console.log('scores', scores)
 
-    if (winningTeam.currentRoundWins + winningTeam.currentRoundLosses === 3) {
+    if (winningTeam.currentRoundWins >= 2) {
         try {
             console.log('try 1077')
             success = await axios({
