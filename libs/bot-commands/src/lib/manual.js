@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { postStory, isMod, isNewUser, hasAffiliateAccess, isIronPlayer, isTourPlayer, checkPairing, getMatches, processMatchResult, selectTournament } from '@fl/bot-functions'
+import { createPlayer, postStory, isMod, isNewUser, hasAffiliateAccess, isIronPlayer, isTourPlayer, checkPairing, getMatches, processMatchResult, processTeamResult, selectTournament } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Entry, Format, Iron, Match, Matchup, Player, Pool, Server, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
@@ -74,6 +74,7 @@ export default {
         let winningEntry
         let losingEntry
         let tournament
+        let tournamentMatchId
 
         const loserHasIronRole = isIronPlayer(server, losingMember)
         const winnerHasIronRole = isIronPlayer(server, winningMember)
@@ -147,7 +148,8 @@ export default {
                         isTournamentMatch = true
                         if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
                         if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
-                        const success = await processMatchResult(server, interaction, winningMember, winningPlayer, losingMember, losingPlayer, tournament)
+                        tournamentMatchId = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament) :
+                            await processMatchResult(server, interaction, winningMember, winningPlayer, losingMember, losingPlayer, tournament)
                         if (!success) return
                     } else {
                         return
@@ -228,6 +230,7 @@ export default {
             loser: losingPlayer.name,
             loserId: losingPlayer.id,
             tournament: isTournamentMatch,
+            tournamentMatchId: tournamentMatchId,
             format: format.name,
             delta: delta,
             serverId: serverId,

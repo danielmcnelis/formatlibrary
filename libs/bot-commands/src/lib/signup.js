@@ -78,7 +78,7 @@ export default {
             }
                                            
             const { participant } = await postParticipant(server, tournament, player)
-            if (!participant) return await interaction.member.send({ content: `Error: Unable to register ${player.name} on Challonge for ${tournament.name}. ${tournament.logo}`})
+            if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register ${player.name} on Challonge for ${tournament.name}. ${tournament.logo}`})
             await entry.update({ participantId: participant.id })
 
             member.roles.add(server.tourRole).catch((err) => console.log(err))

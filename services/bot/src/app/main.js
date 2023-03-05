@@ -136,7 +136,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         if (command.data.name === 'undo') {
             if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const matchId = interaction.values[0]
-            await undoMatch(interaction.channel, matchId)
+            await undoMatch(server, interaction.channel, matchId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'deck') {
             if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)

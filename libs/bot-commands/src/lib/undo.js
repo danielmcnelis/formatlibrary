@@ -4,6 +4,7 @@ import { isMod, hasAffiliateAccess, selectMatch } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Format, Match, Player, Server, Stats } from '@fl/models'
 import { Op } from 'sequelize'
+import axios from 'axios'
 
 export default {
     data: new SlashCommandBuilder()
@@ -35,6 +36,23 @@ export default {
 
         const match = authorIsMod ? await selectMatch(interaction, matches.slice(0, 10)) :  matches[0]
         if (!match) return
+
+        if (match.tournament && match.tournamentId && match.tournamentMatchId) {
+            try {
+                await axios({
+                    method: 'put',
+                    url: `https://api.challonge.com/v1/tournaments/${match.tournamentId}/matches/${match.tournamentMatchId}.json?api_key=${server.challongeAPIKey}`,
+                    data: {
+                        match: {
+                            winner_id: null,
+                            scores_csv: ["0-0"]
+                        }
+                    }
+                })
+            } catch (err) {
+                console.log(err)
+            }
+        }
     
         const winnerId = match.winnerId
         const loserId = match.loserId
@@ -60,6 +78,6 @@ export default {
         await loserStats.save()
 
         await match.destroy()
-        return await interaction.editReply({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${format.name} match in which ${winningPlayer.name} defeated ${losingPlayer.name} has been erased. ${server.emoji || format.emoji}`})	
+        return await interaction.editReply({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${match.isTournamentMatch ? 'Tournament ' : ''}match in which ${winningPlayer.name} defeated ${losingPlayer.name} has been erased.`})	
     }
 }

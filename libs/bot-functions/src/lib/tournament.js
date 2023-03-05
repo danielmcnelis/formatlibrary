@@ -873,11 +873,6 @@ export const processMatchResult = async (server, interaction, winner, winningPla
         return false
     }
 
-    if (tournament.isTeamTournament && losingEntry.slot !== winningEntry.slot) {
-        interaction.editReply({ content: `Sorry, ${losingEntry.playerName} (Player ${losingEntry.slot}) and ${winningEntry.playerName} (Player ${winningEntry.slot}) are not paired for ${tournament.name}.`})
-        return false
-    }
-
     const gameCount = noshow ? [0, 0] : [1, 0]
     if (!gameCount || !gameCount.length) {
         interaction.editReply({ content: `Please specify a valid game count.`})
@@ -1019,21 +1014,21 @@ export const processMatchResult = async (server, interaction, winner, winningPla
         }
     }
     
-    return true
+    return matchId
 }
 
 //PROCESS TEAM RESULT
-export const processTeamResult = async (server, interaction, winner, winningPlayer, loser, losingPlayer, tournament, noshow = false) => {
+export const processTeamResult = async (server, interaction, winningPlayer, losingPlayer, tournament, noshow = false) => {
     const losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id }, include: [Player, Team] })
     const winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id }, include: [Player, Team] })
     
     if (!losingEntry || !winningEntry) {
-        interaction.editReply({ content: `Sorry I could not find your tournament in the database.`})
+        await interaction.editReply({ content: `Sorry I could not find your tournament in the database.`})
         return false
     }
 
     if (losingEntry.slot !== winningEntry.slot) {
-        interaction.editReply({ content: `Sorry, ${losingEntry.playerName} (Player ${losingEntry.slot}) and ${winningEntry.playerName} (Player ${winningEntry.slot}) are not paired for ${tournament.name}.`})
+        await interaction.editReply({ content: `Sorry, ${losingEntry.playerName} (Player ${losingEntry.slot}) and ${winningEntry.playerName} (Player ${winningEntry.slot}) are not paired for ${tournament.name}.`})
         return false
     }
 
@@ -1094,7 +1089,7 @@ export const processTeamResult = async (server, interaction, winner, winningPlay
         }
          
         if (!success) {
-            interaction.editReply({ content: `Error: could not update bracket for ${tournament.name}.`})
+            await interaction.editReply({ content: `Error: could not update bracket for ${tournament.name}.`})
             return false
         }
 
@@ -1193,7 +1188,7 @@ export const processTeamResult = async (server, interaction, winner, winningPlay
 
         await losingEntry.udpate({ losses: losingEntry.losses++ })
         await winningEntry.update({ wins: winningEntry.wins++ })        
-        return true
+        return matchId
     }
 }
 

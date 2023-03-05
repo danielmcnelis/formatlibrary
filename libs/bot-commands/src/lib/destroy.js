@@ -4,6 +4,7 @@ import { Entry, Player, Server, Tournament } from '@fl/models'
 import { isAdmin, isProgrammer, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
+import { emojis } from '@fl/bot-emojis'
 
 export default {
 	data: new SlashCommandBuilder()
@@ -16,14 +17,15 @@ export default {
                 .setRequired(true)
         ),
 	async execute(interaction) {
+        await interaction.deferReply()
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
 
         const name = interaction.options.getString('tournament')
 
-        if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isAdmin(server, interaction.member)) return await interaction.reply({ content: 'You do not have permission to do that.'})
+        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        if (!isAdmin(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
 
         const tournament = await Tournament.findOne({ 
             where: { 
@@ -36,8 +38,8 @@ export default {
         })
 
         if (!tournament) return await interaction.reply({ content: `Could not find tournament: "${name}".`})
-        if (tournament.state === 'underway' && !isProgrammer(interaction.member)) return await interaction.reply({ content: `This tournament is underway, therefore it may only be deleted by the database manager.`})
-        if (tournament.state === 'complete' && !isProgrammer(interaction.member)) return await interaction.reply({ content: `This tournament is complete, therefore it may only be deleted by the database manager.`})
+        if (tournament.state === 'underway' && !isProgrammer(interaction.member)) return await interaction.editReply({ content: `This tournament is underway, therefore it may only be deleted by the database manager.`})
+        if (tournament.state === 'complete' && !isProgrammer(interaction.member)) return await interaction.editReply({ content: `This tournament is complete, therefore it may only be deleted by the database manager.`})
 
         try {
             const { status } = await axios({
@@ -70,16 +72,17 @@ export default {
                         console.log(err)
                     }
                 }
-        
-                const content = `Yikes! You deleted ${tournament.name} ${tournament.logo} from your Challonge account.`
+
+                const tournamentName = tournament.name
+                const tournamentLogo = tournament.logo
                 await tournament.destroy()
-                return await interaction.reply({ content })
+                return await interaction.editReply({ content: `Yikes! You deleted ${tournamentName} ${tournamentLogo} from your Challonge account.` })
             } else {
-                return await interaction.reply({ content: `Unable to delete tournament from Challonge account.`})
+                return await interaction.editReply({ content: `Unable to delete tournament from Challonge account.`})
             }
         } catch (err) {
             console.log(err)
-            return await interaction.reply({ content: `Error: Unable to delete tournament from Challonge account.`})
+            return await interaction.editReply({ content: `Error: Unable to delete tournament from Challonge account.`})
         }
     }
 }

@@ -1,10 +1,29 @@
 
-const { Match, Player, Stats } = require('@fl/models')
+import { Format, Match, Player, Stats } from '@fl/models'
+import axios from 'axios'
 
 // UNDO MATCH
-export const undoMatch = async (channel, id) => {
+export const undoMatch = async (server, channel, id) => {
     try {
-        const match = await Match.findOne({ where: { id }})
+        const match = await Match.findOne({ where: { id }, include: Format})
+
+        if (match.tournament && match.tournamentId && match.tournamentMatchId) {
+            try {
+                await axios({
+                    method: 'put',
+                    url: `https://api.challonge.com/v1/tournaments/${match.tournamentId}/matches/${match.tournamentMatchId}.json?api_key=${server.challongeAPIKey}`,
+                    data: {
+                        match: {
+                            winner_id: null,
+                            scores_csv: ["0-0"]
+                        }
+                    }
+                })
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        
         const winnerId = match.winnerId
         const loserId = match.loserId
         const winningPlayer = await Player.findOne({ where: { id: winnerId } })
@@ -23,12 +42,12 @@ export const undoMatch = async (channel, id) => {
     
         loserStats.elo = loserStats.backupElo
         loserStats.backupElo = null
-        loserStats.losses--
+        loserStats.losses--g
         loserStats.games--
         await loserStats.save()
     
         await match.destroy()
-        return channel.send({ content: `The last ${match.format} match in which ${winningPlayer.name} defeated ${losingPlayer.name} has been erased.`})	
+        return channel.send({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${match.format} Format ${server.emoji || match.format?.emoji || ''} ${match.isTournamentMatch ? 'Tournament ' : ''}match in which ${winningPlayer.name} defeated ${losingPlayer.name} has been erased.`})	
     } catch (err) {
         console.log(err)
     }

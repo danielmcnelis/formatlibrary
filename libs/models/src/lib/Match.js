@@ -26,6 +26,12 @@ export const Match = db.define('matches', {
         type: Sequelize.BOOLEAN,   
         defaultValue: false
     },
+    tournamentId: {
+        type: Sequelize.STRING,
+    },
+    tournamentMatchId: {
+        type: Sequelize.INTEGER
+    },
     internal: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
