@@ -1026,9 +1026,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
 export const processTeamResult = async (server, interaction, winningPlayer, losingPlayer, tournament, noshow = false) => {
     console.log('processTeamResult()')
     const losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id }, include: [Player, Team] })
-    console.log('!!losingEntry', !!losingEntry)
     const winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id }, include: [Player, Team] })
-    console.log('!!winningEntry', !!winningEntry)
 
     if (!losingEntry || !winningEntry) {
         await interaction.editReply({ content: `Sorry I could not find your tournament in the database.`})
@@ -1041,17 +1039,10 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     }
 
     const losingTeam = losingEntry.team
-    console.log('!!losingTeam', !!losingTeam)
     const winningTeam = winningEntry.team
-    console.log('!!winningTeam', !!winningTeam)
 
-    console.log('losingTeam.currentRoundLosses before update', losingTeam.currentRoundLosses)
-    await losingTeam.update({ currentRoundLosses: losingTeam.currentRoundLosses++ })
-    console.log('losingTeam.currentRoundLosses after update', losingTeam.currentRoundLosses)
-
-    console.log('winningTeam.currentRoundWins before update', winningTeam.currentRoundWins)
-    await winningTeam.update({ currentRoundWins: winningTeam.currentRoundWins++ })
-    console.log('winningTeam.currentRoundWins after update', winningTeam.currentRoundWins)
+    await losingTeam.update({ currentRoundLosses: losingTeam.currentRoundLosses + 1 })
+    await winningTeam.update({ currentRoundWins: winningTeam.currentRoundWins + 1 })
 
     const losingEntries = await Entry.findAll({
         where: {
@@ -1063,27 +1054,27 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     console.log('losingEntries.length', losingEntries.length)
     console.log('winningTeam.currentRoundWins + winningTeam.currentRoundLosses', winningTeam.currentRoundWins + winningTeam.currentRoundLosses)
 
-    if (winningTeam.currentRoundWins + winningTeam.currentRoundLosses === 3) {
-        const matchesArr = await getMatches(server, tournament.id) || []
-        let matchId = false
-        let scores = false
-        for (let i = 0; i < matchesArr.length; i++) {
-            const match = matchesArr[i].match
-            if (match.state !== 'open') continue
-            if (checkPairing(match, losingEntry.participantId, winningEntry.participantId)) {
-                matchId = match.id    
-                scores = `${winningTeam.currentRoundWins}-${winningTeam.currentRoundLosses}`
-                break
-            }
-        }
+    const matchesArr = await getMatches(server, tournament.id) || []
+    let matchId = false
+    let scores = false
+    let success
 
-        console.log('matchId', matchId)
-        console.log('scores', scores)
-    
-        let success
-    
+    for (let i = 0; i < matchesArr.length; i++) {
+        const match = matchesArr[i].match
+        if (match.state !== 'open') continue
+        if (checkPairing(match, losingEntry.participantId, winningEntry.participantId)) {
+            matchId = match.id    
+            scores = `${winningTeam.currentRoundWins}-${winningTeam.currentRoundLosses}`
+            break
+        }
+    }
+
+    console.log('matchId', matchId)
+    console.log('scores', scores)
+
+    if (winningTeam.currentRoundWins + winningTeam.currentRoundLosses === 3) {
         try {
-            console.log('try 1081')
+            console.log('try 1077')
             success = await axios({
                 method: 'put',
                 url: `https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${matchId}.json?api_key=${server.challongeAPIKey}`,
@@ -1232,12 +1223,12 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                 }, 4000)
             }
         }
-
-        await losingEntry.udpate({ losses: losingEntry.losses++ })
-        await winningEntry.update({ wins: winningEntry.wins++ })   
-        console.log('return matchId', matchId)     
-        return matchId
     }
+
+    await losingEntry.udpate({ losses: losingEntry.losses++ })
+    await winningEntry.update({ wins: winningEntry.wins++ })   
+    console.log('return matchId', matchId)     
+    return matchId
 }
 
 //SEND TEAM PAIRINGS
