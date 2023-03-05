@@ -1225,7 +1225,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
         }
     }
 
-    await losingEntry.udpate({ losses: losingEntry.losses++ })
+    await losingEntry.update({ losses: losingEntry.losses++ })
     await winningEntry.update({ wins: winningEntry.wins++ })   
     console.log('return matchId', matchId)     
     return matchId
