@@ -1045,8 +1045,13 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     const winningTeam = winningEntry.team
     console.log('!!winningTeam', !!winningTeam)
 
+    console.log('losingTeam.currentRoundLosses before update', losingTeam.currentRoundLosses)
     await losingTeam.update({ currentRoundLosses: losingTeam.currentRoundLosses++ })
+    console.log('losingTeam.currentRoundLosses after update', losingTeam.currentRoundLosses)
+
+    console.log('winningTeam.currentRoundWins before update', winningTeam.currentRoundWins)
     await winningTeam.update({ currentRoundWins: winningTeam.currentRoundWins++ })
+    console.log('winningTeam.currentRoundWins after update', winningTeam.currentRoundWins)
 
     const losingEntries = await Entry.findAll({
         where: {
