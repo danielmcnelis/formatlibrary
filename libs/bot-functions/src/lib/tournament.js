@@ -1064,7 +1064,9 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
         if (match.state !== 'open') continue
         if (checkPairing(match, losingEntry.participantId, winningEntry.participantId)) {
             matchId = match.id    
-            scores = `${winningTeam.currentRoundWins}-${winningTeam.currentRoundLosses}`
+            scores =  match.player1_id === winningEntry.participantId ? 
+                `${winningTeam.currentRoundWins}-${winningTeam.currentRoundLosses}` : 
+                `${winningTeam.currentRoundLosses}-${winningTeam.currentRoundWins}`
             break
         }
     }
