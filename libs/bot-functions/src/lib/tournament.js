@@ -1225,8 +1225,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
         }
     }
 
-    await losingEntry.update({ losses: losingEntry.losses++ })
-    await winningEntry.update({ wins: winningEntry.wins++ })   
+    await losingEntry.update({ losses: losingEntry.losses + 1 })
+    await winningEntry.update({ wins: winningEntry.wins + 1 })   
     console.log('return matchId', matchId)     
     return matchId
 }
