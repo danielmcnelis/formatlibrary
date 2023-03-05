@@ -74,6 +74,7 @@ export default {
         let winningEntry
         let losingEntry
         let tournament
+        let tournamentId
         let tournamentMatchId
 
         const loserHasIronRole = isIronPlayer(server, losingMember)
@@ -146,6 +147,7 @@ export default {
                     const tournament = await selectTournament(interaction, tournaments, interaction.user.id)
                     if (tournament) {
                         isTournamentMatch = true
+                        tournamentId = tournament.id
                         if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
                         if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
                         tournamentMatchId = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament) :
@@ -230,6 +232,7 @@ export default {
             loser: losingPlayer.name,
             loserId: losingPlayer.id,
             isTournament: isTournamentMatch,
+            tournamentId: tournamentId,
             tournamentMatchId: tournamentMatchId,
             formatName: format.name,
             formatId: format.id,

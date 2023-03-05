@@ -1,7 +1,7 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Server, Tournament } from '@fl/models'
-import { selectTournament, sendPairings } from '@fl/bot-functions'
+import { selectTournament, sendPairings, sendTeamPairings } from '@fl/bot-functions'
 import { isMod, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
@@ -54,7 +54,11 @@ export default {
         if (data.tournament.state === 'underway') {
 			await tournament.update({ state: 'underway' })
             interaction.editReply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${url} ${tournament.emoji}`})
-            return sendPairings(interaction.guild, server, tournament, false)
+            if (tournament.isTeamTournament) {
+                return sendTeamPairings(interaction.guild, server, tournament, false)
+            } else {
+                return sendPairings(interaction.guild, server, tournament, false)
+            }
         } else {
 		    const row = new ActionRowBuilder()
                 .addComponents(new ButtonBuilder()

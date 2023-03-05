@@ -3,8 +3,9 @@ import { SlashCommandBuilder } from 'discord.js'
 import { Format, Server, Tournament } from '@fl/models'
 import { emojis } from '@fl/bot-emojis'
 import { isMod, hasPartnerAccess } from '@fl/bot-functions'
-import { sendPairings, selectTournament } from '@fl/bot-functions'
+import { sendPairings, sendTeamPairings, selectTournament } from '@fl/bot-functions'
 import { Op } from 'sequelize'
+import e from 'express'
 
 export default {
     data: new SlashCommandBuilder()
@@ -77,7 +78,12 @@ export default {
             interaction.editReply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${hours} ${word1} and ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
         }
 
-        sendPairings(interaction.guild, server, tournament, ignoreRound1)
+        if (tournament.isTeamTournament) {
+            sendTeamPairings(interaction.guild, server, tournament, ignoreRound1)
+        } else {
+            sendPairings(interaction.guild, server, tournament, ignoreRound1)
+        }
+
         return setTimeout(async () => {
             return await interaction.channel.send(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`)
         }, timeRemaining)

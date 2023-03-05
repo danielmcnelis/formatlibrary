@@ -458,7 +458,12 @@ export const setTimerForTournament = async (interaction, tournamentId, hours = n
         interaction.reply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${hours} ${word1} and ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
     }
 
-    sendPairings(interaction.guild, server, tournament, true)
+    if (tournament.isTeamTournament) {
+        sendTeamPairings(interaction.guild, server, tournament, true)
+    } else {
+        sendPairings(interaction.guild, server, tournament, true)
+    }
+
     return setTimeout(async () => {
         return await interaction.reply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`)
     }, timeRemaining)
@@ -1192,6 +1197,112 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     }
 }
 
+//SEND TEAM PAIRINGS
+export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) => {
+    const matches = [...await getMatches(server, tournament.id)].map((el) => el.match).filter((match) => match.state === 'open')
+    
+    for (let i = 0; i < matches.length; i++) {
+        const match = matches[i]
+        if (ignoreRound1 && match.round === 1) continue
+        const round = tournament.type === 'double elimination' && match.round < 0 ? `Losers Round ${Math.abs(match.round)}` :
+            tournament.type === 'double elimination' && match.round > 0 ? `Winners Round ${Math.abs(match.round)}` :
+            `Round ${match.round}`
+  
+        const {player: playerA1} = await Entry.findOne({ where: { participantId: match.player1_id, tournamentId: tournament.id, slot: 'A' }, include: Player })
+        const {player: playerA2} = await Entry.findOne({ where: { participantId: match.player2_id, tournamentId: tournament.id, slot: 'A' }, include: Player })
+        
+        try {
+            const pA1Member = await guild.members.fetch(playerA1.discordId)
+            pA1Member.user.send(
+                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+                `\nServer: ${server.name} ${server.logo}` +
+                `\nChannel: <#${tournament.channelId}>` +
+                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                `\nDiscord: ${playerA2.discordName}#${playerA2.discriminator}` +
+                `\nDuelingBook: ${playerA2.duelingBook}`
+            )
+        } catch (err) {
+            console.log(err)
+        }
+
+        try {
+            const pA2Member = await guild.members.fetch(playerA2.discordId)
+            pA2Member.user.send(
+                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+                `\nServer: ${server.name} ${server.logo}` +
+                `\nChannel: <#${tournament.channelId}>` +
+                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                `\nDiscord: ${playerA1.discordName}#${playerA1.discriminator}` +
+                `\nDuelingBook: ${playerA1.duelingBook}`
+            )
+        } catch (err) {
+            console.log(err)
+        }
+
+        const {player: playerB1} = await Entry.findOne({ where: { participantId: match.player1_id, tournamentId: tournament.id, slot: 'B' }, include: Player })
+        const {player: playerB2} = await Entry.findOne({ where: { participantId: match.player2_id, tournamentId: tournament.id, slot: 'B' }, include: Player })
+
+        try {
+            const pB1Member = await guild.members.fetch(playerB1.discordId)
+            pB1Member.user.send(
+                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+                `\nServer: ${server.name} ${server.logo}` +
+                `\nChannel: <#${tournament.channelId}>` +
+                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                `\nDiscord: ${playerB2.discordName}#${playerB2.discriminator}` +
+                `\nDuelingBook: ${playerB2.duelingBook}`
+            )
+        } catch (err) {
+            console.log(err)
+        }
+
+        try {
+            const pB2Member = await guild.members.fetch(playerB2.discordId)
+            pB2Member.user.send(
+                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+                `\nServer: ${server.name} ${server.logo}` +
+                `\nChannel: <#${tournament.channelId}>` +
+                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                `\nDiscord: ${playerB1.discordName}#${playerB1.discriminator}` +
+                `\nDuelingBook: ${playerB1.duelingBook}`
+            )
+        } catch (err) {
+            console.log(err)
+        }
+
+        const {player: playerC1} = await Entry.findOne({ where: { participantId: match.player1_id, tournamentId: tournament.id, slot: 'C' }, include: Player })
+        const {player: playerC2} = await Entry.findOne({ where: { participantId: match.player2_id, tournamentId: tournament.id, slot: 'C' }, include: Player })
+
+        try {
+            const pC1Member = await guild.members.fetch(playerC1.discordId)
+            pC1Member.user.send(
+                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+                `\nServer: ${server.name} ${server.logo}` +
+                `\nChannel: <#${tournament.channelId}>` +
+                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                `\nDiscord: ${playerC2.discordName}#${playerC2.discriminator}` +
+                `\nDuelingBook: ${playerC2.duelingBook}`
+            )
+        } catch (err) {
+            console.log(err)
+        }
+
+        try {
+            const pC2Member = await guild.members.fetch(playerC2.discordId)
+            pC2Member.user.send(
+                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+                `\nServer: ${server.name} ${server.logo}` +
+                `\nChannel: <#${tournament.channelId}>` +
+                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                `\nDiscord: ${playerC1.discordName}#${playerC1.discriminator}` +
+                `\nDuelingBook: ${playerC1.duelingBook}`
+            )
+        } catch (err) {
+            console.log(err)
+        }
+    }      
+}
+
 // SEND PAIRINGS
 export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
     const matches = [...await getMatches(server, tournament.id)].map((el) => el.match).filter((match) => match.state === 'open')
@@ -1442,10 +1553,14 @@ export const startTournament = async (interaction, tournamentId) => {
 
     if (status === 200) { 
         await tournament.update({ state: 'underway' })
-        interaction.reply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${tournament.url} ${tournament.emoji}`})
-        return sendPairings(interaction.guild, server, tournament, false)
+        interaction.channel.send({ content: `Let's go! Your tournament is starting now: https://challonge.com/${tournament.url} ${tournament.emoji}`})
+        if (tournament.isTeamTournament) {
+            return sendTeamPairings(interaction.guild, server, tournament, false)
+        } else {
+            return sendPairings(interaction.guild, server, tournament, false)
+        }
     } else {
-        return await interaction.reply({ content: `Error connecting to Challonge.`})
+        return await interaction.channel.send({ content: `Error connecting to Challonge.`})
     }
 }
 
@@ -1474,7 +1589,11 @@ export const initiateStartTournament = async (interaction, tournamentId) => {
     if (data.tournament.state === 'underway') {
         await tournament.update({ state: 'underway' })
         interaction.reply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${tournament.url} ${tournament.emoji}`})
-        return sendPairings(interaction.guild, server, tournament, false)
+        if (tournament.isTeamTournament) {
+            return sendTeamPairings(interaction.guild, server, tournament, false)
+        } else {
+            return sendPairings(interaction.guild, server, tournament, false)
+        }
     } else {
         const row = new ActionRowBuilder()
             .addComponents(new ButtonBuilder()
