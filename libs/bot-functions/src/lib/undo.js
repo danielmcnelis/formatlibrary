@@ -42,7 +42,7 @@ export const undoMatch = async (server, channel, id) => {
     
         loserStats.elo = loserStats.backupElo
         loserStats.backupElo = null
-        loserStats.losses--g
+        loserStats.losses--
         loserStats.games--
         await loserStats.save()
     
