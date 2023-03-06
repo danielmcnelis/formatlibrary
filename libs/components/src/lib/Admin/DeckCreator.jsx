@@ -107,7 +107,6 @@ export const DeckCreator = () => {
     // USE EFFECT
     useEffect(() => {
         const fetchEvents= async () => {
-            console.log('community', community)
             const {data} = await axios.get(`/api/events/community/${community}`)
             setEvents(data)
         }
@@ -155,6 +154,7 @@ export const DeckCreator = () => {
                 >
                     <option value={null}></option>
                     <option value="Format Library">Format Library</option>
+                    <option value="beastmode">Beastmode</option>
                     <option value="DuelistGroundz">DuelistGroundz</option>
                     <option value="EdisonFormat.com">EdisonFormat.com</option>
                     <option value="Fire-Water Format">Fire-Water Format</option>
