@@ -144,8 +144,8 @@ export const getRatedFormat = async (interaction) => {
             where: {
                 name: {
                     [Op.or]: [
-                        {[Op.substring]: '%' + response},
-                        {[Op.substring]: '%' + response.replace(' ', '-')}
+                        {[Op.substring]: response},
+                        {[Op.substring]: response.replace(' ', '-')}
                     ]
                 }
             }
