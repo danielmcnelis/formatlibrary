@@ -315,6 +315,8 @@ export const EventTable = (props) => {
             >
               <option value={null}>All Communities</option>
               <option value="Format Library">Format Library</option>
+              <option value="Androidland">Androidland</option>
+              <option value="Aureum's Army">Aureum's Army</option>
               <option value="beastmode">Beastmode</option>
               <option value="DuelistGroundz">DuelistGroundz</option>
               <option value="EdisonFormat.com">EdisonFormat.com</option>

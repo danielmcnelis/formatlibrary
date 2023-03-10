@@ -52,6 +52,9 @@ export const Server = db.define('servers', {
   modRole: {
       type: Sequelize.STRING
   },
+  judgeRole: {
+      type: Sequelize.STRING
+  },
   rankedRole: {
       type: Sequelize.STRING
   },
