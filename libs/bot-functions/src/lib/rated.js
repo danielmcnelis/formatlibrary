@@ -150,6 +150,7 @@ export const getRatedFormat = async (interaction) => {
             }
         })
 
+        console.log('getRatedFormat() format?.name', format?.name)
         return format
     }).catch((err) => {
         console.log(err)
