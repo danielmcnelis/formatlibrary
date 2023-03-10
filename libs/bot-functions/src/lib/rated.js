@@ -139,12 +139,14 @@ export const getRatedFormat = async (interaction) => {
         max: 1,
         time: 15000
     }).then(async (collected) => {
-        const response = collected.first().content.toLowerCase()
+        const response = collected.first().content
         const format = await Format.findOne({
             where: {
                 name: {
                     [Op.or]: [
+                        {[Op.iLike]: response},
                         {[Op.substring]: response},
+                        {[Op.iLike]: response.replace(' ', '-')},
                         {[Op.substring]: response.replace(' ', '-')}
                     ]
                 }
