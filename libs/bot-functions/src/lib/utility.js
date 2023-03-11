@@ -467,7 +467,7 @@ export const isProgrammer = (member) => member && member.user.id === '1941479387
 export const isAdmin = (server, member) => (server && member && member._roles.includes(server.adminRole)) || member.user.id === '194147938786738176'
 
 //IS MOD?
-export const isMod = (server, member) => (server && member && member._roles.includes(server.judgeRole || server.modRole || server.adminRole)) || member.user.id === '194147938786738176'
+export const isMod = (server, member) => (server && member && member._roles.includes(server.modRole || server.adminRole || server.judgeRole)) || member.user.id === '194147938786738176'
 
 //IS IRON PLAYER?
 export const isIronPlayer = (server, member) => server && member && member._roles.includes('948006324237643806')
