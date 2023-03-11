@@ -91,7 +91,13 @@ const getRatedInformation = async (interaction, player) => {
     
     if (!ratedDeck || !ratedDeck.ydk) return
     const deckAttachments = await drawDeck(ratedDeck.ydk) || []
-    interaction.user.send({content: `Okay, ${interaction.user.username}, you will be using this deck if you are paired:` , files: [...deckAttachments] })
+    deckAttachments.forEach((attachment, index) => {
+        if (index === 0) {
+            interaction.user.send({ content: `Okay, ${interaction.user.username}, you will be using this deck if you are paired:`, files: [attachment] }).catch((err) => console.log(err))
+        } else {
+            interaction.user.send({ files: [attachment] }).catch((err) => console.log(err))
+        }
+    })
     
     const count = await Pool.count({
         where: {
