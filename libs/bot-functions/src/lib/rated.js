@@ -144,9 +144,12 @@ export const getRatedFormat = async (interaction) => {
             where: {
                 [Op.or]: [
                     { name: {[Op.iLike]: response } },
-                    { abbreviation: {[Op.iLike]: response } },
-                    { cleanName: {[Op.substring]: response } },
+                    { abbreviation: {[Op.iLike]: response } }
                 ]
+            }
+        }) || await Format.findOne({
+            where: {
+                cleanName: {[Op.substring]: response },
             }
         })
 
