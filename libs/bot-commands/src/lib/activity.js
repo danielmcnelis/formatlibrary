@@ -54,7 +54,7 @@ export default {
             const labels = []
             const data = []
 
-            for (let [key, value] in Object.entries(summary)) {
+            for (let [key, value] of Object.entries(summary)) {
                 console.log('key', key)
                 console.log('value', value)
                 if (value < 10) continue
