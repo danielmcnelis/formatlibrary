@@ -48,15 +48,22 @@ export default {
                 const match = matches[i]
                 summary[match.formatName] ? summary[match.formatName]++ : summary[match.formatName] = 1
             }
+
+            console.log('summary', summary)
     
             const labels = []
             const data = []
 
             for (let [key, value] in Object.entries(summary)) {
+                console.log('key', key)
+                console.log('value', value)
                 if (value < 10) continue
                 labels.push(key)
                 data.push(value)
             }
+
+            console.log('labels', labels)
+            console.log('data', data)
 
             const chart = new QuickChart()
             chart.setConfig({
