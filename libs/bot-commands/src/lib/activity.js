@@ -57,7 +57,7 @@ export default {
             for (let [key, value] of Object.entries(summary)) {
                 console.log('key', key)
                 console.log('value', value)
-                if (value < 10) continue
+                if (value < 12) continue
                 labels.push(key)
                 data.push(value)
             }
