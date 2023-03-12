@@ -48,16 +48,15 @@ export default {
                 const match = matches[i]
                 summary[match.formatName] ? summary[match.formatName]++ : summary[match.formatName] = 1
             }
-
-            console.log('summary', summary)
     
             const labels = []
             const data = []
 
-            for (let [key, value] of Object.entries(summary)) {
-                console.log('key', key)
-                console.log('value', value)
-                if (value < 12) continue
+            const entries = Object.entries(summary).sort((a, b) => b[1] - a[1])
+            console.log('entries', entries)
+
+            for (let [key, value] of entries) {
+                if (value < 120) continue
                 labels.push(key)
                 data.push(value)
             }
