@@ -29,7 +29,7 @@ export const initiateTrivia = async (interaction) => {
 
     for (let i = 1; i < 12; i ++) {
         setTimeout(async () => {
-            const confirming = await TriviaEntry.count({ where: { confirmed: 'confirming' }})
+            const confirming = await TriviaEntry.count({ where: { status: 'confirming' }})
             if (!confirming) return
 
             const count = await TriviaEntry.count({ where: { confirmed: false }})
