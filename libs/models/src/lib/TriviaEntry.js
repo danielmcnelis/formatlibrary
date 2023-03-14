@@ -2,7 +2,7 @@
 import { Sequelize } from 'sequelize'
 import { db } from './db'
 
-const TriviaEntry = db.define('triviaEntries', {
+export const TriviaEntry = db.define('triviaEntries', {
     playerName: {
         type: Sequelize.STRING
     },
@@ -26,6 +26,4 @@ const TriviaEntry = db.define('triviaEntries', {
         defaultValue: null
     }
 })
-
-module.exports = TriviaEntry
 
