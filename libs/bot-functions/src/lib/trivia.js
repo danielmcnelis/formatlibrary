@@ -154,7 +154,7 @@ export const getAnswer = async (interaction, entry, content, round) => {
 }
 
 //ASSIGN TRIVIA ROLES
-export const assignTriviaRoles = (interaction, entries) => {  
+export const assignTriviaRoles = (entries) => {  
     const guild = client.guilds.cache.get('414551319031054346')
     entries.forEach(async (entry) => {
         const member = await guild.members.fetch(entry.player.discordId)
