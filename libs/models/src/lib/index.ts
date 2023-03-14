@@ -42,18 +42,18 @@ Article.belongsTo(Player)
 Player.hasMany(Article)
 
 //CardDeckType
-CardDeckType.hasOne(Card)
-Card.hasMany(CardDeckType)
+// CardDeckType.hasOne(Card)
+// Card.hasMany(CardDeckType)
 
-CardDeckType.hasOne(DeckType)
-DeckType.hasMany(CardDeckType)
+// CardDeckType.hasOne(DeckType)
+// DeckType.hasMany(CardDeckType)
 
 //DECKTYPEARCHETYPE
-DeckTypeArchetype.hasOne(Archetype)
-Archetype.hasMany(DeckTypeArchetype)
+// DeckTypeArchetype.hasOne(Archetype)
+// Archetype.hasMany(DeckTypeArchetype)
 
-DeckTypeArchetype.hasOne(DeckType)
-DeckType.hasMany(DeckTypeArchetype)
+// DeckTypeArchetype.hasOne(DeckType)
+// DeckType.hasMany(DeckTypeArchetype)
 
 //DECKTYPE
 DeckType.hasMany(Deck)

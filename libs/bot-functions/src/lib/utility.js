@@ -361,6 +361,7 @@ export const createPlayer = async (member) => {
                 id: id,
                 name: `${member.user.username}`,
                 discordId: `${member.user.id}`,
+                discordName: `${member.user.username}`,
                 discriminator: `${member.user.discriminator}`
             })
         } catch (err) {
