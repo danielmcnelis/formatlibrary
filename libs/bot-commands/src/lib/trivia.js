@@ -18,11 +18,11 @@ export default {
         
         const player = await Player.findOne({ where: { discordId: interaction.user.id }})
         const alreadyIn = await TriviaEntry.count({ where: { playerId: player.id }})
-        const isPending = await TriviaEntry.count({ where: { status: 'pending' }})
-        if (!isPending && alreadyIn) return await interaction.reply({ content: 'Sorry, you cannot leave trivia after it has started.' })
+        const isConfirming = await TriviaEntry.count({ where: { status: 'confirming' }})
+        if (isConfirming && alreadyIn) return await interaction.reply({ content: 'Sorry, you cannot leave trivia after it has started.' })
         
         if (!alreadyIn) {
-            if (isPending) {
+            if (isConfirming) {
                 await TriviaEntry.create({ 
                     playerName: player.discordName,
                     playerId: player.id,
@@ -38,7 +38,7 @@ export default {
                 })
 
                 const count = await TriviaEntry.count()
-                if (count === 4) initiateTrivia(interaction)
+                if (count >= 4) initiateTrivia(interaction)
                 return await interaction.reply({ content: `You joined the Trivia queue. 📚`})
             }
         } else {
