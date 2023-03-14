@@ -57,7 +57,7 @@ export const getTriviaConfirmation = async (interaction, entry) => {
     await entry.save()
     const discordId = entry.player.discordId
     const member = interaction.guild.members.cache.get(discordId)
-    if (!member || discordId !== member.user.id) return interaction.channel.send({ content: `${entry.playerName} cannot be sent DMs.` })
+    if (!member) return interaction.channel.send({ content: `${entry.playerName} cannot be sent DMs.` })
     const filter = m => m.author.id === discordId
     const message = await member.send({ content: `Do you still wish to play Trivia?`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
