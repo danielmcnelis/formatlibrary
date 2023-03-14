@@ -4,6 +4,7 @@ const FuzzySet = require('fuzzyset')
 import { emojis } from '@fl/bot-emojis'
 const yescom = ['yes', 'ye', 'y', 'ya', 'yea', 'yeah', 'da', 'ja', 'si', 'ok', 'sure']
 const triviaRole = '1085310457126060153'
+import { client } from '../client'
 
 //INITIATE TRIVIA
 export const initiateTrivia = async (interaction) => {
@@ -56,7 +57,7 @@ export const getTriviaConfirmation = async (interaction, entry) => {
     entry.status = 'confirming'
     await entry.save()
     const discordId = entry.player.discordId
-    const member = interaction.guild.members.cache.get(discordId)
+    const member = client.guild.members.cache.get(discordId)
     if (!member) return interaction.channel.send({ content: `${entry.playerName} cannot be sent DMs.` })
     const filter = m => m.author.id === discordId
     const message = await member.send({ content: `Do you still wish to play Trivia?`}).catch((err) => console.log(err))
@@ -128,7 +129,7 @@ export const askQuestion = async (interaction, round, questions) => {
 //GET ANSWER
 export const getAnswer = async (interaction, entry, content, round) => {
     const discordId = entry.player.discordId
-    const member = interaction.guild.members.cache.get(discordId)
+    const member = client.guild.members.cache.get(discordId)
     if (!member || discordId !== member.user.id) return
     
     const filter = m => m.author.id === discordId
@@ -151,7 +152,7 @@ export const getAnswer = async (interaction, entry, content, round) => {
 //ASSIGN TRIVIA ROLES
 export const assignTriviaRoles = (interaction, entries) => {    
     entries.forEach((entry) => {
-        const member = interaction.guild.members.cache.get(entry.playerId)
+        const member = client.guild.members.cache.get(entry.playerId)
         member.roles.add(triviaRole)
     })
 }
@@ -204,7 +205,7 @@ export const postTriviaStandings = async (interaction, round, entries, questions
 export const endTrivia = async (interaction, entries) => {
     for (let i = 0; i < entries.length; i++) {
         const entry = entries[i]
-        const member = interaction.guild.members.cache.get(entry.player.discordId)
+        const member = client.guild.members.cache.get(entry.player.discordId)
         member.roles.remove(triviaRole).catch((err) => console.log(err))
         await entry.destroy()
     }
