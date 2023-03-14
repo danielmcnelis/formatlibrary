@@ -215,6 +215,14 @@ Server.hasMany(Tournament)
 Team.belongsTo(Tournament)
 Tournament.hasMany(Team)
 
+//TriviaEntry
+TriviaEntry.belongsTo(Player)
+Player.hasMany(TriviaEntry)
+
+//TriviaKnowledge
+TriviaKnowledge.belongsTo(Player)
+Player.hasMany(TriviaKnowledge)
+
 //VIDEO
 Video.belongsTo(Player)
 Player.hasMany(Video)
