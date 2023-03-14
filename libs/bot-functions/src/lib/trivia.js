@@ -57,7 +57,9 @@ export const getTriviaConfirmation = async (interaction, entry) => {
     entry.status = 'confirming'
     await entry.save()
     const discordId = entry.player.discordId
-    const member = client.guild.members.cache.get(discordId)
+    const guild = client.guilds.cache.get('414551319031054346')
+    const member = guild.members.fetch(discordId)
+    
     if (!member) return interaction.channel.send({ content: `${entry.playerName} cannot be sent DMs.` })
     const filter = m => m.author.id === discordId
     const message = await member.send({ content: `Do you still wish to play Trivia?`}).catch((err) => console.log(err))
@@ -129,7 +131,9 @@ export const askQuestion = async (interaction, round, questions) => {
 //GET ANSWER
 export const getAnswer = async (interaction, entry, content, round) => {
     const discordId = entry.player.discordId
-    const member = client.guild.members.cache.get(discordId)
+    const guild = client.guilds.cache.get('414551319031054346')
+    const member = guild.members.fetch(discordId)
+    
     if (!member || discordId !== member.user.id) return
     
     const filter = m => m.author.id === discordId
@@ -150,9 +154,10 @@ export const getAnswer = async (interaction, entry, content, round) => {
 }
 
 //ASSIGN TRIVIA ROLES
-export const assignTriviaRoles = (interaction, entries) => {    
+export const assignTriviaRoles = (interaction, entries) => {  
+    const guild = client.guilds.cache.get('414551319031054346')
     entries.forEach((entry) => {
-        const member = client.guild.members.cache.get(entry.playerId)
+        const member = guild.members.fetch(entry.player.discordId)
         member.roles.add(triviaRole)
     })
 }
@@ -205,7 +210,8 @@ export const postTriviaStandings = async (interaction, round, entries, questions
 export const endTrivia = async (interaction, entries) => {
     for (let i = 0; i < entries.length; i++) {
         const entry = entries[i]
-        const member = client.guild.members.cache.get(entry.player.discordId)
+        const guild = client.guilds.cache.get('414551319031054346')
+        const member = guild.members.fetch(entry.player.discordId)
         member.roles.remove(triviaRole).catch((err) => console.log(err))
         await entry.destroy()
     }
