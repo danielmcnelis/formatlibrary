@@ -33,6 +33,7 @@ export default {
                 await TriviaEntry.create({ 
                     playerName: player.discordName,
                     playerId: player.id,
+                    status: 'confirming',
                     confirmed: false
                 })
 
