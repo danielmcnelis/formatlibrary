@@ -3,7 +3,6 @@ import { SlashCommandBuilder } from 'discord.js'
 import { TriviaEntry, Player, Server } from '@fl/models'
 import { initiateTrivia, hasFullAccess } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
-import { findAllByDisplayValue } from '@testing-library/react'
 
 export default {
     data: new SlashCommandBuilder()
