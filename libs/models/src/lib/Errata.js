@@ -13,15 +13,15 @@ export const Errata = db.define('erratas', {
         type: Sequelize.TEXT
     },
     effectiveDate: {
-        type: Sequelize.DATE
+        type: Sequelize.STRING
     },
     expirationDate: {
-        type: Sequelize.DATE
+        type: Sequelize.STRING
     },
     original: {
         type: Sequelize.BOOLEAN
     },
-    current: {
+    active: {
         type: Sequelize.BOOLEAN
     }
 })

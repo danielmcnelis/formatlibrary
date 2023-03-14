@@ -6,6 +6,9 @@ export const Price = db.define('prices', {
     type: Sequelize.FLOAT,
     defaultValue: 0.0
   },
+  edition: {
+    type: Sequelize.STRING,
+  },
   source: {
     type: Sequelize.STRING,
     defaultValue: 'TCGplayer'

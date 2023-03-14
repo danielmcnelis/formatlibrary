@@ -4,7 +4,7 @@ import { db } from './db'
 
 export const Match = db.define('matches', {
     url: {
-        type: Sequelize.TEXT
+        type: Sequelize.STRING
     },
     formatName: {
         type: Sequelize.STRING
@@ -19,13 +19,13 @@ export const Match = db.define('matches', {
         type: Sequelize.STRING
     },
     matchId: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
     },
     eventName: {
         type: Sequelize.STRING,
     },
     eventId: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
     },
     round: {
         type: Sequelize.STRING

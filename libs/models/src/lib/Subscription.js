@@ -15,11 +15,11 @@ export const Subscription = db.define('subscriptions', {
   playerId: {
     type: Sequelize.STRING
   },
-  eventNotifications: {
+  eventNotifs: {
     type: Sequelize.BOOLEAN,
     defaultValue: true
   },
-  poolNotifications: {
+  poolNotifs: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   }

@@ -2,11 +2,8 @@
 import { Sequelize } from 'sequelize'
 import { db } from './db'
 
-export const Cube = db.define('cubes', {
+export const Archetype = db.define('archetypes', {
   name: {
     type: Sequelize.STRING
-  },
-  builder: {
-    type: Sequelize.STRING
-  },
+  }
 })

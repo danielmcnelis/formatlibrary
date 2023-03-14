@@ -114,18 +114,6 @@ export const Card = db.define('cards', {
   },
   sortPriority: {
     type: Sequelize.INTEGER
-  },
-  primaryArchetypeName: {
-    type: Sequelize.STRING
-  },
-  primaryArchetypeId: {
-    type: Sequelize.INTEGER
-  },
-  secondaryArchetypeName: {
-    type: Sequelize.STRING
-  },
-  secondaryArchetypeId: {
-    type: Sequelize.INTEGER
   }
 })
 
