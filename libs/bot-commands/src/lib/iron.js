@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Format, Iron, Player, Server } from '@fl/models'
-import { confirmIron, hasFullAccess } from '@fl/bot-functions'
+import { initiateIron, hasFullAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
 
@@ -121,7 +121,7 @@ export default {
                     format: format.name
                 })
 
-                if (count === 5) confirmIron(interaction.channel, format)
+                if (count === 5) initiateIron(interaction.channel, format)
                 return await interaction.reply({ content: `You joined the Iron queue. ${emojis.iron}`})
             }
         } else {

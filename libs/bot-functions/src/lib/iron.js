@@ -6,8 +6,8 @@ import { client } from '../client'
 
 const yescom = ['yes', 'ye', 'y', 'ya', 'yeah', 'da', 'ja', 'si', 'ok', 'sure']
 
-//CONFIRM IRON
-export const confirmIron = async (channel, format) => {
+//INITIATE IRON
+export const initiateIron = async (channel, format) => {
     channel.send({ content: `Iron players, please check your DMs!`})
     const entries = await Iron.findAll({ where: { format: format.name }, include: Player})
     getIronConfirmation(entries[0], channel, format)

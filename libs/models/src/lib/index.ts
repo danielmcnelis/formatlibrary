@@ -35,6 +35,9 @@ import { Status } from './Status'
 import { Subscription } from './Subscription'
 import { Team } from './Team'
 import { Tournament } from './Tournament'
+import { TriviaEntry } from './TriviaEntry'
+import { TriviaKnowledge } from './TriviaKnowledge'
+import { TriviaQuestion } from './TriviaQuestion'
 import { Video } from './Video'
 
 //ARTICLE
@@ -212,6 +215,14 @@ Server.hasMany(Tournament)
 Team.belongsTo(Tournament)
 Tournament.hasMany(Team)
 
+//TRIVIA ENTRY
+TriviaEntry.belongsTo(Player)
+Player.hasMany(TriviaEntry)
+
+//TRIVIA KNOWLEDGE
+TriviaKnowledge.belongsTo(Player)
+Player.hasMany(TriviaKnowledge)
+
 //VIDEO
 Video.belongsTo(Player)
 Player.hasMany(Video)
@@ -245,5 +256,8 @@ export {
   Status,
   Team,
   Tournament,
+  TriviaEntry,
+  TriviaKnowledge,
+  TriviaQuestion,
   Video
 }
