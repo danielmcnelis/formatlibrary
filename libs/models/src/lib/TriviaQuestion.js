@@ -16,7 +16,8 @@ export const TriviaQuestion = db.define('triviaQuestions', {
     type: Sequelize.STRING
   },
   askedRecently: {
-    type: Sequelize.BOOLEAN
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
   },
   order: {
     type: Sequelize.INTEGER

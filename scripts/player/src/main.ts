@@ -1,6 +1,20 @@
 import { TriviaQuestion } from '@fl/models'
-import * as trivia from '../../../trivia.json'
-import { shuffleArray } from '@fl/bot-functions'
+const trivia = require('../../../trivia.json')
+
+const shuffleArray = (arr) => {
+    let i = arr.length
+    let temp
+    let index
+
+    while (i--) {
+        index = Math.floor((i + 1) * Math.random())
+        temp = arr[index]
+        arr[index] = arr[i]
+        arr[i] = temp
+    }
+
+    return arr
+}
 
 ;(async () => {
     const values = shuffleArray(Object.values(trivia))
