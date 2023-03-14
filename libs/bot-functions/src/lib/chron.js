@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 import * as sharp from 'sharp'
-import { Card, Deck, Entry, Tournament, Match, Membership, Player, Print, Role, Server, Set, Stats, DeckType } from '@fl/models'
+import { Card, Deck, Entry, Tournament, Match, Membership, Player, Price, Print, Role, Server, Set, Stats, DeckType } from '@fl/models'
 import { createMembership, createPlayer } from './utility'
 import { Op } from 'sequelize'
 import { S3 } from 'aws-sdk'
@@ -373,8 +373,45 @@ export const updateDeckTypes = async (client) => {
     return setTimeout(() => updateDeckTypes(client), (24 * 60 * 60 * 1000))
 }
 
-// FIND NEW PRINTS
-export const findNewPrints = async (set, groupId) => {
+// UPDATE MARKET PRICES
+export const updateMarketPrices = async (print) => {
+    const endpoint = `https://api.tcgplayer.com/pricing/product/${print.tcgPlayerProductId}`
+    const { data } = await axios.get(endpoint, {
+        headers: {
+            "Accept": "application/json",
+            "Authorization": `bearer ${config.tcgPlayer.accessToken}`
+        }
+    })
+
+    for (let i = 0; i < data.results.length; i++) {
+        const result = data.results[i]
+
+        if (result.marketPrice) {
+            const priceType = result.subTypeName === 'Unlimited' ? 'unlimPrice' :
+                result.subTypeName === '1st Edition' ? 'firstPrice' :
+                result.subTypeName === 'Limited' ? 'limPrice' :
+                null
+
+            if (priceType) await print.update({ [priceType]: result.marketPrice })
+
+            try {
+                await Price.create({
+                    usd: result.marketPrice,
+                    edition: result.subTypeName,
+                    source: 'TCGplayer',
+                    printId: print.id
+                }) 
+
+                console.log(`saved market price for print: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${result.subTypeName} - $${result.marketPrice}`)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+    }
+}
+
+// UPDATE PRINTS
+export const updatePrints = async (set, groupId) => {
     let b = 0
     let c = 0
     let e = 0
@@ -425,9 +462,18 @@ export const findNewPrints = async (set, groupId) => {
                         tcgPlayerUrl: result.url,
                         tcgPlayerProductId: result.productId
                     })
-    
+
                     b++
                     console.log(`created new print: ${print.rarity} ${print.cardCode} - ${print.cardName} (productId: ${print.tcgPlayerProductId})`)
+                    await updateMarketPrices(print)
+                } else {
+                    const print = await Print.findOne({
+                        where: {
+                            tcgPlayerProductId: result.productId
+                        }
+                    })
+
+                    await updateMarketPrices(print)
                 }
             }
         } catch (err) {
@@ -646,7 +692,7 @@ export const downloadNewCards = async () => {
                 })
                 console.log(`New card: ${datum.name} (TCG Date: ${datum.misc_info[0].tcg_date}, OCG Date: ${datum.misc_info[0].ocg_date})`)
                 await downloadCardImage(datum.id)
-                console.log(`IMAGE SAVED`)
+                console.log(`Image saved (${datum.name})`)
             } else if (card && (card.name !== datum.name)) {
                 c++
                 card.name = datum.name
@@ -658,7 +704,7 @@ export const downloadNewCards = async () => {
                 await card.save()
                 console.log(`New name: ${card.name} is now: ${datum.name}`)
                 await downloadCardImage(datum.id)
-                console.log(`IMAGE SAVED`)
+                console.log(`Image saved (${datum.name})`)
             } else if (card && (!card.tcgDate || !card.tcgLegal) && datum.misc_info[0].tcg_date) {
                 t++
                 card.name = datum.name
@@ -668,7 +714,7 @@ export const downloadNewCards = async () => {
                 await card.save()
                 console.log(`New TCG Card: ${card.name}`)
                 await downloadCardImage(datum.id)
-                console.log(`IMAGE SAVED`)
+                console.log(`Image saved (${card.name})`)
             } else if (card && (!card.ocgDate || !card.ocgLegal) && datum.misc_info[0].ocg_date) {
                 o++
                 card.name = datum.name
@@ -678,7 +724,7 @@ export const downloadNewCards = async () => {
                 await card.save()
                 console.log(`New OCG Card: ${card.name}`)
                 await downloadCardImage(datum.id)
-                console.log(`IMAGE SAVED`)
+                console.log(`Image saved (${card.name})`)
             }
         } catch (err) {
             e++ 
@@ -717,15 +763,15 @@ export const updateSets = async () => {
                     }
                 }
 
-                if (set && set.tcgPlayerGroupId && (set.tcgDate.startsWith('20') || set.size !== datum.num_of_cards)) {
+                if (set && set.tcgPlayerGroupId) {
                     console.log(`updating size of ${set.setName} from ${set.size} to ${datum.num_of_cards}`)
                     set.size = datum.num_of_cards
                     await set.save()
                     c++
 
                     try {
-                        await findNewPrints(set, set.tcgPlayerGroupId)
-                        console.log(`collected prints for old set: ${datum.set_name} (${datum.set_code})`)
+                        await updatePrints(set, set.tcgPlayerGroupId)
+                        console.log(`updated prints for old set: ${datum.set_name} (${datum.set_code})`)
                     } catch (err) {
                         console.log(err)
                     }
@@ -743,7 +789,7 @@ export const updateSets = async () => {
                     const groupId = await getNewGroupId(set.id)
 
                     try {
-                        await findNewPrints(set, groupId)
+                        await updatePrints(set, groupId)
                         console.log(`collected prints for new set: ${datum.set_name} (${datum.set_code})`)
                     } catch (err) {
                         console.log(err)

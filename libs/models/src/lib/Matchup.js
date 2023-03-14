@@ -3,16 +3,25 @@ import { Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const Matchup = db.define('matchups', {
-    format: {
+    formatName: {
         type: Sequelize.STRING
     },
-    winningDeck: {
+    formatId: {
+        type: Sequelize.INTEGER
+    },
+    winningDeckType: {
+        type: Sequelize.STRING
+    },
+    winningDeckTypeId: {
         type: Sequelize.STRING
     },
     winningDeckId: {
+        type: Sequelize.INTEGER
+    },
+    losingDeckType: {
         type: Sequelize.STRING
     },
-    losingDeck: {
+    losingDeckTypeId: {
         type: Sequelize.STRING
     },
     losingDeckId: {

@@ -38,6 +38,10 @@ export const Format = db.define('formats', {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
+  spotlight: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
   category: {
     type: Sequelize.STRING
   }

@@ -18,7 +18,6 @@ const clientId = config.services.bot.clientId
 // 	commands.push(command.data.toJSON())
 // }
 
-// console.log(Object.values(commands))
 const commandNames = Object.values(commands).map((command: any) => command.data.toJSON())
 
 // Construct and prepare an instance of the REST module

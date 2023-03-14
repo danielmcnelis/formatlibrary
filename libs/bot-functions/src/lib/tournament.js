@@ -967,7 +967,6 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                 return await interaction.channel.send({ content: `${losingPlayer.name}, You are eliminated from the tournament. Better luck next time!`})
             } else if (loserNextOpponent) {
                 try {
-                    console.log(`New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${loserNextOpponent.player.name + '#' + loserNextOpponent.player.discriminator}\nDuelingBook: ${loserNextOpponent.player.duelingBook}`)
                     loser.user.send(`New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${loserNextOpponent.player.name + '#' + loserNextOpponent.player.discriminator}\nDuelingBook: ${loserNextOpponent.player.duelingBook}`)
                 } catch (err) {
                     console.log(err)
@@ -975,7 +974,6 @@ export const processMatchResult = async (server, interaction, winner, winningPla
 
                 try {
                     const member = await interaction.guild.members.fetch(loserNextOpponent.player.discordId)
-                    console.log(`New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${losingPlayer.name + '#' + losingPlayer.discriminator}\nDuelingBook: ${losingPlayer.duelingBook}`)
                     member.user.send(`New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${losingPlayer.name + '#' + losingPlayer.discriminator}\nDuelingBook: ${losingPlayer.duelingBook}`)
                 } catch (err) {
                     console.log(err)
@@ -995,7 +993,6 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                     return await interaction.channel.send({ content: `<@${winningPlayer.discordId}>, You won the tournament! Congratulations on your stellar performance! ${emojis.legend}`})
                 } else if (winnerNextOpponent) {
                     try {
-                        console.log(`New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${winnerNextOpponent.player.name + '#' + winnerNextOpponent.player.discriminator}\nDuelingBook: ${winnerNextOpponent.player.duelingBook}`)
                         winner.user.send(`New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${winnerNextOpponent.player.name + '#' + winnerNextOpponent.player.discriminator}\nDuelingBook: ${winnerNextOpponent.player.duelingBook}`)
                     } catch (err) {
                         console.log(err)
@@ -1003,7 +1000,6 @@ export const processMatchResult = async (server, interaction, winner, winningPla
 
                     try {
                         const member = await interaction.guild.members.fetch(winnerNextOpponent.player.discordId)
-                        console.log(`New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${winningPlayer.name + '#' + winningPlayer.discriminator}\nDuelingBook: ${winningPlayer.duelingBook}`)
                         member.user.send(`New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${winningPlayer.name + '#' + winningPlayer.discriminator}\nDuelingBook: ${winningPlayer.duelingBook}`)
                     } catch (err) {
                         console.log(err)
@@ -1071,7 +1067,6 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
     if (winningTeam.matchWins >= 2) {
         try {
-            console.log('try 1077')
             success = await axios({
                 method: 'put',
                 url: `https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${matchId}.json?api_key=${server.challongeAPIKey}`,
@@ -1211,7 +1206,6 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
 //SEND TEAM PAIRINGS
 export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) => {
-    console.log('sendTeamPairings()')
     const matches = [...await getMatches(server, tournament.id)].map((el) => el.match).filter((match) => match.state === 'open')
     
     for (let i = 0; i < matches.length; i++) {
@@ -1504,8 +1498,6 @@ export const createTournament = async (interaction, formatName, name, abbreviati
 
 // REMOVE FROM TOURNAMENT
 export const removeFromTournament = async (interaction, tournamentId, userId) => {
-    console.log('tournamentId', tournamentId)
-    console.log('userId', userId)
     const server = await Server.findOne({ where: { id: interaction.guildId }})
     const member = userId ? await interaction.guild.members.fetch(userId) : interaction.member
     

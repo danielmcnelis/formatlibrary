@@ -149,9 +149,7 @@ export const decksShareId = async (req, res, next) => {
         })
 
         const shareLink = await Deck.generateShareLink()
-        console.log('shareLink', shareLink)
-        console.log('req.body.linkExpiration', req.body.linkExpiration)
-
+        
         await deck.update({
             shareLink: shareLink,
             linkExpiration: req.body.linkExpiration
@@ -242,7 +240,7 @@ export const decksBuilderId = async (req, res, next) => {
 
 export const decksMyDecks = async (req, res, next) => {
     const playerId = req.user?.playerId
-    console.log('req.user', req.user)
+
     try {
         const player = await Player.findOne({
             where: {

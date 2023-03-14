@@ -110,8 +110,6 @@ export default {
                     }
                 }
 
-                console.log('commonTournamentIds', commonTournamentIds)
-
                 if (commonTournamentIds.length) {
                     for (let i = 0; i < commonTournamentIds.length; i++) {
                         const id = commonTournamentIds[i]
@@ -133,17 +131,13 @@ export default {
                     }
                 }
 
-                console.log('tournaments.length', tournaments.length)
-
                 if (tournaments.length) {
                     const tournament = await selectTournament(interaction, tournaments, interaction.member.user.id)
                     if (tournament) {
                         isTournament = true
                         tournamentId = tournament.id
-                        console.log('tournamentId', tournamentId)
                         if (tournament.state === 'pending') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
                         if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
-                        console.log('tournament.isTeamTournament', tournament.isTeamTournament)
                         tournamentMatchId = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament) :
                             await processMatchResult(server, interaction, winner, winningPlayer, interaction.member, losingPlayer, tournament)
                         if (!tournamentMatchId) return

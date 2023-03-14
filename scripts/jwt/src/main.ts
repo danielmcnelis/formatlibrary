@@ -55,8 +55,6 @@ import { JWT } from '@fl/tokens'
         console.error(err)
         throw new Error('Failed to sign JWT!')
     }
-
-    console.log('token: ', token)
   }
 
   if (verify) {
@@ -75,7 +73,5 @@ import { JWT } from '@fl/tokens'
         console.error(err)
         throw new Error('Failed to verify JWT!')
     }
-
-    console.log('claims: ', claims)
   }
 })()

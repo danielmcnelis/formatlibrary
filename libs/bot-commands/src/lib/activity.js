@@ -53,16 +53,12 @@ export default {
             const data = []
 
             const entries = Object.entries(summary).sort((a, b) => b[1] - a[1])
-            console.log('entries', entries)
 
             for (let [key, value] of entries) {
                 if (value < 120) continue
                 labels.push(key)
                 data.push(value)
             }
-
-            console.log('labels', labels)
-            console.log('data', data)
 
             const chart = new QuickChart()
             chart.setConfig({

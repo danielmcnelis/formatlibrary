@@ -250,7 +250,6 @@ export const deckTypesDownload = async (req, res, next) => {
         data.sideTraps.forEach((el) => sideYdk.push(el.card.konamiCode))
 
         const ydk = ['created by...', '#main', ...mainYdk, '#extra', ...extraYdk, '!side', ...sideYdk, ''].join('\n')
-        console.log('YDK', ydk)
         res.send(ydk)
     } catch (err) {
       console.log(err)
