@@ -3,6 +3,7 @@ import { SlashCommandBuilder } from 'discord.js'
 import { TriviaEntry, Player, Server } from '@fl/models'
 import { initiateTrivia, hasFullAccess } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
+import { findAllByDisplayValue } from '@testing-library/react'
 
 export default {
     data: new SlashCommandBuilder()
@@ -21,18 +22,7 @@ export default {
         if (!isPending && alreadyIn) return await interaction.reply({ content: 'Sorry, you cannot leave trivia after it has started.' })
         
         if (!alreadyIn) {
-            const count = await TriviaEntry.count()
-
             if (isPending) {
-                await TriviaEntry.create({ 
-                    playerName: player.discordName,
-                    playerId: player.id,
-                    confirmed: false
-                })
-
-                if (count === 5) initiateTrivia(interaction)
-                return await interaction.reply({ content: `You joined the Trivia queue. 📚`})
-            } else {
                 await TriviaEntry.create({ 
                     playerName: player.discordName,
                     playerId: player.id,
@@ -40,6 +30,16 @@ export default {
                 })
 
                 return await interaction.reply({ content: `You joined the Trivia game. 📚`})
+            } else {
+                await TriviaEntry.create({ 
+                    playerName: player.discordName,
+                    playerId: player.id,
+                    confirmed: false
+                })
+
+                const count = await TriviaEntry.count()
+                if (count === 5) initiateTrivia(interaction)
+                return await interaction.reply({ content: `You joined the Trivia queue. 📚`})
             }
         } else {
             const triviaPerson = await TriviaEntry.findOne({ where: { playerId: player.id }})
