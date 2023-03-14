@@ -62,7 +62,7 @@ export const getTriviaConfirmation = async (interaction, entry) => {
     
     if (!member) return interaction.channel.send({ content: `${entry.playerName} cannot be sent DMs.` })
     const filter = m => m.author.id === discordId
-    const message = await member.send({ content: `Do you still wish to play Trivia?`}).catch((err) => console.log(err))
+    const message = await member.user.send({ content: `Do you still wish to play Trivia?`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
 
 	await message.channel.awaitMessages({ 
@@ -72,20 +72,20 @@ export const getTriviaConfirmation = async (interaction, entry) => {
 	}).then(async (collected) => {
         const response = collected.first().content.toLowerCase()
         const count = await TriviaEntry.count({ where: { status: 'confirming' }})
-        if (!count) return member.send({ content: `Sorry, time expired.` })
+        if (!count) return member.user.send({ content: `Sorry, time expired.` })
 
         if (yescom.includes(response)) {
             entry.confirmed = true
             await entry.update({ confirmed: true })
-            member.send({ content: `Thanks! Please wait to see if everyone confirms.`})
+            member.user.send({ content: `Thanks! Please wait to see if everyone confirms.`})
             return interaction.channel.send({ content: `${member.user.username} confirmed their participation in Trivia! 📚`})
         } else {
-            member.send({ content: `Okay, sorry to see you go!`})
+            member.user.send({ content: `Okay, sorry to see you go!`})
             return interaction.channel.send({ content: `Oof. ${member.user.username} ducked out of Trivia! 📚`})
         }
 	}).catch((err) => {
 		console.log(err)
-        return member.send({ content: `Sorry, time's up.`})
+        return member.user.send({ content: `Sorry, time's up.`})
 	})
 }
 
@@ -137,7 +137,7 @@ export const getAnswer = async (interaction, entry, content, round) => {
     if (!member || discordId !== member.user.id) return
     
     const filter = m => m.author.id === discordId
-	const message = await member.send({ content: `${emojis.megaphone}  ------  Question #${round}  ------  ${emojis.dummy}\n${content}`}).catch((err) => console.log(err))
+	const message = await member.user.send({ content: `${emojis.megaphone}  ------  Question #${round}  ------  ${emojis.dummy}\n${content}`}).catch((err) => console.log(err))
 	if (!message || !message.channel) return false
     
     await message.channel.awaitMessages({ filter,
@@ -145,11 +145,11 @@ export const getAnswer = async (interaction, entry, content, round) => {
 		time: 20000
 	}).then(async (collected) => {
         await entry.update({ answer: collected.first().content })
-        return member.send({ content: `Thanks!`})
+        return member.user.send({ content: `Thanks!`})
 	}).catch(async (err) => {
 		console.log(err)
         await entry.save({ answer: 'no answer'})
-        return member.send({ content: `Time's up!`})
+        return member.user.send({ content: `Time's up!`})
 	})
 }
 
