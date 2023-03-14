@@ -58,7 +58,7 @@ export const getTriviaConfirmation = async (interaction, entry) => {
     await entry.save()
     const discordId = entry.player.discordId
     const guild = client.guilds.cache.get('414551319031054346')
-    const member = await h(discordId)
+    const member = await guild.members.fetch(discordId)
     
     if (!member) return interaction.channel.send({ content: `${entry.playerName} cannot be sent DMs.` })
     const filter = m => m.author.id === discordId
