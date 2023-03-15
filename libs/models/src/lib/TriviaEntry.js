@@ -22,8 +22,8 @@ export const TriviaEntry = db.define('triviaEntries', {
         defaultValue: 0
     },
     answer: {
-        type: Sequelize.TEXT,
-        defaultValue: null
+        type: Sequelize.TEXT,   
+        defaultValue: ''
     }
 })
 
