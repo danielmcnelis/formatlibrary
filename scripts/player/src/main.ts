@@ -12,6 +12,7 @@ const rulings = require('../../../rulings.json')
         const baseRulings = ruling.Rulings_Base?.split("\\n") || []
         for (let i = 0; i < baseRulings.length; i++) {
             const content = baseRulings[i].slice(baseRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
+            console.log('content', content)
             if (!content.length) continue
             if (await Ruling.count({ where: { content: {[Op.iLike]: content}, cardId: card.id }})) {
                 continue
@@ -27,6 +28,7 @@ const rulings = require('../../../rulings.json')
         const goatRulings = ruling.Rulings_Goat?.split("\n●") || []
         for (let i = 0; i < goatRulings.length; i++) {
             const content = goatRulings[i].replaceAll('●', '').trim()
+            console.log('content', content)
             if (!content.length) continue
             if (await Ruling.count({ where: { content: {[Op.iLike]: content}, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: {[Op.iLike]: content}, cardId: card.id }})
@@ -47,8 +49,18 @@ const rulings = require('../../../rulings.json')
         for (let i = 0; i < edisonRulings?.length; i++) {
             const content = edisonRulings[i].replaceAll('●', '').trim()
             if (!content.length) continue
-            if (await Ruling.count({ where: { content: {[Op.iLike]: content}, cardId: card.id }})) {
-                const ruling = await Ruling.findOne({ where: { content: {[Op.iLike]: content}, cardId: card.id }})
+            if (await Ruling.count({ 
+                where: { 
+                    content: {[Op.iLike]: content}, 
+                    cardId: card.id 
+                }
+            })) {
+                const ruling = await Ruling.findOne({ 
+                    where: { 
+                        content: {[Op.iLike]: content}, 
+                        cardId: card.id 
+                    }
+                })
                 if (ruling.effectiveDate && ruling.effectiveDate < '2010-03-01') await ruling.update({ effectiveDate: '2010-03-01' })
                 if (!ruling.expirationDate || ruling.expirationDate > '2010-09-01') await ruling.update({ expirationDate: '2010-09-01' })
             } else {
