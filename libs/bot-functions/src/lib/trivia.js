@@ -152,8 +152,7 @@ export const askQuestion = async (interaction, round, questions) => {
             await entry.save()
 
             setTimeout(() => {
-                const timedOut = entry.answer === 'no answer' ? true : false
-                interaction.channel.send({ content: `${entry.playerName}${timedOut ? ` did not answer in time. That's a shame. ${emojis.orange}` : ` said: ${entry.answer}. ${score ? `Correct! ${emojis.cultured}` : `That ain't it! ${emojis.amongmfao}`}`}`})
+                interaction.channel.send({ content: `${entry.playerName}${entry.answer === null ? ` did not answer in time. That's a shame. ${emojis.orange}` : ` said: ${entry.answer}. ${score ? `Correct! ${emojis.cultured}` : `That ain't it! ${emojis.amongmfao}`}`}`})
             }, i * 2000)
         }
         
