@@ -77,9 +77,11 @@ export const initiateTrivia = async (interaction) => {
             }
 
             assignTriviaRoles(entries)
-            return setTimeout(() => {
+            setTimeout(() => {
                 interaction.channel.send({ content: `<@&${triviaRole}>, look alive bookworms! Trivia starts in 10 seconds. ${emojis.skipper}`})
             }, 1000)
+
+            return setTimeout(() => { return askQuestion(interaction, round, questions) }, 11000)
         }
     }, 61000)
 }
