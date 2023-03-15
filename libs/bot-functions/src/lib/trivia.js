@@ -54,7 +54,7 @@ export const initiateTrivia = async (interaction) => {
         if (playing) return
 
         const missingEntries = await TriviaEntry.findAll({ where: { confirmed: false }})
-        const missingNames = missingEntries.map((entry) => entry.player.name)
+        const missingNames = missingEntries.map((entry) => entry.playerName)
 
         for (let i = 0; i < missingEntries.length; i++) {
             const entry = missingEntries[i]
