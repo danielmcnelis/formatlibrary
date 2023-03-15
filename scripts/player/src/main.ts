@@ -216,7 +216,7 @@ const rulings = require('../../../rulings.json')
 
         const dadretRulings = ruling.Rulings_ReturnDAD?.split("\n●") || []
         for (let i = 0; i < dadretRulings.length; i++) {
-            const content = dadretRulings[i]..replaceAll('●', '').trim()
+            const content = dadretRulings[i].replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: {[Op.iLike]: content}, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: {[Op.iLike]: content}, cardId: card.id }})
@@ -235,7 +235,7 @@ const rulings = require('../../../rulings.json')
 
         const trooperRulings = ruling.Rulings_Trooper?.split("\n●") || []
         for (let i = 0; i < trooperRulings.length; i++) {
-            const content = trooperRulings[i]..replaceAll('●', '').trim()
+            const content = trooperRulings[i].replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: {[Op.iLike]: content}, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: {[Op.iLike]: content}, cardId: card.id }})
