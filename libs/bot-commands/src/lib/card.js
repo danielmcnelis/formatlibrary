@@ -20,7 +20,7 @@ export default {
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
 
-        if (server.name === 'Format Library' && interaction.member.roles.cache.some(role => role.id === '1085310457126060153')) return interaction.replay(`Sorry, you cannot look up cards while playing trivia. 📚 🐛`)
+        if (server.name === 'Format Library' && interaction.member.roles.cache.some(role => role.id === '1085310457126060153')) return interaction.reply(`Sorry, you cannot look up cards while playing trivia. 📚 🐛`)
 
         const format = await Format.findOne({
             where: {
