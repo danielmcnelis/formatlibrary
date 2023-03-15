@@ -52,6 +52,7 @@ export const emojis = {
     'Goat Format War League': "<:WarGoat:971636196365205544>",
     god: "<:god:832463473115660288>",
     gold: "<:gold:580616719496904723>",
+    gradcap: "<:gradcap:1085391103617929216>",
     'HATFormat.com': "🎩",
     high_alert: "<a:high_alert:832512275834994689>",
     Insect: "<:Insect:935749315584983090>",

@@ -228,7 +228,7 @@ export const postTriviaStandings = async (interaction, round, entries, questions
         let enthusiasm = ''
         for (let i = 0; i < score; i++) enthusiasm += `${emojis.gradcap} `
         const unit = score === 1 ? 'pt' : 'pts'
-       return `${index + 1}. <@${entry.playerId}> - ${score}${unit} ${enthusiasm}`
+       return `${index + 1}. <@${entry.player.discordId}> - ${score}${unit} ${enthusiasm}`
     })
 
     interaction.channel.send({ content: `${title}\n${standings.join("\n")}`})
