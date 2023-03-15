@@ -197,7 +197,7 @@ export const assignTriviaRoles = (entries) => {
 }
 
 //CHECK ANSWER
-export const checkAnswer = async (answer, fuzzyAnswers, stringency) => {
+export const checkAnswer = async (answer = '', fuzzyAnswers, stringency) => {
     const matching = fuzzyAnswers.get(answer, null, stringency) || []
 	matching.sort((a, b) => b[0] - a[0])
 
@@ -222,13 +222,18 @@ export const checkKnowledge = async (playerId, triviaQuestionId) => {
 //POST TRIVIA STANDINGS
 export const postTriviaStandings = async (interaction, round, entries, questions) => {
     entries.sort((a, b) => b.score - a.score)
+    for (let i = 0; i < entries.length; i++) {
+        const entry = entries[i]
+        await entry.update({ answer: null })
+    }
+
     const title = `${emojis.no} --- Trivia ${round < 10 ? `Round ${round}` : 'Final'} Standings --- ${emojis.yes}`
     const standings = entries.map((entry, index) => {
         const score = entry.score
         let enthusiasm = ''
         for (let i = 0; i < score; i++) enthusiasm += `${emojis.gradcap} `
         const unit = score === 1 ? 'pt' : 'pts'
-       return `${index + 1}. <@${entry.player.discordId}> - ${score}${unit} ${enthusiasm}`
+        return `${index + 1}. <@${entry.player.discordId}> - ${score}${unit} ${enthusiasm}`
     })
 
     interaction.channel.send({ content: `${title}\n${standings.join("\n")}`})
