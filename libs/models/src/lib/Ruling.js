@@ -12,9 +12,6 @@ export const Ruling = db.define('rulings', {
     content: {
         type: Sequelize.TEXT
     },
-    region: {
-        type: Sequelize.STRING
-    },
     effectiveDate: {
         type: Sequelize.STRING
     },

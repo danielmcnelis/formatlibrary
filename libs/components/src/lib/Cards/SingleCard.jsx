@@ -83,6 +83,7 @@ export const SingleCard = () => {
     const [card, setCard] = useState({})
     const [statuses, setStatuses] = useState({})
     const [prints, setPrints] = useState([])
+    const [rulings, setRulings] = useState([])
     const [isAdmin, setIsAdmin] = useState(false)
     const { id } = useParams()
   
@@ -123,6 +124,7 @@ export const SingleCard = () => {
           setCard(data.card)
           setStatuses(data.statuses)
           setPrints(data.prints)
+          setRulings(data.rulings)
         } catch (err) {
           console.log(err)
           setCard(null)
@@ -341,6 +343,17 @@ export const SingleCard = () => {
                   <table>
                     <tbody>
                       {prints.map((print, index) => <PrintRow key={print.id} index={index} print={print}/>)}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="prints-flexbox">
+                <div>Rulings:</div>
+                <div className="print-box">
+                  <table>
+                    <tbody>
+                      {rulings.map((ruling, index) => <RulingRow key={ruling.id} index={index} ruling={ruling}/>)}
                     </tbody>
                   </table>
                 </div>

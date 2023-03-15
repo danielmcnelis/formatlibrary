@@ -1,4 +1,4 @@
-import { Card, Print, Set, Status } from '@fl/models'
+import { Card, Print, Ruling, Set, Status } from '@fl/models'
 import { Op } from 'sequelize'
 import * as fs from 'fs'
 
@@ -90,10 +90,19 @@ export const cardsId = async (req, res, next) => {
       order: [[Set, 'tcgDate', 'ASC']]
     })
 
+    const rulings = await Ruling.findAll({
+        where: {
+          cardId: card.id
+        },
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        order: [['expirationDate', 'DESC'], ['effectiveDate', 'DESC']]
+      })
+
     const info = {
       card: card,
       statuses: Object.fromEntries(statuses),
-      prints: prints || []
+      prints: prints || [],
+      rulings: rulings || []
     }
 
     res.json(info)

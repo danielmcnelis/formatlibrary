@@ -1718,22 +1718,21 @@
     background-color: #6d6f8a;
   }
   
-  
-  .odd-print-row {
+  .odd-print-row, .odd-ruling-row {
     align-content: left;
     vertical-align: middle;
     background-color: #f7f7f7;
     border-bottom: 2px solid #9ba9cc;
   }
   
-  .even-print-row {
+  .even-print-row, .event-ruling-row {
     align-content: left;
     vertical-align: middle;
     background-color: #eef2f5;
     border-bottom: 2px solid #9ba9cc;
   }
   
-  .odd-print-row:hover, .even-print-row:hover {
+  .odd-print-row:hover, .even-print-row:hover, .odd-ruling-row:hover, .even-ruling-row:hover {
     cursor: pointer;
     color: white;
     background-color: #6d6f8a;
@@ -2056,13 +2055,21 @@
     background-image: url('https://cdn.formatlibrary.com/images/symbols/zombie.png');
   }
   
+  .ruling-cell-1 {
+    width: 90%;
+  }
+
+  .ruling-cell-2, .ruling-cell-3 {
+    padding: 10px, 15px;
+  }
+
   .rarity-cell {
     width: 28px;
     background-size: 28px;
     background-repeat: no-repeat;
     background-position: center;
   }
-  
+
   .print-cell-2, .print-cell-3, .print-cell-4, .print-cell-5 {
     padding: 10px, 15px;
   }
