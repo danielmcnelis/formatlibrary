@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Format, Iron, Server } from '@fl/models'
+import { Format, Iron, Server, TriviaEntry } from '@fl/models'
 import { hasFullAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
