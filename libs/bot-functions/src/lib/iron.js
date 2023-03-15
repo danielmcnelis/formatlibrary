@@ -82,7 +82,7 @@ export const initiateIron = async (channel, format) => {
                 await entry.save()
             }
             
-            return channel.send({ content: `Unfortunately, The ${format.name} Iron cannot begin without 6f players. ${format.emoji} ${emojis.iron}\n\nThe following players have been removed from the queue:\n${missingNames.sort().join("\n")}`})
+            return channel.send({ content: `Unfortunately, The ${format.name} Iron cannot begin without 6 players. ${format.emoji} ${emojis.iron}\n\nThe following players have been removed from the queue:\n${missingNames.sort().join("\n")}`})
         } else if (!count) {
             for (let j = 0; j < entries.length; j++) {
                 const entry = entries[j]

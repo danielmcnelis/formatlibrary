@@ -29,27 +29,59 @@ export const initiateTrivia = async (interaction) => {
 
     for (let i = 1; i < 12; i ++) {
         setTimeout(async () => {
-            const confirming = await TriviaEntry.count({ where: { status: 'confirming' }})
-            if (!confirming) return
+            const playing = await TriviaEntry.count({ where: { status: 'playing' }})
+            if (playing) return
+            const unconfirmed = await TriviaEntry.count({ where: { confirmed: false }})
 
-            const count = await TriviaEntry.count({ where: { confirmed: false }})
-
-            if (!count) {
+            if (!unconfirmed) {
                 for (let j = 0; j < entries.length; j++) {
                     const entry = entries[j]
-                    entry.status = 'playing'
-                    await entry.save()
+                    await entry.update({ status: 'playing' })
                 }
 
                 assignTriviaRoles(entries)
                 setTimeout(() => {
-                    interaction.channel.send({ content: `<@&1085310457126060153>, look alive bookworms! Trivia starts in 10 seconds. ${emojis.skipper}\n\nP.S. Remember: answer questions **in your DMs**.`})
+                    interaction.channel.send({ content: `<@&${triviaRole}>, look alive bookworms! Trivia starts in 10 seconds. ${emojis.skipper}\n\nP.S. Remember: answer questions **in your DMs**.`})
                 }, 1000)
 
                 return setTimeout(() => { return askQuestion(interaction, round, questions) }, 11000)
             }
         }, i * 5000)
     }
+
+    return setTimeout(async () => {
+        const playing = await TriviaEntry.count({ where: { status: 'playing' }})
+        if (playing) return
+
+        const missingEntries = await TriviaEntry.findAll({ where: { confirmed: false }})
+        const missingNames = missingEntries.map((entry) => entry.player.name)
+
+        for (let i = 0; i < missingEntries.length; i++) {
+            const entry = missingEntries[i]
+            await entry.destroy()
+        }
+
+        const remainingEntries = await TriviaEntry.findAll({ where: { confirmed: true }})
+
+        if (remainingEntries.length < 5) {    
+            for (let i = 0; i < remainingEntries.length; i++) {
+                const entry = remainingEntries[i]
+                await entry.update({ status: 'pending', confirmed: false })
+            }
+
+            return interaction.channel.send({ content: `Unfortunately, Trivia cannot begin without at least 5 players. 📚\n\nThe following players have been removed from the queue:\n${missingNames.sort().join("\n")}`})
+        } else {
+            for (let i = 0; i < remainingEntries.length; i++) {
+                const entry = entries[i]
+                await entry.update({ status: 'playing' })
+            }
+
+            assignTriviaRoles(entries)
+            return setTimeout(() => {
+                interaction.channel.send({ content: `<@&${triviaRole}>, look alive bookworms! Trivia starts in 10 seconds. ${emojis.skipper}`})
+            }, 1000)
+        }
+    }, 61000)
 }
 
 //GET TRIVIA CONFIRMATION
@@ -62,7 +94,7 @@ export const getTriviaConfirmation = async (interaction, entry) => {
     
     if (!member) return interaction.channel.send({ content: `${entry.playerName} cannot be sent DMs.` })
     const filter = m => m.author.id === discordId
-    const message = await member.user.send({ content: `Do you still wish to play Trivia?`}).catch((err) => console.log(err))
+    const message = await member.user.send({ content: `Do you still wish to play Trivia? 📚`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
 
 	await message.channel.awaitMessages({ 
@@ -77,11 +109,11 @@ export const getTriviaConfirmation = async (interaction, entry) => {
         if (yescom.includes(response)) {
             entry.confirmed = true
             await entry.update({ confirmed: true })
-            member.user.send({ content: `Thanks! Please wait to see if everyone confirms.`})
+            member.user.send({ content: `Thanks! Please wait to see if enough players confirm. ${emojis.cultured}`})
             return interaction.channel.send({ content: `${member.user.username} confirmed their participation in Trivia! 📚`})
         } else {
             member.user.send({ content: `Okay, sorry to see you go!`})
-            return interaction.channel.send({ content: `Oof. ${member.user.username} ducked out of Trivia! 📚`})
+            return interaction.channel.send({ content: `Oof. ${member.user.username} ducked out of Trivia! 🦆`})
         }
 	}).catch((err) => {
 		console.log(err)
@@ -100,7 +132,7 @@ export const askQuestion = async (interaction, round, questions) => {
     interaction.channel.send({ content: `${emojis.megaphone}  ------  Question #${round}  ------  ${emojis.dummy}\n${question.content}\n\n`})
     
     const entries = await TriviaEntry.findAll({ include: Player })
-    entries.forEach((entry) => getAnswer(interaction, entry, question.content, round))
+    entries.forEach((entry) => getAnswer(entry, question.content, round))
 
     setTimeout(async() => {
         const updatedEntries = await TriviaEntry.findAll({ include: Player })
@@ -129,7 +161,7 @@ export const askQuestion = async (interaction, round, questions) => {
 }
 
 //GET ANSWER
-export const getAnswer = async (interaction, entry, content, round) => {
+export const getAnswer = async (entry, content, round) => {
     const discordId = entry.player.discordId
     const guild = client.guilds.cache.get('414551319031054346')
     const member = await guild.members.fetch(discordId)
@@ -201,13 +233,16 @@ export const postTriviaStandings = async (interaction, round, entries, questions
     round++
 
     return setTimeout(() => {
-        if (round <= 10) return askQuestion(interaction, round, questions)
-        else return endTrivia(interaction, entries)
+        if (round <= 10) {
+            return askQuestion(interaction, round, questions)
+        } else {
+            return endTrivia(entries)
+        }
     }, 10000)
 }
 
 //END TRIVIA
-export const endTrivia = async (interaction, entries) => {
+export const endTrivia = async (entries) => {
     for (let i = 0; i < entries.length; i++) {
         const entry = entries[i]
         const guild = client.guilds.cache.get('414551319031054346')
