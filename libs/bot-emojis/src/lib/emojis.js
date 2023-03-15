@@ -71,6 +71,7 @@ export const emojis = {
     master: "<:master:521847142164463616>",
     megaphone: "<:megaphone:971647134153732106>",
     mlady: "<:mlady:639565671629324330>",
+    no: "<:no:897001608985063455>",
     Normal: "<:Normal:935749315996053585>",
     one_week: "<:one_week:964231317078310982>",
     Plant: "<:Plant:935749315731808346>",
@@ -112,5 +113,6 @@ export const emojis = {
     WingedBeast: "<:WingedBeast:935749315857633291>",
     Wyrm: "<:Wyrm:935749316281266176>",
     yellow: "<:yellow:833604958732419098>",
+    yes: "<:yes:897001608817295421>",
     Zombie: "<:Zombie:935749316302209045>"
   }
