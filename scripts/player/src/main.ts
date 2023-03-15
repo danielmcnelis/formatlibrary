@@ -140,7 +140,7 @@ const rulings = require('../../../rulings.json')
 
         const fwRulings = ruling.Rulings_FireWater?.split("\n●") || []
         for (let i = 0; i < fwRulings.length; i++) {
-            const content = fwRulings[i].slice(fwRulings[i].replaceAll('●', '').trim()
+            const content = fwRulings[i].replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: {[Op.iLike]: content}, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: {[Op.iLike]: content}, cardId: card.id }})
