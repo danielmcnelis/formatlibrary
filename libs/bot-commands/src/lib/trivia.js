@@ -17,7 +17,7 @@ export default {
         
         const player = await Player.findOne({ where: { discordId: interaction.user.id }})
         const alreadyIn = await TriviaEntry.count({ where: { playerId: player.id }})
-        const isConfirming = await TriviaEntry.count({ where: { confirmed: 'confirming' }})
+        const isConfirming = await TriviaEntry.count({ where: { status: 'confirming' }})
         if (isConfirming && alreadyIn) return await interaction.reply({ content: 'Sorry, you cannot leave trivia after it has started.' })
         
         if (!alreadyIn) {
