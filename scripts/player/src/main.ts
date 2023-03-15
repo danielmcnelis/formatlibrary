@@ -9,9 +9,9 @@ const rulings = require('../../../rulings.json')
         const card = await Card.findOne({ where: { name: {[Op.iLike]: ruling.CardName }}})
         if (!card) continue
 
-        const baseRulings = ruling.Rulings_Base?.split("\\n")
+        const baseRulings = ruling.Rulings_Base?.split("\\n") || []
         for (let i = 0; i < baseRulings.length; i++) {
-            const content = baseRulings[i].slice(baseRulings[i].indexOf('. ') + 1)
+            const content = baseRulings[i].slice(baseRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: content, cardId: card.id }})) {
                 continue
@@ -24,9 +24,9 @@ const rulings = require('../../../rulings.json')
             }
         }
 
-        const goatRulings = ruling.Rulings_Goat?.split("\n●")
+        const goatRulings = ruling.Rulings_Goat?.split("\n●") || []
         for (let i = 0; i < goatRulings.length; i++) {
-            const content = goatRulings[i].slice(goatRulings[i].indexOf('. ') + 1)
+            const content = goatRulings[i].slice(goatRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: content, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: content, cardId: card.id }})
@@ -43,9 +43,9 @@ const rulings = require('../../../rulings.json')
             }
         }
 
-        const edisonRulings = ruling.Rulings_Edison?.split("\n●")
-        for (let i = 0; i < edisonRulings.length; i++) {
-            const content = edisonRulings[i].slice(edisonRulings[i].indexOf('. ') + 1)
+        const edisonRulings = ruling.Rulings_Edison?.split("\n●") || []
+        for (let i = 0; i < edisonRulings?.length; i++) {
+            const content = edisonRulings[i].slice(edisonRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: content, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: content, cardId: card.id }})
@@ -62,9 +62,9 @@ const rulings = require('../../../rulings.json')
             }
         }
 
-        const tenguRulings = ruling.Rulings_Tengu?.split("\n●")
+        const tenguRulings = ruling.Rulings_Tengu?.split("\n●") || []
         for (let i = 0; i < tenguRulings.length; i++) {
-            const content = tenguRulings[i].slice(tenguRulings[i].indexOf('. ') + 1)
+            const content = tenguRulings[i].slice(tenguRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: content, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: content, cardId: card.id }})
@@ -81,9 +81,9 @@ const rulings = require('../../../rulings.json')
             }
         }
 
-        const hatRulings = ruling.Rulings_HAT?.split("\n●")
+        const hatRulings = ruling.Rulings_HAT?.split("\n●") || []
         for (let i = 0; i < hatRulings.length; i++) {
-            const content = hatRulings[i].slice(hatRulings[i].indexOf('. ') + 1)
+            const content = hatRulings[i].slice(hatRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: content, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: content, cardId: card.id }})
@@ -100,9 +100,9 @@ const rulings = require('../../../rulings.json')
             }
         }
 
-        const vegasRulings = ruling.Rulings_Vegas?.split("\n●")
+        const vegasRulings = ruling.Rulings_Vegas?.split("\n●") || []
         for (let i = 0; i < vegasRulings.length; i++) {
-            const content = vegasRulings[i].slice(vegasRulings[i].indexOf('. ') + 1)
+            const content = vegasRulings[i].slice(vegasRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: content, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: content, cardId: card.id }})
@@ -119,9 +119,9 @@ const rulings = require('../../../rulings.json')
             }
         }
 
-        const meadowlandsRulings = ruling.Rulings_Meadowlands?.split("\n●")
+        const meadowlandsRulings = ruling.Rulings_Meadowlands?.split("\n●") || []
         for (let i = 0; i < meadowlandsRulings.length; i++) {
-            const content = meadowlandsRulings[i].slice(meadowlandsRulings[i].indexOf('. ') + 1)
+            const content = meadowlandsRulings[i].slice(meadowlandsRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: content, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: content, cardId: card.id }})
@@ -138,9 +138,9 @@ const rulings = require('../../../rulings.json')
             }
         }
 
-        const fwRulings = ruling.Rulings_FireWater?.split("\n●")
+        const fwRulings = ruling.Rulings_FireWater?.split("\n●") || []
         for (let i = 0; i < fwRulings.length; i++) {
-            const content = fwRulings[i].slice(fwRulings[i].indexOf('. ') + 1)
+            const content = fwRulings[i].slice(fwRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: content, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: content, cardId: card.id }})
@@ -157,9 +157,9 @@ const rulings = require('../../../rulings.json')
             }
         }
 
-        const catRulings = ruling.Rulings_Cat?.split("\n●")
+        const catRulings = ruling.Rulings_Cat?.split("\n●") || []
         for (let i = 0; i < catRulings.length; i++) {
-            const content = catRulings[i].slice(goatRulings[i].indexOf('. ') + 1)
+            const content = catRulings[i].slice(goatRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: content, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: content, cardId: card.id }})
@@ -176,9 +176,9 @@ const rulings = require('../../../rulings.json')
             }
         }
 
-        const teledadRulings = ruling.Rulings_TeleDAD?.split("\n●")
+        const teledadRulings = ruling.Rulings_TeleDAD?.split("\n●") || []
         for (let i = 0; i < teledadRulings.length; i++) {
-            const content = teledadRulings[i].slice(teledadRulings[i].indexOf('. ') + 1)
+            const content = teledadRulings[i].slice(teledadRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: content, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: content, cardId: card.id }})
@@ -195,9 +195,9 @@ const rulings = require('../../../rulings.json')
             }
         }
 
-        const gladRulings = ruling.Rulings_Gladiator?.split("\n●")
+        const gladRulings = ruling.Rulings_Gladiator?.split("\n●") || []
         for (let i = 0; i < gladRulings.length; i++) {
-            const content = gladRulings[i].slice(gladRulings[i].indexOf('. ') + 1)
+            const content = gladRulings[i].slice(gladRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: content, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: content, cardId: card.id }})
@@ -214,9 +214,9 @@ const rulings = require('../../../rulings.json')
             }
         }
 
-        const dadretRulings = ruling.Rulings_ReturnDAD?.split("\n●")
+        const dadretRulings = ruling.Rulings_ReturnDAD?.split("\n●") || []
         for (let i = 0; i < dadretRulings.length; i++) {
-            const content = dadretRulings[i].slice(dadretRulings[i].indexOf('. ') + 1)
+            const content = dadretRulings[i].slice(dadretRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: content, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: content, cardId: card.id }})
@@ -233,9 +233,9 @@ const rulings = require('../../../rulings.json')
             }
         }
 
-        const trooperRulings = ruling.Rulings_Trooper?.split("\n●")
+        const trooperRulings = ruling.Rulings_Trooper?.split("\n●") || []
         for (let i = 0; i < trooperRulings.length; i++) {
-            const content = trooperRulings[i].slice(trooperRulings[i].indexOf('. ') + 1)
+            const content = trooperRulings[i].slice(trooperRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: content, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: content, cardId: card.id }})
@@ -252,9 +252,9 @@ const rulings = require('../../../rulings.json')
             }
         }
 
-        const pcRulings = ruling.Rulings_Circle?.split("\n●")
+        const pcRulings = ruling.Rulings_Circle?.split("\n●") || []
         for (let i = 0; i < pcRulings.length; i++) {
-            const content = pcRulings[i].slice(pcRulings[i].indexOf('. ') + 1)
+            const content = pcRulings[i].slice(pcRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: content, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: content, cardId: card.id }})
@@ -271,9 +271,9 @@ const rulings = require('../../../rulings.json')
             }
         }
 
-        const steinRulings = ruling.Rulings_Stein?.split("\n●")
+        const steinRulings = ruling.Rulings_Stein?.split("\n●") || []
         for (let i = 0; i < steinRulings.length; i++) {
-            const content = steinRulings[i].slice(steinRulings[i].indexOf('. ') + 1)
+            const content = steinRulings[i].slice(steinRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
             if (!content.length) continue
             if (await Ruling.count({ where: { content: content, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: content, cardId: card.id }})
