@@ -69,7 +69,7 @@ export const initiateTrivia = async (interaction) => {
                 await entry.update({ status: 'pending', confirmed: false })
             }
 
-            return interaction.channel.send({ content: `Unfortunately, Trivia cannot begin without at least 5 players. 📚\n\nThe following players have been removed from the queue:\n${missingNames.sort().join("\n")}`})
+            return interaction.channel.send({ content: `Unfortunately, Trivia cannot begin without at least 5 players. 📚 🐛\n\nThe following players have been removed from the queue:\n${missingNames.sort().join("\n")}`})
         } else {
             for (let i = 0; i < remainingEntries.length; i++) {
                 const entry = entries[i]
@@ -96,7 +96,7 @@ export const getTriviaConfirmation = async (interaction, entry) => {
     
     if (!member) return interaction.channel.send({ content: `${entry.playerName} cannot be sent DMs.` })
     const filter = m => m.author.id === discordId
-    const message = await member.user.send({ content: `Do you still wish to play Trivia? 📚`}).catch((err) => console.log(err))
+    const message = await member.user.send({ content: `Do you still wish to play Trivia? 📚 🐛`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
 
 	await message.channel.awaitMessages({ 
@@ -112,7 +112,7 @@ export const getTriviaConfirmation = async (interaction, entry) => {
             entry.confirmed = true
             await entry.update({ confirmed: true })
             member.user.send({ content: `Thanks! Please wait to see if enough players confirm. ${emojis.cultured}`})
-            return interaction.channel.send({ content: `${member.user.username} confirmed their participation in Trivia! 📚`})
+            return interaction.channel.send({ content: `${member.user.username} confirmed their participation in Trivia! 📚 🐛`})
         } else {
             member.user.send({ content: `Okay, sorry to see you go!`})
             return interaction.channel.send({ content: `Oof. ${member.user.username} ducked out of Trivia! 🦆`})

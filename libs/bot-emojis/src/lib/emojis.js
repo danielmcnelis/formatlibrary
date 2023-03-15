@@ -74,6 +74,7 @@ export const emojis = {
     no: "<:no:897001608985063455>",
     Normal: "<:Normal:935749315996053585>",
     one_week: "<:one_week:964231317078310982>",
+    orange: "<:orange:836320285841555536>",
     Plant: "<:Plant:935749315731808346>",
     platinum: "<:platinum:580616719714877450>",
     Psychic: "<:Psychic:935749316352557126>",
