@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import { NotFound } from '../General/NotFound'
 import { PrintRow } from './PrintRow'
+import { RulingRow } from './RulingRow'
 import { StatusBox } from './StatusBar'
 import { dateToVerbose } from '@fl/utils'
 
