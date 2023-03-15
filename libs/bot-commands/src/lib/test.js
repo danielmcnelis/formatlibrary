@@ -11,7 +11,7 @@ export default {
     async execute(interaction) {
         if (isProgrammer(interaction.member)) {
             downloadNewCards()
-            setTimeout(() => updateSets(), 1 * 60 * 1000)
+            setTimeout(() => updateSets())
             await interaction.reply(emojis.yellow)
         } else {
             await interaction.reply('🧪')
