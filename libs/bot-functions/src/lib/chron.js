@@ -691,19 +691,23 @@ export const downloadNewCards = async () => {
                     sortPriority: getSortPriority(datum.type)
                 })
                 console.log(`New card: ${datum.name} (TCG Date: ${datum.misc_info[0].tcg_date}, OCG Date: ${datum.misc_info[0].ocg_date})`)
-                await downloadCardImage(datum.id)
+                await downloadCardImage(id)
                 console.log(`Image saved (${datum.name})`)
-            } else if (card && (card.name !== datum.name)) {
+            } else if (card && (card.name !== datum.name || card.ypdId !== id)) {
                 c++
+                console.log(`New name and/or ID: ${card.name} (${card.ypdId}) is now: ${datum.name} (${id})`)
                 card.name = datum.name
+                card.ypdId = id
+                let konamiCode = id
+                while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+                card.konamiCode = konamiCode
                 card.description = datum.desc
                 card.tcgLegal = !!datum.misc_info[0].tcg_date
                 card.ocgLegal = !!datum.misc_info[0].ocg_date
                 card.tcgDate = datum.misc_info[0].tcg_date ? datum.misc_info[0].tcg_date : null
                 card.ocgDate = datum.misc_info[0].ocg_date ? datum.misc_info[0].ocg_date : null
                 await card.save()
-                console.log(`New name: ${card.name} is now: ${datum.name}`)
-                await downloadCardImage(datum.id)
+                await downloadCardImage(id)
                 console.log(`Image saved (${datum.name})`)
             } else if (card && (!card.tcgDate || !card.tcgLegal) && datum.misc_info[0].tcg_date) {
                 t++
@@ -713,7 +717,7 @@ export const downloadNewCards = async () => {
                 card.tcgLegal = true
                 await card.save()
                 console.log(`New TCG Card: ${card.name}`)
-                await downloadCardImage(datum.id)
+                await downloadCardImage(id)
                 console.log(`Image saved (${card.name})`)
             } else if (card && (!card.ocgDate || !card.ocgLegal) && datum.misc_info[0].ocg_date) {
                 o++
@@ -723,7 +727,7 @@ export const downloadNewCards = async () => {
                 card.ocgLegal = true
                 await card.save()
                 console.log(`New OCG Card: ${card.name}`)
-                await downloadCardImage(datum.id)
+                await downloadCardImage(id)
                 console.log(`Image saved (${card.name})`)
             }
         } catch (err) {
