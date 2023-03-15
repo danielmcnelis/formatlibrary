@@ -198,6 +198,7 @@ export const assignTriviaRoles = (entries) => {
 
 //CHECK ANSWER
 export const checkAnswer = async (answer = '', fuzzyAnswers, stringency) => {
+    if (typeof answer !== 'string') return false
     const matching = fuzzyAnswers.get(answer, null, stringency) || []
 	matching.sort((a, b) => b[0] - a[0])
 
@@ -252,9 +253,11 @@ export const postTriviaStandings = async (interaction, round, entries, questions
 export const endTrivia = async (entries) => {
     for (let i = 0; i < entries.length; i++) {
         const entry = entries[i]
+        const discordId = entry.player.discordId
+        await entry.destroy().catch((err) => console.log(err))
+
         const guild = client.guilds.cache.get('414551319031054346')
-        const member = await guild.members.fetch(entry.player.discordId)
+        const member = await guild.members.fetch(discordId)
         member.roles.remove(triviaRole).catch((err) => console.log(err))
-        await entry.destroy()
     }
 }
