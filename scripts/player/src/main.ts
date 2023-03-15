@@ -12,7 +12,6 @@ const rulings = require('../../../rulings.json')
         const baseRulings = ruling.Rulings_Base?.split("\\n") || []
         for (let i = 0; i < baseRulings.length; i++) {
             const content = baseRulings[i].slice(baseRulings[i].indexOf('. ') + 1).replaceAll('●', '').trim()
-            console.log('content', content)
             if (!content.length) continue
             if (await Ruling.count({ where: { content: {[Op.iLike]: content}, cardId: card.id }})) {
                 continue
@@ -20,7 +19,7 @@ const rulings = require('../../../rulings.json')
                 await Ruling.create({
                     cardName: card.name,
                     cardId: card.id,
-                    content: {[Op.iLike]: content}
+                    content: content
                 })
             }
         }
@@ -28,7 +27,6 @@ const rulings = require('../../../rulings.json')
         const goatRulings = ruling.Rulings_Goat?.split("\n●") || []
         for (let i = 0; i < goatRulings.length; i++) {
             const content = goatRulings[i].replaceAll('●', '').trim()
-            console.log('content', content)
             if (!content.length) continue
             if (await Ruling.count({ where: { content: {[Op.iLike]: content}, cardId: card.id }})) {
                 const ruling = await Ruling.findOne({ where: { content: {[Op.iLike]: content}, cardId: card.id }})
@@ -38,7 +36,7 @@ const rulings = require('../../../rulings.json')
                 await Ruling.create({
                     cardName: card.name,
                     cardId: card.id,
-                    content: {[Op.iLike]: content},
+                    content: content,
                     effectiveDate: '2005-04-01',
                     expirationDate: '2005-10-01'
                 })
@@ -67,7 +65,7 @@ const rulings = require('../../../rulings.json')
                 await Ruling.create({
                     cardName: card.name,
                     cardId: card.id,
-                    content: {[Op.iLike]: content},
+                    content: content,
                     effectiveDate: '2010-03-01',
                     expirationDate: '2010-09-01'
                 })
@@ -86,7 +84,7 @@ const rulings = require('../../../rulings.json')
                 await Ruling.create({
                     cardName: card.name,
                     cardId: card.id,
-                    content: {[Op.iLike]: content},
+                    content: content,
                     effectiveDate: '2011-09-01',
                     expirationDate: '2012-03-01'
                 })
@@ -105,7 +103,7 @@ const rulings = require('../../../rulings.json')
                 await Ruling.create({
                     cardName: card.name,
                     cardId: card.id,
-                    content: {[Op.iLike]: content},
+                    content: content,
                     effectiveDate: '2014-05-01',
                     expirationDate: '2014-07-01'
                 })
@@ -124,7 +122,7 @@ const rulings = require('../../../rulings.json')
                 await Ruling.create({
                     cardName: card.name,
                     cardId: card.id,
-                    content: {[Op.iLike]: content},
+                    content: content,
                     effectiveDate: '2014-04-01',
                     expirationDate: '2014-05-01'
                 })
@@ -143,7 +141,7 @@ const rulings = require('../../../rulings.json')
                 await Ruling.create({
                     cardName: card.name,
                     cardId: card.id,
-                    content: {[Op.iLike]: content},
+                    content: content,
                     effectiveDate: '2013-03-01',
                     expirationDate: '2013-09-01'
                 })
@@ -162,7 +160,7 @@ const rulings = require('../../../rulings.json')
                 await Ruling.create({
                     cardName: card.name,
                     cardId: card.id,
-                    content: {[Op.iLike]: content},
+                    content: content,
                     effectiveDate: '2014-01-01',
                     expirationDate: '2014-04-01'
                 })
@@ -181,7 +179,7 @@ const rulings = require('../../../rulings.json')
                 await Ruling.create({
                     cardName: card.name,
                     cardId: card.id,
-                    content: {[Op.iLike]: content},
+                    content: content,
                     effectiveDate: '2009-03-01',
                     expirationDate: '2009-09-01'
                 })
@@ -200,7 +198,7 @@ const rulings = require('../../../rulings.json')
                 await Ruling.create({
                     cardName: card.name,
                     cardId: card.id,
-                    content: {[Op.iLike]: content},
+                    content: content,
                     effectiveDate: '2008-09-01',
                     expirationDate: '2009-03-01'
                 })
@@ -219,7 +217,7 @@ const rulings = require('../../../rulings.json')
                 await Ruling.create({
                     cardName: card.name,
                     cardId: card.id,
-                    content: {[Op.iLike]: content},
+                    content: content,
                     effectiveDate: '2008-05-01',
                     expirationDate: '2008-09-01'
                 })
@@ -238,7 +236,7 @@ const rulings = require('../../../rulings.json')
                 await Ruling.create({
                     cardName: card.name,
                     cardId: card.id,
-                    content: {[Op.iLike]: content},
+                    content: content,
                     effectiveDate: '2008-03-01',
                     expirationDate: '2008-05-01'
                 })
@@ -257,7 +255,7 @@ const rulings = require('../../../rulings.json')
                 await Ruling.create({
                     cardName: card.name,
                     cardId: card.id,
-                    content: {[Op.iLike]: content},
+                    content: content,
                     effectiveDate: '2007-03-01',
                     expirationDate: '2007-09-01'
                 })
@@ -276,7 +274,7 @@ const rulings = require('../../../rulings.json')
                 await Ruling.create({
                     cardName: card.name,
                     cardId: card.id,
-                    content: {[Op.iLike]: content},
+                    content: content,
                     effectiveDate: '2007-09-01',
                     expirationDate: '2008-03-01'
                 })
@@ -295,7 +293,7 @@ const rulings = require('../../../rulings.json')
                 await Ruling.create({
                     cardName: card.name,
                     cardId: card.id,
-                    content: {[Op.iLike]: content},
+                    content: content,
                     effectiveDate: '2006-09-01',
                     expirationDate: '2007-03-01'
                 })
