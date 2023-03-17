@@ -38,6 +38,7 @@ import rated from './lib/rated'
 import recalculate from './lib/recalculate'
 import records from './lib/records'
 import remove from './lib/remove'
+import reset from './lib/reset'
 import rng from './lib/rng'
 import role from './lib/role'
 import settimer from './lib/settimer'
@@ -91,6 +92,7 @@ export default {
     recalculate,
     records,
     remove,
+    reset,
     rng,
     role,
     settimer,
