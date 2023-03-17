@@ -58,7 +58,7 @@ export const initiateTrivia = async (interaction) => {
 
         for (let i = 0; i < missingEntries.length; i++) {
             const entry = missingEntries[i]
-            await entry.destroy()
+            await entry?.destroy()
         }
 
         const remainingEntries = await TriviaEntry.findAll({ where: { confirmed: true }})
@@ -66,14 +66,14 @@ export const initiateTrivia = async (interaction) => {
         if (remainingEntries.length < 5) {    
             for (let i = 0; i < remainingEntries.length; i++) {
                 const entry = remainingEntries[i]
-                await entry.update({ status: 'pending', confirmed: false })
+                await entry?.update({ status: 'pending', confirmed: false })
             }
 
             return interaction.channel.send({ content: `Unfortunately, Trivia cannot begin without at least 5 players. 📚 🐛\n\nThe following players have been removed from the queue:\n${missingNames.sort().join("\n")}`})
         } else {
             for (let i = 0; i < remainingEntries.length; i++) {
                 const entry = entries[i]
-                await entry.update({ status: 'playing' })
+                await entry?.update({ status: 'playing' })
             }
 
             assignTriviaRoles(entries)
@@ -236,7 +236,10 @@ export const postTriviaStandings = async (interaction, round, entries, questions
         return `${index + 1}. <@${entry.player.discordId}> - ${score}${unit} ${enthusiasm}`
     })
 
-    interaction.channel.send({ content: `${title}\n${standings.join("\n")}`})
+    for (let i = 0; i < 6; i += 6) {
+        interaction.channel.send({ content: `${title}\n${standings.slice(i, i + 6).join("\n")}`})
+    }
+
     round++
 
     return setTimeout(() => {
