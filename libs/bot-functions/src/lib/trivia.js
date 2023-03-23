@@ -63,13 +63,13 @@ export const initiateTrivia = async (interaction) => {
 
         const remainingEntries = await TriviaEntry.findAll({ where: { confirmed: true }})
 
-        if (remainingEntries.length < 5) {    
+        if (remainingEntries.length < 4) {    
             for (let i = 0; i < remainingEntries.length; i++) {
                 const entry = remainingEntries[i]
                 await entry?.update({ status: 'pending', confirmed: false })
             }
 
-            return interaction.channel.send({ content: `Unfortunately, Trivia cannot begin without at least 5 players. 📚 🐛\n\nThe following players have been removed from the queue:\n${missingNames.sort().join("\n")}`})
+            return interaction.channel.send({ content: `Unfortunately, Trivia cannot begin without at least 4 players. 📚 🐛\n\nThe following players have been removed from the queue:\n${missingNames.sort().join("\n")}`})
         } else {
             for (let i = 0; i < remainingEntries.length; i++) {
                 const entry = entries[i]
@@ -236,8 +236,8 @@ export const postTriviaStandings = async (interaction, round, entries, questions
         return `${index + 1}. <@${entry.player.discordId}> - ${score}${unit} ${enthusiasm}`
     })
 
-    for (let i = 0; i < 6; i += 6) {
-        interaction.channel.send({ content: `${title}\n${standings.slice(i, i + 6).join("\n")}`})
+    for (let i = 0; i < 5; i += 5) {
+        interaction.channel.send({ content: `${title}\n${standings.slice(i, i + 5).join("\n")}`})
     }
 
     round++

@@ -53,7 +53,7 @@ export default {
         for (let i = 0; i < teams.length; i++) {
             const team = teams[i]
             let players = []
-            results.push(`\nTeam: ${team.name}`)
+            results.push(`\n**Team: ${team.name}**`)
             const captain = await Player.findOne({ where: { id: team.captainId }})
             const playerA = await Player.findOne({ where: { id: team.playerAId }})
             const playerB = await Player.findOne({ where: { id: team.playerBId }})
@@ -79,6 +79,18 @@ export default {
                 results.push(`${j === 0 ? 'Captain' : 'Player'}: ${player.name} - ${isRegistered ? emojis.check : emojis.nope}`)
             }
         }
+
+        results.push('\n**Free Agents**')
+        const freeAgents = await Entry.findAll({
+            where: {
+                tournamentId: tournament.id,
+                teamId: null
+            },
+            order: [["playerName", "ASC"]]
+        })
+
+        if (!freeAgents.length) results.push('N/A')
+        freeAgents.forEach((freeAgent) => results.push(freeAgent.playerName))
 
         await interaction.editReply({ content: `${tournament.name} ${tournament.logo} - Teams ${tournament.emoji}`}) 
         for (let i = 0; i < results.length; i += 30) interaction.channel.send({ content: results.slice(i, i + 30).join('\n').toString() })

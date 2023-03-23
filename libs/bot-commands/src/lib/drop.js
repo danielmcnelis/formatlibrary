@@ -5,6 +5,7 @@ import { removeParticipant, removeTeam, selectTournament } from '@fl/bot-functio
 import { hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
+import e from 'express'
 
 export default {
 	data: new SlashCommandBuilder()
@@ -56,25 +57,62 @@ export default {
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
 
-        if (tournament.isTeamTournament && (tournament.state === 'pending' || tournament.state === 'standby')) {
-            const team = await Team.findOne({ 
-                where: { 
+        const team = await Team.findOne({ 
+            where: { 
+                captainId: player.id, 
+                tournamentId: tournament.id
+            }
+        })
+
+        if (tournament.isTeamTournament) {            
+            const isCaptain = await Team.count({
+                where: {
                     captainId: player.id, 
                     tournamentId: tournament.id
                 }
             })
 
-            if (!team) return await interaction.editReply({ content: `Only the team captain can drop the team from a team tournament.`})
+            if (isCaptain) {
+                const entries = await Entry.findAll({
+                    where: {
+                        teamId: team.id,
+                        tournamentId: tournament.id
+                    }
+                })
 
-            const entries = await Entry.findAll({
-                where: {
-                    teamId: team.id,
-                    tournamentId: tournament.id
+                return removeTeam(server, interaction, team, entries, tournament, false)
+            } else {
+                const isOnTeam = await Team.count({
+                    where: {
+                        tournamentId: tournament.id,
+                        [Op.or]: {
+                            playerAId: player.id,
+                            playerBId: player.id,
+                            playerCId: player.id
+                        }
+                    }
+                })
+
+                if (isOnTeam) {
+                    return await interaction.editReply({ content: `Only the team captain can drop a team from a team tournament.`})
+                } else {
+                    const entry = await Entry.findOne({ 
+                        where: { 
+                            playerId: player.id, 
+                            tournamentId: tournament.id
+                        },
+                        include: Player
+                    })
+
+                    if (!entry) {
+                        return await interaction.editReply({ content: `Hmm... I don't see you in the participants list for ${tournament.name}. ${tournament.emoji}`})
+                    } else {
+                        await entry.destroy()
+                        return await interaction.editReply({ content: `I removed you from ${tournament.name}. ${tournament.emoji}`})
+                    }
                 }
-            })
-
-            return removeTeam(server, interaction, team, entries, tournament, false)
-        } else {
+            }
+         } else {
             let success = (tournament.state === 'pending' || tournament.state === 'standby')
             if (!success) {
                 const matches = await Match.findAll({ 
@@ -94,7 +132,7 @@ export default {
     
             const entry = await Entry.findOne({ 
                 where: { 
-                    '$player.discordId$': interaction.user.id, 
+                    playerId: player.id, 
                     tournamentId: tournament.id
                 },
                 include: Player

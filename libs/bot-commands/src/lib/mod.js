@@ -2,6 +2,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 import { Server } from '@fl/models'
 import { hasAffiliateAccess, isMod } from '@fl/bot-functions'
+import { emojis } from '@fl/bot-emojis'
 
 export default {
 	data: new SlashCommandBuilder()

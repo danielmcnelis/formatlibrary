@@ -41,7 +41,7 @@ export default {
                 })
 
                 const count = await TriviaEntry.count()
-                if (count >= 5) initiateTrivia(interaction)
+                if (count >= 4) initiateTrivia(interaction)
                 return await interaction.reply({ content: `You joined the Trivia queue. 📚 🐛`})
             }
         } else {
