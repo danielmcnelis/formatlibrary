@@ -54,10 +54,10 @@ export default {
             const team = teams[i]
             let players = []
             results.push(`\nTeam: ${team.name}`)
-            const captain = await Player.findOne({ where: { playerId: team.captainId }})
-            const playerA = await Player.findOne({ where: { playerId: team.playerAId }})
-            const playerB = await Player.findOne({ where: { playerId: team.playerBId }})
-            const playerC = await Player.findOne({ where: { playerId: team.playerCId }})
+            const captain = await Player.findOne({ where: { id: team.captainId }})
+            const playerA = await Player.findOne({ where: { id: team.playerAId }})
+            const playerB = await Player.findOne({ where: { id: team.playerBId }})
+            const playerC = await Player.findOne({ where: { id: team.playerCId }})
 
             if (captain.id !== playerA.id) players.push(playerA)
             if (captain.id !== playerB.id) players.push(playerB)
