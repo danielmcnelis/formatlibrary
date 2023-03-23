@@ -45,8 +45,7 @@ export default {
         const teams = await Team.findAll({
             where: {
                 tournamentId: tournament.id
-            },
-            include: Player
+            }
         })
 
         const results = []
