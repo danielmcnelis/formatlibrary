@@ -61,7 +61,7 @@ export default {
             }
         })
 
-        if (tournament.isTeamTournament && !team) return
+        if (tournament.isTeamTournament && !team) return interaction.editReply(`You must first register with a team before joining a team tournament.`)
 
         const { url, ydk } = await getDeckList(interaction.member, player, format)
         if (!url || !ydk) return
@@ -156,7 +156,7 @@ export default {
             })
 
             return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
-        } else if (entry.active === false) {
+        } else if (entry.active === false && !tournament.isTeamTournament) {
             const { participant } = await postParticipant(server, tournament, player)
             if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
                                         

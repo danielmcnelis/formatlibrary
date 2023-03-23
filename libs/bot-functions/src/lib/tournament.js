@@ -225,6 +225,19 @@ export const joinTournament = async (interaction, tournamentId) => {
         }
     })
 
+    const team = await Team.findOne({
+        where: {
+            tournamentId: tournament.id,
+            [Op.or]: {
+                playerAId: player.id,
+                playerBId: player.id,
+                playerCId: player.id,
+            }
+        }
+    })
+
+    if (tournament.isTeamTournament && !team) return interaction.reply(`Please register with a team before joining a team tournament.`)
+
     const server = await Server.findOne({
         where: {
             name: interaction.guild.name
@@ -241,7 +254,42 @@ export const joinTournament = async (interaction, tournamentId) => {
     const { url, ydk } = await getDeckList(interaction.member, player, format)
     if (!url) return
 
-    if (!entry) {
+    if (!entry && team) {
+        const slot = team.playerAId === player.id ? 'A' :
+        team.playerBId === player.id ? 'B' :
+        team.playerCId === player.id ? 'C' :
+        null
+
+        try { 
+            await Entry.create({
+                playerName: player.name,
+                url: url,
+                ydk: ydk,
+                participantId: team.participantId,
+                playerId: player.id,
+                tournamentId: tournament.id,
+                compositeKey: player.id + tournament.id,
+                slot: slot,
+                teamId: team.id
+            })
+        } catch (err) {
+            console.log(err)
+            return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
+        }
+
+        const deckAttachments = await drawDeck(ydk) || []
+        interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
+        interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
+        deckAttachments.forEach((attachment, index) => {
+            if (index === 0) {
+                interaction.member.send({ content: `FYI, this is the deck you submitted:`, files: [attachment] }).catch((err) => console.log(err))
+            } else {
+                interaction.member.send({ files: [attachment] }).catch((err) => console.log(err))
+            }
+        })
+        
+        return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (${team.name}) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+    } else if (!entry && !tournament.isTeamTournament) {
         try {
             entry = await Entry.create({
                 playerName: player.name,
@@ -272,7 +320,26 @@ export const joinTournament = async (interaction, tournamentId) => {
         })
 
         return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
-    } else if (entry.active === false) {
+    } else if (entry && entry.active === false && team) {
+        await entry.update({
+            url: url,
+            ydk: ydk,
+            active: true
+        })
+
+        const deckAttachments = await drawDeck(ydk) || []
+        interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
+        interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
+        deckAttachments.forEach((attachment, index) => {
+            if (index === 0) {
+                interaction.member.send({ content: `FYI, this is the deck you submitted:`, files: [attachment] }).catch((err) => console.log(err))
+            } else {
+                interaction.member.send({ files: [attachment] }).catch((err) => console.log(err))
+            }
+        })
+
+        return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+    } else if (entry.active === false && !tournament.isTeamTournament) {
         const { participant } = await postParticipant(server, tournament, player)
         if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
         
