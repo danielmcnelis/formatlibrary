@@ -49,6 +49,7 @@ import stats from './lib/stats'
 import story from './lib/story'
 import timer from './lib/timer'
 import team from './lib/team'
+import teams from './lib/teams'
 import test from './lib/test'
 import trivia from './lib/trivia'
 import undo from './lib/undo'
@@ -102,6 +103,7 @@ export default {
     stats,
     story,
     team,
+    teams,
     test,
     timer,
     trivia,

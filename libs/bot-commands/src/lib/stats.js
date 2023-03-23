@@ -95,7 +95,7 @@ export default {
                 order: [['elo', 'DESC']] 
             })
 
-        const triviaRankings = 
+        // const triviaRankings = 
 
         const index = allStats.length ? allStats.findIndex((s) => s.playerId === player.id) : null
         const rank = stats && index >= 0 ? `#${index + 1} out of ${allStats.length}` : `N/A`
