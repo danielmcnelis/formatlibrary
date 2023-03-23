@@ -42,15 +42,14 @@ export default {
         ].map((e) => e.tournament)
 
         if (!tournaments.length) {
-            console.log('tournaments', tournaments)
-            const captainTournament = await Team.findOne({
+            const team = await Team.findOne({
                 where: {
                     captainId: player.id
-                }
+                },
+                include: Tournament
             }) 
 
-            console.log('add captainTournament', !!captainTournament)
-            if (captainTournament) tournaments.push(captainTournament)
+            if (team) tournaments.push(team.tournament)
         }
 
         if (!tournaments.length) return await interaction.editReply({ content: `You are not in an active ${format ? `${format.name} tournament` : 'tournament'}.`})
