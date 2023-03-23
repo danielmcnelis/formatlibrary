@@ -73,7 +73,7 @@ export default {
                 }
             })
 
-            return removeTeam(server, interaction, team, entries, tournament, true)
+            return removeTeam(server, interaction, team, entries, tournament, false)
         } else {
             let success = (tournament.state === 'pending' || tournament.state === 'standby')
             if (!success) {

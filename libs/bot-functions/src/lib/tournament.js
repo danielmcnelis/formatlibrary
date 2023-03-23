@@ -650,10 +650,13 @@ export const removeTeam = async (server, interaction, team, entries, tournament,
             }
         
             if (drop) {
-                return await interaction.editReply({ content: `I removed ${team.name} from ${tournament.name}. Better luck next time! ${tournament.emoji}`})
+                await interaction.editReply({ content: `I removed ${team.name} from ${tournament.name}. Better luck next time! ${tournament.emoji}`})
             } else {
-                return await interaction.editReply({ content: `${team.name} has been removed from ${tournament.name}. ${tournament.emoji}`})
+                await interaction.editReply({ content: `${team.name} has been removed from ${tournament.name}. ${tournament.emoji}`})
             }
+
+            if (tournament.state !== 'underway') await team.destroy()
+            return
         } else if (!success && drop) {
             return await interaction.editReply({ content: `Hmm... I don't see ${team.name} in the participants list for ${tournament.name}. ${tournament.emoji}`})
         } else if (!success && !drop) {
