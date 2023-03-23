@@ -41,29 +41,38 @@ export default {
             })
         ].map((e) => e.tournament)
 
+        if (!tournaments.length) {
+            const captainTournament = await Team.findOne({
+                where: {
+                    captainId: player.id
+                }
+            }) 
+
+            if (captainTournament) tournaments.push(captainTournament)
+        }
+
         if (!tournaments.length) return await interaction.editReply({ content: `You are not in an active ${format ? `${format.name} tournament` : 'tournament'}.`})
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
 
         if (tournament.isTeamTournament && (tournament.state === 'pending' || tournament.state === 'standby')) {
-            const entry = await Entry.findOne({ 
+            const team = await Team.findOne({ 
                 where: { 
-                    '$player.discordId$': interaction.user.id, 
-                    tournamentId: tournament.id
-                },
-                include: [Player, Team]
-            })
-
-            if (entry.team.captainId !== entry.playerId) return await interaction.editReply({ content: `Only the team captain can drop the team from a team tournament.`})
-
-            const entries = await Entry.findAll({
-                where: {
-                    teamId: entry.team.id,
+                    captainId: player.id, 
                     tournamentId: tournament.id
                 }
             })
 
-            return removeTeam(server, interaction, entry.team, entries, tournament, true)
+            if (!team) return await interaction.editReply({ content: `Only the team captain can drop the team from a team tournament.`})
+
+            const entries = await Entry.findAll({
+                where: {
+                    teamId: team.id,
+                    tournamentId: tournament.id
+                }
+            })
+
+            return removeTeam(server, interaction, team, entries, tournament, true)
         } else {
             let success = (tournament.state === 'pending' || tournament.state === 'standby')
             if (!success) {
