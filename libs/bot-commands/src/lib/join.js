@@ -61,8 +61,6 @@ export default {
             }
         })
 
-        if (tournament.isTeamTournament && !team) return interaction.editReply(`You must first register with a team before joining a team tournament.`)
-
         const { url, ydk } = await getDeckList(interaction.member, player, format)
         if (!url || !ydk) return
 
