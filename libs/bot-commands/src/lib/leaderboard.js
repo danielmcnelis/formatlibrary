@@ -8,13 +8,7 @@ import { Op } from 'sequelize'
 export default {
     data: new SlashCommandBuilder()
         .setName('leaderboard')
-        .setDescription(`Post the leaderboard. 🪜`)
-        .addNumberOption(num =>
-            num
-                .setName('number')
-                .setDescription('Show how many players?')
-                .setRequired(false)
-        ),
+        .setDescription(`Post the leaderboard. 🪜`),
     async execute(interaction) {
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
@@ -32,12 +26,9 @@ export default {
 
         if (!format) return await interaction.reply({ content: `Try using **/leaderboard** in channels like: <#414575168174948372> or <#629464112749084673>.`})
             
-        const x = interaction.options.getNumber('number') || 10
-        if (x < 1) return await interaction.reply({ content: "Please provide a number greater than 0."})
-        if (x > 100 || isNaN(x)) return await interaction.reply({ content: "Please provide a number less than or equal to 100."})
         const serverId = server.internalLadder ? server.id : '414551319031054346'
 
-        const allStats = await Stats.findAll({ 
+        const stats = await Stats.findAll({ 
             where: {
                 format: {[Op.iLike]: format.name}, 
                 games: { [Op.gte]: 3 },
@@ -46,17 +37,17 @@ export default {
                 '$player.hidden$': false
             },
             include: Player,
+            limit: 10,
             order: [['elo', 'DESC']] 
         })
         
-        const topStats = allStats.slice(0, x)
-        if (!topStats.length) return await interaction.reply({ content: `I'm sorry, we don't have any ${format.name} players.`})
+        if (!stats.length) return await interaction.reply({ content: `I'm sorry, we don't have any ${format.name} players.`})
         const results = []
-        topStats.length === 1 ? results[0] = `${server.emoji || format.emoji} --- The Best ${server.internalLadder ? 'Internal ' : ''}${format.name} Player --- ${server.emoji || format.emoji}`
-        : results[0] = `${server.emoji || format.emoji} --- Top ${topStats.length} ${server.internalLadder ? 'Internal ' : ''}${format.name} Players --- ${server.emoji || format.emoji}`
-        for (let i = 0; i < topStats.length; i++) results[i+1] = `${(i+1)}. ${getMedal(topStats[i].elo)} ${topStats[i].player.name}`
+        stats.length === 1 ? results[0] = `${server.emoji || format.emoji} --- The Best ${server.internalLadder ? 'Internal ' : ''}${format.name} Player --- ${server.emoji || format.emoji}`
+        : results[0] = `${server.emoji || format.emoji} --- Top ${stats.length} ${server.internalLadder ? 'Internal ' : ''}${format.name} Players --- ${server.emoji || format.emoji}`
+        for (let i = 0; i < stats.length; i++) results[i+1] = `${(i+1)}. ${getMedal(stats[i].elo)} ${stats[i].player.name}`
         if (!server.internalLadder) results.push(`\nFull Leaderboard: https://formatlibrary.com/leaderboards/${urlize(format.name)}`)
-        for (let i = 0; i < results.length; i += 30) await interaction.reply({ content: results.slice(i, i+30).join('\n').toString() })
+        await interaction.reply({ content: results.join('\n').toString() })
     }
 }
 

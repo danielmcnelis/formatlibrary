@@ -2,7 +2,7 @@
 import { SlashCommandBuilder } from 'discord.js'    
 import { hasAffiliateAccess, getMedal } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
-import { Format, Player, Server, Stats } from '@fl/models'
+import { Format, Player, Server, Stats, TriviaKnowledge } from '@fl/models'
 import { Op } from 'sequelize'
 
 export default {
@@ -37,7 +37,40 @@ export default {
         if (!player) return await interaction.reply({ content: "That user is not in the database."})
         const serverId = server.internalLadder ? server.id : '414551319031054346'
 
-        const stats = await Stats.findOne({ 
+		// const transformed_knowledges = []
+
+		// const allKnowledges = await Knowledge.findAll()
+
+		// const playerIds = []
+		// for (let i = 0; i < allKnowledges.length; i++) {
+		// 	const knowledge = allKnowledges[i]
+		// 	const playerId = knowledge.playerId
+		// 	if (!playerIds.includes(playerId)) playerIds.push(playerId)
+		// }
+
+		// for (let i = 0; i < playerIds.length; i++) {
+		// 	const playerId = playerIds[i]
+		// 	const correct_answers = await Knowledge.count({ where: { playerId: playerId }})
+		// 	transformed_knowledges.push([playerId, correct_answers])
+		// }
+
+		// transformed_knowledges.sort((a, b) => b[1] - a[1])
+		// const index = transformed_knowledges.length ? transformed_knowledges.findIndex((k) => k[0] === playerId) : null
+		// const rank = index !== null ? `#${index + 1} out of ${transformed_knowledges.length}` : `N/A`
+		// const smarts = transformed_knowledges[index][1]
+		
+		// return message.channel.send({ content: 
+		// 	`${no} --- Trivia Stats --- ${yes}`
+		// 	+ `\nName: ${player.name}`
+		// 	+ `\nRanking: ${rank}`
+		// 	+ `\nCorrectly Answered: ${smarts} ${stoned}`
+		// })
+
+        const stats = interaction.channel?.name === 'trivia' ? await TriviaKnowledge.count({ 
+            where: { 
+                playerId: player.id
+            } 
+        }) : await Stats.findOne({ 
             where: { 
                 playerId: player.id, 
                 format: {[Op.iLike]: format.name}, 
@@ -49,17 +82,20 @@ export default {
             } 
         })
 
-        const allStats = await Stats.findAll({ 
-            where: {
-                format: { [Op.iLike]: format.name }, 
-                games: { [Op.gte]: 3 },
-                serverId: serverId,
-                inactive: false,
-                '$player.hidden$': false
-            },
-            include: [Player],
-            order: [['elo', 'DESC']] 
-        })
+        const allStats = interaction.channel?.name === 'trivia' ? await TriviaKnowledge.findAll() : 
+            await Stats.findAll({ 
+                where: {
+                    format: { [Op.iLike]: format.name }, 
+                    games: { [Op.gte]: 3 },
+                    serverId: serverId,
+                    inactive: false,
+                    '$player.hidden$': false
+                },
+                include: [Player],
+                order: [['elo', 'DESC']] 
+            })
+
+        const triviaRankings = 
 
         const index = allStats.length ? allStats.findIndex((s) => s.playerId === player.id) : null
         const rank = stats && index >= 0 ? `#${index + 1} out of ${allStats.length}` : `N/A`
