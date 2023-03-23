@@ -76,7 +76,7 @@ export default {
                     }
                 })
 
-                results.push(`${j === 0 ? 'Captain' : 'Player'}: ${player.name} - Reg. ${isRegistered ? emojis.check : emojis.nope}`)
+                results.push(`${j === 0 ? 'Captain' : 'Player'}: ${player.name} - ${isRegistered ? emojis.check : emojis.nope}`)
             }
         }
 

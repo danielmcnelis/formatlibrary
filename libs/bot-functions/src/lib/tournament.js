@@ -1581,36 +1581,57 @@ export const removeFromTournament = async (interaction, tournamentId, userId) =>
 
 // DROP FROM TOURNAMENT
 export const dropFromTournament = async (interaction, tournamentId) => {
+    console.log('dropFromTournament()', dropFromTournament())
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
     const player = await Player.findOne({ where: { discordId: interaction.user.id }})
     const server = await Server.findOne({ where: { id: interaction.guildId }})
 
-    let success = (tournament.state === 'pending' || tournament.state === 'standby')
-    if (!success) {
-        const matches = await Match.findAll({ 
+    if (tournament.isTeamTournament && (tournament.state === 'pending' || tournament.state === 'standby')) {
+        const team = await Team.findOne({ 
             where: { 
-                isTournament: true
+                captainId: player.id, 
+                tournamentId: tournament.id
+            }
+        })
+
+        if (!team) return await interaction.editReply({ content: `Only the team captain can drop the team from a team tournament.`})
+
+        const entries = await Entry.findAll({
+            where: {
+                teamId: team.id,
+                tournamentId: tournament.id
+            }
+        })
+
+        return removeTeam(server, interaction, team, entries, tournament, true)
+    } else {
+        let success = (tournament.state === 'pending' || tournament.state === 'standby')
+        if (!success) {
+            const matches = await Match.findAll({ 
+                where: { 
+                    isTournament: true
+                },
+                limit: 5,
+                order: [["createdAt", "DESC"]] 
+            })
+    
+            matches.forEach((match) => {
+                if (match.winnerId === player.id || match.loserId === player.id) success = true 
+            })
+    
+            if (!success) return await interaction.reply({ content: `If you played a match, please report the result before dropping. Otherwise ask a Moderator to remove you.`})
+        }
+    
+        const entry = await Entry.findOne({ 
+            where: { 
+                '$player.discordId$': interaction.user.id, 
+                tournamentId: tournamentId
             },
-            limit: 5,
-            order: [["createdAt", "DESC"]] 
+            include: Player
         })
-
-        matches.forEach((match) => {
-            if (match.winnerId === player.id || match.loserId === player.id) success = true 
-        })
-
-        if (!success) return await interaction.reply({ content: `If you played a match, please report the result before dropping. Otherwise ask a Moderator to remove you.`})
+    
+        return removeParticipant(server, interaction, interaction.member, entry, tournament, true)   
     }
-
-    const entry = await Entry.findOne({ 
-        where: { 
-            '$player.discordId$': interaction.user.id, 
-            tournamentId: tournamentId
-        },
-        include: Player
-    })
-
-    return removeParticipant(server, interaction, interaction.member, entry, tournament, true)
 }
 
 // START TOURNAMENT

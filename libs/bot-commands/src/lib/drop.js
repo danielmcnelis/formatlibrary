@@ -42,12 +42,14 @@ export default {
         ].map((e) => e.tournament)
 
         if (!tournaments.length) {
+            console.log('tournaments', tournaments)
             const captainTournament = await Team.findOne({
                 where: {
                     captainId: player.id
                 }
             }) 
 
+            console.log('add captainTournament', !!captainTournament)
             if (captainTournament) tournaments.push(captainTournament)
         }
 
