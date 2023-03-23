@@ -81,7 +81,7 @@ export default {
         }
 
         await interaction.editReply({ content: `${tournament.name} ${tournament.logo} - Teams ${tournament.emoji}`}) 
-        for (let i = 0; i < results.length; i += 30) interaction.channel.send(results.slice(i, i + 30))
+        for (let i = 0; i < results.length; i += 30) interaction.channel.send({ content: results.slice(i, i + 30).join('\n').toString() })
         return    
     }
 }
