@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Format, Player, Server, Team, Tournament } from '@fl/models'
+import { Entry, Format, Player, Server, Team, Tournament } from '@fl/models'
 import { emojis } from '@fl/bot-emojis'
 import { hasPartnerAccess, postParticipant, shuffleArray } from '@fl/bot-functions'
 import { Op } from 'sequelize'
@@ -39,6 +39,8 @@ export default {
         
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
 
+        if (teamName.length > 30) return await interaction.reply({ content: `Sorry, team names must be 30 characters or fewer in length.`})
+
         const format = await Format.findOne({
             where: {
                 [Op.or]: {
@@ -48,15 +50,20 @@ export default {
             }
         })
 
-        const tournament = await Tournament.findOne({
+        const tournament = format ? await Tournament.findOne({
             where: {
                 isTeamTournament: true,
+                state: 'pending',
                 formatId: format.id
+            }
+        }) : await Tournament.findOne({
+            where: {
+                isTeamTournament: true,
+                state: 'pending'
             }
         })
 
-        if (!tournament) return interaction.reply({ content: `There is no active ${format.name} Format ${format.emoji} team tournament.`})
-
+        if (!tournament) return interaction.reply({ content: `There is no pending team tournament.`})
 
         const teamExists = await Team.count({
             where: {
@@ -111,7 +118,7 @@ export default {
             const { participant } = await postParticipant(server, tournament, { name: teamName })
             if (!participant) return await interaction.editReply({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
             
-            await Team.create({
+            const team = await Team.create({
                 name: teamName,
                 captainId: captain.id,
                 tournamentId: tournament.id,
@@ -120,6 +127,51 @@ export default {
                 playerBId: teammates[1].id,
                 playerCId: teammates[2].id,
             })
+
+            const entryA = await Entry.findOne({
+                where: {
+                    playerId: team.playerAId,
+                    tournamentId: tournament.id
+                }
+            })
+
+            if (entryA) {
+                await entryA.update({
+                    participantId: team.participantId,
+                    teamId: team.id,
+                    slot: 'A'
+                })
+            }
+
+            const entryB = await Entry.findOne({
+                where: {
+                    playerId: team.playerBId,
+                    tournamentId: tournament.id
+                }
+            })
+
+            if (entryB) {
+                await entryB.update({
+                    participantId: team.participantId,
+                    teamId: team.id,
+                    slot: 'B'
+                })
+            }
+
+            const entryC = await Entry.findOne({
+                where: {
+                    playerId: team.playerCId,
+                    tournamentId: tournament.id
+                }
+            })
+
+            if (entryC) {
+                await entryC.update({
+                    participantId: team.participantId,
+                    teamId: team.id,
+                    slot: 'C'
+                })
+            }
 
             return await interaction.editReply({ content: `Congrats! You've registered ${teamName} for ${tournament.name}! ${tournament.logo} ${tournament.emoji}\nCaptain: <@${captain.discordId}>\nTeammate 1: <@${teammate1.discordId}>\nTeammate 2: <@${teammate2.discordId}>`})    
         }

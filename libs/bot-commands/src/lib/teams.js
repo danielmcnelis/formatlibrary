@@ -27,13 +27,13 @@ export default {
             }
         })
 
-        const tournament = await Tournament.findOne({
+        const tournament = format ? await Tournament.findOne({
             where: {
                 isTeamTournament: true,
                 formatId: format.id,
                 serverId: server.id
             }
-        }) || await Tournament.findOne({
+        }) : await Tournament.findOne({
             where: {
                 isTeamTournament: true,
                 serverId: server.id
@@ -53,7 +53,8 @@ export default {
         for (let i = 0; i < teams.length; i++) {
             const team = teams[i]
             let players = []
-            results.push(`\n**Team: ${team.name}**`)
+            if (i > 0) results.push('')
+            results.push(`**Team: ${team.name}**`)
             const captain = await Player.findOne({ where: { id: team.captainId }})
             const playerA = await Player.findOne({ where: { id: team.playerAId }})
             const playerB = await Player.findOne({ where: { id: team.playerBId }})
@@ -80,7 +81,7 @@ export default {
             }
         }
 
-        results.push('\n\n**Free Agents**')
+        results.push('**Free Agents**')
         const freeAgents = await Entry.findAll({
             where: {
                 tournamentId: tournament.id,
