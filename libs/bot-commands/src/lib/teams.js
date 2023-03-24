@@ -45,7 +45,8 @@ export default {
         const teams = await Team.findAll({
             where: {
                 tournamentId: tournament.id
-            }
+            },
+            order: [['createdAt', 'ASC']]
         })
 
         const results = []
@@ -88,7 +89,7 @@ export default {
                 tournamentId: tournament.id,
                 teamId: null
             },
-            order: [["playerName", "ASC"]]
+            order: [["createdAt", "ASC"]]
         })
 
         if (!freeAgents.length) results.push('N/A')
