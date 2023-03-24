@@ -53,7 +53,7 @@ export default {
         for (let i = 0; i < teams.length; i++) {
             const team = teams[i]
             let players = []
-            results.push('')
+            if (i > 0) results.push('‎')
             results.push(`**Team: ${team.name}**`)
             const captain = await Player.findOne({ where: { id: team.captainId }})
             const playerA = await Player.findOne({ where: { id: team.playerAId }})
@@ -81,6 +81,7 @@ export default {
             }
         }
 
+        results.push('‎')
         results.push('**Free Agents**')
         const freeAgents = await Entry.findAll({
             where: {
