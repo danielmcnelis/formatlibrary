@@ -80,7 +80,7 @@ export default {
             }
         }
 
-        results.push('\n**Free Agents**')
+        results.push('\n\n**Free Agents**')
         const freeAgents = await Entry.findAll({
             where: {
                 tournamentId: tournament.id,

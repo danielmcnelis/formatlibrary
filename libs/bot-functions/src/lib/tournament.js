@@ -1162,7 +1162,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
         } catch (err) {
             console.log(err)
         }
-         
+        
         if (!success) {
             await interaction.editReply({ content: `Error: could not update bracket for ${tournament.name}.`})
             return false
