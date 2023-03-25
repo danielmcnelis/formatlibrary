@@ -18,6 +18,8 @@ export default {
         
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
 
+        
+
         const format = await Format.findOne({
             where: {
                 [Op.or]: {
@@ -53,22 +55,24 @@ export default {
 
         for (let i = 0; i < teams.length; i++) {
             const team = teams[i]
-            let players = []
             if (i > 0) results.push('‎')
-            results.push(`**Team: ${team.name}**`)
+            results.push(`**${team.name}**`)
             const captain = await Player.findOne({ where: { id: team.captainId }})
             const playerA = await Player.findOne({ where: { id: team.playerAId }})
             const playerB = await Player.findOne({ where: { id: team.playerBId }})
             const playerC = await Player.findOne({ where: { id: team.playerCId }})
 
-            if (captain.id !== playerA.id) players.push(playerA)
-            if (captain.id !== playerB.id) players.push(playerB)
-            if (captain.id !== playerC.id) players.push(playerC)
+            const players = [playerA, playerB, playerC]
 
-            players = shuffleArray(players)
-            players.unshift(captain)
+            // if (captain.id !== playerA.id) players.push(playerA)
+            // if (captain.id !== playerB.id) players.push(playerB)
+            // if (captain.id !== playerC.id) players.push(playerC)
+
+            // players = shuffleArray(players)
+            // players.unshift(captain)
 
             for (let j = 0; j < players.length; j++) {
+                const slot = j === 0 ? 'A' : j === 1 ? 'B' : 'C'
                 const player = players[j]
                 const isRegistered = await Entry.count({
                     where: {
@@ -78,7 +82,9 @@ export default {
                     }
                 })
 
-                results.push(`${j === 0 ? 'Captain' : 'Player'}: ${player.name} ${isRegistered ? emojis.check : emojis.nope}`)
+                const isCaptain = player.id === captain.id
+
+                results.push(`Player ${slot}: ${player.name} ${isCaptain ? '(Captain) ' : ' '}${isRegistered ? emojis.check : emojis.nope}`)
             }
         }
 
