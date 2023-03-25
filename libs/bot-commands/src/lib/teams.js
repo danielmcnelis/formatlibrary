@@ -10,6 +10,7 @@ export default {
         .setName('teams')
         .setDescription('View list of teams. 📋'),
     async execute(interaction) {
+        return interaction.reply(emojis.yellow)
         await interaction.deferReply()
 
         const server = !interaction.guildId ? {} : 
@@ -18,7 +19,7 @@ export default {
         
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
 
-        
+
 
         const format = await Format.findOne({
             where: {
