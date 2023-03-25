@@ -1328,14 +1328,102 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                     if (!winnerNextMatch) {
                         return await interaction.channel.send({ content: `${winningTeam.name}, You won the tournament! Congratulations on your stellar performance! ${emojis.legend}`})
                     } else if (winnerNextTeam) {
+                        const round = tournament.type === 'double elimination' && winnerNextMatch.round < 0 ? `Losers Round ${Math.abs(winnerNextMatch.round)}` :
+                            tournament.type === 'double elimination' && winnerNextMatch.round > 0 ? `Winners Round ${Math.abs(winnerNextMatch.round)}` :
+                            `Round ${winnerNextMatch.round}`
+    
                         const {player: playerA1} = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player })
                         const {player: playerA2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player})
+
+                        try {
+                            const pA1Member = await interaction.guild.members.fetch(playerA1.discordId)
+                            pA1Member.user.send(
+                                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+                                `\nServer: ${server.name} ${server.logo}` +
+                                `\nChannel: <#${tournament.channelId}>` +
+                                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                                `\nDiscord: ${playerA2.discordName}#${playerA2.discriminator}` +
+                                `\nDuelingBook: ${playerA2.duelingBook}`
+                            )
+                        } catch (err) {
+                            console.log(err)
+                        }
+    
+                        try {
+                            const pA2Member = await interaction.guild.members.fetch(playerA2.discordId)
+                            pA2Member.user.send(
+                                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+                                `\nServer: ${server.name} ${server.logo}` +
+                                `\nChannel: <#${tournament.channelId}>` +
+                                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                                `\nDiscord: ${playerA1.discordName}#${playerA1.discriminator}` +
+                                `\nDuelingBook: ${playerA1.duelingBook}`
+                            )
+                        } catch (err) {
+                            console.log(err)
+                        }
 
                         const {player: playerB1} = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
                         const {player: playerB2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
 
+                        try {
+                            const pB1Member = await interaction.guild.members.fetch(playerB1.discordId)
+                            pB1Member.user.send(
+                                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+                                `\nServer: ${server.name} ${server.logo}` +
+                                `\nChannel: <#${tournament.channelId}>` +
+                                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                                `\nDiscord: ${playerB2.discordName}#${playerB2.discriminator}` +
+                                `\nDuelingBook: ${playerB2.duelingBook}`
+                            )
+                        } catch (err) {
+                            console.log(err)
+                        }
+    
+                        try {
+                            const pB2Member = await interaction.guild.members.fetch(playerB2.discordId)
+                            pB2Member.user.send(
+                                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+                                `\nServer: ${server.name} ${server.logo}` +
+                                `\nChannel: <#${tournament.channelId}>` +
+                                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                                `\nDiscord: ${playerB1.discordName}#${playerB1.discriminator}` +
+                                `\nDuelingBook: ${playerB1.duelingBook}`
+                            )
+                        } catch (err) {
+                            console.log(err)
+                        }
+
                         const {player: playerC1} = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
                         const {player: playerC2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
+
+                        try {
+                            const pC1Member = await interaction.guild.members.fetch(playerC1.discordId)
+                            pC1Member.user.send(
+                                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+                                `\nServer: ${server.name} ${server.logo}` +
+                                `\nChannel: <#${tournament.channelId}>` +
+                                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                                `\nDiscord: ${playerC2.discordName}#${playerC2.discriminator}` +
+                                `\nDuelingBook: ${playerC2.duelingBook}`
+                            )
+                        } catch (err) {
+                            console.log(err)
+                        }
+    
+                        try {
+                            const pC2Member = await interaction.guild.members.fetch(playerC2.discordId)
+                            pC2Member.user.send(
+                                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+                                `\nServer: ${server.name} ${server.logo}` +
+                                `\nChannel: <#${tournament.channelId}>` +
+                                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                                `\nDiscord: ${playerC1.discordName}#${playerC1.discriminator}` +
+                                `\nDuelingBook: ${playerC1.duelingBook}`
+                            )
+                        } catch (err) {
+                            console.log(err)
+                        }
 
                         await interaction.channel.send({
                             content: `New Team Match: ${winningTeam.name} vs. ${winnerNextTeam.name}. Good luck to both teams.` + 
