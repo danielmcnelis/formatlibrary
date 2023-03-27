@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Deck, Entry, Event, Format, Player, Server, Tournament } from '@fl/models'
+import { Deck, Entry, Event, Format, Player, Server, Team, Tournament } from '@fl/models'
 import { selectTournament } from '@fl/bot-functions'
 import { isMod, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
@@ -92,6 +92,7 @@ export default {
                 display: false,
                 tournamentId: tournament.id,
                 type: tournament.type,
+                isTeamEvent: tournament.isTeamTournament,
                 community: tournament.community,
                 logo: tournament.logo,
                 emoji: tournament.emoji
@@ -109,15 +110,19 @@ export default {
                         break
                     }
                 }
-    
-                const winningEntry = await Entry.findOne({ where: { participantId: parseInt(winnerParticipantId) }})
 
-                await event.update({
-                    winner: winningEntry.playerName,
-                    playerId: winningEntry.playerId
-                })
-
-                console.log(`Marked ${winningEntry.playerName} as the winner of ${event.name}.`)
+                if (event.isTeamEvent) {
+                    const winningTeam = await Team.findOne({ where: { participantId: parseInt(winnerParticipantId) }})
+                    await event.update({ winner: winningTeam.name })
+                    console.log(`Marked ${winningTeam.name} as the winner of ${event.name}.`)
+                } else {
+                    const winningEntry = await Entry.findOne({ where: { participantId: parseInt(winnerParticipantId) }})
+                    await event.update({
+                        winner: winningEntry.playerName,
+                        playerId: winningEntry.playerId
+                    })
+                    console.log(`Marked ${winningEntry.playerName} as the winner of ${event.name}.`)
+                }
             } catch (err) {
                 console.log(err)
             }
@@ -144,7 +149,7 @@ export default {
 
         let count = await Deck.count({ where: { eventId: event.id }})
         
-        if (event && event.size > 0 && event.size !== count) {
+        if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
             try {
                 const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
                 const success = await createDecks(event, data)
@@ -159,7 +164,7 @@ export default {
             }
         }
         
-        if (event && event.size > 0 && event.size === count) {
+        if (event && event.size > 0 && ((!event.isTeamEvent && event.size === count) || (event.isTeamEvent && (event.size * 3) === count))) {
             const entries = await Entry.findAll({ where: { tournamentId: tournament.id }, include: Player })
     
             for (let i = 0; i < entries.length; i++) {

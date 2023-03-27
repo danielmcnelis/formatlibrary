@@ -44,6 +44,10 @@ export const Event = db.define('events', {
   series: {
     type: Sequelize.BOOLEAN
   },
+  isTeamEvent: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
   community: {
     type: Sequelize.STRING
   },

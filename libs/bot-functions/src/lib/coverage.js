@@ -17,7 +17,7 @@ export const createDecks = async (event, data) => {
     for (let i = 0; i < data.length; i++) {
         try {
             const participant = data[i].participant
-            const entry = await Entry.findOne({
+            const entries = await Entry.findAll({
                 where: {
                     participantId: participant.id,
                     tournamentId: event.tournamentId
@@ -25,48 +25,55 @@ export const createDecks = async (event, data) => {
                 include: Player
             })
 
-            if (!entry) console.log(`missing entry for participant ${participant.id}`)
-        
-            const count = await Deck.count({
-                where: {
-                    playerId: entry.playerId,
-                    eventId: event.id
-                }
-            })
+            if (!event.isTeamEvent && !entries.length) {
+                console.log(`missing entry for participant ${participant.id}`)
+            } else if (event.isTeamEvent && entries.length !== 3) {
+                console.log(`missing ${(3 - entries.length) || 3} team entries for participant ${participant.id}`)
+            } 
 
-            if (!count) {
-                const placement = participant.final_rank ? parseInt(participant.final_rank, 10) : null
-                const dname = await getDeckType(entry.ydk, event.formatName)
-
-                const deckType = await DeckType.findOne({ 
-                    where: { 
-                        name: {[Op.iLike]: dname } 
+            for (let i = 0; i < entries.length; i++) {
+                const entry = entries[i]
+                const count = await Deck.count({
+                    where: {
+                        playerId: entry.playerId,
+                        eventId: event.id
                     }
-                }) || ({ name: 'Other', category: 'Other' })
-
-                await Deck.create({
-                    type: deckType.name,
-                    category: deckType.category,
-                    builder: entry.playerName,
-                    formatName: event.formatName,
-                    formatId: event.formatId,
-                    ydk: entry.ydk,
-                    placement: placement,
-                    eventName: event.abbreviation || event.name,
-                    origin: 'event',
-                    display: false,
-                    community: event.community,
-                    playerId: entry.playerId,
-                    eventId: event.id,
-                    deckTypeId: deckType.id,
-                    eventDate: event.startDate
                 })
 
-                b++
-                console.log(`uploaded ${event.abbreviation || event.name} #${placement} ${deckType.name} deck built by ${entry.playerName}`)
-            } else {
-                c++
-                console.log(`already have ${entry.playerName}'s deck for ${event.name}`)
+                if (count !== 3) {
+                    const placement = participant.final_rank ? parseInt(participant.final_rank, 10) : null
+                    const dname = await getDeckType(entry.ydk, event.formatName)
+
+                    const deckType = await DeckType.findOne({ 
+                        where: { 
+                            name: {[Op.iLike]: dname } 
+                        }
+                    }) || ({ name: 'Other', category: 'Other' })
+
+                    await Deck.create({
+                        type: deckType.name,
+                        category: deckType.category,
+                        builder: entry.playerName,
+                        formatName: event.formatName,
+                        formatId: event.formatId,
+                        ydk: entry.ydk,
+                        placement: placement,
+                        eventName: event.abbreviation || event.name,
+                        origin: 'event',
+                        display: false,
+                        community: event.community,
+                        playerId: entry.playerId,
+                        eventId: event.id,
+                        deckTypeId: deckType.id,
+                        eventDate: event.startDate
+                    })
+
+                    b++
+                    console.log(`uploaded ${event.abbreviation || event.name} #${placement} ${deckType.name} deck built by ${entry.playerName}`)
+                } else {
+                    c++
+                    console.log(`already have ${entry.playerName}'s deck for ${event.name}`)
+                }
             }
         } catch (err) {
             e++
@@ -80,6 +87,8 @@ export const createDecks = async (event, data) => {
 
 // COMPOSE BLOG POST
 export const composeBlogPost = async (interaction, event) => {
+    if (event.isTeamEvent) return await interaction.channel.send(`Cannot make blogpost for team event: ${event.name}.`)
+
     try {
         const count = await BlogPost.count({
             where: {
