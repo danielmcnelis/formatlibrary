@@ -10,7 +10,7 @@ export default {
         .setDescription('Performs a test. 🧪'),
     async execute(interaction) {
         if (isProgrammer(interaction.member)) {
-            downloadNewCards()
+            updateSets()
             await interaction.reply(emojis.yellow)
         } else {
             await interaction.reply('🧪')
