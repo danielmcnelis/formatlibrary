@@ -6,6 +6,7 @@ import { createMembership, createPlayer } from './utility'
 import { Op } from 'sequelize'
 import { S3 } from 'aws-sdk'
 import { config } from '@fl/config'
+console.log('config.tcgPlayer.accessToken', config.tcgPlayer.accessToken)
 
 // GET MIDNIGHT COUNTDOWN
 export const getMidnightCountdown = () => {
