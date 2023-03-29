@@ -386,14 +386,31 @@ export const updateMarketPrices = async (print) => {
 
     for (let i = 0; i < data.results.length; i++) {
         const result = data.results[i]
+        if (!result.marketPrice) continue
 
-        if (result.marketPrice) {
-            const priceType = result.subTypeName === 'Unlimited' ? 'unlimPrice' :
-                result.subTypeName === '1st Edition' ? 'firstPrice' :
-                result.subTypeName === 'Limited' ? 'limPrice' :
-                null
+        const priceType = result.subTypeName === 'Unlimited' ? 'unlimPrice' :
+            result.subTypeName === '1st Edition' ? 'firstPrice' :
+            result.subTypeName === 'Limited' ? 'limPrice' :
+            null
 
-            if (priceType) await print.update({ [priceType]: result.marketPrice })
+        const recentPrice = await Price.findOne({
+            where: {
+                printId: print.id,
+                source: 'TCGplayer',
+                edition: result.subTypeName
+            },
+            order: [['createdAt', 'DESC']]
+        })
+
+        if (recentPrice && recentPrice.usd === result.marketPrice) {
+            console.log(`no change in market price for print: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${result.subTypeName} - $${result.marketPrice}`)
+            continue
+        } else {
+            try {
+                await print.update({ [priceType]: result.marketPrice })
+            } catch (err) {
+                console.log(err)
+            }
 
             try {
                 await Price.create({
