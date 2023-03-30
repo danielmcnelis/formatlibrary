@@ -122,6 +122,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 // SELECT MENUS
 client.on(Events.InteractionCreate, async (interaction) => {
     console.log('interaction', interaction)
+    console.log('interaction.isSelectMenu()', interaction.isSelectMenu())
+    console.log('interaction.isUserSelectMenu()', interaction.isUserSelectMenu())
     console.log('interaction.isStringSelectMenu()', interaction.isStringSelectMenu())
 	if (!interaction.isStringSelectMenu()) return
 
