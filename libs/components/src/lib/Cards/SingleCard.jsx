@@ -83,7 +83,8 @@ export const SingleCard = () => {
     const [card, setCard] = useState({})
     const [statuses, setStatuses] = useState({})
     const [prints, setPrints] = useState([])
-    const [rulings, setRulings] = useState([])
+    const [genericRulings, setGenericRulings] = useState([])
+    const [specificRulings, setSpecificRulings] = useState({})
     const [isAdmin, setIsAdmin] = useState(false)
     const { id } = useParams()
   
@@ -124,7 +125,8 @@ export const SingleCard = () => {
           setCard(data.card)
           setStatuses(data.statuses)
           setPrints(data.prints)
-          setRulings(data.rulings)
+          setGenericRulings(data.genericRulings)
+          setSpecificRulings(data.specificRulings)
         } catch (err) {
           console.log(err)
           setCard(null)
@@ -349,19 +351,19 @@ export const SingleCard = () => {
               </div>
 
               <div className="prints-flexbox">
-                {rulings.genericRulings && rulings.genericRulings.length ? (
+                {genericRulings.length ? (
                     <div>
                         <div>Generic Rulings:</div>
                         <div>
-                            {rulings.genericRulings.map((ruling) => <li>{ruling.conent}</li>)}
+                            {genericRulings.map((ruling) => <li>{ruling.conent}</li>)}
                         </div>
                     </div>
                 ) : ''}
                 <div> 
-                    {rulings.specificRulings && Object.keys(rulings.specificRulings).length ? (
+                    {Object.keys(specificRulings).length ? (
                         <div>
                             {
-                                Object.entries(rulings.specificRulings.map((entry) => {
+                                Object.entries(specificRulings.map((entry) => {
                                     return (
                                         <div>
                                             <div>{entry[0] + 'Rulings'}</div>
