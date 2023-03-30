@@ -111,9 +111,9 @@ export const cardsId = async (req, res, next) => {
     const specificRulings = {}
 
     for (let i = 0; i < additionalRulings.length; i++) {
-        const ruling = specificRulings[i]
-        const formatName = ruling.formatName
-        specificRulings[formatName] ? specificRulings[formatName] = [...specificRulings[formatName], ruling] : specificRulings[formatName] = [ruling]
+        const additionalRuling = additionalRulings[i]
+        const formatName = additionalRuling.formatName
+        specificRulings[formatName] ? specificRulings[formatName] = [...specificRulings[formatName], additionalRuling] : specificRulings[formatName] = [additionalRuling]
     }
 
     const info = {
