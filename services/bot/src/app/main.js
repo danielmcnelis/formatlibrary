@@ -121,6 +121,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 // SELECT MENUS
 client.on(Events.InteractionCreate, async (interaction) => {
+    console.log('interaction', interaction)
+    console.log('interaction.isStringSelectMenu()', interaction.isStringSelectMenu())
 	if (!interaction.isStringSelectMenu()) return
 
     const commandName = interaction.commandName || interaction.message.interaction.commandName
@@ -154,6 +156,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             await openTournament(interaction, tournamentId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'join') {
+            console.log('join')
             const userId = interaction.message.components[0].components[0].data.custom_id
             if (userId !== interaction.member.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
