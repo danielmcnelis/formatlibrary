@@ -349,19 +349,19 @@ export const SingleCard = () => {
               </div>
 
               <div className="prints-flexbox">
-                {rulings?.genericRulings.length ? (
+                {rulings.genericRulings && rulings.genericRulings.length ? (
                     <div>
                         <div>Generic Rulings:</div>
                         <div>
-                            {rulings?.genericRulings.map((ruling) => <li>{ruling.conent}</li>)}
+                            {rulings.genericRulings.map((ruling) => <li>{ruling.conent}</li>)}
                         </div>
                     </div>
                 ) : ''}
                 <div> 
-                    {Object.keys(rulings?.specificRulings).length ? (
+                    {rulings.specificRulings && Object.keys(rulings.specificRulings).length ? (
                         <div>
                             {
-                                Object.entries(rulings?.specificRulings.map((entry) => {
+                                Object.entries(rulings.specificRulings.map((entry) => {
                                     return (
                                         <div>
                                             <div>{entry[0] + 'Rulings'}</div>
