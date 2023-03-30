@@ -12,10 +12,10 @@ export const Ruling = db.define('rulings', {
     content: {
         type: Sequelize.TEXT
     },
-    effectiveDate: {
+    formatName: {
         type: Sequelize.STRING
     },
-    expirationDate: {
-        type: Sequelize.STRING
+    formatId: {
+        type: Sequelize.INTEGER
     }
 })

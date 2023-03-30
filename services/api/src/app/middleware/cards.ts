@@ -1,4 +1,4 @@
-import { Card, Print, Ruling, Set, Status } from '@fl/models'
+import { Card, Format, Print, Ruling, Set, Status } from '@fl/models'
 import { Op } from 'sequelize'
 import * as fs from 'fs'
 
@@ -90,19 +90,38 @@ export const cardsId = async (req, res, next) => {
       order: [[Set, 'tcgDate', 'ASC']]
     })
 
-    const rulings = await Ruling.findAll({
+    const genericRulings = await Ruling.findAll({
         where: {
-          cardId: card.id
+          cardId: card.id,
+          formatId: null
         },
-        attributes: { exclude: ['createdAt', 'updatedAt'] },
-        order: [['expirationDate', 'DESC'], ['effectiveDate', 'DESC']]
+        attributes: { exclude: ['createdAt', 'updatedAt'] }
       })
+
+    const additionalRulings = await Ruling.findAll({
+        where: {
+          cardId: card.id,
+          formatId: {[Op.not]: null}
+        },
+        include: Format,
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        order: [[Format, 'date', 'DESC']]
+      })
+
+    const specificRulings = {}
+
+    for (let i = 0; i < additionalRulings.length; i++) {
+        const ruling = specificRulings[i]
+        const formatName = ruling.formatName
+        specificRulings[formatName] ? specificRulings[formatName] = [...specificRulings[formatName], ruling] : specificRulings[formatName] = [ruling]
+    }
 
     const info = {
       card: card,
       statuses: Object.fromEntries(statuses),
       prints: prints || [],
-      rulings: rulings || []
+      genericRulings: genericRulings || [],
+      specificRulings: specificRulings || {}
     }
 
     res.json(info)

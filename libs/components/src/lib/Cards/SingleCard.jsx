@@ -350,13 +350,31 @@ export const SingleCard = () => {
               </div>
 
               <div className="prints-flexbox">
-                <div>Rulings:</div>
-                <div className="print-box">
-                  <table>
-                    <tbody>
-                      {rulings.map((ruling, index) => <RulingRow key={ruling.id} index={index} ruling={ruling}/>)}
-                    </tbody>
-                  </table>
+                {rulings?.genericRulings.length ? (
+                    <div>
+                        <div>Generic Rulings:</div>
+                        <div>
+                            {rulings?.genericRulings.map((ruling) => <li>{ruling.conent}</li>)}
+                        </div>
+                    </div>
+                ) : ''}
+                <div> 
+                    {Object.keys(rulings?.specificRulings).length ? (
+                        <div>
+                            {
+                                Object.entries(rulings?.specificRulings.map((entry) => {
+                                    return (
+                                        <div>
+                                            <div>{entry[0] + 'Rulings'}</div>
+                                            {
+                                                entry[1].map((ruling) => (<li>{ruling.conent}</li>))
+                                            }
+                                        </div>
+                                    )
+                                }))
+                            }
+                        </div>
+                    ) : ''}
                 </div>
               </div>
               <div>

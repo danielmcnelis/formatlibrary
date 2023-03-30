@@ -186,6 +186,9 @@ Role.belongsTo(Membership)
 Membership.hasMany(Role)
 
 //RULING
+Ruling.belongsTo(Format)
+Format.hasMany(Ruling)
+
 Ruling.belongsTo(Card)
 Card.hasMany(Ruling)
 
