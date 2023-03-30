@@ -121,12 +121,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 // SELECT MENUS
 client.on(Events.InteractionCreate, async (interaction) => {
-    console.log('interaction', interaction)
-    console.log('Object.getOwnPropertyNames(interaction)', Object.getOwnPropertyNames(interaction))
-    console.log('interaction.isSelectMenu()', interaction.isSelectMenu())
-    console.log('interaction.isSelectMenu', interaction.isSelectMenu)
-    console.log('interaction.isStringSelectMenu()', interaction.isStringSelectMenu())
-    console.log('interaction.isStringSelectMenu', interaction.isStringSelectMenu)
 	if (!interaction.isStringSelectMenu()) return
 
     const commandName = interaction.commandName || interaction.message.interaction.commandName
