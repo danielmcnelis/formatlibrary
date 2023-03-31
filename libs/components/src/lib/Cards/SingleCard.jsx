@@ -7,6 +7,7 @@ import { NotFound } from '../General/NotFound'
 import { PrintRow } from './PrintRow'
 import { StatusBox } from './StatusBar'
 import { dateToVerbose, getCookie } from '@fl/utils'
+import './SingleCard.css'
 
 const banlists = [
   ['may02', '2002-05-01'],
@@ -365,10 +366,11 @@ export const SingleCard = () => {
                                 Object.entries(rulings.specific).map((entry) => {
                                     return (
                                         <div>
-                                            <div>{entry[0] + 'Rulings'}</div>
+                                            <div>{entry[0] + ' Format Rulings:'}</div>
                                             {
-                                                entry[1].map((ruling) => (<li>{ruling.content}</li>))
+                                                entry[1].map((ruling) => (<li className="ruling">{ruling.content}</li>))
                                             }
+                                            <br/>
                                         </div>
                                     )
                                 })

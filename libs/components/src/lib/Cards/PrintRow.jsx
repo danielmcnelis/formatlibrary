@@ -8,7 +8,7 @@ export const PrintRow = (props) => {
     `https://store.tcgplayer.com/yugioh/${urlize(print.setName)}/${urlize(print.cardName)}?utm_campaign=affiliate&utm_medium=FormatLibrary&utm_source=FormatLibrary`
   const openNewTab = () => window.open(tcgPlayerUrl, "_blank")
   const id = print.rarity === '10000 Secret Rare' ? 'tenThousandSecretRare' : camelize(print.rarity)
-  
+  const prices = [print.unlimPrice, print.firstPrice, print.limPrice].filter((e) => !!e)
 
   return (
     <tr onClick={() => openNewTab()} className={`${evenOrOdd}-print-row`}>
@@ -29,6 +29,9 @@ export const PrintRow = (props) => {
           <div className="mobile-only">
             {dateToSimple(print.set.tcgDate)}
           </div>
+        </td>
+        <td className="print-cell-6">
+            {'$' + Math.min(...prices)}
         </td>
     </tr>
   )
