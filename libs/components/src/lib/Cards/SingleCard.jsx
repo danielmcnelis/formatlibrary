@@ -87,7 +87,7 @@ export const SingleCard = () => {
     const [isAdmin, setIsAdmin] = useState(false)
     const { id } = useParams()
     console.log('rulings', rulings)
-    console.log('Object.entries(rulings?.specific)', Object.entries(rulings?.specific))
+    if (rulings && rulings.specific) console.log('Object.entries(rulings?.specific)', Object.entries(rulings?.specific))
   
       // DOWNLOAD CARD IMAGE
       const downloadCardImage = async () => {
@@ -360,7 +360,7 @@ export const SingleCard = () => {
                     </div>
                 ) : ''}
                 <div> 
-                    {Object.keys(rulings?.specific).length ? (
+                    {rulings && rulings.specific && Object.keys(rulings?.specific).length ? (
                         <div>
                             {
                                 Object.entries(rulings?.specific?.map((entry) => {
