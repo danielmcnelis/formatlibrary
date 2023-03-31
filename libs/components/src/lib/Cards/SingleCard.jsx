@@ -355,8 +355,9 @@ export const SingleCard = () => {
                     <div>
                         <div>Generic Rulings:</div>
                         <div>
-                            {rulings.generic.map((ruling) => <li>{ruling.content}</li>)}
+                            {rulings.generic.map((ruling) => <li className="ruling">{ruling.content}</li>)}
                         </div>
+                        <br/>
                     </div>
                 ) : ''}
                 <div> 
