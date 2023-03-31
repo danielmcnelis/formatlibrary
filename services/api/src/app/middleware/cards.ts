@@ -105,7 +105,7 @@ export const cardsId = async (req, res, next) => {
         },
         include: Format,
         attributes: { exclude: ['createdAt', 'updatedAt'] },
-        order: [[Format, 'date', 'DESC']]
+        order: [[Format, 'date', 'ASC']]
       })
 
     const specificRulings = {}
