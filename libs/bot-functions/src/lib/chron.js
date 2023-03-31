@@ -376,6 +376,8 @@ export const updateDeckTypes = async (client) => {
 
 // UPDATE MARKET PRICES
 export const updateMarketPrices = async () => {
+    let b = 0 
+    let c = 0
     const prints = await Print.findAll({
         where: {
             tcgPlayerProductId: {[Op.not]: null}
@@ -413,22 +415,19 @@ export const updateMarketPrices = async () => {
     
             if (recentPrice && recentPrice.usd === result.marketPrice) {
                 console.log(`no change in market price for print: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${result.subTypeName} - $${result.marketPrice}`)
+                c++
                 continue
             } else {
                 try {
                     await print.update({ [priceType]: result.marketPrice })
-                } catch (err) {
-                    console.log(err)
-                }
-    
-                try {
                     await Price.create({
                         usd: result.marketPrice,
                         edition: result.subTypeName,
                         source: 'TCGplayer',
                         printId: print.id
                     }) 
-    
+
+                    b++
                     console.log(`saved market price for print: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${result.subTypeName} - $${result.marketPrice}`)
                 } catch (err) {
                     console.log(err)
@@ -436,6 +435,9 @@ export const updateMarketPrices = async () => {
             }
         }
     }
+
+    console.log(`created ${b} new prices and checked ${c} other(s)`)
+    return setTimeout(() => updateMarketPrices(), (24 * 60 * 60 * 1000))
 }
 
 // UPDATE PRINTS
