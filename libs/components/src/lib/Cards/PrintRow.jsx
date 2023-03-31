@@ -9,10 +9,13 @@ export const PrintRow = (props) => {
   const openNewTab = () => window.open(tcgPlayerUrl, "_blank")
   const id = print.rarity === '10000 Secret Rare' ? 'tenThousandSecretRare' : camelize(print.rarity)
   const prices = [print.unlimPrice, print.firstPrice, print.limPrice].filter((e) => !!e)
-  const minPrice = Math.min(...prices) ? '$' + Math.min(...prices) : 'N/A'
+  const minPrice = Math.min(...prices) ? '$' + Math.min(...prices) : '?'
 
   return (
     <tr onClick={() => openNewTab()} className={`${evenOrOdd}-print-row`}>
+        <td className="print-cell-6">
+            {minPrice}
+        </td>
         <td className="rarity-cell" id={id}/>
         <td className="print-cell-2">
             {print.rarity}
@@ -30,9 +33,6 @@ export const PrintRow = (props) => {
           <div className="mobile-only">
             {dateToSimple(print.set.tcgDate)}
           </div>
-        </td>
-        <td className="print-cell-6">
-            {minPrice}
         </td>
     </tr>
   )
