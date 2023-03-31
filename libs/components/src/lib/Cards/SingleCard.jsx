@@ -87,6 +87,8 @@ export const SingleCard = () => {
     const [specificRulings, setSpecificRulings] = useState({})
     const [isAdmin, setIsAdmin] = useState(false)
     const { id } = useParams()
+    console.log('specificRulings', specificRulings)
+    console.log('genericRulings', genericRulings)
   
       // DOWNLOAD CARD IMAGE
       const downloadCardImage = async () => {
@@ -125,8 +127,8 @@ export const SingleCard = () => {
           setCard(data.card)
           setStatuses(data.statuses)
           setPrints(data.prints)
-          setGenericRulings(data.genericRulings)
-          setSpecificRulings(data.specificRulings)
+          setGenericRulings(data.rulings.genericRulings)
+          setSpecificRulings(data.rulings.specificRulings)
         } catch (err) {
           console.log(err)
           setCard(null)
