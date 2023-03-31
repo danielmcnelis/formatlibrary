@@ -366,7 +366,7 @@ export const SingleCard = () => {
                                 Object.entries(rulings.specific).map((entry) => {
                                     return (
                                         <div>
-                                            <div>{entry[0] + ' Format Rulings:'}</div>
+                                            <div>{entry[0] + ' Rulings:'}</div>
                                             {
                                                 entry[1].map((ruling) => (<li className="ruling">{ruling.content}</li>))
                                             }
