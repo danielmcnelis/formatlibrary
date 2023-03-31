@@ -364,6 +364,8 @@ export const SingleCard = () => {
                         <div>
                             {
                                 Object.entries(rulings.specific.map((entry) => {
+                                    console.log(entry[0] + 'Rulings')
+                                    console.log(entry[1])
                                     return (
                                         <div>
                                             <div>{entry[0] + 'Rulings'}</div>
