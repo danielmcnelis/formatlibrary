@@ -83,12 +83,10 @@ export const SingleCard = () => {
     const [card, setCard] = useState({})
     const [statuses, setStatuses] = useState({})
     const [prints, setPrints] = useState([])
-    const [genericRulings, setGenericRulings] = useState([])
-    const [specificRulings, setSpecificRulings] = useState({})
+    const [rulings, setRulings] = useState({})
     const [isAdmin, setIsAdmin] = useState(false)
     const { id } = useParams()
-    console.log('specificRulings', specificRulings)
-    console.log('genericRulings', genericRulings)
+    console.log('rulings', rulings)
   
       // DOWNLOAD CARD IMAGE
       const downloadCardImage = async () => {
@@ -127,8 +125,7 @@ export const SingleCard = () => {
           setCard(data.card)
           setStatuses(data.statuses)
           setPrints(data.prints)
-          setGenericRulings(data.rulings.genericRulings)
-          setSpecificRulings(data.rulings.specificRulings)
+          setRulings(data.rulings)
         } catch (err) {
           console.log(err)
           setCard(null)
@@ -353,19 +350,19 @@ export const SingleCard = () => {
               </div>
 
               <div className="prints-flexbox">
-                {genericRulings.length ? (
+                {rulings?.generic?.length ? (
                     <div>
                         <div>Generic Rulings:</div>
                         <div>
-                            {genericRulings.map((ruling) => <li>{ruling.conent}</li>)}
+                            {rulings.generic.map((ruling) => <li>{ruling.conent}</li>)}
                         </div>
                     </div>
                 ) : ''}
                 <div> 
-                    {Object.keys(specificRulings).length ? (
+                    {Object.keys(rulings?.specific).length ? (
                         <div>
                             {
-                                Object.entries(specificRulings.map((entry) => {
+                                Object.entries(rulings.specific.map((entry) => {
                                     return (
                                         <div>
                                             <div>{entry[0] + 'Rulings'}</div>

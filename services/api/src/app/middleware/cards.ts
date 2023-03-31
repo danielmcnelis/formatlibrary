@@ -120,8 +120,10 @@ export const cardsId = async (req, res, next) => {
       card: card,
       statuses: Object.fromEntries(statuses),
       prints: prints || [],
-      genericRulings: genericRulings || [],
-      specificRulings: specificRulings || {}
+      rulings: {
+        generic: genericRulings || [],
+        specific: specificRulings || {}
+      }
     }
 
     res.json(info)
