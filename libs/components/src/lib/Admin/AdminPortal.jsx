@@ -11,7 +11,6 @@ import { NotFound } from '../General/NotFound'
 import { getCookie } from '@fl/utils'
 import axios from 'axios'
 
-
 const playerId = getCookie('playerId')
 
 export const AdminPortal = () => {

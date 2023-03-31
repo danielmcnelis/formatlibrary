@@ -6,7 +6,7 @@ import axios from 'axios'
 import { NotFound } from '../General/NotFound'
 import { PrintRow } from './PrintRow'
 import { StatusBox } from './StatusBar'
-import { dateToVerbose } from '@fl/utils'
+import { dateToVerbose, getCookie } from '@fl/utils'
 
 const banlists = [
   ['may02', '2002-05-01'],
@@ -78,23 +78,41 @@ const banlists = [
   ['oct22', '2022-10-01']
 ]
 
-// eslint-disable-next-line complexity
+const playerId = getCookie('playerId')
+
 export const SingleCard = () => {
+    const [isAdmin, setIsAdmin] = useState(false)
     const [card, setCard] = useState({})
     const [statuses, setStatuses] = useState({})
     const [prints, setPrints] = useState([])
     const [rulings, setRulings] = useState({})
     const { id } = useParams()
-  
-      // DOWNLOAD CARD IMAGE
-      const downloadCardImage = async () => {
-          try {
-              const {data} = await axios.post(`/api/images/update-card?ypdId=${card.ypdId}`)
-              if (data.success) alert(`Success! New Image: /images/cards/${card.ypdId}`)
-          } catch (err) {
-              console.log(err)
-          }
-      }
+    
+    // USE EFFECT
+    useEffect(() => {
+        const checkIfAdmin = async () => {
+        try {
+            const { status } = await axios.get(`/api/players/admin/${playerId}`)
+            if (status === 200) {
+            setIsAdmin(true)
+            }
+        } catch (err) {
+            console.log(err)
+        }
+        }
+
+        checkIfAdmin()
+    }, [])
+    
+    // DOWNLOAD CARD IMAGE
+    const downloadCardImage = async () => {
+        try {
+            const {data} = await axios.post(`/api/images/update-card?ypdId=${card.ypdId}`)
+            if (data.success) alert(`Success! New Image: /images/cards/${card.ypdId}`)
+        } catch (err) {
+            console.log(err)
+        }
+    }
   
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0))
