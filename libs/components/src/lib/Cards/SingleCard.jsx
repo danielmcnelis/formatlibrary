@@ -360,10 +360,10 @@ export const SingleCard = () => {
                     </div>
                 ) : ''}
                 <div> 
-                    {rulings && rulings.specific && Object.keys(rulings?.specific).length ? (
+                    {rulings && rulings.specific && Object.keys(rulings.specific).length ? (
                         <div>
                             {
-                                Object.entries(rulings?.specific?.map((entry) => {
+                                Object.entries(rulings.specific.map((entry) => {
                                     return (
                                         <div>
                                             <div>{entry[0] + 'Rulings'}</div>
