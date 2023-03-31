@@ -84,10 +84,7 @@ export const SingleCard = () => {
     const [statuses, setStatuses] = useState({})
     const [prints, setPrints] = useState([])
     const [rulings, setRulings] = useState({})
-    const [isAdmin, setIsAdmin] = useState(false)
     const { id } = useParams()
-    console.log('rulings', rulings)
-    if (rulings && rulings.specific) console.log('Object.entries(rulings?.specific)', Object.entries(rulings?.specific))
   
       // DOWNLOAD CARD IMAGE
       const downloadCardImage = async () => {
@@ -98,22 +95,6 @@ export const SingleCard = () => {
               console.log(err)
           }
       }
-  
-      // USE EFFECT
-      useEffect(() => {
-          const checkIfAdmin = async () => {
-            //   const {data} = await axios.get(`/authX/admin`, {
-            //       headers: {
-            //           username: localStorage.getItem('username'),
-            //           password: localStorage.getItem('password')
-            //       }
-            //   })
-              
-              setIsAdmin(true)
-          }
-          
-          checkIfAdmin()
-      }, [])
   
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0))
@@ -355,7 +336,7 @@ export const SingleCard = () => {
                     <div>
                         <div>Generic Rulings:</div>
                         <div>
-                            {rulings.generic.map((ruling) => <li>{ruling.conent}</li>)}
+                            {rulings.generic.map((ruling) => <li>{ruling.content}</li>)}
                         </div>
                     </div>
                 ) : ''}
@@ -363,18 +344,16 @@ export const SingleCard = () => {
                     {rulings && rulings.specific && Object.keys(rulings.specific).length ? (
                         <div>
                             {
-                                Object.entries(rulings.specific.map((entry) => {
-                                    console.log(entry[0] + 'Rulings')
-                                    console.log(entry[1])
+                                Object.entries(rulings.specific).map((entry) => {
                                     return (
                                         <div>
                                             <div>{entry[0] + 'Rulings'}</div>
                                             {
-                                                entry[1].map((ruling) => (<li>{ruling.conent}</li>))
+                                                entry[1].map((ruling) => (<li>{ruling.content}</li>))
                                             }
                                         </div>
                                     )
-                                }))
+                                })
                             }
                         </div>
                     ) : ''}
