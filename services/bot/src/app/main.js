@@ -12,7 +12,7 @@ import { Membership, Player, Server } from '@fl/models'
 
 // FUNCTION IMPORTS
 import { assignTourRoles, conductCensus, downloadNewCards, getMidnightCountdown, markInactives, purgeEntries, 
-    purgeRatedDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateSets, updateServers, fixDeckFolder,
+    purgeRatedDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices ,updateSets, updateServers, fixDeckFolder,
     calculateStandings, checkTimer, closeTournament, createTournament, dropFromTournament, initiateStartTournament, 
     joinTournament, openTournament, processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, 
     signupForTournament, startTournament, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, 
@@ -52,10 +52,11 @@ client.on('ready', async() => {
     setTimeout(() => updateServers(client), midnightCountdown + (0.8 * 60 * 1000))
     setTimeout(() => updateSets(), midnightCountdown + (1 * 60 * 1000))
     setTimeout(() => downloadNewCards(), midnightCountdown + (2 * 60 * 1000))
-    setTimeout(() => conductCensus(client), midnightCountdown + (3 * 60 * 1000))
-    setTimeout(() => updateAvatars(client), midnightCountdown + (10 * 60 * 1000))
-    setTimeout(() => purgeRatedDecks(), midnightCountdown + (12 * 60 * 1000))
-    setTimeout(() => updateDeckTypes(client), midnightCountdown + (12.2 * 60 * 1000))
+    setTimeout(() => updateMarketPrices(), midnightCountdown + (3 * 60 * 1000))
+    setTimeout(() => conductCensus(client), midnightCountdown + (4 * 60 * 1000))
+    setTimeout(() => updateAvatars(client), midnightCountdown + (11 * 60 * 1000))
+    setTimeout(() => purgeRatedDecks(), midnightCountdown + (13 * 60 * 1000))
+    setTimeout(() => updateDeckTypes(client), midnightCountdown + (13.2 * 60 * 1000))
 })
 
 client.on(Events.InteractionCreate, async interaction => {

@@ -375,54 +375,64 @@ export const updateDeckTypes = async (client) => {
 }
 
 // UPDATE MARKET PRICES
-export const updateMarketPrices = async (print) => {
-    const endpoint = `https://api.tcgplayer.com/pricing/product/${print.tcgPlayerProductId}`
-    const { data } = await axios.get(endpoint, {
-        headers: {
-            "Accept": "application/json",
-            "Authorization": `bearer ${config.tcgPlayer.accessToken}`
+export const updateMarketPrices = async () => {
+    const prints = await Print.findAll({
+        where: {
+            tcgPlayerProductId: {[Op.not]: null}
         }
     })
 
-    for (let i = 0; i < data.results.length; i++) {
-        const result = data.results[i]
-        if (!result.marketPrice) continue
+    for (let i = 0; i < prints.length; i++) {
+        const print = prints[i]
 
-        const priceType = result.subTypeName === 'Unlimited' ? 'unlimPrice' :
-            result.subTypeName === '1st Edition' ? 'firstPrice' :
-            result.subTypeName === 'Limited' ? 'limPrice' :
-            null
-
-        const recentPrice = await Price.findOne({
-            where: {
-                printId: print.id,
-                source: 'TCGplayer',
-                edition: result.subTypeName
-            },
-            order: [['createdAt', 'DESC']]
-        })
-
-        if (recentPrice && recentPrice.usd === result.marketPrice) {
-            console.log(`no change in market price for print: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${result.subTypeName} - $${result.marketPrice}`)
-            continue
-        } else {
-            try {
-                await print.update({ [priceType]: result.marketPrice })
-            } catch (err) {
-                console.log(err)
+        const endpoint = `https://api.tcgplayer.com/pricing/product/${print.tcgPlayerProductId}`
+        const { data } = await axios.get(endpoint, {
+            headers: {
+                "Accept": "application/json",
+                "Authorization": `bearer ${config.tcgPlayer.accessToken}`
             }
-
-            try {
-                await Price.create({
-                    usd: result.marketPrice,
-                    edition: result.subTypeName,
+        })
+    
+        for (let i = 0; i < data.results.length; i++) {
+            const result = data.results[i]
+            if (!result.marketPrice) continue
+    
+            const priceType = result.subTypeName === 'Unlimited' ? 'unlimPrice' :
+                result.subTypeName === '1st Edition' ? 'firstPrice' :
+                result.subTypeName === 'Limited' ? 'limPrice' :
+                null
+    
+            const recentPrice = await Price.findOne({
+                where: {
+                    printId: print.id,
                     source: 'TCGplayer',
-                    printId: print.id
-                }) 
-
-                console.log(`saved market price for print: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${result.subTypeName} - $${result.marketPrice}`)
-            } catch (err) {
-                console.log(err)
+                    edition: result.subTypeName
+                },
+                order: [['createdAt', 'DESC']]
+            })
+    
+            if (recentPrice && recentPrice.usd === result.marketPrice) {
+                console.log(`no change in market price for print: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${result.subTypeName} - $${result.marketPrice}`)
+                continue
+            } else {
+                try {
+                    await print.update({ [priceType]: result.marketPrice })
+                } catch (err) {
+                    console.log(err)
+                }
+    
+                try {
+                    await Price.create({
+                        usd: result.marketPrice,
+                        edition: result.subTypeName,
+                        source: 'TCGplayer',
+                        printId: print.id
+                    }) 
+    
+                    console.log(`saved market price for print: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${result.subTypeName} - $${result.marketPrice}`)
+                } catch (err) {
+                    console.log(err)
+                }
             }
         }
     }
@@ -483,15 +493,6 @@ export const updatePrints = async (set, groupId) => {
 
                     b++
                     console.log(`created new print: ${print.rarity} ${print.cardCode} - ${print.cardName} (productId: ${print.tcgPlayerProductId})`)
-                    await updateMarketPrices(print)
-                } else {
-                    const print = await Print.findOne({
-                        where: {
-                            tcgPlayerProductId: result.productId
-                        }
-                    })
-
-                    await updateMarketPrices(print)
                 }
             }
         } catch (err) {
