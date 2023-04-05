@@ -98,7 +98,7 @@ export const StatsRow = (props) => {
             </td>
             <td className="leaderboard-cell-5">{wins}</td>
             <td className="leaderboard-cell-6">{losses}</td>
-            <td className="leaderboard-cell-7">{(Math.round(1000 * wins / (wins + losses))/10).toFixed(1)}%</td>
+            <td className="leaderboard-cell-7">{(Math.round(1000 * wins / (wins + losses))/10).toFixed(2)}%</td>
         </tr>
     )
 }

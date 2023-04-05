@@ -9,7 +9,7 @@ export const PrintRow = (props) => {
   const openNewTab = () => window.open(tcgPlayerUrl, "_blank")
   const id = print.rarity === '10000 Secret Rare' ? 'tenThousandSecretRare' : camelize(print.rarity)
   const prices = [print.unlimPrice, print.firstPrice, print.limPrice].filter((e) => !!e)
-  const minPrice = prices.length ? '$' + Math.min(...prices) : 'N/A'
+  const minPrice = prices.length ? '$' + Math.min(...prices).toFixed(2) : 'N/A'
 
   return (
     <tr onClick={() => openNewTab()} className={`${evenOrOdd}-print-row`}>
