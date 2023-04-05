@@ -13,7 +13,7 @@ export const PrintRow = (props) => {
 
   return (
     <tr onClick={() => openNewTab()} className={`${evenOrOdd}-print-row`}>
-        <td className="print-cell-6">
+        <td className="print-cell-1">
             {minPrice}
         </td>
         <td className="rarity-cell" id={id}/>
@@ -24,7 +24,9 @@ export const PrintRow = (props) => {
             {print.cardCode}
         </td>
         <td className="print-cell-4">
-            {print.setName}
+            <div className="desktop-only">
+                {print.setName}
+            </div>
         </td>
         <td className="print-cell-5">
           <div className="desktop-only">
