@@ -623,7 +623,7 @@ export const downloadCardImage = async (id) => {
 export const downloadCardArtworks = async () => {
     const cards = await Card.findAll()
     for (let i = 0; i < cards.length; i++) {
-        const {id} = cards[i]
+        const {ypdId: id} = cards[i]
         const {data} = await axios({
             method: 'GET',
             url: `https://images.ygoprodeck.com/images/cards_cropped/${id}.jpg`,
