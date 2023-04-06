@@ -5,7 +5,6 @@ import { removeParticipant, removeTeam, selectTournament } from '@fl/bot-functio
 import { hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
-import e from 'express'
 
 export default {
 	data: new SlashCommandBuilder()
