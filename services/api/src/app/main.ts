@@ -21,15 +21,13 @@ import { config } from '@fl/config'
 
 const app = express()
 
-if (config.siteProxy === 'true') {
-    // rewrite
-    app.use('/api', (req, _res, next) => {
-        const from = req.url
-        const to = from.replace(/\/api\//g, '/')
-        req.url = to
-        next()
-    })
-}
+// rewrite
+app.use('/api', (req, _res, next) => {
+    const from = req.url
+    const to = from.replace(/\/api\//g, '/')
+    req.url = to
+    next()
+})
   
 // logging
 app.use(morgan('dev'))

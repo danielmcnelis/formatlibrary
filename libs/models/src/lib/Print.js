@@ -18,20 +18,16 @@ export const Print = db.define('prints', {
     type: Sequelize.BOOLEAN
   },
   marketPrice: {
-    type: Sequelize.FLOAT,
-    defaultValue: 0.0
+    type: Sequelize.FLOAT
   },
   unlimPrice: {
-    type: Sequelize.FLOAT,
-    defaultValue: 0.0
+    type: Sequelize.FLOAT
   },
   firstPrice: {
-    type: Sequelize.FLOAT,
-    defaultValue: 0.0
+    type: Sequelize.FLOAT
   },
   limPrice: {
-    type: Sequelize.FLOAT,
-    defaultValue: 0.0
+    type: Sequelize.FLOAT
   },
   tcgPlayerProductId: {
     type: Sequelize.INTEGER

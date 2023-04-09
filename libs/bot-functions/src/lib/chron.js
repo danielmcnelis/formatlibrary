@@ -6,16 +6,13 @@ import { createMembership, createPlayer } from './utility'
 import { Op } from 'sequelize'
 import { S3 } from 'aws-sdk'
 import { config } from '@fl/config'
-console.log('config.tcgPlayer.accessToken', config.tcgPlayer.accessToken)
 
 // GET MIDNIGHT COUNTDOWN
 export const getMidnightCountdown = () => {
 	const date = new Date()
-	const hours = date.getHours()
-	const mins = date.getMinutes()
-	const minsLeftInPeriod = 60 - mins
-	const hoursLeftInPeriod = 23 - hours
-    return ( hoursLeftInPeriod * 60 + minsLeftInPeriod ) * 60 * 1000
+	const remainingMinutes = 60 - date.getMinutes()
+	const remainingHours = 23 - date.getHours()
+    return ( remainingHours * 60 + remainingMinutes ) * 60 * 1000
 }
 
 // UPDATE AVATARS

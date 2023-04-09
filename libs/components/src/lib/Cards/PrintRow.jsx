@@ -17,16 +17,14 @@ export const PrintRow = (props) => {
             {minPrice}
         </td>
         <td className="rarity-cell" id={id}/>
-        <td className="print-cell-2">
+        <td className="print-cell-2 desktop-only">
             {print.rarity}
         </td>
         <td className="print-cell-3">
             {print.cardCode}
         </td>
-        <td className="print-cell-4">
-            <div className="desktop-only">
-                {print.setName}
-            </div>
+        <td className="print-cell-4 desktop-only">
+            {print.setName}
         </td>
         <td className="print-cell-5">
           <div className="desktop-only">

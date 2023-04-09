@@ -3057,7 +3057,7 @@
       padding: 6px;
     }
   
-    .print-box table tr th:nth-child(2), .print-box table tr td:nth-child(2),
+    /* .print-box table tr th:nth-child(2), .print-box table tr td:nth-child(2),
     .print-box table tr th:nth-child(3), .print-box table tr td:nth-child(3) {
       display: none;
     }
@@ -3073,7 +3073,7 @@
     .print-box table tr th:nth-child(5), .print-box table tr td:nth-child(5) {
       width: 23%;
       text-align: center;
-    }
+    } */
   }
   
   /* MEDIUM AND LARGE CELL PHONES */
