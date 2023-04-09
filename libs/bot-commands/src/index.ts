@@ -100,7 +100,6 @@ export default {
     standings,
     start,
     stats,
-    story,
     team,
     teams,
     test,
