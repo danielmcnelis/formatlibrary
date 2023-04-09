@@ -10,7 +10,7 @@ export default {
         .setName('teams')
         .setDescription('View list of teams. 📋'),
     async execute(interaction) {
-        return interaction.reply(emojis.yellow)
+        // return interaction.reply(emojis.yellow)
         await interaction.deferReply()
 
         const server = !interaction.guildId ? {} : 
@@ -63,14 +63,15 @@ export default {
             const playerB = await Player.findOne({ where: { id: team.playerBId }})
             const playerC = await Player.findOne({ where: { id: team.playerCId }})
 
-            const players = [playerA, playerB, playerC]
+            let players = []
+            // const players = [playerA, playerB, playerC]
 
-            // if (captain.id !== playerA.id) players.push(playerA)
-            // if (captain.id !== playerB.id) players.push(playerB)
-            // if (captain.id !== playerC.id) players.push(playerC)
+            if (captain.id !== playerA.id) players.push(playerA)
+            if (captain.id !== playerB.id) players.push(playerB)
+            if (captain.id !== playerC.id) players.push(playerC)
 
-            // players = shuffleArray(players)
-            // players.unshift(captain)
+            players = shuffleArray(players)
+            players.unshift(captain)
 
             for (let j = 0; j < players.length; j++) {
                 const slot = j === 0 ? 'A' : j === 1 ? 'B' : 'C'
