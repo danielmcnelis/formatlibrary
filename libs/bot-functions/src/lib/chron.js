@@ -105,10 +105,11 @@ export const conductCensus = async (client) => {
                 const member = members[i]
                 if (member.user.bot) continue
                 const player = await Player.findOne({ where: { discordId: member.user.id } })
-                if (player && ( player.name !== member.user.username || player.discriminator !== member.user.discriminator )) {
+                if (player && ( player.name !== member.user.username || player.discordName !== member.user.username || player.discriminator !== member.user.discriminator )) {
                     updateCount++
                     await player.update({
                         name: member.user.username,
+                        discordName: member.user.username,
                         discriminator: member.user.discriminator
                     })
                 } else if (!player && !member.user.bot) {
