@@ -10,9 +10,7 @@ export default {
         .setDescription('Performs a test. 🧪'),
     async execute(interaction) {
         if (isProgrammer(interaction.member)) {
-            console.log('interaction.member', interaction.member)
-            console.log('interaction?.member?.presence?.status', interaction?.member?.presence?.status)
-            // conductCensus(client)
+            conductCensus(client)
             await interaction.reply(emojis.yellow)
         } else {
             await interaction.reply('🧪')

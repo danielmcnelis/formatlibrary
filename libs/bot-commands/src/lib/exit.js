@@ -15,10 +15,10 @@ const getExitInformation = async (interaction, player) => {
     const results = []
     for (let i = 0; i < drops.length; i++) {
         try {
-            const format = drops[i]
-            const oldPool = await Pool.findOne({ where: { format: format, playerId: player.id } })
+            const formatName = drops[i]
+            const oldPool = await Pool.findOne({ where: { formatName: formatName, playerId: player.id } })
             await oldPool.destroy()
-            results.push(format)
+            results.push(formatName)
         } catch (err) {
             console.log(err)
         }

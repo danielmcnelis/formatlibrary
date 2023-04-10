@@ -178,6 +178,9 @@ Print.belongsTo(Set)
 Set.hasMany(Print)
 
 //RATED POOL
+Pool.belongsTo(Format)
+Format.hasMany(Pool)
+
 Pool.belongsTo(Player)
 Player.hasMany(Pool)
 

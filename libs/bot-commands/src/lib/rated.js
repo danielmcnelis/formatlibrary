@@ -101,7 +101,6 @@ const getRatedInformation = async (interaction, player) => {
     
     const count = await Pool.count({
         where: {
-            name: player.name,
             format: format.name,
             playerId: player.id
         }
@@ -109,13 +108,13 @@ const getRatedInformation = async (interaction, player) => {
 
     const pool = count ? await Pool.findOne({
         where: {
-            name: player.name,
-            format: format.name,
+            formatId: format.id,
             playerId: player.id
         }
     }) : await Pool.create({
         name: player.name,
-        format: format.name,
+        formatName: format.name,
+        formatId: format.id,
         status: 'pending',
         playerId: player.id
     })
@@ -125,7 +124,7 @@ const getRatedInformation = async (interaction, player) => {
             where: { 
                 playerId: {[Op.not]: player.id },
                 status: 'pending',
-                format: format.name
+                formatId: format.id
             },
             include: Player,
             order: [['createdAt', 'ASC']]

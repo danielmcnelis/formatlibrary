@@ -6,8 +6,11 @@ export const Pool = db.define('pools', {
     name: {
         type: Sequelize.STRING
     },
-    format: {
+    formatName: {
         type: Sequelize.STRING
+    },
+    formatId: {
+        type: Sequelize.INTEGER
     },
     status: {
         type: Sequelize.STRING,      

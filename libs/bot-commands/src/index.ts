@@ -25,6 +25,7 @@ import iron from './lib/iron'
 import join from './lib/join'
 import leaderboard from './lib/leaderboard'
 import legal from './lib/legal'
+import lobby from './lib/lobby'
 import loss from './lib/loss'
 import manual from './lib/manual'
 import mod from './lib/mod'
@@ -79,6 +80,7 @@ export default {
     join,
     leaderboard,
     legal,
+    lobby,
     loss,
     manual,
     mod,
@@ -107,6 +109,3 @@ export default {
     trivia,
     undo
 }
-  
-
-// export * from './lib/lib/'
