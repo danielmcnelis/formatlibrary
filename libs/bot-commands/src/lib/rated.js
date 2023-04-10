@@ -101,7 +101,7 @@ const getRatedInformation = async (interaction, player) => {
     
     const count = await Pool.count({
         where: {
-            format: format.name,
+            formatId: format.id,
             playerId: player.id
         }
     })
