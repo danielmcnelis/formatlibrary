@@ -30,7 +30,7 @@ export default {
         if (!pools.length) {
             return await interaction.editReply({ content: `Nobody is actively using any Rated Lobby.` })
         } else {
-            return await interaction.editReply({ content: `Active Rated ${emojis.FL} Lobbies:${pools.join('\n')}`})
+            return await interaction.editReply({ content: `${emojis.FL} __**Active Rated Lobbies**__ ${emojis.FL}\n${pools.join('\n')}`})
         }
 	}
 }
