@@ -7,7 +7,7 @@ const getExitInformation = async (interaction, player) => {
     const oldPools = await Pool.findAll({ where: {  playerId: player.id } }) || []
     if (!oldPools.length) return await interaction.user.send(`You are not in any Rated Pools.`)
 
-    const pools = oldPools.map((p) => p.format)
+    const pools = oldPools.map((p) => p.formatName)
 
     const drops = await getDropFormats(interaction, pools)
     if (!drops || !drops.length) return await interaction.user.send(`Please specify a valid number.`)

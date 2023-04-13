@@ -1,8 +1,8 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { conductCensus, isProgrammer, downloadCardArtworks } from '@fl/bot-functions'
+import { isProgrammer, updateSets } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
-import { client } from '../client'
+// import { client } from '../client'
 
 export default {
     data: new SlashCommandBuilder()
@@ -10,7 +10,7 @@ export default {
         .setDescription('Performs a test. 🧪'),
     async execute(interaction) {
         if (isProgrammer(interaction.member)) {
-            conductCensus(client)
+            updateSets()
             await interaction.reply(emojis.yellow)
         } else {
             await interaction.reply('🧪')
