@@ -2,7 +2,7 @@
 import { Player, TriviaEntry, TriviaQuestion, TriviaKnowledge } from '@fl/models'
 const FuzzySet = require('fuzzyset')
 import { emojis } from '@fl/bot-emojis'
-const yescom = ['yes', 'ye', 'y', 'ya', 'yea', 'yeah', 'da', 'ja', 'si', 'ok', 'sure']
+// const yescom = ['yes', 'ye', 'y', 'ya', 'yea', 'yeah', 'da', 'ja', 'si', 'ok', 'sure']
 const triviaRole = '1085310457126060153'
 import { client } from '../client'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
@@ -113,21 +113,21 @@ export const getTriviaConfirmation = async (interaction, entry) => {
 }
 
 //HANDLE TRIVIA CONFIRMATION
-export const handleTriviaConfirmation = async (interaction, entry) => {
-    // const response = collected.first().content.toLowerCase()
-    // const count = await TriviaEntry.count({ where: { status: 'confirming' }})
-    // if (!count) return member.user.send({ content: `Sorry, time expired.` })
+export const handleTriviaConfirmation = async (interaction, entryId, confirmed) => {
+    const entry = await TriviaEntry.findOne({ where: { id: entryId }})
+    const count = await TriviaEntry.count({ where: { status: 'confirming' }})
+    if (!count) return interaction.channel.send({ content: `Sorry, time expired.` })
+    const triviaChannel = client.channels.cache.get('1085316454053838981')
 
-    // if (yescom.includes(response)) {
-    //     entry.confirmed = true
-    //     await entry.update({ confirmed: true })
-    //     member.user.send({ content: `Thanks! Please wait to see if enough players confirm. ${emojis.cultured}`})
-    //     return interaction.channel.send({ content: `${member.user.username} confirmed their participation in Trivia! 📚 🐛`})
-    // } else {
-    //     member.user.send({ content: `Okay, sorry to see you go!`})
-    //     return interaction.channel.send({ content: `Oof. ${member.user.username} ducked out of Trivia! 🦆`})
-    // }
-    return
+    if (confirmed) {
+        entry.confirmed = true
+        await entry.update({ confirmed: true })
+        interaction.channel.send({ content: `Thanks! Please wait to see if enough players confirm. ${emojis.cultured}`})
+        return triviaChannel.send({ content: `${entry.playerName} confirmed their participation in Trivia! 📚 🐛`})
+    } else {
+        interaction.channel.send({ content: `Okay, sorry to see you go!`})
+        return triviaChannel.send({ content: `Oof. ${entry.playerName} ducked out of Trivia! 🦆`})
+    }
 }
 
 //ASK QUESTION

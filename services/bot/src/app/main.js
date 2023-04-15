@@ -16,7 +16,7 @@ import { assignTourRoles, conductCensus, downloadNewCards, getMidnightCountdown,
     calculateStandings, checkTimer, closeTournament, createTournament, dropFromTournament, initiateStartTournament, 
     joinTournament, openTournament, processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, 
     signupForTournament, startTournament, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, 
-    hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, isNewUser, setTimers
+    hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
@@ -88,20 +88,31 @@ client.on(Events.InteractionCreate, async (interaction) => {
     interaction.message.edit({ components: [] })
     console.log('interaction', interaction)
 
-    const customId = interaction.customId
-    const toBeSeeded = customId.charAt(0) !== 'N'
-    const toBeShuffled = customId.charAt(0) === 'S'
-    const tournamentId = customId.slice(1)
-    
-    console.log(`${interaction.member.user.username} pressed the seed button for tournament ${tournamentId}`)
+    if (interaction?.message?.content?.includes('Do you still wish to play Trivia?')) {
+        const customId = interaction.customId
+        const confirmed = customId.charAt(0) === 'Y'
+        const entryId = customId.slice(1)
 
-    if (toBeSeeded) {
-        await seed(interaction, tournamentId, toBeShuffled)
+        console.log(`${interaction.member.user.username} pressed the confirmation button for trivia`)    
+        return handleTriviaConfirmation(interaction, entryId, confirmed)
     } else {
-        interaction.channel.send(`Okay, your seeds 🌱 will not been changed. 👍`)
+        const customId = interaction.customId
+        const toBeSeeded = customId.charAt(0) !== 'N'
+        const toBeShuffled = customId.charAt(0) === 'S'
+        const tournamentId = customId.slice(1)
+        
+        console.log(`${interaction.member.user.username} pressed the seed button for tournament ${tournamentId}`)
+    
+        if (toBeSeeded) {
+            await seed(interaction, tournamentId, toBeShuffled)
+        } else {
+            interaction.channel.send(`Okay, your seeds 🌱 will not been changed. 👍`)
+        }
+    
+        return startTournament(interaction, tournamentId)
+
     }
 
-    return startTournament(interaction, tournamentId)
 })
 
 // MODAL SUBMIT
