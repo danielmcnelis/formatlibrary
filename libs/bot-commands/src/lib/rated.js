@@ -177,7 +177,7 @@ const getRatedInformation = async (interaction, player) => {
             if (!commonGuildId) continue
             const now = new Date()
             const twoMinutesAgo = new Date(now - (2 * 60 * 1000))
-            const oneHourAgo = new Date(now - (60 * 60 * 1000))
+            const tenMinutesAgo = new Date(now - (10 * 60 * 1000))
 
             const yourRecentOpponents = [...await Match.findAll({
                 where: {
@@ -186,7 +186,7 @@ const getRatedInformation = async (interaction, player) => {
                         loserId: player.id
                     },
                     formatName: format.name,
-                    createdAt: {[Op.gte]: oneHourAgo }
+                    createdAt: {[Op.gte]: tenMinutesAgo }
                 }
             })].map((m) => {
                 if (player.id === m.winnerId) {

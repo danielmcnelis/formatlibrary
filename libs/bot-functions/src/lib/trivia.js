@@ -5,6 +5,7 @@ import { emojis } from '@fl/bot-emojis'
 const yescom = ['yes', 'ye', 'y', 'ya', 'yea', 'yeah', 'da', 'ja', 'si', 'ok', 'sure']
 const triviaRole = '1085310457126060153'
 import { client } from '../client'
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 
 //INITIATE TRIVIA
 export const initiateTrivia = async (interaction) => {
@@ -93,34 +94,40 @@ export const getTriviaConfirmation = async (interaction, entry) => {
     const discordId = entry.player.discordId
     const guild = client.guilds.cache.get('414551319031054346')
     const member = await guild.members.fetch(discordId)
-    
     if (!member) return interaction.channel.send({ content: `${entry.playerName} cannot be sent DMs.` })
-    const filter = m => m.author.id === discordId
-    const message = await member.user.send({ content: `Do you still wish to play Trivia? 📚 🐛`}).catch((err) => console.log(err))
-    if (!message || !message.channel) return false
+    
+    const row = new ActionRowBuilder()
+    .addComponents(new ButtonBuilder()
+        .setCustomId(`Y${entry.id}`)
+        .setLabel('Yes')
+        .setStyle(ButtonStyle.Primary)
+    )
 
-	await message.channel.awaitMessages({ 
-        filter,
-        max: 1,
-		time: 60000
-	}).then(async (collected) => {
-        const response = collected.first().content.toLowerCase()
-        const count = await TriviaEntry.count({ where: { status: 'confirming' }})
-        if (!count) return member.user.send({ content: `Sorry, time expired.` })
+    .addComponents(new ButtonBuilder()
+        .setCustomId(`N${entry.id}`)
+        .setLabel('No')
+        .setStyle(ButtonStyle.Primary)
+    )
 
-        if (yescom.includes(response)) {
-            entry.confirmed = true
-            await entry.update({ confirmed: true })
-            member.user.send({ content: `Thanks! Please wait to see if enough players confirm. ${emojis.cultured}`})
-            return interaction.channel.send({ content: `${member.user.username} confirmed their participation in Trivia! 📚 🐛`})
-        } else {
-            member.user.send({ content: `Okay, sorry to see you go!`})
-            return interaction.channel.send({ content: `Oof. ${member.user.username} ducked out of Trivia! 🦆`})
-        }
-	}).catch((err) => {
-		console.log(err)
-        return member.user.send({ content: `Sorry, time's up.`})
-	})
+    await member.user.send({ content: `Do you still wish to play Trivia? 📚 🐛`, components: [row] })
+}
+
+//HANDLE TRIVIA CONFIRMATION
+export const handleTriviaConfirmation = async (interaction, entry) => {
+    // const response = collected.first().content.toLowerCase()
+    // const count = await TriviaEntry.count({ where: { status: 'confirming' }})
+    // if (!count) return member.user.send({ content: `Sorry, time expired.` })
+
+    // if (yescom.includes(response)) {
+    //     entry.confirmed = true
+    //     await entry.update({ confirmed: true })
+    //     member.user.send({ content: `Thanks! Please wait to see if enough players confirm. ${emojis.cultured}`})
+    //     return interaction.channel.send({ content: `${member.user.username} confirmed their participation in Trivia! 📚 🐛`})
+    // } else {
+    //     member.user.send({ content: `Okay, sorry to see you go!`})
+    //     return interaction.channel.send({ content: `Oof. ${member.user.username} ducked out of Trivia! 🦆`})
+    // }
+    return
 }
 
 //ASK QUESTION

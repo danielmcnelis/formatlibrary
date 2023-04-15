@@ -86,6 +86,7 @@ client.on(Events.InteractionCreate, async interaction => {
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isButton()) return
     interaction.message.edit({ components: [] })
+    console.log('interaction', interaction)
 
     const customId = interaction.customId
     const toBeSeeded = customId.charAt(0) !== 'N'
