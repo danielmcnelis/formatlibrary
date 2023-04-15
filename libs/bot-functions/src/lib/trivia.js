@@ -122,10 +122,10 @@ export const handleTriviaConfirmation = async (interaction, entryId, confirmed) 
 
     if (confirmed) {
         await entry.update({ confirmed: true })
-        interaction.user?.send({ content: `Thanks! Please wait to see if enough players confirm. ${emojis.cultured}`})
+        await interaction.reply({ content: `Thanks! Please wait to see if enough players confirm. ${emojis.cultured}`, components: []})
         return triviaChannel?.send({ content: `${entry.playerName} confirmed their participation in Trivia! 📚 🐛`})
     } else {
-        interaction.user?.send({ content: `Okay, sorry to see you go!`})
+        await interaction.reply({ content: `Okay, sorry to see you go!`, components: []})
         return triviaChannel?.send({ content: `Oof. ${entry.playerName} ducked out of Trivia! 🦆`})
     }
 }

@@ -87,7 +87,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isButton()) return
 
     if (interaction.message?.content?.includes('Do you still wish to play Trivia?')) {
-        await interaction.reply({ components: [] }).catch((err) => console.log(err))
+        // await interaction.reply({ components: [] }).catch((err) => console.log(err))
         const customId = interaction.customId
         const confirmed = customId.charAt(0) === 'Y'
         const entryId = customId.slice(1)
