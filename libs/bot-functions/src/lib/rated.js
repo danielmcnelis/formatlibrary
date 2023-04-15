@@ -33,6 +33,10 @@ export const getRatedConfirmation = async (client, format, potentialPair, pool, 
 }
 
 export const handleRatedConfirmation = async (client, interaction, confirmed, yourPoolId, opponentsPoolId, serverId) => {
+    console.log('yourPoolId', yourPoolId)
+    console.log('opponentsPoolId', opponentsPoolId)
+    console.log('serverId', serverId)
+
     const yourPool = await Pool.findOne({ where: { id: yourPoolId }, include: [Format, Player] })
     const format = yourPool.format
     const opponentsPool = await Pool.findOne({ where: { id: opponentsPoolId }, include: Player })
@@ -48,7 +52,11 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
         const guild = client.guilds.cache.get(serverId)
         const channel = guild.channels.cache.get(channelId)
         const player = yourPool.player
+        console.log('player.name', player.name)
+        console.log('player.discordId', player.discordId)
         const opponent = opponentsPool.player
+        console.log('opponent.name', opponent.name)
+        console.log('opponent.discordId', opponent.discordId)
         const opposingMember = await guild.members.fetch(opponent.discordId)
 
         opposingMember.user.send(
@@ -59,6 +67,7 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
             `\nDuelingBook: ${player.duelingBook}`
         ).catch((err) => console.log(err))
         
+        console.log('interaction.user', interaction.user)
         interaction.user.send(
             `New pairing for Rated ${format.name} Format ${format.emoji}!` +
             `\nServer: ${commonServer.name} ${commonServer.logo}` +
