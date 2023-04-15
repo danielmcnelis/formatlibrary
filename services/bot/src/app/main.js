@@ -23,7 +23,8 @@ import { assignTourRoles, conductCensus, downloadNewCards, getMidnightCountdown,
 import { emojis } from '@fl/bot-emojis'
 import commands from '@fl/bot-commands'
 client.commands = new Collection()
-Object.values(commands).forEach((command) => client.commands.set(command.data.name, command))
+Object.values(commands.formatLibraryCommands).forEach((command) => client.commands.set(command.data.name, command))
+Object.values(commands.globalCommands).forEach((command) => client.commands.set(command.data.name, command))
 
 // GLOBAL VARIABLES
 const fuzzyCards = FuzzySet([], false)
