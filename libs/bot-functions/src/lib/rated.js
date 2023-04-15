@@ -10,21 +10,21 @@ import { getIssues } from './deck'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 
 // GET RATED CONFIRMATION
-export const getRatedConfirmation = async (client, format, potentialPair, pool, commonGuildId) => {
+export const getRatedConfirmation = async (client, format, yourPool, opponentsPool, commonGuildId) => {
     const guild = client.guilds.cache.get(commonGuildId)
-    const member = await guild.members.fetch(potentialPair.player.discordId)
+    const member = await guild.members.fetch(yourPool.player.discordId)
     if (!member) return
-    await potentialPair.update({ status: 'confirming' })
+    await yourPool.update({ status: 'confirming' })
  
     const row = new ActionRowBuilder()
     .addComponents(new ButtonBuilder()
-        .setCustomId(`Y-${pool.id}-${potentialPair.id}-${commonGuildId}`)
+        .setCustomId(`Y-${yourPool.id}-${opponentsPool.id}-${commonGuildId}`)
         .setLabel('Yes')
         .setStyle(ButtonStyle.Primary)
     )
 
     .addComponents(new ButtonBuilder()
-        .setCustomId(`N-${pool.id}-${potentialPair.id}-${commonGuildId}`)
+        .setCustomId(`N-${yourPool.id}-${opponentsPool.id}-${commonGuildId}`)
         .setLabel('No')
         .setStyle(ButtonStyle.Primary)
     )
