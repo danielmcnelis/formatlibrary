@@ -16,7 +16,7 @@ import { assignTourRoles, conductCensus, downloadNewCards, getMidnightCountdown,
     calculateStandings, checkTimer, closeTournament, createTournament, dropFromTournament, initiateStartTournament, 
     joinTournament, openTournament, processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, 
     signupForTournament, startTournament, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, 
-    hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation
+    hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
@@ -94,6 +94,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
         console.log(`${interaction.user?.username} pressed the confirmation button for Trivia`)    
         return handleTriviaConfirmation(interaction, entryId, confirmed)
+    } else if (interaction.message?.content?.includes(`I've found a Rated`)) {
+        await interaction.update({ components: [] }).catch((err) => console.log(err))
+        const customId = interaction.customId
+        const confirmed = customId.charAt(0) === 'Y'
+        const ids = customId.slice(2).split('-')
+        const yourPoolId = ids[0]
+        const opponentsPoolId = ids[1]
+        const serverId = ids[2]
+
+        console.log(`${interaction.user?.username} pressed the confirmation button for Trivia`)    
+        return handleRatedConfirmation(client, interaction, confirmed, yourPoolId, opponentsPoolId, serverId)
     } else {
         await interaction.message.edit({ components: [] })
         const customId = interaction.customId
@@ -110,9 +121,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
     
         return startTournament(interaction, tournamentId)
-
     }
-
 })
 
 // MODAL SUBMIT

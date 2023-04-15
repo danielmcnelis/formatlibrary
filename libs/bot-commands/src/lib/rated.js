@@ -2,7 +2,7 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { Deck, Match, Membership, Player, Pool, Server, Stats } from '@fl/models'
 import { Op } from 'sequelize'
-import { getRatedFormat, getNewRatedDeck, getPotentialPairConfirmation, getPreviousRatedDeck } from '@fl/bot-functions'
+import { getRatedFormat, getNewRatedDeck, getRatedConfirmation, getPreviousRatedDeck } from '@fl/bot-functions'
 import { getIssues } from '@fl/bot-functions'
 import { askForDBName } from '@fl/bot-functions'
 import { drawDeck } from '@fl/bot-functions'
@@ -199,7 +199,7 @@ const getRatedInformation = async (interaction, player) => {
             if (yourRecentOpponents.includes(potentialPair.playerId)) {
                 continue
             } else if (potentialPair.updatedAt < twoMinutesAgo) {
-                getPotentialPairConfirmation(client, format, potentialPair, pool, commonGuildId)
+                getRatedConfirmation(client, format, potentialPair, pool, commonGuildId)
                 continue
             } else {
                 const commonServer = await Server.findOne({ where: { id: commonGuildId }})
