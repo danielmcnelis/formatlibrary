@@ -85,9 +85,9 @@ client.on(Events.InteractionCreate, async interaction => {
 // BUTTON SUBMIT
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isButton()) return
-    await interaction.editReply({ components: [] })
 
     if (interaction.message?.content?.includes('Do you still wish to play Trivia?')) {
+        await interaction.editReply({ components: [] })
         const customId = interaction.customId
         const confirmed = customId.charAt(0) === 'Y'
         const entryId = customId.slice(1)
@@ -95,6 +95,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         console.log(`${interaction.user?.username} pressed the confirmation button for Trivia`)    
         return handleTriviaConfirmation(interaction, entryId, confirmed)
     } else {
+        await interaction.message.edit({ components: [] })
         const customId = interaction.customId
         const toBeSeeded = customId.charAt(0) !== 'N'
         const toBeShuffled = customId.charAt(0) === 'S'
