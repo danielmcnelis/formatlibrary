@@ -93,7 +93,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         const confirmed = customId.charAt(0) === 'Y'
         const entryId = customId.slice(1)
 
-        console.log(`${interaction.member.user.username} pressed the confirmation button for trivia`)    
+        console.log(`${interaction?.user?.username} pressed the confirmation button for trivia`)    
         return handleTriviaConfirmation(interaction, entryId, confirmed)
     } else {
         const customId = interaction.customId
@@ -101,7 +101,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         const toBeShuffled = customId.charAt(0) === 'S'
         const tournamentId = customId.slice(1)
         
-        console.log(`${interaction.member.user.username} pressed the seed button for tournament ${tournamentId}`)
+        console.log(`${interaction?.member?.user?.username} pressed the seed button for tournament ${tournamentId}`)
     
         if (toBeSeeded) {
             await seed(interaction, tournamentId, toBeShuffled)
