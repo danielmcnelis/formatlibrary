@@ -119,15 +119,16 @@ export const handleTriviaConfirmation = async (interaction, entryId, confirmed) 
     if (!count) return interaction.channel.send({ content: `Sorry, time expired.` })
     const guild = client.guilds.cache.get('414551319031054346')
     const triviaChannel = guild.channels.cache.get('1085316454053838981')
+    console.log('triviaChannel', triviaChannel)
 
     if (confirmed) {
         entry.confirmed = true
         await entry.update({ confirmed: true })
-        interaction.channel.send({ content: `Thanks! Please wait to see if enough players confirm. ${emojis.cultured}`})
-        return triviaChannel.send({ content: `${entry.playerName} confirmed their participation in Trivia! 📚 🐛`})
+        interaction?.message?.author?.send({ content: `Thanks! Please wait to see if enough players confirm. ${emojis.cultured}`})
+        return triviaChannel?.send({ content: `${entry.playerName} confirmed their participation in Trivia! 📚 🐛`})
     } else {
-        interaction.channel.send({ content: `Okay, sorry to see you go!`})
-        return triviaChannel.send({ content: `Oof. ${entry.playerName} ducked out of Trivia! 🦆`})
+        interaction?.message?.author?.send({ content: `Okay, sorry to see you go!`})
+        return triviaChannel?.send({ content: `Oof. ${entry.playerName} ducked out of Trivia! 🦆`})
     }
 }
 
