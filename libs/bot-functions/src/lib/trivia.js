@@ -117,7 +117,8 @@ export const handleTriviaConfirmation = async (interaction, entryId, confirmed) 
     const entry = await TriviaEntry.findOne({ where: { id: entryId }})
     const count = await TriviaEntry.count({ where: { status: 'confirming' }})
     if (!count) return interaction.channel.send({ content: `Sorry, time expired.` })
-    const triviaChannel = client.channels.cache.get('1085316454053838981')
+    const guild = client.guilds.cache.get('414551319031054346')
+    const triviaChannel = guild.channels.cache.get('1085316454053838981')
 
     if (confirmed) {
         entry.confirmed = true
