@@ -66,7 +66,7 @@ export const EventCreator = () => {
     if (!format) return alert('Please select a Format.')
     if (!size) return alert('Please specify the Tournament Size.')
     if (!tournamentType) return alert('Please select a Tournament Type.')
-    if (!bracket) return alert('Please upload a Bracket PNG file.')
+    //if (!bracket) return alert('Please upload a Bracket PNG file.')
     if (!tournamentId && url.includes('challonge')) return alert('Tournament not found on Challonge.')
     if (!player) return alert('No Winner Found.')
     if (!startDate) return alert('Please select a Start Date.')

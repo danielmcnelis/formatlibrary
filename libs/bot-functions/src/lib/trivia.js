@@ -2,7 +2,6 @@
 import { Player, TriviaEntry, TriviaQuestion, TriviaKnowledge } from '@fl/models'
 const FuzzySet = require('fuzzyset')
 import { emojis } from '@fl/bot-emojis'
-// const yescom = ['yes', 'ye', 'y', 'ya', 'yea', 'yeah', 'da', 'ja', 'si', 'ok', 'sure']
 const triviaRole = '1085310457126060153'
 import { client } from '../client'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'

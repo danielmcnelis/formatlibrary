@@ -320,24 +320,26 @@ export const eventsId = async (req, res, next) => {
 
 export const eventsCreate = async (req, res, next) => {
   try {
-    const buffer = Buffer.from(req.body.bracket.replace(/^data:image\/\w+;base64,/, ''), 'base64')
+    if (req.body.bracket) {
+        const buffer = Buffer.from(req.body.bracket.replace(/^data:image\/\w+;base64,/, ''), 'base64')
 
-    const s3 = new S3({
-        region: config.s3.region,
-        credentials: {
-            accessKeyId: config.s3.credentials.accessKeyId,
-            secretAccessKey: config.s3.credentials.secretAccessKey
-        }
-    })
-
-    const { Location: uri} = await s3.upload({ 
-        Bucket: 'formatlibrary', 
-        Key: `images/brackets/${req.body.abbreviation}.png`, 
-        Body: buffer,
-        ContentType: 'image/png'
-    }).promise()
-
-    console.log('uri', uri)
+        const s3 = new S3({
+            region: config.s3.region,
+            credentials: {
+                accessKeyId: config.s3.credentials.accessKeyId,
+                secretAccessKey: config.s3.credentials.secretAccessKey
+            }
+        })
+    
+        const { Location: uri} = await s3.upload({ 
+            Bucket: 'formatlibrary', 
+            Key: `images/brackets/${req.body.abbreviation}.png`, 
+            Body: buffer,
+            ContentType: 'image/png'
+        }).promise()
+    
+        console.log('uri', uri)
+    }
 
     if (req.body.id) {
       await Tournament.create({
