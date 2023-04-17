@@ -90,9 +90,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await interaction.update({ components: [] }).catch((err) => console.log(err))
         const customId = interaction.customId
         const confirmed = customId.charAt(0) === 'Y'
-        const entryId = customId.slice(1)
-
-        console.log(`${interaction.user?.username} pressed the confirmation button for Trivia`)    
+        const entryId = customId.slice(1) 
         return handleTriviaConfirmation(interaction, entryId, confirmed)
     } else if (interaction.message?.content?.includes(`I've found a Rated`)) {
         await interaction.update({ components: [] }).catch((err) => console.log(err))
@@ -102,8 +100,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
         const yourPoolId = ids[0]
         const opponentsPoolId = ids[1]
         const serverId = ids[2]
-
-        console.log(`${interaction.user?.username} pressed the confirmation button for Trivia`)    
         return handleRatedConfirmation(client, interaction, confirmed, yourPoolId, opponentsPoolId, serverId)
     } else {
         await interaction.message.edit({ components: [] })
@@ -111,7 +107,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
         const toBeSeeded = customId.charAt(0) !== 'N'
         const toBeShuffled = customId.charAt(0) === 'S'
         const tournamentId = customId.slice(1)
-        
         console.log(`${interaction?.member?.user?.username} pressed the seed button for tournament ${tournamentId}`)
     
         if (toBeSeeded) {
