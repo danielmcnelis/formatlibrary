@@ -42,6 +42,7 @@ export default {
         await displayDecks(interaction, event)
         await publishDecks(interaction, event)
         await composeThumbnails(interaction, event)
+        console.log('event.community', event.community)
         if (event.community !== 'Konami' && event.communtiy !== 'Upper Deck Entertainment') {
             await composeBlogPost(interaction, event)
         }
