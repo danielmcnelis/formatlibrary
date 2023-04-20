@@ -30,27 +30,29 @@ export default {
         const tournaments = await Tournament.findAll({ 
             where: { 
                 state: 'pending',
-                formatName: format ? format.name : {[Op.not]: null},
+                formatId: format?.id || {[Op.not]: null},
                 serverId: interaction.guildId
             }, 
+            include: Format,
             order: [['createdAt', 'ASC']] 
         })
         
-        const player = await Player.findOne({ where: { discordId: interaction.user.id }})
-        if (!player) return await interaction.editReply({ content: `You are not in the database.`})
-        
+        const player = await Player.findOne({ where: { discordId: interaction.user?.id }})    
+        if (!player) return    
+
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
 
         let entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournament.id }})
-        if (!format) format = await Format.findOne({ where: { name: {[Op.iLike]: tournament.formatName } }})
-        if (!format) return await interaction.editReply(`Unable to determine what format is being played in ${tournament.name}. Please contact an administrator.`)
+        if (!format) format = tournament.format
+        if (!format) return
+
         interaction.editReply({ content: `Please check your DMs.` })
         
-        const dbName = player.duelingBook ? player.duelingBook : await askForDBName(interaction.member, player)
+        const dbName = player.duelingBook || await askForDBName(interaction.member, player)
         if (!dbName) return
 
-        const team = await Team.findOne({
+        const team = tournament.isTeamTournament ? await Team.findOne({
             where: {
                 tournamentId: tournament.id,
                 [Op.or]: {
@@ -59,9 +61,9 @@ export default {
                     playerCId: player.id,
                 }
             }
-        })
+        }) : null
 
-        const { url, ydk } = await getDeckList(interaction.member, player, format)
+        const { url, ydk } = await getDeckList(interaction.member, player, tournament.format)
         if (!url || !ydk) return
 
         if (!entry && tournament.isTeamTournament && team) {
@@ -141,8 +143,8 @@ export default {
                 return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
             }
                                     
-            const { participant } = await postParticipant(server, tournament, player)
-            
+            const { participant } = await postParticipant(server, tournament, player).catch((err) => console.log(err))
+        
             if (!participant) {
                 await entry.destroy()
                 return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
@@ -182,7 +184,7 @@ export default {
 
             return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (${team ? team.name : 'Free Agent'}) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         } else if (entry && entry.active === false && !tournament.isTeamTournament) {
-            const { participant } = await postParticipant(server, tournament, player)
+            const { participant } = await postParticipant(server, tournament, player).catch((err) => console.log(err))
             if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
                                         
             await entry.update({
@@ -205,14 +207,13 @@ export default {
 
             return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         } else {
-            await entry.update({ url: url, ydk: ydk })
-            
+            await entry.update({ url, ydk })
             const deckAttachments = await drawDeck(ydk) || []
             interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have your updated deck list for ${tournament.name}! ${tournament.logo}`})
             deckAttachments.forEach((attachment, index) => {
                 if (index === 0) {
-                    interaction.member.send({ content: `FYI, this is the deck you submitted:`, files: [attachment] }).catch((err) => console.log(err))
+                    interaction.member.send({ content: `FYI, this is the deck you resubmitted:`, files: [attachment] }).catch((err) => console.log(err))
                 } else {
                     interaction.member.send({ files: [attachment] }).catch((err) => console.log(err))
                 }

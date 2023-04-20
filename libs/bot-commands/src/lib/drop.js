@@ -56,13 +56,6 @@ export default {
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
 
-        const team = await Team.findOne({ 
-            where: { 
-                captainId: player.id, 
-                tournamentId: tournament.id
-            }
-        })
-
         if (tournament.isTeamTournament) {            
             const isCaptain = await Team.count({
                 where: {
@@ -72,6 +65,13 @@ export default {
             })
 
             if (isCaptain) {
+                const team = await Team.findOne({ 
+                    where: { 
+                        captainId: player.id, 
+                        tournamentId: tournament.id
+                    }
+                })
+
                 const entries = await Entry.findAll({
                     where: {
                         teamId: team.id,
@@ -99,8 +99,7 @@ export default {
                         where: { 
                             playerId: player.id, 
                             tournamentId: tournament.id
-                        },
-                        include: Player
+                        }
                     })
 
                     if (!entry) {
@@ -115,8 +114,9 @@ export default {
             let success = (tournament.state === 'pending' || tournament.state === 'standby')
             if (!success) {
                 const matches = await Match.findAll({ 
-                    where: { 
-                        isTournament: true
+                    where: {
+                        isTournament: true,
+                        tournamentId: tournament.id
                     },
                     limit: 5,
                     order: [["createdAt", "DESC"]] 
@@ -126,15 +126,14 @@ export default {
                     if (match.winnerId === player.id || match.loserId === player.id) success = true 
                 })
     
-                if (!success) return await interaction.editReply({ content: `If you played a match, please report the result before dropping. Otherwise ask a Moderator to remove you.`})
+                if (!success) return await interaction.editReply({ content: `If you played a match, please report the result before dropping. Otherwise ask a Moderator to **remove** you.`})
             }
     
             const entry = await Entry.findOne({ 
                 where: { 
                     playerId: player.id, 
                     tournamentId: tournament.id
-                },
-                include: Player
+                }
             })
     
             return removeParticipant(server, interaction, interaction.member, entry, tournament, true)

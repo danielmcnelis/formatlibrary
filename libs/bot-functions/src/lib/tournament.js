@@ -215,17 +215,24 @@ export const openTournament = async (interaction, tournamentId) => {
 export const joinTournament = async (interaction, tournamentId) => {
     const player = await Player.findOne({
         where: {
-            discordId: interaction.user.id
+            discordId: interaction.user?.id
         }
     })
 
     const tournament = await Tournament.findOne({
         where: {
             id: tournamentId
+        },
+        include: Format
+    })
+
+    const server = await Server.findOne({
+        where: {
+            name: interaction.guild.name
         }
     })
 
-    const team = await Team.findOne({
+    const team = tournament.isTeamTournament ? await Team.findOne({
         where: {
             tournamentId: tournament.id,
             [Op.or]: {
@@ -234,31 +241,22 @@ export const joinTournament = async (interaction, tournamentId) => {
                 playerCId: player.id,
             }
         }
-    })
-
-    if (tournament.isTeamTournament && !team) return interaction.reply(`Please register with a team before joining a team tournament.`)
-
-    const server = await Server.findOne({
-        where: {
-            name: interaction.guild.name
-        }
-    })
+    }) : null
 
     let entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournamentId }})
-    const format = await Format.findOne({ where: { name: {[Op.iLike]: tournament.formatName } }})
-    if (!format) return await interaction.reply(`Unable to determine what format is being played in ${tournament.name}. Please contact an administrator.`)
     interaction.reply({ content: `Please check your DMs.` })
     
-    const dbName = player.duelingBook ? player.duelingBook : await askForDBName(interaction.member, player)
+    const dbName = player.duelingBook || await askForDBName(interaction.member, player)
     if (!dbName) return
-    const { url, ydk } = await getDeckList(interaction.member, player, format)
-    if (!url) return
 
-    if (!entry && team) {
+    const { url, ydk } = await getDeckList(interaction.member, player, tournament.format)
+    if (!url || !ydk) return
+
+    if (!entry && tournament.isTeamTournament && team) {
         const slot = team.playerAId === player.id ? 'A' :
-        team.playerBId === player.id ? 'B' :
-        team.playerCId === player.id ? 'C' :
-        null
+            team.playerBId === player.id ? 'B' :
+            team.playerCId === player.id ? 'C' :
+            null
 
         try { 
             await Entry.create({
@@ -304,10 +302,10 @@ export const joinTournament = async (interaction, tournamentId) => {
             return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
         }
                             
-        const { participant } = await postParticipant(server, tournament, player)
+        const { participant } = await postParticipant(server, tournament, player).catch((err) => console.log(err))
         if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
         await entry.update({ participantId: participant.id })
-        
+
         const deckAttachments = await drawDeck(ydk) || []
         interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
@@ -320,7 +318,7 @@ export const joinTournament = async (interaction, tournamentId) => {
         })
 
         return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
-    } else if (entry && entry.active === false && team) {
+    } else if (entry && entry.active === false && tournament.isTeamTournament) {
         await entry.update({
             url: url,
             ydk: ydk,
@@ -339,8 +337,8 @@ export const joinTournament = async (interaction, tournamentId) => {
         })
 
         return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
-    } else if (entry.active === false && !tournament.isTeamTournament) {
-        const { participant } = await postParticipant(server, tournament, player)
+    } else if (entry && entry.active === false && !tournament.isTeamTournament) {
+        const { participant } = await postParticipant(server, tournament, player).catch((err) => console.log(err))
         if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
         
         await entry.update({
@@ -363,7 +361,7 @@ export const joinTournament = async (interaction, tournamentId) => {
 
         return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else {
-        await entry.update({ url: url, ydk: ydk })
+        await entry.update({ url, ydk })
 
         const deckAttachments = await drawDeck(ydk) || []
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
@@ -577,41 +575,35 @@ export const createSheetData = async (tournament) => {
 //REMOVE PARTICIPANT
 export const removeParticipant = async (server, interaction, member, entry, tournament, drop = false) => {    
     try {
-        const success = await axios({
+        const { status } = await axios({
             method: 'delete',
             url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${entry.participantId}.json?api_key=${server.challongeAPIKey}`
         })
 
-        if (success) {
-            if (tournament.state === 'underway') {
-                entry.active = false
-                entry.roundDropped = entry.wins + entry.losses
-                await entry.save()
-            } else {
-                await entry.destroy()
-            }
+        console.log('status', status)
+        const playerId = entry.playerId
 
-            const playerId = entry.playerId
-            const count = await Entry.count({ 
-                where: {
-                    playerId: playerId,
-                    active: true,
-                    '$tournament.serverId$': server.id
-                },
-                include: Tournament,
-            })
+        if (tournament.state === 'underway') {
+            await entry.update({ active: false, roundDropped: entry.wins + entry.losses })
+        } else {
+            await entry.destroy()
+        }
 
-            if (!count) member.roles.remove(server.tourRole).catch((err) => console.log(err))
-        
-            if (drop) {
-                return await interaction.editReply({ content: `I removed you from ${tournament.name}. Better luck next time! ${tournament.emoji}`})
-            } else {
-                return await interaction.editReply({ content: `${member.user.username} has been removed from ${tournament.name}. ${tournament.emoji}`})
-            }
-        } else if (!success && drop) {
-            return await interaction.editReply({ content: `Hmm... I don't see you in the participants list for ${tournament.name}. ${tournament.emoji}`})
-        } else if (!success && !drop) {
-            return await interaction.editReply({ content: `I could not find ${member.user.username} in the participants list for ${tournament.name}. ${tournament.emoji}`})
+        const count = await Entry.count({ 
+            where: {
+                playerId: playerId,
+                active: true,
+                '$tournament.serverId$': server.id
+            },
+            include: Tournament,
+        })
+
+        if (!count) member.roles.remove(server.tourRole).catch((err) => console.log(err))
+    
+        if (drop) {
+            return await interaction.editReply({ content: `I removed you from ${tournament.name}. Better luck next time! ${tournament.emoji}`})
+        } else {
+            return await interaction.editReply({ content: `${member.user.username} has been removed from ${tournament.name}. ${tournament.emoji}`})
         }
     } catch (err) {
         console.log(err)
@@ -927,7 +919,7 @@ export const postParticipant = async (server, tournament, player) => {
             url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`,
             data: {
                 participant: {
-                    name: player.name
+                    name: player.discordName + '#' + player.discriminator
                 }
             }
         })
@@ -1755,35 +1747,75 @@ export const removeFromTournament = async (interaction, tournamentId, userId) =>
 
 // DROP FROM TOURNAMENT
 export const dropFromTournament = async (interaction, tournamentId) => {
-    console.log('dropFromTournament()', dropFromTournament())
+    console.log('dropFromTournament()')
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
     const player = await Player.findOne({ where: { discordId: interaction.user.id }})
+    if (!player) return
     const server = await Server.findOne({ where: { id: interaction.guildId }})
+    if (!server) return
 
-    if (tournament.isTeamTournament && (tournament.state === 'pending' || tournament.state === 'standby')) {
-        const team = await Team.findOne({ 
-            where: { 
+    if (tournament.isTeamTournament) {
+        const isCaptain = await Team.count({
+            where: {
                 captainId: player.id, 
                 tournamentId: tournament.id
             }
         })
 
-        if (!team) return await interaction.editReply({ content: `Only the team captain can drop the team from a team tournament.`})
+        if (isCaptain) {
+            const team = await Team.findOne({ 
+                where: { 
+                    captainId: player.id, 
+                    tournamentId: tournament.id
+                }
+            })
 
-        const entries = await Entry.findAll({
-            where: {
-                teamId: team.id,
-                tournamentId: tournament.id
+            const entries = await Entry.findAll({
+                where: {
+                    teamId: team.id,
+                    tournamentId: tournament.id
+                }
+            })
+    
+            return removeTeam(server, interaction, team, entries, tournament, true)
+        } else {
+
+            const isOnTeam = await Team.count({
+                where: {
+                    tournamentId: tournament.id,
+                    [Op.or]: {
+                        playerAId: player.id,
+                        playerBId: player.id,
+                        playerCId: player.id
+                    }
+                }
+            })
+            
+            if (isOnTeam) {
+                return await interaction.editReply({ content: `Only the team captain can drop the team from a team tournament.`})    
+            } else {
+                const entry = await Entry.findOne({ 
+                    where: { 
+                        playerId: player.id, 
+                        tournamentId: tournament.id
+                    }
+                })
+
+                if (!entry) {
+                    return await interaction.editReply({ content: `Hmm... I don't see you in the participants list for ${tournament.name}. ${tournament.emoji}`})
+                } else {
+                    await entry.destroy()
+                    return await interaction.editReply({ content: `I removed you from ${tournament.name}. ${tournament.emoji}`})
+                }
             }
-        })
-
-        return removeTeam(server, interaction, team, entries, tournament, true)
+        }
     } else {
         let success = (tournament.state === 'pending' || tournament.state === 'standby')
         if (!success) {
-            const matches = await Match.findAll({ 
+            const matches = await Match.findAll({
                 where: { 
-                    isTournament: true
+                    isTournament: true,
+                    tournamentId: tournament.id
                 },
                 limit: 5,
                 order: [["createdAt", "DESC"]] 
@@ -1798,10 +1830,9 @@ export const dropFromTournament = async (interaction, tournamentId) => {
     
         const entry = await Entry.findOne({ 
             where: { 
-                '$player.discordId$': interaction.user.id, 
+                playerId: player.id, 
                 tournamentId: tournamentId
-            },
-            include: Player
+            }
         })
     
         return removeParticipant(server, interaction, interaction.member, entry, tournament, true)   
