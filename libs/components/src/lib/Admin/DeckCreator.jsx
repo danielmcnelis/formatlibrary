@@ -172,6 +172,7 @@ export const DeckCreator = () => {
                     <option value="Upper Deck Entertainment">Upper Deck Entertainment</option>
                     <option value="Vegas Format">Vegas Format</option>
                     <option value="Wind-Up Factory">Wind-Up Factory</option>
+              <option value="YGOFrom0">YGOFrom0</option>
                     <option value="Yugi-Kaibaland">Yugi-Kaibaland</option>
                     <option value="Yu-Gi-Oh! Legacy">Yu-Gi-Oh! Legacy</option>
                 </select>
