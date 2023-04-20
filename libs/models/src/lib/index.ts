@@ -217,6 +217,9 @@ Player.hasMany(Subscription)
 Tournament.belongsTo(Server)
 Server.hasMany(Tournament)
 
+Tournament.belongsTo(Format)
+Format.hasMany(Tournament)
+
 //TEAM
 Team.belongsTo(Tournament)
 Tournament.hasMany(Team)
