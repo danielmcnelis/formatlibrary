@@ -30,9 +30,6 @@ export const getRatedConfirmation = async (client, format, yourPool, opponentsPo
     )
 
     const message = await member.user.send({ content: `I've found a Rated ${format.name} Format ${format.emoji} opponent for you. Do you still wish to play?`, components: [row] })
-    console.log('message', message)
-
-    const timeLimit = member.user.username === 'Jazz' || member.user.username === 'Pupster' ? 1 : 5 * 60 * 1000
 
     setTimeout(async () => {
         const unconfirmed = await Pool.count({
@@ -43,16 +40,10 @@ export const getRatedConfirmation = async (client, format, yourPool, opponentsPo
         })
 
         if (unconfirmed) {
-            console.log('UNCONFIRMED...')
-            console.log('message', message)
-            console.log('...UNCONFIRMED')
-            console.log('Object.getOwnPropertyNames(message)', Object.getOwnPropertyNames(message))
             await message.edit({ components: [] }).catch((err) => console.log(err))
             await message.channel.send({ content: `Sorry, time's up! I've removed you from the ${format.name} Format ${format.emoji} rated pool.`})
-        } else {
-            console.log('CONFIMRED.')
         }
-    }, timeLimit)
+    }, 5 * 60 * 1000)
 
 }
 
