@@ -29,10 +29,10 @@ export const getRatedConfirmation = async (client, format, yourPool, opponentsPo
         .setStyle(ButtonStyle.Primary)
     )
 
-    const message = await member.user.send({ content: `I've found a Rated ${format.name} Format ${format.emoji} opponent for you. Do you still wish to play?`, components: [row] })
+    const {message} = await member.user.send({ content: `I've found a Rated ${format.name} Format ${format.emoji} opponent for you. Do you still wish to play?`, components: [row] })
     console.log('message', message)
 
-    const timeLimit = message.user.username === 'Jazz' || message.user.username === 'Pupster' ? 1 : 5 * 60 * 1000
+    const timeLimit = member.user.username === 'Jazz' || member.user.username === 'Pupster' ? 1 : 5 * 60 * 1000
 
     setTimeout(async () => {
         const unconfirmed = await Pool.count({
