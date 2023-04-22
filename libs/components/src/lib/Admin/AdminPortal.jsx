@@ -14,26 +14,26 @@ import axios from 'axios'
 const playerId = getCookie('playerId')
 
 export const AdminPortal = () => {
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [isContentManager, setIsContentManager] = useState(false)
   const [view, setView] = useState(false)
 
   // USE EFFECT
   useEffect(() => {
-    const checkIfAdmin = async () => {
+    const checkIfContentManager = async () => {
       try {
-        const { status } = await axios.get(`/api/players/admin/${playerId}`)
+        const { status } = await axios.get(`/api/players/content-manager/${playerId}`)
         if (status === 200) {
-          setIsAdmin(true)
+            setIsContentManager(true)
         }
       } catch (err) {
         console.log(err)
       }
     }
 
-    checkIfAdmin()
+    checkIfContentManager()
   }, [])
 
-  if (isAdmin) {
+  if (isContentManager) {
     return (
       <div className="body">
         <h1>Admin Portal</h1>

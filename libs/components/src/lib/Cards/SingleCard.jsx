@@ -94,9 +94,7 @@ export const SingleCard = () => {
         const checkIfAdmin = async () => {
         try {
             const { status } = await axios.get(`/api/players/admin/${playerId}`)
-            if (status === 200) {
-            setIsAdmin(true)
-            }
+            if (status === 200) setIsAdmin(true)
         } catch (err) {
             console.log(err)
         }

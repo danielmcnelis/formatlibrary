@@ -61,6 +61,10 @@ export const Player = db.define('players', {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
+  contentManager: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
   creator: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
