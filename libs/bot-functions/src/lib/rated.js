@@ -29,7 +29,30 @@ export const getRatedConfirmation = async (client, format, yourPool, opponentsPo
         .setStyle(ButtonStyle.Primary)
     )
 
-    await member.user.send({ content: `I've found a Rated ${format.name} Format ${format.emoji} opponent for you. Do you still wish to play?`, components: [row] })
+    const message = await member.user.send({ content: `I've found a Rated ${format.name} Format ${format.emoji} opponent for you. Do you still wish to play?`, components: [row] })
+    console.log('message', message)
+
+    const timeLimit = message.user.username === 'Jazz' || message.user.username === 'Pupster' ? 1 : 5 * 60 * 1000
+
+    setTimeout(async () => {
+        const unconfirmed = await Pool.count({
+            where: {
+                id: yourPool.id,
+                status: 'confirming'
+            }
+        })
+
+        if (unconfirmed) {
+            console.log('UNCONFIRMED...')
+            console.log('message', message)
+            console.log('...UNCONFIRMED')
+            await message.update({ components: [] }).catch((err) => console.log(err))
+            await message.channel.send({ content: `Sorry, time's up! I've removed you from the ${format.name} Format ${format.emoji} rated pool.`})
+        } else {
+            console.log('CONFIMRED.')
+        }
+    }, timeLimit)
+
 }
 
 export const handleRatedConfirmation = async (client, interaction, confirmed, yourPoolId, opponentsPoolId, serverId) => {
