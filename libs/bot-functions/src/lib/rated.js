@@ -46,7 +46,8 @@ export const getRatedConfirmation = async (client, format, yourPool, opponentsPo
             console.log('UNCONFIRMED...')
             console.log('message', message)
             console.log('...UNCONFIRMED')
-            await message.update({ components: [] }).catch((err) => console.log(err))
+            console.log('message.getOwnPropertyNames()', message.getOwnPropertyNames())
+            await message.edit({ components: [] }).catch((err) => console.log(err))
             await message.channel.send({ content: `Sorry, time's up! I've removed you from the ${format.name} Format ${format.emoji} rated pool.`})
         } else {
             console.log('CONFIMRED.')
