@@ -41,6 +41,7 @@ export const getRatedConfirmation = async (client, format, yourPool, opponentsPo
 
         if (unconfirmed) {
             await message.edit({ components: [] }).catch((err) => console.log(err))
+            await yourPool.destroy()
             await message.channel.send({ content: `Sorry, time's up! I've removed you from the ${format.name} Format ${format.emoji} rated pool.`})
         }
     }, 5 * 60 * 1000)
