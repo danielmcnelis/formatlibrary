@@ -85,7 +85,7 @@ Deck.countResults = async (filter = {}) => {
         let value = by.value
         if (typeof value === 'string') value.replaceAll('%20', ' ')
         let operator = by.operator
-        if (['display'].includes(key)) { value = value.toLowerCase() === 'true' }
+        // if (['display'].includes(key)) { value = value.toLowerCase() === 'true' }
         if (['deckTypeId', 'downloads', 'views', 'rating'].includes(key)) { value = parseInt(value) }
         
         if (operator === 'eq') {
