@@ -28,21 +28,36 @@ const emojis = {
 
 const { Unicorn, Voltage, Bow, Volcano, Helmet, Controller, Orb, Lock, Thinking, First, Second, Third, Consolation, Heart, Disk, Eye } = emojis
 
+const playerId = getCookie('playerId')
+
 export const SingleDeck = () => {
     const [deck, setDeck] = useState({})
     const [banlist, setBanlist] = useState({})
+    const [isAdmin, setIsAdmin] = useState({})
     const navigate = useNavigate()
     const { id } = useParams()
 
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0), [])
 
+    // USE EFFECT
+    useEffect(() => {
+        const checkIfAdmin = async () => {
+            try {
+                const { status } = await axios.get(`/api/players/admin/${playerId}`)
+                if (status === 200) setIsAdmin(true)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        checkIfAdmin()
+    }, [])
+    
   // USE EFFECT SET DECK
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const playerId = getCookie('playerId')
-        const isAdmin = playerId === 'UeyvnNBD6CD53gsqRQsxCY'
         const {data} = await axios.get(`/api/decks/${id}?isAdmin=${isAdmin}`)
         setDeck(data)
       } catch (err) {
@@ -52,7 +67,7 @@ export const SingleDeck = () => {
     }
 
     fetchData()
-  }, [id])
+  }, [id, isAdmin])
 
   // USE EFFECT SET DECK
   useEffect(() => {

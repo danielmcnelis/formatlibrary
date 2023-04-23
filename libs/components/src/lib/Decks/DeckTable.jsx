@@ -6,6 +6,9 @@ import { DeckRow } from './DeckRow.jsx'
 import { MobileDeckRow } from './MobileDeckRow'
 import { Pagination } from '../General/Pagination'
 import { useMediaQuery } from 'react-responsive'
+import { getCookie } from '@fl/utils'
+
+const playerId = getCookie('playerId')
 
 export const DeckTable = () => {
     const [page, setPage] = useState(1)
@@ -17,6 +20,7 @@ export const DeckTable = () => {
     const [origin, setOrigin] = useState(null)
     const [format, setFormat] = useState(null)
     const [formats, setFormats] = useState([])
+    const [isAdmin, setIsAdmin] = useState({})
   
     const [queryParams, setQueryParams] = useState({
       type: null,
@@ -27,6 +31,20 @@ export const DeckTable = () => {
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
   
+    // USE EFFECT
+    useEffect(() => {
+        const checkIfAdmin = async () => {
+            try {
+                const { status } = await axios.get(`/api/players/admin/${playerId}`)
+                if (status === 200) setIsAdmin(true)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        checkIfAdmin()
+    }, [])
+
     // GO TO PAGE
     const goToPage = (num, location) => {
       setPage(num)
@@ -58,7 +76,7 @@ export const DeckTable = () => {
 
     // COUNT
     const count = async () => {
-        let url = `/api/decks/count`
+        let url = `/api/decks/count?isAdmin=${isAdmin}`
         let filter = ''
   
         if (queryParams.eventName) filter += `,eventName:inc:${queryParams.eventName}`
@@ -66,7 +84,7 @@ export const DeckTable = () => {
         if (queryParams.type) filter += `,type:inc:${queryParams.type}`
         if (origin) filter += `,origin:eq:${origin}`
         if (format) filter += `,formatName:eq:${format}`
-        if (filter.length) url += ('?filter=' + filter.slice(1))
+        if (filter.length) url += ('&filter=' + filter.slice(1))
 
         const {data} = await axios.get(url)
         setTotal(data)
@@ -74,7 +92,7 @@ export const DeckTable = () => {
   
     // SEARCH
     const search = async () => {
-      let url = `/api/decks?page=${page}&limit=${decksPerPage}&sort=${sortBy}`
+      let url = `/api/decks?page=${page}&limit=${decksPerPage}&isAdmin=${isAdmin}&sort=${sortBy}`
       let filter = ''
 
       if (queryParams.eventName) filter += `,eventName:inc:${queryParams.eventName}`

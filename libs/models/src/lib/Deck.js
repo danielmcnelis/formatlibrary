@@ -80,7 +80,7 @@ export const Deck = db.define('decks', {
   }
 })
 
-Deck.countResults = async (filter = {}) => {
+Deck.countResults = async (filter = {}, isAdmind) => {
     filter = Object.entries(filter).reduce((reduced, [key, by]) => {
         let value = by.value
         if (typeof value === 'string') value.replaceAll('%20', ' ')

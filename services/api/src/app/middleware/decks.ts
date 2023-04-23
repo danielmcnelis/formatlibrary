@@ -520,12 +520,16 @@ export const decksDownload = async (req, res, next) => {
 
 export const countDecks = async (req, res, next) => {
     try {
+        const isAdmin = req.query.isAdmin
+        const display = isAdmin === 'true' ? { display: {operator: 'or', value: [true, false]} } :
+            { display: {operator: 'eq', value: 'true'} }
+
         const filter = req.query.filter ? req.query.filter.split(',').reduce((reduced, val) => {
             let [field, operator, value] = val.split(':')
             if (value.startsWith('arr(') && value.endsWith(')')) value = (value.slice(4, -1)).split(';')
             reduced[field] = {operator, value}
             return reduced
-        }, { display: {operator: 'eq', value: 'true'} }) : { display: {operator: 'eq', value: 'true'} }
+        }, display) : display
 
         const count = await Deck.countResults(filter)
         res.json(count)
@@ -536,15 +540,18 @@ export const countDecks = async (req, res, next) => {
 
 export const getDecks = async (req, res, next) => {
     try {
+        const isAdmin = req.query.isAdmin
         const limit = parseInt(req.query.limit || 10)
         const page = parseInt(req.query.page || 1)
+        const display = isAdmin === 'true' ? { display: {operator: 'or', value: [true, false]} } :
+            { display: {operator: 'eq', value: 'true'} }
 
         const filter = req.query.filter ? req.query.filter.split(',').reduce((reduced, val) => {
             let [field, operator, value] = val.split(':')
             if (value.startsWith('arr(') && value.endsWith(')')) value = (value.slice(4, -1)).split(';')
             reduced[field] = {operator, value}
             return reduced
-        }, { display: {operator: 'eq', value: 'true'} }) : { display: {operator: 'eq', value: 'true'} }
+        }, display) : display
 
         const sort = req.query.sort ? req.query.sort.split(',').reduce((reduced, val) => {
             const [field, value] = val.split(':')
