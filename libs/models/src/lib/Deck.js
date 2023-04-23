@@ -80,7 +80,7 @@ export const Deck = db.define('decks', {
   }
 })
 
-Deck.countResults = async (filter = {}, isAdmind) => {
+Deck.countResults = async (filter = {}) => {
     filter = Object.entries(filter).reduce((reduced, [key, by]) => {
         let value = by.value
         if (typeof value === 'string') value.replaceAll('%20', ' ')
@@ -118,6 +118,7 @@ Deck.countResults = async (filter = {}, isAdmind) => {
         return reduced
     }, {})
 
+    console.log('filter', filter)
     const count = await Deck.count({ 
         where: filter
      })
