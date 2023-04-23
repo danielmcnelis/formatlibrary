@@ -521,6 +521,7 @@ export const decksDownload = async (req, res, next) => {
 export const countDecks = async (req, res, next) => {
     try {
         const isAdmin = req.query.isAdmin
+        console.log('countDecks() isAdmin', isAdmin)
         const display = isAdmin === 'true' ? { display: {operator: 'or', value: [true, false]} } :
             { display: {operator: 'eq', value: 'true'} }
 
@@ -541,6 +542,7 @@ export const countDecks = async (req, res, next) => {
 export const getDecks = async (req, res, next) => {
     try {
         const isAdmin = req.query.isAdmin
+        console.log('getDecks() isAdmin', isAdmin)
         const limit = parseInt(req.query.limit || 10)
         const page = parseInt(req.query.page || 1)
         const display = isAdmin === 'true' ? { display: {operator: 'or', value: [true, false]} } :

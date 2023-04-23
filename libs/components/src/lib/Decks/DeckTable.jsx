@@ -20,7 +20,8 @@ export const DeckTable = () => {
     const [origin, setOrigin] = useState(null)
     const [format, setFormat] = useState(null)
     const [formats, setFormats] = useState([])
-    const [isAdmin, setIsAdmin] = useState({})
+    const [isAdmin, setIsAdmin] = useState(false)
+    console.log('isAdmin', isAdmin)
   
     const [queryParams, setQueryParams] = useState({
       type: null,
@@ -160,12 +161,12 @@ export const DeckTable = () => {
     // USE EFFECT SEARCH
     useEffect(() => {
       search()
-    }, [format, origin, queryParams, page, decksPerPage, sortBy])
+    }, [isAdmin, format, origin, queryParams, page, decksPerPage, sortBy])
   
     // USE EFFECT COUNT
     useEffect(() => {
         count()
-      }, [format, origin, queryParams])
+      }, [isAdmin, format, origin, queryParams])
 
     // RENDER
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
