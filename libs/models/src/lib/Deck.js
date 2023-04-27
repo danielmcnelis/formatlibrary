@@ -164,6 +164,8 @@ Deck.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
         return reduced
     }, {})
 
+    console.log('sort', sort)
+
     const decks = await Deck.findAll({
         where: filter,
         offset: (page - 1) * limit,
