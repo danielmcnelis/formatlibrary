@@ -12,7 +12,7 @@ export default {
 	        .setDescription('A Yu-Gi-Oh! Bot powered by FormatLibrary.com.\n' )
 	        .setURL('https://discord.com/invite/formatlibrary')
 	        .setAuthor({ name: 'Jazz#2704', iconURL: 'https://i.imgur.com/wz5TqmR.png', url: 'https://discord.com/invite/formatlibrary' })
-            .setThumbnail('https://cdn.formatlibrary.com/images/logos/AJTBLS.png')
+            .setThumbnail('https://cdn.formatlibrary.com/images/logos/Format%20Library.png')
             .addFields(
                 { name: 'How to Use This Bot', value: '\nThe following commands can be used for any format in the appropriate server, channels, or via DM.' },
         	    { name: 'Cards', value: '\n/search - Look up a card. \n'},

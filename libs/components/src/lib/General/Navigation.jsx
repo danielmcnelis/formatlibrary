@@ -20,7 +20,7 @@ export const Navigation = () => {
         <div className="navigation-bar">
             <Link to="/">
             <div id="logo">
-                <img src={'https://cdn.formatlibrary.com/images/logos/AJTBLS.png'} alt="logo"/>
+                <img src={'https://cdn.formatlibrary.com/images/logos/Format Library.png'} alt="logo"/>
                 <h1>Format Library</h1>
             </div>
             </Link>

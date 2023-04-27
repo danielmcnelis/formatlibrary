@@ -1,0 +1,55 @@
+{
+  "name": "rulings",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "scripts/rulings/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/scripts/rulings",
+        "main": "scripts/rulings/src/main.ts",
+        "tsConfig": "scripts/rulings/tsconfig.app.json"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "scripts/rulings/src/environments/environment.ts",
+              "with": "scripts/rulings/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["scripts/rulings/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/scripts/rulings"],
+      "options": {
+        "jestConfig": "scripts/rulings/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "script": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["./node_modules/.bin/nx run rulings:build", "node dist/scripts/rulings/main.js"],
+        "parallel": false
+      }
+    }
+  },
+  "tags": []
+}
