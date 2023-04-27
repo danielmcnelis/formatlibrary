@@ -164,14 +164,9 @@ Deck.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
         return reduced
     }, {})
 
-    console.log('sort 167', sort)
-
     const sortParams = sort.map((e) => e[0])
-
     if (!sortParams.includes('publishDate')) sort.push(['publishDate', 'desc'])
     if (!sortParams.includes('placement')) sort.push(['placement', 'asc'])
-    
-    console.log('sort 174', sort)
 
     const decks = await Deck.findAll({
         where: filter,

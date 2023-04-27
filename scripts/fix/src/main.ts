@@ -3,7 +3,7 @@ import { Deck, DeckType, DeckThumb, Event, Format, Player } from '@fl/models'
 
 ;(async () => {
     const decks = await Deck.findAll({ include: [DeckType, Event, Format, Player] })
-    let a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0, h = 0, k = 0
+    let a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0, h = 0, k = 0, l = 0
 
     for (let i = 0; i < decks.length; i++) {
         const deck = decks[i]
@@ -79,4 +79,24 @@ import { Deck, DeckType, DeckThumb, Event, Format, Player } from '@fl/models'
     }
 
     console.log(`synchronized ${h} DeckThumb names with DeckType names`)
+
+    const deckTypes = await DeckType.findAll()
+
+    for (let i = 0; i < deckTypes.length; i++) {
+        const deckType = deckTypes[i]
+
+        const count = await Deck.count({
+            where: {
+                deckTypeId: deckType.id
+            }
+        })
+
+        if (!count) {
+            console.log(`deleting DeckType: ${deckType.name}`)
+            await deckType.destroy()
+            l++
+        }
+    }
+
+    console.log(`deleted ${l} DeckTypes without a corresponding Deck`)
 })()
