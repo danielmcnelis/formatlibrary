@@ -553,11 +553,11 @@ export const getDecks = async (req, res, next) => {
             return reduced
         }, display) : display
 
-        const sort = req.query.sort ? req.query.sort.split(',').reduce((reduced, val) => {
+        const sort = req.query.sort?.split(',').reduce((reduced, val) => {
             const [field, value] = val.split(':')
             reduced.push([field, value])
             return reduced
-        }, []) : [['publishDate', 'desc'], ['placement', 'asc']]
+        }, [])
 
         const decks = await Deck.find(filter, limit, page, sort)
         res.json(decks)
