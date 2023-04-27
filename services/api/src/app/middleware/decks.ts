@@ -720,7 +720,7 @@ export const decksCreate = async (req, res, next) => {
       ydk: req.body.ydk,
       eventName: req.body.eventName,
       eventId: req.body.eventId,
-      origin: 'event',
+      origin: req.body.origin,
       publishDate: req.body.publishDate,
       placement: req.body.placement,
       community: req.body.community,

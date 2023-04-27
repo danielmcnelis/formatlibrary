@@ -170,6 +170,7 @@ export const Builder = () => {
                     formatDate: format.date,
                     formatBanlist: format.banlist,
                     formatId: format.id,
+                    origin: 'user',
                     ydk: ydk,
                     display: false
                 })

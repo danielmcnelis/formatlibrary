@@ -56,6 +56,7 @@ export const DeckCreator = () => {
                 eventId: event.id,
                 publishDate: event.startDate,
                 placement: placement,
+                origin: 'event',
                 community: community,
                 display: display
             })
