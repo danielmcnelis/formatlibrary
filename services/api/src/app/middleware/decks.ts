@@ -557,7 +557,7 @@ export const getDecks = async (req, res, next) => {
             const [field, value] = val.split(':')
             reduced.push([field, value])
             return reduced
-        }, []) : [['publishDate', 'desc']]
+        }, [['placement', 'asc'], ['publishDate', 'desc']]) : [['placement', 'asc'], ['publishDate', 'desc'], ]
 
         const decks = await Deck.find(filter, limit, page, sort)
         res.json(decks)
