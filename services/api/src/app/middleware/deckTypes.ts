@@ -259,20 +259,21 @@ export const deckTypesDownload = async (req, res, next) => {
   
 export const deckTypesSummary = async (req, res, next) => {
   try {
-    const decks =
-      (await Deck.findAll({
+    const decks = await Deck.findAll({
         where: {
-          type: { [Op.iLike]: req.query.id },
-          formatName: {[Op.iLike]: req.query.format}
+            type: { [Op.iLike]: req.query.id },
+            formatName: { [Op.iLike]: req.query.format },
+            origin: 'event',
+            eventId: { [Op.not]: null }
         },
         attributes: ['id', 'type', 'category', 'ydk', 'formatName']
-      })) || []
+    })
     
     const format = await Format.findOne({
-      where: {
-        name: { [Op.iLike]: req.query.format }
-      },
-      attributes: ['id', 'name', 'banlist', 'date', 'icon']
+        where: {
+            name: { [Op.iLike]: req.query.format }
+        },
+        attributes: ['id', 'name', 'banlist', 'date', 'icon']
     })
 
     const deckType = await DeckType.findOne({
@@ -282,12 +283,7 @@ export const deckTypesSummary = async (req, res, next) => {
     })
 
     const showExtra = format.date >= '2008-08-05' || !format.date
-
-    const total = await Deck.count({
-      where: {
-        formatId: format.id
-      }
-    })
+    const total = await Deck.count({ where: { formatId: format.id }})
 
     const data = {
       percent: Math.round((decks.length / total) * 100) || '<1',
