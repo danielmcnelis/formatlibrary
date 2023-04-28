@@ -262,37 +262,37 @@ export const deckTypesSummary = async (req, res, next) => {
     const decks =
       (await Deck.findAll({
         where: {
-          type: { [Op.iLike]: req.query.id }
+          type: { [Op.iLike]: req.query.id },
+          formatName: {[Op.iLike]: req.query.format}
         },
         attributes: ['id', 'type', 'category', 'ydk', 'formatName']
       })) || []
-
-    const freqs = decks.reduce(
-      (acc, curr) => (acc[curr.formatName] ? acc[curr.formatName]++ : (acc[curr.formatName] = 1), acc),
-      {}
-    )
     
-    const sortedFreqs = Object.entries(freqs).sort((a: never, b: never) => b[1] - a[1])
-    const topFormat = sortedFreqs[0][0]
     const format = await Format.findOne({
       where: {
-        name: { [Op.iLike]: req.query.format || topFormat }
+        name: { [Op.iLike]: req.query.format }
       },
       attributes: ['id', 'name', 'banlist', 'date', 'icon']
     })
 
+    const deckType = await DeckType.findOne({
+        where: {
+            name: req.query.id
+        }
+    })
+
     const showExtra = format.date >= '2008-08-05' || !format.date
-    const count = freqs[format.name]
+
     const total = await Deck.count({
       where: {
-        formatName: { [Op.iLike]: format.name }
+        formatId: format.id
       }
     })
 
     const data = {
-      percent: Math.round((count / total) * 100) || '<1',
-      deckType: decks[0].type,
-      deckCategory: decks[0].category,
+      percent: Math.round((decks.length / total) * 100) || '<1',
+      deckType: deckType.name,
+      deckCategory: deckType.category,
       analyzed: 0,
       main: {},
       mainMonsters: [],
@@ -304,19 +304,19 @@ export const deckTypesSummary = async (req, res, next) => {
       sideMonsters: [],
       sideSpells: [],
       sideTraps: [],
-      format: undefined
+      format: format
     }
 
     for (let i = 0; i < decks.length; i++) {
-      const deck = decks[i]
-      if (deck.formatName.toLowerCase() !== format.name.toLowerCase()) continue
       data.analyzed++
+      const deck = decks[i]
 
       const mainKonamiCodes = deck.ydk
         .split('#main')[1]
         .split('#extra')[0]
         .split('\n')
         .filter((e) => e.length)
+
       const extraKonamiCodes = showExtra
         ? deck.ydk
             .split('#extra')[1]
@@ -324,6 +324,7 @@ export const deckTypesSummary = async (req, res, next) => {
             .split('\n')
             .filter((e) => e.length)
         : []
+        
       const sideKonamiCodes = deck.ydk
         .split('!side')[1]
         .split('\n')
@@ -339,8 +340,8 @@ export const deckTypesSummary = async (req, res, next) => {
         const konamiCode = e[0]
         const count = e[1]
         if (data.main[konamiCode]) {
-          data.main[konamiCode][count]++
-          data.main[konamiCode].decks++
+          data.main[konamiCode][count] += 1
+          data.main[konamiCode].decks += 1 
           data.main[konamiCode].total += count
         } else {
           data.main[konamiCode] = {
@@ -357,8 +358,8 @@ export const deckTypesSummary = async (req, res, next) => {
         const konamiCode = e[0]
         const count = e[1]
         if (data.extra[konamiCode]) {
-          data.extra[konamiCode][count]++
-          data.extra[konamiCode].decks++
+          data.extra[konamiCode][count] += 1
+          data.extra[konamiCode].decks += 1
           data.extra[konamiCode].total += count
         } else {
           data.extra[konamiCode] = {
@@ -375,8 +376,8 @@ export const deckTypesSummary = async (req, res, next) => {
         const konamiCode = e[0]
         const count = e[1]
         if (data.side[konamiCode]) {
-          data.side[konamiCode][count]++
-          data.side[konamiCode].decks++
+          data.side[konamiCode][count] += 1
+          data.side[konamiCode].decks += 1
           data.side[konamiCode].total += count
         } else {
           data.side[konamiCode] = {
@@ -472,8 +473,8 @@ export const deckTypesSummary = async (req, res, next) => {
     data.sideTraps = Object.values(data.side)
       .filter((v: any) => v.card.category === 'Trap')
       .sort((a: any, b: any) => b.decks - a.decks)
-    data.format = format
 
+    console.log('data', data)
     res.json(data)
   } catch (err) {
     console.log(err)
