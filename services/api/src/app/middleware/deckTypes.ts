@@ -277,7 +277,7 @@ export const deckTypesSummary = async (req, res, next) => {
 
     const deckType = await DeckType.findOne({
         where: {
-            name: req.query.id
+            name: { [Op.iLike]: req.query.id }
         }
     })
 
