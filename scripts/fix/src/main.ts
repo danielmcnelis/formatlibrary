@@ -87,7 +87,8 @@ import { Deck, DeckType, DeckThumb, Event, Format, Player } from '@fl/models'
 
         const count = await Deck.count({
             where: {
-                deckTypeId: deckType.id
+                deckTypeId: deckType.id,
+                origin: 'event' 
             }
         })
 
