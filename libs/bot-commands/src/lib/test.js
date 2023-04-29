@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { isProgrammer, updateMarketPrices } from '@fl/bot-functions'
+import { isProgrammer, updateSets, downloadNewCards, updateMarketPrices } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 // import { client } from '../client'
 
@@ -10,7 +10,9 @@ export default {
         .setDescription('Performs a test. 🧪'),
     async execute(interaction) {
         if (isProgrammer(interaction.member)) {
-            updateMarketPrices()
+            updateSets()
+            setTimeout(() => downloadNewCards(), 1 * 60 * 1000)
+            setTimeout(() => updateMarketPrices(), 2 * 60 * 1000)
             await interaction.reply(emojis.yellow)
         } else {
             await interaction.reply('🧪')
