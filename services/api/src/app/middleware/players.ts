@@ -23,6 +23,25 @@ export const playersAdmin = async (req, res, next) => {
       }
 }
 
+export const playersSubscriber = async (req, res, next) => {
+    try {
+        const player = await Player.findOne({
+          where: {
+            id: req.params.id,
+            subscriber: true
+          }
+        })
+
+        if (player) {
+            res.send(200)
+        } else {
+            res.send(404)
+        }
+      } catch (err) {
+        next(err)
+      }
+}
+
 export const playersContentManager = async (req, res, next) => {
     try {
         const player = await Player.findOne({
