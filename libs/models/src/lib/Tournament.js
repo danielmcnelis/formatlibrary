@@ -21,6 +21,10 @@ export const Tournament = db.define('tournaments', {
   formatId: {
     type: Sequelize.INTEGER
   },
+  isPremiumTournament: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
   isTeamTournament: {
     type: Sequelize.BOOLEAN,
     defaultValue: false

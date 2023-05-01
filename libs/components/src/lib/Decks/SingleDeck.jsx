@@ -33,7 +33,8 @@ const playerId = getCookie('playerId')
 export const SingleDeck = () => {
     const [deck, setDeck] = useState({})
     const [banlist, setBanlist] = useState({})
-    const [isAdmin, setIsAdmin] = useState({})
+    const [isAdmin, setIsAdmin] = useState(false)
+    const [isSubscriber, setIsSubscriber] = useState(false)
     const navigate = useNavigate()
     const { id } = useParams()
 
@@ -51,14 +52,24 @@ export const SingleDeck = () => {
             }
         }
 
+        const checkIfSubscriber = async () => {
+            try {
+                const { status } = await axios.get(`/api/players/subscriber/${playerId}`)
+                if (status === 200) setIsSubscriber(true)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
         checkIfAdmin()
+        checkIfSubscriber()
     }, [])
     
   // USE EFFECT SET DECK
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const {data} = await axios.get(`/api/decks/${id}?isAdmin=${isAdmin}`)
+        const {data} = await axios.get(`/api/decks/${id}?isAdmin=${isAdmin}?isSubscriber=${isSubscriber}`)
         setDeck(data)
       } catch (err) {
         console.log(err)
@@ -67,7 +78,7 @@ export const SingleDeck = () => {
     }
 
     fetchData()
-  }, [id, isAdmin])
+  }, [id, isAdmin, isSubscriber])
 
   // USE EFFECT SET DECK
   useEffect(() => {

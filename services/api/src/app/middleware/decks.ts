@@ -521,7 +521,9 @@ export const decksDownload = async (req, res, next) => {
 export const countDecks = async (req, res, next) => {
     try {
         const isAdmin = req.query.isAdmin
+        const isSubscriber = req.query.isSubscriber
         const display = isAdmin === 'true' ? { display: {operator: 'or', value: [true, false]} } :
+            isSubscriber === 'true' ? { publishDate: {operator: 'not', value: null }} :
             { display: {operator: 'eq', value: true} }
 
         const filter = req.query.filter ? req.query.filter.split(',').reduce((reduced, val) => {
@@ -541,9 +543,12 @@ export const countDecks = async (req, res, next) => {
 export const getDecks = async (req, res, next) => {
     try {
         const isAdmin = req.query.isAdmin
+        const isSubscriber = req.query.isSubscriber
         const limit = parseInt(req.query.limit || 10)
         const page = parseInt(req.query.page || 1)
+        
         const display = isAdmin === 'true' ? { display: {operator: 'or', value: [true, false]} } :
+            isSubscriber === 'true' ? { publishDate: {operator: 'not', value: null }} :
             { display: {operator: 'eq', value: true} }
 
         const filter = req.query.filter ? req.query.filter.split(',').reduce((reduced, val) => {
@@ -571,11 +576,17 @@ export const decksId = async (req, res, next) => {
     const id = parseInt(req.params.id)
     const shareLink = req.params.id
     const isAdmin = req.query.isAdmin
+    const isSubscriber = req.query.isSubscriber
     
     const deck = await Deck.findOne({
-        where: !isNaN(id) ? {
+        where: !isNaN(id) && isAdmin === 'true' ? {
+            id: id
+        } : !isNaN(id) && isSubscriber === 'true' ? {
             id: id,
-            display: isAdmin === 'true' ? {[Op.or]: [true, false]} : true
+            publishDate: {[Op.not]: null}
+        } : !isNaN(id) ? {
+            id: id,
+            display: true,
         } : {
             shareLink: shareLink,
             linkExpiration: {[Op.gte]: new Date()}

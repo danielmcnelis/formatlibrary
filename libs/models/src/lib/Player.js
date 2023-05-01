@@ -69,6 +69,13 @@ export const Player = db.define('players', {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
+  subscriber: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+  subTier: {
+    type: Sequelize.STRING
+  },
   hidden: {
     type: Sequelize.BOOLEAN,
     defaultValue: false

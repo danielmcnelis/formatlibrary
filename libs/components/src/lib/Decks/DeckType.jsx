@@ -162,10 +162,10 @@ export const DeckType = () => {
                   data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
                   `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
   
-                  const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%\n` : '') +
-                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%\n` : '') +
-                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%\n` : '') +
-                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100)}%` : '')
+                  const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
   
                   return (
                     <div className="popular-main" key={'m' + data.card.ypdId}>
@@ -184,10 +184,10 @@ export const DeckType = () => {
                   data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
                   `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
   
-                  const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%\n` : '') +
-                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%\n` : '') +
-                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%\n` : '') +
-                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100)}%` : '')
+                  const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
   
                   return (
                     <div className="popular-main" key={'m' + data.card.ypdId} >
@@ -206,10 +206,10 @@ export const DeckType = () => {
                   data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
                   `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
   
-                  const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%\n` : '') +
-                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%\n` : '') +
-                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%\n` : '') +
-                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100)}%` : '')
+                  const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
   
                   return (
                     <div className="popular-main" key={'m' + data.card.ypdId} >
@@ -238,10 +238,10 @@ export const DeckType = () => {
                         data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
                         `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
   
-                        const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%\n` : '') +
-                        (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%\n` : '') +
-                        (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%\n` : '') +
-                        ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100)}%` : '')
+                        const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                        (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                        (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                        ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
       
                         return (
                           <div className="popular-side" key={'e' + data.card.ypdId} >
@@ -271,10 +271,10 @@ export const DeckType = () => {
                   data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
                   `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
   
-                  const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%\n` : '') +
-                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%\n` : '') +
-                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%\n` : '') +
-                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100)}%` : '')
+                  const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
   
                   return (
                     <div className="popular-side" key={'s' + data.card.ypdId} >
@@ -293,10 +293,10 @@ export const DeckType = () => {
                   data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
                   `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
   
-                  const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%\n` : '') +
-                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%\n` : '') +
-                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%\n` : '') +
-                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100)}%` : '')
+                  const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
   
                   return (
                     <div className="popular-side" key={'s' + data.card.ypdId}>
@@ -315,10 +315,10 @@ export const DeckType = () => {
                   data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
                   `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
   
-                  const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%\n` : '') +
-                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%\n` : '') +
-                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%\n` : '') +
-                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100)}%` : '')
+                  const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
   
                   return (
                     <div className="popular-side" key={'s' + data.card.ypdId}>

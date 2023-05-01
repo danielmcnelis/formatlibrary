@@ -288,6 +288,22 @@ export const joinTournament = async (interaction, tournamentId) => {
         
         return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (${team.name}) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else if (!entry && !tournament.isTeamTournament) {
+        if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
+            return interaction.member.send({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
+        } else if (tournament.isPremiumTournament && player.subTier === 'Premium') {
+            const alreadyEntered = await Entry.count({
+                where: {
+                    playerId: player.id,
+                    '$tournament.isPremiumTournament$': true
+                },
+                include: Tournament
+            })
+
+            if (alreadyEntered) {
+                return interaction.member.send({ content: `Sorry, you may only enter one Premium Tournament per month with your current subscription.`})
+            }
+        }
+
         try {
             entry = await Entry.create({
                 playerName: player.name,
@@ -303,7 +319,12 @@ export const joinTournament = async (interaction, tournamentId) => {
         }
                             
         const { participant } = await postParticipant(server, tournament, player).catch((err) => console.log(err))
-        if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
+        
+        if (!participant) {
+            await entry.destroy()
+            return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
+        }
+
         await entry.update({ participantId: participant.id })
 
         const deckAttachments = await drawDeck(ydk) || []
@@ -337,32 +358,8 @@ export const joinTournament = async (interaction, tournamentId) => {
         })
 
         return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
-    } else if (entry && entry.active === false && !tournament.isTeamTournament) {
-        const { participant } = await postParticipant(server, tournament, player).catch((err) => console.log(err))
-        if (!participant) return await interaction.member.send({ content: `Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
-        
-        await entry.update({
-            url: url,
-            ydk: ydk,
-            participantId: participant.id,
-            active: true
-        })
-
-        const deckAttachments = await drawDeck(ydk) || []
-        interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
-        interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
-        deckAttachments.forEach((attachment, index) => {
-            if (index === 0) {
-                interaction.member.send({ content: `FYI, this is the deck you submitted:`, files: [attachment] }).catch((err) => console.log(err))
-            } else {
-                interaction.member.send({ files: [attachment] }).catch((err) => console.log(err))
-            }
-        })
-
-        return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else {
         await entry.update({ url, ydk })
-
         const deckAttachments = await drawDeck(ydk) || []
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
@@ -575,18 +572,21 @@ export const createSheetData = async (tournament) => {
 //REMOVE PARTICIPANT
 export const removeParticipant = async (server, interaction, member, entry, tournament, drop = false) => {    
     try {
-        const { status } = await axios({
+        await axios({
             method: 'delete',
             url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${entry.participantId}.json?api_key=${server.challongeAPIKey}`
         })
 
-        console.log('status', status)
         const playerId = entry.playerId
 
         if (tournament.state === 'underway') {
             await entry.update({ active: false, roundDropped: entry.wins + entry.losses })
         } else {
             await entry.destroy()
+            if (tournament.isPremiumTournament) {
+                const player = await Player.findOne({ id: playerId })
+                await player.update({ vouchers: player.vouchers + 1 })
+            }
         }
 
         const count = await Entry.count({ 
@@ -600,7 +600,9 @@ export const removeParticipant = async (server, interaction, member, entry, tour
 
         if (!count) member.roles.remove(server.tourRole).catch((err) => console.log(err))
     
-        if (drop) {
+        if (drop && tournament.state !== 'underway') {
+            return await interaction.editReply({ content: `I removed you from ${tournament.name}. We hope to see you next time! ${tournament.emoji}`})
+        } else if (drop) {
             return await interaction.editReply({ content: `I removed you from ${tournament.name}. Better luck next time! ${tournament.emoji}`})
         } else {
             return await interaction.editReply({ content: `${member.user.username} has been removed from ${tournament.name}. ${tournament.emoji}`})
@@ -1621,7 +1623,8 @@ export const createTournament = async (interaction, formatName, name, abbreviati
     })
     
     const channel = interaction.guild.name !== 'Format Library' ? await interaction.guild.channels.cache.find((channel) => channel.name === channelName) : {}
-    const channelId = interaction.guild.name === 'Format Library' ? format.channel : channel.id
+    const channelId = interaction.guild.name === 'Format Library' ? format.channel : channel?.id
+    if (!channelId) return
 
     const str = generateRandomString(10, '0123456789abcdefghijklmnopqrstuvwxyz')
 
@@ -1747,7 +1750,6 @@ export const removeFromTournament = async (interaction, tournamentId, userId) =>
 
 // DROP FROM TOURNAMENT
 export const dropFromTournament = async (interaction, tournamentId) => {
-    console.log('dropFromTournament()')
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
     const player = await Player.findOne({ where: { discordId: interaction.user.id }})
     if (!player) return
@@ -1779,7 +1781,6 @@ export const dropFromTournament = async (interaction, tournamentId) => {
     
             return removeTeam(server, interaction, team, entries, tournament, true)
         } else {
-
             const isOnTeam = await Team.count({
                 where: {
                     tournamentId: tournament.id,

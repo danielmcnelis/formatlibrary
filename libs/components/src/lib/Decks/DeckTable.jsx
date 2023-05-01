@@ -21,7 +21,7 @@ export const DeckTable = () => {
     const [format, setFormat] = useState(null)
     const [formats, setFormats] = useState([])
     const [isAdmin, setIsAdmin] = useState(false)
-    console.log('isAdmin', isAdmin)
+    const [isSubscriber, setIsSubscriber] = useState(false)
   
     const [queryParams, setQueryParams] = useState({
       type: null,
@@ -43,7 +43,17 @@ export const DeckTable = () => {
             }
         }
 
+        const checkIfSubscriber = async () => {
+            try {
+                const { status } = await axios.get(`/api/players/subscriber/${playerId}`)
+                if (status === 200) setIsSubscriber(true)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
         checkIfAdmin()
+        checkIfSubscriber()
     }, [])
 
     // GO TO PAGE
@@ -77,7 +87,7 @@ export const DeckTable = () => {
 
     // COUNT
     const count = async () => {
-        let url = `/api/decks/count?isAdmin=${isAdmin}`
+        let url = `/api/decks/count?isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`
         let filter = ''
   
         if (queryParams.eventName) filter += `,eventName:inc:${queryParams.eventName}`
@@ -93,7 +103,7 @@ export const DeckTable = () => {
   
     // SEARCH
     const search = async () => {
-      let url = `/api/decks?page=${page}&limit=${decksPerPage}&isAdmin=${isAdmin}&sort=${sortBy}`
+      let url = `/api/decks?page=${page}&limit=${decksPerPage}&isAdmin=${isAdmin}&isSubscriber=${isSubscriber}&sort=${sortBy}`
       let filter = ''
 
       if (queryParams.eventName) filter += `,eventName:inc:${queryParams.eventName}`
@@ -161,12 +171,12 @@ export const DeckTable = () => {
     // USE EFFECT SEARCH
     useEffect(() => {
       search()
-    }, [isAdmin, format, origin, queryParams, page, decksPerPage, sortBy])
+    }, [isAdmin, isSubscriber, format, origin, queryParams, page, decksPerPage, sortBy])
   
     // USE EFFECT COUNT
     useEffect(() => {
         count()
-      }, [isAdmin, format, origin, queryParams])
+      }, [isAdmin, isSubscriber, format, origin, queryParams])
 
     // RENDER
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
