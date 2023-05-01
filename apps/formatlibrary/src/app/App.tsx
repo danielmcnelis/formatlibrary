@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { getCookie } from '@fl/utils'
 const playerId = getCookie('playerId')
+import {Helmet} from "react-helmet"
 
 
 const App = () => {
@@ -31,7 +32,10 @@ const App = () => {
 
   return (
     <div>
-        {/* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2048547741313745" crossOrigin="anonymous"></script> */}
+        <Helmet>
+            <script>console.log('hello')</script>
+            {/* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2048547741313745" crossOrigin="anonymous"></script> */}
+        </Helmet>
         <div className="app">
         <Router />
             {/* {
