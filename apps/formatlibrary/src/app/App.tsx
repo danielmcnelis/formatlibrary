@@ -36,9 +36,15 @@ const App = () => {
         <Helmet>
             <script>console.log('@_@')</script>
             {
-                !isSubscriber ? (
-                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2048547741313745" crossOrigin="anonymous"></script>
-                ) : ''
+                playerId && !checkedSubscription ? '' : (
+                    <div>
+                        {
+                            !isSubscriber ? (
+                                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2048547741313745" crossOrigin="anonymous"></script>
+                            ) : ''
+                        }
+                    </div>
+                )
             }
         </Helmet>
         <div className="app">
