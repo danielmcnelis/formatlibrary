@@ -7,9 +7,9 @@ const playerId = getCookie('playerId')
 
 const App = () => {
     const [isSubscriber, setIsSubscriber] = useState(false)
-    // const [checkedSubscription, setCheckedSubscription] = useState(false)
+    const [checkedSubscription, setCheckedSubscription] = useState(false)
     console.log('isSubscriber', isSubscriber)
-    // console.log('checkedSubscription', checkedSubscription)
+    console.log('checkedSubscription', checkedSubscription)
 
     // USE EFFECT
     useEffect(() => {
@@ -22,7 +22,7 @@ const App = () => {
                     console.log(err)
                 }
     
-                // setCheckedSubscription(true)
+                setCheckedSubscription(true)
             }
     
             checkIfSubscriber()
@@ -31,14 +31,18 @@ const App = () => {
 
   return (
     <div className="app">
-        <div>
-            {
-                !isSubscriber ? (
-                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2048547741313745" crossOrigin="anonymous"></script>
-                ) : ''
-            }
-            <Router />
-        </div>
+        {
+            playerId && !checkedSubscription ? '' : (
+                <div>
+                    {
+                        !isSubscriber ? (
+                            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2048547741313745" crossOrigin="anonymous"></script>
+                        ) : ''
+                    }
+                    <Router />
+                </div>
+            )
+        }
     </div>
   )
 }
