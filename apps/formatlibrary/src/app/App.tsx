@@ -32,8 +32,12 @@ const App = () => {
   return (
     <div className="app">
         {
-            playerId && !checkedSubscription ? (
-                <div></div>
+            playerId && !checkedSubscription ? (        
+                <div>
+                    {
+                        console.log('@_@')
+                    }   
+                </div> 
             ) : (
                 <div>
                     {
