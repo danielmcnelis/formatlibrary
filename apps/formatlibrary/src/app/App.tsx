@@ -9,6 +9,7 @@ const App = () => {
     const [isSubscriber, setIsSubscriber] = useState(false)
     const [checkedSubscription, setCheckedSubscription] = useState(false)
     console.log('isSubscriber', isSubscriber)
+    console.log('checkedSubscription', checkedSubscription)
 
     // USE EFFECT
     useEffect(() => {
