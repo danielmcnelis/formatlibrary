@@ -27,7 +27,7 @@ const App = () => {
     <div className="app">
         {
             !isSubscriber ? (
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2048547741313745" crossorigin="anonymous"></script>
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2048547741313745" crossOrigin="anonymous"></script>
             ) : ''
         }
       <Router />
