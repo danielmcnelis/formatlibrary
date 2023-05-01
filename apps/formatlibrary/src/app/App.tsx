@@ -34,7 +34,7 @@ const App = () => {
   return (
     <div>
         <Helmet>
-            <script>console.log('hello')</script>
+            <script>console.log('@_@')</script>
             {
                 !isSubscriber ? (
                     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2048547741313745" crossOrigin="anonymous"></script>
