@@ -34,9 +34,7 @@ const App = () => {
         {
             playerId && !checkedSubscription ? (        
                 <div>
-                    {
-                        console.log('@_@')
-                    }   
+                    .
                 </div> 
             ) : (
                 <div>
