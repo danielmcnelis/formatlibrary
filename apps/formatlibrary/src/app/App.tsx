@@ -35,12 +35,13 @@ const App = () => {
     <div>
         <Helmet>
             <script>console.log('hello')</script>
-            {/* {
-                playerId && !checkedSubscription ? '' : 
+            {
+                playerId && !checkedSubscription ? <script>console.log('checking...')</script> : 
                     !isSubscriber ? (
-                        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2048547741313745" crossOrigin="anonymous"></script>
-                    ) : ''
-            } */}
+                        <script>console.log('display ads')</script>
+                        // <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2048547741313745" crossOrigin="anonymous"></script>
+                    ) : <script>console.log('no ads')</script>
+            }
         </Helmet>
         <div className="app">
         <Router />
