@@ -38,8 +38,8 @@ const App = () => {
             {
                 playerId && !checkedSubscription ? <script>console.log('checking...')</script> : 
                     !isSubscriber ? (
-                        <script>console.log('display ads')</script>
-                        // <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2048547741313745" crossOrigin="anonymous"></script>
+                        // <script>console.log('display ads')</script>
+                        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2048547741313745" crossOrigin="anonymous"></script>
                     ) : <script>console.log('no ads')</script>
             }
         </Helmet>
