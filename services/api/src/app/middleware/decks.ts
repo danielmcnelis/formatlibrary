@@ -576,7 +576,9 @@ export const decksId = async (req, res, next) => {
     const id = parseInt(req.params.id)
     const shareLink = req.params.id
     const isAdmin = req.query.isAdmin
+    console.log('isAdmin', isAdmin)
     const isSubscriber = req.query.isSubscriber
+    console.log('isSubscriber', isSubscriber)
     
     const deck = await Deck.findOne({
         where: !isNaN(id) && isAdmin === 'true' ? {

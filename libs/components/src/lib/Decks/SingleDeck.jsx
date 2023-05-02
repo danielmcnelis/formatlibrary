@@ -37,6 +37,7 @@ export const SingleDeck = () => {
     const [isSubscriber, setIsSubscriber] = useState(false)
     const navigate = useNavigate()
     const { id } = useParams()
+    console.log('isAdmin', isAdmin)
 
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0), [])

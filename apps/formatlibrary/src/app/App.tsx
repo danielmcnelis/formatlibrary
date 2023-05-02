@@ -10,8 +10,6 @@ const playerId = getCookie('playerId')
 const App = () => {
     const [isSubscriber, setIsSubscriber] = useState(false)
     const [checkedSubscription, setCheckedSubscription] = useState(false)
-    console.log('isSubscriber', isSubscriber)
-    console.log('checkedSubscription', checkedSubscription)
 
     // USE EFFECT
     useEffect(() => {
@@ -34,18 +32,15 @@ const App = () => {
   return (
     <div>
         <Helmet>
-            <script>console.log('hello')</script>
             {
-                playerId && !checkedSubscription ? <script>console.log('checking...')</script> : 
+                playerId && !checkedSubscription ? '' : 
                     !isSubscriber ? (
-                        // <script>console.log('display ads')</script>
                         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2048547741313745" crossOrigin="anonymous"></script>
-                    ) : <script>console.log('no ads')</script>
+                    ) : ''
             }
         </Helmet>
         <div className="app">
-        <Router />
-            
+            <Router />
         </div>
     </div>
   )
