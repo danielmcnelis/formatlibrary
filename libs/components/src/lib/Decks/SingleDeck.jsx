@@ -70,7 +70,7 @@ export const SingleDeck = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const {data} = await axios.get(`/api/decks/${id}?isAdmin=${isAdmin}?isSubscriber=${isSubscriber}`)
+        const {data} = await axios.get(`/api/decks/${id}?isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`)
         setDeck(data)
       } catch (err) {
         console.log(err)
