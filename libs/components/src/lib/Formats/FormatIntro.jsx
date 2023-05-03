@@ -7,8 +7,9 @@ import { NotFound } from '../General/NotFound'
 import { PopularDecks } from './PopularDecks'
 import { RecentEvents } from '../Events/RecentEvents'
 import { useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 
-export const FormatIntro = (props = {}) => {
+export const FormatIntro = () => {
     const [format, setFormat] = useState({})
     const [deckCount, setDeckCount] = useState(0)
     const [eventCount, setEventCount] = useState(0)
@@ -34,13 +35,22 @@ export const FormatIntro = (props = {}) => {
       }
   
       fetchData()
-    }, [])
+    }, [id])
   
     if (!format) return <NotFound/>
     if (!format.id) return <div />
   
     return (
       <div className="body">
+        <Helmet>
+            {
+                <>
+                    <meta property="og:title" content={`${format.name} Format`}/>
+                    <meta property="og:description" content={format.description}/>
+                    <meta property="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
+                </>
+            }
+        </Helmet>
         <div className="format-icon-flexbox">
           <div className="format-text">
             <h1>{format.name} Format</h1>

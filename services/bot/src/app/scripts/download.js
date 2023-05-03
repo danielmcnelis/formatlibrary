@@ -61,8 +61,6 @@ const savePfps = async () => {
                 fs.writeFileSync(`./pfps/${player_18.discordId}.png`, buffer)
                 console.log(`saved new pfp for ${player_18.name}`)
                 count++
-            } else {
-                console.log('BOTH ???')
             }
         } catch (err) {
             console.log(err)

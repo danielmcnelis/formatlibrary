@@ -49,8 +49,6 @@ module.exports = {
         const iron = irons[i]
         const player = await Player.findOne({ where: { id: iron.playerId }})
         if (!player || !player.uuid) continue
-        console.log('player.id', player.id)
-        console.log('player.uuid', player.uuid)
         await iron.update({ playerId: player.uuid })
     }
 

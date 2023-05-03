@@ -118,7 +118,6 @@ Deck.countResults = async (filter = {}) => {
         return reduced
     }, {})
 
-    console.log('filter', filter)
     const count = await Deck.count({ 
         where: filter
      })

@@ -192,7 +192,6 @@ export const cardsCreate = async (req, res, next) => {
             sortPriority: req.body.sortPriority
         })
 
-        console.log('/api/cards/create', card.dataValues)
         res.json(card)
     } catch (err) {
     next(err)

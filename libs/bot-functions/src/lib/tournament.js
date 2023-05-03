@@ -1636,6 +1636,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
         name.toLowerCase().includes('ajtbls') ? emojis.toad :
         name.toLowerCase().includes('ke$ha') ? emojis.UredU :
         name.toLowerCase().includes('crown') ? emojis.king :
+        name.toLowerCase().includes('patron battle royale') ? emojis.baller :
         name.toLowerCase().includes('dark side') ? emojis.evil :
         name.toLowerCase().includes('woawa') ? '🦉 ⚽' :
         name.toLowerCase().includes('gigachad') ? emojis.gigachad :
