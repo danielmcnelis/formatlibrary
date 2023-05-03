@@ -45,9 +45,9 @@ export const FormatIntro = () => {
         <Helmet>
             {
                 <>
-                    <meta property="og:title" content={`${format.name} Format`}>
-                    <meta property="og:description" content={format.description}>
-                    <meta property="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}>
+                    <meta property="og:title" content={`${format.name} Format`}/>
+                    <meta property="og:description" content={format.description}/>
+                    <meta property="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
                 </>
             }
         </Helmet>
