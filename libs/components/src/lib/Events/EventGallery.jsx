@@ -33,7 +33,7 @@ export const EventGallery = () => {
         fetchData()
     }, [id])
 
-    if (!events.length) return <div/>
+    if (!events?.length || !format?.id) return <div/>
 
     return (
         <div className="body">
