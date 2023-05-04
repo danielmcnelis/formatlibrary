@@ -14,7 +14,7 @@ export const EventThumbnail = (props = {}) => {
                   <img 
                     className="eventThumbnail-image" 
                     src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`}
-                    alt={event.format.name}
+                    alt={format.name}
                   />
                   <img 
                     className="eventThumbnail-player-pfp" 
