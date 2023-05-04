@@ -39,6 +39,7 @@ export const eventsAll = async (req, res, next) => {
 
 export const eventsGallery = async (req, res, next) => {
     try {
+        console.log('req.params.format', req.params.format)
       const format = await Format.findOne({
         where: {
           name: { [Op.iLike]: req.params.format }
@@ -47,10 +48,11 @@ export const eventsGallery = async (req, res, next) => {
       })
   
       if (!format) return false
+      console.log('!!format', !!format)
 
       const events = await Event.findAll({
         where: {
-          formatId: { [Op.iLike]: format.id },
+          formatId: format.id,
           display: true
         },
         include: [
@@ -60,6 +62,7 @@ export const eventsGallery = async (req, res, next) => {
         order: [['endDate', 'DESC']]
       })
   
+      console.log('events.length', events.length)
       if (!events.length) return false
       const winners = events.map((e) => e.player)
 
