@@ -37,6 +37,45 @@ export const eventsAll = async (req, res, next) => {
 }
 
 
+export const eventsGallery = async (req, res, next) => {
+    try {
+      const format = await Format.findOne({
+        where: {
+          name: { [Op.iLike]: req.params.format }
+        },
+        attributes: ['id', 'name', 'icon']
+      })
+  
+      if (!format) return false
+
+      const events = await Event.findAll({
+        where: {
+          formatId: { [Op.iLike]: format.id },
+          display: true
+        },
+        include: [
+          { model: Player, attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp'] }
+        ],
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        order: [['endDate', 'DESC']]
+      })
+  
+      if (!events.length) return false
+      const winners = events.map((e) => e.player)
+
+      const data = {
+        format,
+        events,
+        winners
+      }
+  
+      res.json(data)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+
 export const countEvents = async (req, res, next) => {
     try {
         const filter = req.query.filter ? req.query.filter.split(',').reduce((reduced, val) => {

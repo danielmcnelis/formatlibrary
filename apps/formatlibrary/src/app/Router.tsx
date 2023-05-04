@@ -6,6 +6,7 @@ import {
   DeckGallery,
   DeckTable,
   DeckType,
+  EventGallery,
   EventTable,
   FormatMaker,
   FormatMenu,
@@ -49,9 +50,10 @@ export const Router = () => {
 					<Route path="/decks/" element=<Page element= <DeckTable /> /> />
 					<Route path="/decks/:id" element=<Page element= <SingleDeck /> /> />
 					<Route path="/decktypes/:id" element=<Page element= <DeckType /> /> />
-					<Route path="/gallery/:id" element=<Page element= <DeckGallery /> /> />
+					<Route path="/deck-gallery/:id" element=<Page element= <DeckGallery /> /> />
 					<Route path="/events/" element=<Page element= <EventTable /> /> />
 					<Route path="/events/:id" element=<Page element= <SingleEvent /> /> />
+					<Route path="/event-gallery/:id" element=<Page element= <EventGallery /> /> />
 					<Route path="/ban-lists" element=<Page element= <FormatMenu /> /> />
 					<Route path="/goat-intro.html" element={<Navigate to="/formats/Goat" />} />
 					<Route path="/goat-intro" element={<Navigate to="/formats/Goat" />} />

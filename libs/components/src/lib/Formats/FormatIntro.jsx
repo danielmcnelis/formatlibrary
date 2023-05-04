@@ -42,7 +42,7 @@ export const FormatIntro = () => {
   
     return (
       <div className="body">
-        <Helmet>
+        {/* <Helmet>
             {
                 <>
                     <meta property="og:title" content={`${format.name} Format`}/>
@@ -50,7 +50,7 @@ export const FormatIntro = () => {
                     <meta property="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
                 </>
             }
-        </Helmet>
+        </Helmet> */}
         <div className="format-icon-flexbox">
           <div className="format-text">
             <h1>{format.name} Format</h1>

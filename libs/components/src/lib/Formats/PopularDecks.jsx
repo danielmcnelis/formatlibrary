@@ -7,7 +7,7 @@ import { DeckThumbnail } from '../Decks/DeckThumbnail'
 export const PopularDecks = (props) => {
     const [popularDecks, setPopularDecks] = useState([])
     const navigate = useNavigate()
-    const goToDeckGallery = () => navigate(`/gallery/${props.format.name}`)
+    const goToDeckGallery = () => navigate(`/deck-gallery/${props.format.name}`)
   
     // USE EFFECT
     useEffect(() => {
