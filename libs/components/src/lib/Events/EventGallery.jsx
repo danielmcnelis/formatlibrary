@@ -45,7 +45,7 @@ export const EventGallery = () => {
                 </div>
                 <div className="recent-events-flexbox">
                 {
-                    events.map((event, index) => <EventThumbnail key={event.id} event={event} winner={winners[index]}/>)
+                    events.map((event, index) => <EventThumbnail key={event.id} event={event} winner={winners[index]} format={format}/>)
                 }
                 </div>
             </div>

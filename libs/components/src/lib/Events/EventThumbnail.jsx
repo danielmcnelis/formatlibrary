@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { capitalize } from '@fl/utils'
 
 export const EventThumbnail = (props = {}) => {
-    const {event, winner} = props
+    const {event, winner, format} = props
     if (!event || !winner) return <div/>
 
   return (
@@ -13,7 +13,7 @@ export const EventThumbnail = (props = {}) => {
               <div className="eventThumbnail-flexbox">
                   <img 
                     className="eventThumbnail-image" 
-                    src={`https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png`}
+                    src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`}
                     alt={event.format.name}
                   />
                   <img 
