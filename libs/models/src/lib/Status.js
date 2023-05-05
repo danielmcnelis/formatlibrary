@@ -8,7 +8,13 @@ export const Status = db.define('statuses', {
   banlist: {
     type: Sequelize.STRING
   },
+  date: {
+    type: Sequelize.STRING
+  },
   restriction: {
+    type: Sequelize.STRING
+  },
+  previous: {
     type: Sequelize.STRING
   }
 })
