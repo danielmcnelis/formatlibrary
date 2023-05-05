@@ -102,54 +102,54 @@ import { Op } from 'sequelize'
 //     console.log(`deleted ${l} DeckTypes without a corresponding Deck`)
 // })()
     
-;(async () => {
-    const statuses = await Status.findAll()
-
-    for (let i = 0; i < statuses.length; i++) {
-        const status = statuses[i]
-        const monthStr = status.banlist.slice(0, 3) 
-        const month = monthStr === 'jan' ? '01' :
-            monthStr === 'feb' ? '02' :
-            monthStr === 'mar' ? '03' :
-            monthStr === 'apr' ? '04' :
-            monthStr === 'may' ? '05' :
-            monthStr === 'jun' ? '06' :
-            monthStr === 'jul' ? '07' :
-            monthStr === 'aug' ? '08' :
-            monthStr === 'sep' ? '09' :
-            monthStr === 'oct' ? '10' :
-            monthStr === 'nov' ? '11' :
-            monthStr === 'dec' ? '12' :
-            ''
-
-        const year = '20' + status.banlist.slice(3)
-        await status.update({ date: `${year}-${month}-01` })
-    }
-})()
-
 // ;(async () => {
-//     const cards = await Card.findAll()
+//     const statuses = await Status.findAll()
 
-//     for (let i = 0; i < cards.length; i++) {
-//         const card = cards[i]
-//         const statuses = await Status.findAll({
-//             where: {
-//                 cardId: card.id
-//             },
-//             order: ['date', 'ASC']
-//         })
+//     for (let i = 0; i < statuses.length; i++) {
+//         const status = statuses[i]
+//         const monthStr = status.banlist.slice(0, 3) 
+//         const month = monthStr === 'jan' ? '01' :
+//             monthStr === 'feb' ? '02' :
+//             monthStr === 'mar' ? '03' :
+//             monthStr === 'apr' ? '04' :
+//             monthStr === 'may' ? '05' :
+//             monthStr === 'jun' ? '06' :
+//             monthStr === 'jul' ? '07' :
+//             monthStr === 'aug' ? '08' :
+//             monthStr === 'sep' ? '09' :
+//             monthStr === 'oct' ? '10' :
+//             monthStr === 'nov' ? '11' :
+//             monthStr === 'dec' ? '12' :
+//             ''
 
-//         for (let j = 0; j < statuses.length; j++) {
-//             const status = statuses[j]
-//             if (j === 0) {
-//                 if (card.tcgDate < `${status.date}-01`) {
-//                     await status.update({ previous: 'unlimited' })
-//                 } else {
-//                     await status.update({ previous: 'did not exist' })
-//                 }
-//             } else {
-//                 await status.update({ previous: statuses[j - 1].restriction })
-//             }
-//         }
+//         const year = '20' + status.banlist.slice(3)
+//         await status.update({ date: `${year}-${month}-01` })
 //     }
 // })()
+
+;(async () => {
+    const cards = await Card.findAll()
+
+    for (let i = 0; i < cards.length; i++) {
+        const card = cards[i]
+        const statuses = await Status.findAll({
+            where: {
+                cardId: card.id
+            },
+            order: ['date', 'ASC']
+        })
+
+        for (let j = 0; j < statuses.length; j++) {
+            const status = statuses[j]
+            if (j === 0) {
+                if (card.tcgDate < `${status.date}-01`) {
+                    await status.update({ previous: 'unlimited' })
+                } else {
+                    await status.update({ previous: 'did not exist' })
+                }
+            } else {
+                await status.update({ previous: statuses[j - 1].restriction })
+            }
+        }
+    }
+})()
