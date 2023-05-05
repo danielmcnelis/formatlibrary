@@ -130,26 +130,51 @@ import { Op } from 'sequelize'
 ;(async () => {
     const cards = await Card.findAll()
 
+    const banlists = [...await Status.findAll({ order: [['date', 'ASC']]})]
+        .map((s) => s.date)
+        .filter((value, index, array) => array.indexOf(value) === index)
+
     for (let i = 0; i < cards.length; i++) {
         const card = cards[i]
-        const statuses = await Status.findAll({
+        const status = await Status.findAll({
             where: {
-                cardId: card.id
+                cardId: card.id,
+                restriction: {[Op.not]: 'no longer on list'}
             },
-            order: [['date', 'ASC']]
+            order: [['date', 'DESC']],
+            limit: 1
         })
 
-        for (let j = 0; j < statuses.length; j++) {
-            const status = statuses[j]
-            if (j === 0) {
-                if (card.tcgDate < `${status.date}-01`) {
-                    await status.update({ previous: 'unlimited' })
-                } else {
-                    await status.update({ previous: 'did not exist' })
-                }
-            } else {
-                await status.update({ previous: statuses[j - 1].restriction })
-            }
+        if (!status) continue
+
+        if (banlists.indexOf(status.date) < banlists.length - 1) {
+            const nextDate = banlists[banlists.indexOf(status.date) + 1]
+            const monthNum = nextDate.slice(5, 7)
+            const monthStr = monthNum === '01' ? 'jan' : 
+                monthNum === '02' ? 'feb' :
+                monthNum === '03' ? 'mar' :
+                monthNum === '04' ? 'apr' :
+                monthNum === '05' ? 'may' :
+                monthNum === '06' ? 'jun' :
+                monthNum === '07' ? 'jul' :
+                monthNum === '08' ? 'aug' :
+                monthNum === '09' ? 'sep' :
+                monthNum === '10' ? 'oct' :
+                monthNum === '11' ? 'nov' :
+                monthNum === '12' ? 'dec' :
+                ''
+
+            const yearStr = nextDate.slice(2, 4)
+
+            await Status.create({
+                name: status.name,
+                cardId: status.cardId,
+                banlist: monthStr + yearStr,
+                date: nextDate,
+                restriction: 'no longer on list',
+                previous: status.restriction
+            })
         }
+
     }
 })()

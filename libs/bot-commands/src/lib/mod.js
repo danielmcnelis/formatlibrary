@@ -24,8 +24,10 @@ export default {
 	        .setAuthor({ name: 'Jazz#2704', iconURL: 'https://i.imgur.com/wz5TqmR.png', url: 'https://discord.com/invite/formatlibrary' })
             .setThumbnail('https://cdn.formatlibrary.com/images/logos/Format%20Library.png')
         	.addFields(
-                { name: 'Rated Play', value: '\n/manual - Manually record a match result. \n/records - View a player\'s recent match records. \n/undo - Undo one of the recent match results.'},
-                { name: 'Tournaments', value: '\n/create -  Create a new tournament \n/destroy -  Delete a tournament. \n/signup - Directly add a player to a bracket. \n/close - Close tournament registration. \n/open - Open tournament registration. \n/start - Start a tournament. \n/settimer- Start a timer and notify players. \n/noshow - Report a no-show. \n/deck - Check a player\'s tournament deck. \n/remove - Remove a player from a bracket.  \n/end - End a tournament.'},
+                { name: 'Rated Play', value: '\n/manual - Manually record a match result. \n/records - View a player\'s match records. \n/undo - Undo one of the recent match results.'},
+                { name: 'Tournament Creation', value: '\n/create -  Create a new tournament. \n/destroy -  Delete a tournament. \n/start - Start a tournament. \n/end - End a tournament.'},
+                { name: 'Tournament Registration', value: '\n/signup - Directly add a player to a bracket. \n/remove - Remove a player from a bracket. \n/close - Close tournament registration. \n/open - Open tournament registration.'},
+                { name: 'Tournament Hosting', value: '\n/settimer - Start a timer and notify players. \n/noshow - Report a no-show. \n/deck - Check a player\'s tournament deck.'},
             )
 
         interaction.user.send({ embeds: [botEmbed] }).catch((err) => console.log(err))
