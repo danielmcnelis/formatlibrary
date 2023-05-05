@@ -10,7 +10,7 @@ import { emojis } from '@fl/bot-emojis'
 export default {
 	data: new SlashCommandBuilder()
 		.setName('start')
-		.setDescription('Start a tournament. 🏎️'),
+		.setDescription('Mod Only - Start a tournament. 🏎️'),
 	async execute(interaction) {
         await interaction.deferReply()
         const server = !interaction.guildId ? {} : 

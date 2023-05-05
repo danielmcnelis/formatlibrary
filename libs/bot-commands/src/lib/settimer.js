@@ -10,7 +10,7 @@ import e from 'express'
 export default {
     data: new SlashCommandBuilder()
         .setName('settimer')
-        .setDescription('Set the timer for the round. ⌛')
+        .setDescription('Mod Only - Set the timer for the round. ⌛')
 		.addNumberOption(num =>
             num
                 .setName('hours')

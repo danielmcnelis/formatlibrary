@@ -9,7 +9,7 @@ import { checkExpiryDate, uploadDeckFolder } from '@fl/bot-functions'
 export default {
     data: new SlashCommandBuilder()
         .setName('fix')
-        .setDescription('Fix an issue. 🛠️'),
+        .setDescription('Admin Only - Fix an issue. 🛠️'),
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {

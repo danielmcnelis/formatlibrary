@@ -7,7 +7,7 @@ import { emojis } from '@fl/bot-emojis'
 export default {
     data: new SlashCommandBuilder()
         .setName('test')
-        .setDescription('Performs a test. 🧪'),
+        .setDescription('Admin Only - Performs a test. 🧪'),
     async execute(interaction) {
         if (isProgrammer(interaction.member)) {
             updateSets()

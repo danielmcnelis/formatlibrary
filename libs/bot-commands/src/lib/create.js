@@ -9,7 +9,7 @@ import { Op } from 'sequelize'
 export default {
     data: new SlashCommandBuilder()
         .setName('create')
-        .setDescription('Create a tournament. 🎉'),
+        .setDescription('Mod Only - Create a tournament. 🎉'),
     async execute(interaction) {
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 

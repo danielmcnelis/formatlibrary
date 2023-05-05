@@ -7,7 +7,7 @@ import { emojis } from '@fl/bot-emojis'
 export default {
 	data: new SlashCommandBuilder()
 		.setName('mod')
-		.setDescription('View the RetroBot Moderator guide. 👮'),
+		.setDescription('Mod Only - View the RetroBot Moderator guide. 👮'),
 	async execute(interaction) {
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 

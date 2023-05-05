@@ -7,7 +7,7 @@ import { Server, TriviaEntry } from '@fl/models'
 export default {
 	data: new SlashCommandBuilder()
 		.setName('reset')
-		.setDescription('Reset trivia! 🤔'),
+		.setDescription('Mod Only - Reset trivia! 🤔'),
 	async execute(interaction) {
         await interaction.deferReply()
         const server = !interaction.guildId ? {} : 

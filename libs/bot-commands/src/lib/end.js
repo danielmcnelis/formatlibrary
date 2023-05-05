@@ -11,7 +11,7 @@ import { createDecks } from '@fl/bot-functions'
 export default {
 	data: new SlashCommandBuilder()
 		.setName('end')
-		.setDescription('End a tournament. 🏎️')
+		.setDescription('Mod Only - End a tournament. 🏎️')
         .addStringOption(str =>
             str
                 .setName('tournament')

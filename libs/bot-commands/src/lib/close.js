@@ -8,7 +8,7 @@ import { Op } from 'sequelize'
 export default {
 	data: new SlashCommandBuilder()
 		.setName('close')
-		.setDescription('Close tournament registration. 🔐'),
+		.setDescription('Mod Only - Close tournament registration. 🔐'),
 	async execute(interaction) {
         await interaction.deferReply()
         const server = !interaction.guildId ? {} : 

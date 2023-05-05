@@ -9,7 +9,7 @@ import { emojis } from '@fl/bot-emojis'
 export default {
 	data: new SlashCommandBuilder()
 		.setName('destroy')
-		.setDescription('Destroy a tournament. 🧨')
+		.setDescription('Mod Only - Destroy a tournament. 🧨')
         .addStringOption(str =>
             str
                 .setName('tournament')

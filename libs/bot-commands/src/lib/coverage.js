@@ -8,7 +8,7 @@ import { emojis } from '@fl/bot-emojis'
 export default {
     data: new SlashCommandBuilder()
         .setName('coverage')
-        .setDescription('Post tournament coverage. 🖊️')
+        .setDescription('Mod Only - Post tournament coverage. 🖊️')
 		.addStringOption(str =>
             str
                 .setName('tournament')

@@ -8,7 +8,7 @@ import { Op } from 'sequelize'
 export default {
     data: new SlashCommandBuilder()
         .setName('manual')
-        .setDescription(`Manually report a match result. 👷`)
+        .setDescription(`Mod Only - Manually report a match result. 👷`)
         .addUserOption(option =>
             option
                 .setName('winner')

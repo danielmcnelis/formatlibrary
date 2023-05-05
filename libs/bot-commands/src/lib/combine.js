@@ -16,7 +16,7 @@ import { Op } from 'sequelize'
 export default {
     data: new SlashCommandBuilder()
         .setName('combine')
-        .setDescription(`Combine two user accounts. 🏭`)
+        .setDescription(`Admin Only - Combine two user accounts. 🏭`)
         .addUserOption(option =>
             option
                 .setName('olduser')

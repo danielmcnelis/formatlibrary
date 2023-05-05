@@ -9,7 +9,7 @@ import { emojis } from '@fl/bot-emojis'
 export default {
 	data: new SlashCommandBuilder()
 		.setName('signup')
-		.setDescription('Sign-up another user for a tournament. 🙋')
+		.setDescription('Mod Only - Sign-up another user for a tournament. 🙋')
         .addUserOption(option =>
             option
                 .setName('player')

@@ -8,7 +8,7 @@ import { Op } from 'sequelize'
 export default {
     data: new SlashCommandBuilder()
         .setName('noshow')
-        .setDescription(`Record a tournament no-show. 🙈`)
+        .setDescription(`Mod Only - Record a tournament no-show. 🙈`)
         .addUserOption(option =>
             option
                 .setName('player')
