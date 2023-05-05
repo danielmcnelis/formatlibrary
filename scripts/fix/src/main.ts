@@ -134,16 +134,18 @@ import { Op } from 'sequelize'
         .map((s) => s.date)
         .filter((value, index, array) => array.indexOf(value) === index)
 
+    console.log('banlists', banlists)
+
     for (let i = 0; i < cards.length; i++) {
         const card = cards[i]
-        const status = await Status.findAll({
+        const status = [...await Status.findAll({
             where: {
                 cardId: card.id,
                 restriction: {[Op.not]: 'no longer on list'}
             },
             order: [['date', 'DESC']],
             limit: 1
-        })
+        })][0]
 
         if (!status) continue
 
