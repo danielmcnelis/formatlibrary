@@ -136,7 +136,7 @@ import { Op } from 'sequelize'
             where: {
                 cardId: card.id
             },
-            order: ['date', 'ASC']
+            order: [['date', 'ASC']]
         })
 
         for (let j = 0; j < statuses.length; j++) {
