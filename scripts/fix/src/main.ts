@@ -134,8 +134,6 @@ import { Op } from 'sequelize'
         .map((s) => s.date)
         .filter((value, index, array) => array.indexOf(value) === index)
 
-    console.log('banlists', banlists)
-
     for (let i = 0; i < cards.length; i++) {
         const card = cards[i]
         const status = [...await Status.findAll({

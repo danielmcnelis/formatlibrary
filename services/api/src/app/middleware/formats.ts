@@ -51,7 +51,7 @@ export const formatsAll = async (req, res, next) => {
           date: { [Op.not]: null }
         }
       },
-      attributes: ['id', 'name', 'icon', 'date', 'banlist', 'event', 'description', 'popular'],
+      attributes: ['id', 'name', 'icon', 'date', 'banlist', 'event', 'description', 'popular', 'spotlight'],
       order: [
         ['popular', 'DESC'],
         ['date', 'ASC']
