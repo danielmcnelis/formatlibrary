@@ -8,9 +8,7 @@ const clientId = config.services.bot.clientId
 const guildId = '414551319031054346'
 
 const formatLibraryCommandNames = Object.values(commands.formatLibraryCommands).map((command: any) => command.data.toJSON())
-console.log('formatLibraryCommandNames', formatLibraryCommandNames)
 const globalCommandNames = Object.values(commands.globalCommands).map((command: any) => command.data.toJSON())
-console.log('globalCommandNames', globalCommandNames)
 
 // Construct and prepare an instance of the REST module
 const rest = new REST({ version: '10' }).setToken(discordBotToken);
