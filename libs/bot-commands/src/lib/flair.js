@@ -4,7 +4,7 @@ import { SlashCommandBuilder } from 'discord.js'
 export default {
     data: new SlashCommandBuilder()
         .setName('flair')
-        .setDescription(`Add or remove a subscriber flair. 👒`)
+        .setDescription(`Add or remove a Subscriber Role. 👒`)
         .addRoleOption(option =>
             option
                 .setName('role')
@@ -12,7 +12,8 @@ export default {
                 .setRequired(true))
         ,
     async execute(interaction) {
-        const role = interaction.options.getUser('role')
+        console.log('interaction.options', interaction.options)
+        const role = interaction.options.getRole('role')
         console.log('role', role)
 
         try {
