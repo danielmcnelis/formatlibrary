@@ -22,7 +22,7 @@ const rest = new REST({ version: '10' }).setToken(discordBotToken);
 
 		// The put method is used to fully refresh all commands in the guild with the current set
 		await rest.put(
-            Routes.applicationCommands(clientId),
+            Routes.applicationGuildCommands(clientId, guildId),
             { body: formatLibraryCommandNames },
 		);
 
