@@ -572,6 +572,7 @@ export const createSheetData = async (tournament) => {
 //REMOVE PARTICIPANT
 export const removeParticipant = async (server, interaction, member, entry, tournament, drop = false) => {    
     try {
+        // DELETE PARTICIPANT FROM CHALLONGE BRACKET 
         await axios({
             method: 'delete',
             url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${entry.participantId}.json?api_key=${server.challongeAPIKey}`
@@ -579,14 +580,11 @@ export const removeParticipant = async (server, interaction, member, entry, tour
 
         const playerId = entry.playerId
 
+        // DE-ACTIVATE ENTRY DATA IF UNDERWAY, OTHERWISE DELETE ENTRY DATA
         if (tournament.state === 'underway') {
             await entry.update({ active: false, roundDropped: entry.wins + entry.losses })
         } else {
             await entry.destroy()
-            if (tournament.isPremiumTournament) {
-                const player = await Player.findOne({ id: playerId })
-                await player.update({ vouchers: player.vouchers + 1 })
-            }
         }
 
         const count = await Entry.count({ 
@@ -595,11 +593,13 @@ export const removeParticipant = async (server, interaction, member, entry, tour
                 active: true,
                 '$tournament.serverId$': server.id
             },
-            include: Tournament,
+            include: Tournament
         })
 
+        // REMOVE TOURNAMENT PARTICIPANT ROLE IF NOT IN ANY OTHER TOURNAMENTS ON THE SERVER
         if (!count) member.roles.remove(server.tourRole).catch((err) => console.log(err))
     
+        // REPLY WITH AN AFFIRMATIVE RESPONSE
         if (drop && tournament.state !== 'underway') {
             return await interaction.editReply({ content: `I removed you from ${tournament.name}. We hope to see you next time! ${tournament.emoji}`})
         } else if (drop) {
@@ -609,6 +609,7 @@ export const removeParticipant = async (server, interaction, member, entry, tour
         }
     } catch (err) {
         console.log(err)
+        // REPLY WITH AN ERROR MESSAGE
         if (drop) {
             return await interaction.editReply({ content: `Hmm... I don't see you in the participants list for ${tournament.name}. ${tournament.emoji}`})
         } else {

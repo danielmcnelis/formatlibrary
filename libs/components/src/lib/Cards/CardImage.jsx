@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
 export const CardImage = (props) => {
-    const {addCard, removeCard, card, status, width, margin, padding, index, locale} = props
+    const {addCard, removeCard, card, previous, status, width, margin, padding, index, locale} = props
   
     return (
       <div className="CardImage-box">
@@ -46,6 +46,9 @@ export const CardImage = (props) => {
                     className="CardImages"
                     alt={card.name}
                   />
+                  {
+                    previous ? <img src={`https://cdn.formatlibrary.com/images/emojis/${previous === 'forbidden' ? 'from0' : previous === 'limited' ? 'from1' : previous === 'semi-limited' ? "from2" : 'new'}.png`} className="remarks-icon"/> : null
+                  }
                 </div>
           </Link>
           )

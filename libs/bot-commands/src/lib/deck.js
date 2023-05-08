@@ -36,7 +36,7 @@ export default {
         
         const tournaments = await Tournament.findAll({
             where: { 
-                state: {[Op.or]: ["pending", "underway"]}, 
+                state: {[Op.or]: ["pending", "standby", "underway"]}, 
                 formatName: format.name,
                 serverId: interaction.guildId 
             },

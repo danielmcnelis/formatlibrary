@@ -24,11 +24,11 @@ export const BanList = (props) => {
       }
   
       fetchData()
-    }, [])
+    }, [BL])
   
     if (banlist === null) return <NotFound/>
     if (!banlist.limited) return <div />
-    const { forbidden, limited, semiLimited } = banlist
+    const { forbidden, limited, semiLimited, unlimited } = banlist
   
   /* eslint-disable */
   const convertToTitle = (param = '') => {
@@ -69,6 +69,7 @@ export const BanList = (props) => {
                         width='72px' 
                         padding='1px' 
                         margin='0px'
+                        previous={el.restriction !== el.previous ? el.previous : null}
                         key={el.card.id} 
                         card={el.card}
                       />
@@ -90,6 +91,7 @@ export const BanList = (props) => {
                 width='72px' 
                 padding='1px' 
                 margin='0px'
+                previous={el.restriction !== el.previous ? el.previous : null}
                 key={el.card.id} 
                 card={el.card}
               />
@@ -107,6 +109,7 @@ export const BanList = (props) => {
                   width='72px' 
                   padding='1px' 
                   margin='0px'
+                  previous={el.restriction !== el.previous ? el.previous : null}
                   key={el.card.id}
                   card={el.card}
                 />
@@ -114,6 +117,28 @@ export const BanList = (props) => {
             }
           </div>
         </div>
+        {
+            unlimited.length ? (
+                <div id="unlimited" className="banlist-bubble">
+                    <div id="unlimited" className="banlist-category">No Longer Restricted:</div>
+                        <div id="unlimited" className="banlist-flexbox">
+                        {
+                        unlimited.map((el) => 
+                            <
+                            CardImage 
+                            width='72px' 
+                            padding='1px' 
+                            margin='0px'
+                            previous={el.restriction !== el.previous ? el.previous : null}
+                            key={el.card.id}
+                            card={el.card}
+                            />
+                        )
+                        }
+                    </div>
+                </div>
+            ) : ''
+        }
       </div>
     )
 }

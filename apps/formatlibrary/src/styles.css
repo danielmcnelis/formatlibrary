@@ -287,6 +287,15 @@
     padding: 10px 0px;
     margin-bottom: 5px;
   }
+
+  .banlist-bubble#unlimited {
+    width: 760px;
+    border: solid #7db300;
+    border-width: 5px 0px;
+    background-color: #f4ffe6ff;
+    padding: 10px 0px;
+    margin-bottom: 5px;
+  }
   
   .banlist-category {
     font-size: 24px;
@@ -525,6 +534,15 @@
     left: 2.5%;
   }
   
+  .remarks-icon {
+    position: absolute;
+    z-index: 1;
+    width: 90% !important;
+    bottom: 5% !important;
+    right: 5% !important;
+    left: 5% !important;
+  }
+
   .small-status-icon {
     position: relative !important;
     z-index: 1;
@@ -2922,12 +2940,12 @@
       justify-content: center;
     }
   
-    #forbidden, #limited, #semi-limited {
+    #forbidden, #limited, #semi-limited, #unlimited {
       width: 100%;
       max-width: 100%;
     }
   
-    #forbidden.banlist-bubble, #limited.banlist-bubble, #semi-limited.banlist-bubble {
+    #forbidden.banlist-bubble, #limited.banlist-bubble, #semi-limited.banlist-bubble, #unlimited.banlist-bubble {
       border-radius: 0px;
     }
   

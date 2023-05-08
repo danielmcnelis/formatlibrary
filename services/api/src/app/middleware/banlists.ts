@@ -44,9 +44,22 @@ export const banlistsDate = async (req, res, next) => {
     })
 
     const semiLimited = await Status.findAll({
+        where: {
+          banlist: date,
+          restriction: 'semi-limited'
+        },
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        include: [{ model: Card, attributes: ['id', 'name', 'ypdId', 'sortPriority'] }],
+        order: [
+          [Card, 'sortPriority', 'ASC'],
+          ['name', 'ASC']
+        ]
+      })
+
+    const unlimited = await Status.findAll({
       where: {
         banlist: date,
-        restriction: 'semi-limited'
+        restriction: 'no longer on list'
       },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       include: [{ model: Card, attributes: ['id', 'name', 'ypdId', 'sortPriority'] }],
@@ -59,7 +72,8 @@ export const banlistsDate = async (req, res, next) => {
     const banlist = {
       forbidden: forbidden,
       limited: limited,
-      semiLimited: semiLimited
+      semiLimited: semiLimited,
+      unlimited: unlimited
     }
 
     res.json(banlist)
