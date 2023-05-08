@@ -16,6 +16,7 @@ import duelingbook from './lib/duelingbook'
 import end from './lib/end'
 import exit from './lib/exit'
 import fix from './lib/fix'
+import flair from './lib/flair'
 import h2h from './lib/h2h'
 import help from './lib/help'
 import history from './lib/history'
@@ -58,6 +59,7 @@ export default {
         combine,
         coverage,
         fix,
+        flair,
         iron,
         queue,
         recalculate,
