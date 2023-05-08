@@ -6,15 +6,16 @@ export default {
         .setName('flair')
         .setDescription(`Add subscriber flair. 👒`)
         .addStringOption(option =>
-            option.setName('role')
+            option
+                .setName('role')
                 .setDescription('Subscriber Role.')
-                .setRequired(true))
+                .setRequired(true)
                 .addChoices(
 					{ name: 'Airbellum Subscriber', value: '1105203082909986866' },
 					{ name: 'Alius Subscriber', value: '1105201244722712697' },
 					{ name: 'Breaker Subscriber', value: '1103204327927074847' },
 				)
-        ,
+        ),
     async execute(interaction) {
         console.log('interaction.options', interaction.options)
         const roleId = interaction.options.getString('role')
