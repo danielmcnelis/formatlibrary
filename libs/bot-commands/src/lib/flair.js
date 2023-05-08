@@ -56,7 +56,8 @@ export default {
         ),
     async execute(interaction) {
         const roleId = interaction.options.getString('role')
-        const currentRoles = interaction.member.roles.cache.filter((r) => r.name.includes('Subscriber'))
+        const currentRoles = await interaction.member.roles.cache.filter((r) => r.name.includes('Subscriber'))
+        console.log('currentRoles', currentRoles)
         const privilegedUserIds = ['194147938786738176', '626843317010694176']
 
         if (!interaction.member._roles?.includes('1102002844850208810') && !privilegedUserIds.includes(interaction.member.id)) {
