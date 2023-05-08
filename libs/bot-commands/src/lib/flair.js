@@ -4,10 +4,9 @@ import { SlashCommandBuilder } from 'discord.js'
 export default {
     data: new SlashCommandBuilder()
         .setName('flair')
-        .setDescription(`Add or remove a Subscriber Role. 👒`)
+        .setDescription(`Add subscriber flair. 👒`)
         .addStringOption(option =>
-            option
-                .setName('role')
+            option.setName('role')
                 .setDescription('Subscriber Role.')
                 .setRequired(true))
                 .addChoices(
