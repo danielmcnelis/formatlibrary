@@ -26,6 +26,8 @@ client.commands = new Collection()
 Object.values(commands.formatLibraryCommands).forEach((command) => client.commands.set(command.data.name, command))
 Object.values(commands.globalCommands).forEach((command) => client.commands.set(command.data.name, command))
 
+console.log('client.commands', client.commands)
+
 // GLOBAL VARIABLES
 const fuzzyCards = FuzzySet([], false)
 
