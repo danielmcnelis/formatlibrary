@@ -65,8 +65,8 @@ export default {
         let tournamentId
         let tournamentMatchId
 
-        const loserHasIronRole = isIronPlayer(server, member)
-        const winnerHasIronRole = isIronPlayer(server, winner)
+        const loserHasIronRole = isIronPlayer(member)
+        const winnerHasIronRole = isIronPlayer(winner)
         const activeIron = await Iron.count({ where: { format: format.name, status: 'active' }})
         let isIronMatch
 

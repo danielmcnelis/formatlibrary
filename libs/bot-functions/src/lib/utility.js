@@ -453,25 +453,25 @@ export const getRandomSubset = (arr, n) => {
 }
 
 //HAS AFFILIATE ACCESS?
-export const hasAffiliateAccess = (server) => server && (server.access === 'affiliate' || server.access === 'partner' || server.access === 'full')
+export const hasAffiliateAccess = (server) => server?.access === 'affiliate' || server?.access === 'partner' || server?.access === 'full'
 
 //HAS PARTNER ACCESS?
-export const hasPartnerAccess = (server) => server && (server.access === 'partner' || server.access === 'full')
+export const hasPartnerAccess = (server) => server?.access === 'partner' || server?.access === 'full'
 
 //HAS FULL ACCESS?
-export const hasFullAccess = (server) => server && server.access === 'full'
+export const hasFullAccess = (server) => server?.access === 'full'
 
 //IS PROGRAMMER?
-export const isProgrammer = (member) => member && member.user.id === '194147938786738176'
+export const isProgrammer = (member) => member?.user?.id === '194147938786738176'
 
 //IS ADMIN?
-export const isAdmin = (server, member) => (server && member && member._roles.includes(server.adminRole)) || member.user.id === '194147938786738176'
+export const isAdmin = (server, member) => member?._roles.includes(server?.adminRole) || member?.user?.id === '194147938786738176'
 
 //IS MOD?
-export const isMod = (server, member) => (server && member && member._roles.includes(server.modRole || server.adminRole || server.judgeRole)) || member.user.id === '194147938786738176'
+export const isMod = (server, member) => member?._roles.includes(server?.modRole) || member?._roles.includes(server?.adminRole) || member?._roles.includes(server?.judgeRole) || member?.user?.id === '194147938786738176'
 
 //IS IRON PLAYER?
-export const isIronPlayer = (server, member) => server && member && member._roles.includes('948006324237643806')
+export const isIronPlayer = (member) => member?._roles.includes('948006324237643806')
 
 //IS NEW MEMBER?
 export const isNewMember = async (serverId, discordId) => !await Membership.count({ where: { serverId, '$player.discordId$': discordId }, include: Player })
@@ -480,7 +480,7 @@ export const isNewMember = async (serverId, discordId) => !await Membership.coun
 export const isNewUser = async (discordId) => !await Player.count({ where: { discordId: discordId } })
 
 //IS TOURNAMENT PLAYER?
-export const isTourPlayer = (server, member) => server && member && member._roles.includes(server.tourRole)
+export const isTourPlayer = (server, member) => member?._roles.includes(server?.tourRole)
 
 // SELECT MATCH
 export const selectMatch = async (interaction, matches) => {
