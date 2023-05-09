@@ -12,8 +12,16 @@ import { Op } from 'sequelize'
 export default {
     data: new SlashCommandBuilder()
         .setName('recalculate')
-        .setDescription(`Admin Only - Recalculate player stats. 🧮`),
+        .setDescription(`Admin Only - Recalculate player stats. 🧮`)
+        .addStringOption(option =>
+            option
+                .setName('format')
+                .setDescription('Format to recalculate.')
+                .setRequired(false))
+        ,
     async execute(interaction) {
+        const formatName = interaction.options.getString('format')
+
         const server = !interaction.guildId ? {} : 
             await Server.findOne({ where: { id: interaction.guildId }}) || 
             await Server.create({ id: interaction.guildId, name: interaction.guild.name })
@@ -24,7 +32,7 @@ export default {
         const format = await Format.findOne({
             where: {
                 [Op.or]: {
-                    name: { [Op.iLike]: server.format },
+                    name: { [Op.iLike]: server.format || formatName },
                     channel: interaction.channelId
                 }
             }

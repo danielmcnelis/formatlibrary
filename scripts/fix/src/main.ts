@@ -1,4 +1,4 @@
-import { Card, Deck, DeckType, DeckThumb, Event, Format, Player, Status } from '@fl/models'
+import { Card, Deck, DeckType, DeckThumb, Event, Format, Match, Player, Status } from '@fl/models'
 import { Op } from 'sequelize'
 
 // ;(async () => {
@@ -127,54 +127,73 @@ import { Op } from 'sequelize'
 //     }
 // })()
 
+// ;(async () => {
+//     const cards = await Card.findAll()
+
+//     const banlists = [...await Status.findAll({ order: [['date', 'ASC']]})]
+//         .map((s) => s.date)
+//         .filter((value, index, array) => array.indexOf(value) === index)
+
+//     for (let i = 0; i < cards.length; i++) {
+//         const card = cards[i]
+//         const status = [...await Status.findAll({
+//             where: {
+//                 cardId: card.id,
+//                 restriction: {[Op.not]: 'no longer on list'}
+//             },
+//             order: [['date', 'DESC']],
+//             limit: 1
+//         })][0]
+
+//         if (!status) continue
+
+//         if (banlists.indexOf(status.date) < banlists.length - 1) {
+//             const nextDate = banlists[banlists.indexOf(status.date) + 1]
+//             const monthNum = nextDate.slice(5, 7)
+//             const monthStr = monthNum === '01' ? 'jan' : 
+//                 monthNum === '02' ? 'feb' :
+//                 monthNum === '03' ? 'mar' :
+//                 monthNum === '04' ? 'apr' :
+//                 monthNum === '05' ? 'may' :
+//                 monthNum === '06' ? 'jun' :
+//                 monthNum === '07' ? 'jul' :
+//                 monthNum === '08' ? 'aug' :
+//                 monthNum === '09' ? 'sep' :
+//                 monthNum === '10' ? 'oct' :
+//                 monthNum === '11' ? 'nov' :
+//                 monthNum === '12' ? 'dec' :
+//                 ''
+
+//             const yearStr = nextDate.slice(2, 4)
+
+//             await Status.create({
+//                 name: status.name,
+//                 cardId: status.cardId,
+//                 banlist: monthStr + yearStr,
+//                 date: nextDate,
+//                 restriction: 'no longer on list',
+//                 previous: status.restriction
+//             })
+//         }
+//     }
+// })()
+
 ;(async () => {
-    const cards = await Card.findAll()
-
-    const banlists = [...await Status.findAll({ order: [['date', 'ASC']]})]
-        .map((s) => s.date)
-        .filter((value, index, array) => array.indexOf(value) === index)
-
-    for (let i = 0; i < cards.length; i++) {
-        const card = cards[i]
-        const status = [...await Status.findAll({
-            where: {
-                cardId: card.id,
-                restriction: {[Op.not]: 'no longer on list'}
-            },
-            order: [['date', 'DESC']],
-            limit: 1
-        })][0]
-
-        if (!status) continue
-
-        if (banlists.indexOf(status.date) < banlists.length - 1) {
-            const nextDate = banlists[banlists.indexOf(status.date) + 1]
-            const monthNum = nextDate.slice(5, 7)
-            const monthStr = monthNum === '01' ? 'jan' : 
-                monthNum === '02' ? 'feb' :
-                monthNum === '03' ? 'mar' :
-                monthNum === '04' ? 'apr' :
-                monthNum === '05' ? 'may' :
-                monthNum === '06' ? 'jun' :
-                monthNum === '07' ? 'jul' :
-                monthNum === '08' ? 'aug' :
-                monthNum === '09' ? 'sep' :
-                monthNum === '10' ? 'oct' :
-                monthNum === '11' ? 'nov' :
-                monthNum === '12' ? 'dec' :
-                ''
-
-            const yearStr = nextDate.slice(2, 4)
-
-            await Status.create({
-                name: status.name,
-                cardId: status.cardId,
-                banlist: monthStr + yearStr,
-                date: nextDate,
-                restriction: 'no longer on list',
-                previous: status.restriction
-            })
+    const matches = await Match.findAll({
+        where: {
+            formatId: null
         }
+    })
 
+    for (let i = 0; i < matches.length; i++) {
+        const match = matches[i]
+        const format = await Format.findOne({
+            where: {
+                name: {[Op.iLike]: match.formatName}
+            }
+        })
+
+        if (!format) continue
+        await match.update({ formatId: format.id })
     }
 })()
