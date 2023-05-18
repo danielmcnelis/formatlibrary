@@ -46,7 +46,7 @@ export default {
             }
         }) : null
 
-        const { url, ydk } = await getDeckList(interaction.member, player, tournament.format)
+        const { url, ydk } = await getDeckList(interaction.member, player, format)
         if (!url || !ydk) return
 
         if (!entry && tournament.isTeamTournament && team) {
