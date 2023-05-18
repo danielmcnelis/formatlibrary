@@ -49,9 +49,9 @@ export const ImageCreator = () => {
                 Folder:
                 <select
                     id="folder"
-                    onChange={(e) => setFolder(e.target.value)}
+                    onChange={(e) => setFolder(e.target.value || null)}
                 >
-                    <option value={null}></option>
+                    <option value=""></option>
                     <option value="artworks">Artworks</option>
                     <option value="brackets">Brackets</option>
                     <option value="cards">Cards</option>

@@ -112,9 +112,9 @@ export const BanListCreator = () => {
             <label>Month:
                 <select
                     id="month"
-                    onChange={(e) => setMonth(e.target.value)}
+                    onChange={(e) => setMonth(e.target.value || null)}
                 >
-                    <option value={null}></option>
+                    <option value=""></option>
                     <option value="jan">January</option>
                     <option value="feb">February</option>
                     <option value="mar">March</option>
@@ -133,9 +133,9 @@ export const BanListCreator = () => {
             <label>Year:
                 <select
                     id="year"
-                    onChange={(e) => setYear(e.target.value)}
+                    onChange={(e) => setYear(e.target.value || null)}
                 >
-                    <option value={null}></option>
+                    <option value=""></option>
                     {
                         years.map((year) => <option value={year.toString().slice(-2)}>{year}</option>)
                     }
@@ -145,9 +145,9 @@ export const BanListCreator = () => {
             <label>Previous List:
                 <select
                     id="previous"
-                    onChange={(e) => setPrevious(e.target.value)}
+                    onChange={(e) => setPrevious(e.target.value || null)}
                 >
-                <option value={null}></option>
+                <option value=""></option>
                 {
                     banlists.map((e) => <option value={e}>{e}</option>)
                 }
@@ -177,9 +177,9 @@ export const BanListCreator = () => {
                         <td>
                             <input
                                 id="card"
-                                defaultValue={null}
+                                defaultValue=""
                                 type="search"
-                                onKeyDown={(e) => { if (e.key === 'Enter') findCards(e.target.value, null)}}
+                                onKeyDown={(e) => { if (e.key === 'Enter') findCards(e.target.value || null, null)}}
                             />
 
                             <select
@@ -199,10 +199,10 @@ export const BanListCreator = () => {
                         <td>
                             <select
                                 id="new-status"
-                                defaultValue={null}
-                                onChange={(e) => setNewStatus(e.target.value)}
+                                defaultValue=""
+                                onChange={(e) => setNewStatus(e.target.value || null)}
                             >
-                                <option value={null}></option>
+                                <option value=""></option>
                                 <option value="forbidden">Forbidden</option>
                                 <option value="limited">Limited</option>
                                 <option value="semi-limited">Semi-Limited</option>

@@ -242,7 +242,7 @@ export const Settings = () => {
                                     type="password"
                                     id="old-password"
                                     disabled={player && !player.hasPassword}
-                                    defaultValue={null}
+                                    defaultValue=""
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
@@ -250,7 +250,7 @@ export const Settings = () => {
                                 <Form.Control
                                     type="password"
                                     id="new-password"
-                                    defaultValue={null}
+                                    defaultValue=""
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
@@ -258,14 +258,14 @@ export const Settings = () => {
                                 <Form.Control
                                     type="password"
                                     id="confirm-password"
-                                    defaultValue={null}
+                                    defaultValue=""
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>Show Passwords: <input
                                     type="checkbox"
                                     id="show-passwords"
-                                    defaultValue={null}
+                                    defaultValue=""
                                     onChange={() => togglePasswordFields()}
                                 /></Form.Label>
                             </Form.Group>

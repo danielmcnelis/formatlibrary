@@ -37,7 +37,7 @@ export const EventGallery = () => {
             <div id="recent-events" className="recent-events">
                 <div className="subcategory-title-flexbox">
                     <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
-                    <h1 className="leaderboard-title">{format.name} Recent Events</h1>
+                    <h1 className="leaderboard-title">{format.name} Event Gallery</h1>
                     <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
                 </div>
                 <div className="recent-events-flexbox">

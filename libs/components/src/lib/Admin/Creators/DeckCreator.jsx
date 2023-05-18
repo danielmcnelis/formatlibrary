@@ -135,9 +135,9 @@ export const DeckCreator = () => {
             <label>Deck Type:
                 <select
                     id="deckType"
-                    onChange={(e) => getDeckType(e.target.value)}
+                    onChange={(e) => getDeckType(e.target.value || null)}
                 >
-                <option value={null}></option>
+                <option value=""></option>
                 {
                     deckTypes.map((e) => <option value={e.name}>{e.name}</option>)
                 }
@@ -147,9 +147,9 @@ export const DeckCreator = () => {
                 Community:
                 <select
                     id="community"
-                    onChange={(e) => setCommunity(e.target.value)}
+                    onChange={(e) => setCommunity(e.target.value || null)}
                 >
-                    <option value={null}></option>
+                    <option value=""></option>
                     <option value="Format Library">Format Library</option>
                     <option value="Androidland">Androidland</option>
                     <option value="Aureum's Army">Aureum's Army</option>
@@ -177,9 +177,9 @@ export const DeckCreator = () => {
             <label>Event:
                 <select
                     id="event"
-                    onChange={(e) => getEvent(e.target.value)}
+                    onChange={(e) => getEvent(e.target.value || null)}
                 >
-                <option value={null}></option>
+                <option value=""></option>
                 {
                     events.map((e) => <option value={e.name}>{e.name}</option>)
                 }

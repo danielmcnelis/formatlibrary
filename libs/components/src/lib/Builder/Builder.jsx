@@ -490,8 +490,8 @@ export const Builder = () => {
                 <Form>
                     <Form.Group className="mb-3">
                             <Form.Label>Format:</Form.Label>
-                            <Form.Select id="format-selector" style={{width: '200px'}} aria-label="Format:" onChange={(e) => setControlPanelFormat(e.target.value !== 'All Formats' ? e.target.value : null)}>
-                                <option key="all-formats" value={null}>All Formats</option>
+                            <Form.Select id="format-selector" style={{width: '200px'}} aria-label="Format:" onChange={(e) => setControlPanelFormat(e.target.value || null)}>
+                                <option key="all-formats" value="">All Formats</option>
                             {
                                 formats.filter((f) => f.banlist && myFormats.includes(f.name)).map((f) => <option key={f.name} value={f.name}>{f.name}</option>)
                             }
@@ -499,8 +499,8 @@ export const Builder = () => {
                     </Form.Group>
                     <Form.Group className="mb-3">
                             <Form.Label>Deck-Type:</Form.Label>
-                            <Form.Select id="format-selector" style={{width: '200px'}} aria-label="Format:" onChange={(e) => setControlPanelDeckType(e.target.value !== 'All Deck-Types' ? e.target.value : null)}>
-                                <option key="all-formats" value={null}>All Deck-Types</option>
+                            <Form.Select id="format-selector" style={{width: '200px'}} aria-label="Format:" onChange={(e) => setControlPanelDeckType(e.target.value || null)}>
+                                <option key="all-formats" value="">All Deck-Types</option>
                             {
                                 deckTypes.filter((dt) => myDeckTypes.includes(dt.name)).map((dt) => <option key={dt.id} value={dt.name}>{dt.name}</option>)
                             }
@@ -511,9 +511,9 @@ export const Builder = () => {
                         <Form.Select
                             aria-label="deck-name" 
                             id="deck-name"
-                            defaultValue={null}
+                            defaultValue=""
                             className="filter"
-                            onChange={(e) => {getDeck(e.target.value); setControlPanelFormat(null); setControlPanelDeckType(null)}}
+                            onChange={(e) => {getDeck(e.target.value || null); setControlPanelFormat(null); setControlPanelDeckType(null)}}
                         >
                         {
                             decks.filter((d) => (!controlPanelFormat && !controlPanelDeckType) || (!controlPanelFormat || d.formatName === controlPanelFormat) && (!controlPanelDeckType || d.type === controlPanelDeckType)).map((d) => <option key={d.id} value={d.id}>{d.id === deck.id ? deck.name : d.name}</option>)
@@ -608,7 +608,7 @@ export const Builder = () => {
                             defaultValue={deck.type}
                             onChange={(e) => handleDeckTypeSelect(e)}
                         >
-                        <option key="None" value={null}>None</option>
+                        <option key="None" value="">None</option>
                         {
                             deckTypes.map((dt) => <option key={dt.id} value={dt.name}>{dt.name}</option>)
                         }
@@ -647,7 +647,7 @@ export const Builder = () => {
                         <option key="24 hours" value={24 * 60 * 60 * 1000}>24 hours</option>
                         <option key="7 days" value={7 * 24 * 60 * 60 * 1000}>7 days</option>
                         <option key="30 days" value={30 * 24 * 60 * 60 * 1000}>30 days</option>
-                        <option key="never" value={null}>Never</option>
+                        <option key="never" value="">Never</option>
                     </Form.Select>
                 </Form.Group>
             </Modal.Body>

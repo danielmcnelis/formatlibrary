@@ -186,9 +186,9 @@ export const EventTable = (props) => {
   
             <select
               id="format"
-              defaultValue={null}
+              defaultValue=""
               className="filter"
-              onChange={(e) => setFormat(e.target.value)}
+              onChange={(e) => setFormat(e.target.value || null)}
             >
               <option key={'All Formats'} value={''}>All Formats</option>
               {
@@ -312,9 +312,9 @@ export const EventTable = (props) => {
               id="community"
               defaultValue="All Communities"
               className="filter"
-              onChange={(e) => {setCommunity(e.target.value); setPage(1)}}
+              onChange={(e) => {setCommunity(e.target.value || null); setPage(1)}}
             >
-              <option value={null}>All Communities</option>
+              <option value="">All Communities</option>
               <option value="Format Library">Format Library</option>
               <option value="Androidland">Androidland</option>
               <option value="Aureum's Army">Aureum's Army</option>
@@ -341,9 +341,9 @@ export const EventTable = (props) => {
   
             <select
               id="format"
-              defaultValue={null}
+              defaultValue=""
               className="filter"
-              onChange={(e) => {setFormat(e.target.value); setPage(1)}}
+              onChange={(e) => {setFormat(e.target.value || null); setPage(1)}}
             >
               <option key={'All Formats'} value={''}>All Formats</option>
               {

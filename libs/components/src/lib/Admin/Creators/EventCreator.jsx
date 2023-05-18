@@ -158,8 +158,8 @@ export const EventCreator = () => {
     <div className="admin-portal">
       <label>
         Community:
-        <select id="community" onChange={(e) => setCommunity(e.target.value)}>
-          <option value={null}></option>
+        <select id="community" onChange={(e) => setCommunity(e.target.value || null)}>
+          <option value=""></option>
               <option value="Format Library">Format Library</option>
               <option value="Androidland">Androidland</option>
               <option value="Aureum's Army">Aureum's Army</option>
@@ -199,7 +199,7 @@ export const EventCreator = () => {
       <label>
         Format:
         <select id="format" onChange={(e) => setFormat(formats[e.target.value])}>
-          <option value={null}></option>
+          <option value=""></option>
           {formats.map((e, index) => (
             <option value={index}>{e.name}</option>
           ))}
@@ -211,8 +211,8 @@ export const EventCreator = () => {
       </label>
       <label>
         Type:
-        <select id="type" onChange={(e) => setTournamentType(e.target.value)}>
-          <option value={null}></option>
+        <select id="type" onChange={(e) => setTournamentType(e.target.value || null)}>
+          <option value=""></option>
           <option value="Double Elimination">Double Elimination</option>
           <option value="Single Elimination">Single Elimination</option>
           <option value="Swiss">Swiss</option>

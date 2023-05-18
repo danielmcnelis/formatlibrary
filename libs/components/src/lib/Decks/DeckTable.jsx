@@ -18,7 +18,8 @@ export const DeckTable = () => {
     const [decksPerPage, setDecksPerPage] = useState(12)
     const [view, setView] = useState('table')
     const [sortBy, setSortBy] = useState('publishDate:desc')
-    const [origin, setOrigin] = useState('events')
+    const [origin, setOrigin] = useState('event')
+    console.log('origin', origin)
     const [format, setFormat] = useState(null)
     const [formats, setFormats] = useState([])
     const [isAdmin, setIsAdmin] = useState(false)
@@ -154,7 +155,7 @@ export const DeckTable = () => {
     // USE EFFECT
     useEffect(() => {
         const fetchDecks = async () => {
-          const {data} = await axios.get(`/api/decks?page=1&limit=12&sortBy=publishDate:desc`)
+          const {data} = await axios.get(`/api/decks?page=1&limit=12&sortBy=publishDate:desc&filter=origin:eq:event`)
           setDecks(data)
         }
   
@@ -216,20 +217,20 @@ export const DeckTable = () => {
   
             <select
               id="origin"
-              defaultValue="Event Decks"
+              defaultValue="event"
               className="filter"
-              onChange={(e) => setOrigin(e.target.value)}
+              onChange={(e) => setOrigin(e.target.value || null)}
             >
-              <option value={null}>All Decks</option>
               <option value="event">Event Decks</option>
               <option value="user">User Decks</option>
+              <option value="">All Decks</option>
             </select>
   
             <select
               id="format"
-              defaultValue={null}
+              defaultValue=""
               className="filter"
-              onChange={(e) => setFormat(e.target.value)}
+              onChange={(e) => setFormat(e.target.value || null)}
             >
               <option key={'All Formats'} value={''}>All Formats</option>
               {

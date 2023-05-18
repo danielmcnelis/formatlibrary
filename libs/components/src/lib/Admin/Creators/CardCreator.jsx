@@ -241,9 +241,9 @@ export const CardCreator = () => {
                 id="category"
                 value={category}
                 style={{width: '200px'}}
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={(e) => setCategory(e.target.value || null)}
             >
-                <option value={null}>Category</option>
+                <option value="">Category</option>
                 <option value="Monster">Monster</option>
                 <option value="Spell">Spell</option>
                 <option value="Trap">Trap</option>
@@ -252,9 +252,9 @@ export const CardCreator = () => {
                 id="icon"
                 value={icon}
                 style={{width: '200px'}}
-                onChange={(e) => setIcon(e.target.value)}
+                onChange={(e) => setIcon(e.target.value || null)}
             >
-                <option value={null}>Icon</option>
+                <option value="">Icon</option>
                 <option value="Continuous">Continuous</option>
                 <option value="Counter">Counter</option>
                 <option value="Equip">Equip</option>
@@ -267,9 +267,9 @@ export const CardCreator = () => {
                 id="attribute"
                 value={attribute}
                 style={{width: '200px'}}
-                onChange={(e) => setAttribute(e.target.value)}
+                onChange={(e) => setAttribute(e.target.value || null)}
             >
-                <option value={null}>Attribute</option>
+                <option value="">Attribute</option>
                 <option value="DARK">DARK</option>
                 <option value="DIVINE">DIVINE</option>
                 <option value="EARTH">EARTH</option>
@@ -282,9 +282,9 @@ export const CardCreator = () => {
                 id="type"
                 value={type}
                 style={{width: '200px'}}
-                onChange={(e) => setType(e.target.value)}
+                onChange={(e) => setType(e.target.value || null)}
             >
-                <option value={null}>Type</option>
+                <option value="">Type</option>
                 <option value="Aqua">Aqua</option>
                 <option value="Beast">Beast</option>
                 <option value="Beast-Warrior">Beast-Warrior</option>

@@ -111,9 +111,9 @@ export const DeckTypeCreator = () => {
                 Category:
                 <select
                     id="category"
-                    onChange={(e) => setCategory(e.target.value)}
+                    onChange={(e) => setCategory(e.target.value || null)}
                 >
-                    <option value={null}></option>
+                    <option value=""></option>
                     <option value="Aggro">Aggro</option>
                     <option value="Combo">Combo</option>
                     <option value="Control">Control</option>
@@ -130,7 +130,7 @@ export const DeckTypeCreator = () => {
                     id="format"
                     onChange={(e) => setFormat(formats[e.target.value])}
                 >
-                <option value={null}></option>
+                <option value=""></option>
                 {
                     formats.map((e, index) => <option value={index}>{e.name}</option>)
                 }
