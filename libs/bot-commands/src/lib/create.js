@@ -4,28 +4,17 @@ import { SlashCommandBuilder } from 'discord.js'
 import { Format, Server } from '@fl/models'
 import { emojis } from '@fl/bot-emojis'
 import { isMod, hasPartnerAccess } from '@fl/bot-functions'
-import { Op } from 'sequelize'
 
 export default {
     data: new SlashCommandBuilder()
         .setName('create')
         .setDescription('Mod Only - Create a tournament. 🎉'),
     async execute(interaction) {
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-        
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         if (!isMod(server, interaction.member)) return await interaction.reply({ content: 'You do not have permission to do that.'})
 
-        const format = await Format.findOne({
-            where: {
-                [Op.or]: {
-                    name: {[Op.iLike]: server.format },
-                    channel: interaction.channelId
-                }
-            }
-        })
+        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
 
 		const modal = new ModalBuilder()
             .setCustomId('createTournament')

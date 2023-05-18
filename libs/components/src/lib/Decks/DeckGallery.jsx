@@ -3,6 +3,7 @@ import { useState, useEffect, useLayoutEffect } from 'react'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { DeckThumbnail } from './DeckThumbnail'
+import './DeckGallery.css'
 
 export const DeckGallery = () => {
     const [decks, setDecks] = useState([])

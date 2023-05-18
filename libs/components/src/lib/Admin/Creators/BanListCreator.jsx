@@ -44,13 +44,7 @@ export const BanListCreator = () => {
         if (!changes || !changes.length) return alert('Please add some changes.')
         
         try {
-            const { data } = await axios.post('/api/banlists/create', {
-                month: month,
-                year: year,
-                changes: changes,
-                previous: previous
-            })
-
+            const { data } = await axios.post('/api/banlists/create', { month, year, changes, previous })
             alert(`Success! Added ${data} Cards to the ${month}${year} Ban List`)
             return reset()
         } catch (err) {
@@ -118,7 +112,6 @@ export const BanListCreator = () => {
             <label>Month:
                 <select
                     id="month"
-                    className="login"
                     onChange={(e) => setMonth(e.target.value)}
                 >
                     <option value={null}></option>
@@ -140,7 +133,6 @@ export const BanListCreator = () => {
             <label>Year:
                 <select
                     id="year"
-                    className="login"
                     onChange={(e) => setYear(e.target.value)}
                 >
                     <option value={null}></option>
@@ -153,7 +145,6 @@ export const BanListCreator = () => {
             <label>Previous List:
                 <select
                     id="previous"
-                    className="login"
                     onChange={(e) => setPrevious(e.target.value)}
                 >
                 <option value={null}></option>
@@ -186,14 +177,12 @@ export const BanListCreator = () => {
                         <td>
                             <input
                                 id="card"
-                                className="login"
                                 defaultValue={null}
                                 type="search"
                                 onKeyDown={(e) => { if (e.key === 'Enter') findCards(e.target.value, null)}}
                             />
 
                             <select
-                                className="login"
                                 onChange={(e) => {
                                     setCard(e.target.value)
                                     getStatus(e.target.value)}
@@ -211,7 +200,6 @@ export const BanListCreator = () => {
                             <select
                                 id="new-status"
                                 defaultValue={null}
-                                className="login"
                                 onChange={(e) => setNewStatus(e.target.value)}
                             >
                                 <option value={null}></option>

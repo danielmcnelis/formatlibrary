@@ -1,4 +1,6 @@
 
+import './Pagination.css'
+
 export const Pagination = (props) => {
     const { length = 0, itemsPerPage = 12, location = 'top', page = 1 } = props
     const totalPages = Math.ceil(length / itemsPerPage)

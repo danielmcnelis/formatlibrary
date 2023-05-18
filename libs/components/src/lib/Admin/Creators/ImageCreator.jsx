@@ -49,7 +49,6 @@ export const ImageCreator = () => {
                 Folder:
                 <select
                     id="folder"
-                    className="login"
                     onChange={(e) => setFolder(e.target.value)}
                 >
                     <option value={null}></option>
@@ -64,7 +63,6 @@ export const ImageCreator = () => {
             <label>Image:
                 <input
                     id="image"
-                    className="login"
                     type="file"
                     accept="image/*"
                     onChange={(e) => {
@@ -76,7 +74,6 @@ export const ImageCreator = () => {
             <label>File Name:
                 <input
                     id="file-name"
-                    className="login"
                     value={fileName || ''}
                     type="text"
                     onChange={(e) => setFileName(e.target.value)}

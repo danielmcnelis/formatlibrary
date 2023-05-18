@@ -4,6 +4,7 @@ import axios from 'axios'
 import { StatsRow } from './StatsRow'
 import { capitalize } from '@fl/utils'
 import { useParams } from 'react-router-dom'
+import './Leaderboard.css'
 
 export const LeaderBoard = (props) => {
     const [format, setFormat] = useState({})

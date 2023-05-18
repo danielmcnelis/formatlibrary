@@ -1,6 +1,7 @@
 
 import { Link } from 'react-router-dom'
 import { capitalize, underscorize } from '@fl/utils'
+import './FormatButton.css'
 
 //FORMAT BUTTONS
 export const FormatButton = (props) => {

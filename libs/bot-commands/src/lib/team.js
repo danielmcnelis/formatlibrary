@@ -32,23 +32,10 @@ export default {
         const captain = await Player.findOne({ where: { discordId: interaction.user.id }})
         const teammate1 = await Player.findOne({ where: { discordId: interaction.options.getUser('teammate1').id }})
         const teammate2 = await Player.findOne({ where: { discordId: interaction.options.getUser('teammate2').id }})
-
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-        
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-
         if (teamName.length > 30) return await interaction.reply({ content: `Sorry, team names must be 30 characters or fewer in length.`})
-
-        const format = await Format.findOne({
-            where: {
-                [Op.or]: {
-                    name: {[Op.iLike]: server.format },
-                    channel: interaction.channelId
-                }
-            }
-        })
+        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
 
         const tournament = format ? await Tournament.findOne({
             where: {

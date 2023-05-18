@@ -82,6 +82,13 @@
     color: #0c0e17;
     text-decoration: none;
 }
+  
+  .player-cell-pfp {
+    border: 1px solid black;
+    border-radius: 32px;
+    width: 32px;
+    margin: 0px 20px;
+  }
 
 
 /* LAPTOPS AND SMALLER WINDOWS */

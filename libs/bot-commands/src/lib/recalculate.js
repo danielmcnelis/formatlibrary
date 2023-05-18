@@ -3,7 +3,6 @@ import { SlashCommandBuilder } from 'discord.js'
 import { isMod, hasAffiliateAccess, trackStats } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Format, Match, Player, Server, Stats } from '@fl/models'
-import { Op } from 'sequelize'
 
 // RECALCULATE
 // Use this command to recalculate every player's Elo from scratch.
@@ -21,28 +20,13 @@ export default {
         ,
     async execute(interaction) {
         const formatName = interaction.options.getString('format')
-
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-    
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         if (!isMod(server, interaction.member)) return await interaction.reply({ content: `You do not have permission to do that.`})
-        
-        const format = await Format.findOne({
-            where: {
-                [Op.or]: {
-                    name: { [Op.iLike]: server.format || formatName },
-                    channel: interaction.channelId
-                }
-            }
-        })
-    
+        const format = await Format.findByServerOrInputOrChannelId(server, formatName, interaction.channelId)
         if (!format) return await interaction.reply({ content: `Try using **/recalculate** in channels like: <#414575168174948372> or <#629464112749084673>.`})
-        
         const serverId = server.internalLadder ? server.id : '414551319031054346'
         const count = await Match.count({ where: { formatName: format.name, serverId: serverId }})
-
         interaction.reply({ content: `Recalculating data from ${count} ${format.name} ${format.emoji} matches. Please wait...`})
         
         const allMatches = await Match.findAll({ 
@@ -75,15 +59,6 @@ export default {
             const winnerStats = await Stats.findOne({ where: { playerId: winnerId, format: format.name, serverId: serverId }, include: Player })
             const loserStats = await Stats.findOne({ where: { playerId: loserId, format: format.name, serverId: serverId }, include: Player })
 
-            const prevVanq = await Match.count({
-                where: {
-                    formatName: match.formatName,
-                    winnerId: match.winnerId,
-                    loserId: match.loserId,
-                    createdAt: {[Op.lt]: match.createdAt}
-                }
-            })
-
             if (!winnerStats) {
                 await trackStats(server, winnerId, format.name)
                 i--
@@ -107,7 +82,7 @@ export default {
             winnerStats.games++
             winnerStats.streak++
             if (winnerStats.streak >= winnerStats.bestStreak) winnerStats.bestStreak++
-            if (!prevVanq) winnerStats.vanquished++
+            if (!await Match.checkIfVanquished(format.id, winnerId, loserId, match.createdAt)) winnerStats.vanquished++
             await winnerStats.save()
     
             loserStats.elo = origEloLoser - delta

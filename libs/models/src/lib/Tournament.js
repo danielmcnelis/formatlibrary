@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize'
+import { Op, Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const Tournament = db.define('tournaments', {
@@ -53,4 +53,32 @@ export const Tournament = db.define('tournaments', {
   serverId: {
     type: Sequelize.STRING
   }
+})
+
+Tournament.findActiveByFormatAndServerId = async (format, serverId) => await Tournament.findAll({ 
+    where: {
+        state: { [Op.not]: 'complete'},
+        formatId: format?.id || {[Op.not]: null},
+        serverId
+    },
+    order: [['createdAt', 'ASC']]
+})
+
+Tournament.findByStateAndFormatAndServerId = async (state, format, serverId) => await Tournament.findAll({ 
+    where: {
+        state, 
+        serverId,
+        formatId: format?.id || {[Op.not]: null}
+    },
+    order: [['createdAt', 'ASC']]
+})
+
+Tournament.findByQueryAndServerId = async (query, serverId) => await Tournament.findOne({ 
+    where: { 
+        [Op.or]: {
+            name: { [Op.iLike]: query },
+            abbreviation: { [Op.iLike]: query },
+        },
+        serverId: serverId 
+    }
 })

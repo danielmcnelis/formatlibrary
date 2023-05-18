@@ -3,7 +3,6 @@ import { SlashCommandBuilder } from 'discord.js'
 import { createPlayer, isMod, isNewUser, hasAffiliateAccess, findNoShowOpponent, getMatches, processMatchResult, selectTournament } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Entry, Format, Player, Server, Tournament } from '@fl/models'
-import { Op } from 'sequelize'
 
 export default {
     data: new SlashCommandBuilder()
@@ -17,24 +16,12 @@ export default {
         ),
     async execute(interaction) {
         await interaction.deferReply()
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-    
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
-        
-        const format = await Format.findOne({
-            where: {
-                [Op.or]: {
-                    name: { [Op.iLike]: server.format },
-                    channel: interaction.channelId
-                }
-            }
-        })
-    
+        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.editReply({ content: `Try using **/noShow** in channels like: <#414575168174948372> or <#629464112749084673>.`})
-    
+
         const noShow = interaction.options.getUser('player')
         const noShowMember = await interaction.guild.members.fetch(noShow.id)
         if ((noShowMember && noShow.bot)) return await interaction.editReply({ content: `Sorry, Bots do not play ${format.name} Format... *yet*.`})

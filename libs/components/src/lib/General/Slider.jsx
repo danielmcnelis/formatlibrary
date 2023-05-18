@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { styled, alpha } from '@mui/system'
 import SliderUnstyled, { sliderUnstyledClasses } from '@mui/base/SliderUnstyled'
+import './Slider.css'
 
 const StyledSlider = styled(SliderUnstyled)(
   ({ theme }) => `

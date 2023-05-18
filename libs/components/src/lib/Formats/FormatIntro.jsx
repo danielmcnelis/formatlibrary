@@ -7,7 +7,7 @@ import { NotFound } from '../General/NotFound'
 import { PopularDecks } from './PopularDecks'
 import { RecentEvents } from '../Events/RecentEvents'
 import { useParams } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
+import './FormatIntro.css'
 
 export const FormatIntro = () => {
     const [format, setFormat] = useState({})
@@ -65,7 +65,7 @@ export const FormatIntro = () => {
             {
               deckCount ? (
                 <li>
-                  <a href={`/gallery/${format.name}`}>Deck Gallery</a>
+                  <a href={`/deck-gallery/${format.name}`}>Deck Gallery</a>
                 </li>
               ) : ''
             }

@@ -3,3 +3,193 @@
     font-size: 12pt;
     margin: 5px 0px;
 }
+
+.flexy {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    vertical-align: text-top;
+    align-items: flex-start;
+  }
+
+  
+  .single-card-image {
+    float: left;
+    margin: 10px 0px 0px 4%;
+    width: 300px;
+  }
+  
+  .single-card-table {
+    padding: 10px;
+    float: left;
+    margin-left: 30px;
+    max-width: 720px;
+    width: 60%;
+  }
+  
+  .single-card-title {
+    text-align: left;
+    font-size: 30px;
+    width: 650px;
+    border-bottom: 2px solid #9ba9cc;
+  }
+  
+  .single-card-standard-row {
+    align-content: left;
+    vertical-align: middle;
+    font-size: 24px;
+    border-bottom: 2px solid #9ba9cc;
+  }
+  
+  .single-card-bottom-row {
+    align-content: left;
+    vertical-align: middle;
+    font-size: 24px;
+    border-top: 2px solid #9ba9cc;
+    border-bottom: 2px solid #9ba9cc;
+  }
+  
+  .single-card-description-label {
+    padding: 20px 0px 0px 10px;
+  }
+
+  .prints-flexbox {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-right: auto;
+    margin-left: auto;
+    width: 75%;
+    padding: 6px 40px;
+  }
+  
+  .print-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    padding: 6px 0px;
+  }
+
+  
+  .status-cell {
+    position: relative;
+    min-width: 10px;
+    width: 25px;
+    height: 50px;
+    border: 1px solid black;
+  }
+  
+  .status-cell:hover {
+    outline: 3px solid black;
+    z-index: 1;
+  }
+  
+  .status-cell p {
+    border-radius: 5px;
+    position: absolute;
+    text-align: center;
+    top: -56px;
+    left: -26px;
+    z-index: 1;
+    width: 60px;
+    border: 1px solid black;
+    padding: 5px;
+    background-color: white;
+    display: none;
+    color: black;
+  }
+  
+  .status-cell:hover p {
+    display: block;
+  }
+  
+  .status-flexbox {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-right: auto;
+    margin-left: auto;
+    width: 75%;
+    padding: 6px 40px;
+  }
+  
+  .status-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 0px;
+  }
+  
+  
+  .single-card-date-row {
+    text-align: left;
+    vertical-align: bottom;
+    height: 60px;
+    font-size: 18px;
+  }
+  
+  .single-card-cardType {
+    height: 40px;
+  }
+  
+  .single-card-symbol {
+    height: 32px;
+  }
+  
+  .single-card-symbol-td {
+    width: 40px;
+    text-align: center;
+  }
+  
+  .single-card-label-td {
+    width: 140px;
+  }
+  
+  .single-card-label-inner-td {
+    width: 140px;
+    border-right: 2px solid #9ba9cc;
+  }
+  
+  .single-card-large-label-td {
+    width: 300px;
+  }
+  
+  .single-card-description-box {
+    padding: 10px 20px 40px 20px;
+    text-align: justify;
+    background-color: #e3dede;
+    border-radius: 20px;
+    margin: 0px 0px 30px 0px;
+  }
+
+  
+  .blank-row {
+    height: 20px !important;
+    border-bottom: 2px solid #9ba9cc !important;
+  }
+  
+  .downloadButton {
+    margin-left: auto;
+    padding: 0.36em 0.84em;
+    border: 1px solid #000000;
+    border-radius: 0.5em;
+    margin: 0.1em 0.5em 0.2em 0.5em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: black;
+    text-align: center;
+    transition: all 0.15s;
+  }
+  
+  .downloadButton:hover {
+    cursor: pointer;
+    text-shadow: 0 0 2em rgba(255, 255, 255, 1);
+    color: black;
+    background-color: #ede6e6;
+    border-color: #ede6e6;
+  }

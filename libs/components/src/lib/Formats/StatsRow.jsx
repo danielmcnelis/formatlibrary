@@ -1,6 +1,7 @@
 
 import { useNavigate } from 'react-router-dom'
 import { ordinalize } from '@fl/utils'
+import './StatsRow.css'
 
 //GET MEDAL
 const getMedal = (elo) => {

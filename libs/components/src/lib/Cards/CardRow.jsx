@@ -1,5 +1,6 @@
 
 import { Link } from 'react-router-dom'
+import './CardRow.css'
 
 export const CardRow = (props) => {
     const { card, status } = props

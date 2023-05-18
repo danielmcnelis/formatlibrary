@@ -1,5 +1,6 @@
 
 import { Link } from 'react-router-dom'
+import './EventRow.css'
 
 export const EventRow = (props) => {
     const {event} = props

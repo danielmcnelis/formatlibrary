@@ -10,6 +10,7 @@ import { Pagination } from '../General/Pagination'
 import { capitalize } from '@fl/utils'
 import { useMediaQuery } from 'react-responsive'
 import { useLocation } from 'react-router-dom'
+import './CardTable.css' 
 
 const now = new Date()
 
@@ -910,7 +911,7 @@ export const CardTable = () => {
             </table>
           </div>
         ) : (
-          <div id="galleryFlexBox">
+          <div id="cardGalleryFlexBox">
             {total ? (
               cards.map((card) => {
                 return <

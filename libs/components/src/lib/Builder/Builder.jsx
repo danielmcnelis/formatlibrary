@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom'
 import axios from 'axios'
 import {Button, Form, Modal} from 'react-bootstrap'
 import { getCookie } from '@fl/utils'
+import './Builder.css'
 
 export const Builder = () => {
     const [decks, setDecks] = useState([])

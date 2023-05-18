@@ -1,0 +1,139 @@
+
+  
+  .deck-bubble {
+    width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 5px;
+  }
+  
+  .deck-bubble#main {
+    border: solid #990099;
+    border-width: 5px 0px;
+    padding: 10px 0px;
+    background-color: #ffe6ff;
+    margin-bottom: 5px;
+  }
+  
+  .deck-bubble#side {
+    border: solid #00a3cc;
+    border-width: 5px 0px;
+    padding: 5px 0px;
+    background-color: #e6faff;
+    margin-bottom: 2px;
+  }
+  
+  .deck-bubble#extra {
+    border: solid #ffbf00;
+    border-width: 5px 0px;
+    padding: 5px 0px;
+    background-color: #ffffe6;
+  }
+
+  .deck-flexbox {
+    padding: 0px 10px;
+    max-width: 800px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: left;
+    flex-direction: row;
+    overflow: visible;
+  }
+
+  .deckType-info {
+    display: block;
+    font-size: 10pt; 
+    font-weight: bold;
+    text-align: center;
+    margin: 5px 0px 10px;
+  }
+  
+  .expanded-info {
+    flex: none;
+    white-space: pre-line;
+    display: none;
+    font-size: 10pt; 
+    font-weight: bold;
+    text-align: center;
+    margin: 5px 0px 10px;  
+    position: relative;
+    z-index: 2;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 1px;
+    background-color: #f0ecec;
+    color: black;
+  }
+  
+  .deckType-info:hover {
+    cursor: pointer;
+  }
+
+  .popular-main, .popular-side {
+    padding: 0px 9.1px;
+  }
+  
+  .format-link {
+    display: inline-block;
+    padding: 14px 6px 6px 54px;
+    border: 1px solid #000000;
+    margin: 0.15em 0.4em 0.15em 0em;
+    height: 64px;
+    width: 200px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: left;
+    transition: all 0.15s;
+    background-repeat: no-repeat;
+    background-position: 2px;
+    background-size: 64px;
+    vertical-align: middle;
+  }
+
+  .format-link:hover {
+    cursor: pointer;
+    color: white;
+    background-color: #41474f;
+  }
+
+  .single-deck-title {
+    padding: 0px 20px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 30px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .single-deck-title-flexbox {
+    display: flex;
+    justify-content: center;
+    width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  
+  .deck-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: left;
+    align-items: center;
+    font-size: 18px;
+    height: 38px;
+    margin: 0px 2px;
+    padding: 2px 5px;
+  }
+  
+  .deck-button:hover {
+      color: white;
+      background-color:#00a3cc;
+      border-radius: 4px; 
+  }

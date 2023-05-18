@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize'
+import { Sequelize, Op } from 'sequelize'
 import { db } from './db'
 
 export const Format = db.define('formats', {
@@ -42,4 +42,25 @@ export const Format = db.define('formats', {
   category: {
     type: Sequelize.STRING
   }
+})
+
+
+Format.findById = async (id) => await Format.findOne({ where: { id }})
+
+Format.findByServerOrChannelId = async (server, channelId) => await Format.findOne({
+    where: {
+        [Op.or]: {
+            name: {[Op.iLike]: server?.format },
+            channel: channelId
+        }
+    }
+})
+
+Format.findByServerOrInputOrChannelId = async (server, formatName, channelId) => await Format.findOne({
+    where: {
+        [Op.or]: {
+            name: { [Op.iLike]: server.format || formatName },
+            channel: channelId
+        }
+    }
 })

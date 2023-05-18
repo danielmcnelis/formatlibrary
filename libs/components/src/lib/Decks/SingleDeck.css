@@ -1,0 +1,185 @@
+
+  
+  .deck-bubble {
+    width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 5px;
+  }
+  
+  .deck-bubble#main {
+    border: solid #990099;
+    border-width: 5px 0px;
+    padding: 10px 0px;
+    background-color: #ffe6ff;
+    margin-bottom: 5px;
+  }
+  
+  .deck-bubble#side {
+    border: solid #00a3cc;
+    border-width: 5px 0px;
+    padding: 5px 0px;
+    background-color: #e6faff;
+    margin-bottom: 2px;
+  }
+  
+  .deck-bubble#extra {
+    border: solid #ffbf00;
+    border-width: 5px 0px;
+    padding: 5px 0px;
+    background-color: #ffffe6;
+  }
+  
+  .format-link {
+    display: inline-block;
+    padding: 14px 6px 6px 54px;
+    border: 1px solid #000000;
+    margin: 0.15em 0.4em 0.15em 0em;
+    height: 64px;
+    width: 200px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: left;
+    transition: all 0.15s;
+    background-repeat: no-repeat;
+    background-position: 2px;
+    background-size: 64px;
+    vertical-align: middle;
+  }
+
+  .format-link:hover {
+    cursor: pointer;
+    color: white;
+    background-color: #41474f;
+  }
+
+  .single-deck-title {
+    padding: 0px 20px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 30px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .single-deck-title-flexbox {
+    display: flex;
+    justify-content: center;
+    width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  
+  .deck-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: left;
+    align-items: center;
+    font-size: 18px;
+    height: 38px;
+    margin: 0px 2px;
+    padding: 2px 5px;
+  }
+  
+  .deck-button:hover {
+      color: white;
+      background-color:#00a3cc;
+      border-radius: 4px; 
+  }
+
+  .deck-stats-table {
+    display: table;
+    width: 720px;
+    vertical-align: middle;
+    margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .deck-stats-table td {
+    padding: 0px 6px;
+  }
+  
+  .deck-stats-cell {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-content: left;
+      align-items: center;
+      font-size: 18px;
+      height: 38px;
+      margin: 5px 2px;
+      padding: 5px;
+    }
+  
+    .single-deck-builder-cell-pfp {
+        border: 1px solid black;
+        border-radius: 28px;
+        width: 28px;
+        margin: 0px 7px;
+      }
+
+  .single-deck-table {
+    display: table;
+    width: 760px;
+    margin: 5px 0px 10px;
+    vertical-align: middle;
+    margin-left: auto;
+    margin-right: auto;
+    border-top: 2px solid #2e2215;
+    border-bottom: 2px solid #2e2215;
+    border-radius: 6px;
+  }
+  
+  .single-deck-info-1 {
+    border-bottom: 1px solid #2e2215;
+    background-color: #f7f7f7;
+  }
+  
+  .single-deck-info-2 {
+    background-color: #eef2f5;
+  }
+  
+  .single-deck-cell {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-content: left;
+    align-items: center;
+    font-size: 18px;
+    padding: 2px 6px;
+    height: 28px;
+  }
+  
+  .single-deck-builder-link, .single-deck-format-link {
+    color: black
+  }
+  
+  .single-deck-builder-link:hover, .single-deck-format-link:hover {
+    cursor: pointer;
+    color: #34AD5A;
+  }
+  
+  .single-deck-builder-link {
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-start;
+    align-items: center;
+  }
+  
+  .single-deck-table td {
+    padding: 0px;
+  }
+  
+  
+  .likeImg:hover {
+    cursor: pointer;
+  }
+  

@@ -200,7 +200,6 @@ export const CardCreator = () => {
             <label>Name:
                 <input
                     id="name"
-                    className="login"
                     value={name || ''}
                     type="text"
                     onChange={(e) => setName(e.target.value)}
@@ -209,7 +208,6 @@ export const CardCreator = () => {
             <label>Konami Code:
                 <input
                     id="konamiCode"
-                    className="login"
                     value={konamiCode || ''}
                     type="text"
                     onChange={(e) => setKonamiCode(e.target.value)}
@@ -218,7 +216,6 @@ export const CardCreator = () => {
             <label>TCG Date:
                 <input
                     id="tcgDate"
-                    className="login"
                     value={tcgDate || ''}
                     type="text"
                     onChange={(e) => setTCGDate(e.target.value)}
@@ -227,7 +224,6 @@ export const CardCreator = () => {
             <label>OCG Date:
                 <input
                     id="ocgDate"
-                    className="login"
                     value={ocgDate || ''}
                     type="text"
                     onChange={(e) => setOCGDate(e.target.value)}
@@ -236,7 +232,6 @@ export const CardCreator = () => {
             <label>Description:
                 <input
                     id="description"
-                    className="login"
                     value={description || ''}
                     type="text"
                     onChange={(e) => setDescription(e.target.value)}
@@ -245,7 +240,6 @@ export const CardCreator = () => {
             <select
                 id="category"
                 value={category}
-                className="login"
                 style={{width: '200px'}}
                 onChange={(e) => setCategory(e.target.value)}
             >
@@ -257,7 +251,6 @@ export const CardCreator = () => {
             <select
                 id="icon"
                 value={icon}
-                className="login"
                 style={{width: '200px'}}
                 onChange={(e) => setIcon(e.target.value)}
             >
@@ -273,7 +266,6 @@ export const CardCreator = () => {
             <select
                 id="attribute"
                 value={attribute}
-                className="login"
                 style={{width: '200px'}}
                 onChange={(e) => setAttribute(e.target.value)}
             >
@@ -289,7 +281,6 @@ export const CardCreator = () => {
             <select
                 id="type"
                 value={type}
-                className="login"
                 style={{width: '200px'}}
                 onChange={(e) => setType(e.target.value)}
             >
@@ -322,7 +313,6 @@ export const CardCreator = () => {
             <label>ATK:
                 <input
                     id="atk"
-                    className="login"
                     value={atk || ''}
                     type="text"
                     onChange={(e) => setATK(parseInt(e.target.value))}
@@ -331,7 +321,6 @@ export const CardCreator = () => {
             <label>DEF:
                 <input
                     id="def"
-                    className="login"
                     value={def || ''}
                     type="text"
                     onChange={(e) => setDEF(parseInt(e.target.value))}
@@ -340,7 +329,6 @@ export const CardCreator = () => {
             <label>Level:
                 <input
                     id="level"
-                    className="login"
                     value={level || ''}
                     type="text"
                     onChange={(e) => setLevel(parseInt(e.target.value))}
@@ -349,7 +337,6 @@ export const CardCreator = () => {
             <label>Rating:
                 <input
                     id="rating"
-                    className="login"
                     value={rating || ''}
                     type="text"
                     onChange={(e) => setRating(parseInt(e.target.value))}
@@ -358,7 +345,6 @@ export const CardCreator = () => {
             <label>Scale:
                 <input
                     id="scale"
-                    className="login"
                     value={scale || ''}
                     type="text"
                     onChange={(e) => setScale(parseInt(e.target.value))}
@@ -367,7 +353,6 @@ export const CardCreator = () => {
             <label>Arrows:
                 <input
                     id="arrows"
-                    className="login"
                     value={arrows || ''}
                     type="text"
                     onChange={(e) => setArrows(e.target.value)}
@@ -377,7 +362,6 @@ export const CardCreator = () => {
                 <select
                     id="normal"
                     value={normal}
-                    className="login"
                     onChange={(e) => setNormal(e.target.value)}
                 >
                     <option value="true">True</option>
@@ -388,7 +372,6 @@ export const CardCreator = () => {
                 <select
                     id="effect"
                     value={effect}
-                    className="login"
                     style={{backgroundImage: 'none'}}
                     onChange={(e) => setEffect(e.target.value)}
                 >
@@ -400,7 +383,6 @@ export const CardCreator = () => {
                 <select
                     id="fusion"
                     value={fusion}
-                    className="login"
                     style={{backgroundImage: 'none'}}
                     onChange={(e) => setFusion(e.target.value)}
                 >
@@ -412,7 +394,6 @@ export const CardCreator = () => {
                 <select
                     id="ritual"
                     value={ritual}
-                    className="login"
                     style={{backgroundImage: 'none'}}
                     onChange={(e) => setRitual(e.target.value)}
                 >
@@ -424,7 +405,6 @@ export const CardCreator = () => {
                 <select
                     id="synchro"
                     value={synchro}
-                    className="login"
                     style={{backgroundImage: 'none'}}
                     onChange={(e) => setSynchro(e.target.value)}
                 >
@@ -436,7 +416,6 @@ export const CardCreator = () => {
                 <select
                     id="xyz"
                     value={xyz}
-                    className="login"
                     style={{backgroundImage: 'none'}}
                     onChange={(e) => setXyz(e.target.value)}
                 >
@@ -448,7 +427,6 @@ export const CardCreator = () => {
                 <select
                     id="pendulum"
                     value={pendulum}
-                    className="login"
                     style={{backgroundImage: 'none'}}
                     onChange={(e) => setPendulum(e.target.value)}
                 >
@@ -460,7 +438,6 @@ export const CardCreator = () => {
                 <select
                     id="link"
                     value={link}
-                    className="login"
                     style={{backgroundImage: 'none'}}
                     onChange={(e) => setLink(e.target.value)}
                 >
@@ -472,7 +449,6 @@ export const CardCreator = () => {
                 <select
                     id="flip"
                     value={flip}
-                    className="login"
                     style={{backgroundImage: 'none'}}
                     onChange={(e) => setFlip(e.target.value)}
                 >
@@ -484,7 +460,6 @@ export const CardCreator = () => {
                 <select
                     id="gemini"
                     value={gemini}
-                    className="login"
                     style={{backgroundImage: 'none'}}
                     onChange={(e) => setGemini(e.target.value)}
                 >
@@ -496,7 +471,6 @@ export const CardCreator = () => {
                 <select
                     id="spirit"
                     value={spirit}
-                    className="login"
                     style={{backgroundImage: 'none'}}
                     onChange={(e) => setSpirit(e.target.value)}
                 >
@@ -508,7 +482,6 @@ export const CardCreator = () => {
                 <select
                     id="toon"
                     value={toon}
-                    className="login"
                     style={{backgroundImage: 'none'}}
                     onChange={(e) => setToon(e.target.value)}
                 >
@@ -520,7 +493,6 @@ export const CardCreator = () => {
                 <select
                     id="tuner"
                     value={tuner}
-                    className="login"
                     style={{backgroundImage: 'none'}}
                     onChange={(e) => setTuner(e.target.value)}
                 >
@@ -532,7 +504,6 @@ export const CardCreator = () => {
                 <select
                     id="union"
                     value={union}
-                    className="login"
                     style={{backgroundImage: 'none'}}
                     onChange={(e) => setUnion(e.target.value)}
                 >
@@ -543,7 +514,6 @@ export const CardCreator = () => {
             <label>Image:
                 <input
                     id="image"
-                    className="login"
                     type="file"
                     accept=".png"
                     onChange={(e) => readImage(e.target.files[0])}

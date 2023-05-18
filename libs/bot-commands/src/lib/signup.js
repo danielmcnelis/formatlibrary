@@ -18,31 +18,11 @@ export default {
         ),
 	async execute(interaction) {
         await interaction.deferReply()
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that. Please type **/join** instead.'})   
-
-        let format = await Format.findOne({
-            where: {
-                [Op.or]: {
-                    name: {[Op.iLike]: server.format },
-                    channel: interaction.channelId
-                }
-            }
-        })
-        
-        const tournaments = await Tournament.findAll({ 
-            where: { 
-                state: {[Op.or]: ['pending', 'standby']},
-                formatName: format ? format.name : {[Op.not]: null},
-                serverId: interaction.guildId
-            }, 
-            order: [['createdAt', 'ASC']] 
-        })
-        
+        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that. Please type **/join** instead.'})           
+        let format = await Format.findByServerOrChannelId(server, interaction.channelId)
+        const tournaments = await Tournament.findByStateAndFormatAndServerId({[Op.or]: ['pending', 'standby']}, format, interaction.guildId)
         const user = interaction.options.getUser('player')
         const member = await interaction.guild.members.fetch(user.id)
         const player = await Player.findOne({ where: { discordId: user.id }})

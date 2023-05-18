@@ -8,7 +8,7 @@ export default {
         .setDescription(`Select your Subscriber Flair. 👒`)
         .addStringOption(option =>
             option
-                .setName('role')
+                .setName('emoji')
                 .setDescription('Subscriber Flair.')
                 .setRequired(true)
                 .addChoices(
@@ -36,8 +36,7 @@ export default {
                     { name: 'Time Wizard', value: '1105203831542911027' },
                     { name: 'Traptrix Myrmeleo', value: '1105200619570090097' },
                     { name: 'X-Saber Airbellum', value: '1105203082909986866' },
-                    { name: 'XX-Saber Darksoul', value: '1105206904352952450' },
-
+                    { name: 'XX-Saber Darksoul', value: '1105206904352952450' }
 				)
         ),
     async execute(interaction) {

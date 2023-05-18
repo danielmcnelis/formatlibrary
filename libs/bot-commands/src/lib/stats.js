@@ -16,20 +16,9 @@ export default {
                 .setRequired(false)
         ),
     async execute(interaction) {
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
-        const format = await Format.findOne({
-            where: {
-                [Op.or]: {
-                    name: { [Op.iLike]: server.format },
-                    channel: interaction.channelId
-                }
-            }
-        })
-
+        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.reply({ content: `Try using **/stats** in channels like: <#414575168174948372> or <#629464112749084673>.`})
         const user = interaction.options.getUser('player') || interaction.user
         const discordId = user.id	

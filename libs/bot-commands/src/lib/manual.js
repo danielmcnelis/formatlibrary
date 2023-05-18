@@ -24,26 +24,12 @@ export default {
         await interaction.deferReply()
         const winner = interaction.options.getUser('winner')
         const winningMember = await interaction.guild.members.fetch(winner.id)
-
         const loser = interaction.options.getUser('loser')
         const losingMember = await interaction.guild.members.fetch(loser.id)
-
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-    
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
-        
-        const format = await Format.findOne({
-            where: {
-                [Op.or]: {
-                    name: { [Op.iLike]: server.format },
-                    channel: interaction.channelId
-                }
-            }
-        })
-    
+        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.editReply({ content: `Try using **/manual** in channels like: <#414575168174948372> or <#629464112749084673>.`})
         
         const winnerDiscordId = winner.id
@@ -83,22 +69,9 @@ export default {
         let isIronMatch
 
         if (loserHasTourRole && winnerHasTourRole && activeTournament) {
-            const loserEntries = await Entry.findAll({ 
-                where: { 
-                    playerId: losingPlayer.id,
-                    '$tournament.formatId$': format.id
-                }, 
-                include: Tournament 
-            })
-
-            const winnerEntries = await Entry.findAll({ 
-                where: { 
-                    playerId: winningPlayer.id,
-                    '$tournament.formatId$': format.id
-                 }, 
-                include: Tournament 
-            })
-
+            const loserEntries = await Entry.findByPlayerIdAndFormatId(losingPlayer.id, format.id)
+            const winnerEntries = await Entry.findByPlayerIdAndFormatId(winningPlayer.id, format.id)
+            
             if (loserEntries.length && winnerEntries.length) {
                 const loserTournamentIds = []
                 const winnerTournamentIds = []
@@ -195,14 +168,6 @@ export default {
             }
         }
         
-        const prevVanq = await Match.count({
-            where: {
-                formatName: {[Op.iLike]: format.name},
-                winnerId: winningPlayer.id,
-                loserId: losingPlayer.id
-            }
-        })
-
         const origEloWinner = winnerStats.elo || 500.00
         const origEloLoser = loserStats.elo || 500.00
         const delta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
@@ -215,7 +180,7 @@ export default {
         winnerStats.inactive = false
         winnerStats.streak++
         if (winnerStats.streak >= winnerStats.bestStreak) winnerStats.bestStreak++
-        if (!prevVanq) winnerStats.vanquished++
+        if (!await Match.checkIfVanquished(format.id, winningPlayer.id, losingPlayer.id)) winnerStats.vanquished++
         await winnerStats.save()
 
         loserStats.elo = origEloLoser - delta

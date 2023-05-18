@@ -1,6 +1,7 @@
 
 import { Link } from 'react-router-dom'
 import { capitalize, underscorize } from '@fl/utils'
+import './DeckThumbnail.css'
 
 export const DeckThumbnail = (props) => {
     const {deck} = props

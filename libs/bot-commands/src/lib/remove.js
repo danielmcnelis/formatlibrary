@@ -18,10 +18,7 @@ export default {
         ),
 	async execute(interaction) {
         await interaction.deferReply()
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const user = interaction.options.getUser('player')
         const member = await interaction.guild.members.fetch(user.id)
 
@@ -30,15 +27,8 @@ export default {
 
         const player = await Player.findOne({ where: { discordId: user.id }})
         if (!player) return await interaction.editReply(`That player is not in the database.`)
-
-        const format = await Format.findOne({
-            where: {
-                [Op.or]: {
-                    name: {[Op.iLike]: server.format },
-                    channel: interaction.channelId
-                }
-            }
-        })
+        
+        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
                 
         const tournaments = [
             ...await Entry.findAll({ 

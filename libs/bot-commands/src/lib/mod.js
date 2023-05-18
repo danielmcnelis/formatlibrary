@@ -9,10 +9,7 @@ export default {
 		.setName('mod')
 		.setDescription('Mod Only - View the RetroBot Moderator guide. 👮'),
 	async execute(interaction) {
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-    
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         if (!isMod(server, interaction.member)) return await interaction.reply({ content: "You do not have permission to do that."})
 

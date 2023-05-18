@@ -1,5 +1,5 @@
 
-import { Sequelize } from 'sequelize'
+import { Op, Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const Match = db.define('matches', {
@@ -40,3 +40,12 @@ export const Match = db.define('matches', {
         defaultValue: false
     }
 })
+
+Match.checkIfVanquished = async (formatId, winnerId, loserId, createdAt) => createdAt ? 
+    await Match.count({ 
+        where: { 
+            formatId, winnerId, loserId,
+            createdAt: {[Op.lt]: createdAt}
+        }
+    }) : await Match.count({ where: { formatId, winnerId, loserId }})
+    

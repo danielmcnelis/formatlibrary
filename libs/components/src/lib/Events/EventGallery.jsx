@@ -10,9 +10,6 @@ export const EventGallery = () => {
     const [winners, setWinners] = useState([])
     const [format, setFormat] = useState({})
     const { id } = useParams()
-    console.log('events', events)
-    console.log('winners', winners)
-    console.log('format', format)
     
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0))

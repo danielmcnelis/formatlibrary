@@ -158,7 +158,7 @@ export const EventCreator = () => {
     <div className="admin-portal">
       <label>
         Community:
-        <select id="community" className="login" onChange={(e) => setCommunity(e.target.value)}>
+        <select id="community" onChange={(e) => setCommunity(e.target.value)}>
           <option value={null}></option>
               <option value="Format Library">Format Library</option>
               <option value="Androidland">Androidland</option>
@@ -186,19 +186,19 @@ export const EventCreator = () => {
       </label>
       <label>
         URL:
-        <input id="url" className="login" type="text" onChange={(e) => getTournament(e.target.value)} />
+        <input id="url" type="text" onChange={(e) => getTournament(e.target.value)} />
       </label>
       <label>
         Full Name:
-        <input id="full-name" className="login" type="text" onChange={(e) => setFullName(e.target.value)} />
+        <input id="full-name" type="text" onChange={(e) => setFullName(e.target.value)} />
       </label>
       <label>
         Abbbreviation:
-        <input id="short-name" className="login" type="text" onChange={(e) => setAbbreviation(e.target.value)} />
+        <input id="short-name" type="text" onChange={(e) => setAbbreviation(e.target.value)} />
       </label>
       <label>
         Format:
-        <select id="format" className="login" onChange={(e) => setFormat(formats[e.target.value])}>
+        <select id="format" onChange={(e) => setFormat(formats[e.target.value])}>
           <option value={null}></option>
           {formats.map((e, index) => (
             <option value={index}>{e.name}</option>
@@ -207,11 +207,11 @@ export const EventCreator = () => {
       </label>
       <label>
         Size:
-        <input id="size" value={size || ''} className="size" type="text" onChange={(e) => setSize(e.target.value)} />
+        <input id="size" value={size || ''} type="text" onChange={(e) => setSize(e.target.value)} />
       </label>
       <label>
         Type:
-        <select id="type" className="login" onChange={(e) => setTournamentType(e.target.value)}>
+        <select id="type" onChange={(e) => setTournamentType(e.target.value)}>
           <option value={null}></option>
           <option value="Double Elimination">Double Elimination</option>
           <option value="Single Elimination">Single Elimination</option>
@@ -221,7 +221,7 @@ export const EventCreator = () => {
       </label>
       <label>
         Series:
-        <select id="series" className="login" onChange={(e) => setIsSeries(e.target.value)}>
+        <select id="series" onChange={(e) => setIsSeries(e.target.value)}>
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
@@ -230,7 +230,6 @@ export const EventCreator = () => {
         Bracket:
         <input
           id="bracket"
-          className="login"
           type="file"
           accept=".png"
           onChange={(e) => readBracket(e.target.files[0])}
@@ -240,13 +239,13 @@ export const EventCreator = () => {
         Winner:
         <input
           id="winner"
-          className="login"
+          
           type="search"
           onKeyDown={(e) => {
             if (e.key === 'Enter') findPlayers(e.target.value)
           }}
         />
-        <select id="winner-select" className="login" onChange={(e) => getPlayer(e.target.value)}>
+        <select id="winner-select" onChange={(e) => getPlayer(e.target.value)}>
           {players.map((e) => (
             <option value={e.name}>{e.name}</option>
           ))}
@@ -257,7 +256,6 @@ export const EventCreator = () => {
         <input
           id="startDate"
           value={slice || 'mm-dd-yyyy'}
-          className="login"
           type="date"
           onChange={(e) => {
             setEndDate(e.target.value + ' 00:00:00+00')

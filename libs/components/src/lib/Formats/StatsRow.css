@@ -1,0 +1,43 @@
+
+medal-cell {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .medal-cell img {
+    -webkit-filter: drop-shadow(1px 0px 0 rgb(83, 74, 74))
+                    drop-shadow(-1px 0px 0 rgb(83, 74, 74));
+    filter: drop-shadow(1px 0px 0 rgb(83, 74, 74)) 
+            drop-shadow(-1px 0px 0 rgb(83, 74, 74));
+  }
+  
+  .odd-search-results-row {
+    text-align: center;
+    display: table-row;
+    color: black;
+    background-color: #f7f7f7;
+    border-bottom: 2px solid #9faac2;
+  }
+  
+  .even-search-results-row {
+    text-align: center;
+    display: table-row;
+    color: black;
+    background-color: #eef2f5;
+    border-bottom: 2px solid #9faac2;
+  }
+  
+  .odd-search-results-row:hover, .even-search-results-row:hover {
+    cursor: pointer;
+    color: white;
+    background-color: #6d6f8a;
+  }
+  
+  .medal-cell {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+  }

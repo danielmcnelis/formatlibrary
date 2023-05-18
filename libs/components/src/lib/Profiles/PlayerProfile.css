@@ -4,3 +4,83 @@
     height: 30px;
     padding: 2px 8px
 }
+
+.popular-decks-flexbox {
+  display: flex;
+  max-width: 1100px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: auto;
+  margin-left: auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.badges-title {
+    margin-left: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 3px 0px;
+    text-align: center;
+  }
+  
+  .badges-flexbox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 10px 0px;
+    margin: 10px auto 0px 30px;
+    background-image: url('https://cdn.formatlibrary.com/images/velvet.png');
+    background-size:auto;
+    border: 6px ridge #715224;
+    border-radius: 3px;
+  }
+
+  .player-profile-flexbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: flex-start;
+  }
+  
+  .player-awards {
+    padding: 10px 30px;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+  }
+  
+  .player-info {
+    padding: 10px 30px;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+  }
+  
+  .player-pfp {
+    border: 3px solid black;
+    border-radius: 2px;
+    display: block;
+    margin: 10px auto;
+    width: 128px;
+  }
+  
+  .player-profile-title {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    padding: 3px ;
+  }
+  
+  
+  .player-profile-info td {
+    padding: 0px;
+  }
+  
+  .player-profile-cell {
+    padding: 4px 1px;
+  }

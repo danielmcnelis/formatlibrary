@@ -1,0 +1,248 @@
+
+.card-image-cell, .empty-image-cell {
+    display: flex;
+  }
+
+  .odd-search-results-row {
+    text-align: center;
+    display: table-row;
+    color: black;
+    background-color: #f7f7f7;
+    border-bottom: 2px solid #9faac2;
+  }
+  
+  .even-search-results-row {
+    text-align: center;
+    display: table-row;
+    color: black;
+    background-color: #eef2f5;
+    border-bottom: 2px solid #9faac2;
+  }
+  
+  .odd-search-results-row:hover, .even-search-results-row:hover {
+    cursor: pointer;
+    color: white;
+    background-color: #6d6f8a;
+  }
+
+  .inner-cardRow-table {
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    vertical-align: top;
+  }
+
+  .cardrow-description {
+    text-align: left;
+  }
+  
+  .status-icon {
+    position: absolute;
+    z-index: 1;
+    width: 33% !important;
+    top: 1%;
+    left: 2.5%;
+  }
+
+  .small-status-icon {
+    position: relative !important;
+    z-index: 1;
+    width: 28px !important;
+    height: 30px !important;
+    top: 10px;
+    left: -136px;
+  }
+  
+  
+  #normal.groupMiniButton, #normal.clickedGroupMiniButton, #normal.groupButton, #normal.clickedGroupButton {
+    background-image: url('https://cdn.formatlibrary.com/images/templates/monsterCard.jpg');
+  }
+  
+  #effect {
+    background-image: url('https://cdn.formatlibrary.com/images/templates/effectCard.png');
+  }
+  
+  #fusion {
+    background-image: url('https://cdn.formatlibrary.com/images/templates/fusionCard.jpg');
+  }
+  
+  #ritual {
+    background-image: url('https://cdn.formatlibrary.com/images/templates/ritualCard.jpg');
+  }
+  
+  #synchro {
+    background-image: url('https://cdn.formatlibrary.com/images/templates/synchroCard.png');
+  }
+  
+  #xyz {
+    background-image: url('https://cdn.formatlibrary.com/images/templates/xyzCard.png');
+  }
+  
+  #pendulum {
+    background-image: url('https://cdn.formatlibrary.com/images/templates/pendulumCard.png');
+  }
+  
+  #flip {
+    background-size: 24px;
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/flip.png');
+  }
+  
+  #gemini {
+    background-size: 24px;
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/gemini.png');
+  }
+  
+  #spirit {
+    background-size: 22px;
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/spirit.png');
+  }
+  
+  #toon {
+    background-size: 22px;
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/toon.png');
+  }
+  
+  #tuner {
+    background-size: 24px;
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/tuner.png');
+  }
+  
+  #union {
+    background-size: 24px;
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/union.png');
+  }
+  
+  #link {
+    background-image: url('https://cdn.formatlibrary.com/images/templates/linkCard.png');
+  }
+  
+  #dark {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/dark.png');
+  }
+  
+  #light {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/light.png');
+  }
+  
+  #earth {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/earth.png');
+  }
+  
+  #wind {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/wind.png');
+  }
+  
+  #water {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/water.png');
+  }
+  
+  #fire {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/fire.png');
+  }
+  
+  #divine {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/divine.png');
+  }
+  
+  #continuous {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/continuous.png');
+  }
+  
+  #counter {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/counter.png');
+  }
+  
+  #normal.iconMiniButton, #normal.clickedIconMiniButton, #normal.iconButton, #normal.clickedIconButton {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/normal.png');
+  }
+  
+  #equip {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/equip.png');
+  }
+  
+  #ritual.iconMiniButton, #ritual.clickedIconMiniButton, #ritual.iconButton, #ritual.clickedIconButton {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/ritual.png');
+  }
+  
+  #field {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/field.png');
+  }
+  
+  #quick-Play {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/quick-play.png');
+  }
+  
+  #aqua {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/aqua.png');
+  }
+  
+  #beast {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/beast.png');
+  }
+  #beast-Warrior {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/beast-warrior.png');
+  }
+  #cyberse {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/cyberse.png');
+  }
+  #dinosaur {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/dinosaur.png');
+  }
+  #divine-Beast {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/divine-beast.png');
+  }
+  #dragon {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/dragon.png');
+  }
+  #fairy {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/fairy.png');
+  }
+  #fiend {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/fiend.png');
+  }
+  #fish {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/fish.png');
+  }
+  #insect {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/insect.png');
+  }
+  #machine {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/machine.png');
+  }
+  #plant {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/plant.png');
+  }
+  #psychic {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/psychic.png');
+  }
+  #pyro {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/pyro.png');
+  }
+  #reptile {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/reptile.png');
+  }
+  #rock {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/rock.png');
+  }
+  #seaSerpent {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/sea-serpent.png');
+  }
+  #spellcaster {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/spellcaster.png');
+  }
+  #thunder {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/thunder.png');
+  }
+  #warrior {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/warrior.png');
+  }
+  #wingedBeast {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/winged-beast.png');
+  }
+  #wyrm {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/wyrm.png');
+  }
+  #zombie {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/zombie.png');
+  }

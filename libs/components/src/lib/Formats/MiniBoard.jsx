@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { StatsRow } from './StatsRow'
 import { capitalize } from '@fl/utils'
+import './MiniBoard.css'
 
 export const MiniBoard = (props) => {
     const { format, limit } = props

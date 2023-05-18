@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { DeckThumbnail } from '../Decks/DeckThumbnail'
+import './PopularDecks.css'
 
 export const PopularDecks = (props) => {
     const [popularDecks, setPopularDecks] = useState([])

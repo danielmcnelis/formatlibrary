@@ -1,0 +1,24 @@
+
+.deck-flexbox {
+    padding: 0px 10px;
+    max-width: 800px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: left;
+    flex-direction: row;
+    overflow: visible;
+  }
+
+  .DeckImages {
+    display: block;
+    color: black;
+    padding: 5px 0px;
+    margin: 5px 0px;
+  }
+  
+  .DeckImages:hover {
+    box-shadow: -2px 2px 5px 4px #737373;
+    cursor: pointer;
+  }
+  

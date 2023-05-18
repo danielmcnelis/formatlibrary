@@ -16,17 +16,15 @@ export default {
             const tournaments = await Tournament.findAll({
                 where: {
                     serverId: interaction.guildId,
-                    createdAt: { [Op.gte]: "2022-12-01 00:00:00.000+00" },
                 },
+                limit: 25,
                 order: [["createdAt", "ASC"]],
             })
 
             const tournament = await selectTournament(interaction, tournaments)
             if (!tournament) return
-
-            const server = await Server.findOne({ where: {
-                id: interaction.guildId
-            }})
+            
+            const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
 
             const decks = await Deck.findAll({
                 where: {

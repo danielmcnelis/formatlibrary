@@ -1,6 +1,7 @@
 
 import { Link } from 'react-router-dom'
 import { ordinalize } from '@fl/utils'
+import './DeckImage.css'
 
 export const DeckImage = (props) => {
     const {deck, width, margin, padding, coverage} = props

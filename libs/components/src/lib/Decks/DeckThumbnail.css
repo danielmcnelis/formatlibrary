@@ -1,0 +1,25 @@
+
+  
+  .deckThumbnail-flexbox {
+    padding: 3px 6px;
+    margin: 0px 10px 20px;
+    max-height: 120px;
+    max-width: 330px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: left;
+    flex-direction: row;
+    border-top: 4px solid black;
+    border-bottom: 4px solid black;
+    border-radius: 4px;
+    background-image: url('https://cdn.formatlibrary.com/images/duelingbook.png');
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .deckThumbnail-image {
+    width: 100px;
+    margin: 0px 3px;
+    border: 1px solid white;
+  }

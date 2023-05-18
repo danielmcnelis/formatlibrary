@@ -1,6 +1,7 @@
 
 import { Link } from 'react-router-dom'
 import { capitalize, ordinalize } from '@fl/utils'
+import './MobileDeckRow.css'
 
 export const MobileDeckRow = (props) => {
     const {deck} = props

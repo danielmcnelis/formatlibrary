@@ -1,5 +1,6 @@
 
 import { Sequelize } from 'sequelize'
+import { Tournament } from './Tournament'
 import { db } from './db'
 
 export const Entry = db.define('entries', {
@@ -46,4 +47,14 @@ export const Entry = db.define('entries', {
     slot: {
         type: Sequelize.STRING
     }
+})
+
+Entry.findByPlayerIdAndTournamentId = async (playerId, tournamentId) => await Entry.findOne({ where: { playerId, tournamentId }})
+
+Entry.findByPlayerIdAndFormatId = async (playerId, formatId) => await Entry.findAll({ 
+    where: { 
+        playerId,
+        '$tournament.formatId$': formatId
+    }, 
+    include: Tournament 
 })

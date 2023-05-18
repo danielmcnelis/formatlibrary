@@ -1,0 +1,81 @@
+
+.blog {
+    background-color: #f7f7f7;
+    min-height: 70vh;
+    padding-top: 20px; 
+}
+  
+.pagination {
+    display: flex;
+    min-width: 410px;
+    max-width: 100%;
+    margin: 0px 8px;
+    padding: 4px;
+    align-items: center;
+    justify-content: center;
+}
+  
+.paginationWrapper {
+    width: 90%;
+    min-width: 764px;
+    max-width: 100%;
+    padding: 4px 4px 2px 4px;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+/* TABLETS AND SMALL LAPTOPS */
+@media only screen and (max-width: 800px) {
+    .blog {
+        border: 0px;
+        padding: 0px;
+        margin: 0px;
+    }
+}
+
+/* MEDIUM AND LARGE CELL PHONES */
+@media only screen and (max-width: 600px) {
+    .pagination {
+        display: flex;
+        min-width: 0px;
+        max-width: 100%;
+        margin: 0px 8px;
+        padding: 4px;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .paginationWrapper {
+        width: 90%;
+        min-width: 0px;
+        max-width: 100%;
+        padding: 4px 4px 2px 4px;
+        align-items: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* SMALL CELL PHONES */
+@media only screen and (max-width: 375px) {
+    .pagination {
+      display: flex;
+      min-width: 0px;
+      max-width: 100%;
+      margin: 0px 8px;
+      padding: 4px;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .paginationWrapper {
+      width: 90%;
+      min-width: 0px;
+      max-width: 100%;
+      padding: 4px 4px 2px 4px;
+      align-items: center;
+      margin-left: auto;
+      margin-right: auto;
+    } 
+}

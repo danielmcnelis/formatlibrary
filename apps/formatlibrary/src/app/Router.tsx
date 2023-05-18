@@ -46,7 +46,7 @@ export const Router = () => {
 					<Route path="/cards/" element=<Page element= <CardTable /> /> />
 					<Route path="/cards?format=:id" element=<Page element= <CardTable /> /> />
 					<Route path="/cards/:id" element=<Page element= <SingleCard /> /> />
-					<Route path="/goat-deck-gallery" element={<Navigate to="/gallery/Goat" />} />
+					<Route path="/goat-deck-gallery" element={<Navigate to="/deck-gallery/Goat" />} />
 					<Route path="/decks/" element=<Page element= <DeckTable /> /> />
 					<Route path="/decks/:id" element=<Page element= <SingleDeck /> /> />
 					<Route path="/decktypes/:id" element=<Page element= <DeckType /> /> />

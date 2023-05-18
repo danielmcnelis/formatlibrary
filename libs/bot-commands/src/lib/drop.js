@@ -12,30 +12,18 @@ export default {
 		.setDescription('Drop from a tournament. 💧'),
 	async execute(interaction) {
         await interaction.deferReply()
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-
-        const player = await Player.findOne({ where: { discordId: interaction.user.id }})
+        const player = await Player.findByDiscordId(interaction.user.id)
         if (!player) return await interaction.editReply({ content: `You are not in the database.`})
-
-        const format = await Format.findOne({
-            where: {
-                [Op.or]: {
-                    name: {[Op.iLike]: server.format },
-                    channel: interaction.channelId
-                }
-            }
-        })
+        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
                 
         const tournaments = [
             ...await Entry.findAll({ 
                 where: { 
                     '$player.discordId$': interaction.user.id,
-                    '$tournament.formatName$': format ? format.name : { [Op.not]: null },
-                    '$tournament.serverId$': interaction.guild.id
+                    '$tournament.formatId$': format?.id || { [Op.not]: null },
+                    '$tournament.serverId$': interaction.guildId
                 }, 
                 include: [Player, Tournament]
             })
@@ -95,13 +83,8 @@ export default {
                 if (isOnTeam) {
                     return await interaction.editReply({ content: `Only the team captain can drop a team from a team tournament.`})
                 } else {
-                    const entry = await Entry.findOne({ 
-                        where: { 
-                            playerId: player.id, 
-                            tournamentId: tournament.id
-                        }
-                    })
-
+                    const entry = await Entry.findByPlayerIdAndTournamentId(player.id, tournament.id)
+            
                     if (!entry) {
                         return await interaction.editReply({ content: `Hmm... I don't see you in the participants list for ${tournament.name}. ${tournament.emoji}`})
                     } else {
@@ -129,13 +112,7 @@ export default {
                 if (!success) return await interaction.editReply({ content: `If you played a match, please report the result before dropping. Otherwise ask a Moderator to **remove** you.`})
             }
     
-            const entry = await Entry.findOne({ 
-                where: { 
-                    playerId: player.id, 
-                    tournamentId: tournament.id
-                }
-            })
-    
+            const entry = await Entry.findByPlayerIdAndTournamentId(player.id, tournament.id)
             return removeParticipant(server, interaction, interaction.member, entry, tournament, true)
         }
     }

@@ -1,9 +1,9 @@
 
 import { AttachmentBuilder, SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Server, Tournament } from '@fl/models'
-import { Op } from 'sequelize'
-import { selectTournamentForDeckCheck } from '@fl/bot-functions'
+import { hasPartnerAccess, selectTournamentForDeckCheck } from '@fl/bot-functions'
 import { drawDeck, isMod } from '@fl/bot-functions'
+import { emojis } from '@fl/bot-emojis'
 
 export default {
     data: new SlashCommandBuilder()
@@ -18,31 +18,10 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         const user = interaction.options.getUser('player')
-        
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-        
-        const format = await Format.findOne({
-            where: {
-                [Op.or]: {
-                    name: {[Op.iLike]: server.format },
-                    channel: interaction.channelId
-                }
-            }
-        })
-
-        if (!format) return
-        
-        const tournaments = await Tournament.findAll({
-            where: { 
-                state: {[Op.or]: ["pending", "standby", "underway"]}, 
-                formatName: format.name,
-                serverId: interaction.guildId 
-            },
-            order: [["createdAt", "ASC"]]
-        })
-
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+        if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
+        const tournaments = await Tournament.findActiveByFormatAndServerId(format, interaction.guildId)
         if (!user) return await interaction.editReply({ content: `Player not found.` })
         const discordId = user.id
         if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.` })

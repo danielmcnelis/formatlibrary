@@ -17,10 +17,7 @@ export default {
         ),
     async execute(interaction) {
         await interaction.deferReply()
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasFullAccess(server)) return await interaction.editReply(`This feature is only available in Format Library. ${emojis.FL}`) 
         if (!isMod(server, interaction.member)) return await interaction.editReply(`You do not have permission to do that.`)
         

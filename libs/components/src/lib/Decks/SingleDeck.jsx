@@ -6,6 +6,7 @@ import { NotFound } from '../General/NotFound'
 import axios from 'axios'
 import { dateToSimple, dateToVerbose, ordinalize } from '@fl/utils'
 import { getCookie } from '@fl/utils'
+import './SingleDeck.css'
 
 const emojis = {
   Helmet: 'https://cdn.formatlibrary.com/images/emojis/helmet.png',

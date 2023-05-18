@@ -1,6 +1,7 @@
 
 import { Link } from 'react-router-dom'
 import { ordinalize } from '@fl/utils'
+import './DeckRow.css'
 
 export const DeckRow = (props) => {
     const {deck} = props

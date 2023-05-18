@@ -120,13 +120,11 @@ export const DeckCreator = () => {
             <label>Builder:
                 <input
                     id="builder"
-                    className="login"
                     type="search"
                     onKeyDown={(e) => { if (e.key === 'Enter') findPlayers(e.target.value)}}
                 />
                 <select
                     id="builder-select"
-                    className="login"
                     onChange={(e) => getPlayer(e.target.value)}
                 >
                 {
@@ -137,7 +135,6 @@ export const DeckCreator = () => {
             <label>Deck Type:
                 <select
                     id="deckType"
-                    className="login"
                     onChange={(e) => getDeckType(e.target.value)}
                 >
                 <option value={null}></option>
@@ -150,7 +147,6 @@ export const DeckCreator = () => {
                 Community:
                 <select
                     id="community"
-                    className="login"
                     onChange={(e) => setCommunity(e.target.value)}
                 >
                     <option value={null}></option>
@@ -181,7 +177,6 @@ export const DeckCreator = () => {
             <label>Event:
                 <select
                     id="event"
-                    className="login"
                     onChange={(e) => getEvent(e.target.value)}
                 >
                 <option value={null}></option>
@@ -193,7 +188,6 @@ export const DeckCreator = () => {
             <label>Placement:
                 <select
                     id="placement"
-                    className="login"
                     onChange={(e) => {
                         setDisplay(shouldDisplay(e.target.value, event.size))
                         setPlacement(e.target.value)}
@@ -208,7 +202,6 @@ export const DeckCreator = () => {
                 <select
                     id="display"
                     value={display}
-                    className="login"
                     onChange={(e) => setDisplay(e.target.value)}
                 >
                     <option value="true">True</option>
@@ -218,7 +211,6 @@ export const DeckCreator = () => {
             <label>YDK:
                 <input
                     id="ydk"
-                    className="login"
                     type="file"
                     accept=".ydk"
                     onChange={(e) => readYDK(e.target.files[0])}

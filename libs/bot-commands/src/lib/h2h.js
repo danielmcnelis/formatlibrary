@@ -3,7 +3,6 @@ import { SlashCommandBuilder } from 'discord.js'
 import { hasAffiliateAccess } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Format, Match, Player, Server } from '@fl/models'
-import { Op } from 'sequelize'
 
 export default {
     data: new SlashCommandBuilder()
@@ -23,22 +22,9 @@ export default {
     async execute(interaction) {
         const user1 = interaction.options.getUser('player1')
         const user2 = interaction.options.getUser('player2') || interaction.user
-
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-    
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
-        
-        const format = await Format.findOne({
-            where: {
-                [Op.or]: {
-                    name: { [Op.iLike]: server.format },
-                    channel: interaction.channelId
-                }
-            }
-        })
-    
+        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.reply({ content: `Try using **/h2h** in channels like: <#414575168174948372> or <#629464112749084673>.`})
 
         const player1DiscordId = user1.id	
@@ -47,7 +33,6 @@ export default {
 
         const player1 = await Player.findOne({ where: { discordId: player1DiscordId } })
         const player2 = await Player.findOne({ where: { discordId: player2DiscordId } })
-        
         if (!player1 && player2DiscordId === interaction.user.id) return await interaction.reply({ content: `That user is not in the database.`})
         if (!player1 && player2DiscordId !== interaction.user.id) return await interaction.reply({ content: `The first user is not in the database.`})
         if (!player2 && player2DiscordId === interaction.user.id) return await interaction.reply({ content: `You are not in the database.`})

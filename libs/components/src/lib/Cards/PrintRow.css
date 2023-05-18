@@ -1,0 +1,137 @@
+
+.rarity-cell {
+    width: 28px;
+    background-size: 28px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .print-cell-1, .print-cell-2, .print-cell-3, .print-cell-4, .print-cell-5 {
+    padding: 10px, 15px;
+  }
+
+  
+  .odd-print-row, .odd-ruling-row {
+    align-content: left;
+    vertical-align: middle;
+    background-color: #f7f7f7;
+    border-bottom: 2px solid #9ba9cc;
+  }
+  
+  .even-print-row, .event-ruling-row {
+    align-content: left;
+    vertical-align: middle;
+    background-color: #eef2f5;
+    border-bottom: 2px solid #9ba9cc;
+  }
+  
+  .odd-print-row:hover, .even-print-row:hover, .odd-ruling-row:hover, .even-ruling-row:hover {
+    cursor: pointer;
+    color: white;
+    background-color: #6d6f8a;
+  }
+  
+  
+  #tenThousandSecretRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/10000SecretRare.png');
+  }
+  
+  #collectorsRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/collectorsRare.png');
+  }
+  
+  #common {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/common.png');
+  }
+  
+  #dTNormalParallelRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/dTNormalParallelRare.png');
+  }
+  
+  #dTRareParallelRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/dTRareParallelRare.png');
+  }
+  
+  #dTSuperParallelRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/dTSuperParallelRare.png');
+  }
+  
+  #dTUltraParallelRare, #ultraParallelRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/dTUltraParallelRare.png');
+  }
+  
+  #ghostGoldRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/ghostGoldRare.png');
+  }
+  
+  #ghostRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/ghostRare.png');
+  }
+  
+  #goldRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/goldRare.png');
+  }
+  
+  #goldSecretRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/goldSecretRare.png');
+  }
+  
+  #mosaicRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/mosaicRare.png');
+  }
+  
+  #platinumRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/platinumRare.png');
+  }
+  
+  #platinumSecretRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/platinumSecretRare.png');
+  }
+  
+  #premiumGoldRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/premiumGoldRare.png');
+  }
+  
+  #prismaticSecretRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/prismaticSecretRare.png');
+  }
+  
+  #rare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/rare.png');
+  }
+  
+  #secretRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/secretRare.png');
+  }
+  
+  #shatterfoilRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/shatterfoilRare.png');
+  }
+  
+  #shortPrint {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/shortPrint.png');
+  }
+  
+  #starfoilRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/starfoilRare.png');
+  }
+  
+  #starlightRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/starlightRare.png');
+  }
+  
+  #superRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/superRare.png');
+  }
+  
+  #superShortPrint {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/superShortPrint.png');
+  }
+  
+  #ultimateRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/ultimateRare.png');
+  }
+  
+  #ultraRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/ultraRare.png');
+  }

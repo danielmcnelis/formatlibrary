@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { capitalize } from '@fl/utils'
+import './StatusBar.css'
 
 //STATUS BOX
 export const StatusBox = (props) => {

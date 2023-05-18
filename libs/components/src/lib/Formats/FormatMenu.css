@@ -1,0 +1,15 @@
+
+.format-menu-title {
+    padding: 2px 6px 15px;
+    font-size: 42px;
+}
+
+  
+.format-menu {
+    padding: 0% 5%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }

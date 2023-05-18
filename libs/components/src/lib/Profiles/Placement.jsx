@@ -1,6 +1,7 @@
 
 import { ordinalize } from "@fl/utils"
 import { Link } from "react-router-dom"
+import './Placement.css'
 
 const emojis = {
   First: 'https://cdn.formatlibrary.com/images/emojis/1st.png',

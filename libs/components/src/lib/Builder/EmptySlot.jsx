@@ -1,4 +1,6 @@
 
+import './Builder.css'
+
 export const EmptySlot = (props) => {
     const {width, height, margin, padding} = props
     

@@ -59,7 +59,6 @@ export const PlayerCreator = () => {
             <label>First Name:
                 <input
                     id="firstName"
-                    className="login"
                     value={firstName || ''}
                     type="text"
                     onChange={(e) => setFirstName(e.target.value)}
@@ -68,7 +67,6 @@ export const PlayerCreator = () => {
             <label>Last Name:
                 <input
                     id="lastName"
-                    className="login"
                     value={lastName || ''}
                     type="text"
                     onChange={(e) => setLastName(e.target.value)}
@@ -77,7 +75,6 @@ export const PlayerCreator = () => {
             <label>PFP:
                 <input
                     id="pfp"
-                    className="login"
                     type="file"
                     accept=".png"
                     onChange={(e) => readPfp(e.target.files[0])}
@@ -86,7 +83,6 @@ export const PlayerCreator = () => {
             <label>Discord Name:
                 <input
                     id="discordName"
-                    className="login"
                     value={discordName || ''}
                     type="text"
                     onChange={(e) => setDiscordName(e.target.value)}
@@ -95,7 +91,6 @@ export const PlayerCreator = () => {
             <label>Discord Discriminator:
                 <input
                     id="discriminator"
-                    className="login"
                     value={discriminator || ''}
                     type="text"
                     onChange={(e) => setDiscriminator(e.target.value)}

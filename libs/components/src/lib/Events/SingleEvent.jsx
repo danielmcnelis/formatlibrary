@@ -5,6 +5,7 @@ import axios from 'axios'
 import { capitalize, dateToSimple, dateToVerbose } from '@fl/utils'
 import { DeckImage } from '../Decks/DeckImage'
 import { NotFound } from '../General/NotFound'
+import './SingleEvent.css'
 
 import { Chart as ChartJS, ArcElement, CategoryScale, BarElement, Title, LinearScale, Tooltip, Legend } from 'chart.js'
 import { Bar, Doughnut } from 'react-chartjs-2'

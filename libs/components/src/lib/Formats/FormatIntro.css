@@ -1,0 +1,38 @@
+
+.format-icon-flexbox {
+    display: flex;
+    align-items: top;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+  }
+
+  #format-icon-large {
+    height: 176px;
+    width: 176px;
+    border: 10px ridge #bf9c60;
+    border-radius: 5px;
+    margin: 10px 0px 10px 30px;
+  }
+
+  .format-text {
+    width: 70%;
+  }
+  
+  .format-text h1, .format-text h2, .format-text p {
+    text-align: left;
+    width: 100%;
+  }
+
+  
+  .format-desc {
+    width: 90%;
+    font-size: 12pt;
+    line-height: 16pt;
+    text-align: justify;
+    margin-right: auto;
+    margin-left: auto;
+  }

@@ -1,47 +1,22 @@
 
 import { capitalize, underscorize } from '@fl/utils'
 import { Link } from 'react-router-dom'
-
-const emojis = {
-  god: 'https://cdn.formatlibrary.com/images/emojis/god.png',
-  legend: 'https://cdn.formatlibrary.com/images/emojis/legend.png',
-  master: 'https://cdn.formatlibrary.com/images/emojis/master.png',
-  diamond: 'https://cdn.formatlibrary.com/images/emojis/diamond.png',
-  platinum: 'https://cdn.formatlibrary.com/images/emojis/platinum.png',
-  gold: 'https://cdn.formatlibrary.com/images/emojis/gold.png',
-  silver: 'https://cdn.formatlibrary.com/images/emojis/silver.png',
-  bronze: 'https://cdn.formatlibrary.com/images/emojis/bronze.png',
-  rock: 'https://cdn.formatlibrary.com/images/emojis/rock.png',
-  sad: 'https://cdn.formatlibrary.com/images/emojis/sad.png',
-  mad: 'https://cdn.formatlibrary.com/images/emojis/mad.png'
-}
-const { god, legend, master, diamond, platinum, gold, silver, bronze, rock, sad, mad } = emojis
+import './Badge.css'
 
 //GET MEDAL
 const getMedal = (elo) => {
-  return !elo
-    ? gold
-    : elo <= 230
-    ? mad
-    : elo > 230 && elo <= 290
-    ? sad
-    : elo > 290 && elo <= 350
-    ? rock
-    : elo > 350 && elo <= 410
-    ? bronze
-    : elo > 410 && elo <= 470
-    ? silver
-    : elo > 470 && elo <= 530
-    ? gold
-    : elo > 530 && elo <= 590
-    ? platinum
-    : elo > 590 && elo <= 650
-    ? diamond
-    : elo > 650 && elo <= 710
-    ? master
-    : elo > 710 && elo <= 770
-    ? legend
-    : god
+  return !elo ? 'https://cdn.formatlibrary.com/images/emojis/gold.png'
+    : elo <= 230 ? 'https://cdn.formatlibrary.com/images/emojis/mad.png'
+    : elo > 230 && elo <= 290 ? 'https://cdn.formatlibrary.com/images/emojis/sad.png'
+    : elo > 290 && elo <= 350 ? 'https://cdn.formatlibrary.com/images/emojis/rock.png'
+    : elo > 350 && elo <= 410 ? 'https://cdn.formatlibrary.com/images/emojis/bronze.png'
+    : elo > 410 && elo <= 470 ? 'https://cdn.formatlibrary.com/images/emojis/silver.png'
+    : elo > 470 && elo <= 530 ? 'https://cdn.formatlibrary.com/images/emojis/gold.png'
+    : elo > 530 && elo <= 590 ? 'https://cdn.formatlibrary.com/images/emojis/platinum.png'
+    : elo > 590 && elo <= 650 ? 'https://cdn.formatlibrary.com/images/emojis/diamond.png'
+    : elo > 650 && elo <= 710 ? 'https://cdn.formatlibrary.com/images/emojis/master.png'
+    : elo > 710 && elo <= 770 ? 'https://cdn.formatlibrary.com/images/emojis/legend.png'
+    : 'https://cdn.formatlibrary.com/images/emojis/god.png'
 }
 
 //BADGE

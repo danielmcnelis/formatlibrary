@@ -12,31 +12,10 @@ export default {
 		.setDescription('Join a tournament. ✅'),
 	async execute(interaction) {
         await interaction.deferReply()
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-
-        let format = await Format.findOne({
-            where: {
-                [Op.or]: {
-                    name: {[Op.iLike]: server.format },
-                    channel: interaction.channelId
-                }
-            }
-        })
-        
-        const tournaments = await Tournament.findAll({ 
-            where: { 
-                state: 'pending',
-                formatId: format?.id || {[Op.not]: null},
-                serverId: interaction.guildId
-            }, 
-            include: Format,
-            order: [['createdAt', 'ASC']] 
-        })
-        
+        let format = await Format.findByServerOrChannelId(server, interaction.channelId)
+        const tournaments = await Tournament.findByStateAndFormatAndServerId('pending', format, interaction.guildId)
         const player = await Player.findOne({ where: { discordId: interaction.user?.id }})    
         if (!player) return    
 
@@ -44,7 +23,7 @@ export default {
         if (!tournament) return
 
         let entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournament.id }})
-        if (!format) format = tournament.format
+        if (!format) format = await Format.findOne({ where: { id: tournament.formatId }})
         if (!format) return
 
         interaction.editReply({ content: `Please check your DMs.` })

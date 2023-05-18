@@ -9,10 +9,7 @@ export default {
         .setName('trivia')
         .setDescription('Join or leave the trivia queue. 📚 🐛'),
     async execute(interaction) {
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-        
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasFullAccess(server)) return await interaction.reply({ content: `This feature is only available in Format Library. ${emojis.FL}`})
         if (interaction.channel.id !== '1085316454053838981') return await interaction.reply({ content: `Try using **/trivia** in the <#1085316454053838981> channel. 📚 🐛`})
 

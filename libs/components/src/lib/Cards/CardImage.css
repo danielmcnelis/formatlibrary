@@ -1,0 +1,31 @@
+
+.CardImages, .SmallCardImages, .EmptyImages, .SmallEmptyImages {
+    display: block;
+  }
+  
+  .CardImages:hover {
+    box-shadow: -2px 2px 5px 4px #737373;
+    cursor: pointer;
+  }
+  
+  .CardImage-box {
+    position: relative;
+  }
+  
+  .status-icon {
+    position: absolute;
+    z-index: 1;
+    width: 33% !important;
+    top: 1%;
+    left: 2.5%;
+  }
+
+  
+  .remarks-icon {
+    position: absolute;
+    z-index: 1;
+    width: 90% !important;
+    bottom: 5% !important;
+    right: 5% !important;
+    left: 5% !important;
+  }

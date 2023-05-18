@@ -1,6 +1,7 @@
 
 import parse from 'html-react-parser'
 import { useMediaQuery } from 'react-responsive'
+import './BlogPost.css'
 
 export const BlogPost = (props) => {
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })

@@ -99,11 +99,9 @@ export const DeckTypeCreator = () => {
 
     return (
         <div className="admin-portal">
-
             <label>Name:
                 <input
                     id="name"
-                    className="login"
                     type="text"
                     onChange={(e) => setName(e.target.value)}
                 />
@@ -113,7 +111,6 @@ export const DeckTypeCreator = () => {
                 Category:
                 <select
                     id="category"
-                    className="login"
                     onChange={(e) => setCategory(e.target.value)}
                 >
                     <option value={null}></option>
@@ -131,7 +128,6 @@ export const DeckTypeCreator = () => {
             <label>Format:
                 <select
                     id="format"
-                    className="login"
                     onChange={(e) => setFormat(formats[e.target.value])}
                 >
                 <option value={null}></option>
@@ -144,13 +140,11 @@ export const DeckTypeCreator = () => {
             <label>Left Card:
                 <input
                     id="left-card"
-                    className="login"
                     type="search"
                     onKeyDown={(e) => { if (e.key === 'Enter') findCards(e.target.value, 'left')}}
                 />
                 <select
                     id="left-card-select"
-                    className="login"
                     onChange={(e) => getCard(e.target.value, 'left')}
                 >
                 {
@@ -163,13 +157,11 @@ export const DeckTypeCreator = () => {
             <label>Center Card:
                 <input
                     id="center-card"
-                    className="login"
                     type="search"
                     onKeyDown={(e) => { if (e.key === 'Enter') findCards(e.target.value, 'center')}}
                 />
                 <select
                     id="center-card-select"
-                    className="login"
                     onChange={(e) => getCard(e.target.value, 'center')}
                 >
                 {
@@ -181,13 +173,11 @@ export const DeckTypeCreator = () => {
             <label>Right Card:
                 <input
                     id="right-card"
-                    className="login"
                     type="search"
                     onKeyDown={(e) => { if (e.key === 'Enter') findCards(e.target.value, 'right')}}
                 />
                 <select
                     id="right-card-select"
-                    className="login"
                     onChange={(e) => getCard(e.target.value, 'right')}
                 >
                 {

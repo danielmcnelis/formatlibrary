@@ -1,6 +1,7 @@
 
 import { Link } from 'react-router-dom'
 import { capitalize } from '@fl/utils'
+import './EventThumbnail.css'
 
 export const EventThumbnail = (props = {}) => {
     const {event, winner, format} = props

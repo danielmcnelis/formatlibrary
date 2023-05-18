@@ -4,6 +4,7 @@ import axios from 'axios'
 import { BlogPost } from './BlogPost'
 import { Pagination } from '../General/Pagination'
 import { useLocation } from 'react-router-dom'
+import './Home.css'
 
 export const Home = () => {
     const [page, setPage] = useState(1)

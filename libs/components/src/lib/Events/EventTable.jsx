@@ -6,6 +6,7 @@ import { MobileEventRow } from './MobileEventRow'
 // import { EventImage } from './EventImage'
 import { Pagination } from '../General/Pagination'
 import { useMediaQuery } from 'react-responsive'
+import './EventTable.css' 
 
 export const EventTable = (props) => {
     const [community, setCommunity] = useState(null)

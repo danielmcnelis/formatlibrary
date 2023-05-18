@@ -7,6 +7,7 @@ import { MobileDeckRow } from './MobileDeckRow'
 import { Pagination } from '../General/Pagination'
 import { useMediaQuery } from 'react-responsive'
 import { getCookie } from '@fl/utils'
+import './DeckTable.css' 
 
 const playerId = getCookie('playerId')
 

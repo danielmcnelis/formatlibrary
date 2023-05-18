@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import './CardImage.css'
 
 export const CardImage = (props) => {
     const {addCard, removeCard, card, previous, status, width, margin, padding, index, locale} = props

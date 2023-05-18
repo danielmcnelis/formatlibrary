@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { FormatButton } from './FormatButton'
+import './FormatMenu.css'
 
 export const FormatMenu = () => {
     const [formats, setFormats] = useState(null)

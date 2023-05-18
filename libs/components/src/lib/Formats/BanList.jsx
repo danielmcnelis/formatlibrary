@@ -4,6 +4,7 @@ import axios from 'axios'
 import { CardImage } from '../Cards/CardImage'
 import { NotFound } from '../General/NotFound'
 import { useParams } from 'react-router-dom'
+import './BanList.css'
 
 export const BanList = (props) => {
     const [banlist, setBanlist] = useState({})

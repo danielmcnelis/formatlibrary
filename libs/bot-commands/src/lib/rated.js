@@ -243,6 +243,7 @@ const getRatedInformation = async (interaction, player) => {
                         format: { [Op.iLike]: format.name }, 
                         games: { [Op.gte]: 3 },
                         serverId: '414551319031054346',
+                        inactive: false,
                         '$player.hidden$': false
                     },
                     include: [Player],

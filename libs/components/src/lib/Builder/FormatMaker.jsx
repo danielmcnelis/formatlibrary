@@ -5,6 +5,7 @@ import {EmptySlot} from './EmptySlot'
 import {SearchPanel} from './SearchPanel'
 import axios from 'axios'
 import {Button, Form, Modal} from 'react-bootstrap'
+import './Builder.css'
 
 export const FormatMaker = () => {
     const [cardPool, setCardPool] = useState([])

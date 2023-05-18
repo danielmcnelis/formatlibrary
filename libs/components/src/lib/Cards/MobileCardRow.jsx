@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import './MobileCardRow.css'
 
 const symbols = {
   Aqua: 'https://cdn.formatlibrary.com/images/symbols/aqua.png',

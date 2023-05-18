@@ -1,0 +1,48 @@
+
+.iconMiniButton,
+.clickedIconMiniButton,
+.attributeMiniButton,
+.clickedAttributeMiniButton,
+.typeMiniButton,
+.clickedTypeMiniButton,
+.groupMiniButton,
+.clickedGroupMiniButton {
+  display: inline-block;
+  padding: 0px;
+  margin: 0.1em;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+  text-align: left;
+  transition: all 0.15s;
+  background-repeat: no-repeat;
+  background-position: 2px;
+  background-size: 24px;
+  vertical-align: middle;
+}
+
+.iconMiniButton,
+.attributeMiniButton,
+.typeMiniButton,
+.groupMiniButton {
+    box-shadow: 0 0 0 1px black;
+  }
+
+.clickedIconMiniButton,
+.clickedAttributeMiniButton,
+.clickedTypeMiniButton,
+.clickedGroupMiniButton {
+    box-shadow: 0 0 0 1px black;
+    background-color: #6d6f8a;
+  }
+
+  .clickedAttributeMiniButton:hover,
+  .clickedTypeMiniButton:hover,
+  .clickedIconMiniButton:hover,
+  .clickedGroupMiniButton:hover {
+    cursor: pointer;
+  }

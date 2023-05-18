@@ -1,7 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Format, Server } from '@fl/models'
-import { Op } from 'sequelize'
 import { checkDeckList } from '@fl/bot-functions'
 
 export default {
@@ -9,24 +8,12 @@ export default {
         .setName('legal')
         .setDescription('Check deck legality. 👍'),
     async execute(interaction) {
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-        
-        const format = await Format.findOne({
-            where: {
-                [Op.or]: {
-                    name: {[Op.iLike]: server.format },
-                    channel: interaction.channelId
-                }
-            }
-        })
-
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.reply({ content: `Try using /legal in channels like: <#414575168174948372> or <#629464112749084673>.`})
         if (format.category !== 'TCG') return await interaction.reply(`Sorry, ${format.category} formats are not supported at this time.`)
         interaction.reply(`Please check your DMs.`)
         const issues = await checkDeckList(interaction.member, format)
-        if (!issues) return
 
         const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards } = issues
         if (illegalCards.length || forbiddenCards.length || limitedCards.length || semiLimitedCards.length) {      

@@ -1,5 +1,6 @@
 
 import { useLayoutEffect } from 'react'
+import './NotFound.css'
 
 export const NotFound = () => {
   // USE LAYOUT EFFECT

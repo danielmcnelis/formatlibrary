@@ -1,5 +1,6 @@
 
 import { camelize, capitalize } from '@fl/utils'
+import './MiniAdvButton.css'
 
 //MINI ADVANCED SEARCH BUTTONS
 export const MiniAdvButton = (props) => {

@@ -2,7 +2,6 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { Entry, Player, Server, Tournament } from '@fl/models'
 import { isAdmin, isProgrammer, hasPartnerAccess } from '@fl/bot-functions'
-import { Op } from 'sequelize'
 import axios from 'axios'
 import { emojis } from '@fl/bot-emojis'
 
@@ -18,27 +17,12 @@ export default {
         ),
 	async execute(interaction) {
         await interaction.deferReply()
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-
-        const name = interaction.options.getString('tournament')
-
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+        const query = interaction.options.getString('tournament')
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         if (!isAdmin(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
-
-        const tournament = await Tournament.findOne({ 
-            where: { 
-                [Op.or]: {
-                    name: { [Op.iLike]: name },
-                    abbreviation: { [Op.iLike]: name },
-                },
-                serverId: interaction.guildId 
-            }
-        })
-
-        if (!tournament) return await interaction.reply({ content: `Could not find tournament: "${name}".`})
-        if (tournament.state === 'underway' && !isProgrammer(interaction.member)) return await interaction.editReply({ content: `This tournament is underway, therefore it may only be deleted by the database manager.`})
+        const tournament = await Tournament.findByQueryAndServerId(query, interaction.guildId)
+        if (!tournament) return await interaction.reply({ content: `Could not find tournament: "${query}".`})
         if (tournament.state === 'complete' && !isProgrammer(interaction.member)) return await interaction.editReply({ content: `This tournament is complete, therefore it may only be deleted by the database manager.`})
 
         try {

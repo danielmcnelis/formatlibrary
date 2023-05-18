@@ -8,6 +8,7 @@ import {MiniPagination} from '../General/MiniPagination'
 import axios from 'axios'
 import { capitalize } from '@fl/utils'
 import { useMediaQuery } from 'react-responsive'
+import './Builder.css'
 
 const symbols = {
     Star: 'https://cdn.formatlibrary.com/images/symbols/star.png'

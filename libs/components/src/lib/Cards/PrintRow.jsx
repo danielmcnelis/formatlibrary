@@ -1,5 +1,6 @@
 import { camelize, urlize } from '@fl/utils'
 import { dateToSimple } from '@fl/utils'
+import './PrintRow.css'
 
 export const PrintRow = (props) => {
   const { index, print } = props

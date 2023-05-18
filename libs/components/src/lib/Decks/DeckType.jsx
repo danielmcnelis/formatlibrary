@@ -6,6 +6,7 @@ import { CardImage } from '../Cards/CardImage'
 import { NotFound } from '../General/NotFound'
 import { useLocation } from 'react-router-dom'
 import { capitalize } from '@fl/utils'
+import './DeckType.css'
 
 const emojis = {
   Helmet: 'https://cdn.formatlibrary.com/images/emojis/helmet.png',

@@ -7,7 +7,8 @@ export const Server = db.define('servers', {
     type: Sequelize.STRING
   },
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
+    allowNull: false
   },
   size: {
     type: Sequelize.INTEGER
@@ -62,3 +63,7 @@ export const Server = db.define('servers', {
       type: Sequelize.STRING
   }
 })
+
+Server.findById = async (id) => await Server.findOne({ where: { id }})
+
+Server.findOrCreateByIdOrName = async (id, name) => await Server.findOrCreate({ where: { id, name }})

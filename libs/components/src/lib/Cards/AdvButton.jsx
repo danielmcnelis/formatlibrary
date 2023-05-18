@@ -1,4 +1,5 @@
 import { camelize, capitalize } from '@fl/utils'
+import './AdvButton.css'
 
 //ADVANCED SEARCH BUTTONS
 export const AdvButton = (props) => {

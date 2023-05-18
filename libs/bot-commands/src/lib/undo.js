@@ -3,7 +3,6 @@ import { SlashCommandBuilder } from 'discord.js'
 import { isMod, hasAffiliateAccess, selectMatch } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Format, Match, Player, Server, Stats } from '@fl/models'
-import { Op } from 'sequelize'
 import axios from 'axios'
 
 export default {
@@ -12,21 +11,9 @@ export default {
         .setDescription(`Undo a match result. ⏪`),                
     async execute(interaction) {
         await interaction.deferReply()
-        const server = !interaction.guildId ? {} : 
-            await Server.findOne({ where: { id: interaction.guildId }}) || 
-            await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-    
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
-        
-        const format = await Format.findOne({
-            where: {
-                [Op.or]: {
-                    name: { [Op.iLike]: server.format },
-                    channel: interaction.channelId
-                }
-            }
-        })
-    
+        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.editReply({ content: `Try using **/undo** in channels like: <#414575168174948372> or <#629464112749084673>.`})
         if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         const serverId = server.internalLadder ? server.id : '414551319031054346'
