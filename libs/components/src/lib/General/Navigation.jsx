@@ -10,6 +10,7 @@ const toggle = () => {
 }
 
 const playerId = getCookie('playerId')
+console.log('playerId', playerId)
 const discordId = getCookie('discordId')
 const discordPfp = getCookie('discordPfp')
 const googlePfp = getCookie('googlePfp')
@@ -93,11 +94,11 @@ export const Navigation = () => {
                 {
                     playerId ? (
                         <a href="/auth/logout/">
-                            <h1 id="logout" className="navigation-item">Logout</h1>
+                            <h3 className="hamburger-item">Logout</h3>
                         </a>
                     ) : (
                         <a href="/auth/login/">
-                            <h1 id="login" className="navigation-item">Login</h1>
+                            <h3 className="hamburger-item">Login</h3>
                         </a>
                     )
                 }
