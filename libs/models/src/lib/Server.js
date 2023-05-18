@@ -69,6 +69,6 @@ Server.findById = async (id) => await Server.findOne({ where: { id }})
 Server.findOrCreateByIdOrName = async (id, name) => {
     console.log('id:', id, 'name:', name)
     const server = await Server.findOrCreate({ where: { id, name }})
-    console.log('server', server)
-    return server
+    console.log('server?.[0]', server?.[0])
+    return server?.[0]
 }
