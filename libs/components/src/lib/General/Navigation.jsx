@@ -90,6 +90,17 @@ export const Navigation = () => {
                 <Link to="/formats/">
                     <h3 className="hamburger-item">Formats</h3>
                 </Link>
+                {
+                    playerId ? (
+                        <a href="/auth/logout/">
+                            <h1 id="logout" className="navigation-item">Logout</h1>
+                        </a>
+                    ) : (
+                        <a href="/auth/login/">
+                            <h1 id="login" className="navigation-item">Login</h1>
+                        </a>
+                    )
+                }
             </div>
         </div>
 )

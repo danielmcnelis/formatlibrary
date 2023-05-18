@@ -13,18 +13,14 @@ export default {
 	async execute(interaction) {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        console.log('server?.name', server?.name)
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         let format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        console.log('format?.name', format?.name)
         const tournaments = await Tournament.findByStateAndFormatAndServerId('pending', format, interaction.guildId)
-        console.log('tournaments?.length', tournaments?.length)
         const player = await Player.findOne({ where: { discordId: interaction.user?.id }})    
         if (!player) return    
 
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
-        console.log('tournament?.name', tournament?.name)
 
         let entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournament.id }})
         if (!format) format = await Format.findOne({ where: { id: tournament.formatId }})

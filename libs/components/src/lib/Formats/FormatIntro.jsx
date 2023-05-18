@@ -7,6 +7,7 @@ import { NotFound } from '../General/NotFound'
 import { PopularDecks } from './PopularDecks'
 import { RecentEvents } from '../Events/RecentEvents'
 import { useParams } from 'react-router-dom'
+import { underscorize } from '@fl/utils'
 import './FormatIntro.css'
 
 export const FormatIntro = () => {
@@ -64,40 +65,43 @@ export const FormatIntro = () => {
             }
             {
               deckCount ? (
-                <li>
-                  <a href={`/deck-gallery/${format.name}`}>Deck Gallery</a>
-                </li>
-              ) : ''
-            }
-            {
-              deckCount ? (
-                <li>
-                  <a href={`/formats/${format.name}#popular-decks`}>Popular Decks</a>
-                </li>
+                <>
+                    <li>
+                        <a href={`/deck-gallery/${underscorize(format.name)}`}>Deck Gallery</a>
+                    </li>
+                    <li>
+                        <a href={`/formats/${underscorize(format.name)}#popular-decks`}>Popular Decks</a>
+                    </li>
+                </>
               ) : ''
             }
             {
               eventCount ? (
-                <li>
-                  <a href={`/formats/${format.name}#recent-events`}>Recent Events</a>
-                </li>
+                <>
+                    <li>
+                        <a href={`/event-gallery/${underscorize(format.name)}`}>Event Gallery</a>
+                    </li>
+                    <li>
+                        <a href={`/formats/${underscorize(format.name)}#recent-events`}>Recent Events</a>
+                    </li>
+                </>
               ) : ''
             }
             {
               statsCount ? (
                 <li>
-                  <a href={`/leaderboards/${format.name}`}>Leaderboard</a>
+                  <a href={`/leaderboards/${underscorize(format.name)}`}>Leaderboard</a>
                 </li>
               ) : ''
             }
             <li>
-              <a href={`/cards?format=${format.name.replaceAll(' ', '_')}`}>Card Pool</a>
+              <a href={`/cards?format=${underscorize(format.name)}`}>Card Pool</a>
             </li>
             <li>
-              <a href={`/formats/${format.name}#banlist`}>Ban List</a>
+              <a href={`/formats/${underscorize(format.name)}#banlist`}>Ban List</a>
             </li>
           </div>
-          <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} />
+          <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} alt={format.icon}/>
         </div>
         {
           format.description ? (

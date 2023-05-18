@@ -33,7 +33,7 @@ export const RecentEvents = (props) => {
         <div>
             <div className="divider"/>
             <div id="recent-events" className="recent-events">
-                <h2 onClick={() => goToEventGallery()} className="subheading">Recent Events:</h2>
+                <h2 onClick={() => goToEventGallery()} id="recent-events" className="subheading">Recent Events:</h2>
                 <div className="recent-events-flexbox">
                 {
                     recentEvents.map((event, index) => <EventThumbnail key={event.id} event={event} winner={winners[index]} format={event.format}/>)

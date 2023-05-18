@@ -18,7 +18,7 @@ export const DeckTable = () => {
     const [decksPerPage, setDecksPerPage] = useState(12)
     const [view, setView] = useState('table')
     const [sortBy, setSortBy] = useState('publishDate:desc')
-    const [origin, setOrigin] = useState(null)
+    const [origin, setOrigin] = useState('events')
     const [format, setFormat] = useState(null)
     const [formats, setFormats] = useState([])
     const [isAdmin, setIsAdmin] = useState(false)
@@ -206,7 +206,7 @@ export const DeckTable = () => {
             <select
               id="searchTypeSelector"
               defaultValue="name"
-              className="filter desktop-only"
+              className="filter"
               onChange={() => runQuery()}
             >
               <option value="type">Deck Type</option>
@@ -216,8 +216,8 @@ export const DeckTable = () => {
   
             <select
               id="origin"
-              defaultValue="All Decks"
-              className="filter desktop-only"
+              defaultValue="Event Decks"
+              className="filter"
               onChange={(e) => setOrigin(e.target.value)}
             >
               <option value={null}>All Decks</option>
