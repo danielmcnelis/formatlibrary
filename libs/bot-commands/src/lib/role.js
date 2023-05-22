@@ -15,8 +15,7 @@ export default {
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.reply({ content: `Try using **/role** in channels like: <#414575168174948372> or <#629464112749084673>.`})    
         const roleId = server.rankedRole || format.role
-        const role = await interaction.guild.roles.cache.find((role) => role.id === roleId)
-        console.log('role', role)
+        const discordRole = await interaction.guild.roles.cache.find((role) => role.id === roleId)
 
         const membership = await Membership.findOne({ where: { '$player.discordId$': interaction.user.id, serverId: interaction.guildId }, include: Player })
         if (!membership) return await interaction.reply({ content: `You are not in the database.`})
@@ -29,23 +28,23 @@ export default {
                     await Role.create({ 
                         membershipId: membership.id,
                         roleId: roleId,
-                        roleName: role.name
+                        roleName: discordRole.name
                     })
                 }
-                return await interaction.reply({ content: `You now have the ${role.name} role.`})
+                return await interaction.reply({ content: `You now have the ${discordRole.name} role.`})
             } catch (err) {
                 console.log(err)
-                return await interaction.reply({ content: `Error: Unable to add ${roleName} role.`})
+                return await interaction.reply({ content: `Error: Unable to add ${discordRole.name} role.`})
             }
         } else {
             try {
                 await interaction.member.roles.remove(roleId)
                 const role = await Role.findOne({ where: { membershipId: membership.id, roleId: roleId } })
                 await role.destroy()
-                return await interaction.reply({ content: `You no longer have the ${role.name} role.`})
+                return await interaction.reply({ content: `You no longer have the ${discordRole.name} role.`})
             } catch (err) {
                 console.log(err)
-                return await interaction.reply({ content: `Error: Unable to remove ${role.name} role.`})
+                return await interaction.reply({ content: `Error: Unable to remove ${discordRole.name} role.`})
             }
         }
     }
