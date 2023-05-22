@@ -15,8 +15,7 @@ export default {
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.reply({ content: `Try using **/role** in channels like: <#414575168174948372> or <#629464112749084673>.`})    
         const roleId = server.rankedRole || format.role
-        console.log('interaction.guild.roles.cache', interaction.guild.roles.cache)
-        const role = interaction.guild.roles.cache.find((role) => role.id === roleId)
+        const role = await interaction.guild.roles.cache.find((role) => role.id === roleId)
         console.log('role', role)
 
         const membership = await Membership.findOne({ where: { '$player.discordId$': interaction.user.id, serverId: interaction.guildId }, include: Player })
