@@ -76,8 +76,8 @@ export const findCard = async (query, fuzzyCards) => {
     return card_name
 }
 
-//SEARCH
-export const search = async (query, fuzzyCards, format) => {
+// GET CARD
+export const getCard = async (query, fuzzyCards, format) => {
 	const card_name = await findCard(query, fuzzyCards)
 	if (!card_name) return false
 
@@ -457,9 +457,6 @@ export const hasAffiliateAccess = (server) => server?.access === 'affiliate' || 
 
 //HAS PARTNER ACCESS?
 export const hasPartnerAccess = (server) => server?.access === 'partner' || server?.access === 'full'
-
-//HAS FULL ACCESS?
-export const hasFullAccess = (server) => server?.access === 'full'
 
 //IS PROGRAMMER?
 export const isProgrammer = (member) => member?.user?.id === '194147938786738176'

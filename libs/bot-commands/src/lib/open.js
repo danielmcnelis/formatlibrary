@@ -17,6 +17,7 @@ export default {
         const tournaments = await Tournament.findByStateAndFormatAndServerId('standby', format, interaction.guildId)
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
+        
         await tournament.update({ state: 'pending'})
         return await interaction.editReply({ content: `Registration for ${tournament.name} ${tournament.logo} is now open.`})
 	}

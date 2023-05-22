@@ -1,8 +1,8 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Format, Match, Server } from '@fl/models'
-const QuickChart = require('quickchart-js')
 import { Op } from 'sequelize'
+const QuickChart = require('quickchart-js')
 
 export default {
     data: new SlashCommandBuilder()
@@ -11,38 +11,33 @@ export default {
     async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-
         const today = new Date()
-        const cutoff = new Date(
-            today.getMonth() === 11 ? today.getFullYear() : today.getFullYear() - 1,
-            today.getMonth() === 11 ? 1 : today.getMonth() + 1,
-            1
-        )
+        const currentMonth = today.getMonth()
+        const currentYear = today.getFullYear()
+        const cutoff = currentMonth === 11 ? new Date(currentYear, 1, 1) :
+            new Date(currentYear - 1, currentMonth + 1, 1)
 
         const matches = await Match.findAll({
             where: { 
                 formatId: format?.id || {[Op.not]: null},
-                createdAt: {
-                    [Op.gte]: cutoff
-                }
+                createdAt: {[Op.gte]: cutoff}
             },
             order: [['createdAt', 'ASC']]
         })
 
         if (!format) {
             const summary = {}
+            const labels = []
+            const data = []
             
             for (let i = 0; i < matches.length; i++) {
                 const match = matches[i]
                 summary[match.formatName] ? summary[match.formatName]++ : summary[match.formatName] = 1
             }
     
-            const labels = []
-            const data = []
-            const entries = Object.entries(summary).sort((a, b) => b[1] - a[1])
+            const entries = Object.entries(summary).filter((e) => e[1] >= 120).sort((a, b) => b[1] - a[1])
 
             for (let [key, value] of entries) {
-                if (value < 120) continue
                 labels.push(key)
                 data.push(value)
             }
@@ -106,18 +101,14 @@ export default {
                 summary[month] ? summary[month]++ : summary[month] = 1
             }
     
-            const month = today.getMonth()
-            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-            const labels = []
+            const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
             const data = []
             
-            for (let i = month + 1; i <= 11; i++) {
-                labels.push(months[i])
+            for (let i = currentMonth + 1; i <= 11; i++) {
                 data.push(summary[i])
             }
 
-            for (let i = 0; i <= month; i++) {
-                labels.push(months[i])
+            for (let i = 0; i <= currentMonth; i++) {
                 data.push(summary[i])
             }
             

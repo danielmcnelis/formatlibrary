@@ -1,22 +1,19 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { TriviaEntry, Player, Server } from '@fl/models'
-import { initiateTrivia, hasFullAccess } from '@fl/bot-functions'
-import { emojis } from '@fl/bot-emojis'
+import { TriviaEntry, Player } from '@fl/models'
+import { initiateTrivia } from '@fl/bot-functions'
 
 export default {
     data: new SlashCommandBuilder()
         .setName('trivia')
         .setDescription('Join or leave the trivia queue. 📚 🐛'),
     async execute(interaction) {
-        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!hasFullAccess(server)) return await interaction.reply({ content: `This feature is only available in Format Library. ${emojis.FL}`})
         if (interaction.channel.id !== '1085316454053838981') return await interaction.reply({ content: `Try using **/trivia** in the <#1085316454053838981> channel. 📚 🐛`})
-
         const player = await Player.findOne({ where: { discordId: interaction.user.id }})
         const alreadyIn = await TriviaEntry.count({ where: { playerId: player.id }})
         const isConfirming = await TriviaEntry.count({ where: { status: 'confirming' }})
         const isPlaying = await TriviaEntry.count({ where: { status: 'playing' }})
+
         if ((isConfirming || isPlaying) && alreadyIn) return await interaction.reply({ content: 'Sorry, you cannot leave trivia after it has started.' })
         
         if (!alreadyIn) {

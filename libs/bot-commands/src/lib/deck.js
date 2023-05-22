@@ -11,21 +11,20 @@ export default {
         .setDescription(`Check tournament deck. 🧐`)
         .addUserOption(option =>
             option
-                .setName('player')
-                .setDescription('The tournament player to check.')
+                .setName('user')
+                .setDescription('Tag the user to check.')
                 .setRequired(false)
         ),
     async execute(interaction) {
         await interaction.deferReply()
-        const user = interaction.options.getUser('player')
+        const discordId = interaction.options.getUser('player')?.id
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.` })
+    
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         const tournaments = await Tournament.findActiveByFormatAndServerId(format, interaction.guildId)
-        if (!user) return await interaction.editReply({ content: `Player not found.` })
-        const discordId = user.id
-        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.` })
-
+       
         const player = await Player.findOne({ where: { discordId: discordId } })
         if (!player) return
 

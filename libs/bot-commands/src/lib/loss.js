@@ -12,7 +12,7 @@ export default {
         .addUserOption(option =>
             option
                 .setName('opponent')
-                .setDescription('The opponent you lost to.')
+                .setDescription('Tag the user that you lost against.')
                 .setRequired(true)
         ),
     async execute(interaction) {

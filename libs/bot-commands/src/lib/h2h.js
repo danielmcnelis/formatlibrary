@@ -10,18 +10,18 @@ export default {
         .setDescription(`Post the record between 2 players. 🤼`)
         .addUserOption(option =>
             option
-                .setName('player1')
-                .setDescription('The first player.')
+                .setName('user1')
+                .setDescription('Tag the first user.')
                 .setRequired(true))
         .addUserOption(option =>
             option
-                .setName('player2')
-                .setDescription('The second player.')
+                .setName('user2')
+                .setDescription('Tag the second user.')
                 .setRequired(false)
         ),
     async execute(interaction) {
-        const user1 = interaction.options.getUser('player1')
-        const user2 = interaction.options.getUser('player2') || interaction.user
+        const user1 = interaction.options.getUser('user1')
+        const user2 = interaction.options.getUser('user2') || interaction.user
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
@@ -29,7 +29,7 @@ export default {
 
         const player1DiscordId = user1.id	
         const player2DiscordId = user2.id
-        if (player1DiscordId === player2DiscordId) return await interaction.reply({ content: `Please specify 2 different players.`})
+        if (player1DiscordId === player2DiscordId) return await interaction.reply({ content: `Please specify 2 different users.`})
 
         const player1 = await Player.findOne({ where: { discordId: player1DiscordId } })
         const player2 = await Player.findOne({ where: { discordId: player2DiscordId } })

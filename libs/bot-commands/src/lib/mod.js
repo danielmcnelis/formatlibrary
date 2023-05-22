@@ -1,8 +1,9 @@
 
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 import { Server } from '@fl/models'
-import { hasAffiliateAccess, isMod } from '@fl/bot-functions'
+import { hasPartnerAccess, isMod } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
+import { hasPartnerAccess } from '../../../bot-functions/src'
 
 export default {
 	data: new SlashCommandBuilder()
@@ -10,8 +11,8 @@ export default {
 		.setDescription('Mod Only - View the RetroBot Moderator guide. 👮'),
 	async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return await interaction.reply({ content: "You do not have permission to do that."})
+        if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}` })
+        if (!isMod(server, interaction.member)) return await interaction.reply({ content: `You do not have permission to do that.` })
 
         const botEmbed = new EmbedBuilder()
 	        .setColor('#38C368')
@@ -28,6 +29,6 @@ export default {
             )
 
         interaction.user.send({ embeds: [botEmbed] }).catch((err) => console.log(err))
-        return await interaction.reply({ content: "I messaged you the RetroBot Moderator Guide."})
+        return await interaction.reply({ content: `I messaged you the RetroBot Moderator Guide.` })
 	}
 }

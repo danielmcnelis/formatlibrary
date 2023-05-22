@@ -12,7 +12,7 @@ export default {
         .addStringOption(str =>
             str
                 .setName('tournament')
-                .setDescription('The tournament you want to destroy.')
+                .setDescription('Enter the tournament name or abbreviation.')
                 .setRequired(true)
         ),
 	async execute(interaction) {

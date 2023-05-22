@@ -9,7 +9,7 @@ export default {
 		.addStringOption(str =>
             str
                 .setName('name')
-                .setDescription('Your DuelingBook name.')
+                .setDescription('Enter your DuelingBook name.')
                 .setRequired(true)
         ),
 	async execute(interaction) {

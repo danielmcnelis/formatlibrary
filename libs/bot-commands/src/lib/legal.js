@@ -10,12 +10,11 @@ export default {
     async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        if (!format) return await interaction.reply({ content: `Try using /legal in channels like: <#414575168174948372> or <#629464112749084673>.`})
+        if (!format) return await interaction.reply({ content: `Try using **/legal** in channels like: <#414575168174948372> or <#629464112749084673>.`})
         if (format.category !== 'TCG') return await interaction.reply(`Sorry, ${format.category} formats are not supported at this time.`)
-        interaction.reply(`Please check your DMs.`)
-        const issues = await checkDeckList(interaction.member, format)
+        await interaction.reply(`Please check your DMs.`)
+        const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards } = await checkDeckList(interaction.member, format)
 
-        const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards } = issues
         if (illegalCards.length || forbiddenCards.length || limitedCards.length || semiLimitedCards.length) {      
             let response = [`I'm sorry, ${interaction.user.username}, your deck is not legal for ${format.name} Format. ${server.emoji || format.emoji}`]
             if (illegalCards.length) response = [...response, `\nThe following cards are not included in this format:`, ...illegalCards]
@@ -33,8 +32,8 @@ export default {
             }
         } else if (unrecognizedCards.length) {
             let response = `I'm sorry, ${interaction.user.username}, the following card IDs were not found in our database:\n${unrecognizedCards.join('\n')}`
-            response += `\n\nThese cards are either alternate artwork, new to the TCG, OCG only, or incorrect in our database. Please contact the Tournament Organizer or the Admin if you can't resolve this.`
-            return await interaction.member.send({ content: response.toString() }).catch((err) => console.log(err))
+            response += `\n\nThese cards are either alternate artwork, new to the TCG, OCG only, or incorrect in our database. Please contact an admin to resolve this.`
+            return await interaction.member.send({ content: response }).catch((err) => console.log(err))
         } else {
             return await interaction.member.send({ content: `Congrats, your ${format.name} Format deck is perfectly legal! ${format.emoji}`}).catch((err) => console.log(err))
         }

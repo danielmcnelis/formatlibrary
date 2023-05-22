@@ -7,7 +7,7 @@ import { Op } from 'sequelize'
 export default {
 	data: new SlashCommandBuilder()
 		.setName('lobby')
-		.setDescription('Check the Rated Lobbies. 🛎️'),
+		.setDescription('Check the Rated Lobby. 🛎️'),
 	async execute(interaction) {
         await interaction.deferReply()
         const now = new Date()
@@ -28,7 +28,7 @@ export default {
         })
         
         if (!pools.length) {
-            return await interaction.editReply({ content: `Nobody is actively using any Rated Lobby.` })
+            return await interaction.editReply({ content: `Nobody is actively using the Rated Lobby.` })
         } else {
             return await interaction.editReply({ content: `${emojis.FL} __**Active Rated Lobbies**__ ${emojis.FL}\n${pools.join('\n')}`})
         }

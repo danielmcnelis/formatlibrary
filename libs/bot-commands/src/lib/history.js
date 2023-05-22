@@ -12,8 +12,8 @@ export default {
         .setDescription(`View a player's Elo history chart. 📈`)
         .addUserOption(option =>
             option
-                .setName('player')
-                .setDescription('The player you want to check.')
+                .setName('user')
+                .setDescription('Tag the user to check.')
                 .setRequired(false)
         ),
     async execute(interaction) {

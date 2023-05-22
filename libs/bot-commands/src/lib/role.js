@@ -1,8 +1,9 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { hasAffiliateAccess, hasFullAccess } from '@fl/bot-functions'
+import { hasPartnerAccess } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Format, Player, Membership, Role, Server } from '@fl/models'
+import { hasPartnerAccess } from '../../../bot-functions/src'
 
 export default {
     data: new SlashCommandBuilder()
@@ -10,19 +11,12 @@ export default {
         .setDescription(`Add or remove a format role. 🧙`),
     async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.reply({ content: `Try using **/role** in channels like: <#414575168174948372> or <#629464112749084673>.`})    
-        const roleId = hasFullAccess(server) ? format.role : server.rankedRole
-        if (!roleId) return
-
-        const roleName = hasFullAccess(server) ? `${format.name} Players` : 
-            server.name === 'GoatFormat.com' ? 'Ranked Players' :
-            server.name === 'Lab' ? 'Ranked Players' :
-            server.name === 'Crows Nest' ? 'Crows' :
-            server.name === 'Goat Format War League' ? 'Warheads' :
-            server.name === 'Vegas (April 2014) Format' ? 'Duelist' :
-            ''
+        const roleId = server.rankedRole || format.role
+        const role = interaction.guild.roles.cache.get((role) => role.id === roleId)
+        console.log('role', role)
 
         const membership = await Membership.findOne({ where: { '$player.discordId$': interaction.user.id, serverId: interaction.guildId }, include: Player })
         if (!membership) return await interaction.reply({ content: `You are not in the database.`})
@@ -35,10 +29,10 @@ export default {
                     await Role.create({ 
                         membershipId: membership.id,
                         roleId: roleId,
-                        roleName: roleName
+                        roleName: role.name
                     })
                 }
-                return await interaction.reply({ content: `You now have the ${roleName} role.`})
+                return await interaction.reply({ content: `You now have the ${role.name} role.`})
             } catch (err) {
                 console.log(err)
                 return await interaction.reply({ content: `Error: Unable to add ${roleName} role.`})
@@ -48,10 +42,10 @@ export default {
                 await interaction.member.roles.remove(roleId)
                 const role = await Role.findOne({ where: { membershipId: membership.id, roleId: roleId } })
                 await role.destroy()
-                return await interaction.reply({ content: `You no longer have the ${roleName} role.`})
+                return await interaction.reply({ content: `You no longer have the ${role.name} role.`})
             } catch (err) {
                 console.log(err)
-                return await interaction.reply({ content: `Error: Unable to remove ${roleName} role.`})
+                return await interaction.reply({ content: `Error: Unable to remove ${role.name} role.`})
             }
         }
     }

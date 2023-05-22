@@ -11,7 +11,7 @@ export default {
         .addUserOption(option =>
             option
                 .setName('player')
-                .setDescription('The player who no-showed.')
+                .setDescription('Tag the user who did not play.')
                 .setRequired(true)
         ),
     async execute(interaction) {

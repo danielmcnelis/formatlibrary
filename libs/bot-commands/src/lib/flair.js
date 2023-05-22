@@ -9,7 +9,7 @@ export default {
         .addStringOption(option =>
             option
                 .setName('emoji')
-                .setDescription('Subscriber Flair.')
+                .setDescription('Select an emoji.')
                 .setRequired(true)
                 .addChoices(
 					{ name: 'Blackwing - Kalut the Moonshadow', value: '1105202857566802010' },	

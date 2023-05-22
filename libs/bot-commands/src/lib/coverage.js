@@ -1,9 +1,8 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Event, Format, Player, Server } from '@fl/models'
-import { composeBlogPost, composeThumbnails, displayDecks, publishDecks, hasFullAccess, isMod } from '@fl/bot-functions'
+import { composeBlogPost, composeThumbnails, displayDecks, publishDecks, isMod } from '@fl/bot-functions'
 import { Op } from 'sequelize'
-import { emojis } from '@fl/bot-emojis'
 
 export default {
     data: new SlashCommandBuilder()
@@ -12,14 +11,13 @@ export default {
 		.addStringOption(str =>
             str
                 .setName('tournament')
-                .setDescription('Enter tournament name.')
+                .setDescription('Enter tournament name or abbreviation.')
                 .setRequired(true)
         ),
     async execute(interaction) {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!hasFullAccess(server)) return await interaction.editReply(`This feature is only available in Format Library. ${emojis.FL}`) 
-        if (!isMod(server, interaction.member)) return await interaction.editReply(`You do not have permission to do that.`)
+        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.` })
         
         const input = interaction.options.getString('tournament')     
         const event = await Event.findOne({ 
@@ -32,10 +30,10 @@ export default {
             include: [Format, Player]
         })
 
-        if (!event) return await interaction.editReply(`No event found.`)
+        if (!event) return await interaction.editReply({ content: `No event found.` })
         if (event.display === false) await event.update({ display: true })
 
-        interaction.editReply(`Generating coverage for ${event.name}. Please wait.`)
+        await interaction.editReply({ content: `Generating coverage for ${event.name}. Please wait.` })
         await displayDecks(interaction, event)
         await publishDecks(interaction, event)
         await composeThumbnails(interaction, event)

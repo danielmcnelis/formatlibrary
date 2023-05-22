@@ -12,12 +12,12 @@ export default {
         .addUserOption(option =>
             option
                 .setName('winner')
-                .setDescription('The player who won.')
+                .setDescription('Tag the user who won.')
                 .setRequired(true))
         .addUserOption(option =>
             option
                 .setName('loser')
-                .setDescription('The player who lost.')
+                .setDescription('Tag the user who lost.')
                 .setRequired(true)
         ),
     async execute(interaction) {
