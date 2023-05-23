@@ -363,6 +363,8 @@ export const publishDecks = async (interaction, event) => {
 export const generateMatchupData = async (interaction, server, event, tournament) => {
     const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
     const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeAPIKey}`)
+    console.log('participants.length', participants.length)
+    console.log('matches.length', matches.length)
     const deckMap = {}
     let b = 0
 
@@ -412,6 +414,8 @@ export const generateMatchupData = async (interaction, server, event, tournament
             }
         }
     }
+
+    console.log('deckMap', deckMap)
 
     for (let i = 0; i < matches.length; i++) {
         const { match } = matches[i]
