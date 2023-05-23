@@ -401,6 +401,8 @@ export const generateMatchupData = async (interaction, server, event, tournament
                     discordName: discordName
                 }
             })]
+            
+            console.log('players.length', players.length)
 
             for (let j = 0; j < players.length; j++) {
                 const player = players[i]
