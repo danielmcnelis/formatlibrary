@@ -447,7 +447,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
 
         const retrobotMatch = await Match.findOne({ where: { challongeMatchId: match.id }})
 
-        if (!retrobotMatch && (match.forfeited || match.scores === '0-0')) {        
+        if (!retrobotMatch && (match.forfeited || match.scores_csv === '0-0')) {        
             console.log(`match ${match.id} appears to be forfeited from ${tournament.name}`)
             c++
             continue
