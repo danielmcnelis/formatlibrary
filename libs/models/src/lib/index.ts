@@ -1,4 +1,5 @@
 
+import { Alius } from './Alius'
 import { Archetype } from './Archetype'
 import { Article } from './Article'
 import { BlogPost } from './BlogPost'
@@ -39,6 +40,10 @@ import { TriviaEntry } from './TriviaEntry'
 import { TriviaKnowledge } from './TriviaKnowledge'
 import { TriviaQuestion } from './TriviaQuestion'
 import { Video } from './Video'
+
+//ALIUS
+Alius.belongsTo(Player)
+Player.hasMany(Alius)
 
 //ARTICLE
 Article.belongsTo(Player)

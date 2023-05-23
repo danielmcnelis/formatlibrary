@@ -3,7 +3,7 @@ const Canvas = require('canvas')
 import axios from 'axios'
 import { S3 } from 'aws-sdk'
 import { Op } from 'sequelize'
-import { BlogPost, Card, Deck, DeckType, Entry, Match, Matchup, Player, Tournament, Server }  from '@fl/models'
+import { Alius, BlogPost, Card, Deck, DeckType, Entry, Match, Matchup, Player, Tournament, Server }  from '@fl/models'
 import { capitalize, dateToVerbose } from './utility'
 import { getDeckType } from './deck'
 import { config } from '@fl/config'
@@ -398,7 +398,12 @@ export const generateMatchupData = async (interaction, server, event, tournament
                 where: {
                     discordName: discordName
                 }
-            })]
+            }), ...await Alius.findAll({
+                where: {
+                    formerName: discordName
+                },
+                include: Player
+            }).map((a) => a.player)]
 
             if (!players.length) {
                 console.log(`!players.length - cannot find player matching participant: ${participant.name} (${participant.id})`)
