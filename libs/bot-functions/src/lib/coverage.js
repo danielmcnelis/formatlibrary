@@ -434,7 +434,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
         const losingDeck = deckMap[match.loser_id?.toString()]
         if (!winningDeck || !losingDeck) continue
 
-        const { id } = await Match.findOne({ where: { challongeMatchId: match.id }})
+        const retrobotMatch = await Match.findOne({ where: { challongeMatchId: match.id }})
 
         const count = await Matchup.count({ where: { challongeMatchId: match.id }})
         if (count) {           
@@ -447,7 +447,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
             formatId: event.format?.id,
             tournamentId: tournament.id,
             challongeMatchId: match.id,
-            matchId: id,
+            matchId: retrobotMatch?.id,
             winningDeckId: winningDeck.id,
             losingDeckId: winningDeck.id,
             winningDeckType: winningDeck.type,
