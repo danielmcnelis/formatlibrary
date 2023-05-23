@@ -458,7 +458,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
             challongeMatchId: match.id,
             matchId: retrobotMatch?.id,
             winningDeckId: winningDeck.id,
-            losingDeckId: winningDeck.id,
+            losingDeckId: losingDeck.id,
             winningDeckType: winningDeck.type,
             losingDeckType: losingDeck.type,
             winningDeckTypeId: winningDeck.deckTypeId,
