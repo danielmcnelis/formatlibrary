@@ -363,8 +363,6 @@ export const publishDecks = async (interaction, event) => {
 export const generateMatchupData = async (interaction, server, event, tournament) => {
     const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
     const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeAPIKey}`)
-    console.log('participants.length', participants.length)
-    console.log('matches.length', matches.length)
     const deckMap = {}
     let b = 0
     let c = 0
@@ -391,8 +389,6 @@ export const generateMatchupData = async (interaction, server, event, tournament
             deckMap[participant.id] = deck
         } else {
             const [discordName, discriminator] = participant.name.split('#')
-            console.log('discordName', discordName)
-            console.log('discriminator', discriminator)
             const players = discriminator ? [await Player.findOne({
                 where: {
                     discordName: discordName,
@@ -405,13 +401,13 @@ export const generateMatchupData = async (interaction, server, event, tournament
             })]
 
             if (!players.length) {
-                console.log(`cannot find player matching participant: ${participant.name} (${participant.id})`)
+                console.log(`!players.length - cannot find player matching participant: ${participant.name} (${participant.id})`)
             }
 
             for (let j = 0; j < players.length; j++) {
                 const player = players[j]
                 if (!player) {
-                    console.log(`cannot find player matching participant: ${participant.name} (${participant.id})`)
+                    console.log(`!player - cannot find player matching participant: ${participant.name} (${participant.id})`)
                     continue
                 }
 
@@ -432,8 +428,6 @@ export const generateMatchupData = async (interaction, server, event, tournament
         }
     }
 
-    console.log('Object.entries(deckMap).length', Object.entries(deckMap).length)
-
     for (let i = 0; i < matches.length; i++) {
         const { match } = matches[i]
         const retrobotMatch = await Match.findOne({ where: { challongeMatchId: match.id }})
@@ -452,7 +446,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
             if (!losingDeck) console.log(`missing deck from loser (${match.loser_id}) of match ${match.id}`)
             continue
         }
-        
+
         const count = await Matchup.count({ where: { challongeMatchId: match.id }})
 
         if (count) {           
