@@ -401,21 +401,27 @@ export const generateMatchupData = async (interaction, server, event, tournament
                     discordName: discordName
                 }
             })]
-            
+
             console.log('players.length', players.length)
 
             for (let j = 0; j < players.length; j++) {
                 const player = players[i]
+                console.log('!!player', !!player)
+                console.log('player?.name', player?.name)
                 if (!player) continue
                 console.log('player.id', player.id)
                 const deck = await Deck.findOne({
                     where: {
                         playerId: player.id,
                         eventId: event.id
-                    },
-                    include: DeckType
+                    }
                 })
-                if (!deck) continue                    
+
+                if (!deck) {
+                    console.log(`no deck found for ${player.name}`)
+                    continue   
+                }                 
+
                 deckMap[participant.id] = deck
             }
         }
