@@ -402,13 +402,17 @@ export const generateMatchupData = async (interaction, server, event, tournament
                 }
             })]
 
-            console.log('players.length', players.length)
+            if (!players.length) {
+                console.log(`cannot find player matching participant: ${participant.name} (${participant.id})`)
+            }
 
             for (let j = 0; j < players.length; j++) {
                 const player = players[j]
-                console.log('player?.name', player?.name)
-                if (!player) continue
-                console.log('player.id', player.id)
+                if (!player) {
+                    console.log(`cannot find player matching participant: ${participant.name} (${participant.id})`)
+                    continue
+                }
+
                 const deck = await Deck.findOne({
                     where: {
                         playerId: player.id,
