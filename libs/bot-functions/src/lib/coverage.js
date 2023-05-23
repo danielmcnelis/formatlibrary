@@ -446,7 +446,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
         const matchup = await Matchup.create({
             formatName: event.format?.name,
             formatId: event.format?.id,
-            tournamentId: event.tournamentId,
+            tournamentId: tournament.id,
             challongeMatchId: match.id,
             matchId: id,
             winningDeckId: winningDeck.id,
