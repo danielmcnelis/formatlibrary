@@ -405,6 +405,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
             for (let j = 0; j < players.length; j++) {
                 const player = players[i]
                 if (!player) continue
+                console.log('player.id', player.id)
                 const deck = await Deck.findOne({
                     where: {
                         playerId: player.id,
