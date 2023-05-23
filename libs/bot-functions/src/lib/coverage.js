@@ -398,12 +398,12 @@ export const generateMatchupData = async (interaction, server, event, tournament
                 where: {
                     discordName: discordName
                 }
-            }), ...await Alius.findAll({
+            }), ...[...await Alius.findAll({
                 where: {
                     formerName: discordName
                 },
                 include: Player
-            }).map((a) => a.player)]
+            })].map((a) => a.player)]
 
             if (!players.length) {
                 console.log(`!players.length - cannot find player matching participant: ${participant.name} (${participant.id})`)
