@@ -494,7 +494,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
         console.log(`added new ${matchup.formatName} format matchup data point: ${matchup.winningDeckType} > ${matchup.losingDeckType} (${percentage}%)`)
     }
 
-    return interaction.editReply(`Generated new matchup data points for ${b} out of ${matches.length} matches from ${tournament.name}.${d ? ` ${d} matchups were already recorded.` : ''}${c ? ` ${c} matches appear to have been forfeited.` : ''}`)
+    return interaction.editReply(`Generated new matchup data points for ${b} matches from ${tournament.name}.${d ? ` ${d} matchups were already recorded.` : ''}${c ? ` ${c} matches appear to have been forfeited.` : ''} ${b + d + c} out of ${matches.length} matches are now accounted for.`)
 }
 
 
