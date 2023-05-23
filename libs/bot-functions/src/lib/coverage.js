@@ -405,7 +405,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
             console.log('players.length', players.length)
 
             for (let j = 0; j < players.length; j++) {
-                const player = players[i]
+                const player = players[j]
                 console.log('!!player', !!player)
                 console.log('player?.name', player?.name)
                 if (!player) continue
