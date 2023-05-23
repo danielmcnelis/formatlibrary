@@ -367,6 +367,8 @@ export const generateMatchupData = async (interaction, server, event, tournament
     console.log('matches.length', matches.length)
     const deckMap = {}
     let b = 0
+    let c = 0
+    let d = 0
 
     for (let i = 0; i < participants.length; i++) {
         const { participant } = participants[i]
@@ -447,6 +449,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
 
         if (!retrobotMatch && (match.forfeited || match.scores === '0-0')) {        
             console.log(`match ${match.id} appears to be forfeited from ${tournament.name}`)
+            c++
             continue
         }
 
@@ -454,6 +457,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
 
         if (count) {           
             console.log(`already have matchup data for match ${match.id} from ${tournament.name}`)
+            d++
             continue
         }
 
@@ -491,7 +495,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
         console.log(`added new ${matchup.formatName} format matchup data point: ${matchup.winningDeckType} > ${matchup.losingDeckType} (${percentage}%)`)
     }
 
-    return interaction.editReply(`Generated new matchup data points for ${b} out of ${matches.length} matches from ${tournament.name}.`)
+    return interaction.editReply(`Generated new matchup data points for ${b} out of ${matches.length} matches from ${tournament.name}.${d ? ` ${d} matchups were already recorded.` : ''}${c ? ` ${c} matches appear to have been forfeited.` : ''}`)
 }
 
 
