@@ -32,17 +32,16 @@ export default {
 
             if (!event) return await interaction.editReply({ content: `No event found.` })
 
-            const tournament = topCut ? event?.tournament : await Tournament.findOne({
+            const tournament = topCut ? await Tournament.findOne({
                 where: {
                     [Op.or]: {
-                        name: topCut,
-                        abbreviation: topCut
+                        name: input + '_' + topCut,
+                        abbreviation: input + '_' + topCut
                     }
                 }
-            })
+            }) : event?.tournament
 
             if (!tournament) return await interaction.editReply({ content: `No tournament found.` })
-
             await generateMatchupData(interaction, server, event, tournament)
         } else {
             return await interaction.editReply('🛠️')
