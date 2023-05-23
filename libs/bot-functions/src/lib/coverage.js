@@ -445,7 +445,13 @@ export const generateMatchupData = async (interaction, server, event, tournament
 
         const retrobotMatch = await Match.findOne({ where: { challongeMatchId: match.id }})
 
+        if (!retrobotMatch && (match.forfeited || match.scores === '0-0')) {        
+            console.log(`match ${match.id} appears to be forfeited from ${tournament.name}`)
+            continue
+        }
+
         const count = await Matchup.count({ where: { challongeMatchId: match.id }})
+
         if (count) {           
             console.log(`already have matchup data for match ${match.id} from ${tournament.name}`)
             continue
