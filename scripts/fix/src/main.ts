@@ -178,22 +178,46 @@ import { Op } from 'sequelize'
 //     }
 // })()
 
+// ;(async () => {
+//     const matches = await Match.findAll({
+//         where: {
+//             formatId: null
+//         }
+//     })
+
+//     for (let i = 0; i < matches.length; i++) {
+//         const match = matches[i]
+//         const format = await Format.findOne({
+//             where: {
+//                 name: {[Op.iLike]: match.formatName}
+//             }
+//         })
+
+//         if (!format) continue
+//         await match.update({ formatId: format.id })
+//     }
+// })()
+
 ;(async () => {
-    const matches = await Match.findAll({
+    let b = 0
+    let e = 0
+    const players = await Player.findAll({
         where: {
-            formatId: null
+            discordId: {[Op.not]: null},
+            discordName: null
         }
     })
 
-    for (let i = 0; i < matches.length; i++) {
-        const match = matches[i]
-        const format = await Format.findOne({
-            where: {
-                name: {[Op.iLike]: match.formatName}
-            }
-        })
-
-        if (!format) continue
-        await match.update({ formatId: format.id })
+    for (let i = 0; i < players.length; i++) {
+        try {
+            const player = player[i]
+            await player.update({ discordName: player.name })
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
     }
+
+    return console.log(`fixed ${b} players and encountered ${e} errors`)
 })()
