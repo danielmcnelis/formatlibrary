@@ -436,6 +436,14 @@ export const generateMatchupData = async (interaction, server, event, tournament
 
     for (let i = 0; i < matches.length; i++) {
         const { match } = matches[i]
+        const retrobotMatch = await Match.findOne({ where: { challongeMatchId: match.id }})
+
+        if (!retrobotMatch && (match.forfeited || match.scores_csv === '0-0')) {     
+            c++  
+            console.log(`match ${match.id} appears to be forfeited from ${tournament.name}`)
+            continue
+        }
+
         const winningDeck = deckMap[match.winner_id?.toString()]
         const losingDeck = deckMap[match.loser_id?.toString()]
 
@@ -444,20 +452,12 @@ export const generateMatchupData = async (interaction, server, event, tournament
             if (!losingDeck) console.log(`missing deck from loser (${match.loser_id}) of match ${match.id}`)
             continue
         }
-
-        const retrobotMatch = await Match.findOne({ where: { challongeMatchId: match.id }})
-
-        if (!retrobotMatch && (match.forfeited || match.scores_csv === '0-0')) {        
-            console.log(`match ${match.id} appears to be forfeited from ${tournament.name}`)
-            c++
-            continue
-        }
-
+        
         const count = await Matchup.count({ where: { challongeMatchId: match.id }})
 
         if (count) {           
-            console.log(`already have matchup data for match ${match.id} from ${tournament.name}`)
             d++
+            console.log(`already have matchup data for match ${match.id} from ${tournament.name}`)
             continue
         }
 
