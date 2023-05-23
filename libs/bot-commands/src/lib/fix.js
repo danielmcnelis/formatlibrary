@@ -19,7 +19,7 @@ export default {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-            const input = interaction.options.getString('tournament')     
+            const [input, topCut] = interaction.options.getString('tournament').split('_')
             const event = await Event.findOne({ 
                 where: { 
                     [Op.or]: {
@@ -29,10 +29,21 @@ export default {
                 },
                 include: [Format, Player, Tournament]
             })
-    
+
             if (!event) return await interaction.editReply({ content: `No event found.` })
 
-            await generateMatchupData(interaction, server, event)
+            const tournament = topCut ? event?.tournament : await Tournament.findOne({
+                where: {
+                    [Op.or]: {
+                        name: topCut,
+                        abbreviation: topCut
+                    }
+                }
+            })
+
+            if (!tournament) return await interaction.editReply({ content: `No tournament found.` })
+
+            await generateMatchupData(interaction, server, event, tournament)
         } else {
             return await interaction.editReply('🛠️')
         }

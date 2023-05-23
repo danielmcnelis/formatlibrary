@@ -360,9 +360,9 @@ export const publishDecks = async (interaction, event) => {
 }
 
 // GENERATE MATCHUP DATA
-export const generateMatchupData = async (interaction, server, event) => {
-    const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${event.tournamentId}/participants.json?api_key=${server.challongeAPIKey}`)
-    const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${event.tournamentId}/matches.json?api_key=${server.challongeAPIKey}`)
+export const generateMatchupData = async (interaction, server, event, tournament) => {
+    const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+    const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeAPIKey}`)
     const deckMap = {}
     let b = 0
 
@@ -423,7 +423,7 @@ export const generateMatchupData = async (interaction, server, event) => {
 
         const count = await Matchup.count({ where: { challongeMatchId: match.id }})
         if (count) {           
-            console.log(`already have matchup data for match ${match.id} from ${event.abbreviation}`)
+            console.log(`already have matchup data for match ${match.id} from ${tournament.name}`)
             continue
         }
 
@@ -461,7 +461,7 @@ export const generateMatchupData = async (interaction, server, event) => {
         console.log(`added new ${matchup.formatName} format matchup data point: ${matchup.winningDeckType} > ${matchup.losingDeckType} (${percentage}%)`)
     }
 
-    return interaction.editReply(`Generated new matchup data points for ${b} out of ${matches.length} matches from ${event.abbreviation}.`)
+    return interaction.editReply(`Generated new matchup data points for ${b} out of ${matches.length} matches from ${tournament.name}.`)
 }
 
 
