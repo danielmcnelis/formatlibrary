@@ -32,7 +32,7 @@ export const Match = db.define('matches', {
     tournamentId: {
         type: Sequelize.STRING,
     },
-    tournamentMatchId: {
+    challongeMatchId: {
         type: Sequelize.INTEGER
     },
     internal: {

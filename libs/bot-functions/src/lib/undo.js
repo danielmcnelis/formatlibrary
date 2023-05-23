@@ -7,11 +7,11 @@ export const undoMatch = async (server, channel, id) => {
     try {
         const match = await Match.findOne({ where: { id }, include: Format})
 
-        if (match.isTournament && match.tournamentId && match.tournamentMatchId) {
+        if (match.isTournament && match.tournamentId && match.challongeMatchId) {
             try {
                 await axios({
                     method: 'post',
-                    url: `https://api.challonge.com/v1/tournaments/${match.tournamentId}/matches/${match.tournamentMatchId}/reopen.json?api_key=${server.challongeAPIKey}`
+                    url: `https://api.challonge.com/v1/tournaments/${match.tournamentId}/matches/${match.challongeMatchId}/reopen.json?api_key=${server.challongeAPIKey}`
                 })
             } catch (err) {
                 console.log(err)

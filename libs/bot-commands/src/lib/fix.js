@@ -1,48 +1,38 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { isProgrammer } from '@fl/bot-functions'
-import { Deck, Player, Server, Tournament } from '@fl/models'
+import { Deck, DeckType, Event, Format, Match, Matchup, Player, Server, Tournament } from '@fl/models'
+import { generateMatchupData } from '@fl/bot-functions'
 import { Op } from 'sequelize'
-import { selectTournament } from '@fl/bot-functions'
-import { checkExpiryDate, uploadDeckFolder } from '@fl/bot-functions'
 
 export default {
     data: new SlashCommandBuilder()
         .setName('fix')
-        .setDescription('Admin Only - Fix an issue. 🛠️'),
+        .setDescription('Admin Only - Fix an issue. 🛠️')
+		.addStringOption(str =>
+            str
+                .setName('tournament')
+                .setDescription('Enter tournament name or abbreviation.')
+                .setRequired(true)
+        ),
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
-            const tournaments = await Tournament.findAll({
-                where: {
-                    serverId: interaction.guildId,
-                },
-                limit: 25,
-                order: [["createdAt", "ASC"]],
-            })
-
-            const tournament = await selectTournament(interaction, tournaments)
-            if (!tournament) return
-            
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-
-            const decks = await Deck.findAll({
-                where: {
-                    eventName: {
-                        [Op.or]: [tournament.abbreviation, tournament.name]
+            const input = interaction.options.getString('tournament')     
+            const event = await Event.findOne({ 
+                where: { 
+                    [Op.or]: {
+                        name: input,
+                        abbreviation: input
                     }
                 },
-                include: Player
+                include: [Format, Player, Tournament]
             })
+    
+            if (!event) return await interaction.editReply({ content: `No event found.` })
 
-            try {
-                await checkExpiryDate(server)
-                await uploadDeckFolder(server, tournament.name, decks)
-                return await interaction.editReply({ content: `Your tournament files have been uploaded! ${server.logo}` })
-            } catch (err) {
-                console.log(err)
-                return await interaction.editReply({ content: `Error. Check bot logs.` })
-            }
+            await generateMatchupData(interaction, server, event)
         } else {
             return await interaction.editReply('🛠️')
         }

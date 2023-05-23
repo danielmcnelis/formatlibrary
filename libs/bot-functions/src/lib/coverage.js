@@ -1,8 +1,9 @@
 
 const Canvas = require('canvas')
+import axios from 'axios'
 import { S3 } from 'aws-sdk'
 import { Op } from 'sequelize'
-import { BlogPost, Card, Deck, DeckType, Entry, Player, Tournament, Server }  from '@fl/models'
+import { BlogPost, Card, Deck, DeckType, Entry, Match, Matchup, Player, Tournament, Server }  from '@fl/models'
 import { capitalize, dateToVerbose } from './utility'
 import { getDeckType } from './deck'
 import { config } from '@fl/config'
@@ -222,7 +223,7 @@ export const composeBlogPost = async (interaction, event) => {
         console.log('uri', uri)
         return await interaction.channel.send(`Composed blogpost for ${event.name}.`)
     } catch (err) {
-        console.log('composeBlogpost()', err)
+        console.log(err)
         return await interaction.channel.send(`Error composing blogpost for ${event.name}.`)
     }
 }
@@ -357,6 +358,112 @@ export const publishDecks = async (interaction, event) => {
 
     return await interaction.channel.send(`Published ${decks.length} new deck lists for ${event.name}.`)
 }
+
+// GENERATE MATCHUP DATA
+export const generateMatchupData = async (interaction, server, event) => {
+    const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${event.tournamentId}/participants.json?api_key=${server.challongeAPIKey}`)
+    const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${event.tournamentId}/matches.json?api_key=${server.challongeAPIKey}`)
+    const deckMap = {}
+    let b = 0
+
+    for (let i = 0; i < participants.length; i++) {
+        const participant = participants[i]
+        const entry = await entry.findOne({ 
+            where: {
+                participantId: participant?.id?.toString()
+            }
+        })
+
+        if (entry) {
+            const deck = await Deck.findOne({
+                where: {
+                    playerId: entry.playerId,
+                    eventId: event.id
+                },
+                include: DeckType
+            })
+
+            if (!deck) continue
+            deckMap[participant.id] = deck
+        } else {
+            const [discordName, discriminator] = participant.name.split('#')
+            const players = discriminator ? [...await Player.findOne({
+                where: {
+                    discordName: discordName,
+                    discriminator: discordName
+                }
+            })] : [...await Player.findAll({
+                where: {
+                    discordName: discordName
+                }
+            })]
+
+            for (let j = 0; j < players.length; j++) {
+                const player = players[i]
+                const deck = await Deck.findOne({
+                    where: {
+                        playerId: player.id,
+                        eventId: event.id
+                    },
+                    include: DeckType
+                })
+                if (!deck) continue                    
+                deckMap[participant.id] = deck
+            }
+        }
+    }
+
+    for (let i = 0; i < matches.length; i++) {
+        const { match } = matches[i]
+        const winningDeck = deckMap[match.winner_id?.toString()]
+        const losingDeck = deckMap[match.loser_id?.toString()]
+        if (!winningDeck || !losingDeck) continue
+
+        const { id } = await Match.findOne({ where: { challongeMatchId: match.id }})
+
+        const count = await Matchup.count({ where: { challongeMatchId: match.id }})
+        if (count) {           
+            console.log(`already have matchup data for match ${match.id} from ${event.abbreviation}`)
+            continue
+        }
+
+        const matchup = await Matchup.create({
+            formatName: event.format?.name,
+            formatId: event.format?.id,
+            tournamentId: event.tournamentId,
+            challongeMatchId: match.id,
+            matchId: id,
+            winningDeckId: winningDeck.id,
+            losingDeckId: winningDeck.id,
+            winningDeckType: winningDeck.type,
+            losingDeckType: losingDeck.type,
+            winningDeckTypeId: winningDeck.deckTypeId,
+            losingDeckTypeId: losingDeck.deckTypeId,
+        })
+
+        b++
+
+        const wins = await Matchup.count({
+            where: {
+                winningDeckTypeId: matchup.winningDeckTypeId,
+                losingDeckTypeId: matchup.losingDeckTypeId,
+            }
+        })
+
+        const losses = await Matchup.count({
+            where: {
+                winningDeckTypeId: matchup.losingDeckTypeId,
+                losingDeckTypeId: matchup.winningDeckTypeId,
+            }
+        })
+
+        const percentage = (wins / (wins + losses)).toFixed(3) * 100
+        console.log(`added new ${matchup.formatName} format matchup data point: ${matchup.winningDeckType} > ${matchup.losingDeckType} (${percentage}%)`)
+    }
+
+    return interaction.editReply(`Generated new matchup data points for ${b} out of ${matches.length} matches from ${event.abbreviation}.`)
+}
+
 
 // FIX DECK FOLDER
 export const fixDeckFolder = async (interaction, tournamentId) => {

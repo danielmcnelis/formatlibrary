@@ -2,7 +2,7 @@
 import { SlashCommandBuilder } from 'discord.js'    
 import { createPlayer, postStory, isMod, isNewUser, hasAffiliateAccess, isIronPlayer, isTourPlayer, checkPairing, getMatches, processMatchResult, processTeamResult, selectTournament } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
-import { Entry, Format, Iron, Match, Matchup, Player, Pool, Server, Stats, Tournament } from '@fl/models'
+import { Entry, Format, Iron, Match, Player, Pool, Server, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 
 export default {
@@ -61,7 +61,7 @@ export default {
         let losingEntry
         let tournament
         let tournamentId
-        let tournamentMatchId
+        let challongeMatchId
 
         const loserHasIronRole = isIronPlayer(losingMember)
         const winnerHasIronRole = isIronPlayer(winningMember)
@@ -123,9 +123,9 @@ export default {
                         tournamentId = tournament.id
                         if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
                         if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
-                        tournamentMatchId = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament) :
+                        challongeMatchId = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament) :
                             await processMatchResult(server, interaction, winningMember, winningPlayer, losingMember, losingPlayer, tournament)
-                        if (!tournamentMatchId) return
+                        if (!challongeMatchId) return
                     } else {
                         return
                     }
@@ -198,21 +198,13 @@ export default {
             loserId: losingPlayer.id,
             isTournament: isTournament,
             tournamentId: tournamentId,
-            tournamentMatchId: tournamentMatchId,
+            challongeMatchId: challongeMatchId,
             formatName: format.name,
             formatId: format.id,
             delta: delta,
             serverId: serverId,
             internal: server.internalLadder
         })
-
-        if (isTournament && winningEntry && losingEntry && tournament && match) {
-            await Matchup.create({
-                matchId: match.id,
-                format: format.name,
-                tournamentId: tournament.id
-            })
-        }
 
         const poolsToUpdate = await Pool.findAll({
             where: {
