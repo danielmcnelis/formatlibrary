@@ -242,6 +242,7 @@ Video.belongsTo(Player)
 Player.hasMany(Video)
 
 export {
+  Alius,
   Archetype,
   Article,
   BlogPost,
