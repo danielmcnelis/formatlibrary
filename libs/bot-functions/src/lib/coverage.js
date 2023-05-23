@@ -368,7 +368,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
 
     for (let i = 0; i < participants.length; i++) {
         const participant = participants[i]
-        const entry = await entry.findOne({ 
+        const entry = await Entry.findOne({ 
             where: {
                 participantId: participant?.id?.toString()
             }
