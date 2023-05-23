@@ -210,7 +210,7 @@ import { Op } from 'sequelize'
 
     for (let i = 0; i < players.length; i++) {
         try {
-            const player = player[i]
+            const player = players[i]
             await player.update({ discordName: player.name })
             b++
         } catch (err) {
