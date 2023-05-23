@@ -432,7 +432,12 @@ export const generateMatchupData = async (interaction, server, event, tournament
         const { match } = matches[i]
         const winningDeck = deckMap[match.winner_id?.toString()]
         const losingDeck = deckMap[match.loser_id?.toString()]
-        if (!winningDeck || !losingDeck) continue
+
+        if (!winningDeck || !losingDeck) {
+            if (!winningDeck) console.log(`missing deck from winner (${match.winner_id}) of match ${match.id}`)
+            if (!losingDeck) console.log(`missing deck from loser (${match.loser_id}) of match ${match.id}`)
+            continue
+        }
 
         const retrobotMatch = await Match.findOne({ where: { challongeMatchId: match.id }})
 
