@@ -406,7 +406,6 @@ export const generateMatchupData = async (interaction, server, event, tournament
 
             for (let j = 0; j < players.length; j++) {
                 const player = players[j]
-                console.log('!!player', !!player)
                 console.log('player?.name', player?.name)
                 if (!player) continue
                 console.log('player.id', player.id)
@@ -427,7 +426,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
         }
     }
 
-    console.log('deckMap', deckMap)
+    console.log('Object.entries(deckMap).length', Object.entries(deckMap).length)
 
     for (let i = 0; i < matches.length; i++) {
         const { match } = matches[i]
