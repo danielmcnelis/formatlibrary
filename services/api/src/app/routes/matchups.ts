@@ -3,6 +3,6 @@ import { getMatchupH2H } from '../middleware'
 
 const router = Router()
 
-router.get('/api/matchups/:name', getMatchupH2H)
+router.get('/api/matchups/:id', getMatchupH2H)
 
 export default router
