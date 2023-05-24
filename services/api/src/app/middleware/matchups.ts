@@ -20,9 +20,7 @@ export const getMatchupH2H = async (req, res, next) => {
         }
     })
 
-    const percentage = (wins / (wins + losses)).toFixed(3) * 100
-
-    const data = { wins, losses, percentage }
+    const data = { wins, losses }
     res.json(data)
   } catch (err) {
     next(err)
