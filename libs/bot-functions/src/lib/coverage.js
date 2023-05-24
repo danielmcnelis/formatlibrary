@@ -406,13 +406,13 @@ export const generateMatchupData = async (interaction, server, event, tournament
             })].map((a) => a.player)]
 
             if (!players.length) {
-                console.log(`!players.length - cannot find player matching participant: ${participant.name} (${participant.id})`)
+                console.log(`CANNOT FIND PLAYER matching participant: ${participant.name} (${participant.id})`)
             }
 
             for (let j = 0; j < players.length; j++) {
                 const player = players[j]
                 if (!player) {
-                    console.log(`!player - cannot find player matching participant: ${participant.name} (${participant.id})`)
+                    console.log(`CANNOT FIND PLAYER matching participant: ${participant.name} (${participant.id})`)
                     continue
                 }
 
@@ -424,7 +424,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
                 })
 
                 if (!deck) {
-                    console.log(`no deck found for ${player.name}`)
+                    console.log(`NO DECK FOUND for ${player.name}`)
                     continue   
                 }                 
 
@@ -447,8 +447,8 @@ export const generateMatchupData = async (interaction, server, event, tournament
         const losingDeck = deckMap[match.loser_id?.toString()]
 
         if (!winningDeck || !losingDeck) {
-            if (!winningDeck) console.log(`missing deck from winner (${match.winner_id}) of match ${match.id}`)
-            if (!losingDeck) console.log(`missing deck from loser (${match.loser_id}) of match ${match.id}`)
+            if (!winningDeck) console.log(`MISSING DECK FROM WINNER (${match.winner_id}) of match ${match.id}`)
+            if (!losingDeck) console.log(`MISSING DECK FROM LOSER (${match.loser_id}) of match ${match.id}`)
             continue
         }
 
