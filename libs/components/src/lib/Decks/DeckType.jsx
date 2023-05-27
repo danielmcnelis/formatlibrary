@@ -5,8 +5,9 @@ import axios from 'axios'
 import { CardImage } from '../Cards/CardImage'
 import { NotFound } from '../General/NotFound'
 import { useLocation } from 'react-router-dom'
-import { capitalize } from '@fl/utils'
+import { capitalize, getCookie } from '@fl/utils'
 import './DeckType.css'
+const playerId = getCookie('playerId')
 
 const emojis = {
   Helmet: 'https://cdn.formatlibrary.com/images/emojis/helmet.png',
@@ -25,6 +26,7 @@ const { Helmet, Controller, Orb, Lock, Bow, Voltage, Volcano, Unicorn, Thinking 
 export const DeckType = () => {
     const [summary, setSummary] = useState({})
     const [banlist, setBanList] = useState({})
+    const [isSubscriber, setIsSubscriber] = useState(false)
     const navigate = useNavigate()
     const goToFormat = () => navigate(`/formats/${summary.format ? summary.format.name : ''}`)
     const { id } = useParams()
@@ -35,6 +37,21 @@ export const DeckType = () => {
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
   
+
+    // USE EFFECT
+    useEffect(() => {
+        const checkIfSubscriber = async () => {
+            try {
+                const { status } = await axios.get(`/api/players/subscriber/${playerId}`)
+                if (status === 200) setIsSubscriber(true)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        checkIfSubscriber()
+    }, [])
+
     // USE EFFECT SET CARD
     useEffect(() => {
       const fetchData = async () => {

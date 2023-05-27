@@ -7,6 +7,7 @@ import axios from 'axios'
 import { dateToSimple, dateToVerbose, ordinalize } from '@fl/utils'
 import { getCookie } from '@fl/utils'
 import './SingleDeck.css'
+const playerId = getCookie('playerId')
 
 const emojis = {
   Helmet: 'https://cdn.formatlibrary.com/images/emojis/helmet.png',
@@ -29,8 +30,6 @@ const emojis = {
 
 const { Unicorn, Voltage, Bow, Volcano, Helmet, Controller, Orb, Lock, Thinking, First, Second, Third, Consolation, Heart, Disk, Eye } = emojis
 
-const playerId = getCookie('playerId')
-
 export const SingleDeck = () => {
     const [deck, setDeck] = useState({})
     const [banlist, setBanlist] = useState({})
@@ -38,7 +37,6 @@ export const SingleDeck = () => {
     const [isSubscriber, setIsSubscriber] = useState(false)
     const navigate = useNavigate()
     const { id } = useParams()
-    console.log('isAdmin', isAdmin)
 
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0), [])
