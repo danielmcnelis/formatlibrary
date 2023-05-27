@@ -20,7 +20,7 @@ export default {
         const discordId = interaction.options.getUser('user')?.id || interaction.user.id
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.` })
+        if (discordId !== interaction.user.id && !isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.` })
     
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         const tournaments = await Tournament.findActiveByFormatAndServerId(format, interaction.guildId)
