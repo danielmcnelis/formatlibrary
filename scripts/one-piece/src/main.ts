@@ -64,7 +64,10 @@ const rarities = ['L', 'C', 'UC', 'R', 'SR', 'SEC', 'P']
             })
 
             if (!set) continue
-            await card.update({ westernDate: set.tcgDate })
+            await card.update({ 
+                westernDate: set.tcgDate,
+                westernLegal: set.tcgDate && set.tcgDate < '2023-06-01'
+            })
         } catch (err) {
             console.log(err)
         }
