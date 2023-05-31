@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Server, Tournament } from '@fl/models'
-import { askForDBName, getDeckList, postParticipant, selectTournament } from '@fl/bot-functions'
+import { askForSimName, getDeckList, getOPDeckList, postParticipant, selectTournament } from '@fl/bot-functions'
 import { isMod, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
@@ -37,17 +37,22 @@ export default {
         
         interaction.editReply({ content: `Please check your DMs.`})
         
-        const dbName = player.duelingBook ? player.duelingBook : await askForDBName(interaction.member, player)
-        if (!dbName) return
-        const { url, ydk } = await getDeckList(interaction.member, player, format, tournament.name, true)
-        if (!url) return
+        const simName = format.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.member, player, 'OPTCGSim') :
+            player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
+
+        if (!simName) return
+
+        const data = format.category === 'OP' ? await getOPDeckList(interaction.member, player, true) :
+            await getDeckList(interaction.member, player, format, true)
+
+        if (!data) return
 
         if (!entry) {
             try {
                 entry = await Entry.create({
                     playerName: player.name,
-                    url: url,
-                    ydk: ydk,
+                    url: data.url,
+                    ydk: data.ydk || data.opdk,
                     playerId: player.id,
                     tournamentId: tournament.id,
                     compositeKey: player.id + tournament.id
@@ -69,8 +74,8 @@ export default {
             if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
                       
             await entry.update({
-                url: url,
-                ydk: ydk,
+                url: data.url,
+                ydk: data.ydk || data.opdk,
                 participantId: participant.id,
                 active: true
             })
@@ -79,8 +84,7 @@ export default {
             interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.`}).catch((err) => console.log(err))
             return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         } else if (entry && entry.active === true) {
-            await entry.update({ url: url, ydk: ydk })
-
+            await entry.update({ url: data.url, ydk: data.ydk || data.opdk })
             interaction.member.send({ content: `Thanks! I have ${player.name}'s updated deck list for the tournament.` }).catch((err) => console.log(err))
             return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator resubmitted <@${player.discordId}>'s deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         }

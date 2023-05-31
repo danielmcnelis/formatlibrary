@@ -1,10 +1,10 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Deck, Match, Membership, Player, Pool, Server, Stats } from '@fl/models'
+import { Deck, Match, Membership, OPCard, OPDeck, Player, Pool, Server, Stats } from '@fl/models'
 import { Op } from 'sequelize'
 import { getRatedFormat, getNewRatedDeck, getRatedConfirmation, getPreviousRatedDeck } from '@fl/bot-functions'
 import { getIssues } from '@fl/bot-functions'
-import { askForDBName } from '@fl/bot-functions'
+import { askForSimName } from '@fl/bot-functions'
 import { drawDeck } from '@fl/bot-functions'
 import axios from 'axios'
 import { client } from '../client'
@@ -28,11 +28,19 @@ const getRatedInformation = async (interaction, player) => {
     
     const yourGuildIds = yourServers.map((s) => s.id) || []
 
-    if (!yourGuildIds.length) return await interaction.user.send(`Sorry, you are not a member of a server that supports rated play for ${format.name} Format. ${server.emoji || format.emoji}`)
-    const dbName = player.duelingBook ? player.duelingBook : await askForDBName(interaction.user, player)
-    if (!dbName) return
+    if (!yourGuildIds.length) return await interaction.user.send(`Sorry, you are not a member of a server that supports rated play for ${format.name} Format. ${format.emoji}`)
+    const simName = format.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.user, player, 'OPTCGSim') :
+        player.duelingBook || await askForSimName(interaction.user, player, 'DuelingBook')
 
-    const yourRatedDecks = await Deck.findAll({
+    if (!simName) return
+
+    const yourRatedDecks = format.category === 'OP' ? await OPDeck.findAll({
+        where: {
+            playerId: player.id
+        },
+        order: [['updatedAt', 'DESC']],
+        limit: 20
+    }) : await Deck.findAll({
         where: {
             formatName: format.name,
             playerId: player.id,
@@ -43,7 +51,7 @@ const getRatedInformation = async (interaction, player) => {
     }) || []
 
     let ratedDeck = await getPreviousRatedDeck(interaction.user, yourRatedDecks, format)
-    if (ratedDeck) {
+    if (ratedDeck && format.category !== 'OP') {
         try {
             const id = ratedDeck.url.slice(ratedDeck.url.indexOf('?id=') + 4)
             const {data} = await axios.get(`https://www.duelingbook.com/php-scripts/load-deck.php/deck?id=${id}`)
@@ -85,12 +93,40 @@ const getRatedInformation = async (interaction, player) => {
             console.log(err)
             return await interaction.user.send(`Unable to process deck list. Please try again.`)
         }
+    } else if (ratedDeck && format.category === 'OP') {
+        const opdkArr = ratedDeck.opdk.split('\n')
+        const cards = []
+        let deckSize = 0
+
+        for (let i = 0; i < opdkArr.length; i++) {
+            const str = opdkArr[i]
+            const copyNumber = parseInt(str[0])
+            deckSize += copyNumber
+            const cardCode = str.split(str.indexOf('x') + 1)
+            const card = await OPCard.findOne({ where: { cardCode }})
+            cards.push([copyNumber, card])
+        }
+        
+        if (deckSize !== 51) return await interaction.user.send(`Illegal deck size.`)
+
+        const leader = cards[0][1]
+        const allowedColors = leader.color.split('-')
+        const wrongColorCards = []
+
+        for (let i = 1; i < cards.length; i++) {
+            const card = cards[i]
+            if (!allowedColors.includes(card.color)) {
+                wrongColorCards.push(`${card.cardCode} ${card.name} (${card.color})`)
+            }
+        }
+
+        if (wrongColorCards.length) return await interaction.user.send(`You cannot use the following cards in your ${leader.color} deck:\n${wrongColorCards.join('\n')}`)
     } else {
         ratedDeck = await getNewRatedDeck(interaction.user, player, format)
     }
     
-    if (!ratedDeck || !ratedDeck.ydk) return
-    const deckAttachments = await drawDeck(ratedDeck.ydk) || []
+    if (!ratedDeck || (!ratedDeck.ydk && !ratedDeck.opdk)) return
+    const deckAttachments = await drawDeck(ratedDeck.ydk || ratedDeck.opdk) || []
     deckAttachments.forEach((attachment, index) => {
         if (index === 0) {
             interaction.user.send({ content: `Okay, ${interaction.user.username}, you will be using this deck if you are paired:`, files: [attachment] }).catch((err) => console.log(err))
@@ -138,7 +174,7 @@ const getRatedInformation = async (interaction, player) => {
                     const channelId = server.id === '414551319031054346' ? format.channel : server.ratedChannel
                     const channel = guild.channels.cache.get(channelId)
                     if (!channel) continue
-                    channel.send(`Somebody joined the ${format.name} Format ${format.emoji} Rated Pool! ${emojis.megaphone}`)
+                    channel.send(`Somebody joined the ${format.name}${format.category === 'YGO' ? ' Format' : ''} ${format.emoji} Rated Pool! ${emojis.megaphone}`)
                 } catch (err) {
                     console.log(err)
                 }
@@ -209,19 +245,19 @@ const getRatedInformation = async (interaction, player) => {
                 const opposingMember = await guild.members.fetch(opponent.discordId)
 
                 opposingMember.user.send(
-                    `New pairing for Rated ${format.name} Format ${format.emoji}!` +
+                    `New pairing for Rated ${format.name}${format.category !== 'OP' ? ' Format' : ''} ${format.emoji}!` +
                     `\nServer: ${commonServer.name} ${commonServer.logo}` +
                     `\nChannel: <#${channelId}>` +
                     `\nDiscord: ${player.discordName}#${player.discriminator}` +
-                    `\nDuelingBook: ${player.duelingBook}`
+                    format.category !== 'OP' ? `\nDuelingBook: ${player.duelingBook}` : `\nOPTCGSim: ${player.opTcgSim}`
                 ).catch((err) => console.log(err))
 
                 interaction.user.send(
-                    `New pairing for Rated ${format.name} Format ${format.emoji}!` + 
+                    `New pairing for Rated ${format.name}${format.category !== 'OP' ? ' Format' : ''} ${format.emoji}!` + 
                     `\nServer: ${commonServer.name} ${commonServer.logo}` + 
                     `\nChannel: <#${channelId}>` +
                     `\nDiscord: ${opponent.discordName}#${opponent.discriminator}` +
-                    `\nDuelingBook: ${opponent.duelingBook}`
+                    format.category !== 'OP' ? `\nDuelingBook: ${opponent.duelingBook}` : `\nOPTCGSim: ${opponent.opTcgSim}`
                 ).catch((err) => console.log(err))
                 
                 await potentialPair.destroy()
@@ -254,8 +290,10 @@ const getRatedInformation = async (interaction, player) => {
                 const p1Rank = p1Index >= 0 ? `#${p1Index + 1} ` : ''
                 const p2Index = allStats.findIndex((s) => s.playerId === opponent.id)
                 const p2Rank = p2Index >= 0 ? `#${p2Index + 1} ` : ''
+                const content = format.category === 'OP' ? `New Rated ${format.name} ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (OPTCGSim: ${opponent.opTcgSim}) vs. ${p1Rank}<@${player.discordId}> (OPTCGSim: ${player.opTcgSim}). Good luck to both players.` :
+                    `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBook}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBook}). Good luck to both duelists.`
     
-                return channel.send({ content: `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBook}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBook}). Good luck to both duelists.`})   
+                return channel.send({ content: content })   
             }
         }
     } catch (err) {

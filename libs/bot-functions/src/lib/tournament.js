@@ -9,16 +9,17 @@ import { Entry, Format, Match, Player, Stats, Server, Team, Tournament } from '@
 import { getIssues } from './deck.js'
 import { capitalize, drawDeck, generateRandomString, shuffleArray } from './utility.js'
 import { emojis } from '@fl/bot-emojis'
+import { OPCard } from '../../../models/src/index.js'
 
 ////// TOURNAMENT REGISTRATION FUNCTIONS ///////
 
 //ASK FOR DB NAME
-export const askForDBName = async (member, player, override = false, error = false, attempt = 1) => {
+export const askForSimName = async (member, player, simulator, override = false, error = false, attempt = 1) => {
     const filter = m => m.author.id === member.id || member.user.id
     const pronoun = override ? `${player.name}'s` : 'your'
     const greeting = override ? '' : 'Hi! '
-    const prompt = error ? `I think you're getting ahead of yourself. First, I need ${pronoun} DuelingBook name.`
-    : `${greeting}This appears to be ${pronoun} first time using our system. Can you please provide ${pronoun} DuelingBook name?`
+    const prompt = error ? `I think you're getting ahead of yourself. First, I need ${pronoun} ${simulator} name.`
+    : `${greeting}This appears to be ${pronoun} first time using our system. Can you please provide ${pronoun} ${simulator} name?`
 	const message = await member.send({ content: prompt.toString() }).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     return await message.channel.awaitMessages({
@@ -26,20 +27,23 @@ export const askForDBName = async (member, player, override = false, error = fal
 		max: 1,
         time: 15000
     }).then(async (collected) => {
-        const dbName = collected.first().content
-        if (dbName.toLowerCase().includes("duelingbook.com/deck") || dbName.toLowerCase().includes("imgur.com")) {
+        const name = collected.first().content
+        if (name.toLowerCase().includes("duelingbook.com/deck") || name.toLowerCase().includes("imgur.com")) {
             if (attempt >= 3) {
                 member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))
                 return false
             } else {
-                return askForDBName(member, player, override, true, attempt++)
+                return askForSimName(member, player, simulator, override, true, attempt++)
             }
         } else {
-            await player.update({
-                duelingBook: dbName
-            })
-            member.send({ content: `Thanks! I saved ${pronoun} DuelingBook name as: ${dbName}. If that's wrong, go back to the server and type **!db name**.`}).catch((err) => console.log(err))
-            return dbName
+            if (simulator === 'DuelingBook') {
+                await player.update({ duelingBook: name })
+            } else if (simulator === 'OPTCGSim') {
+                await player.update({ opTcgSim: name })
+            }
+
+            member.send({ content: `Thanks! I saved ${pronoun} ${simulator} name as: ${name}. If that's wrong, go back to the server and type **/duelingbook**.`}).catch((err) => console.log(err))
+            return name
         }
     }).catch((err) => {
         console.log(err)
@@ -128,6 +132,73 @@ export const getDeckList = async (member, player, format, override = false) => {
     })
 }
 
+
+//GET OP DECK LIST
+export const getOPDeckList = async (member, player, override = false) => {            
+    const filter = m => m.author.id === member.user.id
+    const pronoun = override ? `${player.name}'s` : 'your'
+    const message = await member.send({ content: `Please paste your OPTCGSim deck list from the clipboard.`}).catch((err) => console.log(err))
+    if (!message || !message.channel) return false
+    return await message.channel.awaitMessages({
+        filter,
+        max: 1,
+        time: 180000
+    }).then(async (collected) => {
+        const opdk = collected.first().content
+        const opdkArr = opdk.split('\n')
+        const cards = []
+        let deckSize = 0
+        let moreThanFour = false
+
+        for (let i = 0; i < opdkArr.length; i++) {
+            const str = opdkArr[i]
+            const copyNumber = parseInt(str[0])
+            if (copyNumber > 4) moreThanFour = true
+            deckSize += copyNumber
+            const cardCode = str.split(str.indexOf('x') + 1)
+            const card = await OPCard.findOne({ where: { cardCode }})
+            cards.push([copyNumber, card])
+        }
+        
+        if (deckSize !== 51) {
+            member.send(`Your main deck is not 50 cards.`)
+            return false
+        }
+
+        if (moreThanFour) {
+            member.send(`You cannot use more than 4 copies of a card in your deck.`)
+            return false
+        }
+
+        const leader = cards[0][1]
+        const allowedColors = leader.color.split('-')
+        const wrongColorCards = []
+
+        for (let i = 1; i < cards.length; i++) {
+            const card = cards[i]
+            if (!allowedColors.includes(card.color)) {
+                wrongColorCards.push(`${card.cardCode} ${card.name} (${card.color})`)
+            }
+        }
+
+        if (wrongColorCards.length) {
+            member.send(`You cannot use the following cards in a deck led by ${leader.cardCode} ${leader.name} (${leader.color}):\n${wrongColorCards.join('\n')}`)
+            return false
+        }
+
+        if (override) {
+            member.send({ content: `Thanks, ${member.user.username}, I saved a copy of ${pronoun} deck. ${emojis.legend}`}).catch((err) => console.log(err))
+            return { leader, opdk }
+        } else {
+            return { leader, opdk }  
+        }
+    }).catch((err) => {
+        console.log(err)
+        member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))
+        return false
+    })
+}
+
 // SEND DECK
 export const sendDeck = async (interaction, entryId) => {
     const entry = await Entry.findOne({ where: { id: entryId }, include: [Player, Tournament] })
@@ -135,7 +206,7 @@ export const sendDeck = async (interaction, entryId) => {
     const deckAttachments = await drawDeck(entry.ydk) || []
     const ydkFile = new AttachmentBuilder(Buffer.from(entry.ydk), { name: `${entry.player.discordName}#${entry.player.discriminator}_${entry.tournament.abbreviation || entry.tournament.name}.ydk` })
     const isAuthor = interaction.user.id === entry.player.discordId
-    return await interaction.member.send({ content: `${isAuthor ? `${entry.player.name}\'s` : 'Your'} deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ...ydkFile]}).catch((err) => console.log(err))
+    return await interaction.member.send({ content: `${isAuthor ? `${entry.player.name}'s` : 'Your'} deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ...ydkFile]}).catch((err) => console.log(err))
 }
 
 // SELECT TOURNAMENT FOR DECK CHECK
@@ -246,11 +317,12 @@ export const joinTournament = async (interaction, tournamentId) => {
     let entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournamentId }})
     interaction.reply({ content: `Please check your DMs.` })
     
-    const dbName = player.duelingBook || await askForDBName(interaction.member, player)
-    if (!dbName) return
+    const simName = tournament.format?.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.member, player, 'OPTCGSim') :
+        player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
+    if (!simName) return
 
-    const { url, ydk } = await getDeckList(interaction.member, player, tournament.format)
-    if (!url || !ydk) return
+    const data = await getDeckList(interaction.member, player, tournament.format)
+    if (!data) return
 
     if (!entry && tournament.isTeamTournament && team) {
         const slot = team.playerAId === player.id ? 'A' :
@@ -261,8 +333,8 @@ export const joinTournament = async (interaction, tournamentId) => {
         try { 
             await Entry.create({
                 playerName: player.name,
-                url: url,
-                ydk: ydk,
+                url: data.url,
+                ydk: data.ydk || data.opdk,
                 participantId: team.participantId,
                 playerId: player.id,
                 tournamentId: tournament.id,
@@ -275,7 +347,7 @@ export const joinTournament = async (interaction, tournamentId) => {
             return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
         }
 
-        const deckAttachments = await drawDeck(ydk) || []
+        const deckAttachments = await drawDeck(data.ydk || data.opdk) || []
         interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
@@ -307,8 +379,8 @@ export const joinTournament = async (interaction, tournamentId) => {
         try {
             entry = await Entry.create({
                 playerName: player.name,
-                url: url,
-                ydk: ydk,
+                url: data.url,
+                ydk: data.ydk || data.opdk,
                 playerId: player.id,
                 tournamentId: tournament.id,
                 compositeKey: player.id + tournament.id
@@ -327,7 +399,7 @@ export const joinTournament = async (interaction, tournamentId) => {
 
         await entry.update({ participantId: participant.id })
 
-        const deckAttachments = await drawDeck(ydk) || []
+        const deckAttachments = await drawDeck(data.ydk || data.opdk) || []
         interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
@@ -341,12 +413,12 @@ export const joinTournament = async (interaction, tournamentId) => {
         return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else if (entry && entry.active === false && tournament.isTeamTournament) {
         await entry.update({
-            url: url,
-            ydk: ydk,
+            url: data.url,
+            ydk: data.ydk || data.opdk,
             active: true
         })
 
-        const deckAttachments = await drawDeck(ydk) || []
+        const deckAttachments = await drawDeck(data.ydk || data.opdk) || []
         interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
@@ -359,8 +431,8 @@ export const joinTournament = async (interaction, tournamentId) => {
 
         return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else {
-        await entry.update({ url, ydk })
-        const deckAttachments = await drawDeck(ydk) || []
+        await entry.update({ url: data.url, ydk: data.ydk || data.opdk })
+        const deckAttachments = await drawDeck(data.ydk || data.opdk) || []
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
@@ -404,17 +476,20 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
     if (!format) return await interaction.reply(`Unable to determine what format is being played in ${tournament.name}. Please contact an administrator.`)
     interaction.reply({ content: `Please check your DMs.` })
     
-    const dbName = player.duelingBook ? player.duelingBook : await askForDBName(interaction.member, player)
-    if (!dbName) return
-    const { url, ydk } = await getDeckList(interaction.member, player, format, true)
-    if (!url) return
+    const simName = format.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.member, player, 'OPTCGSim') :
+        player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
+
+    if (!simName) return
+
+    const data = await getDeckList(interaction.member, player, format, true)
+    if (!data) return
 
     if (!entry) {
         try {
             entry = await Entry.create({
                 playerName: player.name,
-                url: url,
-                ydk: ydk,
+                url: data.url,
+                ydk: data.ydk || data.opdk,
                 playerId: player.id,
                 tournamentId: tournament.id,
                 compositeKey: player.id + tournament.id,
@@ -436,8 +511,8 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
         if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
         
         await entry.update({
-            url: url,
-            ydk: ydk,
+            url: data.url,
+            ydk: data.ydk || data.opdk,
             participantId: participant.id,
             active: true
         })
@@ -446,8 +521,7 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
         interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
         return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else if (entry && entry.active === true) {
-        await entry.update({ url: url, ydk: ydk })
-
+        await entry.update({ url: data.url, ydk: data.ydk || data.opdk })
         interaction.member.send({ content: `Thanks! I have ${player.name}'s updated deck list for the tournament.` }).catch((err) => console.log(err))
         return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator resubmitted <@${player.discordId}>'s deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))   
     }
