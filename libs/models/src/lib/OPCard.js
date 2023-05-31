@@ -2,7 +2,7 @@
 import { Sequelize } from 'sequelize'
 import { db } from './db'
 
-export const OPCard = db.define('cards', {
+export const OPCard = db.define('opCards', {
   name: {
     type: Sequelize.STRING,
     allowNull: false
