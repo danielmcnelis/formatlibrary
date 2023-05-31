@@ -22,5 +22,9 @@ export const Set = db.define('sets', {
   },
   tcgPlayerGroupId: {
     type: Sequelize.INTEGER
+  },
+  game: {
+    type: Sequelize.STRING,
+    defaultValue: 'YGO'
   }
 })
