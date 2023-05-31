@@ -1,0 +1,55 @@
+{
+  "name": "one-piece",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "scripts/one-piece/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/scripts/one-piece",
+        "main": "scripts/one-piece/src/main.ts",
+        "tsConfig": "scripts/one-piece/tsconfig.app.json"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "scripts/one-piece/src/environments/environment.ts",
+              "with": "scripts/one-piece/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["scripts/one-piece/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/scripts/one-piece"],
+      "options": {
+        "jestConfig": "scripts/one-piece/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "script": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["./node_modules/.bin/nx run one-piece:build", "node dist/scripts/one-piece/main.js"],
+        "parallel": false
+      }
+    }
+  },
+  "tags": []
+}

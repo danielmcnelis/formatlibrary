@@ -9,7 +9,7 @@ export default {
         const botEmbed = new EmbedBuilder()
 	        .setColor('#38C368')
         	.setTitle('RetroBot User Guide')
-	        .setDescription('A Yu-Gi-Oh! Bot powered by FormatLibrary.com.\n' )
+	        .setDescription('A TCG Bot powered by FormatLibrary.com.\n' )
 	        .setURL('https://discord.com/invite/formatlibrary')
 	        .setAuthor({ name: 'Jazz#2704', iconURL: 'https://i.imgur.com/wz5TqmR.png', url: 'https://discord.com/invite/formatlibrary' })
             .setThumbnail('https://cdn.formatlibrary.com/images/logos/Format%20Library.png')

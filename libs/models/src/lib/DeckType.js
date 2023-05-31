@@ -8,5 +8,9 @@ export const DeckType = db.define('deckTypes', {
   },
   category: {
     type: Sequelize.STRING
+  },
+  game: {
+    type: Sequelize.STRING,
+    defaultValue: 'YGO'
   }
 })

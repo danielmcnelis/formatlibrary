@@ -616,6 +616,25 @@ export const downloadCardImage = async (id) => {
     console.log('uri', uri)
 }
 
+// DOWNLOAD OP CARD IMAGE
+export const downloadOPCardImage = async (id) => {
+    const {data} = await axios({
+        method: 'GET',
+        url: `https://images.ygoprodeck.com/images/cards/${id}.jpg`,
+        responseType: 'stream'
+    })
+
+    const s3 = new S3({
+        region: config.s3.region,
+        credentials: {
+            accessKeyId: config.s3.credentials.accessKeyId,
+            secretAccessKey: config.s3.credentials.secretAccessKey
+        }
+    })
+
+    const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${id}.jpg`, Body: data, ContentType: `image/jpg` }).promise()
+    console.log('uri', uri)
+}
 
 // DOWNLOAD CARD ARTWORK
 export const downloadCardArtworks = async () => {

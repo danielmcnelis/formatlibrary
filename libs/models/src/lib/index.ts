@@ -23,6 +23,7 @@ import { LikedVideo } from './LikedVideo'
 import { Match } from './Match'
 import { Matchup } from './Matchup'
 import { Membership } from './Membership'
+import { OPCard } from './OPCard'
 import { Player } from './Player'
 import { Price } from './Price'
 import { Print } from './Print'
@@ -261,6 +262,7 @@ export {
   Match,
   Matchup,
   Membership,
+  OPCard,
   Player,
   Pool,
   Price,

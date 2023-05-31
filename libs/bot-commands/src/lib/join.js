@@ -17,7 +17,7 @@ export default {
         let format = await Format.findByServerOrChannelId(server, interaction.channelId)
         const tournaments = await Tournament.findByStateAndFormatAndServerId('pending', format, interaction.guildId)
         const player = await Player.findOne({ where: { discordId: interaction.user?.id }})    
-        if (!player) return    
+        if (!player) return
 
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
