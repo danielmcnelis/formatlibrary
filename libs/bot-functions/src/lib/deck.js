@@ -192,20 +192,15 @@ export const checkOPDeckList = async (member, format) => {
             if (copyNumber > 4) moreThanFour = true
             deckSize += copyNumber
             const cardCode = str.slice(str.indexOf('x') + 1)
-            console.log('cardCode', cardCode)
             const card = await OPCard.findOne({ where: { cardCode }})
             if (!card) {
                 unrecognizedCards.push(cardCode)
             } else if (!card.westernLegal) {
-                illegalCards.push(`${card.cardCode} ${card.name}`)
+                illegalCards.push(`${card.cardCode} - ${card.name}`)
             } else {
                 cards.push([copyNumber, card])
             }
         }
-
-        console.log('unrecognizedCards', unrecognizedCards)
-        console.log('illegalCards', illegalCards)
-        console.log('wrongColorCards', wrongColorCards)
 
         if (unrecognizedCards.length) return member.send(`The following cards are unrecognized:\n${unrecognizedCards.join('\n')}`)
         if (illegalCards.length) return member.send(`The following cards are not Western legal:\n${illegalCards.join('\n')}`)

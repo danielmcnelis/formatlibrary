@@ -311,7 +311,7 @@ export const getNewOPRatedDeck = async (user) => {
             if (!card) {
                 unrecognizedCards.push(cardCode)
             } else if (!card.westernLegal) {
-                illegalCards.push(`${card.cardCode} ${card.name}`)
+                illegalCards.push(`${card.cardCode} - ${card.name}`)
             } else {
                 cards.push([copyNumber, card])
             }
@@ -341,9 +341,9 @@ export const getNewOPRatedDeck = async (user) => {
         const allowedColors = leader.color.split('-')
 
         for (let i = 1; i < cards.length; i++) {
-            const card = cards[i]
+            const card = cards[i][1]
             if (!allowedColors.includes(card.color)) {
-                wrongColorCards.push(`${card.cardCode} ${card.name} (${card.color})`)
+                wrongColorCards.push(`${card.cardCode} - ${card.name} (${card.color})`)
             }
         }
 
