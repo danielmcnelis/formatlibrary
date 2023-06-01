@@ -177,7 +177,8 @@ export const checkOPDeckList = async (member, format) => {
         time: 30000
     }).then(async collected => {
         const opdk = collected.first().content
-        const opdkArr = opdk.split('\n')
+        const opdkArr = opdk.trim().split('\n')
+        console.log('opdkArr', opdkArr)
         const cards = []
         const wrongColorCards = []
         const unrecognizedCards = []

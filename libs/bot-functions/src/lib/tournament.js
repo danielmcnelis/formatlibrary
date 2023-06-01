@@ -144,7 +144,7 @@ export const getOPDeckList = async (member, player, override = false) => {
         time: 180000
     }).then(async (collected) => {
         const opdk = collected.first().content
-        const opdkArr = opdk.split('\n')
+        const opdkArr = opdk.trim().split('\n')
         const cards = []
         const wrongColorCards = []
         const unrecognizedCards = []
