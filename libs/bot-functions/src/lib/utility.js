@@ -249,7 +249,7 @@ export const getOPCard = async (query, fuzzyOPCards) => {
         `${card.attribute ? `\nAttribute: ${card.attribute.toUpperCase()} ${emojis[card.attribute.toUpperCase()]}` : ''}` +
         // `${card.type ? `\nType: ` : ''}` +
         `\nRelease Date: ${releaseDate}` +
-        `\n**[** ${capitalize(card.category)} - ${card.type} **]**`
+        `\n**[** ${capitalize(card.category)} ${emojis[card.category]} - ${card.type} **]**`
 
 	let stats =  
         `${card.life ? `Life: ${card.life} ❤️ ` : ''}` +
