@@ -306,7 +306,7 @@ export const getNewOPRatedDeck = async (user) => {
             const copyNumber = parseInt(str[0])
             if (copyNumber > 4) moreThanFour = true
             deckSize += copyNumber
-            const cardCode = str.split(str.indexOf('x') + 1)
+            const cardCode = str.slice(str.indexOf('x') + 1)
             const card = await OPCard.findOne({ where: { cardCode }})
             if (!card) {
                 unrecognizedCards.push(cardCode)

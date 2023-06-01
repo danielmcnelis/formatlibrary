@@ -211,7 +211,7 @@ export const getOPCard = async (query, fuzzyOPCards) => {
 	const card = await OPCard.findOne({ 
 		where: { 
             [Op.or]: {
-                name: {[Op.iLike]: card_name },
+                name: {[Op.iLike]: card_name || '' },
                 cardCode: {[Op.iLike]: query }
             }
 		},
