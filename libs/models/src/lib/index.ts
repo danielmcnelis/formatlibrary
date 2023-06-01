@@ -24,6 +24,7 @@ import { Match } from './Match'
 import { Matchup } from './Matchup'
 import { Membership } from './Membership'
 import { OPCard } from './OPCard'
+import { OPDeck } from './OPDeck'
 import { Player } from './Player'
 import { Price } from './Price'
 import { Print } from './Print'
@@ -263,6 +264,7 @@ export {
   Matchup,
   Membership,
   OPCard,
+  OPDeck,
   Player,
   Pool,
   Price,

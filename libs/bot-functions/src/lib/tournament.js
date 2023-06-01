@@ -5,11 +5,10 @@
 import axios from 'axios'
 import { Op } from 'sequelize'
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } from 'discord.js'
-import { Entry, Format, Match, Player, Stats, Server, Team, Tournament } from '@fl/models'
+import { Entry, Format, Match, OPCard, Player, Stats, Server, Team, Tournament } from '@fl/models'
 import { getIssues } from './deck.js'
 import { capitalize, drawDeck, drawOPDeck, generateRandomString, shuffleArray } from './utility.js'
 import { emojis } from '@fl/bot-emojis'
-import { OPCard } from '../../../models/src/index.js'
 
 ////// TOURNAMENT REGISTRATION FUNCTIONS ///////
 

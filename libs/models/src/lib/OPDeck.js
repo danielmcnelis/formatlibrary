@@ -2,7 +2,7 @@
 import { Sequelize } from 'sequelize'
 import { db } from './db'
 
-export const Deck = db.define('decks', {
+export const OPDeck = db.define('opDecks', {
   name: {
     type: Sequelize.STRING
   },
