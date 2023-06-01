@@ -362,10 +362,12 @@ export const drawDeck = async (ydk) => {
 export const drawOPDeck = async (opdk) => {
     const splt = opdk.split('\n')
     const leader = [splt[0]]
+    console.log('leader', leader)
     const main = splt.slice(1)
+    console.log('main', main)
 
-    const leaderAttachment = await makeCanvasAttachment(leader, 114, 160, 1, 'leader')
-    const mainAttachment = main.length ? await makeCanvasAttachment(main, 57, 80, 10, 'main') : null
+    const leaderAttachment = await makeOPCanvasAttachment(leader, 114, 160, 1, 'leader')
+    const mainAttachment = main.length ? await makeOPCanvasAttachment(main, 57, 80, 10, 'main') : null
  
     const attachments = [
         leaderAttachment,
@@ -373,6 +375,33 @@ export const drawOPDeck = async (opdk) => {
     ].filter((e) => !!e)
 
     return attachments
+}
+
+// MAKE OP CANVAS ATTACHMENT
+export const makeOPCanvasAttachment = async (cardsArr = [], width = 57, height = 80, cardsPerRow = 10, name = 'main') => {
+    try {
+        const rows = Math.ceil(cardsArr.length / cardsPerRow)
+        const canvas = Canvas.createCanvas(width * cardsPerRow, height * rows)
+        const context = canvas.getContext('2d')
+
+        for (let i = 0; i < cardsArr.length; i++) {
+            try {
+                const card = cardsArr[i]
+                const row = Math.floor(i / cardsPerRow)
+                const col = i % cardsPerRow
+                const image = await Canvas.loadImage(card.artwork)
+                context.drawImage(image, width * col, row * height, width, height)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: `${name}.png` })
+        return attachment
+    } catch (err) {
+        console.log(err)
+        return null
+    }
 }
 
 // MAKE CANVAS ATTACHMENT
