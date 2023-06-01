@@ -370,7 +370,7 @@ export const drawOPDeck = async (opdk) => {
         console.log('s', s)
         let n = parseInt(s[0])
         console.log('n', n)
-        while (n < 0) {
+        while (n > 0) {
             main.push(s.slice(2))
             n--
         }
