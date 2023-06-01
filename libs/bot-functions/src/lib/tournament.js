@@ -229,7 +229,7 @@ export const sendDeck = async (interaction, entryId) => {
 // SELECT TOURNAMENT FOR DECK CHECK
 export const selectTournamentForDeckCheck = async (interaction, entries, format) => {
     if (entries.length === 0) {
-        interaction.editReply(`That player is not registered for any ${format.name} format ${format.emoji} tournaments in this server.`)
+        interaction.editReply(`That player is not registered for any ${format.name}${format.category !== 'OP' ? ' format' : ''} ${format.emoji} tournaments in this server.`)
         return false
     } else if (entries.length === 1) {
         return entries[0]
