@@ -243,16 +243,16 @@ export const getOPCard = async (query, fuzzyOPCards) => {
     const releaseDate = card.westernDate ? dateToVerbose(card.westernDate, true, false, true) : 'Eastern Only'
     
     let labels = 
-		`Release Date: ${releaseDate}` +
-        `\nCategory: ${card.category}` +
-        card.cost ? `\nCost: ${card.cost} 🪙` : '' +
-        card.type ? `\nType: ${card.type}` : '' +
-        card.attribute ? `\nAttribute: ${card.attribute}` : ''
+        `Category: ${card.category}` +
+        `${card.cost ? `\nCost: ${card.cost} ${emojis.DON}` : ''}` +
+        `${card.attribute ? `\nAttribute: ${card.attribute.toUpperCase()} ${emojis[card.attribute.toUpperCase()]}` : ''}` +
+        `${card.type ? `\nType: ${card.type}` : ''}` +
+        `\nRelease Date: ${releaseDate}`
 
 	const stats =  
-            card.life ? `Life: ${card.life} ❤️ ` : '' +
-			card.power ? `Power: ${card.power} 🥊 ` : '' +
-			card.counter ? `Counter: +${card.counter} ⚡ ` : ''
+        `${card.life ? `Life: ${card.life} ❤️ ` : ''}` +
+        `${card.power ? `Power: ${card.power} 🥊 ` : ''}` +
+        `${card.counter ? `Counter: +${card.counter} ⚡ ` : ''}`
 	
 	const attachment = new AttachmentBuilder(card.artwork, { name: `${card.cardCode}.jpg` })
 	const thumbnail = attachment ? `attachment://${card.cardCode}.jpg` : null   
