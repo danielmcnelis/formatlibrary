@@ -252,9 +252,9 @@ export const getOPCard = async (query, fuzzyOPCards) => {
         `\n**[** ${capitalize(card.category)} - ${card.type} **]**`
 
 	let stats =  
-        `${card.life ? `Life: ${card.life} ❤️ | ` : ''}` +
-        `${card.power ? `Power: ${card.power} 🥊 | ` : ''}` +
-        `${card.counter ? `Counter: +${card.counter} ⚡ | ` : ''}`
+        `${card.life ? `Life: ${card.life} ❤️ ` : ''}` +
+        `${card.power ? `Power: ${card.power} 🥊 ` : ''}` +
+        `${card.counter ? `Counter: +${card.counter} ⚡ ` : ''}`
 	
 	const attachment = new AttachmentBuilder(card.artwork, { name: `${card.cardCode}.jpg` })
 	const thumbnail = attachment ? `attachment://${card.cardCode}.jpg` : null   
@@ -266,7 +266,7 @@ export const getOPCard = async (query, fuzzyOPCards) => {
 	    .setDescription(
             labels + 
             `\n\n${card.effect}` +
-            `${stats.length ? `\n\n${stats.slice(0, -2)}` : ''}`
+            `${stats.length ? `\n\n${stats}` : ''}`
         )
 	return { cardEmbed, attachment }
 }
