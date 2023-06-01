@@ -242,7 +242,7 @@ export const getOPCard = async (query, fuzzyOPCards) => {
 
     const releaseDate = card.westernDate ? dateToVerbose(card.westernDate, true, false, true) : 'Eastern Only'
     let labels = 
-		`\nRelease Date: ${releaseDate}` +
+		`Release Date: ${releaseDate}` +
         `\nCategory: ${card.category}` +
         card.cost ? `\nCost: ${card.cost} 🪙` : '' +
         card.type ? `\nType: ${card.type}` : '' +
@@ -261,7 +261,7 @@ export const getOPCard = async (query, fuzzyOPCards) => {
 	    .setTitle(`${card.cardCode} ${card.name}`)
 	    .setThumbnail(thumbnail)
 	    .setDescription(
-            `${labels.join('')}` + 
+            labels + 
             `\n\n${card.effect}` +
             `${stats.length ? `\n\n${stats}` : ''}`
         )
