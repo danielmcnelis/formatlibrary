@@ -15,7 +15,7 @@ import { assignTourRoles, conductCensus, downloadNewCards, getMidnightCountdown,
     purgeRatedDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices ,updateSets, updateServers, fixDeckFolder,
     calculateStandings, checkTimer, closeTournament, createTournament, dropFromTournament, initiateStartTournament, 
     joinTournament, openTournament, processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, 
-    signupForTournament, startTournament, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, 
+    signupForTournament, startTournament, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, fetchOPCardNames,  
     hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation
 } from '@fl/bot-functions'
 
@@ -28,6 +28,7 @@ Object.values(commands.globalCommands).forEach((command) => client.commands.set(
 
 // GLOBAL VARIABLES
 const fuzzyCards = FuzzySet([], false)
+const fuzzyOPCards = FuzzySet([], false)
 
 // READY
 client.on('ready', async() => {
@@ -41,6 +42,13 @@ client.on('ready', async() => {
     try {
         const names = await fetchCardNames()
         names.forEach((card) => fuzzyCards.add(card))
+    } catch (err) {
+        console.log(err)
+    }
+
+    try {
+        const names = await fetchOPCardNames()
+        names.forEach((card) => fuzzyOPCards.add(card))
     } catch (err) {
         console.log(err)
     }
@@ -76,7 +84,7 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 
     if (command.data.name === 'card') {
-        return command.execute(interaction, fuzzyCards)
+        return command.execute(interaction, fuzzyCards, fuzzyOPCards)
     } else {
         return command.execute(interaction)
     }

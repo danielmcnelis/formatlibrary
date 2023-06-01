@@ -4,7 +4,7 @@
 //MODULE IMPORTS
 import axios from 'axios'
 import { Op } from 'sequelize'
-import { Deck, Format, Player, Pool, Stats, Server } from '@fl/models'
+import { Deck, Format, OPCard, Player, Pool, Stats, Server } from '@fl/models'
 import { emojis } from '@fl/bot-emojis'
 import { getIssues } from './deck'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
@@ -205,7 +205,7 @@ export const getPreviousRatedDeck = async (user, yourRatedDecks, format) => {
     })
 }
 
-//GET RATED DECK
+//GET NEW RATED DECK
 export const getNewRatedDeck = async (user, player, format) => {   
     const filter = m => m.author.id === user.id
     const message = await user.send({ content: `Please provide a duelingbook.com/deck link for your Rated Deck.`}).catch((err) => console.log(err))
@@ -275,6 +275,85 @@ export const getNewRatedDeck = async (user, player, format) => {
             user.send({ content: "Sorry, I only accept duelingbook.com/deck links."}).catch((err) => console.log(err))    
             return false  
         }
+    }).catch((err) => {
+        console.log(err)
+        user.send({ content: `Sorry, time's up. Please try again.`}).catch((err) => console.log(err))
+        return false
+    })
+}
+
+//GET NEW OP RATED DECK
+export const getNewOPRatedDeck = async (user) => {   
+    const filter = m => m.author.id === user.id
+    const message = await user.send({ content: `Please paste your OPTCGSim deck list from the clipboard.`}).catch((err) => console.log(err))
+    if (!message || !message.channel) return false
+    return await message.channel.awaitMessages({
+        filter,
+        max: 1,
+        time: 180000
+    }).then(async (collected) => {
+        const opdk = collected.first().content
+        const opdkArr = opdk.split('\n')
+        const cards = []
+        const wrongColorCards = []
+        const unrecognizedCards = []
+        const illegalCards = []
+        let deckSize = 0
+        let moreThanFour = false
+
+        for (let i = 0; i < opdkArr.length; i++) {
+            const str = opdkArr[i]
+            const copyNumber = parseInt(str[0])
+            if (copyNumber > 4) moreThanFour = true
+            deckSize += copyNumber
+            const cardCode = str.split(str.indexOf('x') + 1)
+            const card = await OPCard.findOne({ where: { cardCode }})
+            if (!card) {
+                unrecognizedCards.push(cardCode)
+            } else if (!card.westernLegal) {
+                illegalCards.push(`${card.cardCode} ${card.name}`)
+            } else {
+                cards.push([copyNumber, card])
+            }
+        }
+
+        if (unrecognizedCards.length) {
+            user.send(`The following cards are unrecognized:\n${unrecognizedCards.join('\n')}`)
+            return false
+        }
+
+        if (illegalCards.length) {
+            user.send(`The following cards are not Western legal:\n${unrecognizedCards.join('\n')}`)
+            return false
+        }
+        
+        if (deckSize !== 51) {
+            user.send(`Your main deck is not 50 cards.`)
+            return false
+        }
+
+        if (moreThanFour) {
+            user.send(`You cannot use more than 4 copies of a card in your deck.`)
+            return false
+        }
+
+        const leader = cards[0][1]
+        const allowedColors = leader.color.split('-')
+
+        for (let i = 1; i < cards.length; i++) {
+            const card = cards[i]
+            if (!allowedColors.includes(card.color)) {
+                wrongColorCards.push(`${card.cardCode} ${card.name} (${card.color})`)
+            }
+        }
+
+        if (wrongColorCards.length) {
+            user.send(`You cannot use the following cards in a deck led by ${leader.cardCode} ${leader.name} (${leader.color}):\n${wrongColorCards.join('\n')}`)
+            return false
+        }
+
+        user.send({ content: `Thanks, ${user.username}, your deck is perfectly legal. ${emojis.legend}`}).catch((err) => console.log(err))
+        return { leader, opdk }  
     }).catch((err) => {
         console.log(err)
         user.send({ content: `Sorry, time's up. Please try again.`}).catch((err) => console.log(err))

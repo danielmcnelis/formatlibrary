@@ -7,7 +7,7 @@ import { Op } from 'sequelize'
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } from 'discord.js'
 import { Entry, Format, Match, Player, Stats, Server, Team, Tournament } from '@fl/models'
 import { getIssues } from './deck.js'
-import { capitalize, drawDeck, generateRandomString, shuffleArray } from './utility.js'
+import { capitalize, drawDeck, drawOPDeck, generateRandomString, shuffleArray } from './utility.js'
 import { emojis } from '@fl/bot-emojis'
 import { OPCard } from '../../../models/src/index.js'
 
@@ -147,6 +147,9 @@ export const getOPDeckList = async (member, player, override = false) => {
         const opdk = collected.first().content
         const opdkArr = opdk.split('\n')
         const cards = []
+        const wrongColorCards = []
+        const unrecognizedCards = []
+        const illegalCards = []
         let deckSize = 0
         let moreThanFour = false
 
@@ -157,7 +160,23 @@ export const getOPDeckList = async (member, player, override = false) => {
             deckSize += copyNumber
             const cardCode = str.split(str.indexOf('x') + 1)
             const card = await OPCard.findOne({ where: { cardCode }})
-            cards.push([copyNumber, card])
+            if (!card) {
+                unrecognizedCards.push(cardCode)
+            } else if (!card.westernLegal) {
+                illegalCards.push(`${card.cardCode} ${card.name}`)
+            } else {
+                cards.push([copyNumber, card])
+            }
+        }
+
+        if (unrecognizedCards.length) {
+            member.send(`The following cards are unrecognized:\n${unrecognizedCards.join('\n')}`)
+            return false
+        }
+
+        if (illegalCards.length) {
+            member.send(`The following cards are not Western legal:\n${unrecognizedCards.join('\n')}`)
+            return false
         }
         
         if (deckSize !== 51) {
@@ -172,7 +191,6 @@ export const getOPDeckList = async (member, player, override = false) => {
 
         const leader = cards[0][1]
         const allowedColors = leader.color.split('-')
-        const wrongColorCards = []
 
         for (let i = 1; i < cards.length; i++) {
             const card = cards[i]
@@ -203,7 +221,7 @@ export const getOPDeckList = async (member, player, override = false) => {
 export const sendDeck = async (interaction, entryId) => {
     const entry = await Entry.findOne({ where: { id: entryId }, include: [Player, Tournament] })
     interaction.reply({ content: `Please check your DMs.` })
-    const deckAttachments = await drawDeck(entry.ydk) || []
+    const deckAttachments = entry.tournament.formatName === 'One Piece' ? await drawOPDeck(entry.ydk) || [] : await drawDeck(entry.ydk) || []
     const ydkFile = new AttachmentBuilder(Buffer.from(entry.ydk), { name: `${entry.player.discordName}#${entry.player.discriminator}_${entry.tournament.abbreviation || entry.tournament.name}.ydk` })
     const isAuthor = interaction.user.id === entry.player.discordId
     return await interaction.member.send({ content: `${isAuthor ? `${entry.player.name}'s` : 'Your'} deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ...ydkFile]}).catch((err) => console.log(err))
@@ -347,7 +365,7 @@ export const joinTournament = async (interaction, tournamentId) => {
             return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
         }
 
-        const deckAttachments = await drawDeck(data.ydk || data.opdk) || []
+        const deckAttachments = tournament.format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
         interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
@@ -399,7 +417,7 @@ export const joinTournament = async (interaction, tournamentId) => {
 
         await entry.update({ participantId: participant.id })
 
-        const deckAttachments = await drawDeck(data.ydk || data.opdk) || []
+        const deckAttachments = tournament.format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
         interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
@@ -418,7 +436,7 @@ export const joinTournament = async (interaction, tournamentId) => {
             active: true
         })
 
-        const deckAttachments = await drawDeck(data.ydk || data.opdk) || []
+        const deckAttachments = tournament.format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
         interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
@@ -432,7 +450,7 @@ export const joinTournament = async (interaction, tournamentId) => {
         return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else {
         await entry.update({ url: data.url, ydk: data.ydk || data.opdk })
-        const deckAttachments = await drawDeck(data.ydk || data.opdk) || []
+        const deckAttachments = tournament.format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {

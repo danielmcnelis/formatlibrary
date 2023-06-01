@@ -5,7 +5,7 @@
 const Canvas = require('canvas')
 import { ActionRowBuilder, EmbedBuilder, AttachmentBuilder, StringSelectMenuBuilder } from 'discord.js'
 import { Op } from 'sequelize'
-import { Card, Membership, Player, Print, Role, Set, Stats, Status, Tournament } from '@fl/models'
+import { Card, OPCard, Membership, Player, Print, Role, Set, Stats, Status, Tournament } from '@fl/models'
 import { emojis, rarities } from '@fl/bot-emojis'
 
 //DATE TO SIMPLE
@@ -49,6 +49,12 @@ export const urlize = (str) => str.replace(/[\s]/g, '-').toLowerCase()
 //FETCH CARD NAMES
 export const fetchCardNames = async () => {
     const names = [...await Card.findAll()].map((card) => card.name)
+    return names
+}
+
+//FETCH OP CARD NAMES
+export const fetchOPCardNames = async () => {
+    const names = [...await OPCard.findAll()].map((card) => card.name)
     return names
 }
 
@@ -198,6 +204,70 @@ export const getCard = async (query, fuzzyCards, format) => {
 	return { cardEmbed, attachment }
 }
 
+// GET OP CARD
+export const getOPCard = async (query, fuzzyOPCards) => {
+	const card_name = await findCard(query, fuzzyOPCards)
+
+	const card = await OPCard.findOne({ 
+		where: { 
+            [Op.or]: {
+                name: {[Op.iLike]: card_name },
+                cardCode: {[Op.iLike]: query }
+            }
+		},
+        order: [["westernDate", "DESC"]]
+	})
+
+	if (!card) return false
+
+	const color = card.color === "black" ? "#1c1c1c" :
+        card.color === "blue" ? "#0170b7" :
+		card.color === "blue-black" ? "#688db0" :
+		card.color === "blue-purple" ? "#6280b2" :
+		card.color === "blue-yellow" ? "#679b85" :
+		card.color === "don" ? "#010101" :
+		card.color === "green" ? "#188b66" :
+		card.color === "green-black" ? "#1a624c" :
+		card.color === "green-blue" ? "#66a6a6" :
+		card.color === "green-yellow" ? "#b1c482" :
+		card.color === "purple" ? "#8c1b7b" :
+		card.color === "purple-black" ? "#615265" :
+		card.color === "purple-yellow" ? "#bc9e9c" :
+		card.color === "red" ? "#b8051a" :
+		card.color === "red-black" ? "#855d5d" :
+		card.color === "red-blue" ? "#a3929d" :
+		card.color === "red-green" ? "#ab977b" :
+		card.color === "yellow" ? "#e5d631" :
+		null
+
+    const releaseDate = card.westernDate ? dateToVerbose(card.westernDate, true, false, true) : 'Eastern Only'
+    let labels = 
+		`\nRelease Date: ${releaseDate}` +
+        `\nCategory: ${card.category}` +
+        card.cost ? `\nCost: ${card.cost} 🪙` : '' +
+        card.type ? `\nType: ${card.type}` : '' +
+        card.attribute ? `\nAttribute: ${card.attribute}` : ''
+
+	const stats =  
+            card.life ? `Life: ${card.life} ❤️ ` : '' +
+			card.power ? `Power: ${card.power} 🥊 ` : '' +
+			card.counter ? `Counter: +${card.counter} ⚡ ` : ''
+	
+	const attachment = new AttachmentBuilder(card.artwork, { name: `${card.cardCode}.jpg` })
+	const thumbnail = attachment ? `attachment://${card.cardCode}.jpg` : null   
+    
+    const cardEmbed = new EmbedBuilder()
+        .setColor(color)
+	    .setTitle(`${card.cardCode} ${card.name}`)
+	    .setThumbnail(thumbnail)
+	    .setDescription(
+            `${labels.join('')}` + 
+            `\n\n${card.effect}` +
+            `${stats.length ? `\n\n${stats}` : ''}`
+        )
+	return { cardEmbed, attachment }
+}
+
 // DRAW DECK
 export const drawDeck = async (ydk) => {
     const mainArr = ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length) || []
@@ -281,6 +351,23 @@ export const drawDeck = async (ydk) => {
         mainAttachment,
         extraAttachment,
         sideAttachment
+    ].filter((e) => !!e)
+
+    return attachments
+}
+
+// DRAW OP DECK
+export const drawOPDeck = async (opdk) => {
+    const splt = opdk.split('\n')
+    const leader = [splt[0]]
+    const main = splt.slice(1)
+
+    const leaderAttachment = await makeCanvasAttachment(leader, 114, 160, 1, 'leader')
+    const mainAttachment = main.length ? await makeCanvasAttachment(main, 57, 80, 10, 'main') : null
+ 
+    const attachments = [
+        leaderAttachment,
+        mainAttachment
     ].filter((e) => !!e)
 
     return attachments

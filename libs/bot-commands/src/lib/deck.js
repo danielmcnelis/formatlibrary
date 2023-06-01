@@ -2,7 +2,7 @@
 import { AttachmentBuilder, SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Server, Tournament } from '@fl/models'
 import { hasPartnerAccess, selectTournamentForDeckCheck } from '@fl/bot-functions'
-import { drawDeck, isMod } from '@fl/bot-functions'
+import { drawDeck, drawOPDeck, isMod } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 
 export default {
@@ -51,7 +51,7 @@ export default {
         if (!entry) return
 
         interaction.editReply({ content: `Please check your DMs.` })
-        const deckAttachments = await drawDeck(entry.ydk) || []
+        const deckAttachments = format.category === 'OP' ? await drawOPDeck(entry.ydk) || [] : await drawDeck(entry.ydk) || []
         const ydkFile = new AttachmentBuilder(Buffer.from(entry.ydk), { name: `${player.discordName}#${player.discriminator}_${entry.tournament.abbreviation || entry.tournament.name}.ydk` })
         return await interaction.member.send({ content: `${player.name}'s deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
     }

@@ -2,7 +2,7 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Server, Team, Tournament } from '@fl/models'
 import { askForSimName, getDeckList, getOPDeckList, postParticipant, selectTournament } from '@fl/bot-functions'
-import { drawDeck, hasPartnerAccess } from '@fl/bot-functions'
+import { drawDeck, drawOPDeck, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
 
@@ -72,7 +72,7 @@ export default {
                 return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
             }
 
-            const deckAttachments = await drawDeck(data.ydk || data.opdk) || []
+            const deckAttachments = format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
             interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
             deckAttachments.forEach((attachment, index) => {
@@ -99,7 +99,7 @@ export default {
                 return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
             }
 
-            const deckAttachments = await drawDeck(data.ydk || data.opdk) || []
+            const deckAttachments = format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
             interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
             deckAttachments.forEach((attachment, index) => {
@@ -150,9 +150,9 @@ export default {
             }
             
             await entry.update({ participantId: participant.id })
-
-            const deckAttachments = await drawDeck(data.ydk || data.opdk) || []
-            interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
+            
+            const deckAttachments = format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
+interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
             deckAttachments.forEach((attachment, index) => {
                 if (index === 0) {
@@ -170,7 +170,7 @@ export default {
                 active: true
             })
 
-            const deckAttachments = await drawDeck(data.ydk || data.opdk) || []
+            const deckAttachments = format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
             interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
             deckAttachments.forEach((attachment, index) => {
@@ -184,7 +184,7 @@ export default {
             return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (${team ? team.name : 'Free Agent'}) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         } else {
             await entry.update({ url: data.url, ydk: data.ydk || data.opdk })
-            const deckAttachments = await drawDeck(data.ydk || data.opdk) || []
+            const deckAttachments = format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
             interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have your updated deck list for ${tournament.name}! ${tournament.logo}`})
             deckAttachments.forEach((attachment, index) => {

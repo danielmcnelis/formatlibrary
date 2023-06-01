@@ -2,10 +2,10 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { Deck, Match, Membership, OPCard, OPDeck, Player, Pool, Server, Stats } from '@fl/models'
 import { Op } from 'sequelize'
-import { getRatedFormat, getNewRatedDeck, getRatedConfirmation, getPreviousRatedDeck } from '@fl/bot-functions'
+import { getRatedFormat, getNewRatedDeck, getNewOPRatedDeck, getRatedConfirmation, getPreviousRatedDeck } from '@fl/bot-functions'
 import { getIssues } from '@fl/bot-functions'
 import { askForSimName } from '@fl/bot-functions'
-import { drawDeck } from '@fl/bot-functions'
+import { drawDeck, drawOPDeck } from '@fl/bot-functions'
 import axios from 'axios'
 import { client } from '../client'
 import { emojis } from '@fl/bot-emojis'
@@ -34,13 +34,7 @@ const getRatedInformation = async (interaction, player) => {
 
     if (!simName) return
 
-    const yourRatedDecks = format.category === 'OP' ? await OPDeck.findAll({
-        where: {
-            playerId: player.id
-        },
-        order: [['updatedAt', 'DESC']],
-        limit: 20
-    }) : await Deck.findAll({
+    const yourRatedDecks = await Deck.findAll({
         where: {
             formatName: format.name,
             playerId: player.id,
@@ -93,40 +87,14 @@ const getRatedInformation = async (interaction, player) => {
             console.log(err)
             return await interaction.user.send(`Unable to process deck list. Please try again.`)
         }
-    } else if (ratedDeck && format.category === 'OP') {
-        const opdkArr = ratedDeck.opdk.split('\n')
-        const cards = []
-        let deckSize = 0
-
-        for (let i = 0; i < opdkArr.length; i++) {
-            const str = opdkArr[i]
-            const copyNumber = parseInt(str[0])
-            deckSize += copyNumber
-            const cardCode = str.split(str.indexOf('x') + 1)
-            const card = await OPCard.findOne({ where: { cardCode }})
-            cards.push([copyNumber, card])
-        }
-        
-        if (deckSize !== 51) return await interaction.user.send(`Illegal deck size.`)
-
-        const leader = cards[0][1]
-        const allowedColors = leader.color.split('-')
-        const wrongColorCards = []
-
-        for (let i = 1; i < cards.length; i++) {
-            const card = cards[i]
-            if (!allowedColors.includes(card.color)) {
-                wrongColorCards.push(`${card.cardCode} ${card.name} (${card.color})`)
-            }
-        }
-
-        if (wrongColorCards.length) return await interaction.user.send(`You cannot use the following cards in your ${leader.color} deck:\n${wrongColorCards.join('\n')}`)
-    } else {
+    } else if (format.category !== 'OP') {
         ratedDeck = await getNewRatedDeck(interaction.user, player, format)
+    } else {
+        ratedDeck = await getNewOPRatedDeck(interaction.user, player, format)
     }
     
     if (!ratedDeck || (!ratedDeck.ydk && !ratedDeck.opdk)) return
-    const deckAttachments = await drawDeck(ratedDeck.ydk || ratedDeck.opdk) || []
+    const deckAttachments = format.category === 'OP' ? await drawOPDeck(ratedDeck.opdk) || [] : await drawDeck(ratedDeck.ydk) || []
     deckAttachments.forEach((attachment, index) => {
         if (index === 0) {
             interaction.user.send({ content: `Okay, ${interaction.user.username}, you will be using this deck if you are paired:`, files: [attachment] }).catch((err) => console.log(err))
@@ -152,7 +120,8 @@ const getRatedInformation = async (interaction, player) => {
         formatName: format.name,
         formatId: format.id,
         status: 'pending',
-        playerId: player.id
+        playerId: player.id,
+        deckFile: ratedDeck.ydk || ratedDeck.opdk
     })
 
     try {
@@ -307,7 +276,7 @@ const getRatedInformation = async (interaction, player) => {
                 const guild = client.guilds.cache.get(server.id)
                 const channelId = server.id === '414551319031054346' ? format.channel : server.ratedChannel
                 const channel = guild.channels.cache.get(channelId)
-                channel.send(`Somebody joined the ${format.name} Format ${format.emoji} Rated Pool! ${emojis.megaphone}`)
+                channel.send(`Somebody joined the ${format.name}${format.category !== 'OP' ? ' Format' : ''} ${format.emoji} Rated Pool! ${emojis.megaphone}`)
             } catch (err) {
                 console.log(err)
             }

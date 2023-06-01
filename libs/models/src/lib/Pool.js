@@ -18,5 +18,8 @@ export const Pool = db.define('pools', {
     },
     playerId: {
         type: Sequelize.STRING
+    },
+    deckFile: {
+        type: Sequelize.TEXT
     }
 })

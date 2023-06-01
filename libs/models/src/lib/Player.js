@@ -88,6 +88,9 @@ export const Player = db.define('players', {
   },
   twitter: {
       type: Sequelize.STRING
+  },
+  opTcgSim: {
+    type: Sequelize.STRING
   }
 })
 

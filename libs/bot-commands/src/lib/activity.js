@@ -17,6 +17,8 @@ export default {
         const cutoff = currentMonth === 11 ? new Date(currentYear, 1, 1) :
             new Date(currentYear - 1, currentMonth + 1, 1)
 
+        console.log('cutoff', cutoff)
+
         const matches = await Match.findAll({
             where: { 
                 formatId: format?.id || {[Op.not]: null},
@@ -101,15 +103,18 @@ export default {
                 summary[month] ? summary[month]++ : summary[month] = 1
             }
     
-            const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            const labels = []
             const data = []
             
             for (let i = currentMonth + 1; i <= 11; i++) {
                 data.push(summary[i])
+                labels.push(months[i])
             }
 
             for (let i = 0; i <= currentMonth; i++) {
                 data.push(summary[i])
+                labels.push(months[i])
             }
             
             const chart = new QuickChart()
