@@ -213,12 +213,14 @@ export const checkOPDeckList = async (member, format) => {
         if (moreThanFour) return member.send(`You cannot use more than 4 copies of a card in your deck.`)
 
         const leader = cards[0][1]
+        console.log('leader', leader)
         const allowedColors = leader.color.split('-')
+        console.log('allowedColors', allowedColors)
 
         for (let i = 1; i < cards.length; i++) {
-            const card = cards[i]
+            const card = cards[i][1]
             if (!allowedColors.includes(card.color)) {
-                wrongColorCards.push(`${card.cardCode} ${card.name} (${card.color})`)
+                wrongColorCards.push(`${card.cardCode} - ${card.name} (${card.color})`)
             }
         }
 
