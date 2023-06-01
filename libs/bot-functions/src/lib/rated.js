@@ -323,7 +323,7 @@ export const getNewOPRatedDeck = async (user) => {
         }
 
         if (illegalCards.length) {
-            user.send(`The following cards are not Western legal:\n${unrecognizedCards.join('\n')}`)
+            user.send(`The following cards are not Western legal:\n${illegalCards.join('\n')}`)
             return false
         }
         

@@ -241,6 +241,7 @@ export const getOPCard = async (query, fuzzyOPCards) => {
 		null
 
     const releaseDate = card.westernDate ? dateToVerbose(card.westernDate, true, false, true) : 'Eastern Only'
+    
     let labels = 
 		`Release Date: ${releaseDate}` +
         `\nCategory: ${card.category}` +

@@ -174,7 +174,7 @@ export const getOPDeckList = async (member, player, override = false) => {
         }
 
         if (illegalCards.length) {
-            member.send(`The following cards are not Western legal:\n${unrecognizedCards.join('\n')}`)
+            member.send(`The following cards are not Western legal:\n${illegalCards.join('\n')}`)
             return false
         }
         

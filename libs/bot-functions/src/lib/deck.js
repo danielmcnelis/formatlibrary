@@ -208,7 +208,7 @@ export const checkOPDeckList = async (member, format) => {
         console.log('wrongColorCards', wrongColorCards)
 
         if (unrecognizedCards.length) return member.send(`The following cards are unrecognized:\n${unrecognizedCards.join('\n')}`)
-        if (illegalCards.length) return member.send(`The following cards are unrecognized:\n${unrecognizedCards.join('\n')}`)
+        if (illegalCards.length) return member.send(`The following cards are not Western legal:\n${illegalCards.join('\n')}`)
         if (deckSize !== 51) return member.send(`Your main deck is not 50 cards.`)
         if (moreThanFour) return member.send(`You cannot use more than 4 copies of a card in your deck.`)
 
