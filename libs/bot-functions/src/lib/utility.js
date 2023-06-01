@@ -363,10 +363,13 @@ export const drawOPDeck = async (opdk) => {
     const splt = opdk.trim().split('\n')
     const leader = [splt[0].slice(2)]
     console.log('leader', leader)
+    console.log('splt', splt)
     const main = []
     for (let i = 1; i < splt.length; i++) {
         let s = splt[i]
+        console.log('s', s)
         let n = parseInt(s[0])
+        console.log('n', n)
         while (n < 0) {
             main.push(s.slice(2))
             n--
