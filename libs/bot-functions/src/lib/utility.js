@@ -243,17 +243,18 @@ export const getOPCard = async (query, fuzzyOPCards) => {
     const releaseDate = card.westernDate ? dateToVerbose(card.westernDate, true, false, true) : 'Eastern Only'
     
     let labels = 
-        `Category: ${capitalize(card.category)}` +
-        `${card.color ? `\nColor: ${capitalize(card.color)}` : ''}` +
+        // `Category: ${capitalize(card.category)}` +
+        // `${card.color ? `\nColor: ${capitalize(card.color)}` : ''}` +
         `${card.cost ? `\nCost: ${card.cost} ${emojis.DON}` : ''}` +
         `${card.attribute ? `\nAttribute: ${card.attribute.toUpperCase()} ${emojis[card.attribute.toUpperCase()]}` : ''}` +
-        `${card.type ? `\nType: ${card.type}` : ''}` +
-        `\nRelease Date: ${releaseDate}`
+        // `${card.type ? `\nType: ` : ''}` +
+        `\nRelease Date: ${releaseDate}` +
+        `\n**[** ${capitalize(card.category)} - ${card.type} **]**`
 
-	const stats =  
-        `${card.life ? `Life: ${card.life} ❤️  ` : ''}` +
-        `${card.power ? `Power: ${card.power} 🥊  ` : ''}` +
-        `${card.counter ? `Counter: +${card.counter} ⚡  ` : ''}`
+	let stats =  
+        `${card.life ? `Life: ${card.life} ❤️ | ` : ''}` +
+        `${card.power ? `Power: ${card.power} 🥊 | ` : ''}` +
+        `${card.counter ? `Counter: +${card.counter} ⚡ | ` : ''}`
 	
 	const attachment = new AttachmentBuilder(card.artwork, { name: `${card.cardCode}.jpg` })
 	const thumbnail = attachment ? `attachment://${card.cardCode}.jpg` : null   
@@ -265,7 +266,7 @@ export const getOPCard = async (query, fuzzyOPCards) => {
 	    .setDescription(
             labels + 
             `\n\n${card.effect}` +
-            `${stats.length ? `\n\n${stats}` : ''}`
+            `${stats.length ? `\n\n${stats.slice(0, -2)}` : ''}`
         )
 	return { cardEmbed, attachment }
 }
