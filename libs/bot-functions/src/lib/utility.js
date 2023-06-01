@@ -260,7 +260,7 @@ export const getOPCard = async (query, fuzzyOPCards) => {
     
     const cardEmbed = new EmbedBuilder()
         .setColor(color)
-	    .setTitle(`${card.cardCode} ${card.name}`)
+	    .setTitle(`${card.cardCode} - ${card.name}`)
 	    .setThumbnail(thumbnail)
 	    .setDescription(
             labels + 
