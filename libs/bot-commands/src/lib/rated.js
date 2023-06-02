@@ -13,12 +13,13 @@ import { emojis } from '@fl/bot-emojis'
 const getRatedInformation = async (interaction, player) => {
     const format = await getRatedFormat(interaction)
     if (!format) return await interaction.user.send({ content: `Please specify a valid format.`})
+    const access = format.channel ? {[Op.or]: ['full', 'partner']} : 'partner'
     
     const yourServers = [...await Membership.findAll({ 
         where: { 
             playerId: player.id,
             active: true,
-            '$server.access$': {[Op.or]: ['full', 'partner', 'affiliate']},
+            '$server.access$': access,
             '$server.internalLadder$': false,
             '$server.format$': {[Op.or]: [format.name, null]}
         }, 
@@ -157,11 +158,12 @@ const getRatedInformation = async (interaction, player) => {
         for (let i = 0; i < potentialPairs.length; i++) {
             const potentialPair = potentialPairs[i]
             const ppid = potentialPair.playerId
+            const access = format.channel ? {[Op.or]: ['full', 'partner']} : 'partner'
             const opponentsGuildIds = [...await Membership.findAll({ 
                 where: { 
                     playerId: ppid,
                     active: true,
-                    '$server.access$': {[Op.or]: ['full', 'partner', 'affiliate']},
+                    '$server.access$': access,
                     '$server.internalLadder$': false,
                     '$server.format$': {[Op.or]: [format.name, null]}
                 },

@@ -240,14 +240,14 @@ export const getOPCard = async (query, fuzzyOPCards) => {
 		card.color === "yellow" ? "#e5d631" :
 		null
 
-    const releaseDate = card.westernDate ? dateToVerbose(card.westernDate, true, false, true) : 'Eastern Only'
+    const releaseDate = card.westernDate ? dateToVerbose(card.westernDate, true, false, true) : 
+        card.westernLegal ? 'Western Legal'
+        : 'Eastern Only'
     
     let labels = 
-        // `Category: ${capitalize(card.category)}` +
         // `${card.color ? `\nColor: ${capitalize(card.color)}` : ''}` +
         `${card.cost ? `\nCost: ${card.cost} ${emojis.DON}` : ''}` +
         `${card.attribute ? `\nAttribute: ${card.attribute.toUpperCase()} ${emojis[card.attribute.toUpperCase()]}` : ''}` +
-        // `${card.type ? `\nType: ` : ''}` +
         `\nRelease Date: ${releaseDate}` +
         `\n**[** ${capitalize(card.category)} ${emojis[card.category]} - ${card.type} **]**`
 
