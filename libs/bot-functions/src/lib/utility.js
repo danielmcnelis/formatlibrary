@@ -249,7 +249,7 @@ export const getOPCard = async (query, fuzzyOPCards) => {
         `${card.cost ? `\nCost: ${card.cost} ${emojis.DON}` : ''}` +
         `${card.attribute ? `\nAttribute: ${card.attribute.toUpperCase()} ${emojis[card.attribute.toUpperCase()]}` : ''}` +
         `\nRelease Date: ${releaseDate}` +
-        `\n**[** ${capitalize(card.category)} ${emojis[card.category]} - ${card.type} **]**`
+        `\n**[** ${capitalize(card.category)} ${emojis[card.category]}${card.type ? `- ${card.type}` : ''} **]**`
 
 	let stats =  
         `${card.life ? `Life: ${card.life} ❤️ ` : ''}` +
@@ -261,7 +261,7 @@ export const getOPCard = async (query, fuzzyOPCards) => {
     
     const cardEmbed = new EmbedBuilder()
         .setColor(color)
-	    .setTitle(`${card.cardCode} - ${card.name}`)
+	    .setTitle(`${card.cardCode}${card.name ? `- ${card.name}` : ''}`)
 	    .setThumbnail(thumbnail)
 	    .setDescription(
             labels + 
