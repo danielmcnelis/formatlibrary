@@ -40,7 +40,7 @@ export default {
 				)
         ),
     async execute(interaction) {
-        const roleId = interaction.options.getString('role')
+        const roleId = interaction.options.getString('emoji')
         const currentRoles = [...(await interaction.member.roles.cache.filter((r) => r.name.includes('(Sub)'))).values()]
         const privilegedUserIds = ['194147938786738176', '626843317010694176']
 
