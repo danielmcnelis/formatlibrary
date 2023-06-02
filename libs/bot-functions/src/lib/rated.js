@@ -29,7 +29,7 @@ export const getRatedConfirmation = async (client, format, yourPool, opponentsPo
         .setStyle(ButtonStyle.Primary)
     )
 
-    const message = await member.user.send({ content: `I've found a Rated ${format.name} Format ${format.emoji} opponent for you. Do you still wish to play?`, components: [row] })
+    const message = await member.user.send({ content: `I've found a Rated ${format.name}${format.category !== 'OP' ? ' Format' : ''} ${format.emoji} opponent for you. Do you still wish to play?`, components: [row] })
 
     setTimeout(async () => {
         const unconfirmed = await Pool.count({
