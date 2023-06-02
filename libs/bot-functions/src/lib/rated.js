@@ -68,19 +68,19 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
         const opposingMember = await guild.members.fetch(opponent.discordId)
 
         opposingMember.user.send(
-            `New pairing for Rated ${format.name} Format ${format.emoji}!` +
+            `New pairing for Rated ${format.name}${format.category !== 'OP' ? ` Format` : ''} ${format.emoji}!` +
             `\nServer: ${commonServer.name} ${commonServer.logo}` +
             `\nChannel: <#${channelId}>` +
             `\nDiscord: ${player.discordName}#${player.discriminator}` +
-            `\nDuelingBook: ${player.duelingBook}`
+            `\n${format.category !== 'OP' ? `DuelingBook: ${player.duelingBook}` : `OPTCGSim: ${player.opTcgSim}`}`
         ).catch((err) => console.log(err))
         
         interaction.user.send(
-            `New pairing for Rated ${format.name} Format ${format.emoji}!` +
+            `New pairing for Rated ${format.name}${format.category !== 'OP' ? ` Format` : ''} ${format.emoji}!` +
             `\nServer: ${commonServer.name} ${commonServer.logo}` +
             `\nChannel: <#${channelId}>` +
             `\nDiscord: ${opponent.discordName}#${opponent.discriminator}` +
-            `\nDuelingBook: ${opponent.duelingBook}`
+            `\n${format.category !== 'OP' ? `DuelingBook: ${opponent.duelingBook}` : `OPTCGSim: ${opponent.opTcgSim}`}`
         ).catch((err) => console.log(err))
         
         await yourPool.destroy()

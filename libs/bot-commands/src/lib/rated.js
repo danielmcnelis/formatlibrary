@@ -220,7 +220,7 @@ const getRatedInformation = async (interaction, player) => {
                     `\nServer: ${commonServer.name} ${commonServer.logo}` +
                     `\nChannel: <#${channelId}>` +
                     `\nDiscord: ${player.discordName}#${player.discriminator}` +
-                    format.category !== 'OP' ? `\nDuelingBook: ${player.duelingBook}` : `\nOPTCGSim: ${player.opTcgSim}`
+                    `\n${format.category !== 'OP' ? `DuelingBook: ${player.duelingBook}` : `OPTCGSim: ${player.opTcgSim}`}`
                 ).catch((err) => console.log(err))
 
                 interaction.user.send(
@@ -228,7 +228,7 @@ const getRatedInformation = async (interaction, player) => {
                     `\nServer: ${commonServer.name} ${commonServer.logo}` + 
                     `\nChannel: <#${channelId}>` +
                     `\nDiscord: ${opponent.discordName}#${opponent.discriminator}` +
-                    format.category !== 'OP' ? `\nDuelingBook: ${opponent.duelingBook}` : `\nOPTCGSim: ${opponent.opTcgSim}`
+                    `\n${format.category !== 'OP' ? `DuelingBook: ${opponent.duelingBook}` : `OPTCGSim: ${opponent.opTcgSim}`}`
                 ).catch((err) => console.log(err))
                 
                 await potentialPair.destroy()
