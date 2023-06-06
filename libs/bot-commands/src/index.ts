@@ -15,6 +15,7 @@ import drop from './lib/drop'
 import duelingbook from './lib/duelingbook'
 import end from './lib/end'
 import exit from './lib/exit'
+import film from './lib/film'
 import fix from './lib/fix'
 import flair from './lib/flair'
 import h2h from './lib/h2h'
@@ -39,6 +40,7 @@ import rated from './lib/rated'
 import recalculate from './lib/recalculate'
 import records from './lib/records'
 import remove from './lib/remove'
+import replay from './lib/replay'
 import reset from './lib/reset'
 import rng from './lib/rng'
 import role from './lib/role'
@@ -82,6 +84,7 @@ export default {
         duelingbook,
         end,
         exit,
+        film,
         h2h,
         help,
         history,
@@ -101,6 +104,7 @@ export default {
         rated,
         records,
         remove,
+        replay,
         reset,
         rng,
         role,
