@@ -76,7 +76,6 @@ export default {
         })
 
         const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
-        console.log('challongeMatch', challongeMatch)
         if (!match) return await interaction.editReply({ content: `Error: Match report not found.`})	
         if (!challongeMatch) return await interaction.editReply({ content: `Error: Challonge match not found.`})	
         const replay = await Replay.findOne({ where: { matchId: match.id }})
@@ -97,7 +96,7 @@ export default {
                     round: challongeMatch?.match?.round
                 })
                 
-                return await interaction.editReply({ content: `New replay saved for Round ${challongeMatch.round} of ${tournament.name} ${tournament.emoji}:\nURL: <${url}>\nWinner: ${winningPlayer.name}\nLoser: ${losingPlayer.name}`})	
+                return await interaction.editReply({ content: `New replay saved for Round ${challongeMatch?.match?.round} of ${tournament.name} ${tournament.emoji}:\nURL: <${url}>\nWinner: ${winningPlayer.name}\nLoser: ${losingPlayer.name}`})	
             } catch (err) {
                 console.log(err)
             }
