@@ -338,8 +338,8 @@ export const joinTournament = async (interaction, tournamentId) => {
         player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
-    const data = await getDeckList(interaction.member, player, tournament.format)
-    if (!data) return
+    const data = tournament.format?.category === 'OP' ? await getOPDeckList(interaction.member, player) :
+        await getDeckList(interaction.member, player, tournament.format)
 
     if (!entry && tournament.isTeamTournament && team) {
         const slot = team.playerAId === player.id ? 'A' :
@@ -498,8 +498,9 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
 
     if (!simName) return
 
-    const data = await getDeckList(interaction.member, player, format, true)
-    if (!data) return
+    
+    const data = tournament.format?.category === 'OP' ? await getOPDeckList(interaction.member, player, true) :
+        await getDeckList(interaction.member, player, format, true)
 
     if (!entry) {
         try {
@@ -1713,7 +1714,8 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             }
         }
     })
-    
+
+    const game_name = format.category === 'OP' ? 'One Piece TCG' : 'Yu-Gi-Oh!'
     const channel = interaction.guild.name !== 'Format Library' ? await interaction.guild.channels.cache.find((channel) => channel.name === channelName) : {}
     const channelId = interaction.guild.name === 'Format Library' ? format.channel : channel?.id
     if (!channelId) return
@@ -1746,7 +1748,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     name: name,
                     url: abbreviation || name,
                     tournament_type: tournament_type,
-                    game_name: 'Yu-Gi-Oh!',
+                    game_name: game_name,
                     pts_for_match_tie: "0.0"
                 }
             }
@@ -1788,7 +1790,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                         name: name,
                         url: str,
                         tournament_type: tournament_type,
-                        game_name: 'Yu-Gi-Oh!',
+                        game_name: game_name,
                         pts_for_match_tie: "0.0"
                     }
                 }

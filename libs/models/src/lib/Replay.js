@@ -2,7 +2,7 @@
 import { Sequelize } from 'sequelize'
 import { db } from './db'
 
-export const Match = db.define('matches', {
+export const Replay = db.define('replays', {
     url: {
         type: Sequelize.STRING
     },
@@ -15,11 +15,20 @@ export const Match = db.define('matches', {
     winner: {
         type: Sequelize.STRING
     },
+    winnerId: {
+        type: Sequelize.STRING
+    },
     loser: {
+        type: Sequelize.STRING
+    },
+    loserId: {
         type: Sequelize.STRING
     },
     matchId: {
         type: Sequelize.INTEGER
+    },
+    tournamentId: {
+        type: Sequelize.STRING,
     },
     eventName: {
         type: Sequelize.STRING,

@@ -29,6 +29,7 @@ import { Player } from './Player'
 import { Price } from './Price'
 import { Print } from './Print'
 import { Pool } from './Pool'
+import { Replay } from './Replay'
 import { Role } from './Role'
 import { Ruling } from './Ruling'
 import { Server } from './Server'
@@ -269,6 +270,7 @@ export {
   Pool,
   Price,
   Print,
+  Replay,
   Role,
   Ruling,
   Server,
