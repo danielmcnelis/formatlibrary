@@ -27,7 +27,7 @@ export default {
 
         let format = await Format.findByServerOrChannelId(server, interaction.channelId)
         
-        const tournaments = await Tournament.findByStateAndFormatAndServerId('pending', format, interaction.guildId)
+        const tournaments = await Tournament.findByStateAndFormatAndServerId('underway', format, interaction.guildId)
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
 
