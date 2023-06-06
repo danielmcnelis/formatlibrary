@@ -9,7 +9,7 @@ import axios from 'axios'
 export default {
     data: new SlashCommandBuilder()
         .setName('replay')
-        .setDescription(`Save a tournament match replay. ⏪`)
+        .setDescription(`Save a tournament match replay. 💿`)
 		.addStringOption(str =>
             str
                 .setName('url')
