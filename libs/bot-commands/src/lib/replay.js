@@ -35,7 +35,7 @@ export default {
         ),                
     async execute(interaction) {
         await interaction.deferReply()
-        const url = interaction.options.getString('url')
+        const url = interaction.options.getString('url')?.replace(/[\s_-]/g, '')
         const input = interaction.options.getString('tournament')
         const winner = interaction.options.getUser('winner')
         const loser = interaction.options.getUser('loser')
@@ -75,7 +75,7 @@ export default {
             }
         })
 
-        if (!match) return await interaction.editReply({ content: `Error: Match report not found.`})	
+        if (!match) return await interaction.editReply({ content: `Error: No atch report not found.`})	
         const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
         if (!challongeMatch) return await interaction.editReply({ content: `Error: Challonge match not found.`})	
         const replay = await Replay.findOne({ where: { matchId: match.id }})
