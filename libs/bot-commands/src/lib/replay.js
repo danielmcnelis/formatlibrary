@@ -36,7 +36,7 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         const url = interaction.options.getString('url')
-        const input = interaction.options.getString('tournament')?.replace(/[\s_-]/g, '')
+        const input = interaction.options.getString('tournament')?.replace(/[\s-]/g, '')
         const winner = interaction.options.getUser('winner')
         const loser = interaction.options.getUser('loser')
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
