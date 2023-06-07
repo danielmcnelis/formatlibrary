@@ -17,8 +17,6 @@ export default {
         const cutoff = currentMonth === 11 ? new Date(currentYear, 1, 1) :
             new Date(currentYear - 1, currentMonth + 1, 1)
 
-        console.log('cutoff', cutoff)
-
         const matches = await Match.findAll({
             where: { 
                 formatId: format?.id || {[Op.not]: null},
