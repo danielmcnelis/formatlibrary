@@ -4,7 +4,7 @@
     position: relative;
     min-width: 5px;
     width: 20%;
-    height: 40px;
+    height: 16px;
     border: 1px solid black;
   }
   
@@ -20,7 +20,7 @@
     top: -56px;
     left: -26px;
     z-index: 1;
-    width: 60px;
+    width: 20%;
     border: 1px solid black;
     padding: 5px;
     background-color: white;
