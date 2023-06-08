@@ -2,9 +2,9 @@
   
   .matchup-cell {
     position: relative;
-    min-width: 100px;
+    min-width: 5px;
     width: 20%;
-    height: 50px;
+    height: 40px;
     border: 1px solid black;
   }
   
