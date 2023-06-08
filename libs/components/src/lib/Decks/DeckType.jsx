@@ -27,7 +27,7 @@ const { Helmet, Controller, Orb, Lock, Bow, Voltage, Volcano, Unicorn, Thinking 
 export const DeckType = () => {
     const [summary, setSummary] = useState({})
     const [matchups, setMatchups] = useState(false)
-    const [minMatches, setMinmatches] = useState(20)
+    const [minMatches, setMinmatches] = useState(15)
     const [banlist, setBanList] = useState({})
     const [isAdmin, setIsAdmin] = useState(false)
     const [isSubscriber, setIsSubscriber] = useState(false)
