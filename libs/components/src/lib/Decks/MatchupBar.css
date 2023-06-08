@@ -17,10 +17,9 @@
     border-radius: 5px;
     position: absolute;
     text-align: center;
-    top: -56px;
-    left: -26px;
+    bottom: -56px;
     z-index: 1;
-    width: 100%;
+    display: inline-block;
     border: 1px solid black;
     padding: 5px;
     background-color: white;
