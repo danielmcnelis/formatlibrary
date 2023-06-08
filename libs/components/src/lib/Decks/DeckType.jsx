@@ -42,6 +42,16 @@ export const DeckType = () => {
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
 
+    // USE LAYOUT EFFECT
+    useEffect(() => {
+        const grandTotal = Object.values(matchups).map((m) => m.total).reduce((a, v) => a += v, 0)
+        const min = grandTotal < 100 ? 5 :
+            grandTotal < 200 ? 10 :
+            15
+
+        minMatches(min)
+    }, [matchups])
+
     // USE EFFECT
     useEffect(() => {
         const checkIfAdmin = async () => {
