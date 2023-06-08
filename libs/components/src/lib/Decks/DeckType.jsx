@@ -45,8 +45,8 @@ export const DeckType = () => {
     // USE LAYOUT EFFECT
     useEffect(() => {
         const grandTotal = Object.values(matchups).map((m) => m.total).reduce((a, v) => a += v, 0)
-        const min = grandTotal < 100 ? 5 :
-            grandTotal < 200 ? 10 :
+        const min = grandTotal < 200 ? 5 :
+            grandTotal < 400 ? 10 :
             15
 
         setMinMatches(min)
