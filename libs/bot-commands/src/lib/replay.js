@@ -53,7 +53,7 @@ export default {
             }
         })
 
-        if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournament "${input}".`})	
+        if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournament "${input}". Be sure to use the correct abbreviation.`})	
 
         const winningPlayer = await Player.findOne({
             where: {
@@ -61,11 +61,15 @@ export default {
             }
         })
 
+        if (!winningPlayer) return await interaction.editReply({ content: `Error: Winner (${winner.username}) not found.`})	
+
         const losingPlayer = await Player.findOne({
             where: {
                 discordId: loser.id
             }
         })
+
+        if (!losingPlayer) return await interaction.editReply({ content: `Error: Loser (${loser.username}) not found.`})	
 
         const match = await Match.findOne({
             where: {
@@ -98,7 +102,7 @@ export default {
                     round: challongeMatch?.match?.round
                 })
                 
-                return await interaction.editReply({ content: `New replay saved for ${tournament.name} ${tournament.logo}:\nPlayers: ${winningPlayer.name} vs ${losingPlayer.name}\nRound: ${challongeMatch?.match?.round}\nURL: <${url}>`})	
+                return await interaction.editReply({ content: `New replay saved for Round: ${challongeMatch?.match?.round} of ${tournament.name} ${tournament.logo}:\nMatch: ${winningPlayer.name} vs ${losingPlayer.name}\nURL: <${url}>`})	
             } catch (err) {
                 console.log(err)
             }

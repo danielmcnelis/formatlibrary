@@ -242,7 +242,7 @@ export const eventsId = async (req, res, next) => {
 
     const topDecks = await Deck.findAll({
       where: {
-        display: true,
+        display: req.params.isAdmin === 'true' || req.params.isSubscriber === 'true' ? {[Op.or]: [true, false]} : true,
         [Op.or]: {
           eventName: event.abbreviation,
           eventId: event.id

@@ -2,10 +2,11 @@
 import { useState, useEffect, useLayoutEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
-import { capitalize, dateToSimple, dateToVerbose } from '@fl/utils'
+import { capitalize, dateToSimple, dateToVerbose, getCookie } from '@fl/utils'
 import { DeckImage } from '../Decks/DeckImage'
 import { NotFound } from '../General/NotFound'
 import './SingleEvent.css'
+const playerId = getCookie('playerId')
 
 import { Chart as ChartJS, ArcElement, CategoryScale, BarElement, Title, LinearScale, Tooltip, Legend } from 'chart.js'
 import { Bar, Doughnut } from 'react-chartjs-2'
@@ -14,7 +15,9 @@ ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tool
 export const SingleEvent = (props) => {
   const [event, setEvent] = useState({})
   const [winner, setWinner] = useState({})
-  const [topDecks, setTopDecks] = useState([])
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [isSubscriber, setIsSubscriber] = useState(false)
+  const [topDecks, setTopDecks] = useState({})
   const [metagame, setMetagame] = useState({
     deckTypes: [],
     deckCategories: [],
@@ -39,7 +42,7 @@ export const SingleEvent = (props) => {
   useEffect(() => {
     const uploadEvent = async () => {
       try {
-        const {data} = await axios.get(`/api/events/${id}`)
+        const {data} = await axios.get(`/api/events/${id}?isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`)
         setEvent(data.event)
         setWinner(data.event.player)
         setTopDecks(data.topDecks)
@@ -53,6 +56,30 @@ export const SingleEvent = (props) => {
     uploadEvent()
   }, [])
 
+    // USE EFFECT
+    useEffect(() => {
+        const checkIfAdmin = async () => {
+            try {
+                const { status } = await axios.get(`/api/players/admin/${playerId}`)
+                if (status === 200) setIsAdmin(true)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        const checkIfSubscriber = async () => {
+            try {
+                const { status } = await axios.get(`/api/players/subscriber/${playerId}`)
+                if (status === 200) setIsSubscriber(true)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        checkIfAdmin()
+        checkIfSubscriber()
+    }, [])
+    
   if (event === null) return <NotFound/>
   if (!event.name) return <div></div>
   if (!event.format) return <div></div>
@@ -174,7 +201,7 @@ export const SingleEvent = (props) => {
                   <div className="single-event-cell">
                     <div onClick={() => goToFormat()} className="single-event-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {capitalize(event.formatName, true)}</div>
                     <img 
-                        style={{width:'32px'}} 
+                        style={{width:'32px'}}
                         src={`https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png`}
                         alt={event.format.name}
                     />
@@ -262,7 +289,7 @@ export const SingleEvent = (props) => {
                 src={`https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png`}
                 alt={event.format.name}
               />
-              <h2 className="subheading"><b>{event.abbreviation}</b> {topDecks.length > 1 ? `Top ${topDecks.length} Decks` : 'Winning Deck'}:</h2>
+              <h2 className="subheading"><b>{event.abbreviation}</b> {topDecks.length === 1 ? 'Winning Deck' : (isSubscriber || isAdmin) ? `All Decks` : `Top ${topDecks.length} Decks`}:</h2>
               <img 
                 style={{ height:'64px'}} 
                 src={'https://cdn.formatlibrary.com/images/emojis/deckbox.png'}

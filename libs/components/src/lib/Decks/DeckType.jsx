@@ -3,6 +3,7 @@ import { useState, useEffect, useLayoutEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { CardImage } from '../Cards/CardImage'
+import { Matchup } from './Matchup'
 import { NotFound } from '../General/NotFound'
 import { useLocation } from 'react-router-dom'
 import { capitalize, getCookie } from '@fl/utils'
@@ -25,7 +26,9 @@ const { Helmet, Controller, Orb, Lock, Bow, Voltage, Volcano, Unicorn, Thinking 
 
 export const DeckType = () => {
     const [summary, setSummary] = useState({})
+    const [matchups, setMatchups] = useState(false)
     const [banlist, setBanList] = useState({})
+    const [isAdmin, setIsAdmin] = useState(false)
     const [isSubscriber, setIsSubscriber] = useState(false)
     const navigate = useNavigate()
     const goToFormat = () => navigate(`/formats/${summary.format ? summary.format.name : ''}`)
@@ -33,13 +36,22 @@ export const DeckType = () => {
     const location = useLocation()
     const format = location?.search?.slice(8)
     console.log('summary', summary)
+    console.log('matchups', matchups)
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
-  
 
     // USE EFFECT
     useEffect(() => {
+        const checkIfAdmin = async () => {
+            try {
+                const { status } = await axios.get(`/api/players/admin/${playerId}`)
+                if (status === 200) setIsAdmin(true)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
         const checkIfSubscriber = async () => {
             try {
                 const { status } = await axios.get(`/api/players/subscriber/${playerId}`)
@@ -49,8 +61,24 @@ export const DeckType = () => {
             }
         }
 
+        checkIfAdmin()
         checkIfSubscriber()
     }, [])
+
+    // USE EFFECT SET MATCHUPS
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const {data} = await axios.get(`/api/matchups/h2h/${id}?format=${format}&isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`)
+            setMatchups(data)
+          } catch (err) {
+            console.log(err)
+            setSummary(null)
+          }
+        }
+    
+        fetchData()
+      }, [isSubscriber, isAdmin, format, id])
 
     // USE EFFECT SET CARD
     useEffect(() => {
@@ -278,7 +306,6 @@ export const DeckType = () => {
           ) : ''
         }
   
-  
         <br/>
         <h2>Popular Side Deck Cards</h2>
         <div id="side" className="deck-bubble">
@@ -351,6 +378,19 @@ export const DeckType = () => {
             }
             </div>
         </div>
+        {
+            matchups ? (
+                <>
+                    <br/>
+                    <h2>Matchups</h2>
+                    <div>
+                    {
+                        Object.entries(matchups).map((e) => <Matchup deckType={e[0]} wins={e[1].wins} losses={e[1].losses} total={e[1].total}/>)
+                    }
+                    </div>
+                </>
+            ) : ''
+        }
       </div>
     )
 }
