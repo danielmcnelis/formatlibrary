@@ -34,11 +34,13 @@
   
   .matchup-flexbox {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: column;
     justify-content: flex-start;
     margin-right: auto;
     margin-left: auto;
     width: 75%;
+    max-width: 75%;
     padding: 6px 40px;
   }
   
