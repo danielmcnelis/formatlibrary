@@ -27,6 +27,7 @@ const { Helmet, Controller, Orb, Lock, Bow, Voltage, Volcano, Unicorn, Thinking 
 export const DeckType = () => {
     const [summary, setSummary] = useState({})
     const [matchups, setMatchups] = useState(false)
+    const [minMatches, setMinmatches] = useState(20)
     const [banlist, setBanList] = useState({})
     const [isAdmin, setIsAdmin] = useState(false)
     const [isSubscriber, setIsSubscriber] = useState(false)
@@ -385,7 +386,7 @@ export const DeckType = () => {
                     <h2>Matchups</h2>
                     <div className="matchup-box">
                     {
-                        Object.entries(matchups).sort((a, b) => (b[1].wins / b[1].total) - (a[1].wins / a[1].total)).map((e) => <Matchup deckType={e[0]} wins={e[1].wins} losses={e[1].losses} total={e[1].total} format={format}/>)
+                        Object.entries(matchups).filter((m) => m[1].total >= minMatches).sort((a, b) => (b[1].wins / b[1].total) - (a[1].wins / a[1].total)).map((m) => <Matchup deckType={m[0]} wins={m[1].wins} losses={m[1].losses} total={m[1].total} format={format}/>)
                     }
                     </div>
                 </>
