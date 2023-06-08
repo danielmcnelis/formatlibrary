@@ -289,7 +289,7 @@ export const SingleEvent = (props) => {
                 src={`https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png`}
                 alt={event.format.name}
               />
-              <h2 className="subheading"><b>{event.abbreviation}</b> {topDecks.length === 1 ? 'Winning Deck' : (isSubscriber || isAdmin) ? `All Decks` : `Top ${topDecks.length} Decks`}:</h2>
+              <h2 className="subheading"><b>{event.abbreviation}</b> {topDecks.length === 1 ? 'Winning Deck' : (isSubscriber || isAdmin) ? `Decks` : `Top ${topDecks.length} Decks`}:</h2>
               <img 
                 style={{ height:'64px'}} 
                 src={'https://cdn.formatlibrary.com/images/emojis/deckbox.png'}
