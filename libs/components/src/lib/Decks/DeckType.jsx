@@ -385,7 +385,7 @@ export const DeckType = () => {
                     <h2>Matchups</h2>
                     <div className="matchup-box">
                     {
-                        Object.entries(matchups).map((e) => <Matchup deckType={e[0]} wins={e[1].wins} losses={e[1].losses} total={e[1].total} format={format}/>)
+                        Object.entries(matchups).sort((a, b) => (b[1].wins / b[1].total) - (a[1].wins / a[1].total)).map((e) => <Matchup deckType={e[0]} wins={e[1].wins} losses={e[1].losses} total={e[1].total} format={format}/>)
                     }
                     </div>
                 </>
