@@ -11,8 +11,8 @@ export const Matchup = (props) => {
     console.log('fraction', fraction)
 
     const backgroundColor = fraction < 0.4 ? '#cc0000' :
-        fraction >= 0.4 && fraction < 0.45  ? 'e06666' :
-        fraction >= 0.45 && fraction < 0.5  ? 'ea9999' :
+        fraction >= 0.4 && fraction < 0.45  ? '#e06666' :
+        fraction >= 0.45 && fraction < 0.5  ? '#ea9999' :
         fraction === 0.5 ? '#eeeeee' :
         fraction > 0.5 && fraction < 0.55  ? '#b6d7a8' :
         fraction >= 0.55 && fraction < 0.6  ? '#93c47d' :
