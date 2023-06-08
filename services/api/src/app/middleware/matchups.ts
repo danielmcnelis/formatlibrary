@@ -4,7 +4,7 @@ import { Op } from 'sequelize'
 
 export const getMatchupH2H = async (req, res, next) => {
   try {
-    if (req.query.isSubscriber === true || req.query.isAdmin === true) {
+    if (req.query.isSubscriber === 'true' || req.query.isAdmin === 'true') {
         const wins = await Matchup.count({
             where: {
                 winningDeckType: {[Op.iLike]: req.params.id},
@@ -36,7 +36,7 @@ export const getMatchupMatrix = async (req, res, next) => {
     try {
         console.log('req.params.isAdmin', req.params.isAdmin)
         console.log('req.params.isSubscriber', req.params.isSubscriber)
-        if (req.query.isSubscriber === true || req.query.isAdmin === true) {
+        if (req.query.isSubscriber === 'true' || req.query.isAdmin === 'true') {
             console.log('req.params.id', req.params.id)
             console.log('req.query.format', req.query.format)
             const wins = await Matchup.findAll({

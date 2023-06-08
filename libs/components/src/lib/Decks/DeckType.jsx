@@ -69,7 +69,7 @@ export const DeckType = () => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const {data} = await axios.get(`/api/matchups/h2h/${id}?format=${format}&isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`)
+            const {data} = await axios.get(`/api/matchups/${id}?format=${format}&isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`)
             setMatchups(data)
           } catch (err) {
             console.log(err)
