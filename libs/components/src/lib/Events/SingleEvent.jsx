@@ -38,24 +38,6 @@ export const SingleEvent = (props) => {
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0), [])
 
-  // USE EFFECT SET CARD
-  useEffect(() => {
-    const uploadEvent = async () => {
-      try {
-        const {data} = await axios.get(`/api/events/${id}?isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`)
-        setEvent(data.event)
-        setWinner(data.event.player)
-        setTopDecks(data.topDecks)
-        setMetagame(data.metagame)
-      } catch (err) {
-        console.log(err)
-        setEvent(null)
-      }
-    }
-
-    uploadEvent()
-  }, [])
-
     // USE EFFECT
     useEffect(() => {
         const checkIfAdmin = async () => {
@@ -79,6 +61,25 @@ export const SingleEvent = (props) => {
         checkIfAdmin()
         checkIfSubscriber()
     }, [])
+    
+  // USE EFFECT SET CARD
+  useEffect(() => {
+    const uploadEvent = async () => {
+      try {
+        const {data} = await axios.get(`/api/events/${id}?isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`)
+        setEvent(data.event)
+        setWinner(data.event.player)
+        setTopDecks(data.topDecks)
+        setMetagame(data.metagame)
+      } catch (err) {
+        console.log(err)
+        setEvent(null)
+      }
+    }
+
+    uploadEvent()
+  }, [id, isAdmin, isSubscriber])
+
     
   if (event === null) return <NotFound/>
   if (!event.name) return <div></div>
