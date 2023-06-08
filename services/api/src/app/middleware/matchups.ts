@@ -25,7 +25,7 @@ export const getMatchupH2H = async (req, res, next) => {
         const data = { wins, losses, total }
         res.json(data)
     } else {
-        res.json({})
+        res.json(false)
     }
   } catch (err) {
     next(err)
@@ -35,6 +35,8 @@ export const getMatchupH2H = async (req, res, next) => {
 export const getMatchupMatrix = async (req, res, next) => {
     try {
         if (req.query.isSubscriber || req.query.isAdmin) {
+            console.log('req.params.id', req.params.id)
+            console.log('req.query.format', req.query.format)
             const wins = await Matchup.findAll({
                 where: {
                     winningDeckType: {[Op.iLike]: req.params.id},
@@ -77,9 +79,10 @@ export const getMatchupMatrix = async (req, res, next) => {
                 }
             })
         
+            console.log('matrix', matrix)
             res.json(matrix)
         } else {
-            res.json({})
+            res.json(false)
         }
     } catch (err) {
       next(err)
