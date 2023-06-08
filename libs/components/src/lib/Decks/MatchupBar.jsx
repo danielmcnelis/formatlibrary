@@ -8,7 +8,6 @@ export const Matchup = (props) => {
     if (!deckType) return <p></p>
     console.log('deckType')
     const fraction = wins / total
-    const percent = fraction.toFixed(3) * 100
 
     const backgroundColor = fraction < 0.4 ? '#cc0000' :
         fraction >= 0.4 & fraction < 0.45  ? 'e06666' :
@@ -20,7 +19,7 @@ export const Matchup = (props) => {
   
       return (
           <Link to={`/decktypes/${deckType}?format=${format}`} key={deckType} className="matchup-cell" style={{backgroundColor}}>
-            <p>${wins}-${losses} ({percent}%) vs ${capitalize(deckType)}</p>
+            <p>{wins}-{losses} ({(fraction * 100).toFixed(1)}%) vs {capitalize(deckType)}</p>
           </Link>
       )
   } 
