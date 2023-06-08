@@ -1,0 +1,52 @@
+
+  
+  .matchup-cell {
+    position: relative;
+    min-width: 10px;
+    width: 25px;
+    height: 50px;
+    border: 1px solid black;
+  }
+  
+  .matchup-cell:hover {
+    outline: 3px solid black;
+    z-index: 1;
+  }
+  
+  .matchup-cell p {
+    border-radius: 5px;
+    position: absolute;
+    text-align: center;
+    top: -56px;
+    left: -26px;
+    z-index: 1;
+    width: 60px;
+    border: 1px solid black;
+    padding: 5px;
+    background-color: white;
+    display: none;
+    color: black;
+  }
+  
+  .matchup-cell:hover p {
+    display: block;
+  }
+  
+  .matchup-flexbox {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-right: auto;
+    margin-left: auto;
+    width: 75%;
+    padding: 6px 40px;
+  }
+  
+  .matchup-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 0px;
+  }
+  

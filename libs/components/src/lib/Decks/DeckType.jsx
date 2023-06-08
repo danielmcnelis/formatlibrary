@@ -3,7 +3,7 @@ import { useState, useEffect, useLayoutEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { CardImage } from '../Cards/CardImage'
-import { Matchup } from './Matchup'
+import { Matchup } from './MatchupBar'
 import { NotFound } from '../General/NotFound'
 import { useLocation } from 'react-router-dom'
 import { capitalize, getCookie } from '@fl/utils'
@@ -383,9 +383,9 @@ export const DeckType = () => {
                 <>
                     <br/>
                     <h2>Matchups</h2>
-                    <div>
+                    <div className="matchup-box">
                     {
-                        Object.entries(matchups).map((e) => <Matchup deckType={e[0]} wins={e[1].wins} losses={e[1].losses} total={e[1].total}/>)
+                        Object.entries(matchups).map((e) => <Matchup deckType={e[0]} wins={e[1].wins} losses={e[1].losses} total={e[1].total} format={format}/>)
                     }
                     </div>
                 </>
