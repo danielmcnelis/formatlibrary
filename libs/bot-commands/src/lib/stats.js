@@ -25,20 +25,27 @@ export default {
 
         if (interaction.channel?.name === 'trivia') {
             const smarts = await TriviaKnowledge.count({ where: { playerId: player.id } })
-            const allKnowledge = await TriviaKnowledge.findAll()
+            const allKnowledge = await TriviaKnowledge.findAll({ include: Player })
             const data = {}
 
             for (let i = 0; i < allKnowledge.length; i++) {
                 const knowledge = allKnowledge[i]
                 const playerId = knowledge.playerId
-                if (!data[playerId]) {
-                    data[playerId]++
+                if (data[playerId]) {
+                    data[playerId].smarts++
                 } else {
-                    data[playerId] = 1
+                    data[playerId] = {
+                        smarts: 1,
+                        wins: knowledge?.player?.triviaWins
+                    }
                 }
             }
 
-            const triviaRankings = Object.entries(data).sort((a, b) => b[1] - a[1])
+            const triviaRankings = Object.entries(data)
+                .sort((a, b) => b[1].smarts - a[1].smarts)
+                .sort((a, b) => b[1].wins - a[1].wins)
+                
+            console.log('triviaRankings', triviaRankings)
             const index = triviaRankings.length ? triviaRankings.findIndex((k) => k[0] === player.id) : null
             const rank = index !== null ? `#${index + 1} out of ${triviaRankings.length}` : `N/A`
             
