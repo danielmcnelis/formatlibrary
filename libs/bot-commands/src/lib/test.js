@@ -12,9 +12,11 @@ export default {
         if (isProgrammer(interaction.member)) {
             // console.log('interaction.member', interaction.member)
             console.log('interaction.member.displayName', interaction.member.displayName)
+            console.log('interaction.member.nickname', interaction.member.nickname)
             const member = await interaction.guild.members.fetch(interaction.member.user.id)
             // console.log('member', member)
             console.log('member.displayName', member.displayName)
+            console.log('member.nickname', member.nickname)
             await interaction.reply(emojis.yellow)
         } else {
             await interaction.reply('🧪')
