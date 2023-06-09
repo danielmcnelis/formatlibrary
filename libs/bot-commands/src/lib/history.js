@@ -24,7 +24,7 @@ export default {
         if (!format) return await interaction.reply({ content: `Try using **/history** in channels like: <#414575168174948372> or <#629464112749084673>.`})  
 
         let x = 250        
-        const user = interaction.options.getUser('player') || interaction.user    
+        const user = interaction.options.getUser('user') || interaction.user    
         const discordId = user.id
         const player = await Player.findOne({ where: { discordId: discordId } })
         if (!player) return await interaction.reply({ content: "That user is not in the database."})

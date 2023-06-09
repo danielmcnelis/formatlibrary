@@ -8,16 +8,16 @@ export const Matchup = (props) => {
     if (!deckType) return <p></p>
     const fraction = wins / total
 
-    const backgroundColor = fraction < 0.4 ? '#cc0000' :
-        fraction >= 0.4 && fraction < 0.45  ? '#e06666' :
-        fraction >= 0.45 && fraction < 0.5  ? '#ea9999' :
-        fraction === 0.5 ? '#eeeeee' :
-        fraction > 0.5 && fraction < 0.55  ? '#b6d7a8' :
-        fraction >= 0.55 && fraction < 0.6  ? '#93c47d' :
+    const backgroundColor = fraction < 0.40 ? '#cc0000' :
+        fraction >= 0.40 && fraction < 0.44  ? '#e06666' :
+        fraction >= 0.44 && fraction < 0.48  ? '#ea9999' :
+        fraction >= 0.48 && fraction <= 0.52  ? '#eeeeee' :
+        fraction > 0.52 && fraction <= 0.56  ? '#b6d7a8' :
+        fraction > 0.56 && fraction <= 0.60  ? '#93c47d' :
         '#6aa84f'
 
       return (
-          <Link to={`/decktypes/${deckType}?format=${format}`} key={deckType} className="matchup-cell" style={{backgroundColor}}>
+          <Link to={`/decktypes/${deckType.toLowerCase().replace(/\s/g, '_')}?format=${format}`} key={deckType} className="matchup-cell" style={{backgroundColor}}>
             <p>{wins}-{losses} ({(fraction * 100).toFixed(1)}%) vs {capitalize(deckType)}</p>
           </Link>
       )

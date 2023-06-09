@@ -27,7 +27,6 @@ const { Helmet, Controller, Orb, Lock, Bow, Voltage, Volcano, Unicorn, Thinking 
 export const DeckType = () => {
     const [summary, setSummary] = useState({})
     const [matchups, setMatchups] = useState(false)
-    const [minMatches, setMinMatches] = useState(15)
     const [banlist, setBanList] = useState({})
     const [isAdmin, setIsAdmin] = useState(false)
     const [isSubscriber, setIsSubscriber] = useState(false)
@@ -36,21 +35,9 @@ export const DeckType = () => {
     const { id } = useParams()
     const location = useLocation()
     const format = location?.search?.slice(8)
-    console.log('summary', summary)
-    console.log('matchups', matchups)
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
-
-    // USE LAYOUT EFFECT
-    useEffect(() => {
-        const grandTotal = Object.values(matchups).map((m) => m.total).reduce((a, v) => a += v, 0)
-        const min = grandTotal < 200 ? 5 :
-            grandTotal < 400 ? 10 :
-            15
-
-        setMinMatches(min)
-    }, [matchups])
 
     // USE EFFECT
     useEffect(() => {
@@ -396,7 +383,7 @@ export const DeckType = () => {
                     <h2>Matchups</h2>
                     <div className="matchup-box">
                     {
-                        Object.entries(matchups).filter((m) => m[1].total >= minMatches).sort((a, b) => (b[1].wins / b[1].total) - (a[1].wins / a[1].total)).map((m) => <Matchup deckType={m[0]} wins={m[1].wins} losses={m[1].losses} total={m[1].total} format={format}/>)
+                        Object.entries(matchups).filter((m) => m[1].total >= 6).sort((a, b) => (b[1].wins / b[1].total) - (a[1].wins / a[1].total)).map((m) => <Matchup deckType={m[0]} wins={m[1].wins} losses={m[1].losses} total={m[1].total} format={format}/>)
                     }
                     </div>
                 </>

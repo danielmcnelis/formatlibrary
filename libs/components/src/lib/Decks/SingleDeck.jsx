@@ -158,7 +158,9 @@ export const SingleDeck = () => {
                 <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`}/>
             </div>
         </a>
-        <div className="single-deck-title">{deck.type || deck.name}</div>
+        <Link to={`/decktypes/${deck.type.toLowerCase().replace(/\s/g, '_')}?format=${deck.formatName.toLowerCase().replace(/\s/g, '_')}`}>
+            <div className="single-deck-title">{deck.type || deck.name}</div>
+        </Link>
         <Link to="/builder" state={{ deck: deck }} className="desktop-only">                                    
             <div className="deck-button">
                 <b style={{padding: '0px 6px'}}>Open Deck</b>
