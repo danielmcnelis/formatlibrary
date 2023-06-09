@@ -18,12 +18,9 @@ export default {
     async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
-        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        if (!format) return await interaction.reply({ content: `Try using **/stats** in channels like: <#414575168174948372> or <#629464112749084673>.`})
         const user = interaction.options.getUser('player') || interaction.user
-        const discordId = user.id	
-        const player = await Player.findOne({ where: { discordId: discordId } })
-        if (!player) return await interaction.reply({ content: "That user is not in the database."})
+        const player = await Player.findOne({ where: { discordId: user?.id } })
+        if (!player) return await interaction.reply({ content: `That user is not in the database.`})
         const serverId = server.internalLadder ? server.id : '414551319031054346'
 
         if (interaction.channel?.name === 'trivia') {
@@ -53,6 +50,9 @@ export default {
                 + `\nCorrectly Answered: ${smarts} ${emojis.stoned}`
             })
         } else {
+            const format = await Format.findByServerOrChannelId(server, interaction.channelId)
+            if (!format) return await interaction.reply({ content: `Try using **/stats** in channels like: <#414575168174948372> or <#629464112749084673>.`})
+        
             const stats = await Stats.findOne({ 
                 where: { 
                     playerId: player.id, 
