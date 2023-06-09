@@ -14,10 +14,10 @@ export default {
             const member = await interaction.guild.members.fetch(interaction.member.user.id)
             // console.log('member', member)
             console.log('member.user.displayName', member.user.displayName)
-            console.log('member.user.global_name', member.user.global_name)
+            console.log('member.user.globalName', member.user.globalName)
             console.log('member.user.nickname', member.user.nickname)
             console.log('member.displayName', member.displayName)
-            console.log('member.global_name', member.global_name)
+            console.log('member.globalName', member.globalName)
             console.log('member.nickname', member.nickname)
             await interaction.reply(emojis.yellow)
         } else {
