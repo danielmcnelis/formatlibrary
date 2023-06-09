@@ -11,6 +11,8 @@ export default {
     async execute(interaction) {
         if (isProgrammer(interaction.member)) {
             console.log('interaction.member', interaction.member)
+            const member = await interaction.guild.members.fetch(interaction.member.user.id)
+            console.log('member', member)
             await interaction.reply(emojis.yellow)
         } else {
             await interaction.reply('🧪')

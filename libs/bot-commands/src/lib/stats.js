@@ -49,6 +49,7 @@ export default {
                 `${emojis.no} --- Trivia Stats --- ${emojis.yes}`
                 + `\nName: ${player.name}`
                 + `\nRanking: ${rank}`
+                + `\nTrivia Wins: ${player.triviaWins} ${emojis.award}`
                 + `\nCorrectly Answered: ${smarts} ${emojis.stoned}`
             })
         } else {
