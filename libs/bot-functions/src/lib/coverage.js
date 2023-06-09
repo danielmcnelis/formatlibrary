@@ -388,13 +388,8 @@ export const generateMatchupData = async (interaction, server, event, tournament
             if (!deck) continue
             deckMap[participant.id] = deck
         } else {
-            const [discordName, discriminator] = participant.name.split('#')
-            const players = discriminator ? [await Player.findOne({
-                where: {
-                    discordName: discordName,
-                    discriminator: discriminator
-                }
-            })] : [...await Player.findAll({
+            const [discordName,] = participant.name.split('#')
+            const players = [...await Player.findAll({
                 where: {
                     discordName: discordName
                 }
