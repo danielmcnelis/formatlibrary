@@ -78,7 +78,7 @@ export const DeckType = () => {
         fetchData()
       }, [isSubscriber, isAdmin, format, id])
 
-    // USE EFFECT SET CARD
+    // USE EFFECT SET SUMMARY
     useEffect(() => {
       const fetchData = async () => {
         try {
@@ -91,9 +91,9 @@ export const DeckType = () => {
       }
   
       fetchData()
-    }, [])
+    }, [id, format])
   
-    // USE EFFECT SET CARD
+    // USE EFFECT SET BANLIST
     useEffect(() => {
       const fetchData = async () => {
         try {
@@ -137,13 +137,13 @@ export const DeckType = () => {
       let info = document.getElementById(`${category}-info-${index}`)
       let details = document.getElementById(`${category}-details-${index}`)
       
-      if (getComputedStyle(details).display == "none") {
+      if (getComputedStyle(details).display === "none") {
         details.style.display = "block"
       } else {
         details.style.display = "none"
       }
   
-      if (getComputedStyle(info).display == "none") {
+      if (getComputedStyle(info).display === "none") {
         info.style.display = "block"
       } else {
         info.style.display = "none"

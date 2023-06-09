@@ -26,83 +26,75 @@ export default {
         if (!player) return await interaction.reply({ content: "That user is not in the database."})
         const serverId = server.internalLadder ? server.id : '414551319031054346'
 
-		// const transformed_knowledges = []
+        if (interaction.channel?.name === 'trivia') {
+            const smarts = await TriviaKnowledge.count({ where: { playerId: player.id } })
+            const allKnowledge = await TriviaKnowledge.findAll()
+            const data = {}
 
-		// const allKnowledges = await Knowledge.findAll()
+            for (let i = 0; i < allKnowledge.length; i++) {
+                const knowledge = allKnowledge[i]
+                const playerId = knowledge.playerId
+                if (!data[playerId]) {
+                    data[playerId]++
+                } else {
+                    data[playerId] = 1
+                }
+            }
 
-		// const playerIds = []
-		// for (let i = 0; i < allKnowledges.length; i++) {
-		// 	const knowledge = allKnowledges[i]
-		// 	const playerId = knowledge.playerId
-		// 	if (!playerIds.includes(playerId)) playerIds.push(playerId)
-		// }
-
-		// for (let i = 0; i < playerIds.length; i++) {
-		// 	const playerId = playerIds[i]
-		// 	const correct_answers = await Knowledge.count({ where: { playerId: playerId }})
-		// 	transformed_knowledges.push([playerId, correct_answers])
-		// }
-
-		// transformed_knowledges.sort((a, b) => b[1] - a[1])
-		// const index = transformed_knowledges.length ? transformed_knowledges.findIndex((k) => k[0] === playerId) : null
-		// const rank = index !== null ? `#${index + 1} out of ${transformed_knowledges.length}` : `N/A`
-		// const smarts = transformed_knowledges[index][1]
-		
-		// return message.channel.send({ content: 
-		// 	`${no} --- Trivia Stats --- ${yes}`
-		// 	+ `\nName: ${player.name}`
-		// 	+ `\nRanking: ${rank}`
-		// 	+ `\nCorrectly Answered: ${smarts} ${stoned}`
-		// })
-
-        const stats = interaction.channel?.name === 'trivia' ? await TriviaKnowledge.count({ 
-            where: { 
-                playerId: player.id
-            } 
-        }) : await Stats.findOne({ 
-            where: { 
-                playerId: player.id, 
-                format: {[Op.iLike]: format.name}, 
-                [Op.or]: [
-                    { wins: { [Op.not]: null } }, 
-                    { losses: { [Op.not]: null } }, 
-                ],
-                serverId: serverId
-            } 
-        })
-
-        const allStats = interaction.channel?.name === 'trivia' ? await TriviaKnowledge.findAll() : 
-            await Stats.findAll({ 
-                where: {
-                    format: { [Op.iLike]: format.name }, 
-                    games: { [Op.gte]: 3 },
-                    serverId: serverId,
-                    inactive: false,
-                    '$player.hidden$': false
-                },
-                include: [Player],
-                order: [['elo', 'DESC']] 
+            const triviaRankings = Object.entries(data).sort((a, b) => b[1] - a[1])
+            const index = triviaRankings.length ? triviaRankings.findIndex((k) => k[0] === player.id) : null
+            const rank = index !== null ? `#${index + 1} out of ${triviaRankings.length}` : `N/A`
+            
+            return await interaction.reply({ content: 
+                `${emojis.no} --- Trivia Stats --- ${emojis.yes}`
+                + `\nName: ${player.name}`
+                + `\nRanking: ${rank}`
+                + `\nCorrectly Answered: ${smarts} ${emojis.stoned}`
+            })
+        } else {
+            const stats = await Stats.findOne({ 
+                where: { 
+                    playerId: player.id, 
+                    format: {[Op.iLike]: format.name}, 
+                    [Op.or]: [
+                        { wins: { [Op.not]: null } }, 
+                        { losses: { [Op.not]: null } }, 
+                    ],
+                    serverId: serverId
+                } 
             })
 
-        // const triviaRankings = 
+            const allStats = await Stats.findAll({ 
+                    where: {
+                        format: { [Op.iLike]: format.name }, 
+                        games: { [Op.gte]: 3 },
+                        serverId: serverId,
+                        inactive: false,
+                        '$player.hidden$': false
+                    },
+                    include: [Player],
+                    order: [['elo', 'DESC']] 
+                })
 
-        const index = allStats.length ? allStats.findIndex((s) => s.playerId === player.id) : null
-        const rank = stats && index >= 0 ? `#${index + 1} out of ${allStats.length}` : `N/A`
-        const elo = stats ? stats.elo.toFixed(2) : `500.00`
-        const medal = getMedal(elo, true)
-        const wins = stats ? stats.wins : 0
-        const losses = stats ? stats.losses : 0
-        const winrate = wins || losses ? `${(100 * wins / (wins + losses)).toFixed(2)}%` : 'N/A'		
 
-        return await interaction.reply({ content: 
-            `${server.emoji || format.emoji} --- ${format.name} Stats --- ${server.emoji || format.emoji}`
-            + `${server.internalLadder ? `\nServer: ${server.name}` : ''}`
-            + `\nName: ${player.name}`
-            + `\nMedal: ${medal}`
-            + `\nRanking: ${rank}`
-            + `\nElo Rating: ${elo}`
-            + `\nWins: ${wins}, Losses: ${losses}`
-            + `\nWin Rate: ${winrate}`
-        })
+            const index = allStats.length ? allStats.findIndex((s) => s.playerId === player.id) : null
+            const rank = stats && index >= 0 ? `#${index + 1} out of ${allStats.length}` : `N/A`
+            const elo = stats ? stats.elo.toFixed(2) : `500.00`
+            const medal = getMedal(elo, true)
+            const wins = stats ? stats.wins : 0
+            const losses = stats ? stats.losses : 0
+            const winrate = wins || losses ? `${(100 * wins / (wins + losses)).toFixed(2)}%` : 'N/A'		
+
+            return await interaction.reply({ content: 
+                `${server.emoji || format.emoji} --- ${format.name} Stats --- ${server.emoji || format.emoji}`
+                + `${server.internalLadder ? `\nServer: ${server.name}` : ''}`
+                + `\nName: ${player.name}`
+                + `\nMedal: ${medal}`
+                + `\nRanking: ${rank}`
+                + `\nElo Rating: ${elo}`
+                + `\nWins: ${wins}, Losses: ${losses}`
+                + `\nWin Rate: ${winrate}`
+            })
+        }
     }
 }

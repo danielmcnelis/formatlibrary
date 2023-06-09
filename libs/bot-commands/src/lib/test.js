@@ -10,9 +10,7 @@ export default {
         .setDescription('Admin Only - Performs a test. 🧪'),
     async execute(interaction) {
         if (isProgrammer(interaction.member)) {
-            updateSets()
-            setTimeout(() => downloadNewCards(), 1 * 60 * 1000)
-            setTimeout(() => updateMarketPrices(), 2 * 60 * 1000)
+            console.log('interaction.member', interaction.member)
             await interaction.reply(emojis.yellow)
         } else {
             await interaction.reply('🧪')

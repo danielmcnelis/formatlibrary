@@ -261,6 +261,13 @@ export const postTriviaStandings = async (interaction, round, entries, questions
 export const endTrivia = async (entries) => {
     for (let i = 0; i < entries.length; i++) {
         const entry = entries[i]
+        if (i === 0 || entries[0].score === entry.score) {
+            await entry.player.update({ triviaWins: (entry.player.triviaWins || 0) + 1})
+        }
+    }
+
+    for (let i = 0; i < entries.length; i++) {
+        const entry = entries[i]
         const discordId = entry.player.discordId
         await entry.destroy().catch((err) => console.log(err))
 

@@ -69,6 +69,10 @@ export const Player = db.define('players', {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
+  triviaWins: {
+    type: Sequelize.INTEGER,
+    defaultValue: false
+  },
   subscriber: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
