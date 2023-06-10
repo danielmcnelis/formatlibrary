@@ -70,8 +70,7 @@ export const Player = db.define('players', {
     defaultValue: false
   },
   triviaWins: {
-    type: Sequelize.INTEGER,
-    defaultValue: false
+    type: Sequelize.INTEGER
   },
   subscriber: {
     type: Sequelize.BOOLEAN,

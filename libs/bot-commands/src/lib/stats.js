@@ -44,7 +44,7 @@ export default {
             const triviaRankings = Object.entries(data)
                 .sort((a, b) => b[1].smarts - a[1].smarts)
                 .sort((a, b) => b[1].wins - a[1].wins)
-                
+                w
             console.log('triviaRankings', triviaRankings)
             const index = triviaRankings.length ? triviaRankings.findIndex((k) => k[0] === player.id) : null
             const rank = index !== null ? `#${index + 1} out of ${triviaRankings.length}` : `N/A`
