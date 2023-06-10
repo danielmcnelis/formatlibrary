@@ -27,9 +27,6 @@ export const Player = db.define('players', {
   globalName: {
     type: Sequelize.STRING
   },
-  displayName: {
-    type: Sequelize.STRING
-  },
   discordId: {
     type: Sequelize.STRING
   },
