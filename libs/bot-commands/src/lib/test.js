@@ -3,7 +3,7 @@ import { SlashCommandBuilder } from 'discord.js'
 import { isProgrammer, updateSets, downloadNewCards, updateMarketPrices } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 // import { client } from '../client'
-import {util} from 'util'
+const util = require('util')
 console.log('util', util)
 
 export default {
