@@ -105,15 +105,15 @@ export const conductCensus = async (client) => {
                 const member = members[i]
                 if (member.user.bot) continue
                 const player = await Player.findOne({ where: { discordId: member.user.id } })
-                const {data, response} = await axios.get(`https://discord.com/api/v9/users/${member.user.id}`, {
+                const {data, status} = await axios.get(`https://discord.com/api/v9/users/${member.user.id}`, {
                     headers: {
                       Authorization: `Bot ${config.services.bot.token}`
                     }
                 })
 
-                console.log('response.status', response.status)
+                console.log('status', status)
 
-                if (response.status === 429) {
+                if (status === 429) {
                     const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
                     await sleep(data.retryAfter + 0.1)
                 }
