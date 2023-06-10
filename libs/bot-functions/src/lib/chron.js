@@ -116,10 +116,9 @@ export const conductCensus = async (client) => {
                     data = res.data
                     status = res.status
                 } catch (err) {
-                    console.log('err', err)
-                    console.log('err.response', err.response)
+                    console.log(`err.response.headers['retry-after']`, err.response.headers['retry-after'])
                     const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-                    await sleep(err.response['retry-after'] + 0.1)
+                    await sleep(err.response.headers['retry-after'] + 0.1)
                     i--
                     continue
                 }
