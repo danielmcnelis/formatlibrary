@@ -485,7 +485,7 @@ export const convertArrayToObject = (arr = []) => {
 }
 
 //CREATE PLAYER
-export const createPlayer = async (member) => {
+export const createPlayer = async (member, data) => {
     if (member && !member.user.bot) {
         try {
             const id = await Player.generateId()
@@ -494,6 +494,8 @@ export const createPlayer = async (member) => {
                 name: `${member.user.username}`,
                 discordId: `${member.user.id}`,
                 discordName: `${member.user.username}`,
+                globalName: data?.global_name,
+                displayName: data?.display_name,
                 discriminator: `${member.user.discriminator}`
             })
         } catch (err) {

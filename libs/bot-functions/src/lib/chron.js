@@ -105,16 +105,30 @@ export const conductCensus = async (client) => {
                 const member = members[i]
                 if (member.user.bot) continue
                 const player = await Player.findOne({ where: { discordId: member.user.id } })
-                if (player && ( player.name !== member.user.username || player.discordName !== member.user.username || player.discriminator !== member.user.discriminator )) {
+                const {data} = await axios.get(`https://discord.com/api/v9/users/${member.user.id}`, {
+                    headers: {
+                      Authorization: `Bot ${config.services.bot.token}`
+                    }
+                })
+
+                if (player && ( 
+                    player.name !== member.user.username || 
+                    player.globalName !== data?.global_name ||
+                    player.displayName !== data?.display_name ||
+                    player.discordName !== member.user.username || 
+                    player.discriminator !== member.user.discriminator 
+                )) {
                     updateCount++
                     await player.update({
                         name: member.user.username,
+                        globalName: data?.global_name,
+                        displayName: data?.display_name,
                         discordName: member.user.username,
                         discriminator: member.user.discriminator
                     })
                 } else if (!player && !member.user.bot) {
                     createCount++
-                    await createPlayer(member)
+                    await createPlayer(member, data)
                 }
 
                 const membership = await Membership.count({ where: { '$player.discordId$': member.user.id, serverId: guild.id }, include: Player })

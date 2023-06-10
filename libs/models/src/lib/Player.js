@@ -24,6 +24,12 @@ export const Player = db.define('players', {
   discriminator: {
     type: Sequelize.STRING
   },
+  globalName: {
+    type: Sequelize.STRING
+  },
+  displayName: {
+    type: Sequelize.STRING
+  },
   discordId: {
     type: Sequelize.STRING
   },
