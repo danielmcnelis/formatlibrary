@@ -126,7 +126,7 @@ export const conductCensus = async (client) => {
                 console.log('status', status)
 
                 if (player && ( 
-                    player.name !== member.user.username || 
+                    player.name !== data?.global_name || 
                     player.globalName !== data?.global_name ||
                     player.displayName !== data?.display_name ||
                     player.discordName !== member.user.username || 
@@ -134,7 +134,7 @@ export const conductCensus = async (client) => {
                 )) {
                     updateCount++
                     await player.update({
-                        name: member.user.username,
+                        name: data?.global_name || data?.display_name || member.user.username,
                         globalName: data?.global_name,
                         displayName: data?.display_name,
                         discordName: member.user.username,
