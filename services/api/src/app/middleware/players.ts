@@ -80,7 +80,7 @@ export const playersQuery = async (req, res, next) => {
 export const playersId = async (req, res, next) => {
   try {
     const player = await Player.findOne({
-        where: req.query.discriminator 
+        where: req.query && req.query.discriminator 
 !== '0' ? ({
                 discordName: { [Op.iLike]: req.params.id },
                 discriminator: req.query.discriminator,
