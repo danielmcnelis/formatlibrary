@@ -98,7 +98,8 @@ export const SingleDeck = () => {
   if (!deck) return <NotFound/>
   if (!deck.id) return <div/>
 
-  const discriminator = deck.player.discriminator ? `#${deck.player.discriminator}` : ''
+  const discriminator = deck.player.discriminator 
+!== '0' ? `#${deck.player.discriminator}` : ''
 
   const extension =  deck.player.name.replaceAll('%', '%252525')
     .replaceAll('/', '%2F')
@@ -177,7 +178,8 @@ export const SingleDeck = () => {
             <td id="single-deck-builder-td">
               <div className="single-deck-cell">
                 {
-                  deck.player && deck.player.discriminator ? (
+                  deck.player && deck.player.discriminator 
+!== '0' ? (
                     <div onClick={() => goToPlayer()} className="single-deck-builder-link">
                       <b>Builder: </b>
                       <p>{displayName}</p>

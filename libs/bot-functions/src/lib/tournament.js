@@ -1317,7 +1317,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                            `\nDiscord: ${playerA2.name}${playerA2.discriminator ? `#${playerA2.discriminator}` : ''}` +
+                            `\nDiscord: ${playerA2.name}${playerA2.discriminator 
+!== '0' ? `#${playerA2.discriminator}` : ''}` +
                             `\nDuelingBook: ${playerA2.duelingBook}`
                         )
                     } catch (err) {
@@ -1331,7 +1332,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                            `\nDiscord: ${playerA1.name}${playerA1.discriminator ? `#${playerA1.discriminator}` : ''}` +
+                            `\nDiscord: ${playerA1.name}${playerA1.discriminator 
+!== '0' ? `#${playerA1.discriminator}` : ''}` +
                             `\nDuelingBook: ${playerA1.duelingBook}`
                         )
                     } catch (err) {
@@ -1348,7 +1350,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                            `\nDiscord: ${playerB2.name}${playerB2.discriminator ? `#${playerB2.discriminator}` : ''}` +
+                            `\nDiscord: ${playerB2.name}${playerB2.discriminator 
+!== '0' ? `#${playerB2.discriminator}` : ''}` +
                             `\nDuelingBook: ${playerB2.duelingBook}`
                         )
                     } catch (err) {
@@ -1362,7 +1365,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                            `\nDiscord: ${playerB1.name}${playerB1.discriminator ? `#${playerB1.discriminator}` : ''}` +
+                            `\nDiscord: ${playerB1.name}${playerB1.discriminator 
+!== '0' ? `#${playerB1.discriminator}` : ''}` +
                             `\nDuelingBook: ${playerB1.duelingBook}`
                         )
                     } catch (err) {
@@ -1379,7 +1383,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                            `\nDiscord: ${playerC2.name}${playerC2.discriminator ? `#${playerC2.discriminator}` : ''}` +
+                            `\nDiscord: ${playerC2.name}${playerC2.discriminator 
+!== '0' ? `#${playerC2.discriminator}` : ''}` +
                             `\nDuelingBook: ${playerC2.duelingBook}`
                         )
                     } catch (err) {
@@ -1393,7 +1398,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                            `\nDiscord: ${playerC1.name}${playerC1.discriminator ? `#${playerC1.discriminator}` : ''}` +
+                            `\nDiscord: ${playerC1.name}${playerC1.discriminator 
+!== '0' ? `#${playerC1.discriminator}` : ''}` +
                             `\nDuelingBook: ${playerC1.duelingBook}`
                         )
                     } catch (err) {
@@ -1432,7 +1438,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                                `\nDiscord: ${playerA2.name}${playerA2.discriminator ? `#${playerA2.discriminator}` : ''}` +
+                                `\nDiscord: ${playerA2.name}${playerA2.discriminator 
+!== '0' ? `#${playerA2.discriminator}` : ''}` +
                                 `\nDuelingBook: ${playerA2.duelingBook}`
                             )
                         } catch (err) {
@@ -1446,7 +1453,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                                `\nDiscord: ${playerA1.name}${playerA1.discriminator ? `#${playerA1.discriminator}` : ''}` +
+                                `\nDiscord: ${playerA1.name}${playerA1.discriminator 
+!== '0' ? `#${playerA1.discriminator}` : ''}` +
                                 `\nDuelingBook: ${playerA1.duelingBook}`
                             )
                         } catch (err) {
@@ -1463,7 +1471,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                                `\nDiscord: ${playerB2.name}${playerB2.discriminator ? `#${playerB2.discriminator}` : ''}` +
+                                `\nDiscord: ${playerB2.name}${playerB2.discriminator 
+!== '0' ? `#${playerB2.discriminator}` : ''}` +
                                 `\nDuelingBook: ${playerB2.duelingBook}`
                             )
                         } catch (err) {
@@ -1477,7 +1486,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                                `\nDiscord: ${playerB1.name}${playerB1.discriminator ? `#${playerB1.discriminator}` : ''}` +
+                                `\nDiscord: ${playerB1.name}${playerB1.discriminator 
+!== '0' ? `#${playerB1.discriminator}` : ''}` +
                                 `\nDuelingBook: ${playerB1.duelingBook}`
                             )
                         } catch (err) {
@@ -1494,7 +1504,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                                `\nDiscord: ${playerC2.name}${playerC2.discriminator ? `#${playerC2.discriminator}` : ''}` +
+                                `\nDiscord: ${playerC2.name}${playerC2.discriminator 
+!== '0' ? `#${playerC2.discriminator}` : ''}` +
                                 `\nDuelingBook: ${playerC2.duelingBook}`
                             )
                         } catch (err) {
@@ -1508,7 +1519,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                                `\nDiscord: ${playerC1.name}${playerC1.discriminator ? `#${playerC1.discriminator}` : ''}` +
+                                `\nDiscord: ${playerC1.name}${playerC1.discriminator 
+!== '0' ? `#${playerC1.discriminator}` : ''}` +
                                 `\nDuelingBook: ${playerC1.duelingBook}`
                             )
                         } catch (err) {
@@ -1556,7 +1568,8 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                `\nDiscord: ${playerA2.name}${playerA2.discriminator ? `#${playerA2.discriminator}` : ''}` +
+                `\nDiscord: ${playerA2.name}${playerA2.discriminator 
+!== '0' ? `#${playerA2.discriminator}` : ''}` +
                 `\nDuelingBook: ${playerA2.duelingBook}`
             )
         } catch (err) {
@@ -1570,7 +1583,8 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                `\nDiscord: ${playerA1.name}${playerA1.discriminator ? `#${playerA1.discriminator}` : ''}` +
+                `\nDiscord: ${playerA1.name}${playerA1.discriminator 
+!== '0' ? `#${playerA1.discriminator}` : ''}` +
                 `\nDuelingBook: ${playerA1.duelingBook}`
             )
         } catch (err) {
@@ -1587,7 +1601,8 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                `\nDiscord: ${playerB2.name}${playerB2.discriminator ? `#${playerB2.discriminator}` : ''}` +
+                `\nDiscord: ${playerB2.name}${playerB2.discriminator 
+!== '0' ? `#${playerB2.discriminator}` : ''}` +
                 `\nDuelingBook: ${playerB2.duelingBook}`
             )
         } catch (err) {
@@ -1601,7 +1616,8 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                `\nDiscord: ${playerB1.name}${playerB1.discriminator ? `#${playerB1.discriminator}` : ''}` +
+                `\nDiscord: ${playerB1.name}${playerB1.discriminator 
+!== '0' ? `#${playerB1.discriminator}` : ''}` +
                 `\nDuelingBook: ${playerB1.duelingBook}`
             )
         } catch (err) {
@@ -1618,7 +1634,8 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                `\nDiscord: ${playerC2.name}${playerC2.discriminator ? `#${playerC2.discriminator}` : ''}` +
+                `\nDiscord: ${playerC2.name}${playerC2.discriminator 
+!== '0' ? `#${playerC2.discriminator}` : ''}` +
                 `\nDuelingBook: ${playerC2.duelingBook}`
             )
         } catch (err) {
@@ -1632,7 +1649,8 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                `\nDiscord: ${playerC1.name}${playerC1.discriminator ? `#${playerC1.discriminator}` : ''}` +
+                `\nDiscord: ${playerC1.name}${playerC1.discriminator 
+!== '0' ? `#${playerC1.discriminator}` : ''}` +
                 `\nDuelingBook: ${playerC1.duelingBook}`
             )
         } catch (err) {
@@ -1676,7 +1694,8 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
                     `\nServer: ${server.name} ${server.logo}` +
                     `\nChannel: <#${tournament.channelId}>` +
                     `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                    `\nDiscord: ${player2.name}${player2.discriminator ? `#${player2.discriminator}` : ''}` +
+                    `\nDiscord: ${player2.name}${player2.discriminator 
+!== '0' ? `#${player2.discriminator}` : ''}` +
                     `\nDuelingBook: ${player2.duelingBook}`
                 )
             } catch (err) {
@@ -1690,7 +1709,8 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
                     `\nServer: ${server.name} ${server.logo}` +
                     `\nChannel: <#${tournament.channelId}>` +
                     `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                    `\nDiscord: ${player1.name}${player1.discriminator ? `#${player1.discriminator}` : ''}` +
+                    `\nDiscord: ${player1.name}${player1.discriminator 
+!== '0' ? `#${player1.discriminator}` : ''}` +
                     `\nDuelingBook: ${player1.duelingBook}`
                 )
             } catch (err) {

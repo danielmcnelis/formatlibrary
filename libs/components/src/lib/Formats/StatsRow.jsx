@@ -61,7 +61,8 @@ export const StatsRow = (props) => {
     const {index, stats} = props
     const {elo, wins, losses, player} = stats
     if (!player) return <tr/>
-    const discriminator = player.discriminator ? `#${player.discriminator}` : ''
+    const discriminator = player.discriminator 
+!== '0' ? `#${player.discriminator}` : ''
 
     const extension =  player.name.replaceAll('%', '%252525')
         .replaceAll('/', '%2F')

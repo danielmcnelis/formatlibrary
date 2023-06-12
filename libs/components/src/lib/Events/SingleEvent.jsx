@@ -27,7 +27,8 @@ export const SingleEvent = (props) => {
 
   const { id } = useParams()
   const navigate = useNavigate()
-  const discriminator = winner.discriminator ? `#${winner.discriminator}` : ''
+  const discriminator = winner.discriminator 
+!== '0' ? `#${winner.discriminator}` : ''
 
   const goToFormat = () => navigate(`/formats/${event.format ? event.format.name : null}`)
   const goToPlayer = () => navigate(`/players/${
