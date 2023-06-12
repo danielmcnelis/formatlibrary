@@ -300,7 +300,7 @@ export const Settings = () => {
                         <div className="profile-line"><b>Name:</b> {firstName && lastName ? `${firstName} ${lastName}` : ''}</div>
                         <div className="profile-line"><b>Email:</b> {email || ''}</div>
                         <div className="profile-line"><b>DuelingBook:</b> {duelingBook || ''}</div>
-                        <div className="profile-line"><b>Discord:</b> {discordName && discriminator ? (<><span>{discordName}</span><span style={{ color: 'gray' }}>{discriminator !== '0' ? `#${discriminator}` : ''}</span></>): 'N/A'}</div>
+                        <div className="profile-line"><b>Discord:</b> {discordName && discriminator ? (<><span>{discordName}</span><span style={{ color: 'gray' }}>{discriminator ? `#${discriminator}` : ''}</span></>): 'N/A'}</div>
                         <div className="profile-line"><b>Country:</b> {country ? regionNames.of(country) : ''} {country ? <img className="country" src={`https://www.worldometers.info/img/flags/${country.toLowerCase()}-flag.gif`} alt={country + '-flag'}/> : ''}</div>
                         <div className="profile-line"><b>Time Zone:</b> {timeZone || ''}</div>
                         <div className="profile-line"><b>YouTube:</b> {youtube ? <a href={youtube} target="_blank" rel="noopener noreferrer"><img className="social-icon" src="https://cdn.formatlibrary.com/images/logos/youtube.png" alt="YouTube"/></a>: ''}</div>

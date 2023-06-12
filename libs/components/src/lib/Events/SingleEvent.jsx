@@ -27,6 +27,8 @@ export const SingleEvent = (props) => {
 
   const { id } = useParams()
   const navigate = useNavigate()
+  const discriminator = winner.discriminator ? `#${winner.discriminator}` : ''
+
   const goToFormat = () => navigate(`/formats/${event.format ? event.format.name : null}`)
   const goToPlayer = () => navigate(`/players/${
     winner.name.replaceAll('%', '%252525')
@@ -34,7 +36,7 @@ export const SingleEvent = (props) => {
         .replaceAll(' ', '_')
         .replaceAll('#', '%23')
         .replaceAll('?', '%3F') 
-    + winner.discriminator !== '0' ? `#${winner.discriminator}` : ''}`)
+    + discriminator}`)
   
   
   // USE LAYOUT EFFECT
