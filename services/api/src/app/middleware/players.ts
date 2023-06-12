@@ -81,18 +81,20 @@ export const playersId = async (req, res, next) => {
   try {
     console.log('req.query', req.query)
     console.log('req.query?.discriminator', req.query?.discriminator)
+    console.log('req.query && req.query.discriminator', req.query && req.query.discriminator)
+
     const player = await Player.findOne({
-        where: req.query && req.query.discriminator ? ({
-                discordName: { [Op.iLike]: req.params.id },
-                discriminator: req.query.discriminator,
-                hidden: false
-        }) : ({
-                [Op.or]: [
-                    { name: { [Op.iLike]: req.params.id }},
-                    { discordName: { [Op.iLike]: req.params.id }},
-                ],
-                hidden: false            
-        }),
+        where: req.query && req.query.discriminator ? {
+            discordName: { [Op.iLike]: req.params.id },
+            discriminator: req.query.discriminator,
+            hidden: false
+        } : {
+            [Op.or]: [
+                { name: { [Op.iLike]: req.params.id }},
+                { discordName: { [Op.iLike]: req.params.id }},
+            ],
+            hidden: false            
+        },
         attributes: ['id', 'email', 'name', 'discordId', 'discordPfp', 'discordName', 'discriminator', 'firstName', 'lastName', 'googleId', 'googlePfp', 'duelingBook', 'duelingBookPfp', 'country', 'timeZone', 'youtube', 'twitch', 'twitter']
     })
 
