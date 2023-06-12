@@ -105,43 +105,52 @@ export const conductCensus = async (client) => {
                 const member = members[i]
                 if (member.user.bot) continue
                 const player = await Player.findOne({ where: { discordId: member.user.id } })
-                let data
-                let status
-                try {
-                    const res = await axios.get(`https://discord.com/api/v9/users/${member.user.id}`, {
-                        headers: {
-                          Authorization: `Bot ${config.services.bot.token}`
+                
+                if (player && player.duelingBook && player.discriminator === '0') {
+                    try {
+                        const {data, status} = await axios.get(`https://discord.com/api/v9/users/${member.user.id}`, {
+                            headers: {
+                              Authorization: `Bot ${config.services.bot.token}`
+                            }
+                        })
+
+                        console.log('status', status)
+
+                        if (player.name !== player.globalName || 
+                            player.globalName !== data.global_name ||
+                            player.discordName !== member.user.username || 
+                            player.discriminator !== member.user.discriminator 
+                        ) {
+                            updateCount++
+                            await player.update({
+                                name: data.global_name,
+                                globalName: data.global_name,
+                                displayName: data.display_name,
+                                discordName: member.user.username,
+                                discriminator: member.user.discriminator
+                            })
                         }
-                    })
-                    data = res.data
-                    status = res.status
-                } catch (err) {
-                    console.log(`err.response.headers['retry-after']`, err.response.headers['retry-after'])
-                    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-                    await sleep(err.response.headers['retry-after'] * 1000)
-                    i--
-                    continue
-                }
-
-                console.log('status', status)
-
-                if (player && ( 
-                    player.name !== player.globalName || 
-                    player.globalName !== data?.global_name ||
+                    } catch (err) {
+                        console.log(`err.response.headers['retry-after']`, err.response.headers['retry-after'])
+                        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+                        await sleep(err.response.headers['retry-after'] * 1000)
+                        i--
+                        continue
+                    }
+                } else if (player && ( 
+                    player.name !== player.discordName || 
                     player.discordName !== member.user.username || 
                     player.discriminator !== member.user.discriminator 
                 )) {
                     updateCount++
                     await player.update({
-                        name: data?.global_name || member.user.username,
-                        globalName: data?.global_name,
-                        displayName: data?.display_name,
+                        name: member.user.username,
                         discordName: member.user.username,
                         discriminator: member.user.discriminator
                     })
                 } else if (!player && !member.user.bot) {
                     createCount++
-                    await createPlayer(member, data)
+                    await createPlayer(member)
                 }
 
                 const membership = await Membership.count({ where: { '$player.discordId$': member.user.id, serverId: guild.id }, include: Player })

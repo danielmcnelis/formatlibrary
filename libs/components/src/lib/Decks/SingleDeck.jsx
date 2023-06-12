@@ -102,7 +102,7 @@ export const SingleDeck = () => {
     .replaceAll('/', '%2F')
     .replaceAll(' ', '_')
     .replaceAll('#', '%23')
-    .replaceAll('?', '%3F') + '#' + deck.player.discriminator
+    .replaceAll('?', '%3F') + deck.player.discriminator !== '0' ? `#${deck.player.discriminator}` : ''
     
   const goToEvent = () => navigate(`/events/${deck.eventName}`)
   const goToFormat = () => navigate(`/formats/${deck.formatName}`)
@@ -174,7 +174,7 @@ export const SingleDeck = () => {
             <td id="single-deck-builder-td">
               <div className="single-deck-cell">
                 {
-                  deck.player && deck.player.discriminator ? (
+                  deck.player ? (
                     <div onClick={() => goToPlayer()} className="single-deck-builder-link">
                       <b>Builder: </b>
                       <p>{displayName}</p>

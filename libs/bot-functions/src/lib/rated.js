@@ -71,7 +71,7 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
             `New pairing for Rated ${format.name}${format.category !== 'OP' ? ` Format` : ''} ${format.emoji}!` +
             `\nServer: ${commonServer.name} ${commonServer.logo}` +
             `\nChannel: <#${channelId}>` +
-            `\nDiscord: ${player.discordName}#${player.discriminator}` +
+            `\nDiscord: ${player.name}${player.discriminator !== '0' ? `#${player.discriminator}` : ''}` +
             `\n${format.category !== 'OP' ? `DuelingBook: ${player.duelingBook}` : `OPTCGSim: ${player.opTcgSim}`}`
         ).catch((err) => console.log(err))
         
@@ -79,7 +79,7 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
             `New pairing for Rated ${format.name}${format.category !== 'OP' ? ` Format` : ''} ${format.emoji}!` +
             `\nServer: ${commonServer.name} ${commonServer.logo}` +
             `\nChannel: <#${channelId}>` +
-            `\nDiscord: ${opponent.discordName}#${opponent.discriminator}` +
+            `\nDiscord: ${opponent.name}${opponent.discriminator !== '0' ? `#${opponent.discriminator}` : ''}` +
             `\n${format.category !== 'OP' ? `DuelingBook: ${opponent.duelingBook}` : `OPTCGSim: ${opponent.opTcgSim}`}`
         ).catch((err) => console.log(err))
         

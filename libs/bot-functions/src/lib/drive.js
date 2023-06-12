@@ -79,7 +79,7 @@ export const uploadDeckFolder = async (server, tournamentName, decks) => {
               const deck = decks[i]
   
               const fileMetadata = {
-                'name': `${deck.player.discordName}#${deck.player.discriminator}.ydk`,
+                'name': `${deck.player.name}#${deck.player.discriminator}.ydk`,
                 parents: [folderId]
               }
   

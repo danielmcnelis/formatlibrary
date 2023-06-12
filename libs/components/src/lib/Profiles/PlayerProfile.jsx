@@ -5,7 +5,7 @@ import { Badge } from './Badge'
 import { Placement } from './Placement'
 import { DeckThumbnail } from '../Decks/DeckThumbnail'
 import { NotFound } from '../General/NotFound'
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import './PlayerProfile.css'
 
 export const PlayerProfile = () => {
@@ -13,9 +13,7 @@ export const PlayerProfile = () => {
   const [stats, setStats] = useState([])
   const [decks, setDecks] = useState([])
   const [deckTypes, setDeckTypes] = useState([])
-  const { id } = useParams()
-  const location = useLocation()
-  const discriminator = location.hash.slice(-4)
+  const { id, discriminator } = useParams()
 
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0))
@@ -24,7 +22,12 @@ export const PlayerProfile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`/api/players/${id}?discriminator=${discriminator}`)
+        console.log('id', id)
+        console.log('discriminator', discriminator)
+        let route = `/api/players/${id}`
+        if (discriminator) route += `?discriminator=${discriminator}`
+        console.log('route', route)
+        const { data } = await axios.get(route)
         setPlayer(data)
       } catch (err) {
         console.log(err)
@@ -102,7 +105,7 @@ export const PlayerProfile = () => {
                     ) : ''
                 }
                 <div className="profile-line"><b>DuelingBook:</b> {player.duelingBook || 'N/A'}</div>   
-                <div className="profile-line"><b>Discord:</b> {player.discordName && player.discriminator ? (<><span>{player.discordName}</span><span style={{ color: 'gray' }}>#{player.discriminator}</span></>): 'N/A'}</div>
+                <div className="profile-line"><b>Discord:</b> {player.globalName || player.displayName || player.discordName && player.discriminator && player.discriminator !== '0' ? (<><span>{player.discordName}</span><span style={{ color: 'gray' }}>#{player.discriminator}</span></>) : player.discordName || 'N/A'}</div>
                 {
                     player.country ? (
                         <div className="profile-line"><b>Country:</b> {regionNames.of(player.country)} <img className="country" src={`https://www.worldometers.info/img/flags/${player.country.toLowerCase()}-flag.gif`} alt={player.country + '-flag'}/></div>

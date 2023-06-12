@@ -5,6 +5,7 @@ import { emojis } from '@fl/bot-emojis'
 const triviaRole = '1085310457126060153'
 import { client } from '../client'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
+import e from 'express'
 
 //INITIATE TRIVIA
 export const initiateTrivia = async (interaction) => {
@@ -242,27 +243,33 @@ export const postTriviaStandings = async (interaction, round, entries, questions
         return `${index + 1}. <@${entry.player.discordId}> - ${score}${unit} ${enthusiasm}`
     })
 
-    for (let i = 0; i < 5; i += 5) {
-        interaction.channel.send({ content: `${title}\n${standings.slice(i, i + 5).join("\n")}`})
+    for (let i = 0; i < entries.length; i += 5) {
+        if (i === 0) {
+            interaction.channel.send({ content: `${title}\n${standings.slice(i, i + 5).join("\n")}`})
+        } else {
+            interaction.channel.send({ content: `${standings.slice(i, i + 5).join("\n")}`})
+        }
     }
 
-    round++
-
-    return setTimeout(() => {
-        if (round <= 10) {
-            return askQuestion(interaction, round, questions)
-        } else {
-            return endTrivia(entries)
-        }
-    }, 10000)
+    if (round < 10) {
+        round++
+        return setTimeout(() => askQuestion(interaction, round, questions), 10000)
+    } else {
+        return endTrivia(entries)
+    }
 }
 
 //END TRIVIA
 export const endTrivia = async (entries) => {
     for (let i = 0; i < entries.length; i++) {
-        const entry = entries[i]
-        if (i === 0 || entries[0].score === entry.score) {
-            await entry.player.update({ triviaWins: (entry.player.triviaWins || 0) + 1})
+        try {
+            const entry = entries[i]
+            const player = entry.player
+            if (i === 0 || entries[0].score === entry.score) {
+                await player.update({ triviaWins: (player.triviaWins || 0) + 1})
+            }
+        } catch (err) {
+            console.log(err)
         }
     }
 
