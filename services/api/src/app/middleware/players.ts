@@ -79,10 +79,6 @@ export const playersQuery = async (req, res, next) => {
 
 export const playersId = async (req, res, next) => {
   try {
-    console.log('req.query', req.query)
-    console.log('req.query?.discriminator', req.query?.discriminator)
-    console.log('req.query && req.query.discriminator', req.query && req.query.discriminator)
-
     const player = await Player.findOne({
         where: req.query && req.query.discriminator ? {
             discordName: { [Op.iLike]: req.params.id },
