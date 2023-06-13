@@ -36,7 +36,8 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         const url = interaction.options.getString('url')
-        const input = interaction.options.getString('tournament')?.replace(/[\s-]/g, '')
+        const input = interaction.options.getString('tournament')
+        const collapsedInput = input?.replace(/[\s-]/g, '')
         const winner = interaction.options.getUser('winner')
         const loser = interaction.options.getUser('loser')
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
@@ -48,12 +49,12 @@ export default {
             where: {
                 [Op.or]: {
                     name: {[Op.iLike]: input},
-                    abbreviation: {[Op.iLike]: input}
+                    abbreviation: {[Op.iLike]: collapsedInput}
                 }
             }
         })
 
-        if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournament "${input}". Be sure to use the correct abbreviation.`})	
+        if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournament "${input}". Be sure to use the correct name or abbreviation.`})	
 
         const winningPlayer = await Player.findOne({
             where: {
