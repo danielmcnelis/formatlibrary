@@ -5,8 +5,14 @@ import axios from 'axios'
 export const YDKCreator = () => {
     const [text, setText] = useState('')
     const [ydk, setYDK] = useState('')
+    const [errors, setErrors] = useState([])
     const [fileName, setFileName] = useState('converted-text.ydk')
     const file = new Blob([ydk], {type: 'text/plain'})
+
+    // USE EFFECT
+    useEffect(() => {
+        if (errors.length) alert(`Check for typos:\n${errors.join('\n')}`)
+    }, [errors])
 
     // USE EFFECT
     useEffect(() => {
@@ -18,6 +24,7 @@ export const YDKCreator = () => {
             })
     
             setYDK(data.ydk)
+            setErrors(data.errors)
             if (data.fileName) setFileName(data.fileName)
         }
 

@@ -521,8 +521,10 @@ export const convertTextToYDK = async (req, res, next) => {
     try {
         const text = req.body.headers?.text?.trim() || ''
         const arr = text.replace(/^\s*[\n]/gm, '').split('\n')
+        console.log('arr', arr)
         let ydk = 'created by...\n#main\n'
         let fileName = null
+        const errors = []
     
         for (let i = 0; i < arr.length; i++) {
             const line = arr[i].toLowerCase().trim()
@@ -534,16 +536,29 @@ export const convertTextToYDK = async (req, res, next) => {
             const right = line.substring(line.indexOf(' '))?.trim()
 
             if (
-                left.includes('monster') || 
-                left.includes('magic') || 
-                left.includes('spell') || 
-                left.includes('trap')
+                (
+                    left === 'monster' || left === 'monster:' || left === 'monsters' || left === 'monsters:' || 
+                    left === 'magic' || left === 'magic:' || left === 'magics' || left === 'magics:' || 
+                    left === 'spell' ||  left === 'spell:' || left === 'spells' || left === 'spells:' || 
+                    left === 'trap' || left === 'trap:' || left === 'traps' || left === 'traps:'
+                ) && 
+                (!isNaN(right) || right === '')
             ) {
                 continue
-            } else if (left.includes('side')) {
+            } else if (
+                (left === 'side' || left === 'side:') && 
+                (!isNaN(right) || right === '' || right.startsWith('deck') || right === 'deck:')
+            ) {
                 ydk += '!side\n'
                 continue
-            } else if (left.includes('fusion') || left.includes('extra')) {
+            } else if (
+                (
+                    left === 'extra' || left === 'extra:' ||
+                    left === 'fusion' || left === 'fusion:' || 
+                    left === 'fusions' || left === 'fusions:'
+                ) &&
+                (!isNaN(right) || right === '' || right.startsWith('deck'))
+            ) {
                 ydk += '#extra\n'
                 continue
             }
@@ -564,24 +579,41 @@ export const convertTextToYDK = async (req, res, next) => {
                     qty--
                 }
             } else if (
-                right.includes('monster') || 
-                right.includes('magic') || 
-                right.includes('spell') ||
-                right.includes('trap')
+                right === 'monster' || right === 'monster:' || right === 'monsters' || right === 'monsters:' || 
+                right === 'magic' || right === 'magic:' || right === 'magics' || right === 'magics:' || 
+                right === 'spell' || right === 'spell:' || right === 'spells' || right === 'spells:' || 
+                right === 'trap' || right === 'trap:' || right === 'traps' || right === 'traps:'
             ) {
                 continue
-            } else if (right === 'side' || right === 'side deck') {
+            } else if (
+                !isNaN(qty) && (
+                    right === 'side' || right === 'side:' || 
+                    right === 'side deck' || right === 'side deck:'
+                )
+            ) {
                 ydk += '!side\n'
-            } else if (right === 'fusion' || right === 'fusion deck' || right === 'extra' || right === 'extra deck') {
+                continue
+            } else if (
+                !isNaN(qty) && (
+                    right === 'fusion' || right === 'fusion:' || 
+                    right === 'fusions' || right === 'fusions:' || 
+                    right === 'fusion deck' || right === 'fusion deck:' || 
+                    right === 'extra' || right === 'extra:' || 
+                    right === 'extras' || right === 'extras:' ||
+                    right === 'extra deck' || right === 'extra deck:'
+                )
+            ) {
                 ydk += '#extra\n'
+                continue
             } else if (i === 0) {
                 fileName = arr[i].replace(/[^A-Za-z0-9\s]/g, '') + '.ydk'
+                continue
             } else {
-                console.log(`no card found: ${line}`)
+                errors.push(line)
             }
         }
     
-        res.json({ydk, fileName})
+        res.json({ydk, fileName, errors})
     } catch (err) {
         next(err)
     }

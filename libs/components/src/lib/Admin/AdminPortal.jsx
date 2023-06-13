@@ -9,7 +9,7 @@ import './AdminPortal.css'
 const playerId = getCookie('playerId')
 
 export const AdminPortal = () => {
-  const [isContentManager, setIsContentManager] = useState(true)
+  const [isContentManager, setIsContentManager] = useState(false)
   const [view, setView] = useState(false)
 
   // USE EFFECT

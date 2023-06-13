@@ -19,7 +19,6 @@ export const DeckTable = () => {
     const [view, setView] = useState('table')
     const [sortBy, setSortBy] = useState('publishDate:desc')
     const [origin, setOrigin] = useState('event')
-    console.log('origin', origin)
     const [format, setFormat] = useState(null)
     const [formats, setFormats] = useState([])
     const [isAdmin, setIsAdmin] = useState(false)

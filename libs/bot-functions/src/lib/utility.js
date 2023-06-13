@@ -392,7 +392,6 @@ export const drawOPDeck = async (opdk) => {
 // MAKE OP CANVAS ATTACHMENT
 export const makeOPCanvasAttachment = async (cardsArr = [], width = 57, height = 80, cardsPerRow = 10, name = 'main') => {
     try {
-        console.log('cardsArr', cardsArr)
         const rows = Math.ceil(cardsArr.length / cardsPerRow)
         const canvas = Canvas.createCanvas(width * cardsPerRow, height * rows)
         const context = canvas.getContext('2d')
