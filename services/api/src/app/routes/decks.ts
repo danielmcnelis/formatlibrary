@@ -18,7 +18,8 @@ import {
   getDecks,
   countDecks,
   decksId,
-  decksCreate
+  decksCreate,
+  convertTextToYDK
 } from '../middleware'
 
 const router = Router()
@@ -48,6 +49,8 @@ router.get('/api/decks/frequent/:id', decksFrequent)
 router.get('/api/decks/player/:id', decksPlayer)
 
 router.get('/api/decks/like/:id', decksLike)
+
+router.post('/api/decks/text-to-ydk/', convertTextToYDK)
 
 router.get('/api/decks/download/:id', decksDownload)
 

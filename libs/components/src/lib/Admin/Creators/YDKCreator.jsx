@@ -1,68 +1,50 @@
 
 import { useState, useEffect } from 'react'
-import { Card } from '@fl/models'
-import { Op } from 'sequelize'
+import axios from 'axios'
 
 export const YDKCreator = () => {
-    const [text, setText] = useState(null)
-    const [ydk, setYDK] = useState(null)
-
-    const convertTextToYDK = async (text) => {
-        const arr = text.replace(/^\s*[\n]/gm, '').split('\n')
-        let ydk = ''
-
-        for (let i = 0; i < arr.length; i++) {
-            const line = arr[i].toLowerCase().trim()
-            const card = await Card.findOne({
-                where: {
-                    name: {[Op.iLike]: line}
-                }
-            })
-
-            if (card) { 
-                ydk += `${card.konamiCode}\n`
-            } else if (
-                line.includes('monster') || 
-                line.includes('magic') || 
-                line.includes('spell') ||
-                line.includes('trap')
-            ) {
-                continue
-            } else if (line === 'side' || line === 'side deck') {
-                ydk += '!side\n'
-            } else if (line === 'fusion' || line === 'fusion deck' || line === 'extra' || line === 'extra deck') {
-                ydk += '#extra\n'
-            }
-        }
-
-        return ydk
-    }
+    const [text, setText] = useState('')
+    const [ydk, setYDK] = useState('')
+    const [fileName, setFileName] = useState('converted-text.ydk')
+    const file = new Blob([ydk], {type: 'text/plain'})
+    console.log('text', text)
+    console.log('ydk', ydk)
+    console.log('fileName', fileName)
+    console.log('file', file)
 
     // USE EFFECT
     useEffect(() => {
-        setYDK(convertTextToYDK(text))
+        const convertToYdk = async () => {
+            const { data } = await axios.post(`/api/decks/text-to-ydk/`, {
+                headers: {
+                    text: text
+                }
+            })
+    
+            setYDK(data.ydk)
+            if (data.builder) setFileName(data.builder)
+        }
+
+        convertToYdk()
     }, [text])
 
     return (
         <div className="admin-portal">
-            <label>Text:
-                <input
-                    id="text"
-                    onKeyDown={(e) => { setText(e.target.value)}}
-                />
-            </label>
-            <label>YDK:
-                <input
+            <label>Text:</label>
+            <textarea
+                id="text"
+                onChange={(e) => { setText(e.target.value)}}
+            />
+            <label>YDK:</label>
+            <textarea
                     id="ydk"
-                    placeholder={ydk}
-                />
-            </label>
+                    value={ydk}
+            />
             <a
-                className="link desktop-only"
-                href={ydk} 
-                download={`converted-text.ydk`}
+                href={URL.createObjectURL(file)} 
+                download={fileName}
             >                                    
-                <div className="deck-button">
+                <div className="ydk-download-button">
                     <b style={{padding: '0px 6px'}}>Download</b>
                     <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`} alt="floppy-disk"/>
                 </div>
