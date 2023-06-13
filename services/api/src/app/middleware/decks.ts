@@ -522,7 +522,7 @@ export const convertTextToYDK = async (req, res, next) => {
         const text = req.body.headers?.text?.trim() || ''
         const arr = text.replace(/^\s*[\n]/gm, '').split('\n')
         let ydk = 'created by...\n#main\n'
-        let builder = null
+        let fileName = null
     
         for (let i = 0; i < arr.length; i++) {
             const line = arr[i].toLowerCase().trim()
@@ -569,11 +569,11 @@ export const convertTextToYDK = async (req, res, next) => {
             } else if (right === 'fusion' || right === 'fusion deck' || right === 'extra' || right === 'extra deck') {
                 ydk += '#extra\n'
             } else if (i === 0) {
-                builder = arr[i].replace(/[^A-Za-z0-9\s]/g, '')
+                fileName = arr[i].replace(/[^A-Za-z0-9\s]/g, '') + '.ydk'
             }
         }
     
-        res.json({ydk, builder})
+        res.json({ydk, fileName})
     } catch (err) {
         next(err)
     }
