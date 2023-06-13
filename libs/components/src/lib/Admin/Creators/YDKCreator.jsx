@@ -5,12 +5,8 @@ import axios from 'axios'
 export const YDKCreator = () => {
     const [text, setText] = useState('')
     const [ydk, setYDK] = useState('')
-    const [fileName, setFileName] = useState('converted-text.ydk')
+    const [fileName, setFileName] = useState('converted-text')
     const file = new Blob([ydk], {type: 'text/plain'})
-    console.log('text', text)
-    console.log('ydk', ydk)
-    console.log('fileName', fileName)
-    console.log('file', file)
 
     // USE EFFECT
     useEffect(() => {
@@ -42,7 +38,7 @@ export const YDKCreator = () => {
             />
             <a
                 href={URL.createObjectURL(file)} 
-                download={fileName}
+                download={fileName + '.ydk'}
             >                                    
                 <div className="ydk-download-button">
                     <b style={{padding: '0px 6px'}}>Download</b>
