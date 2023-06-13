@@ -526,6 +526,10 @@ export const convertTextToYDK = async (req, res, next) => {
     
         for (let i = 0; i < arr.length; i++) {
             const line = arr[i].toLowerCase().trim()
+                        .replace(/[“”]/g, `"`)
+                        .replace(/[‘’]/g, `'`)
+                        .replace(/[–]/g, '-')
+
             const left = line?.split(' ')[0]
             const right = line.substring(line.indexOf(' '))?.trim()
 
@@ -552,6 +556,8 @@ export const convertTextToYDK = async (req, res, next) => {
             })
     
             if (card) { 
+                let kc = card.konamiCode
+                while (kc.slice(0, 1) === '00') kc = kc.slice(1)
                 if (!qty) qty = 1
                 while (qty) {
                     ydk += `${card.konamiCode}\n`
@@ -570,6 +576,8 @@ export const convertTextToYDK = async (req, res, next) => {
                 ydk += '#extra\n'
             } else if (i === 0) {
                 fileName = arr[i].replace(/[^A-Za-z0-9\s]/g, '') + '.ydk'
+            } else {
+                console.log(`no card found: ${line}`)
             }
         }
     
