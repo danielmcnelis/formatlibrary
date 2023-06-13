@@ -500,22 +500,83 @@ export const decksLike = async (req, res, next) => {
     next(err)
   }
 }
-
 export const decksDownload = async (req, res, next) => {
-  try {
-    const deck = await Deck.findOne({
-      where: {
-        id: req.params.id
-      },
-      attributes: ['id', 'display', 'ydk', 'downloads']
-    })
-
-    deck.downloads++
-    await deck.save()
-    res.send(deck.ydk)
-  } catch (err) {
-    next(err)
+    try {
+      const deck = await Deck.findOne({
+        where: {
+          id: req.params.id
+        },
+        attributes: ['id', 'display', 'ydk', 'downloads']
+      })
+  
+      deck.downloads++
+      await deck.save()
+      res.send(deck.ydk)
+    } catch (err) {
+      next(err)
+    }
   }
+
+export const convertTextToYDK = async (req, res, next) => {
+    try {
+        const text = req.body.headers?.text?.trim() || ''
+        const arr = text.replace(/^\s*[\n]/gm, '').split('\n')
+        let ydk = 'created by...\n#main\n'
+        let builder = null
+    
+        for (let i = 0; i < arr.length; i++) {
+            const line = arr[i].toLowerCase().trim()
+            const left = line?.split(' ')[0]
+            const right = line.substring(line.indexOf(' '))?.trim()
+
+            if (
+                left.includes('monster') || 
+                left.includes('magic') || 
+                left.includes('spell') || 
+                left.includes('trap')
+            ) {
+                continue
+            } else if (left.includes('side')) {
+                ydk += '!side\n'
+                continue
+            } else if (left.includes('fusion') || left.includes('extra')) {
+                ydk += '#extra\n'
+                continue
+            }
+            
+            let qty = Number((left?.match(/\d+/) || [])[0])
+            const card = await Card.findOne({
+                where: {
+                    name: {[Op.iLike]: qty ? right : left + ' ' + right}
+                }
+            })
+    
+            if (card) { 
+                if (!qty) qty = 1
+                while (qty) {
+                    ydk += `${card.konamiCode}\n`
+                    qty--
+                }
+            } else if (
+                right.includes('monster') || 
+                right.includes('magic') || 
+                right.includes('spell') ||
+                right.includes('trap')
+            ) {
+                continue
+            } else if (right === 'side' || right === 'side deck') {
+                ydk += '!side\n'
+            } else if (right === 'fusion' || right === 'fusion deck' || right === 'extra' || right === 'extra deck') {
+                ydk += '#extra\n'
+            } else if (i === 0) {
+                builder = arr[i].replace(/[^A-Za-z0-9\s]/g, '')
+            }
+        }
+    
+        res.json({ydk, builder})
+    } catch (err) {
+        next(err)
+    }
 }
 
 export const countDecks = async (req, res, next) => {
