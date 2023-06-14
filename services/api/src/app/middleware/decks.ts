@@ -1,5 +1,6 @@
 import { Card, Deck, DeckThumb, DeckType, Format, Player } from '@fl/models'
 import { Op } from 'sequelize'
+const FuzzySet = require('fuzzyset')
 
 export const decksReadYdk = async (req, res, next) => {
     try {
@@ -517,14 +518,25 @@ export const decksDownload = async (req, res, next) => {
     }
   }
 
+const findCard = async (query, fuzzyCards) => {
+    const fuzzy_search = fuzzyCards.get(query, null, 0.36) || []
+	fuzzy_search.sort((a, b) => b[0] - a[0])
+	if (!fuzzy_search[0]) return false
+	const card_name = fuzzy_search[0][0] > 0.65 ? fuzzy_search[0][1] : ''
+    return card_name
+}
+
 export const convertTextToYDK = async (req, res, next) => {
     try {
         const text = req.body.headers?.text?.trim() || ''
         const arr = text.replace(/^\s*[\n]/gm, '').split('\n')
-        console.log('arr', arr)
+        const fuzzyCards = FuzzySet([], false)
+        const names = [...await Card.findAll()].map((card) => card.name)
+        names.forEach((card) => fuzzyCards.add(card))
         let ydk = 'created by...\n#main\n'
         let fileName = null
         const errors = []
+
     
         for (let i = 0; i < arr.length; i++) {
             const line = arr[i].toLowerCase().trim()
@@ -564,9 +576,11 @@ export const convertTextToYDK = async (req, res, next) => {
             }
             
             let qty = Number((left?.match(/\d+/) || [])[0])
+            const query = qty ? right : left + ' ' + right
+            const card_name = await findCard(query, fuzzyCards) || ''
             const card = await Card.findOne({
                 where: {
-                    name: {[Op.iLike]: qty ? right : left + ' ' + right}
+                    name: {[Op.iLike]: card_name}
                 }
             })
     
@@ -611,6 +625,18 @@ export const convertTextToYDK = async (req, res, next) => {
             } else {
                 errors.push(line)
             }
+        }
+
+        const split = ydk.split('\n')
+        const extraIndex = split.indexOf('#extra')
+        const sideIndex = split.indexOf('!side')
+
+        if (sideIndex < extraIndex) {
+            const main = split.slice(0, sideIndex)
+            const side = split.slice(sideIndex, extraIndex)
+            const extra = split.slice(extraIndex, -1)
+            const repaired = [...main, ...extra, ...side, '']
+            ydk = repaired.join('\n')
         }
     
         res.json({ydk, fileName, errors})

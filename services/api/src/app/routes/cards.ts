@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { cards, cardsCount, cardsCreate, cardsId, cardsQuery,  } from '../middleware'
+import { cards, cardsCount, cardsCreate, cardsId, cardsQuery } from '../middleware'
 
 const router = Router()
 

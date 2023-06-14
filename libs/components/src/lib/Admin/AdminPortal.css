@@ -46,20 +46,28 @@ label {
     margin-bottom: 10px
   }
 
-  .ydk-download-button {
+  .button-panel {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-content: center;
+    margin: 5px;
+  }
+
+  .ydk-button {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-content: left;
+    align-content: center;
     align-items: center;
     font-size: 18px;
     height: 38px;
     width: 200px;
-    margin: 5px auto;
     padding: 2px 5px;
   }
   
-  .ydk-download-button:hover {
+  .ydk-button:hover {
+	  cursor: pointer;
       color: white;
       background-color:#00a3cc;
       border-radius: 4px; 
