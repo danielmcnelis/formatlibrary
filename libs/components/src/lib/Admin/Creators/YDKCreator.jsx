@@ -44,7 +44,7 @@ export const YDKCreator = () => {
                 value={text}
             />
 
-            <label>YDK: {processing ? <i style={{color: '#CBC5C3'}}> processing...</i> : ''}</label>
+            <label>YDK: {processing ? <i style={{color: '#CBC5C3'}}> Processing</i> : ''}</label>
             <textarea
                     id="ydk"
                     value={ydk}

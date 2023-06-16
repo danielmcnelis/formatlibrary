@@ -530,12 +530,14 @@ export const convertTextToYDK = async (req, res, next) => {
     try {
         const text = req.body.headers?.text?.trim() || ''
         const arr = text.replace(/^\s*[\n]/gm, '').split('\n')
-        const fuzzyCards = FuzzySet([], false)
-        const cards = await Card.findAll()
-        cards.forEach((card) => fuzzyCards.add(card.name))
         let ydk = 'created by...\n#main\n'
         let fileName = null
         const errors = []
+        if (!arr.length) res.json({ydk, fileName, errors})
+
+        const fuzzyCards = FuzzySet([], false)
+        const cards = await Card.findAll()
+        cards.forEach((card) => fuzzyCards.add(card.name))
 
     
         for (let i = 0; i < arr.length; i++) {
