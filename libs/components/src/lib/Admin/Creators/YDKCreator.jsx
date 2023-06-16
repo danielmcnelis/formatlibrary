@@ -4,8 +4,8 @@ import axios from 'axios'
 
 export const YDKCreator = () => {
     const [text, setText] = useState('')
-    console.log('text', text)
     const [ydk, setYDK] = useState('')
+    const [processing, setProcessing] = useState(false)
     const [errors, setErrors] = useState([])
     const [fileName, setFileName] = useState('converted-text.ydk')
     const file = new Blob([ydk], {type: 'text/plain'})
@@ -17,8 +17,8 @@ export const YDKCreator = () => {
 
     // USE EFFECT
     useEffect(() => {
-
         const convertToYdk = async () => {
+            setProcessing(true)
             const { data } = await axios.post(`/api/decks/text-to-ydk/`, {
                 headers: {
                     text: text
@@ -27,10 +27,11 @@ export const YDKCreator = () => {
     
             setYDK(data.ydk)
             setErrors(data.errors)
+            setProcessing(false)
             if (data.fileName) setFileName(data.fileName)
         }
 
-        const timeOutId = setTimeout(() => convertToYdk(), 500)
+        const timeOutId = setTimeout(() => convertToYdk(), 300)
         return () => clearTimeout(timeOutId)
     }, [text])
 
@@ -42,7 +43,8 @@ export const YDKCreator = () => {
                 onChange={(e) => { setText(e.target.value)}}
                 value={text}
             />
-            <label>YDK:</label>
+
+            <label>YDK: {processing ? <i style={{color: '#CBC5C3'}}> processing...</i> : ''}</label>
             <textarea
                     id="ydk"
                     value={ydk}
