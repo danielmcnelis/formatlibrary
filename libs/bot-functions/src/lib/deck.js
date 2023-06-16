@@ -264,7 +264,7 @@ export const getDeckType = async (ydk, format) => {
         }
     })
     
-    if (similarityScores[0][0] > 0.5) {
+    if (similarityScores[0]?.[0] > 0.5) {
         return similarityScores[0][1]  
     } else {
         return null
