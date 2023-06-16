@@ -531,8 +531,8 @@ export const convertTextToYDK = async (req, res, next) => {
         const text = req.body.headers?.text?.trim() || ''
         const arr = text.replace(/^\s*[\n]/gm, '').split('\n')
         const fuzzyCards = FuzzySet([], false)
-        const names = [...await Card.findAll()].map((card) => card.name)
-        names.forEach((card) => fuzzyCards.add(card))
+        const cards = await Card.findAll()
+        cards.forEach((card) => fuzzyCards.add(card.name))
         let ydk = 'created by...\n#main\n'
         let fileName = null
         const errors = []
@@ -580,7 +580,7 @@ export const convertTextToYDK = async (req, res, next) => {
             const card_name = await findCard(query, fuzzyCards) || ''
             const card = await Card.findOne({
                 where: {
-                    name: {[Op.iLike]: card_name}
+                    name: card_name
                 }
             })
     
