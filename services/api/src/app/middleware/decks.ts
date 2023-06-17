@@ -1,6 +1,6 @@
 import { Card, Deck, DeckThumb, DeckType, Format, Player } from '@fl/models'
 import { Op } from 'sequelize'
-import FuzzySet from 'fuzzyset'
+const FuzzySet = require('fuzzyset')
 const fuzzyCards = FuzzySet([], false)
 
 (async () => {
