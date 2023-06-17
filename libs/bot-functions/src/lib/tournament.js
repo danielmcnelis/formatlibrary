@@ -136,7 +136,7 @@ export const getDeckList = async (member, player, format, override = false) => {
 export const getOPDeckList = async (member, player, override = false) => {            
     const filter = m => m.author.id === member.user.id
     const pronoun = override ? `${player.name}'s` : 'your'
-    const message = await member.send({ content: `Please paste your OPTCGSim deck list from the clipboard.`}).catch((err) => console.log(err))
+    const message = await member.send({ content: `Please paste ${pronoun} OPTCGSim deck list from the clipboard.`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     return await message.channel.awaitMessages({
         filter,
@@ -498,8 +498,7 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
 
     if (!simName) return
 
-    
-    const data = tournament.format?.category === 'OP' ? await getOPDeckList(interaction.member, player, true) :
+    const data = format.category === 'OP' ? await getOPDeckList(interaction.member, player, true) :
         await getDeckList(interaction.member, player, format, true)
 
     if (!entry) {
