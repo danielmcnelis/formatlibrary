@@ -12,7 +12,6 @@ import deck from './lib/deck'
 import destroy from './lib/destroy'
 import dice from './lib/dice'
 import drop from './lib/drop'
-import duelingbook from './lib/duelingbook'
 import end from './lib/end'
 import exit from './lib/exit'
 import film from './lib/film'
@@ -55,6 +54,7 @@ import teams from './lib/teams'
 import test from './lib/test'
 import trivia from './lib/trivia'
 import undo from './lib/undo'
+import username from './lib/username'
   
 export default {
     formatLibraryCommands: {
@@ -81,7 +81,6 @@ export default {
         destroy,
         dice,
         drop,
-        duelingbook,
         end,
         exit,
         film,
@@ -114,6 +113,7 @@ export default {
         start,
         stats,
         timer,
-        undo
+        undo,
+        username
     }
 }

@@ -20,10 +20,10 @@ export default {
                 { name: 'Rated Reports', value: '\n/loss - Report a loss to another player. \n/undo - Undo the last report if you made a mistake. \n'},
                 { name: 'Rated Stats', value: '\n/stats - Post a player\'s stats. \n/leaderboard - Post the top rated players. \n/h2h - Post the H2H record between 2 players. \n/history - Post a graph of your Elo history. \n/records - View your recent match records. \n'},
                 { name: 'Notifications', value: '\n/role - Add or remove a role for upcoming tournament notifications. \n/grind - Add or remove a role for rated play notifications. \n'},
-                { name: 'Format Info', value: '\n/legal - Privately check if your deck is legal. \n/info - Post a link to the format overview. \n/activity - Post a graph of dueling activity. \n'},
+                { name: 'Format Info', value: '\n/legal - Privately check if your deck is legal. \n/info - Post a link to the format overview. \n/activity - Post a graph of activity. \n'},
                 { name: 'Tournaments', value: '\n/join - Register for an upcoming tournament.\n/drop - Drop from a tournament. \n/bracket - Post the brackets for the active tournaments. \n/standings - Post the current tournament standings (Swiss only). \n/timer - Post the time remaining in the round.'},
                 // { name: 'Ironmans', value: '\n/iron - Join an ironman queue.\n/queue - Check an ironman queue. \n'},
-                { name: 'Misc.', value: '\n/duelingbook - Set your DuelingBook name. \n/profile - Post a player\'s profile. \n/rng - Random number from 1 to X. \n/flip - Flip a coin. \n/dice - Roll a 6-sided die. \n/help - View the RetroBot User Guide. \n/mod - View the RetroBot Moderator Guide.'}
+                { name: 'Misc.', value: '\n/username - Set your simulator name. \n/profile - Post a player\'s profile. \n/rng - Random number from 1 to X. \n/flip - Flip a coin. \n/dice - Roll a 6-sided die. \n/help - View the RetroBot User Guide. \n/mod - View the RetroBot Moderator Guide.'}
             )
             
         interaction.user.send({ embeds: [botEmbed] }).catch((err) => console.log(err))

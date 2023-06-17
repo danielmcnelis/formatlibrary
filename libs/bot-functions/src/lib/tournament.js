@@ -1045,10 +1045,12 @@ export const processMatchResult = async (server, interaction, winner, winningPla
     const matchesArr = await getMatches(server, tournament.id) || []
     let matchId = false
     let scores = false
+    let challongeMatch
     for (let i = 0; i < matchesArr.length; i++) {
         const match = matchesArr[i].match
         if (match.state !== 'open') continue
         if (checkPairing(match, losingEntry.participantId, winningEntry.participantId)) {
+            challongeMatch = match
             matchId = match.id    
             scores = match.player1_id === winningEntry.participantId ? `${gameCount[0]}-${gameCount[1]}` : `${gameCount[1]}-${gameCount[0]}`
             break
@@ -1175,7 +1177,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
         }
     }
     
-    return matchId
+    return challongeMatch
 }
 
 //PROCESS TEAM RESULT
@@ -1211,12 +1213,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     const matchesArr = await getMatches(server, tournament.id) || []
     let matchId = false
     let scores = false
+    let challongeMatch
     let success
 
     for (let i = 0; i < matchesArr.length; i++) {
         const match = matchesArr[i].match
         if (match.state !== 'open') continue
         if (checkPairing(match, losingEntry.participantId, winningEntry.participantId)) {
+            challongeMatch = match
             matchId = match.id    
             scores =  match.player1_id === winningEntry.participantId ? 
                 `${winningTeam.matchWins}-${winningTeam.matchLosses}` : 
@@ -1545,7 +1549,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
     await losingEntry.update({ losses: losingEntry.losses + 1 })
     await winningEntry.update({ wins: winningEntry.wins + 1 })   
-    return matchId
+    return challongeMatch
 }
 
 //SEND TEAM PAIRINGS

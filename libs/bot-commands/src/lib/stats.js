@@ -84,7 +84,7 @@ export default {
                 })
 
 
-            const index = allStats.length ? allStats.findIndex((s) => s.playerId === player.id) : null
+            const index = allStats.findIndex((s) => s.playerId === player.id)
             const rank = stats && index >= 0 ? `#${index + 1} out of ${allStats.length}` : `N/A`
             const elo = stats ? stats.elo.toFixed(2) : `500.00`
             const medal = getMedal(elo, true)
@@ -99,6 +99,7 @@ export default {
                 + `\nMedal: ${medal}`
                 + `\nRanking: ${rank}`
                 + `\nElo Rating: ${elo}`
+                `${stats.tournamentPoints ? `\nTournament Points: ${stats.tournamentPoints}` : ''}` +
                 + `\nWins: ${wins}, Losses: ${losses}`
                 + `\nWin Rate: ${winrate}`
             })

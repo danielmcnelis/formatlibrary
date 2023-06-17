@@ -67,6 +67,7 @@ export default {
                     value: 
                     `Best Medal: ${getMedal(stats ? stats.bestElo : null, true)}` +
                     `\nHighest Elo: ${stats && stats.bestElo ? stats.bestElo.toFixed(2) : '500.00'}` +
+                    `${stats.tournamentPoints ? `\nTournament Points: ${stats.tournamentPoints}` : ''}` +
                     `\nWinrate: ${stats && (stats.wins || stats.losses) ? `${(100 * stats.wins / (stats.wins + stats.losses)).toFixed(2)}%` : 'N/A'}` +
                     `\nVanquished Foes: ${stats ? stats.vanquished : 0}` +
                     `\nLongest Win Streak: ${stats ? stats.bestStreak : 0}`
@@ -77,8 +78,9 @@ export default {
                 },
                 { 
                     name: `Misc. Info`,
-                    value: player.duelingBook || player.youtube || player.twitch || player.twitter || player.country || player.timeZone ? (
+                    value: player.duelingBook || player.opTcgSim || player.youtube || player.twitch || player.twitter || player.country || player.timeZone ? (
                         `${player.duelingBook ? `DuelingBook: ${player.duelingBook}` : ''}` +
+                        `${player.opTcgSim ? `OnePieceTCGSim: ${player.opTcgSim}` : ''}` +
                         `${player.youtube ? `\nYouTube: ${player.youtube}` : ''}` +
                         `${player.twitch ? `\nTwitch: ${player.twitch}` : ''}` +
                         `${player.twitter ? `\nTwitter: ${player.twitter}` : ''}` +
@@ -142,11 +144,11 @@ export default {
             .addFields(
                 { name: `Best Formats`, value: medals.length ? medals.join('\n') : 'N/A' },
                 { name: `Best Finishes`, value: trophies.length ? trophies.join('\n') : 'N/A' },
-                { name: `DuelingBook`, value: `${player.duelingBook}` },
                 { 
                     name: `Misc. Info`,
-                    value: player.duelingBook || player.youtube || player.twitch || player.twitter || player.country || player.timeZone ? (
+                    value: player.duelingBook || player.opTcgSim || player.youtube || player.twitch || player.twitter || player.country || player.timeZone ? (
                         `${player.duelingBook ? `DuelingBook: ${player.duelingBook}` : ''}` +
+                        `${player.opTcgSim ? `OnePieceTCGSim: ${player.opTcgSim}` : ''}` +
                         `${player.youtube ? `\nYouTube: ${player.youtube}` : ''}` +
                         `${player.twitch ? `\nTwitch: ${player.twitch}` : ''}` +
                         `${player.twitter ? `\nTwitter: ${player.twitter}` : ''}` +

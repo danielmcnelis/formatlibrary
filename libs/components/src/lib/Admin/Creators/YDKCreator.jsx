@@ -4,7 +4,7 @@ import axios from 'axios'
 
 export const YDKCreator = () => {
     const [text, setText] = useState('')
-    const [ydk, setYDK] = useState('')
+    const [ydk, setYDK] = useState('created by...\n#main\n')
     const [processing, setProcessing] = useState(false)
     const [errors, setErrors] = useState([])
     const [fileName, setFileName] = useState('converted-text.ydk')
@@ -17,6 +17,7 @@ export const YDKCreator = () => {
 
     // USE EFFECT
     useEffect(() => {
+        if (text === '') return setYDK('created by...\n#main\n')
         const convertToYdk = async () => {
             setProcessing(true)
             const { data } = await axios.post(`/api/decks/text-to-ydk/`, {
@@ -31,7 +32,7 @@ export const YDKCreator = () => {
             if (data.fileName) setFileName(data.fileName)
         }
 
-        const timeOutId = setTimeout(() => convertToYdk(), 300)
+        const timeOutId = setTimeout(() => convertToYdk(), 500)
         return () => clearTimeout(timeOutId)
     }, [text])
 

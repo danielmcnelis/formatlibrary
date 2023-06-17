@@ -61,7 +61,7 @@ export default {
         let losingEntry
         let tournament
         let tournamentId
-        let challongeMatchId
+        let challongeMatch
 
         const loserHasIronRole = isIronPlayer(losingMember)
         const winnerHasIronRole = isIronPlayer(winningMember)
@@ -123,9 +123,9 @@ export default {
                         tournamentId = tournament.id
                         if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
                         if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
-                        challongeMatchId = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament) :
+                        challongeMatch = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament) :
                             await processMatchResult(server, interaction, winningMember, winningPlayer, losingMember, losingPlayer, tournament)
-                        if (!challongeMatchId) return
+                        if (!challongeMatch) return
                     } else {
                         return
                     }
@@ -180,6 +180,7 @@ export default {
         winnerStats.inactive = false
         winnerStats.streak++
         if (winnerStats.streak >= winnerStats.bestStreak) winnerStats.bestStreak++
+        if (challongeMatch && tournament?.pointsEligible) winnerStats.tournamentPoints += challongeMatch.round + 1
         if (!await Match.checkIfVanquished(format.id, winningPlayer.id, losingPlayer.id)) winnerStats.vanquished++
         await winnerStats.save()
 
@@ -189,16 +190,18 @@ export default {
         loserStats.games++
         loserStats.inactive = false
         loserStats.streak = 0
+        if (challongeMatch?.round === 1 && tournament?.pointsEligible) loserStats.tournamentPoints++
         await loserStats.save()
 
-        const match = await Match.create({
+        await Match.create({
             winner: winningPlayer.name,
             winnerId: winningPlayer.id,
             loser: losingPlayer.name,
             loserId: losingPlayer.id,
             isTournament: isTournament,
             tournamentId: tournamentId,
-            challongeMatchId: challongeMatchId,
+            challongeMatchId: challongeMatch?.id,
+            round: challongeMatch?.round,
             formatName: format.name,
             formatId: format.id,
             delta: delta,
@@ -218,6 +221,6 @@ export default {
             await rPTU.update({ status: 'pending' })
         }
 
-        return await interaction.editReply({ content: `A manual ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournament ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss by <@${losingPlayer.discordId}> to <@${winningPlayer.discordId}> has been recorded.`})		
+        return await interaction.editReply({ content: `A manual ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournament ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss by <@${losingPlayer.discordId}>${tournament?.pointsEligible && challongeMatch?.round ? ` (+1 TP)` : ''} to <@${winningPlayer.discordId}>${tournament?.pointsEligible ? ` (+${challongeMatch.round + 1} TP)` : ''} has been recorded.`})		
     }
 }

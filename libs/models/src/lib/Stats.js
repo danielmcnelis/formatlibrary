@@ -40,6 +40,10 @@ export const Stats = db.define('stats', {
     type: Sequelize.INTEGER,
     defaultValue: 0
   },
+  tournamentPoints: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  },
   internal: {
     type: Sequelize.BOOLEAN
   },

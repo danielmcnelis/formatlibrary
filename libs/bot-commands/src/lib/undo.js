@@ -2,7 +2,7 @@
 import { SlashCommandBuilder } from 'discord.js'    
 import { isMod, hasAffiliateAccess, selectMatch } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
-import { Format, Match, Player, Server, Stats } from '@fl/models'
+import { Format, Match, Player, Server, Stats, Tournament } from '@fl/models'
 import axios from 'axios'
 
 export default {
@@ -34,7 +34,8 @@ export default {
                 console.log(err)
             }
         }
-    
+
+        const tournament = match.isTournament ? await Tournament.findOne({ where: { id: match.tournamentId }}) : null
         const winnerId = match.winnerId
         const loserId = match.loserId
         const winningPlayer = await Player.findOne({ where: { id: winnerId } })
@@ -50,15 +51,17 @@ export default {
         winnerStats.backupElo = null
         winnerStats.wins--
         winnerStats.games--
+        if (tournament?.pointsEligible) winnerStats.tournamentPoints -= (match.round + 1)
         await winnerStats.save()
 
         loserStats.elo = loserStats.backupElo
         loserStats.backupElo = null
         loserStats.losses--
         loserStats.games--
+        if (tournament?.pointsEligible && match.round === 1) winnerStats.tournamentPoints--
         await loserStats.save()
 
         await match.destroy()
-        return await interaction.editReply({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${match.isTournament ? 'Tournament ' : ''}match in which ${winningPlayer.name} defeated ${losingPlayer.name} has been erased.`})	
+        return await interaction.editReply({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${match.isTournament ? 'Tournament ' : ''}match in which ${winningPlayer.name}${tournament?.pointsEligible ? ` (-${match.round + 1}) TP)` : ''} defeated ${losingPlayer.name}${tournament?.pointsEligible && match.round === 1 ? ` (-1 TP)` : ''} has been erased.`})	
     }
 }
