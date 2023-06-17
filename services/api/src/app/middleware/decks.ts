@@ -1,14 +1,6 @@
 import { Card, Deck, DeckThumb, DeckType, Format, Player } from '@fl/models'
 import { Op } from 'sequelize'
 const FuzzySet = require('fuzzyset')
-const fuzzyCards = FuzzySet([], false)
-
-(async () => {
-    console.log('!!FuzzySet', !!FuzzySet)
-    console.log('!!fuzzyCards', !!fuzzyCards)
-    const cards = await Card.findAll()
-    cards.forEach((card) => fuzzyCards?.add(card.name))
-})();
 
 export const decksReadYdk = async (req, res, next) => {
     try {
@@ -542,6 +534,11 @@ export const convertTextToYDK = async (req, res, next) => {
         let fileName = null
         const errors = []
         if (!arr.length) res.json({ydk, fileName, errors})
+
+        const fuzzyCards = FuzzySet([], false)
+        const cards = await Card.findAll()
+        cards.forEach((card) => fuzzyCards.add(card.name))
+
     
         for (let i = 0; i < arr.length; i++) {
             const line = arr[i].toLowerCase().trim()
