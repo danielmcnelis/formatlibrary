@@ -41,6 +41,9 @@ export const Format = db.define('formats', {
   },
   category: {
     type: Sequelize.STRING
+  },
+  resetDate: {
+    type: Sequelize.DATE
   }
 })
 

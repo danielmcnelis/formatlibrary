@@ -1,10 +1,11 @@
 import { Card, Deck, DeckThumb, DeckType, Format, Player } from '@fl/models'
 import { Op } from 'sequelize'
 import FuzzySet from 'fuzzyset'
+const fuzzyCards = FuzzySet([], false)
 
 (async () => {
     console.log('!!FuzzySet', !!FuzzySet)
-    const fuzzyCards = FuzzySet([], false)
+    console.log('!!fuzzyCards', !!fuzzyCards)
     const cards = await Card.findAll()
     cards.forEach((card) => fuzzyCards?.add(card.name))
 })();
