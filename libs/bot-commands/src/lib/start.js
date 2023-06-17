@@ -34,9 +34,9 @@ export default {
 			await tournament.update({ state: 'underway' })
             interaction.editReply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${url} ${tournament.emoji}`})
             if (tournament.isTeamTournament) {
-                return sendTeamPairings(interaction.guild, server, tournament, false)
+                return sendTeamPairings(interaction.guild, server, tournament, format, false)
             } else {
-                return sendPairings(interaction.guild, server, tournament, false)
+                return sendPairings(interaction.guild, server, tournament, format, false)
             }
         } else {
 		    const row = new ActionRowBuilder()

@@ -585,7 +585,8 @@ export const setTimerForTournament = async (interaction, tournamentId, hours = n
     const tournament = await Tournament.findOne({
         where: {
             id: tournamentId
-        }
+        },
+        include: Format
     }) 
 
     const server = await Server.findOne({
@@ -616,9 +617,9 @@ export const setTimerForTournament = async (interaction, tournamentId, hours = n
     }
 
     if (tournament.isTeamTournament) {
-        sendTeamPairings(interaction.guild, server, tournament)
+        sendTeamPairings(interaction.guild, server, tournament, tournament.format)
     } else {
-        sendPairings(interaction.guild, server, tournament, true)
+        sendPairings(interaction.guild, server, tournament, tournament.format, true)
     }
 
     return setTimeout(async () => {
@@ -1324,9 +1325,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                            `\nDiscord: ${playerA2.name}${playerA2.discriminator 
-!== '0' ? `#${playerA2.discriminator}` : ''}` +
-                            `\nDuelingBook: ${playerA2.duelingBook}`
+                            `\nDiscord: ${playerA2.name}${playerA2.discriminator !== '0' ? `#${playerA2.discriminator}` : ''}` +
+                            `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerA2.opTcgSim}` : `DuelingBook: ${playerA2.duelingBook}`}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1339,9 +1339,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                            `\nDiscord: ${playerA1.name}${playerA1.discriminator 
-!== '0' ? `#${playerA1.discriminator}` : ''}` +
-                            `\nDuelingBook: ${playerA1.duelingBook}`
+                            `\nDiscord: ${playerA1.name}${playerA1.discriminator !== '0' ? `#${playerA1.discriminator}` : ''}` +
+                            `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerA1.opTcgSim}` : `DuelingBook: ${playerA1.duelingBook}`}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1357,9 +1356,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                            `\nDiscord: ${playerB2.name}${playerB2.discriminator 
-!== '0' ? `#${playerB2.discriminator}` : ''}` +
-                            `\nDuelingBook: ${playerB2.duelingBook}`
+                            `\nDiscord: ${playerB2.name}${playerB2.discriminator !== '0' ? `#${playerB2.discriminator}` : ''}` +
+                            `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerB2.opTcgSim}` : `DuelingBook: ${playerB2.duelingBook}`}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1372,9 +1370,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                            `\nDiscord: ${playerB1.name}${playerB1.discriminator 
-!== '0' ? `#${playerB1.discriminator}` : ''}` +
-                            `\nDuelingBook: ${playerB1.duelingBook}`
+                            `\nDiscord: ${playerB1.name}${playerB1.discriminator !== '0' ? `#${playerB1.discriminator}` : ''}` +
+                            `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerB1.opTcgSim}` : `DuelingBook: ${playerB1.duelingBook}`}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1390,9 +1387,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                            `\nDiscord: ${playerC2.name}${playerC2.discriminator 
-!== '0' ? `#${playerC2.discriminator}` : ''}` +
-                            `\nDuelingBook: ${playerC2.duelingBook}`
+                            `\nDiscord: ${playerC2.name}${playerC2.discriminator !== '0' ? `#${playerC2.discriminator}` : ''}` +
+                            `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerC2.opTcgSim}` : `DuelingBook: ${playerC2.duelingBook}`}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1405,9 +1401,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                            `\nDiscord: ${playerC1.name}${playerC1.discriminator 
-!== '0' ? `#${playerC1.discriminator}` : ''}` +
-                            `\nDuelingBook: ${playerC1.duelingBook}`
+                            `\nDiscord: ${playerC1.name}${playerC1.discriminator !== '0' ? `#${playerC1.discriminator}` : ''}` +
+                            `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerC1.opTcgSim}` : `DuelingBook: ${playerC1.duelingBook}`}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1445,9 +1440,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                                `\nDiscord: ${playerA2.name}${playerA2.discriminator 
-!== '0' ? `#${playerA2.discriminator}` : ''}` +
-                                `\nDuelingBook: ${playerA2.duelingBook}`
+                                `\nDiscord: ${playerA2.name}${playerA2.discriminator !== '0' ? `#${playerA2.discriminator}` : ''}` +
+                                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerA2.opTcgSim}` : `DuelingBook: ${playerA2.duelingBook}`}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1460,9 +1454,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                                `\nDiscord: ${playerA1.name}${playerA1.discriminator 
-!== '0' ? `#${playerA1.discriminator}` : ''}` +
-                                `\nDuelingBook: ${playerA1.duelingBook}`
+                                `\nDiscord: ${playerA1.name}${playerA1.discriminator !== '0' ? `#${playerA1.discriminator}` : ''}` +
+                                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerA1.opTcgSim}` : `DuelingBook: ${playerA1.duelingBook}`}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1478,9 +1471,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                                `\nDiscord: ${playerB2.name}${playerB2.discriminator 
-!== '0' ? `#${playerB2.discriminator}` : ''}` +
-                                `\nDuelingBook: ${playerB2.duelingBook}`
+                                `\nDiscord: ${playerB2.name}${playerB2.discriminator !== '0' ? `#${playerB2.discriminator}` : ''}` +
+                                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerB2.opTcgSim}` : `DuelingBook: ${playerB2.duelingBook}`}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1493,9 +1485,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                                `\nDiscord: ${playerB1.name}${playerB1.discriminator 
-!== '0' ? `#${playerB1.discriminator}` : ''}` +
-                                `\nDuelingBook: ${playerB1.duelingBook}`
+                                `\nDiscord: ${playerB1.name}${playerB1.discriminator !== '0' ? `#${playerB1.discriminator}` : ''}` +
+                                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerB1.opTcgSim}` : `DuelingBook: ${playerB1.duelingBook}`}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1511,9 +1502,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                                `\nDiscord: ${playerC2.name}${playerC2.discriminator 
-!== '0' ? `#${playerC2.discriminator}` : ''}` +
-                                `\nDuelingBook: ${playerC2.duelingBook}`
+                                `\nDiscord: ${playerC2.name}${playerC2.discriminator !== '0' ? `#${playerC2.discriminator}` : ''}` +
+                                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerC2.opTcgSim}` : `DuelingBook: ${playerC2.duelingBook}`}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1526,9 +1516,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                                `\nDiscord: ${playerC1.name}${playerC1.discriminator 
-!== '0' ? `#${playerC1.discriminator}` : ''}` +
-                                `\nDuelingBook: ${playerC1.duelingBook}`
+                                `\nDiscord: ${playerC1.name}${playerC1.discriminator !== '0' ? `#${playerC1.discriminator}` : ''}` +
+                                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerC1.opTcgSim}` : `DuelingBook: ${playerC1.duelingBook}`}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1575,9 +1564,8 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                `\nDiscord: ${playerA2.name}${playerA2.discriminator 
-!== '0' ? `#${playerA2.discriminator}` : ''}` +
-                `\nDuelingBook: ${playerA2.duelingBook}`
+                `\nDiscord: ${playerA2.name}${playerA2.discriminator !== '0' ? `#${playerA2.discriminator}` : ''}` +
+                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerA2.opTcgSim}` : `DuelingBook: ${playerA2.duelingBook}`}`
             )
         } catch (err) {
             console.log(err)
@@ -1590,9 +1578,8 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                `\nDiscord: ${playerA1.name}${playerA1.discriminator 
-!== '0' ? `#${playerA1.discriminator}` : ''}` +
-                `\nDuelingBook: ${playerA1.duelingBook}`
+                `\nDiscord: ${playerA1.name}${playerA1.discriminator !== '0' ? `#${playerA1.discriminator}` : ''}` +
+                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerA1.opTcgSim}` : `DuelingBook: ${playerA1.duelingBook}`}`
             )
         } catch (err) {
             console.log(err)
@@ -1608,9 +1595,8 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                `\nDiscord: ${playerB2.name}${playerB2.discriminator 
-!== '0' ? `#${playerB2.discriminator}` : ''}` +
-                `\nDuelingBook: ${playerB2.duelingBook}`
+                `\nDiscord: ${playerB2.name}${playerB2.discriminator !== '0' ? `#${playerB2.discriminator}` : ''}` +
+                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerB2.opTcgSim}` : `DuelingBook: ${playerB2.duelingBook}`}`
             )
         } catch (err) {
             console.log(err)
@@ -1623,9 +1609,8 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                `\nDiscord: ${playerB1.name}${playerB1.discriminator 
-!== '0' ? `#${playerB1.discriminator}` : ''}` +
-                `\nDuelingBook: ${playerB1.duelingBook}`
+                `\nDiscord: ${playerB1.name}${playerB1.discriminator !== '0' ? `#${playerB1.discriminator}` : ''}` +
+                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerB1.opTcgSim}` : `DuelingBook: ${playerB1.duelingBook}`}`
             )
         } catch (err) {
             console.log(err)
@@ -1641,9 +1626,8 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                `\nDiscord: ${playerC2.name}${playerC2.discriminator 
-!== '0' ? `#${playerC2.discriminator}` : ''}` +
-                `\nDuelingBook: ${playerC2.duelingBook}`
+                `\nDiscord: ${playerC2.name}${playerC2.discriminator !== '0' ? `#${playerC2.discriminator}` : ''}` +
+                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerC2.opTcgSim}` : `DuelingBook: ${playerC2.duelingBook}`}`
             )
         } catch (err) {
             console.log(err)
@@ -1656,9 +1640,8 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                `\nDiscord: ${playerC1.name}${playerC1.discriminator 
-!== '0' ? `#${playerC1.discriminator}` : ''}` +
-                `\nDuelingBook: ${playerC1.duelingBook}`
+                `\nDiscord: ${playerC1.name}${playerC1.discriminator !== '0' ? `#${playerC1.discriminator}` : ''}` +
+                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerC1.opTcgSim}` : `DuelingBook: ${playerC1.duelingBook}`}`
             )
         } catch (err) {
             console.log(err)
@@ -1701,9 +1684,8 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
                     `\nServer: ${server.name} ${server.logo}` +
                     `\nChannel: <#${tournament.channelId}>` +
                     `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                    `\nDiscord: ${player2.name}${player2.discriminator 
-!== '0' ? `#${player2.discriminator}` : ''}` +
-                    `\nDuelingBook: ${player2.duelingBook}`
+                    `\nDiscord: ${player2.name}${player2.discriminator !== '0' ? `#${player2.discriminator}` : ''}` +
+                    `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${player2.opTcgSim}` : `DuelingBook: ${player2.duelingBook}`}`
                 )
             } catch (err) {
                 console.log(err)
@@ -1716,9 +1698,8 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
                     `\nServer: ${server.name} ${server.logo}` +
                     `\nChannel: <#${tournament.channelId}>` +
                     `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                    `\nDiscord: ${player1.name}${player1.discriminator 
-!== '0' ? `#${player1.discriminator}` : ''}` +
-                    `\nDuelingBook: ${player1.duelingBook}`
+                    `\nDiscord: ${player1.name}${player1.discriminator !== '0' ? `#${player1.discriminator}` : ''}` +
+                    `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${player1.opTcgSim}` : `DuelingBook: ${player1.duelingBook}`}`
                 )
             } catch (err) {
                 console.log(err)
@@ -1968,7 +1949,7 @@ export const dropFromTournament = async (interaction, tournamentId) => {
 // START TOURNAMENT
 export const startTournament = async (interaction, tournamentId) => {
     const server = await Server.findOne({ where: { id: interaction.guildId }})
-    const tournament = await Tournament.findOne({ where: { id: tournamentId }})
+    const tournament = await Tournament.findOne({ where: { id: tournamentId }, include: Format })
     
     const { status } = await axios({
         method: 'post',
@@ -1979,9 +1960,9 @@ export const startTournament = async (interaction, tournamentId) => {
         await tournament.update({ state: 'underway' })
         interaction.channel.send({ content: `Let's go! Your tournament is starting now: https://challonge.com/${tournament.url} ${tournament.emoji}`})
         if (tournament.isTeamTournament) {
-            return sendTeamPairings(interaction.guild, server, tournament)
+            return sendTeamPairings(interaction.guild, server, tournament, tournament.format)
         } else {
-            return sendPairings(interaction.guild, server, tournament, false)
+            return sendPairings(interaction.guild, server, tournament, tournament.format, false)
         }
     } else {
         return await interaction.channel.send({ content: `Error connecting to Challonge.`})

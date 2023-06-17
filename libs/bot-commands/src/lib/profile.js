@@ -80,7 +80,7 @@ export default {
                     name: `Misc. Info`,
                     value: player.duelingBook || player.opTcgSim || player.youtube || player.twitch || player.twitter || player.country || player.timeZone ? (
                         `${player.duelingBook ? `DuelingBook: ${player.duelingBook}` : ''}` +
-                        `${player.opTcgSim ? `OnePieceTCGSim: ${player.opTcgSim}` : ''}` +
+                        `${player.opTcgSim ? `\nOnePieceTCGSim: ${player.opTcgSim}` : ''}` +
                         `${player.youtube ? `\nYouTube: ${player.youtube}` : ''}` +
                         `${player.twitch ? `\nTwitch: ${player.twitch}` : ''}` +
                         `${player.twitter ? `\nTwitter: ${player.twitter}` : ''}` +

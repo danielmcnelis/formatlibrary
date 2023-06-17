@@ -59,9 +59,9 @@ export default {
         }
 
         if (tournament.isTeamTournament) {
-            sendTeamPairings(interaction.guild, server, tournament, ignoreRound1)
+            sendTeamPairings(interaction.guild, server, tournament, format, ignoreRound1)
         } else {
-            sendPairings(interaction.guild, server, tournament, ignoreRound1)
+            sendPairings(interaction.guild, server, tournament, format, ignoreRound1)
         }
 
         return setTimeout(async () => {
