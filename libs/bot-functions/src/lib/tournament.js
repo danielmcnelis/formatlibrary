@@ -336,10 +336,13 @@ export const joinTournament = async (interaction, tournamentId) => {
     
     const simName = tournament.format?.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.member, player, 'OPTCGSim') :
         player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
+
     if (!simName) return
 
     const data = tournament.format?.category === 'OP' ? await getOPDeckList(interaction.member, player) :
         await getDeckList(interaction.member, player, tournament.format)
+
+    if (!data) return
 
     if (!entry && tournament.isTeamTournament && team) {
         const slot = team.playerAId === player.id ? 'A' :
@@ -478,7 +481,8 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
     const tournament = await Tournament.findOne({
         where: {
             id: tournamentId
-        }
+        },
+        include: Format
     })
 
     const server = await Server.findOne({
@@ -489,17 +493,17 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
 
     let entry
     entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournamentId }})
-    const format = await Format.findOne({ where: { name: {[Op.iLike]: tournament.formatName } }})
-    if (!format) return await interaction.reply(`Unable to determine what format is being played in ${tournament.name}. Please contact an administrator.`)
     interaction.reply({ content: `Please check your DMs.` })
     
-    const simName = format.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.member, player, 'OPTCGSim') :
+    const simName = tournament.format?.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.member, player, 'OPTCGSim') :
         player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
 
     if (!simName) return
 
-    const data = format.category === 'OP' ? await getOPDeckList(interaction.member, player, true) :
-        await getDeckList(interaction.member, player, format, true)
+    const data = tournament.format?.category === 'OP' ? await getOPDeckList(interaction.member, player, true) :
+        await getDeckList(interaction.member, player, tournament.format, true)
+
+    if (!data) return
 
     if (!entry) {
         try {
