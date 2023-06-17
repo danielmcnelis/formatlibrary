@@ -1031,7 +1031,7 @@ export const postParticipant = async (server, tournament, player) => {
 }
 
 //PROCESS MATCH RESULT
-export const processMatchResult = async (server, interaction, winner, winningPlayer, loser, losingPlayer, tournament, noshow = false) => {
+export const processMatchResult = async (server, interaction, winner, winningPlayer, loser, losingPlayer, tournament, format, noshow = false) => {
     const losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id }, include: Player })
     const winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id }, include: Player })
     
@@ -1143,10 +1143,15 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                 } catch (err) {
                     console.log(err)
                 }
+
+                const content = format?.category === 'OP' ? `New Match: <@${losingPlayer.discordId}> (DB: ${losingPlayer.opTcgSim}) vs. <@${loserNextOpponent.player.discordId}> (DB: ${loserNextOpponent.player.opTcgSim}). Good luck to both players.` : 
+                    `New Match: <@${losingPlayer.discordId}> (DB: ${losingPlayer.duelingBook}) vs. <@${loserNextOpponent.player.discordId}> (DB: ${loserNextOpponent.player.duelingBook}). Good luck to both duelists.`
         
-                return await interaction.channel.send({ content: `New Match: <@${losingPlayer.discordId}> (DB: ${losingPlayer.duelingBook}) vs. <@${loserNextOpponent.player.discordId}> (DB: ${loserNextOpponent.player.duelingBook}). Good luck to both duelists.`})
+                return await interaction.channel.send({ content: content })
             } else if (loserMatchWaitingOn && loserWaitingOnP1 && loserWaitingOnP2) {
-                return await interaction.channel.send({ content: `${losingPlayer.name}, You are waiting for the result of ${loserWaitingOnP1.player.name} (DB: ${loserWaitingOnP1.player.duelingBook}) vs ${loserWaitingOnP2.player.name} (DB: ${loserWaitingOnP2.player.duelingBook}).`})
+                const content = format?.category === 'OP' ? `${losingPlayer.name}, You are waiting for the result of ${loserWaitingOnP1.player.name} (OPTCGSim: ${loserWaitingOnP1.player.opTcgSim}) vs ${loserWaitingOnP2.player.name} (OPTCGSim: ${loserWaitingOnP2.player.opTcgSim}).` :
+                    `${losingPlayer.name}, You are waiting for the result of ${loserWaitingOnP1.player.name} (DB: ${loserWaitingOnP1.player.duelingBook}) vs ${loserWaitingOnP2.player.name} (DB: ${loserWaitingOnP2.player.duelingBook}).`
+                return await interaction.channel.send({ content: content })
             } else {
                 return await interaction.channel.send({ content: `${losingPlayer.name}, You are waiting for multiple matches to finish. Grab a snack and stay hydrated.`})
             }
@@ -1158,7 +1163,10 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                     return await interaction.channel.send({ content: `<@${winningPlayer.discordId}>, You won the tournament! Congratulations on your stellar performance! ${emojis.legend}`})
                 } else if (winnerNextOpponent) {
                     try {
-                        winner.user.send(`New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${winnerNextOpponent.player.name + '#' + winnerNextOpponent.player.discriminator}\nDuelingBook: ${winnerNextOpponent.player.duelingBook}`)
+                        const name = winnerNextOpponent.player.discriminator === '0' ? winnerNextOpponent.player.name : winnerNextOpponent.player.name + '#' + winnerNextOpponent.player.discriminator
+                        const content = format?.category === 'OP' ? `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${name}\nOPTCGSim: ${winnerNextOpponent.player.opTcgSim}` :
+                            `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${name}\nDuelingBook: ${winnerNextOpponent.player.duelingBook}`
+                        winner.user.send({ content: content })
                     } catch (err) {
                         console.log(err)
                     }
@@ -1166,14 +1174,21 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                     try {
                         const member = await interaction.guild.members.fetch(winnerNextOpponent.player.discordId)
                         const name = winningPlayer.discriminator === '0' ? winningPlayer.name : winningPlayer.name + '#' + winningPlayer.discriminator
-                        member.user.send(`New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${name}\nDuelingBook: ${winningPlayer.duelingBook}`)
+                        const content = format?.category === 'OP' ? `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${name}\nOPTCGSim: ${winningPlayer.opTcgSim}` :
+                            `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${name}\nDuelingBook: ${winningPlayer.duelingBook}`
+                            
+                        member.user.send({ content: content })
                     } catch (err) {
                         console.log(err)
                     }
                     
-                    return await interaction.channel.send({ content: `New Match: <@${winningPlayer.discordId}> (DB: ${winningPlayer.duelingBook}) vs. <@${winnerNextOpponent.player.discordId}> (DB: ${winnerNextOpponent.player.duelingBook}). Good luck to both duelists.`})
+                    const content = format?.category === 'OP' ? `New Match: <@${winningPlayer.discordId}> (OPTCGSim: ${winningPlayer.opTcgSim}) vs. <@${winnerNextOpponent.player.discordId}> (OPTCGSim: ${winnerNextOpponent.player.opTcgSim}). Good luck to both duelists.` : 
+                        `New Match: <@${winningPlayer.discordId}> (DB: ${winningPlayer.duelingBook}) vs. <@${winnerNextOpponent.player.discordId}> (DB: ${winnerNextOpponent.player.duelingBook}). Good luck to both duelists.`
+                    return await interaction.channel.send({ content: content })
                 } else if (winnerMatchWaitingOn && winnerWaitingOnP1 && winnerWaitingOnP2) {
-                    return await interaction.channel.send({ content: `${winningPlayer.name}, You are waiting for the result of ${winnerWaitingOnP1.player.name} (DB: ${winnerWaitingOnP1.player.duelingBook}) vs ${winnerWaitingOnP2.player.name} (DB: ${winnerWaitingOnP2.player.duelingBook}).`})
+                    const content = format?.category === 'OP' ? `${winningPlayer.name}, You are waiting for the result of ${winnerWaitingOnP1.player.name} (OPTCGSim: ${winnerWaitingOnP1.player.opTcgSim}) vs ${winnerWaitingOnP2.player.name} (OPTCGSim: ${winnerWaitingOnP2.player.opTcgSim}).` :
+                        `${winningPlayer.name}, You are waiting for the result of ${winnerWaitingOnP1.player.name} (DB: ${winnerWaitingOnP1.player.duelingBook}) vs ${winnerWaitingOnP2.player.name} (DB: ${winnerWaitingOnP2.player.duelingBook}).`
+                    return await interaction.channel.send({ content: content})
                 } else {
                     return await interaction.channel.send({ content: `${winningPlayer.name}, You are waiting for multiple matches to finish. Grab a snack and stay hydrated.`})
                 }
@@ -1185,7 +1200,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
 }
 
 //PROCESS TEAM RESULT
-export const processTeamResult = async (server, interaction, winningPlayer, losingPlayer, tournament, noshow = false) => {
+export const processTeamResult = async (server, interaction, winningPlayer, losingPlayer, tournament, format, noshow = false) => {
     const losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id }, include: [Player, Team] })
     const winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id }, include: [Player, Team] })
 
@@ -1326,7 +1341,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                             `\nDiscord: ${playerA2.name}${playerA2.discriminator !== '0' ? `#${playerA2.discriminator}` : ''}` +
-                            `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerA2.opTcgSim}` : `DuelingBook: ${playerA2.duelingBook}`}`
+                            `\n${format?.category === 'OP' ? `OPTCGSim: ${playerA2.opTcgSim}` : `DuelingBook: ${playerA2.duelingBook}`}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1340,7 +1355,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                             `\nDiscord: ${playerA1.name}${playerA1.discriminator !== '0' ? `#${playerA1.discriminator}` : ''}` +
-                            `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerA1.opTcgSim}` : `DuelingBook: ${playerA1.duelingBook}`}`
+                            `\n${format?.category === 'OP' ? `OPTCGSim: ${playerA1.opTcgSim}` : `DuelingBook: ${playerA1.duelingBook}`}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1357,7 +1372,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                             `\nDiscord: ${playerB2.name}${playerB2.discriminator !== '0' ? `#${playerB2.discriminator}` : ''}` +
-                            `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerB2.opTcgSim}` : `DuelingBook: ${playerB2.duelingBook}`}`
+                            `\n${format?.category === 'OP' ? `OPTCGSim: ${playerB2.opTcgSim}` : `DuelingBook: ${playerB2.duelingBook}`}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1371,7 +1386,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                             `\nDiscord: ${playerB1.name}${playerB1.discriminator !== '0' ? `#${playerB1.discriminator}` : ''}` +
-                            `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerB1.opTcgSim}` : `DuelingBook: ${playerB1.duelingBook}`}`
+                            `\n${format?.category === 'OP' ? `OPTCGSim: ${playerB1.opTcgSim}` : `DuelingBook: ${playerB1.duelingBook}`}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1388,7 +1403,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                             `\nDiscord: ${playerC2.name}${playerC2.discriminator !== '0' ? `#${playerC2.discriminator}` : ''}` +
-                            `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerC2.opTcgSim}` : `DuelingBook: ${playerC2.duelingBook}`}`
+                            `\n${format?.category === 'OP' ? `OPTCGSim: ${playerC2.opTcgSim}` : `DuelingBook: ${playerC2.duelingBook}`}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1402,7 +1417,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                             `\nDiscord: ${playerC1.name}${playerC1.discriminator !== '0' ? `#${playerC1.discriminator}` : ''}` +
-                            `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerC1.opTcgSim}` : `DuelingBook: ${playerC1.duelingBook}`}`
+                            `\n${format?.category === 'OP' ? `OPTCGSim: ${playerC1.opTcgSim}` : `DuelingBook: ${playerC1.duelingBook}`}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1441,7 +1456,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                                 `\nDiscord: ${playerA2.name}${playerA2.discriminator !== '0' ? `#${playerA2.discriminator}` : ''}` +
-                                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerA2.opTcgSim}` : `DuelingBook: ${playerA2.duelingBook}`}`
+                                `\n${format?.category === 'OP' ? `OPTCGSim: ${playerA2.opTcgSim}` : `DuelingBook: ${playerA2.duelingBook}`}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1455,7 +1470,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                                 `\nDiscord: ${playerA1.name}${playerA1.discriminator !== '0' ? `#${playerA1.discriminator}` : ''}` +
-                                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerA1.opTcgSim}` : `DuelingBook: ${playerA1.duelingBook}`}`
+                                `\n${format?.category === 'OP' ? `OPTCGSim: ${playerA1.opTcgSim}` : `DuelingBook: ${playerA1.duelingBook}`}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1472,7 +1487,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                                 `\nDiscord: ${playerB2.name}${playerB2.discriminator !== '0' ? `#${playerB2.discriminator}` : ''}` +
-                                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerB2.opTcgSim}` : `DuelingBook: ${playerB2.duelingBook}`}`
+                                `\n${format?.category === 'OP' ? `OPTCGSim: ${playerB2.opTcgSim}` : `DuelingBook: ${playerB2.duelingBook}`}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1486,7 +1501,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                                 `\nDiscord: ${playerB1.name}${playerB1.discriminator !== '0' ? `#${playerB1.discriminator}` : ''}` +
-                                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerB1.opTcgSim}` : `DuelingBook: ${playerB1.duelingBook}`}`
+                                `\n${format?.category === 'OP' ? `OPTCGSim: ${playerB1.opTcgSim}` : `DuelingBook: ${playerB1.duelingBook}`}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1503,7 +1518,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                                 `\nDiscord: ${playerC2.name}${playerC2.discriminator !== '0' ? `#${playerC2.discriminator}` : ''}` +
-                                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerC2.opTcgSim}` : `DuelingBook: ${playerC2.duelingBook}`}`
+                                `\n${format?.category === 'OP' ? `OPTCGSim: ${playerC2.opTcgSim}` : `DuelingBook: ${playerC2.duelingBook}`}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1517,7 +1532,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                                 `\nDiscord: ${playerC1.name}${playerC1.discriminator !== '0' ? `#${playerC1.discriminator}` : ''}` +
-                                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerC1.opTcgSim}` : `DuelingBook: ${playerC1.duelingBook}`}`
+                                `\n${format?.category === 'OP' ? `OPTCGSim: ${playerC1.opTcgSim}` : `DuelingBook: ${playerC1.duelingBook}`}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -2028,7 +2043,8 @@ export const processNoShow = async (interaction, tournamentId, userId) => {
     const tournament = await Tournament.findOne({
         where: {
             id: tournamentId
-        }
+        },
+        include: Format
     })
 
     const noShowPlayer = await Player.findOne({
@@ -2066,7 +2082,7 @@ export const processNoShow = async (interaction, tournamentId, userId) => {
     if (!winningEntry) return await interaction.reply({ content: `Error: could not find opponent.`})
     const winningPlayer = winningEntry.player
     const winner = await interaction.guild.members.fetch(winningPlayer.discordId)
-    const success = await processMatchResult(server, interaction, winner, winningPlayer, noShow, noShowPlayer, tournament, true)
+    const success = await processMatchResult(server, interaction, winner, winningPlayer, noShow, noShowPlayer, tournament, tournament.format, true)
     if (!success) return
 
     return await interaction.reply({ content: `<@${noShowPlayer.discordId}>, your Tournament loss to <@${winningPlayer.discordId}> has been recorded as a no-show.`})	
