@@ -73,11 +73,6 @@ export const config = {
     },
     tcgPlayer: {
        accessToken: process.env.TCGPLAYER_ACCESS_TOKEN,
-       tokenType : process.env.TCGPLAYER_TOKEN_TYPE,
-       expiresId : process.env.TCGPLAYER_EXPIRES_IN,
-       username : process.env.TCGPLAYER_USERNAME,
-       issued : process.env.TCGPLAYER_ISSUED,
-       expires : process.env.TCGPLAYER_EXPIRES,
        publicKey : process.env.TCGPLAYER_PUBLIC_KEY,
        privateKey : process.env.TCGPLAYER_PRIVATE_KEY
     }
