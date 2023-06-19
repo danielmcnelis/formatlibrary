@@ -23,12 +23,11 @@ export default {
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.reply({ content: `Try using **/history** in channels like: <#414575168174948372> or <#629464112749084673>.`})  
 
-        let x = 250        
         const user = interaction.options.getUser('user') || interaction.user    
         const discordId = user.id
         const player = await Player.findOne({ where: { discordId: discordId } })
         if (!player) return await interaction.reply({ content: "That user is not in the database."})
-        let eloHistory = [500]
+        const data = [500]
         const serverId = server.internalLadder ? server.id : '414551319031054346'
 
         const matches = await Match.findAll({
@@ -40,24 +39,23 @@ export default {
                 ],
                 serverId: serverId
             },
-            order: [['createdAt', 'ASC']]
+            limit: 250,
+            order: [['createdAt', 'DESC']]
         })
 
         for (let i = 0; i < matches.length; i++) {
             const match = matches[i]
             const delta = match.delta
             const sign = match.winnerId === player.id ? 1 : -1
-            const prevElo = eloHistory.slice(-1)[0] 
+            const prevElo = data.slice(-1)[0] 
             const nextElo = prevElo + (sign * delta)
-            eloHistory.push(nextElo)
+            data.push(nextElo)
         }
 
-        if (eloHistory.length < x) x = eloHistory.length
-        const data = eloHistory.slice(-x)
         const suggestedMin = Math.round(Math.min(...data) / 25) * 25 - 25
         const suggestedMax = Math.round(Math.max(...data) / 25) * 25 + 25
-        const matchNumbers = Array.from({length: x}, (_, k) => x - k)
-        const radius = x <= 10 ? 3 : x <= 50 ? 2 : 1
+        const matchNumbers = Array.from({length: data.length}, (_, k) => data.length - k)
+        const radius = data.length > 50 ? 1 : data.length > 10 ? 2 : 3
         const chart = new QuickChart()
         chart.setConfig({
             type: 'line',
@@ -76,7 +74,7 @@ export default {
                         label: '500',
                         backgroundColor: 'rgb(186, 186, 186)',
                         borderColor: 'rgb(186, 186, 186)',
-                        data: new Array(x).fill(500),
+                        data: new Array(data.length).fill(500),
                         pointRadius: 0,
                         fill: false,
                     },
@@ -85,7 +83,7 @@ export default {
             options: {
                 title: {
                     display: true,
-                    text: `${player.name}'s ${format.name} Elo History - Last ${x} Matches`,
+                    text: `${player.name}'s ${format.name} Elo History - Last ${matches.length} Matches`,
                 },
                 legend: {
                     display: false
