@@ -389,13 +389,17 @@ export const generateMatchupData = async (interaction, server, event, tournament
             deckMap[participant.id] = deck
         } else {
             const [discordName,] = participant.name.split('#')
+            console.log('discordName', discordName)
             const players = [...await Player.findAll({
                 where: {
-                    discordName: discordName
+                    [Op.or]: {
+                        discordName: {[Op.iLike]: discordName},
+                        globalName: {[Op.iLike]: discordName}
+                    }
                 }
             }), ...[...await Alius.findAll({
                 where: {
-                    formerName: discordName
+                    formerName: {[Op.iLike]: discordName}
                 },
                 include: Player
             })].map((a) => a.player)]
