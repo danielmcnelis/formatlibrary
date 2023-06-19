@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { hasAffiliateAccess } from '@fl/bot-functions'
+import { hasAffiliateAccess, isMod } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Format, Match, Player, Replay, Server, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
@@ -42,7 +42,7 @@ export default {
         const loser = interaction.options.getUser('loser')
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
-        const isMod = await isMod(server, interaction.member)
+        
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.editReply({ content: `Try using **/replay** in channels like: <#414575168174948372> or <#629464112749084673>.`})
 
@@ -87,10 +87,10 @@ export default {
         const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
         if (!challongeMatch) return await interaction.editReply({ content: `Error: Challonge match not found.`})	
         const replay = await Replay.findOne({ where: { matchId: match.id }})
-        if (replay && isMod) {
+        if (replay && await isMod(server, interaction.member)) {
             await replay.update({ url })
             return await interaction.editReply({ content: `Replay updated for Round ${challongeMatch?.match?.round} of ${tournament.name} ${tournament.logo}:\nMatch: ${replay.winner} vs ${replay.loser}\nURL: <${url}>`})	
-        } if (replay && !isMod) {
+        } if (replay) {
             return await interaction.editReply({ content: `The replay from this match was already saved:\n<${replay.url}>\n\nIf this link is incorrect, please get a Moderator to help you.`})	
         } else {
             try {
