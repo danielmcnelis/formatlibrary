@@ -27,7 +27,7 @@ export default {
         const discordId = user.id
         const player = await Player.findOne({ where: { discordId: discordId } })
         if (!player) return await interaction.reply({ content: `That user is not in the database.`})
-        const data = []
+        let data = [500]
         const serverId = server.internalLadder ? server.id : '414551319031054346'
 
         const matches = await Match.findAll({
@@ -39,13 +39,10 @@ export default {
                 ],
                 serverId: serverId
             },
-            limit: 250,
             order: [['createdAt', 'DESC']]
         })
 
-        if (matches.length < 250) data.push(500)
-
-        for (let i = matches.length - 1; i >= 0; i--) {
+        for (let i = 0; i < matches.length; i++) {
             const match = matches[i]
             const delta = match.delta
             const sign = match.winnerId === player.id ? 1 : -1
@@ -53,6 +50,8 @@ export default {
             const nextElo = prevElo + (sign * delta)
             data.push(nextElo)
         }
+
+        data = data.slice(-250)
 
         const suggestedMin = Math.round(Math.min(...data) / 25) * 25 - 25
         const suggestedMax = Math.round(Math.max(...data) / 25) * 25 + 25
@@ -85,7 +84,7 @@ export default {
             options: {
                 title: {
                     display: true,
-                    text: `${player.name}'s ${format.name} Elo History - Last ${matches.length} Matches`,
+                    text: `${player.name}'s ${format.name} Elo History - Last ${data.length - 1} Matches`,
                 },
                 legend: {
                     display: false
