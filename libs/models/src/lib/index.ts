@@ -274,6 +274,7 @@ export {
   Membership,
   OPCard,
   OPDeck,
+  Pairing,
   Player,
   Pool,
   Price,
