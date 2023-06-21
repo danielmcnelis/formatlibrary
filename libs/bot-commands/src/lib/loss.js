@@ -228,6 +228,7 @@ export default {
                     formatId: format.id,
                     formatName: format.name,
                     matchId: match.id,
+                    pairingId: pairing.id,
                     source: 'pool'
                 })
 
