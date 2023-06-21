@@ -38,6 +38,13 @@ export const Match = db.define('matches', {
     round: {
         type: Sequelize.INTEGER
     },
+    isRatedPairing: {
+        type: Sequelize.BOOLEAN,   
+        defaultValue: false
+    },
+    pairingId: {
+        type: Sequelize.INTEGER,
+    },
     internal: {
         type: Sequelize.BOOLEAN,
         defaultValue: false

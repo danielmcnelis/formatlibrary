@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Deck, Match, Membership, OPCard, OPDeck, Player, Pool, Server, Stats } from '@fl/models'
+import { Deck, Match, Membership, OPCard, OPDeck, Pairing, Player, Pool, Server, Stats } from '@fl/models'
 import { Op } from 'sequelize'
 import { getRatedFormat, getNewRatedDeck, getNewOPRatedDeck, getRatedConfirmation, getPreviousRatedDeck } from '@fl/bot-functions'
 import { getIssues } from '@fl/bot-functions'
@@ -232,10 +232,23 @@ const getRatedInformation = async (interaction, player) => {
 !== '0' ? `#${opponent.discriminator}` : ''}` +
                     `\n${format.category !== 'OP' ? `DuelingBook: ${opponent.duelingBook}` : `OPTCGSim: ${opponent.opTcgSim}`}`
                 ).catch((err) => console.log(err))
-                
-                await potentialPair.destroy()
-                await pool.destroy()
 
+                await Pairing.create({
+                    formatId: format.id,
+                    formatName: format.name,
+                    serverId: commonServer.id,
+                    serverName: commonServer.name,
+                    playerA: pool.name,
+                    playerAId: pool.playerId,
+                    playerADeckFile: pool.deckFile,
+                    playerB: potentialPair.name,
+                    playerBId: potentialPair.playerId,
+                    playerBDeckFile: potentialPair.deckFile
+                })
+                
+                await pool.destroy()
+                await potentialPair.destroy()
+                
                 const poolsToDeactivate = await Pool.findAll({
                     where: {
                         playerId: {[Op.or]: [player.id, opponent.id]}

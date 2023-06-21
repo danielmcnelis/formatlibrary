@@ -229,7 +229,7 @@ export const checkOPDeckList = async (member, format) => {
 }
 
 //GET DECK TYPE
-export const getDeckType = async (ydk, format) => {
+export const getDeckType = async (ydk, formatName) => {
     const main = ydk.split('#extra')[0]
     if (!main) return
     const primaryDeckArr = main.split('\n').filter(el => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '').sort()
@@ -238,7 +238,7 @@ export const getDeckType = async (ydk, format) => {
         where: {
             type: {[Op.not]: 'Other' },
             deckTypeId: {[Op.not]: null },
-            formatName: format
+            formatName: formatName
         }
     })
 

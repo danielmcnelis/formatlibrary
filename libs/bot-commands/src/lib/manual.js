@@ -1,8 +1,8 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { createPlayer, postStory, isMod, isNewUser, hasAffiliateAccess, isIronPlayer, isTourPlayer, checkPairing, getMatches, processMatchResult, processTeamResult, selectTournament } from '@fl/bot-functions'
+import { createPlayer, getDeckType, postStory, isMod, isNewUser, hasAffiliateAccess, isIronPlayer, isTourPlayer, checkPairing, getMatches, processMatchResult, processTeamResult, selectTournament } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
-import { Entry, Format, Iron, Match, Player, Pool, Server, Stats, Tournament } from '@fl/models'
+import { Entry, Format, Iron, Match, Matchup, Pairing, Player, Pool, Server, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 
 export default {
@@ -193,7 +193,7 @@ export default {
         if (challongeMatch?.round === 1 && tournament?.pointsEligible) loserStats.tournamentPoints++
         await loserStats.save()
 
-        await Match.create({
+        const match = await Match.create({
             winner: winningPlayer.name,
             winnerId: winningPlayer.id,
             loser: losingPlayer.name,
@@ -208,6 +208,38 @@ export default {
             serverId: serverId,
             internal: server.internalLadder
         })
+
+        if (!isTournament && !isIronMatch) {
+            const pairing = await Pairing.findOne({
+                where: {
+                    formatId: format.id,
+                    status: 'active',
+                    playerAId: {[Op.or]: [winningPlayer.id, losingPlayer.id]},
+                    playerBId: {[Op.or]: [winningPlayer.id, losingPlayer.id]}
+                }
+            })
+
+            if (pairing) {
+                const winnerIsPlayerA = pairing.playerAId === winningPlayer.id
+                const winningDeckFile = winnerIsPlayerA ? pairing.deckFileA : pairing.deckFileB
+                const losingDeckFile = winnerIsPlayerA ? pairing.deckFileB : pairing.deckFileA
+                const winningDeckType = await getDeckType(winningDeckFile, format.name)
+                const losingDeckType = await getDeckType(losingDeckFile, format.name)
+
+                await Matchup.create({
+                    winningDeckType: winningDeckType.name,
+                    losingDeckType: losingDeckType.name,
+                    winningDeckTypeId: winningDeckType.id,
+                    losingDeckTypeId: losingDeckType.id,
+                    formatId: format.id,
+                    formatName: format.name,
+                    matchId: match.id,
+                    source: 'pool'
+                })
+                
+                await pairing.update({ status: 'complete' })
+            }
+        }
 
         const poolsToUpdate = await Pool.findAll({
             where: {

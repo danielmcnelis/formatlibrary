@@ -19,21 +19,15 @@ export const testGetDeckType = async (eventId = '') => {
             const deck = decks[i]
             const ydk = deck.ydk
             const formatName = deck.formatName
-            const name = await getDeckType(ydk, formatName)
+            const deckType = await getDeckType(ydk, formatName)
 
-            if (name) {
-                const deckType = await DeckType.findOne({
-                    where: {
-                        name: name
-                    }
-                })
-
+            if (deckType) {
                 await deck.update({
                     type: deckType.name,
                     deckTypeId: deckType.id
                 })
 
-                console.log(`Labeling ${deck.builder}'s deck ${deck.id} as: ${name}`)
+                console.log(`Labeling ${deck.builder}'s deck ${deck.id} as: ${deckType.name}`)
             } else {
                 console.log(`<!> Could not determine type for ${deck.builder}'s deck ${deck.id} <!>`)
                 continue

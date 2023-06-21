@@ -25,6 +25,7 @@ import { Matchup } from './Matchup'
 import { Membership } from './Membership'
 import { OPCard } from './OPCard'
 import { OPDeck } from './OPDeck'
+import { Pairing } from './Pairing'
 import { Player } from './Player'
 import { Price } from './Price'
 import { Print } from './Print'
@@ -157,6 +158,9 @@ Match.hasOne(Matchup)
 Matchup.belongsTo(Tournament)
 Tournament.hasMany(Matchup)
 
+Matchup.belongsTo(Pairing)
+Pairing.hasOne(Matchup)
+
 //MEMBERSHIP
 Membership.belongsTo(Player)
 Player.hasMany(Membership)
@@ -185,7 +189,11 @@ Card.hasMany(Print)
 Print.belongsTo(Set)
 Set.hasMany(Print)
 
-//RATED POOL
+//PAIRING
+Pairing.belongsTo(Format)
+Format.hasMany(Pairing)
+
+//POOL
 Pool.belongsTo(Format)
 Format.hasMany(Pool)
 

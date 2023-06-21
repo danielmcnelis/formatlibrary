@@ -4,7 +4,7 @@
 //MODULE IMPORTS
 import axios from 'axios'
 import { Op } from 'sequelize'
-import { Deck, Format, OPCard, Player, Pool, Stats, Server } from '@fl/models'
+import { Deck, Format, OPCard, Pairing, Player, Pool, Stats, Server } from '@fl/models'
 import { emojis } from '@fl/bot-emojis'
 import { getIssues } from './deck'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
@@ -85,6 +85,19 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
             `\n${format.category !== 'OP' ? `DuelingBook: ${opponent.duelingBook}` : `OPTCGSim: ${opponent.opTcgSim}`}`
         ).catch((err) => console.log(err))
         
+        await Pairing.create({
+            formatId: format.id,
+            formatName: format.name,
+            serverId: commonServer.id,
+            serverName: commonServer.name,
+            playerA: yourPool.name,
+            playerAId: yourPool.playerId,
+            playerADeckFile: yourPool.deckFile,
+            playerB: opponentsPool.name,
+            playerBId: opponentsPool.playerId,
+            playerBDeckFile: opponentsPool.deckFile
+        })
+
         await yourPool.destroy()
         await opponentsPool.destroy()
 

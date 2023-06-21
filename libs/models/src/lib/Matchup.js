@@ -27,7 +27,14 @@ export const Matchup = db.define('matchups', {
     losingDeckId: {
         type: Sequelize.INTEGER
     },
+    source: {
+        type: Sequelize.STRING,
+        defaultValue: 'tournament'
+    },
     challongeMatchId: {
+        type: Sequelize.INTEGER
+    },
+    pairingId: {
         type: Sequelize.INTEGER
     }
 })

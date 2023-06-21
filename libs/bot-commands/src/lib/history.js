@@ -26,15 +26,15 @@ export default {
         const user = interaction.options.getUser('user') || interaction.user    
         const discordId = user.id
         const player = await Player.findOne({ where: { discordId: discordId } })
-        if (!player) return await interaction.reply({ content: "That user is not in the database."})
-        const data = [500]
+        if (!player) return await interaction.reply({ content: `That user is not in the database.`})
+        const data = []
         const serverId = server.internalLadder ? server.id : '414551319031054346'
 
         const matches = await Match.findAll({
             where: {
                 formatName: format.name,
                 [Op.or]: [
-                    { winnerId: player.id }, 
+                    { winnerId: player.id },
                     { loserId: player.id }
                 ],
                 serverId: serverId
@@ -43,7 +43,9 @@ export default {
             order: [['createdAt', 'DESC']]
         })
 
-        for (let i = 0; i < matches.length; i++) {
+        if (matches.length < 250) data.push(500)
+
+        for (let i = matches.length - 1; i >= 0; i--) {
             const match = matches[i]
             const delta = match.delta
             const sign = match.winnerId === player.id ? 1 : -1
