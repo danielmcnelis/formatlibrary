@@ -210,15 +210,10 @@ export default {
 
             if (pairing) {
                 const winnerIsPlayerA = pairing.playerAId === winningPlayer.id
-                console.log('winnerIsPlayerA', winnerIsPlayerA)
                 const winningDeckFile = winnerIsPlayerA ? pairing.deckFileA : pairing.deckFileB
                 const losingDeckFile = winnerIsPlayerA ? pairing.deckFileB : pairing.deckFileA
-                console.log('winningDeckFile', winningDeckFile)
-                console.log('losingDeckFile', losingDeckFile)
                 const winningDeckType = await getDeckType(winningDeckFile, format.name)
                 const losingDeckType = await getDeckType(losingDeckFile, format.name)
-                console.log('winningDeckType', winningDeckType)
-                console.log('losingDeckType', losingDeckType)
 
                 await Matchup.create({
                     winningDeckType: winningDeckType?.name,
