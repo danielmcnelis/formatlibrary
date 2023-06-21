@@ -227,16 +227,16 @@ export default {
                 const losingDeckType = await getDeckType(losingDeckFile, format.name)
 
                 await Matchup.create({
-                    winningDeckType: winningDeckType.name,
-                    losingDeckType: losingDeckType.name,
-                    winningDeckTypeId: winningDeckType.id,
-                    losingDeckTypeId: losingDeckType.id,
+                    winningDeckType: winningDeckType?.name,
+                    losingDeckType: losingDeckType?.name,
+                    winningDeckTypeId: winningDeckType?.id,
+                    losingDeckTypeId: losingDeckType?.id,
                     formatId: format.id,
                     formatName: format.name,
                     matchId: match.id,
                     source: 'pool'
                 })
-                
+
                 await pairing.update({ status: 'complete' })
             }
         }
