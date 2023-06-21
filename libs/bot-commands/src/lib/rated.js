@@ -240,10 +240,10 @@ const getRatedInformation = async (interaction, player) => {
                     serverName: commonServer.name,
                     playerA: pool.name,
                     playerAId: pool.playerId,
-                    playerADeckFile: pool.deckFile,
+                    DeckFileA: pool.deckFile,
                     playerB: potentialPair.name,
                     playerBId: potentialPair.playerId,
-                    playerBDeckFile: potentialPair.deckFile
+                    DeckFileB: potentialPair.deckFile
                 })
                 
                 await pool.destroy()

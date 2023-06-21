@@ -92,10 +92,10 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
             serverName: commonServer.name,
             playerA: yourPool.name,
             playerAId: yourPool.playerId,
-            playerADeckFile: yourPool.deckFile,
+            deckFileA: yourPool.deckFile,
             playerB: opponentsPool.name,
             playerBId: opponentsPool.playerId,
-            playerBDeckFile: opponentsPool.deckFile
+            deckFileB: opponentsPool.deckFile
         })
 
         await yourPool.destroy()
