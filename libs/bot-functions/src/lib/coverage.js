@@ -43,8 +43,7 @@ export const createDecks = async (event, data) => {
 
                 if (count !== 3) {
                     const placement = participant.final_rank ? parseInt(participant.final_rank, 10) : null
-                    const deckType = await getDeckType(entry.ydk, event.formatName) || 
-                        ({ name: 'Other', category: 'Other' })
+                    const deckType = await getDeckType(entry.ydk, event.formatName)
 
                     await Deck.create({
                         type: deckType.name,

@@ -4,7 +4,7 @@
 //MODULE IMPORTS
 import axios from 'axios'
 import { Op } from 'sequelize'
-import { Card, OPCard, Format, Status, Deck } from '@fl/models'
+import { Card, OPCard, Format, Status, Deck, DeckType } from '@fl/models'
 import { convertArrayToObject } from './utility.js'
 
 // COMPARE DECKS
@@ -239,7 +239,8 @@ export const getDeckType = async (ydk, formatName) => {
             type: {[Op.not]: 'Other' },
             deckTypeId: {[Op.not]: null },
             formatName: formatName
-        }
+        },
+        include: DeckType
     })
 
     const similarityScores = []
@@ -251,7 +252,7 @@ export const getDeckType = async (ydk, formatName) => {
         const comparisonDeckArr = otherMain.split('\n').filter(el => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '').sort()
 
         const score = compareDecks(primaryDeckArr, comparisonDeckArr)
-        similarityScores.push([score, otherDeck.type])
+        similarityScores.push([score, otherDeck.deckType])
     }
 
     similarityScores.sort((a, b) => {
@@ -267,7 +268,8 @@ export const getDeckType = async (ydk, formatName) => {
     if (similarityScores[0]?.[0] > 0.5) {
         return similarityScores[0][1]  
     } else {
-        return null
+        const deckType = await DeckType.findOne({ where: { name: 'Other' }})
+        return deckType
     }
   
 }
