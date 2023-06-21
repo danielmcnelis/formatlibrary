@@ -39,7 +39,7 @@ export default {
                 ],
                 serverId: serverId
             },
-            order: [['createdAt', 'DESC']]
+            order: [['createdAt', 'ASC']]
         })
 
         for (let i = 0; i < matches.length; i++) {
