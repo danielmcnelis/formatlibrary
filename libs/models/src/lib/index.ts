@@ -202,11 +202,13 @@ Player.hasMany(Pool)
 
 //REPLAY
 Replay.belongsTo(Player, {
-    as: 'loser'
+    as: 'loser',
+    id: 'loserId'
 })
 
 Replay.belongsTo(Player, {
-    as: 'winner'
+    as: 'winner',
+    id: 'winnerId'
 })
 
 Player.hasMany(Replay)
