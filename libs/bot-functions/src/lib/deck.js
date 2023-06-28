@@ -267,7 +267,7 @@ export const getDeckType = async (deckfile, formatName) => {
 
     for (let i = 0; i < labeledDecks.length; i++) {
         const otherDeck = labeledDecks[i]
-        const otherMain = otherDeck.deckfile.split('#extra')[0]
+        const otherMain = otherDeck.ydk.split('#extra')[0]
         if (!otherMain) continue
         const comparisonDeckArr = otherMain.split('\n').filter(el => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '').sort()
 
