@@ -24,7 +24,9 @@ export default {
         ),
 	async execute(interaction) {
         const name = interaction.options.getString('name')
-        const [simulator, colName] = interaction.options.getString('simulator').split(',')
+        const [simulator, colName] = interaction.options.getString('simulator').split(', ')
+        console.log('simulator', simulator)
+        console.log('colName', colName)
         const player =  await Player.findOne({ where: { discordId: interaction.user.id } })
         await player.update({ [colName]: name })
         return await interaction.reply({ content: `Your ${simulator} username has been set to: ${player[colName]}.`})
