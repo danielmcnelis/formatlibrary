@@ -437,8 +437,8 @@ export const SingleEvent = (props) => {
                           index={index} 
                           roundName={roundName}
                           url={replay.url}
-                          winner={replay.player[0]}
-                          loser={replay.player[1]}
+                          winner={replay.winner}
+                          loser={replay.loser}
                           width="360px"
                           margin="10px 5px"
                           padding="5px"
