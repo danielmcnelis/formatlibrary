@@ -245,7 +245,7 @@ export const eventsId = async (req, res, next) => {
             display: true,
             eventId: event.id
         },
-        include: Player,
+        include: [{ model: Player, as: 'loser' }, { model: Player, as: 'winner' }],
         order: [['round', 'DESC']]
     })
 
