@@ -89,7 +89,7 @@ export default {
         const replay = await Replay.findOne({ where: { matchId: match.id }})
         if (replay && await isMod(server, interaction.member)) {
             await replay.update({ url })
-            return await interaction.editReply({ content: `Replay updated for Round ${challongeMatch?.match?.round} of ${tournament.name} ${tournament.logo}:\nMatch: ${replay.winner} vs ${replay.loser}\nURL: <${url}>`})	
+            return await interaction.editReply({ content: `Replay updated for Round ${challongeMatch?.match?.round} of ${tournament.name} ${tournament.logo}:\nMatch: ${replay.winnerName} vs ${replay.loserName}\nURL: <${url}>`})	
         } if (replay) {
             return await interaction.editReply({ content: `The replay from this match was already saved:\n<${replay.url}>\n\nIf this link is incorrect, please get a Moderator to help you.`})	
         } else {
@@ -100,9 +100,9 @@ export default {
                     formatId: format.id,
                     tournamentId: tournament.id,
                     winnerId: winningPlayer.id,
-                    winner: winningPlayer.name,
+                    winnerName: winningPlayer.name,
                     loserId: losingPlayer.id,
-                    loser: losingPlayer.name,
+                    loserName: losingPlayer.name,
                     matchId: match.id,
                     round: challongeMatch?.match?.round
                 })
