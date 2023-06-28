@@ -228,9 +228,29 @@ export const checkOPDeckList = async (member, format) => {
     })
 }
 
+// GET OP DECK TYPE
+export const getOPDeckType = async (opdk) => {
+    const str = opdk.trim().split('\n')[0]
+    const cardCode = str.slice(str.indexOf('x') + 1)
+    const leader = await OPCard.findOne({ where: { cardCode }})
+    let deckType = await DeckType.findOne({
+        name: leader.name,
+        category: leader.color
+    })
+
+    if (!deckType) deckType = await DeckType.create({
+        name: leader.name,
+        category: leader.color
+    })
+
+    return deckType
+}
+
 //GET DECK TYPE
-export const getDeckType = async (ydk, formatName) => {
-    const main = ydk?.split('#extra')[0]
+export const getDeckType = async (deckfile, formatName) => {
+    if (formatName === 'One Piece') return getOPDeckType(deckfile)
+
+    const main = deckfile?.split('#extra')[0]
     if (!main) return
     const primaryDeckArr = main.split('\n').filter(el => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '').sort()
 
@@ -247,7 +267,7 @@ export const getDeckType = async (ydk, formatName) => {
 
     for (let i = 0; i < labeledDecks.length; i++) {
         const otherDeck = labeledDecks[i]
-        const otherMain = otherDeck.ydk.split('#extra')[0]
+        const otherMain = otherDeck.deckfile.split('#extra')[0]
         if (!otherMain) continue
         const comparisonDeckArr = otherMain.split('\n').filter(el => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '').sort()
 

@@ -41,7 +41,7 @@ export const askForSimName = async (member, player, simulator, override = false,
                 await player.update({ opTcgSim: name })
             }
 
-            member.send({ content: `Thanks! I saved ${pronoun} ${simulator} name as: ${name}. If that's wrong, go back to the server and type **/duelingbook**.`}).catch((err) => console.log(err))
+            member.send({ content: `Thanks! I saved ${pronoun} ${simulator} name as: ${name}. If that's wrong, go back to the server and type **/username**.`}).catch((err) => console.log(err))
             return name
         }
     }).catch((err) => {
@@ -289,7 +289,7 @@ export const selectTournament = async (interaction, tournaments) => {
 export const getFilm = async (interaction, tournamentId, userId) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
     const player = await Player.findOne({ where: { discordId: userId }})
-    
+
     const replays = [...await Replay.findAll({
         where: {
             [Op.or]: [

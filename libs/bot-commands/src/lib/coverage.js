@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Event, Format, Player, Server } from '@fl/models'
-import { composeBlogPost, composeThumbnails, displayDecks, publishDecks, isMod } from '@fl/bot-functions'
+import { composeBlogPost, composeThumbnails, displayDecks, generateMatchupData, publishDecks, isMod } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 
 export default {
@@ -37,6 +37,11 @@ export default {
         await displayDecks(interaction, event)
         await publishDecks(interaction, event)
         await composeThumbnails(interaction, event)
+
+        if (event.tournament) {
+            await generateMatchupData(interaction, server, event, event.tournament)
+        }
+
         if (event.community !== 'Konami' && event.community !== 'Upper Deck Entertainment') {
             await composeBlogPost(interaction, event)
         }
