@@ -200,6 +200,17 @@ Format.hasMany(Pool)
 Pool.belongsTo(Player)
 Player.hasMany(Pool)
 
+//REPLAY
+Replay.belongsTo(Player, {
+    as: 'loser'
+})
+
+Replay.belongsTo(Player, {
+    as: 'winner'
+})
+
+Player.hasMany(Replay)
+
 //ROLE
 Role.belongsTo(Membership)
 Membership.hasMany(Role)
