@@ -4,7 +4,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { capitalize, dateToSimple, dateToVerbose, getCookie } from '@fl/utils'
 import { ReplayThumbnail } from './ReplayThumbnail'
+console.log('!!ReplayThumbnail', !!ReplayThumbnail)
 import { DeckImage } from '../Decks/DeckImage'
+console.log('!!DeckImage', !!DeckImage)
 import { NotFound } from '../General/NotFound'
 import './SingleEvent.css'
 const playerId = getCookie('playerId')
