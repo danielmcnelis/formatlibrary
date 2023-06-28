@@ -3,6 +3,7 @@ import { useState, useEffect, useLayoutEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { capitalize, dateToSimple, dateToVerbose, getCookie } from '@fl/utils'
+import ReplayThumbnail from './ReplayThumbnail'
 import { DeckImage } from '../Decks/DeckImage'
 import { NotFound } from '../General/NotFound'
 import './SingleEvent.css'
@@ -17,6 +18,7 @@ export const SingleEvent = (props) => {
   const [winner, setWinner] = useState({})
   const [isAdmin, setIsAdmin] = useState(false)
   const [isSubscriber, setIsSubscriber] = useState(false)
+  const [replays, setReplays] = useState({})
   const [topDecks, setTopDecks] = useState({})
   const [metagame, setMetagame] = useState({
     deckTypes: [],
@@ -24,6 +26,9 @@ export const SingleEvent = (props) => {
     topMainDeckCards: [],
     topSideDeckCards: []
   })
+
+  console.log('event', event)
+  console.log('replays', replays)
 
   const { id } = useParams()
   const navigate = useNavigate()
@@ -74,6 +79,7 @@ export const SingleEvent = (props) => {
         const {data} = await axios.get(`/api/events/${id}?isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`)
         setEvent(data.event)
         setWinner(data.event.player)
+        setReplays(data.replays)
         setTopDecks(data.topDecks)
         setMetagame(data.metagame)
       } catch (err) {
@@ -245,6 +251,13 @@ export const SingleEvent = (props) => {
               </li>
             ) : ''
           }
+          {
+            replays.length ? (
+              <li>
+                <a href="#replays">Replays</a>
+              </li>
+            ) : ''
+          }
         </div>
         <img className="desktop-only" id="format-icon-large" src={formatArtwork} />
       </div>
@@ -387,6 +400,52 @@ export const SingleEvent = (props) => {
                   options={options}
                 />
               </div>
+            </div>
+          </div>
+        ) : ''
+      }
+      <div className="divider"/>
+      {
+        replays.length ? (
+          <div id="replays">
+            <div className="subcategory-title-flexbox">
+              <img 
+                style={{ width:'64px'}} 
+                src={`https://cdn.formatlibrary.com/images/emojis/film.png`}
+                alt="film"
+              />
+              <h2 className="subheading"><b>{event.abbreviation}</b> Replays:</h2>
+              <img 
+                style={{ height:'64px'}} 
+                src={'https://cdn.formatlibrary.com/images/emojis/film.png'}
+                alt="film"
+              />
+            </div>
+            <div id="replay-flexbox">
+            {
+              replays.map((replay, index) => {
+                const roundName = replay.topCut && index === 0 ? `Finals` :
+                    replay.topCut && (index === 1 || index === 2) ? `Semi-Finals` :
+                    replay.topCut && index >= 3 && index <= 6 ? `Quarter-Finals` :
+                    replay.topCut && index >= 7 && index <= 14 ? `Round of 16` :
+                    replay.topCut && index >= 15 && index <= 30 ? `Round of 32` :
+                    `Round ${replay.round}`
+
+                return <
+                          ReplayThumbnail
+                          key={replay.id} 
+                          index={index} 
+                          roundName={roundName}
+                          url={replay.url}
+                          winner={replay.player[0]}
+                          loser={replay.player[1]}
+                          width="360px"
+                          margin="10px 5px"
+                          padding="5px"
+                          coverage={true}
+                        />
+              })
+            }
             </div>
           </div>
         ) : ''

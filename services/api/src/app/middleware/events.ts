@@ -1,4 +1,4 @@
-import { Card, Deck, Event, Format, Player, Tournament } from '@fl/models'
+import { Card, Deck, Event, Format, Player, Replay, Tournament } from '@fl/models'
 import { arrayToObject, capitalize } from '@fl/utils'
 import { Op } from 'sequelize'
 import { S3 } from 'aws-sdk'
@@ -239,9 +239,16 @@ export const eventsId = async (req, res, next) => {
         { model: Player, attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp'] }
       ]
     })
+    
+    const replays = await Replay.findAll({
+        where: {
+            display: true,
+            eventId: event.id
+        },
+        include: Player,
+        order: [['round', 'DESC']]
+    })
 
-    console.log('req.query.isAdmin', req.query.isAdmin)
-    console.log('req.query.isSubscriber', req.query.isSubscriber)
     const topDecks = await Deck.findAll({
       where: {
         display: (req.query.isAdmin === 'true' || req.query.isSubscriber === 'true') ? {[Op.or]: [true, false]} : true,
@@ -347,6 +354,7 @@ export const eventsId = async (req, res, next) => {
     const data = {
       event: event,
       winner: event.player,
+      replays: replays,
       topDecks: topDecks,
       metagame: {
         deckTypes,
