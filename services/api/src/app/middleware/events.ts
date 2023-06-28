@@ -242,11 +242,11 @@ export const eventsId = async (req, res, next) => {
     
     const replays = await Replay.findAll({
         where: {
-            display: true,
+            display: (req.query.isAdmin === 'true' || req.query.isSubscriber === 'true') ? {[Op.or]: [true, false]} : true,
             eventId: event.id
         },
         include: [{ model: Player, as: 'loser' }, { model: Player, as: 'winner' }],
-        order: [['round', 'DESC']]
+        order: [['round', 'DESC'], ['isTopCut', 'DESC']]
     })
 
     const topDecks = await Deck.findAll({
