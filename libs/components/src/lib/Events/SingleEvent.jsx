@@ -423,7 +423,7 @@ export const SingleEvent = (props) => {
                 alt="film"
               />
             </div>
-            <div id="replayThumbnail-flexbox">
+            <div className="replays-flexbox">
             {
               replays.map((replay, index) => {
                 const roundName = replay.topCut && index === 0 ? `Finals` :

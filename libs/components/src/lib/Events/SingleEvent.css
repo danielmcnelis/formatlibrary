@@ -9,6 +9,19 @@
     padding: 10px;
   }
 
+  .replays-flexbox {
+    display: flex;
+    max-width: 1100px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: auto;
+    margin-left: auto;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+  
   
   #format-icon-large {
     height: 176px;
