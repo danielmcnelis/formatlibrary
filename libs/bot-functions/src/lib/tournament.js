@@ -5,7 +5,7 @@
 import axios from 'axios'
 import { Op } from 'sequelize'
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } from 'discord.js'
-import { Entry, Format, Match, OPCard, Player, Stats, Server, Team, Tournament } from '@fl/models'
+import { Entry, Format, Match, OPCard, Player, Replay, Stats, Server, Team, Tournament } from '@fl/models'
 import { getIssues } from './deck.js'
 import { capitalize, drawDeck, drawOPDeck, generateRandomString, shuffleArray } from './utility.js'
 import { emojis } from '@fl/bot-emojis'
@@ -284,6 +284,30 @@ export const selectTournament = async (interaction, tournaments) => {
         return false
     }
 }
+
+// GET FILM
+export const getFilm = async (interaction, tournamentId, userId) => {
+    const tournament = await Tournament.findOne({ where: { id: tournamentId }})
+    const player = await Player.findOne({ where: { discordId: userId }})
+    
+    const replays = [...await Replay.findAll({
+        where: {
+            [Op.or]: [
+                { winnerId: player.id },
+                { loserId: player.id }
+            ],
+            tournamentId: tournamentId
+        },
+        order: [['round', 'ASC']]
+    })].map((r) => `Round ${r.round} ${r.winnerId === player.id ? `(W) vs ${r.loser}` : `(L) vs ${r.winner}`}: <${r.url}>`)
+
+    if (!replays.length) {
+        return await interaction.reply(`No replays found featuring ${player.name} in ${tournament.name}. ${tournament.emoji}`)
+    } else {
+        return await interaction.reply(`${player.name}'s ${tournament.name} ${tournament.emoji} replays:\n${replays.join('\n')}`)
+    }
+}
+
 
 // CLOSE TOURNAMENT 
 export const closeTournament = async (interaction, tournamentId) => {

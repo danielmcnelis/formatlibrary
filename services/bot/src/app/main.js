@@ -13,7 +13,7 @@ import { Membership, Player, Server } from '@fl/models'
 // FUNCTION IMPORTS
 import { assignTourRoles, conductCensus, downloadNewCards, getMidnightCountdown, markInactives, purgeEntries, 
     purgeRatedDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices ,updateSets, updateServers, fixDeckFolder,
-    calculateStandings, checkTimer, closeTournament, createTournament, dropFromTournament, initiateStartTournament, 
+    calculateStandings, checkTimer, closeTournament, createTournament, dropFromTournament, getFilm, initiateStartTournament, 
     joinTournament, openTournament, processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, 
     signupForTournament, startTournament, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, fetchOPCardNames,  
     hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation
@@ -164,6 +164,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
             if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const matchId = interaction.values[0]
             await undoMatch(server, interaction.channel, matchId)
+            return interaction.message.edit({components: []})
+        } else if (command.data.name === 'film') {
+            const tournamentId = interaction.values[0]
+            const userId = interaction.message.components[0].components[0].data.custom_id
+            await getFilm(interaction, tournamentId, userId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'deck') {
             if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
