@@ -12,13 +12,13 @@ export const Replay = db.define('replays', {
     formatId: {
       type: Sequelize.INTEGER
     },
-    winner: {
+    winnerName: {
         type: Sequelize.STRING
     },
     winnerId: {
         type: Sequelize.STRING
     },
-    loser: {
+    loserName: {
         type: Sequelize.STRING
     },
     loserId: {
