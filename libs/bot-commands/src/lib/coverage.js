@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Event, Format, Player, Server } from '@fl/models'
+import { Event, Format, Player, Server, Tournament } from '@fl/models'
 import { composeBlogPost, composeThumbnails, displayDecks, generateMatchupData, publishDecks, isMod } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 
@@ -27,7 +27,7 @@ export default {
                     abbreviation: input
                 }
             },
-            include: [Format, Player]
+            include: [Format, Player, Tournament]
         })
 
         if (!event) return await interaction.editReply({ content: `No event found.` })
@@ -45,6 +45,7 @@ export default {
         if (event.community !== 'Konami' && event.community !== 'Upper Deck Entertainment') {
             await composeBlogPost(interaction, event)
         }
+        
         return
     }
 }

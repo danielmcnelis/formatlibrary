@@ -436,7 +436,7 @@ export const SingleEvent = (props) => {
 
                 return <
                           ReplayThumbnail
-                          key={replay.id} 
+                          key={replay.id}
                           index={index} 
                           roundName={roundName}
                           url={replay.url}
