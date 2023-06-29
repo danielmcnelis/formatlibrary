@@ -431,6 +431,7 @@ export const SingleEvent = (props) => {
                     replay.topCut && index >= 3 && index <= 6 ? `Quarter-Finals` :
                     replay.topCut && index >= 7 && index <= 14 ? `Round of 16` :
                     replay.topCut && index >= 15 && index <= 30 ? `Round of 32` :
+                    replay.topCut && index >= 31 && index <= 62 ? `Round of 64` :
                     `Round ${replay.round}`
 
                 return <

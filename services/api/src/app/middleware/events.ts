@@ -246,7 +246,7 @@ export const eventsId = async (req, res, next) => {
             eventId: event.id
         },
         include: [{ model: Player, as: 'loser' }, { model: Player, as: 'winner' }],
-        order: [['round', 'DESC'], ['topCut', 'DESC']]
+        order: [['topCut', 'DESC'], ['round', 'DESC']]
     })
 
     const topDecks = await Deck.findAll({
