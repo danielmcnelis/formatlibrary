@@ -40,7 +40,7 @@ export default {
                 tournamentId: tournament.id
             },
             order: [['round', 'ASC']]
-        })].map((r) => `Round ${r.round} ${r.winnerId === player.id ? `(W) vs ${r.loser}` : `(L) vs ${r.winner}`}: <${r.url}>`)
+        })].map((r) => `Round ${r.round} ${r.winnerId === player.id ? `(W) vs ${r.loserName}` : `(L) vs ${r.winnerName}`}: <${r.url}>`)
 
         if (!replays.length) {
             return await interaction.editReply(`No replays found featuring ${player.name} in ${tournament.name}. ${tournament.emoji}`)
