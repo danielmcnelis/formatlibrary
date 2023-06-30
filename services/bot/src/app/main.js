@@ -13,9 +13,9 @@ import { Membership, Player, Server } from '@fl/models'
 // FUNCTION IMPORTS
 import { assignTourRoles, conductCensus, downloadNewCards, getMidnightCountdown, markInactives, purgeEntries, 
     purgeRatedDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices ,updateSets, updateServers, fixDeckFolder,
-    calculateStandings, checkTimer, closeTournament, createTournament, dropFromTournament, getFilm, initiateStartTournament, 
+    calculateStandings, checkTimer, closeTournament, createTournament, dropFromTournament, getFilm, 
     joinTournament, openTournament, processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, 
-    signupForTournament, startTournament, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, fetchOPCardNames,  
+    signupForTournament, startChallongeBracket, startTournament, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, fetchOPCardNames,  
     hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation
 } from '@fl/bot-functions'
 
@@ -86,7 +86,6 @@ client.on(Events.InteractionCreate, async interaction => {
 // BUTTON SUBMIT
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isButton()) return
-    console.log('interaction (button)', interaction)
 
     if (interaction.message?.content?.includes('Do you still wish to play Trivia?')) {
         await interaction.update({ components: [] }).catch((err) => console.log(err))
@@ -103,21 +102,23 @@ client.on(Events.InteractionCreate, async (interaction) => {
         const opponentsPoolId = ids[1]
         const serverId = ids[2]
         return handleRatedConfirmation(client, interaction, confirmed, yourPoolId, opponentsPoolId, serverId)
-    } else {
+    } else if (interaction.message?.content?.includes('Should this tournament be seeded')) {
         await interaction.message.edit({ components: [] })
         const customId = interaction.customId
         const toBeSeeded = customId.charAt(0) !== 'N'
         const toBeShuffled = customId.charAt(0) === 'S'
-        const tournamentId = customId.slice(1)
-        console.log(`${interaction?.member?.user?.username} pressed the seed button for tournament ${tournamentId}`)
-    
+        const ids = customId.slice(2).split('-')
+        const userId = ids[0]
+        const tournamentId = ids[1]
+        if (userId !== interaction.user.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+
         if (toBeSeeded) {
             await seed(interaction, tournamentId, toBeShuffled)
         } else {
             interaction.channel.send(`Okay, your seeds 🌱 will not been changed. 👍`)
         }
     
-        return startTournament(interaction, tournamentId)
+        return startChallongeBracket(interaction, tournamentId)
     }
 })
 
@@ -224,7 +225,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         } else if (command.data.name === 'start') {
             if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
-            await initiateStartTournament(interaction, tournamentId)
+            await startTournament(interaction, tournamentId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'timer') {
             const userId = interaction.message.components[0].components[0].data.custom_id

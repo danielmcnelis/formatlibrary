@@ -1766,6 +1766,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
     })
 
     const game_name = format.category === 'OP' ? 'One Piece TCG' : 'Yu-Gi-Oh!'
+    const description = format.category === 'OP' ? 'One Piece TCG' : `${format.name} Format`
     const channel = interaction.guild.name !== 'Format Library' ? await interaction.guild.channels.cache.find((channel) => channel.name === channelName) : {}
     const channelId = interaction.guild.name === 'Format Library' ? format.channel : channel?.id
     if (!channelId) return
@@ -1798,6 +1799,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     name: name,
                     url: abbreviation || name,
                     tournament_type: tournament_type,
+                    description: description,
                     game_name: game_name,
                     pts_for_match_tie: "0.0"
                 }
@@ -1841,6 +1843,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                         url: str,
                         tournament_type: tournament_type,
                         game_name: game_name,
+                        description: description,
                         pts_for_match_tie: "0.0"
                     }
                 }
@@ -1985,80 +1988,119 @@ export const dropFromTournament = async (interaction, tournamentId) => {
     }
 }
 
-// START TOURNAMENT
-export const startTournament = async (interaction, tournamentId) => {
+// START CHALLONGE BRACKET
+export const startChallongeBracket = async (interaction, tournamentId) => {
     const server = await Server.findOne({ where: { id: interaction.guildId }})
     const tournament = await Tournament.findOne({ where: { id: tournamentId }, include: Format })
-    
-    const { status } = await axios({
-        method: 'post',
-        url: `https://api.challonge.com/v1/tournaments/${tournament.id}/start.json?api_key=${server.challongeAPIKey}`
-    })
+    if (!tournament) return await interaction.channel.send({ content: `Tournament not found.`})
 
-    if (status === 200) { 
+    try {
+        await axios({
+            method: 'post',
+            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/start.json?api_key=${server.challongeAPIKey}`
+        })
+
         await tournament.update({ state: 'underway' })
         interaction.channel.send({ content: `Let's go! Your tournament is starting now: https://challonge.com/${tournament.url} ${tournament.emoji}`})
+        
         if (tournament.isTeamTournament) {
             return sendTeamPairings(interaction.guild, server, tournament, tournament.format)
         } else {
             return sendPairings(interaction.guild, server, tournament, tournament.format, false)
         }
-    } else {
+    } catch (err) {
+        console.log(err)
         return await interaction.channel.send({ content: `Error connecting to Challonge.`})
     }
 }
 
-// INITIATE START TOURNAMENT
-export const initiateStartTournament = async (interaction, tournamentId) => {
-    const server = await Server.findOne({
-        where: {
-            id: interaction.guildId
-        }
-    })
+// START TOURNAMENT
+export const startTournament = async (interaction, tournamentId) => {
+    const server = await Server.findOne({ where: { id: interaction.guildId }})
+    const tournament = await Tournament.findOne({ where: { id: tournamentId }})
+    const unregistered = await Entry.findAll({ where: { participantId: null, tournamentId } })
+    const entryCount = await Entry.count({ where: { tournamentId } })
 
-    const tournament = await Tournament.findOne({
-        where: {
-            id: tournamentId
-        }
-    })
+    if (unregistered.length) {
+        const names = unregistered.map((e) => e.playerName)
+        return await interaction.reply({ content: `Error: The following player(s) are not properly registered with the bot:\n${names.join('\n')}`})
+    }
 
-    const unregCount = await Entry.count({ where: { participantId: null, tournamentId: tournamentId } })
-    if (unregCount) return await interaction.reply({ content: 'One or more players is not registered with Challonge. Type **/purge** to remove them.'})
-
-    const entryCount = await Entry.count({ where: { tournamentId: tournamentId } })
-    if (!entryCount) return await interaction.reply({ content: `Error: no entrants found.`})
-
-    const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+    if (!entryCount) {
+        return await interaction.reply({ content: `Error: No entrants found.`})
+    } else if (entryCount < 2) {
+        return await interaction.reply({ content: `At least 2 players are required to start a tournament.`})
+    }
     
-    if (data.tournament.state === 'underway') {
-        await tournament.update({ state: 'underway' })
-        interaction.reply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${tournament.url} ${tournament.emoji}`})
-        if (tournament.isTeamTournament) {
-            return sendTeamPairings(interaction.guild, server, tournament)
-        } else {
-            return sendPairings(interaction.guild, server, tournament, false)
+    if (tournament?.type?.toLowerCase() === 'swiss') {
+        try {
+            const [rounds, topCut] = entryCount <= 2 ? [1, null] :
+                entryCount >= 3 && entryCount <= 4 ? [2, null] :
+                entryCount >= 5 && entryCount <= 7 ? [3, null] :
+                entryCount === 8 ? [3, 4] :
+                entryCount >= 9 && entryCount <= 12 ? [4, 4] :
+                entryCount >= 13 && entryCount <= 21 ? [5, 4] :
+                entryCount >= 22 && entryCount <= 32 ? [5, 8] :
+                entryCount >= 33 && entryCount <= 64 ? [6, 8] :
+                entryCount >= 65 && entryCount <= 96 ? [7, 8] :
+                entryCount >= 97 && entryCount <= 192 ? [7, 16] :
+                entryCount >= 193 && entryCount <= 256 ? [8, 16] :
+                [9, 16]
+
+            await tournament.update({ rounds, topCut })
+
+            await axios({
+                method: 'put',
+                url: `https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`,
+                data: {
+                    tournament: {
+                        swiss_rounds: rounds,
+                    }
+                }
+            })
+        } catch (err) {
+            console.log(err)
+            return await interaction.channel.send({ content: `Error connecting to Challonge.`})
         }
-    } else {
-        const row = new ActionRowBuilder()
-            .addComponents(new ButtonBuilder()
-                .setCustomId(`Y${tournament.id}`)
-                .setLabel('Yes')
-                .setStyle(ButtonStyle.Primary)
-            )
+    }
 
-            .addComponents(new ButtonBuilder()
-                .setCustomId(`N${tournament.id}`)
-                .setLabel('No')
-                .setStyle(ButtonStyle.Primary)
-            )
-
-            .addComponents(new ButtonBuilder()
-                .setCustomId(`S${tournament.id}`)
-                .setLabel('Shuffle')
-                .setStyle(ButtonStyle.Primary)
-            )
-
-        await interaction.reply({ content: `Should this tournament be seeded by Format Library ${emojis.FL} rankings?`, components: [row] })
+    try {
+        const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+    
+        if (data?.tournament?.state === 'underway') {
+            await tournament.update({ state: 'underway' })
+            interaction.reply({ content: `Your tournament was already underway on Challonge.com: https://challonge.com/${tournament.url} ${tournament.emoji}`})
+            
+            if (tournament.isTeamTournament) {
+                return sendTeamPairings(interaction.guild, server, tournament)
+            } else {
+                return sendPairings(interaction.guild, server, tournament, false)
+            }
+        } else {
+            const row = new ActionRowBuilder()
+                .addComponents(new ButtonBuilder()
+                    .setCustomId(`Y${tournament.id}`)
+                    .setLabel('Yes')
+                    .setStyle(ButtonStyle.Primary)
+                )
+    
+                .addComponents(new ButtonBuilder()
+                    .setCustomId(`N${tournament.id}`)
+                    .setLabel('No')
+                    .setStyle(ButtonStyle.Primary)
+                )
+    
+                .addComponents(new ButtonBuilder()
+                    .setCustomId(`S${tournament.id}`)
+                    .setLabel('Shuffle')
+                    .setStyle(ButtonStyle.Primary)
+                )
+    
+            await interaction.reply({ content: `Should this tournament be seeded by Format Library ${emojis.FL} rankings?`, components: [row] })
+        }
+    } catch (err) {
+        console.log(err)
+        return await interaction.channel.send({ content: `Error connecting to Challonge.`})
     }
 }
 

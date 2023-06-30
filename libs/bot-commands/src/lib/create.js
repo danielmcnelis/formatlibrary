@@ -30,7 +30,7 @@ export default {
             .setCustomId('abbreviation')
             .setLabel('Abbreviation for the tournament?')
             .setStyle(TextInputStyle.Short)
-            .setRequired(false)
+            .setRequired(true)
             
         const tournament_type = new TextInputBuilder()
             .setCustomId('tournament_type')

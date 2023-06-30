@@ -56,6 +56,12 @@ export const Tournament = db.define('tournaments', {
   },
   serverId: {
     type: Sequelize.STRING
+  },
+  rounds: {
+    type: Sequelize.INTEGER
+  },
+  topCut: {
+    type: Sequelize.INTEGER
   }
 })
 
