@@ -37,8 +37,10 @@ export default {
                     { winnerId: player.id },
                     { loserId: player.id }
                 ],
-                tournamentId: tournament.id
+                tournamentId: tournament.id,
+                '$tournament.state$': 'underway'
             },
+            include: Tournament,
             order: [['round', 'ASC']]
         })].map((r) => `Round ${r.round} ${r.winnerId === player.id ? `(W) vs ${r.loserName}` : `(L) vs ${r.winnerName}`}: <${r.url}>`)
 
