@@ -28,7 +28,7 @@ export const CardImage = (props) => {
               >
                 <div className="card-image-cell"  >
                   {
-                    status ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.png`} className="status-icon"/> : null
+                    status && status !== 'no longer on list' ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.png`} className="status-icon"/> : null
                   }
                   <img
                     src={`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`}

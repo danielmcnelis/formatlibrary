@@ -98,16 +98,14 @@ export const SingleDeck = () => {
   if (!deck) return <NotFound/>
   if (!deck.id) return <div/>
 
-  const discriminator = deck.player.discriminator 
-!== '0' ? `#${deck.player.discriminator}` : ''
-
-  const extension =  deck.player.name.replaceAll('%', '%252525')
+  let extension =  deck.player.name.replaceAll('%', '%252525')
     .replaceAll('/', '%2F')
     .replaceAll(' ', '_')
     .replaceAll('#', '%23')
-    .replaceAll('?', '%3F') + discriminator
-    
-  console.log('extension', extension)
+    .replaceAll('?', '%3F')
+
+  if (deck.player?.discriminator && deck?.player?.discriminator !== '0') extension += `#${deck.player.discriminator}`
+
   const goToEvent = () => navigate(`/events/${deck.eventName}`)
   const goToFormat = () => navigate(`/formats/${deck.formatName}`)
   const goToPlayer = () => navigate(`/players/${extension}`)
@@ -121,11 +119,6 @@ export const SingleDeck = () => {
     deck.category === 'Ramp' ? Volcano :
     deck.category === 'Stun' ? Voltage :
     Thinking
-
-    
-
-
-
 
   const placementImage = deck.placement === 1 ? First :
     deck.placement === 2 ? Second :
@@ -159,7 +152,11 @@ export const SingleDeck = () => {
         >                                    
             <div className="deck-button">
                 <b style={{padding: '0px 6px'}}>Download</b>
-                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`}/>
+                <img 
+                    style={{width:'28px'}} 
+                    src={`https://cdn.formatlibrary.com/images/emojis/download.png`}
+                    alt="download"
+                />
             </div>
         </a>
         <Link to={`/decktypes/${deck.type.toLowerCase().replace(/\s/g, '_')}?format=${deck.formatName.toLowerCase().replace(/\s/g, '_')}`}>
@@ -168,7 +165,11 @@ export const SingleDeck = () => {
         <Link to="/builder" state={{ deck: deck }} className="desktop-only">                                    
             <div className="deck-button">
                 <b style={{padding: '0px 6px'}}>Open Deck</b>
-                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`}/>
+                <img 
+                    style={{width:'28px'}} 
+                    src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`}
+                    alt="open"
+                />
             </div>
         </Link>
       </div>
@@ -177,13 +178,10 @@ export const SingleDeck = () => {
           <tr className="single-deck-info-1">
             <td id="single-deck-builder-td">
               <div className="single-deck-cell">
-                {
-                  deck.player && deck.player.discriminator 
-!== '0' ? (
-                    <div onClick={() => goToPlayer()} className="single-deck-builder-link">
-                      <b>Builder: </b>
-                      <p>{displayName}</p>
-                      <img 
+                <div onClick={() => goToPlayer()} className="single-deck-builder-link">
+                    <b>Builder: </b>
+                    <p>{displayName}</p>
+                    <img 
                         className="single-deck-builder-cell-pfp"
                         src={`https://cdn.formatlibrary.com/images/pfps/${deck.player.discordId || deck.player.name}.png`}
                         onError={(e) => {
@@ -192,18 +190,18 @@ export const SingleDeck = () => {
                             }
                         }
                         alt={deck.player.name}
-                      />
-                    </div>
-                  ) : (
-                    <div style={{paddingRight:'7px'}}><b>Builder:</b> {displayName}</div>
-                  )
-                }
+                    />
+                </div>
               </div>       
             </td>
             <td>
               <div onClick={() => goToFormat()} className="single-deck-cell">
                 <div className="single-deck-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {deck.formatName}</div>
-                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/${deck.format.icon}.png`}/>
+                <img 
+                    style={{width:'28px'}} 
+                    src={`https://cdn.formatlibrary.com/images/emojis/${deck.format.icon}.png`}
+                    alt={deck.format.icon}
+                />
               </div>       
             </td>
             {
@@ -211,7 +209,12 @@ export const SingleDeck = () => {
                     <td>
                       <div className="single-deck-cell">
                         <div className="single-deck-category" style={{paddingRight:'7px'}}><b>Category:</b> {deck.category}</div>
-                        <img className="single-deck-category-emoji" style={{width:'28px'}} src={categoryImage}/>
+                        <img 
+                            className="single-deck-category-emoji" 
+                            style={{width:'28px'}} 
+                            src={categoryImage}
+                            alt={deck.category}
+                        />
                       </div>
                     </td>
                 ) : (
@@ -230,13 +233,21 @@ export const SingleDeck = () => {
                 <td>
                   <div onClick={() => goToEvent()} className="single-deck-cell">
                     <div className="single-deck-event-link" style={{paddingRight:'7px'}}><b>Event:</b> {deck.eventName}</div> 
-                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/logos/${deck.community}.png`}/>
+                    <img 
+                        style={{width:'28px'}} 
+                        src={`https://cdn.formatlibrary.com/images/logos/${deck.community}.png`}
+                        alt={deck.community}
+                    />
                   </div>   
                 </td>
                 <td>
                   <div className="single-deck-cell">
                     <div style={{paddingRight:'7px'}}><b>Place:</b> {ordinalize(deck.placement)}</div> 
-                    <img style={{width:'28px'}} src={placementImage}/>
+                    <img 
+                        style={{width:'28px'}} 
+                        src={placementImage}
+                        alt={deck.placement}
+                    />
                   </div>   
                 </td>
                 <td>

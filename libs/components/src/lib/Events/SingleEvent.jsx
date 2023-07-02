@@ -29,9 +29,6 @@ export const SingleEvent = (props) => {
     topSideDeckCards: []
   })
 
-  console.log('event', event)
-  console.log('replays', replays)
-
   const { id } = useParams()
   const navigate = useNavigate()
   const discriminator = winner.discriminator 

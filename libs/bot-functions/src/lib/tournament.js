@@ -299,7 +299,7 @@ export const getFilm = async (interaction, tournamentId, userId) => {
             tournamentId: tournamentId
         },
         order: [['round', 'ASC']]
-    })].map((r) => `Round ${r.round} ${r.winnerId === player.id ? `(W) vs ${r.loser}` : `(L) vs ${r.winner}`}: <${r.url}>`)
+    })].map((r) => `Round ${r.round} ${r.winnerId === player.id ? `(W) vs ${r.loserName}` : `(L) vs ${r.winnerName}`}: <${r.url}>`)
 
     if (!replays.length) {
         return await interaction.reply(`No replays found featuring ${player.name} in ${tournament.name}. ${tournament.emoji}`)

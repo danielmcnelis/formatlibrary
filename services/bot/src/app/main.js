@@ -108,9 +108,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
         const toBeSeeded = customId.charAt(0) !== 'N'
         const toBeShuffled = customId.charAt(0) === 'S'
         const ids = customId.slice(2).split('-')
+        console.log('ids', ids)
         const userId = ids[0]
         const tournamentId = ids[1]
-        if (userId !== interaction.user.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+        // if (userId !== interaction.user.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
 
         if (toBeSeeded) {
             await seed(interaction, tournamentId, toBeShuffled)
