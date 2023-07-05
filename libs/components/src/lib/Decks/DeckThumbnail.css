@@ -8,7 +8,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: left;
+    justify-content: space-evenly;
     flex-direction: row;
     border-top: 4px solid black;
     border-bottom: 4px solid black;
@@ -23,3 +23,9 @@
     margin: 0px 3px;
     border: 1px solid white;
   }
+
+@media only screen and (max-width: 1000px) {
+    .deckThumbnail-flexbox {
+        width: 100vw;
+    }
+}

@@ -59,3 +59,9 @@
     justify-content: left;
     flex-direction: row;
   }
+
+  @media only screen and (max-width: 1000px) {
+      .banlist-flexbox {
+          justify-content: center;
+      }
+  }

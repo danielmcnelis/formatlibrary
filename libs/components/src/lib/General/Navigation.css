@@ -92,7 +92,7 @@
 
 
 /* LAPTOPS AND SMALLER WINDOWS */
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 1200px) {
     #logo h1 {
         font-size: 24pt;
         padding: 10px 0px 10px 10px;
@@ -101,6 +101,68 @@
 
     .navigation-item {
         font-size: 16pt;
+    }
+
+    #navigation-menu {
+        display: none;
+    }
+
+    #hamburger-menu {
+        display: flex;
+        flex-direction: column;
+        height: 60px;
+        z-index: 1;
+        padding: 0px;
+        text-align: center;
+    }
+
+    #hamburger-menu.closed {
+    overflow: hidden;
+    }
+
+    #hamburger-menu.open {
+    overflow: visible;
+    }
+
+    #hamburger-button.open-b {
+        font-size: 36pt;
+        vertical-align: middle;
+        text-align: top;
+        padding-bottom: 2px;
+    }
+
+    #hamburger-button.closed-b {
+        font-size: 36pt;
+        vertical-align: middle;
+        text-align: center;
+        padding-top: 5px;
+    }
+            
+    .hamburger-item {
+        color: #ede6e6;
+        background-color: #000000;
+        overflow: visible;
+        border: 5px solid black;
+        padding: 15px 4px;
+        vertical-align: middle;
+        text-align: center;
+        font-size: 13pt;
+    }
+
+    #hamburger-menu.open div.open-b {
+        display: contents;
+    }
+
+    #hamburger-menu.open div.closed-b {
+        display: none;
+    }
+
+    #hamburger-menu.closed div.open {
+        display: none;
+    }
+
+    #hamburger-menu.closed div.closed {
+        display: contents;
     }
 }
 
@@ -132,14 +194,6 @@
         flex-wrap: nowrap;
     }
 
-    #navigation-menu {
-        width: 100%;
-        justify-content: space-evenly;
-        text-align: center;
-        padding: 6px 0px 0px;
-    }
-
-
     .navigation-item {
         font-size: 14pt;
         font-weight: normal;
@@ -151,68 +205,6 @@
 @media only screen and (max-width: 600px) {
     #logo h1 {
         font-size: 20pt;
-    }
-
-    #navigation-menu {
-        display: none;
-    }
-
-    #hamburger-menu {
-    display: flex;
-    flex-direction: column;
-    height: 60px;
-    z-index: 1;
-    padding: 0px;
-    text-align: center;
-    }
-
-    #hamburger-menu.closed {
-    overflow: hidden;
-    }
-
-    #hamburger-menu.open {
-    overflow: visible;
-    }
-
-    #hamburger-button.open-b {
-    font-size: 36pt;
-    vertical-align: middle;
-    text-align: top;
-    padding-bottom: 2px;
-    }
-
-    #hamburger-button.closed-b {
-    font-size: 36pt;
-    vertical-align: middle;
-    text-align: center;
-    padding-top: 5px;
-      }
-            
-    .hamburger-item {
-        color: #ede6e6;
-        background-color: #000000;
-        overflow: visible;
-        border: 5px solid black;
-        padding: 15px 4px;
-        vertical-align: middle;
-        text-align: center;
-        font-size: 13pt;
-    }
-
-    #hamburger-menu.open div.open-b {
-        display: contents;
-    }
-
-    #hamburger-menu.open div.closed-b {
-        display: none;
-    }
-
-    #hamburger-menu.closed div.open {
-        display: none;
-    }
-
-    #hamburger-menu.closed div.closed {
-        display: contents;
     }
 }
 

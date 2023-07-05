@@ -193,3 +193,33 @@
     background-color: #ede6e6;
     border-color: #ede6e6;
   }
+
+
+@media only screen and (max-width: 1000px) {
+  .single-card-image {
+    float: none;
+    margin: 5px;
+    padding: 2px;
+    width: 96vw;
+  }
+
+  .single-card-table {
+    float: none;
+    margin: 5px;
+    padding: 2px;
+    width: 96vw;
+  }
+
+    .flexy {
+        display: inline;
+    }
+
+    .status-flexbox {
+        display: none;
+    }
+
+  .prints-flexbox {
+    width: 100vw;
+    padding: 6px 0px;
+  }
+}

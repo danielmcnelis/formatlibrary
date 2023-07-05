@@ -36,3 +36,20 @@
     margin-right: auto;
     margin-left: auto;
   }
+
+
+
+
+  @media only screen and (max-width: 1000px) {
+    .format-text {
+      width: 80%;
+    }
+
+    #format-icon-large {
+      height: 76px;
+      width: 76px;
+      border: 4px ridge #bf9c60;
+      border-radius: 2px;
+      margin: 0px 0px 0px 10px;
+    }
+}

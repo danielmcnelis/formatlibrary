@@ -114,13 +114,12 @@ export const conductCensus = async (client) => {
                             }
                         })
 
-                        console.log('status', status)
-
                         if (player.name !== player.globalName || 
                             player.globalName !== data.global_name ||
                             player.discordName !== member.user.username || 
                             player.discriminator !== member.user.discriminator 
                         ) {
+                            console.log(`updating ${member.user.username}`)
                             updateCount++
                             await player.update({
                                 name: data.global_name,

@@ -9,6 +9,7 @@ export const StatusBox = (props) => {
     const backgroundColor = status === 'forbidden' ? 'red' :
       status === 'limited' ? 'orange' :
       status === 'semi-limited' ? 'yellow' :
+      status === 'no longer on list' ? 'green' :
       status === 'unlimited' ? 'green' :
       '#e8e8e8'
   

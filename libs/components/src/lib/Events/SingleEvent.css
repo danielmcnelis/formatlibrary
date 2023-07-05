@@ -167,3 +167,21 @@
     vertical-align: middle;
     text-align: center;
   }
+
+@media only screen and (max-width: 760px) {
+    .single-event-table, .single-event-title-flexbox {
+      width: 100%;
+    }
+
+    .event-info-container {
+        margin: 0px;
+    }
+
+    .single-event-title {
+        padding: 5px 0px;
+        font-family: 'Roboto';
+        font-weight: bold;
+        font-size: 40px;
+    }
+    
+  }

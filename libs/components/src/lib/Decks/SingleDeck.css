@@ -183,3 +183,10 @@
     cursor: pointer;
   }
   
+
+
+@media only screen and (max-width: 760px) {
+  .single-deck-table, .single-deck-title-flexbox, .deck-stats-table {
+    width: 100vw;
+  }
+}

@@ -163,7 +163,7 @@
     margin: 30px auto;
 }
 
-@media only screen and (max-width: 1224px) {
+@media only screen and (max-width: 1000px) {
     .blogpost {
         display: inline;
         width: 100%;
@@ -225,7 +225,7 @@
 
     .blogpost-images-flexbox {
         display: block;
-        min-width: 98vw;
+        min-width: 96vw;
         height: auto;
         padding: 0px;
         margin: 0px;
@@ -238,7 +238,7 @@
 
     .blogpost-deck-box {
         display: block;
-        min-width: 98%;
+        min-width: 96%;
         height: auto;
         padding: 0px;
         margin: 0px 1%;
