@@ -2,6 +2,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react'
 import axios from 'axios'
 import { AdvButton } from './AdvButton'
+import { MiniAdvButton } from './MiniAdvButton'
 import { CardRow } from './CardRow'
 import { CardImage } from './CardImage'
 import { MobileCardRow } from './MobileCardRow'
@@ -15,7 +16,7 @@ import './CardTable.css'
 const now = new Date()
 
 export const CardTable = () => {
-    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 860px)' })
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1000px)' })
     const location = useLocation()
     const formatName = location?.search?.slice(8)
     const [page, setPage] = useState(1)
@@ -708,18 +709,27 @@ export const CardTable = () => {
                         buttonClass === 'attribute' ? attributeParams : 
                         buttonClass === 'type' ? typeParams : 
                         groupParams
-  
-                      return (
-                        <AdvButton 
-                          key={el[0]} 
-                          id={el[0]} 
-                          display={el[1]}
-                          buttonClass={buttonClass} 
-                          clicked={params[el[0]]}
-                          removeFilter={removeFilter} 
-                          applyFilter={applyFilter}
-                        />
-                      )}
+
+                        return isTabletOrMobile ? (
+                            <MiniAdvButton 
+                                key={el[0]} 
+                                id={el[0]} 
+                                buttonClass={buttonClass} 
+                                clicked={params[el[0]]}
+                                removeFilter={removeFilter} 
+                                applyFilter={applyFilter}
+                            />
+                        ) : (
+                            <AdvButton 
+                            key={el[0]} 
+                            id={el[0]} 
+                            display={el[1]}
+                            buttonClass={buttonClass} 
+                            clicked={params[el[0]]}
+                            removeFilter={removeFilter} 
+                            applyFilter={applyFilter}
+                          />
+                        )}
                     )
                   }
                 </div>

@@ -140,17 +140,17 @@
     max-width: 1080px;
     margin-left: auto;
     margin-right: auto;
-    display: table;
     text-align: center;
     padding: 2px 4px 4px 4px;
     font-size: 15px;
   }
   
   .refinedInnerWrapper {
-    margin-top: 5px;
-    margin-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 5px auto;
   }
-
   
   .searchWrapper {
     width: 90%;
@@ -199,3 +199,66 @@
     align-items: center;
     justify-content: center;
   }
+
+  
+@media only screen and (max-width: 1000px) {
+    #card-table {
+        margin: none;
+        width: 100vw;
+    }
+
+    .desktop-only {
+        display: none;
+    }
+
+    .searchWrapper, .resultsWrapper0 {
+        width: 98vw !important;
+        min-width: 0px;   
+        display: flex;
+        align-content: space-evenly;
+        flex-direction: column !important;
+    }
+
+    .query-box {
+        margin: 2px 2px 4px;
+    }
+
+    .refinedWrapper, .refinedInnerWrapper {
+        width: 90vw !important;
+        min-width: 0px;   
+        align-content: center;
+        justify-content: center; 
+    }
+
+    .sliderWrapper0 {
+        width: 90vw !important;
+        min-width: 0px;   
+        align-content: center;
+        justify-content: center; 
+    }
+
+    .sliderWrapper1 {
+        width: 90vw !important;
+        min-width: 0px;   
+        align-content: center;
+        justify-content: center; 
+    }
+
+    #slider {
+        margin: 12px auto !important; 
+        width: 90% !important;
+    }
+
+    #slider h3 {
+        display: none;
+    }
+
+    .refinedInnerWrapper a {
+        padding: none;
+        width: 13%;
+        margin: 2px;
+        height: 0;
+        padding-bottom: 13%;
+        background-size: 96% !important;
+    }
+}

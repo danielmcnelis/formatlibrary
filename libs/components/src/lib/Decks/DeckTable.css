@@ -141,3 +141,20 @@
     text-align: center;
   }
   
+
+@media only screen and (max-width: 1000px) {
+    #deck-table {
+        margin: none;
+    }
+    
+    .desktop-only {
+        display: none;
+    }
+
+    .searchWrapper, .resultsWrapper0 {
+        width: 98%;
+        min-width: 0px;
+        align-content: center;
+        justify-content: center;
+    }
+}

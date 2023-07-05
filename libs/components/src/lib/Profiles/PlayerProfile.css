@@ -84,3 +84,19 @@
   .player-profile-cell {
     padding: 4px 1px;
   }
+
+
+@media only screen and (max-width: 1000px) {
+    .player-profile-flexbox {
+        flex-direction: column;
+    }
+
+    .player-info, .player-awards {
+        padding: 5px;
+    }
+
+    .badges-title, .badges-flexbox {
+        margin: 5px auto;
+    }
+  
+}

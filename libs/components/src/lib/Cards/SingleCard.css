@@ -196,19 +196,19 @@
 
 
 @media only screen and (max-width: 1000px) {
-  .single-card-image {
-    float: none;
-    margin: 5px;
-    padding: 2px;
-    width: 96vw;
-  }
+    .single-card-image {
+        float: none;
+        margin: 5px;
+        padding: 2px;
+        width: 96vw;
+    }
 
-  .single-card-table {
-    float: none;
-    margin: 5px;
-    padding: 2px;
-    width: 96vw;
-  }
+    .single-card-table {
+        float: none;
+        margin: 5px;
+        padding: 2px;
+        width: 96vw;
+    }
 
     .flexy {
         display: inline;

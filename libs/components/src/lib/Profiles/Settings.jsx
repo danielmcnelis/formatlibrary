@@ -281,11 +281,11 @@ export const Settings = () => {
                     </Modal.Footer>
                 </Modal>        
 
-            <div className="player-profile-flexbox">
-                <div className="player-info">
-                    <div className="player-profile-title">{name}</div>
+            <div className="settings-profile-flexbox">
+                <div className="settings-info">
+                    <div className="settings-profile-title">{name}</div>
                     <img
-                        className="player-pfp"
+                        className="settings-pfp"
                         src={
                             googlePfp ? `https://lh3.googleusercontent.com/a/${googlePfp}` :
                             `https://cdn.formatlibrary.com/images/pfps/${discordId || name}.png`}

@@ -8,7 +8,7 @@
     src: url('/assets/fonts/Roboto/Roboto-Bold.ttf');
 }
 
-.player-settings-pfp {
+.settings-settings-pfp {
     width: 150px;
     height: 150px;
     border: 2px solid black;
@@ -44,28 +44,28 @@
     align-items: center;
 }
 
-.player-profile-flexbox {
+.settings-profile-flexbox {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     align-items: flex-start;
   }
   
-  .player-awards {
+  .settings-awards {
     padding: 10px 30px;
     align-items: center;
     justify-content: center;
     align-content: center;
   }
   
-  .player-info {
+  .settings-info {
     padding: 10px 30px;
     align-items: center;
     justify-content: center;
     align-content: center;
   }
   
-  .player-pfp {
+  .settings-pfp {
     border: 3px solid black;
     border-radius: 2px;
     display: block;
@@ -73,7 +73,7 @@
     width: 128px;
   }
   
-  .player-profile-title {
+  .settings-profile-title {
     font-size: 30px;
     font-weight: bold;
     text-align: center;
@@ -81,11 +81,11 @@
   }
   
   
-  .player-profile-info td {
+  .settings-profile-info td {
     padding: 0px;
   }
   
-  .player-profile-cell {
+  .settings-profile-cell {
     padding: 4px 1px;
   }
 
