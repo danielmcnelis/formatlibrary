@@ -54,7 +54,7 @@ client.on('ready', async() => {
     }
 
     // NIGHTLY TASKS
-    const midnightCountdown = getMidnightCountdown()
+    const midnightCountdown = 1 || getMidnightCountdown()
     setTimeout(() => purgeEntries(), midnightCountdown)
     setTimeout(() => purgeTourRoles(client), midnightCountdown + (0.2 * 60 * 1000))
     setTimeout(() => assignTourRoles(client), midnightCountdown + (0.4 * 60 * 1000))
