@@ -9,7 +9,12 @@ import './Settings.css'
 const playerId = getCookie('playerId')
 const discordId = getCookie('discordId')
 const discordPfp = getCookie('discordPfp')
-const googlePfp = getCookie('googlePfp')
+const googlePfp = getCookie('googlePfp')  
+console.log('playerId', playerId) 
+console.log('discordId', discordId)
+console.log('discordPfp', discordPfp)
+console.log('googlePfp', googlePfp)
+
 
 export const Settings = () => {
   const [player, setPlayer] = useState({})
@@ -17,6 +22,7 @@ export const Settings = () => {
   const [detectedTimeZone, setDetectedTimeZone] = useState(null)
   const [showEditModal, setShowEditModal] = useState(false)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
+  console.log('player', player)
 
   const togglePasswordFields = () => {
     const oldPasswordInput = document.getElementById('old-password')
@@ -65,7 +71,7 @@ export const Settings = () => {
     // SAVE PROFILE
     const saveProfile = async () => {
         try {
-            const {data} = await axios.put(`/api/players/update/${player.id}`, {
+            const {data} = await axios.put(`/api/players/update/${player?.id}`, {
                 name: document.getElementById('name').value,
                 duelingBook: document.getElementById('duelingbook').value,
                 firstName: document.getElementById('first-name').value,
