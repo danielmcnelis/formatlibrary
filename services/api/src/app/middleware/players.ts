@@ -86,6 +86,7 @@ export const playersId = async (req, res, next) => {
             hidden: false
         } : {
             [Op.or]: [
+                { id: { [Op.iLike]: req.params.id }},
                 { name: { [Op.iLike]: req.params.id }},
                 { discordName: { [Op.iLike]: req.params.id }},
             ],
