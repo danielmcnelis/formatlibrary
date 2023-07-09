@@ -64,7 +64,7 @@ export const StatsRow = (props) => {
     const discriminator = player.discriminator 
 !== '0' ? `#${player.discriminator}` : ''
 
-    const extension =  player.name.replaceAll('%', '%252525')
+    const extension =  player.name?.replaceAll('%', '%252525')
         .replaceAll('/', '%2F')
         .replaceAll(' ', '_')
         .replaceAll('#', '%23')
