@@ -71,7 +71,7 @@ export const StatsRow = (props) => {
         .replaceAll('?', '%3F') + discriminator
 
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
-    const displayName = player.name.length <= 24 ? player.name : player.name.slice(0, 24).split(' ').slice(0, -1).join(' ')
+    const displayName = player.name?.length <= 24 ? player.name : player.name?.slice(0, 24).split(' ').slice(0, -1).join(' ')
     const navigate = useNavigate()
     const goToPlayer = () => navigate(`/players/${extension}`) 
 
