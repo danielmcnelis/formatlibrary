@@ -741,7 +741,7 @@ export const decksId = async (req, res, next) => {
         ],
         include: [
             { model: Format, attributes: ['id', 'name', 'icon', 'banlist'] },
-            { model: Player, attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp'] }
+            { model: Player, attributes: ['id', 'name', 'discriminator', 'discordName', 'discordId', 'discordPfp'] }
         ]
     })
 
