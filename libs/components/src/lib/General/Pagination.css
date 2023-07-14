@@ -1,15 +1,16 @@
 
-  #to-end {
+/* ALL DISPLAYS */
+#to-end {
     background-image: url('https://cdn.formatlibrary.com/images/emojis/toEnd.png');
     background-position: 65%;
-  }
+}
   
-  #to-start {
+#to-start {
     background-image: url('https://cdn.formatlibrary.com/images/emojis/toStart.png');
     background-position: 35%;
-  }
+}
   
-  .pageButton {
+.page-button {
     display: inline-block;
     padding: 5px 5px;
     border: 0.1em solid black;
@@ -28,11 +29,17 @@
     text-align: center;
     vertical-align: middle;
     transition: all 0.2s;
-  }
+}
   
-  .pageButton:hover {
+.page-button:hover {
     cursor: pointer;
     font-weight: 800;
     color: white;
     background-color: #6d6f8a;
-  }
+}
+
+.current-page {
+    background-color: #c7ccd4;
+    color: black;
+    font-weight: bold;
+}

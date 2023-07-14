@@ -31,11 +31,11 @@ export default {
         if (!alreadyIn) {
             const count = await Iron.count({ where: { format: format.name }})
             if (count >= 10) {
-                return await interaction.reply({ content: `Sorry, ${player.name}, the ${format.name} ${server.emoji || format.emoji} Iron is full.`})
+                return await interaction.reply({ content: `Sorry, ${player.globalName}, the ${format.name} ${server.emoji || format.emoji} Iron is full.`})
             } else if (count < 10 && count >= 6) {
                 if (isConfirming) {
                     await Iron.create({ 
-                        name: player.name,
+                        name: player.globalName,
                         playerId: player.id,
                         format: format.name,
                         confirmed: true
@@ -75,7 +75,7 @@ export default {
 
                     if ((teamBCount === teamACount && teamBElim >= teamAElim) || teamBCount < teamACount) {
                         await Iron.create({ 
-                            name: player.name,
+                            name: player.globalName,
                             playerId: player.id,
                             format: format.name,
                             team: 'B',
@@ -88,7 +88,7 @@ export default {
                         return await interaction.reply({ content: `You joined the Iron for Team B. ${emojis.iron}`})
                     } else {
                         await Iron.create({ 
-                            name: player.name,
+                            name: player.globalName,
                             playerId: player.id,
                             format: format.name,
                             team: 'A',
@@ -103,7 +103,7 @@ export default {
                 }
             } else {
                 await Iron.create({ 
-                    name: player.name,
+                    name: player.globalName,
                     playerId: player.id,
                     format: format.name
                 })
@@ -114,7 +114,7 @@ export default {
         } else {
             const ironPerson = await Iron.findOne({ 
                 where: {
-                    name: player.name,
+                    name: player.globalName,
                     format: format.name,
                     playerId: player.id
                 }

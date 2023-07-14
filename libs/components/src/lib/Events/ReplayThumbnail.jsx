@@ -22,7 +22,7 @@ export const ReplayThumbnail = (props = {}) => {
                             e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                         }
                     }
-                    alt={winner.name}
+                    alt={winner.discordName || winner.name}
                     />
                     <img 
                         className="replayThumbnail-image" 

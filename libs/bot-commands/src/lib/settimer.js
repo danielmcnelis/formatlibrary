@@ -33,21 +33,22 @@ export default {
         if (!tournaments.length && format) return await interaction.editReply({ content: `There are no active ${format.name} ${server.emoji || format.emoji} tournaments.`})
         if (!tournaments.length && !format) return await interaction.editReply({ content: `There are no active tournaments.`})
         
-        const tournament = await selectTournament(interaction, tournaments)
+        const tournament = await selectTournament(interaction, tournaments, hours, minutes)
         if (!tournament) return
 
-        const ignoreRound1 = !tournament.deadline
-        const timestamp = Date.now()
         let hours = interaction.options.getNumber('hours')
         let minutes = interaction.options.getNumber('minutes')
-        const timeRemaining = (hours * 60 * 60 * 1000) + (minutes * 60 * 1000)
-        const deadline = new Date(timestamp + timeRemaining)
-        await tournament.update({ deadline })
-
+        
         while (minutes >= 60) {
             hours++
             minutes-= 60
         }
+
+        const ignoreRound1 = !tournament.deadline
+        const timestamp = Date.now()
+        const timeRemaining = (hours * 60 * 60 * 1000) + (minutes * 60 * 1000)
+        const deadline = new Date(timestamp + timeRemaining)
+        await tournament.update({ deadline })
 
         const word1 = hours === 1 ? 'hour' : 'hours'
         const word2 = minutes === 1 ? 'minute' : 'minutes'

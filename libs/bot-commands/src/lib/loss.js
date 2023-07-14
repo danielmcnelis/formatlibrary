@@ -153,7 +153,7 @@ export default {
                 await ironPersonA.save()
                 setTimeout(() => postStory(interaction.channel, format), 5000)
             } else {
-                return await interaction.editReply({ content: `Sorry, ${winningPlayer.name} is not your ${format.name} Iron opponent. ${server.emoji || format.emoji} ${emojis.iron}`})
+                return await interaction.editReply({ content: `Sorry, ${winningPlayer.globalName} is not your ${format.name} Iron opponent. ${server.emoji || format.emoji} ${emojis.iron}`})
             }
         }
             
@@ -183,9 +183,9 @@ export default {
         await loserStats.save()
 
         const match = await Match.create({
-            winner: winningPlayer.name,
+            winner: winningPlayer.globalName,
             winnerId: winningPlayer.id,
-            loser: losingPlayer.name,
+            loser: losingPlayer.globalName,
             loserId: losingPlayer.id,
             isTournament: isTournament,
             tournamentId: tournamentId,
@@ -243,7 +243,7 @@ export default {
             await rPTU.update({ status: 'pending' })
         }
 
-        return await interaction.editReply({ content: `${losingPlayer.name}${tournament?.pointsEligible && challongeMatch?.round === 1 ? ` (+1 TP)` : ''}, your ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournament ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss to <@${winningPlayer.discordId}>${tournament?.pointsEligible ? ` (+${challongeMatch.round + 1} TP)` : ''} has been recorded.`})
+        return await interaction.editReply({ content: `${losingPlayer.globalName}${tournament?.pointsEligible && challongeMatch?.round === 1 ? ` (+1 TP)` : ''}, your ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournament ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss to <@${winningPlayer.discordId}>${tournament?.pointsEligible ? ` (+${challongeMatch.round + 1} TP)` : ''} has been recorded.`})
     }
 }
 

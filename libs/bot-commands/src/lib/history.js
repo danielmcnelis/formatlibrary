@@ -84,7 +84,7 @@ export default {
             options: {
                 title: {
                     display: true,
-                    text: `${player.name}'s ${format.name} Elo History - Last ${data.length - 1} Matches`,
+                    text: `${player.globalName}'s ${format.name} Elo History - Last ${data.length - 1} Matches`,
                 },
                 legend: {
                     display: false

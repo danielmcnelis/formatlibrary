@@ -44,7 +44,7 @@ export default {
         const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, format: format.name, serverId: serverId } })
 
         if (interaction.user.id !== losingPlayer.discordId) return await interaction.editReply({ content: `You did not participate in the last recorded match. Please get a Moderator to help you.`})
-        if (!winnerStats.backupElo) return await interaction.editReply({ content: `Your last opponent, ${winningPlayer.name}, has no backup stats. Please get a Moderator to help you.`})
+        if (!winnerStats.backupElo) return await interaction.editReply({ content: `Your last opponent, ${winningPlayer.globalName}, has no backup stats. Please get a Moderator to help you.`})
         if (!loserStats.backupElo) return await interaction.editReply({ content: `You have no backup stats. Please get a Moderator to help you.`})
 
         winnerStats.elo = winnerStats.backupElo
@@ -62,6 +62,6 @@ export default {
         await loserStats.save()
 
         await match.destroy()
-        return await interaction.editReply({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${match.isTournament ? 'Tournament ' : ''}match in which ${winningPlayer.name}${tournament?.pointsEligible ? ` (-${match.round + 1}) TP)` : ''} defeated ${losingPlayer.name}${tournament?.pointsEligible && match.round === 1 ? ` (-1 TP)` : ''} has been erased.`})	
+        return await interaction.editReply({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${match.isTournament ? 'Tournament ' : ''}match in which ${winningPlayer.globalName}${tournament?.pointsEligible ? ` (-${match.round + 1}) TP)` : ''} defeated ${losingPlayer.globalName}${tournament?.pointsEligible && match.round === 1 ? ` (-1 TP)` : ''} has been erased.`})	
     }
 }

@@ -42,7 +42,7 @@ export default {
             order: [['createdAt', 'DESC']]
         })
 
-        const records = [`__**${player.name}'s Last ${matches.length} ${format.name} Format ${format.emoji} Matches**__`]
+        const records = [`__**${player.globalName}'s Last ${matches.length} ${format.name} Format ${format.emoji} Matches**__`]
 
         const now = Date.now()
 

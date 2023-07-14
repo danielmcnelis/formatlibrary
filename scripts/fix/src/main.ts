@@ -204,14 +204,14 @@ import { Op } from 'sequelize'
     const players = await Player.findAll({
         where: {
             discordId: {[Op.not]: null},
-            discordName: null
+            globalName: null
         }
     })
 
     for (let i = 0; i < players.length; i++) {
         try {
             const player = players[i]
-            await player.update({ discordName: player.name })
+            await player.update({ globalName: player.discordName })
             b++
         } catch (err) {
             console.log(err)

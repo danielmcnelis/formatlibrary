@@ -58,7 +58,7 @@ export const updateAvatars = async (client) => {
     
                         const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/pfps/${player.discordId}.png`, Body: buffer, ContentType: `image/png` }).promise()
                         console.log('uri', uri)
-                        console.log(`saved new pfp for ${player.name}`)
+                        console.log(`saved new pfp for ${player.globalName}`)
                         count++
                     } else {
                         continue
@@ -108,21 +108,20 @@ export const conductCensus = async (client) => {
                 
                 if (player && player.duelingBook && player.discriminator === '0') {
                     try {
-                        const {data, status} = await axios.get(`https://discord.com/api/v9/users/${member.user.id}`, {
+                        const {data} = await axios.get(`https://discord.com/api/v9/users/${member.user.id}`, {
                             headers: {
                               Authorization: `Bot ${config.services.bot.token}`
                             }
                         })
 
-                        if (player.name !== player.globalName || 
-                            player.globalName !== data.global_name ||
+                        if (player.globalName !== data.global_name ||
+                            player.displayName !== data.display_name || 
                             player.discordName !== member.user.username || 
                             player.discriminator !== member.user.discriminator 
                         ) {
                             console.log(`updating ${member.user.username}`)
                             updateCount++
                             await player.update({
-                                name: data.global_name,
                                 globalName: data.global_name,
                                 displayName: data.display_name,
                                 discordName: member.user.username,
@@ -137,13 +136,11 @@ export const conductCensus = async (client) => {
                         continue
                     }
                 } else if (player && ( 
-                    player.name !== player.discordName || 
                     player.discordName !== member.user.username || 
                     player.discriminator !== member.user.discriminator 
                 )) {
                     updateCount++
                     await player.update({
-                        name: member.user.username,
                         discordName: member.user.username,
                         discriminator: member.user.discriminator
                     })
@@ -231,7 +228,7 @@ export const markInactives = async () => {
         })
 
         if (!count) { 
-            console.log(`INACTIVATING ${s.player ? s.player.name : s.playerId}'s STATS IN ${s.format} FORMAT`)
+            console.log(`INACTIVATING ${s.player ? s.player.globalName : s.playerId}'s STATS IN ${s.format} FORMAT`)
             await s.update({ inactive: true })
             b++
         } else {

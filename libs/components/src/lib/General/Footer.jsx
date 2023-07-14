@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom'
 import './Footer.css'
 
-//Footer
+// FOOTER
 export const Footer = () => (
   <div className="footer">
     <div className="left-flex">

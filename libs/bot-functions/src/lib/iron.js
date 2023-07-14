@@ -69,7 +69,7 @@ export const initiateIron = async (channel, format) => {
                 include: Player
             })
 
-            const missingNames = missingEntries.map((entry) => entry.player.name)
+            const missingNames = missingEntries.map((entry) => entry.player.globalName)
             for (let i = 0; i < missingEntries.length; i++) {
                 const entry = missingEntries[i]
                 await entry.destroy()

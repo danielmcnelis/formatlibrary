@@ -31,7 +31,7 @@ export const DeckTable = () => {
     })
   
     // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, 0), [])
+    useLayoutEffect(() => window.scrollTo(0, 0), [page])
   
     // USE EFFECT
     useEffect(() => {
@@ -310,11 +310,8 @@ export const DeckTable = () => {
         <div className="paginationWrapper desktop-only">
           <div className="pagination">
             <Pagination
-              location="top"
-              nextPage={nextPage}
-              previousPage={previousPage}
-              goToPage={goToPage}
-              length={total}
+              setPage={setPage}
+              itemCount={total}
               page={page}
               itemsPerPage={decksPerPage}
             />
@@ -365,11 +362,8 @@ export const DeckTable = () => {
   
         <div className="pagination">
           <Pagination
-            location="bottom"
-            nextPage={nextPage}
-            previousPage={previousPage}
-            goToPage={goToPage}
-            length={total}
+            setPage={setPage}
+            itemCount={total}
             page={page}
             itemsPerPage={decksPerPage}
           />

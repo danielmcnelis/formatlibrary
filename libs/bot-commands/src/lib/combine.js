@@ -69,13 +69,13 @@ export default {
             } else if (match.winnerId === oldPlayer.id) {     
                 await match.update({
                     winnerId: newPlayer.id,
-                    winner: newPlayer.name
+                    winner: newPlayer.discordName
                 })
                 count++
             } else if (match.loserId === oldPlayer.id) {
                 await match.update({
                     loserId: newPlayer.id,
-                    loser: newPlayer.name
+                    loser: newPlayer.discordName
                 })
                 count++
             }

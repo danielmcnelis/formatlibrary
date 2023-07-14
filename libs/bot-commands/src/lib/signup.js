@@ -33,7 +33,7 @@ export default {
 
         let entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournament.id }})
         if (!format) format = await Format.findOne({ where: { name: {[Op.iLike]: tournament.formatName } }})
-        if (!format) return await interaction.editReply(`Unable to determine what format is being played in ${tournament.name}. Please contact an administrator.`)
+        if (!format) return await interaction.editReply(`Unable to determine what format is being played in ${tournament?.name}. Please contact an administrator.`)
         
         interaction.editReply({ content: `Please check your DMs.`})
         
@@ -50,7 +50,7 @@ export default {
         if (!entry) {
             try {
                 entry = await Entry.create({
-                    playerName: player.name,
+                    playerName: player.globalName,
                     url: data.url,
                     ydk: data.ydk || data.opdk,
                     playerId: player.id,
@@ -63,15 +63,15 @@ export default {
             }
                                            
             const { participant } = await postParticipant(server, tournament, player)
-            if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register ${player.name} on Challonge for ${tournament.name}. ${tournament.logo}`})
+            if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register ${player.globalName} on Challonge for ${tournament?.name}. ${tournament.logo}`})
             await entry.update({ participantId: participant.id })
 
             member.roles.add(server.tourRole).catch((err) => console.log(err))
-            interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
-            return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+            interaction.member.send({ content: `Thanks! I have all the information we need for ${player.globalName}.` }).catch((err) => console.log(err))
+            return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament?.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         } else if (entry && entry.active === false) {                      
             const { participant } = await postParticipant(server, tournament, player)
-            if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
+            if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament?.name}. ${tournament.logo}`})
                       
             await entry.update({
                 url: data.url,
@@ -81,11 +81,11 @@ export default {
             })
             
             member.roles.add(server.tourRole).catch((err) => console.log(err))
-            interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.`}).catch((err) => console.log(err))
+            interaction.member.send({ content: `Thanks! I have all the information we need for ${player.globalName}.`}).catch((err) => console.log(err))
             return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         } else if (entry && entry.active === true) {
             await entry.update({ url: data.url, ydk: data.ydk || data.opdk })
-            interaction.member.send({ content: `Thanks! I have ${player.name}'s updated deck list for the tournament.` }).catch((err) => console.log(err))
+            interaction.member.send({ content: `Thanks! I have ${player.globalName}'s updated deck list for the tournament.` }).catch((err) => console.log(err))
             return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator resubmitted <@${player.discordId}>'s deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         }
     }

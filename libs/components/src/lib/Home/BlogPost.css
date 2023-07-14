@@ -68,7 +68,6 @@
     flex-direction: row;
 }
 
-
 .blogpost-pfp-community-flexbox {
     display: flex;
     align-items: center;
@@ -142,20 +141,40 @@
     background-color: #d5ef95;
 }
 
-  
-.widget-link {
+.black-text {
     color: #151414;
 }
-  
-.widget-link:hover {
+
+.hover-green:hover {
     color: #34AD5A;
+}
+
+#discord {
+    margin: 8px 0px 16px;
+}
+
+#twitter, #buymeacoffee {
+    margin: 16px 0px;
+}
+
+#tcgplayer {
+    margin: 16px 0px 8px;
+}
+
+#discord img, #twitter img {
+    width: 30%;
+    height: 30%;
+}
+
+#buymeacoffee img, #tcgplayer img {
+    height: 18%;
+    width: 70%;
 }
   
 .ad-desc {
     padding: 0px;
     margin: 4px 8px;
 }
-  
   
 .blog-divider {
     width: 90%;
@@ -261,7 +280,6 @@
         margin-right: 1%;
         overflow: none;
     }
-    
     
     .blogpost-pfp, .blogpost-community {
         display: none;

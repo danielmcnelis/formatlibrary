@@ -41,13 +41,16 @@ export default {
                 '$tournament.state$': 'underway'
             },
             include: Tournament,
-            order: [['round', 'ASC']]
-        })].map((r) => `Round ${r.round} ${r.winnerId === player.id ? `(W) vs ${r.loserName}` : `(L) vs ${r.winnerName}`}: <${r.url}>`)
+            order: [['createdAt', 'ASC']]
+        })].map((r) => {
+            const round = tournament.type === 'double elimination' ? r.round < 0 ? `Losers Round ${Math.abs(r.round)}` : `Winners Round ${r.round}` : `Round ${r.round}`
+            return `${round} ${r.winnerId === player.id ? `(W) vs ${r.loserName}` : `(L) vs ${r.winnerName}`}: <${r.url}>`
+        })
 
         if (!replays.length) {
-            return await interaction.editReply(`No replays found featuring ${player.name} in ${tournament.name}. ${tournament.emoji}`)
+            return await interaction.editReply(`No replays found featuring ${player.globalName} in ${tournament.name}. ${tournament.emoji}`)
         } else {
-            return await interaction.editReply(`${player.name}'s ${tournament.name} ${tournament.emoji} replays:\n${replays.join('\n')}`)
+            return await interaction.editReply(`${player.globalName}'s ${tournament.name} ${tournament.emoji} replays:\n${replays.join('\n')}`)
         }
     }
 }

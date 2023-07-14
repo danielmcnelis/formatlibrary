@@ -8,9 +8,7 @@
     src: url('../../../../../apps/formatlibrary/src/assets/fonts/Roboto/Roboto-Bold.ttf');
 }
 
-
 /* DESKTOP */
-
 .left-flex {
     text-align: center;
     display: flex;
@@ -78,20 +76,17 @@
     background-color: #0c0e17;
 }
 
-/* FOOTER */
 #footer-menu {
     display: flex;
     padding: 0px;
     justify-content: center;
 }
 
-/* FOOTER */
 .footer-item {
     color: #f7f7f7;
     padding: 0px 20px;
 }
 
-/* FOOTER */
 .footer-item:hover {
     color: rgb(209, 156, 70);
 }
@@ -104,7 +99,6 @@
     min-width: 140px;
 }
 
-
 .discord-desc {
     color: #f7f7f7;
     padding: 0px;
@@ -114,7 +108,6 @@
 .discord-desc:hover {
     color: rgb(209, 156, 70);
 }
-
 
 /* TABLETS AND SMALL LAPTOPS */
 @media only screen and (max-width: 800px) {
@@ -151,15 +144,13 @@
 
 }
 
-
-
 /* MEDIUM AND LARGE CELL PHONES */
 @media only screen and (max-width: 600px) {
     .footer {
         min-height: 50px
     }
 
-    .footer-logo,
+    .footer-logo, 
     .discord-link {
         display: none;
     }

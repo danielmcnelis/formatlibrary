@@ -110,7 +110,7 @@ export const Slider = (props) => {
     }
 
   return (
-    <div id="slider" name="mySliders" style={{margin: '0px auto 0px 10px', maxWidth: props.maxWidth, width: props.maxWidth}}>
+    <div className="slider" style={{maxWidth: props.maxWidth, width: props.maxWidth}}>
         <img
             src={props.symbol}
             style={{height: '24px', margin: '0px 12px 0px 0px'}}

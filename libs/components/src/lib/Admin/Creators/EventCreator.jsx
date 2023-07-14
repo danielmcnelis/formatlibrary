@@ -84,7 +84,7 @@ export const EventCreator = () => {
         size: size,
         series: isSeries,
         type: tournamentType,
-        winner: player.name,
+        winner: player.globalName || player.name,
         playerId: player.id,
         startDate: startDate,
         endDate: endDate,

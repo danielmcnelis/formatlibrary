@@ -1,8 +1,10 @@
 
+/* ALL DISPLAYS */
 #slider {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
-  }
+    margin: 0px auto 0px 10px,
+}
   

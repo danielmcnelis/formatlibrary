@@ -118,23 +118,6 @@ export const SearchPanel = (props) => {
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
     
-    // GO TO PAGE
-    const goToPage = (num) => {
-        setPage(num)
-    }
-
-    // PREVIOUS PAGE
-    const previousPage = () => {
-        if (page <= 1) return
-        setPage(page - 1)
-    }
-
-    // NEXT PAGE
-    const nextPage = () => {
-        if (page >= Math.ceil(total / cardsPerPage)) return
-        setPage(page + 1)
-    }
-    
     // COUNT
     const count = async () => {
         let url = `/api/cards/count`   
@@ -651,11 +634,8 @@ export const SearchPanel = (props) => {
                         )}
                     </div>
                     <MiniPagination
-                        location="bottom"
-                        nextPage={nextPage}
-                        previousPage={previousPage}
-                        goToPage={goToPage}
-                        length={total}
+                        setPage={setPage}
+                        itemCount={total}
                         page={page}
                         itemsPerPage={cardsPerPage}
                     />

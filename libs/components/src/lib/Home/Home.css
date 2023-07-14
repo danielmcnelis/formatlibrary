@@ -1,4 +1,5 @@
 
+/* DESKTOP */
 .blog {
     background-color: #f7f7f7;
     min-height: 70vh;
@@ -15,7 +16,7 @@
     justify-content: center;
 }
   
-.paginationWrapper {
+.pagination-wrapper {
     width: 90%;
     min-width: 764px;
     max-width: 100%;
@@ -46,7 +47,7 @@
         justify-content: center;
     }
     
-    .paginationWrapper {
+    .pagination-wrapper {
         width: 90%;
         min-width: 0px;
         max-width: 100%;
@@ -69,7 +70,7 @@
       justify-content: center;
     }
   
-    .paginationWrapper {
+    .pagination-wrapper {
       width: 90%;
       min-width: 0px;
       max-width: 100%;

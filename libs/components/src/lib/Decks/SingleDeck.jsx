@@ -98,7 +98,7 @@ export const SingleDeck = () => {
   if (!deck) return <NotFound/>
   if (!deck.id) return <div/>
 
-  let extension =  deck.player.name.replaceAll('%', '%252525')
+  let extension =  deck.player.discordName.replaceAll('%', '%252525')
     .replaceAll('/', '%2F')
     .replaceAll(' ', '_')
     .replaceAll('#', '%23')
@@ -138,7 +138,7 @@ export const SingleDeck = () => {
     setDeck({downloads, ...deck})
   }
 
-  const fullName = deck.player && deck.player.name ? deck.player.name : deck.builder
+  const fullName = deck.player?.globalName || deck.player?.name || deck.builder || ''
   const displayName = fullName.length <= 24 ? fullName : fullName.slice(0, 24).split(' ').slice(0, -1).join(' ')
 
   return (
@@ -189,7 +189,7 @@ export const SingleDeck = () => {
                                 e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                             }
                         }
-                        alt={deck.player.name}
+                        alt={deck.player.discordName || deck.player.name}
                     />
                 </div>
               </div>       

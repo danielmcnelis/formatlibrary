@@ -35,7 +35,7 @@ export const EventRow = (props) => {
                             e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                         }
                     }
-                    alt={event.player.name}
+                    alt={event.player.discordName || event.player.name}
                 />
                 <div>{event.winner || 'N/A'}</div>
               </div>

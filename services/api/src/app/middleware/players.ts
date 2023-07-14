@@ -88,7 +88,12 @@ export const playersId = async (req, res, next) => {
             [Op.or]: [
                 { id: { [Op.iLike]: req.params.id }},
                 { name: { [Op.iLike]: req.params.id }},
-                { discordName: { [Op.iLike]: req.params.id }},
+                {
+                    [Op.and]: [
+                        { discordName: { [Op.iLike]: req.params.id }}, 
+                        { discriminator: {[Op.or]: ['0', null]}}
+                    ]
+                },
             ],
             hidden: false            
         },

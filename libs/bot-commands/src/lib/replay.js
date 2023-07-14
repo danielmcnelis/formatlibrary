@@ -100,14 +100,14 @@ export default {
                     formatId: format.id,
                     tournamentId: tournament.id,
                     winnerId: winningPlayer.id,
-                    winnerName: winningPlayer.name,
+                    winnerName: winningPlayer.globalName,
                     loserId: losingPlayer.id,
-                    loserName: losingPlayer.name,
+                    loserName: losingPlayer.globalName,
                     matchId: match.id,
                     round: challongeMatch?.match?.round
                 })
                 
-                return await interaction.editReply({ content: `New replay saved for Round ${challongeMatch?.match?.round} of ${tournament.name} ${tournament.logo}:\nMatch: ${winningPlayer.name} vs ${losingPlayer.name}\nURL: <${url}>`})	
+                return await interaction.editReply({ content: `New replay saved for Round ${challongeMatch?.match?.round} of ${tournament.name} ${tournament.logo}:\nMatch: ${winningPlayer.globalName} vs ${losingPlayer.globalName}\nURL: <${url}>`})	
             } catch (err) {
                 console.log(err)
             }

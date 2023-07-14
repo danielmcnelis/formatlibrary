@@ -29,17 +29,17 @@ export const SingleEvent = (props) => {
 
   const { id } = useParams()
   const navigate = useNavigate()
-  const discriminator = winner.discriminator 
-!== '0' ? `#${winner.discriminator}` : ''
+
+  let extension =  (winner.discordName || winner.name).replaceAll('%', '%252525')
+    .replaceAll('/', '%2F')
+    .replaceAll(' ', '_')
+    .replaceAll('#', '%23')
+    .replaceAll('?', '%3F')
+
+  if (winner.discordName && winner.discriminator !== '0') extension += `#${winner.discriminator}`
 
   const goToFormat = () => navigate(`/formats/${event.format ? event.format.name : null}`)
-  const goToPlayer = () => navigate(`/players/${
-    winner.name.replaceAll('%', '%252525')
-        .replaceAll('/', '%2F')
-        .replaceAll(' ', '_')
-        .replaceAll('#', '%23')
-        .replaceAll('?', '%3F') 
-    + discriminator}`)
+  const goToPlayer = () => navigate(`/players/${extension}`)
   
   
   // USE LAYOUT EFFECT

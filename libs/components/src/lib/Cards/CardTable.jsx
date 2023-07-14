@@ -113,32 +113,12 @@ export const CardTable = () => {
     })
   
     // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, 0), [])
+    useLayoutEffect(() => window.scrollTo(0, 0), [page])
     
     // CHANGE CARDS PER PAGE
     const changeCardsPerPage = (e) => {
       setCardsPerPage(Number(e.target.value))
       setPage(1)
-    }
-  
-    // GO TO PAGE
-    const goToPage = (num, location) => {
-      setPage(num)
-      if (location === 'bottom') window.scrollTo(0, document.getElementById('resultsWrapper0').offsetTop - 10)
-    }
-  
-    // PREVIOUS PAGE
-    const previousPage = (location) => {
-      if (page <= 1) return
-      setPage(page - 1)
-      if (location === 'bottom') window.scrollTo(0, document.getElementById('resultsWrapper0').offsetTop - 10)
-    }
-  
-    // NEXT PAGE
-    const nextPage = (location) => {
-      if (page >= Math.ceil(total / cardsPerPage)) return
-      setPage(page + 1)
-      if (location === 'bottom') window.scrollTo(0, document.getElementById('resultsWrapper0').offsetTop - 10)
     }
     
     // COUNT
@@ -878,24 +858,21 @@ export const CardTable = () => {
               <option value="level:asc nulls last,rating:asc nulls last">Level: Asc. ⬆</option>
             </select>
   
-            <a
+            <div
               className="searchButton desktop-only"
               type="submit"
               onClick={() => reset()}
             >
               Reset
-            </a>
+            </div>
           </div>
         </div>
   
         <div className="paginationWrapper">
           <div className="pagination desktop-only">
             <Pagination
-              location="top"
-              nextPage={nextPage}
-              previousPage={previousPage}
-              goToPage={goToPage}
-              length={total}
+              setPage={setPage}
+              itemCount={total}
               page={page}
               itemsPerPage={cardsPerPage}
             />
@@ -942,11 +919,8 @@ export const CardTable = () => {
   
         <div className="pagination">
           <Pagination
-            location="bottom"
-            nextPage={nextPage}
-            previousPage={previousPage}
-            goToPage={goToPage}
-            length={total}
+            setPage={setPage}
+            itemCount={total}
             page={page}
             itemsPerPage={cardsPerPage}
           />
