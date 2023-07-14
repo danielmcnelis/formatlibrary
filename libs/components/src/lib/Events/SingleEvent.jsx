@@ -13,7 +13,7 @@ import { Chart as ChartJS, ArcElement, CategoryScale, BarElement, Title, LinearS
 import { Bar, Doughnut } from 'react-chartjs-2'
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-export const SingleEvent = (props) => {
+export const SingleEvent = () => {
   const [event, setEvent] = useState({})
   const [winner, setWinner] = useState({})
   const [isAdmin, setIsAdmin] = useState(false)
@@ -30,17 +30,16 @@ export const SingleEvent = (props) => {
   const { id } = useParams()
   const navigate = useNavigate()
 
-  let extension =  (winner.discordName || winner.name).replaceAll('%', '%252525')
+  let extension =  (winner?.discordName || winner?.name || '').replaceAll('%', '%252525')
     .replaceAll('/', '%2F')
     .replaceAll(' ', '_')
     .replaceAll('#', '%23')
     .replaceAll('?', '%3F')
 
-  if (winner.discordName && winner.discriminator !== '0') extension += `#${winner.discriminator}`
+  if (winner?.discordName && winner?.discriminator !== '0') extension += `#${winner.discriminator}`
 
   const goToFormat = () => navigate(`/formats/${event.format ? event.format.name : null}`)
   const goToPlayer = () => navigate(`/players/${extension}`)
-  
   
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0), [])
