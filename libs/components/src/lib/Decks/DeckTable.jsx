@@ -217,7 +217,7 @@ export const DeckTable = () => {
             <select
               id="origin"
               defaultValue="event"
-              className="filter"
+              className="filter desktop-only"
               onChange={(e) => setOrigin(e.target.value || null)}
             >
               <option value="event">Event Decks</option>

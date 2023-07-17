@@ -60,49 +60,52 @@ const getTitle = (elo) => {
 export const StatsRow = (props) => {
     const {index, stats} = props
     const {elo, wins, losses, player} = stats
-    if (!player) return <tr/>
-    const discriminator = player.discriminator 
-!== '0' ? `#${player.discriminator}` : ''
-
-    const extension =  player.globalName?.replaceAll('%', '%252525')
+    const navigate = useNavigate()
+    
+    let extension =  (player?.discordName || '').replaceAll('%', '%252525')
         .replaceAll('/', '%2F')
         .replaceAll(' ', '_')
         .replaceAll('#', '%23')
-        .replaceAll('?', '%3F') + discriminator
+        .replaceAll('?', '%3F')
+
+    if (player?.discriminator && player?.discriminator !== '0') extension += `#${player.discriminator}`
 
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
     const displayName = player.globalName?.length <= 24 ? player.globalName : player.globalName?.slice(0, 24).split(' ').slice(0, -1).join(' ')
-    const navigate = useNavigate()
     const goToPlayer = () => navigate(`/players/${extension}`) 
 
-    return (
-        <tr onClick={() => goToPlayer()} className={`${evenOrOdd}-search-results-row`}>
-            <td className="leaderboard-cell-1">{ordinalize(index + 1)}</td>
-            <td className="leaderboard-cell-2">
-                <div className="player-cell">
-                    <img
-                        className="player-cell-pfp"
-                        src={`https://cdn.formatlibrary.com/images/pfps/${stats.player.discordId || stats.player.name}.png`}
-                        onError={(e) => {
-                                e.target.onerror = null
-                                e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
+    if (!player) {
+        return <tr/>
+    } else {
+        return (
+            <tr onClick={() => goToPlayer()} className={`${evenOrOdd}-search-results-row`}>
+                <td className="leaderboard-cell-1">{ordinalize(index + 1)}</td>
+                <td className="leaderboard-cell-2">
+                    <div className="player-cell">
+                        <img
+                            className="player-cell-pfp"
+                            src={`https://cdn.formatlibrary.com/images/pfps/${stats.player.discordId || stats.player.name}.png`}
+                            onError={(e) => {
+                                    e.target.onerror = null
+                                    e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
+                                }
                             }
-                        }
-                        alt={stats.player.name}
-                    />
-                    <div>{displayName}</div>
-                </div>
-            </td>
-            <td className="leaderboard-cell-3">{Math.round(100 * elo)/100}</td>
-            <td className="leaderboard-cell-4">
-                <div className="medal-cell">
-                    <div className="medal-title">{getTitle(elo)}</div>
-                    <img width="32px" src={getMedal(elo)} alt="medal"/>
-                </div>
-            </td>
-            <td className="leaderboard-cell-5">{wins}</td>
-            <td className="leaderboard-cell-6">{losses}</td>
-            <td className="leaderboard-cell-7">{(Math.round(1000 * wins / (wins + losses))/10).toFixed(2)}%</td>
-        </tr>
-    )
+                            alt={stats.player.name}
+                        />
+                        <div>{displayName}</div>
+                    </div>
+                </td>
+                <td className="leaderboard-cell-3">{Math.round(100 * elo)/100}</td>
+                <td className="leaderboard-cell-4">
+                    <div className="medal-cell">
+                        <div className="medal-title">{getTitle(elo)}</div>
+                        <img width="32px" src={getMedal(elo)} alt="medal"/>
+                    </div>
+                </td>
+                <td className="leaderboard-cell-5">{wins}</td>
+                <td className="leaderboard-cell-6">{losses}</td>
+                <td className="leaderboard-cell-7">{(Math.round(1000 * wins / (wins + losses))/10).toFixed(2)}%</td>
+            </tr>
+        )
+    }
 }

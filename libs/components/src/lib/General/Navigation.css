@@ -105,16 +105,16 @@
         display: flex;
         flex-direction: column;
         height: 60px;
-        z-index: 1;
+        z-index: 2;
         padding: 0px;
         text-align: center;
     }
 
-    #hamburger-menu.closed-menu {
+    #hamburger-menu.closed {
         overflow: hidden;
     }
 
-    #hamburger-menu.open-menu {
+    #hamburger-menu.open {
         overflow: visible;
     }
 
@@ -125,7 +125,7 @@
         padding-bottom: 2px;
     }
 
-    #hamburger-button.closed-menu-b {
+    #hamburger-button.closed-menu {
         font-size: 36pt;
         vertical-align: middle;
         text-align: center;
@@ -143,19 +143,19 @@
         font-size: 13pt;
     }
 
-    #hamburger-menu.open-menu div.open-menu {
+    #hamburger-menu.open div.open-menu {
         display: contents;
     }
 
-    #hamburger-menu.open-menu div.closed-menu-b {
+    #hamburger-menu.open div.closed-menu {
         display: none;
     }
 
-    #hamburger-menu.closed-menu div.open-menu {
+    #hamburger-menu.closed div.open-menu {
         display: none;
     }
 
-    #hamburger-menu.closed-menu div.closed-menu {
+    #hamburger-menu.closed div.closed-menu {
         display: contents;
     }
 }

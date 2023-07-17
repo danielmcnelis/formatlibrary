@@ -135,6 +135,12 @@
         margin: none;
     }
 
+    .event-database-flexbox {
+        padding: 0px;
+        justify-content: space-evenly;
+        width: 96vw;
+    }
+      
     .desktop-only {
         display: none;
     }
