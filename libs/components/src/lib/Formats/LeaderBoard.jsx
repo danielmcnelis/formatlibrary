@@ -6,7 +6,7 @@ import { capitalize } from '@fl/utils'
 import { useParams } from 'react-router-dom'
 import './LeaderBoard.css'
 
-export const LeaderBoard = (props) => {
+export const LeaderBoard = () => {
     const [format, setFormat] = useState({})
     const [leaderboard, setLeaderboard] = useState([])
     const { id } = useParams()
@@ -49,9 +49,9 @@ export const LeaderBoard = (props) => {
       <div className="body">
         <div id="leaderboard" className="leaderboard">
           <div className="subcategory-title-flexbox">
-            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`}/>
+            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
             <h1 className="leaderboard-title">{capitalize(format.name, true)} Leaderboard</h1>
-            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`}/>
+            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
           </div>
           <table id="leaderboard-table">
             <thead>

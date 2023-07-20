@@ -5,8 +5,9 @@
 import axios from 'axios'
 import { Op } from 'sequelize'
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } from 'discord.js'
-import { Entry, Format, Match, OPCard, Player, Replay, Stats, Server, Team, Tournament } from '@fl/models'
+import { Deck, Entry, Format, Match, OPCard, Player, Replay, Stats, Server, Team, Tournament } from '@fl/models'
 import { getIssues } from './deck.js'
+import { createDecks } from './coverage.js'
 import { capitalize, drawDeck, drawOPDeck, generateRandomString, shuffleArray } from './utility.js'
 import { emojis } from '@fl/bot-emojis'
 
@@ -1696,9 +1697,8 @@ export const sendTeamPairings = async (guild, server, tournament) => {
 
 // SEND PAIRINGS
 export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
-    console.log('sendPairings()')
     const matches = [...await getMatches(server, tournament.id)].map((el) => el.match).filter((match) => match.state === 'open')
-    
+
     for (let i = 0; i < matches.length; i++) {
         const match = matches[i]
         if (ignoreRound1 && match.round === 1) continue
@@ -1754,6 +1754,178 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
             console.log(err)
         }
     }
+}
+
+// CALCULATE STANDINGS 
+export const calculateStandings = async (matches, participants) => {
+    const data = {}
+    let currentRound = 1
+
+    for (let i = 0; i < participants.length; i++) {
+        const p = participants[i]
+
+        const entry = await Entry.findOne({
+            where: {
+                participantId: p.participant.id
+            }
+        })
+
+        if (!entry) {
+            console.log(`no entry:`, p.participant)
+            continue
+        }
+
+        data[p.participant.id] = {
+            participantId: p.participant.id,
+            name: entry.playerName,
+            rank: '',
+            wins: 0,
+            losses: 0,
+            ties: 0,
+            byes: 0,
+            score: 0,
+            active: entry.active,
+            roundDropped: entry.roundDropped,
+            roundsWithoutBye: [],
+            opponents: [],
+            opponentScores: [],
+            defeated: [],
+            winsVsTied: 0,
+            rawBuchholz: 0,
+            medianBuchholz: 0
+        }
+    }
+
+    for (let i = 0; i < matches.length; i++) {
+        const match = matches[i].match
+        const round = parseInt(match.round)
+
+        if (match.state === 'pending') {
+            continue
+        } else if (match.state === 'open') {
+            if (round > currentRound) currentRound = round
+            data[match.player1_id].roundsWithoutBye.push(round)
+            data[match.player2_id].roundsWithoutBye.push(round)
+        } else if (match.state === 'complete' && match.winner_id && match.loser_id) {
+            if (round > currentRound) currentRound = match.round
+            data[match.winner_id].wins++
+            data[match.winner_id].defeated.push(match.loser_id)
+            data[match.winner_id].opponents.push(match.loser_id)
+            data[match.winner_id].roundsWithoutBye.push(round)
+            data[match.loser_id].losses++
+            data[match.loser_id].opponents.push(match.winner_id)
+            data[match.loser_id].roundsWithoutBye.push(round)
+        } else if (match.state === 'complete') {
+            if (round > currentRound) currentRound = round
+            data[match.player1_id].ties++
+            data[match.player1_id].opponents.push(match.player2_id)
+            data[match.player1_id].roundsWithoutBye.push(round)
+            data[match.player2_id].ties++
+            data[match.player2_id].opponents.push(match.player1_id)
+            data[match.player2_id].roundsWithoutBye.push(round)
+        }
+    }
+
+    const rounds = []
+    let i = 1
+    while (i <= currentRound) {
+        rounds.push(i)
+        i++
+    }
+    
+    const keys = Object.keys(data)
+
+    keys.forEach((k) => {
+        for (let j = 1; j <= currentRound; j++) {
+            if (!data[k].roundsWithoutBye.includes(j) && (data[k].active || data[k].roundDropped > j)) {
+                console.log(`round ${j} BYE found for ${data[k].name}`)
+                data[k].byes++
+            }
+        }
+    })
+
+    keys.forEach((k) => {
+        data[k].score = data[k].wins + data[k].byes
+    })
+
+    keys.forEach((k) => {
+        for (let i = 0; i < data[k].opponents.length; i++) {
+            const opponentId = data[k].opponents[i]
+            data[k].opponentScores.push(data[opponentId].score)
+        }
+
+        for (let i = 0; i < data[k].defeated.length; i++) {
+            const opponentId = data[k].defeated[i]
+            if (data[opponentId].score === data[k].score) data[k].winsVsTied++
+        }
+
+        const arr = [...data[k].opponentScores.sort()]
+        arr.shift()
+        arr.pop()
+        data[k].rawBuchholz = data[k].opponentScores.reduce((accum, val) => accum + val, 0)
+        data[k].medianBuchholz = arr.reduce((accum, val) => accum + val, 0)
+    })
+
+    const standings = shuffleArray(Object.values(data)).sort((a, b) => {
+        if (a.score > b.score) {
+            return -1
+        } else if (a.score < b.score) {
+            return 1
+        } else if (a.medianBuchholz > b.medianBuchholz) {
+            return -1
+        } else if (a.medianBuchholz < b.medianBuchholz) {
+            return 1
+        } else if (a.winsVsTied > b.winsVsTied) {
+            return -1
+        } else if (a.winsVsTied < b.winsVsTied) {
+            return 1
+        } else {
+            return 0
+        }
+    })
+
+    return standings
+}
+
+// AUTO REGISTER TOP CUT
+export const autoRegisterTopCut = async (server, tournament, topCutTournament, standings) => {
+    const topCut = standings.filter((s) => {
+        const rawRankValue = parseInt(s.rank.replace(/^\D+/g, ''))
+        if (rawRankValue > tournament.topCut) return s
+    })
+
+    const size = topCut.length
+    let errors = [`Unable to register the following players on Challonge for ${topCutTournament.name}:`]
+
+    for (let i = 0; i < topCut.length; i++) {
+        const s = topCut[i]
+
+        try {
+            const entry = await Entry.findOne({
+                where: {
+                    tournamentId: tournament.id,
+                    participantId: s.participantId
+                },
+                include: Player
+            })
+            const topCutEntry = await Entry.create({
+                name: entry.name,
+                playerId: entry.playerId,
+                tournamentId: topCutTournament.id,
+                compositeKey: `${entry.playerId}${topCutTournament.id}`,
+                url: entry.url,
+                ydk: entry.ydk
+            })
+            
+            const { participant } = await postParticipant(server, topCutTournament, entry.player)
+            if (!participant) errors.push(`- ${entry.name} (${i + 1} seed`)        
+            await topCutEntry.update({ participantId: participant.id })
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    return {errors, size}
 }
 
 // CREATE TOURNAMENT
@@ -1887,6 +2059,94 @@ export const createTournament = async (interaction, formatName, name, abbreviati
     }
 }
 
+// CREATE TOP CUT
+export const createTopCut = async (server, primaryTournament, format) => {
+    const game_name = format.category === 'OP' ? 'One Piece TCG' : 'Yu-Gi-Oh!'
+    const description = format.category === 'OP' ? 'One Piece TCG' : `${format.name} Format`
+    const str = generateRandomString(10, '0123456789abcdefghijklmnopqrstuvwxyz')
+    const name = `${primaryTournament.name} - Top ${primaryTournament.topCut}`
+    const abbreviation = `${primaryTournament.abbreviation}_Top${primaryTournament.topCut}`
+
+    try {
+        const { status, data } = await axios({
+            method: 'post',
+            url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
+            data: {
+                tournament: {
+                    name: name,
+                    url: abbreviation,
+                    tournament_type: 'single elimination',
+                    description: description,
+                    game_name: game_name,
+                    pts_for_match_tie: "0.0"
+                }
+            }
+        })
+        
+        if (status === 200 && data) {
+            const tournament = await Tournament.create({ 
+                id: data.tournament.id,
+                name: name,
+                abbreviation: abbreviation,
+                state: 'pending',
+                type: 'single elimination',
+                formatName: primaryTournament.formatName,
+                formatId: primaryTournament.formatId,
+                logo: primaryTournament.logo,
+                emoji: primaryTournament.emoji,
+                url: data.tournament.url,
+                channelId: primaryTournament.channelId,
+                serverId: primaryTournament.serverId,
+                community: primaryTournament.community,
+                assocTournamentId: primaryTournament.id
+            })
+
+            return tournament
+        } 
+    } catch (err) {
+        console.log(err)
+        try {
+            const { status, data } = await axios({
+                method: 'post',
+                url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
+                data: {
+                    tournament: {
+                        name: name,
+                        url: str,
+                        tournament_type: 'single elimination',
+                        game_name: game_name,
+                        description: description,
+                        pts_for_match_tie: "0.0"
+                    }
+                }
+            })
+            
+            if (status === 200 && data) {
+                const tournament = await Tournament.create({ 
+                    id: data.tournament.id,
+                    name: name,
+                    state: 'pending',
+                    type: 'single elimination',
+                    formatName: primaryTournament.formatName,
+                    formatId: primaryTournament.formatId,
+                    logo: primaryTournament.logo,
+                    emoji: primaryTournament.emoji,
+                    url: data.tournament.url,
+                    channelId: primaryTournament.channelId,
+                    serverId: primaryTournament.serverId,
+                    community: primaryTournament.community,
+                    assocTournamentId: primaryTournament.id
+                })
+
+                return tournament
+            } 
+        } catch (err) {
+            console.log(err)
+            return false
+        }
+    }
+}
+
 // REMOVE FROM TOURNAMENT
 export const removeFromTournament = async (interaction, tournamentId, userId) => {
     const server = await Server.findOne({ where: { id: interaction.guildId }})
@@ -2013,7 +2273,7 @@ export const startChallongeBracket = async (interaction, tournamentId) => {
         if (tournament.isTeamTournament) {
             return sendTeamPairings(interaction.guild, server, tournament, tournament.format)
         } else {
-            return sendPairings(interaction.guild, server, tournament, tournament.format, false)
+            return sendPairings(interaction.guild, server, tournament, false)
         }
     } catch (err) {
         console.log(err)
@@ -2111,6 +2371,188 @@ export const startTournament = async (interaction, tournamentId) => {
     }
 }
 
+// END TOURNAMENT
+export const endTournament = async (interaction, tournamentId) => {
+    const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+    const tournament = await Tournament.findOne({ where: { id: tournamentId }, include: Format })
+    if (!tournament) return
+    const format = tournament.format
+    
+    if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.reply({ content: `This tournament has not begun.`})
+    if (tournament.state === 'complete') return await interaction.reply({ content: `This tournament has already ended.`})
+
+    try {
+        const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+        if (data.tournament.state !== 'complete') {
+            const { status } = await axios({
+                method: 'post',
+                url: `https://api.challonge.com/v1/tournaments/${tournament.id}/finalize.json?api_key=${server.challongeAPIKey}`
+            })
+
+            if (status === 200) {   
+                interaction.channel.send({ content: `Congrats! The results of ${tournament.name} ${tournament.logo} have been finalized on Challonge.com.`})
+            } else {
+                interaction.channel.send({ content: `Unable to finalize ${tournament.name} ${tournament.logo} on Challonge.com.`})
+            }
+        }
+    } catch (err) {
+        console.log(err)
+        interaction.channel.send({ content: `Unable to connect to Challonge.com.`})
+    }
+
+    if (tournament.type === 'swiss' && !tournament.assocTournamentId) {
+        const topCutTournament = await createTopCut(server, tournament, format)
+        if (topCutTournament) {
+            interaction.channel.send({ content: 
+                `Created a new top cut tournament:` + 
+                `\nName: ${topCutTournament.name} ${topCutTournament.logo}` + 
+                `\nFormat: ${topCutTournament.formatName} ${topCutTournament.emoji}` + 
+                `\nType: ${capitalize(topCutTournament.type, true)}` +
+                `\nBracket: https://challonge.com/${topCutTournament.url}`
+            })
+
+            await tournament.update({ assocTournamentId: topCutTournament.id })
+
+            try {
+                const matches = await getMatches(server, tournament.id)
+                const participants = await getParticipants(server, tournament.id)
+                const standings = await calculateStandings(matches, participants)
+                const {errors, size} = await autoRegisterTopCut(server, tournament, topCutTournament, standings)
+                if (errors.length > 1) {
+                    interaction.channel.send({ content: errors })
+                } else {
+                    interaction.channel.send({ content: `Successfully registered the Top ${size} players in the new bracket! Please review the bracket and type **/start** if everything looks good. ${emojis.mlday}` })
+                }
+            } catch (err) {
+                console.log(err)
+                interaction.channel.send({ content: `Oops! An unknown error occurred when registering the top cut players on Challonge. ${emojis.high_alert}` })
+            }
+        } else {
+            return interaction.channel.send({ content: `Oops! Failed to create a new top cut tournament on Challonge. ${emojis.high_alert}` })
+        }
+    }
+
+    let event = await Event.findOne({ where: { primaryTournamentId: tournament.id }})
+
+    if (!event) {
+        event = await Event.create({
+            name: tournament.name,
+            abbreviation: tournament.abbreviation,
+            formatName: tournament.formatName,
+            formatId: tournament.formatId,
+            referenceUrl: `https://challonge.com/${tournament.url}`,
+            display: false,
+            tournamentId: tournament.id,
+            type: tournament.type,
+            isTeamEvent: tournament.isTeamTournament,
+            community: tournament.community,
+            logo: tournament.logo,
+            emoji: tournament.emoji
+        })
+    }
+
+    if (event && !event.playerId) {
+        try {
+            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+            let winnerParticipantId = null
+            for (let i = 0; i < data.length; i++) {
+                const participant = data[i].participant
+                if (participant.final_rank === 1) {
+                    winnerParticipantId = participant.id
+                    break
+                }
+            }
+
+            if (event.isTeamEvent) {
+                const winningTeam = await Team.findOne({ where: { participantId: parseInt(winnerParticipantId) }})
+                await event.update({ winner: winningTeam.name })
+                console.log(`Marked ${winningTeam.name} as the winner of ${event.name}.`)
+            } else {
+                const winningEntry = await Entry.findOne({ where: { participantId: parseInt(winnerParticipantId) }})
+                await event.update({
+                    winner: winningEntry.playerName,
+                    playerId: winningEntry.playerId
+                })
+                console.log(`Marked ${winningEntry.playerName} as the winner of ${event.name}.`)
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    if (event && !event.size) {
+        try {
+            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+            const size = event.size || data.tournament.participants_count
+            const startDate = data.tournament.started_at ? `${data.tournament.started_at.slice(0, 10)} ${data.tournament.started_at.slice(11, 26)}` : ''
+            const endDate = data.tournament.completed_at ? `${data.tournament.completed_at.slice(0, 10)} ${data.tournament.completed_at.slice(11, 26)}` : ''
+
+            await event.update({
+                size,
+                startDate,
+                endDate
+            })
+
+            console.log(`Recorded size, start date, and end date for ${event.name}`)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    let count = await Deck.count({ where: { eventId: event.id }})
+    
+    if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
+        try {
+            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+            const success = await createDecks(event, data)
+            if (!success) {
+                return await interaction.reply(`Failed to save all decks.`)
+            } else {
+                count = event.size
+            }
+        } catch (err) {
+            console.log(err)
+            return await interaction.reply(`Failed to save all decks.`)
+        }
+    }
+    
+    if (event && event.size > 0 && ((!event.isTeamEvent && event.size === count) || (event.isTeamEvent && (event.size * 3) === count))) {
+        const entries = await Entry.findAll({ where: { tournamentId: tournament.id }, include: Player })
+
+        for (let i = 0; i < entries.length; i++) {
+            try {            
+                const entry = entries[i]
+                const playerName = entry.playerName
+                const playerId = entry.playerId
+                const discordId = entry.player.discordId	
+                console.log(`Deleting ${entry.playerName}'s entry for ${event.name}.`)
+                await entry.destroy()
+
+                const count = await Entry.count({ 
+                    where: {
+                        playerId: playerId,
+                        active: true,
+                        '$tournament.serverId$': server.id
+                    },
+                    include: Tournament,
+                })
+
+                if (!count) {
+                    const member = await interaction.guild.members.fetch(discordId)
+                    if (!member) continue
+                    console.log(`Removing ${playerName}'s tournament role on ${server.name}.`)
+                    member.roles.remove(server.tourRole)
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        await tournament.update({ state: 'complete' })
+        return await interaction.reply({ content: `Congrats! The results of ${tournament.name} ${tournament.logo} have been finalized.`})
+    }
+}
+
 // PROCESS NO SHOW
 export const processNoShow = async (interaction, tournamentId, userId) => {
     const tournament = await Tournament.findOne({
@@ -2161,8 +2603,8 @@ export const processNoShow = async (interaction, tournamentId, userId) => {
     return await interaction.reply({ content: `<@${noShowPlayer.discordId}>, your Tournament loss to <@${winningPlayer.discordId}> has been recorded as a no-show.`})	
 }
 
-// CALCULATE STANDINGS
-export const calculateStandings = async (interaction, tournamentId) => {
+// POST STANDINGS
+export const postStandings = async (interaction, tournamentId) => {
     interaction.reply(`Calculating standings, please wait.`)
 
     const server = await Server.findOne({
@@ -2179,133 +2621,7 @@ export const calculateStandings = async (interaction, tournamentId) => {
 
     const matches = await getMatches(server, tournamentId)
     const participants = await getParticipants(server, tournamentId)
-
-    const data = {}
-
-    let currentRound = 1
-
-    for (let i = 0; i < participants.length; i++) {
-        const p = participants[i]
-
-        const entry = await Entry.findOne({
-            where: {
-                participantId: p.participant.id
-            }
-        })
-
-        if (!entry) {
-            console.log(`no entry:`, p.participant)
-            continue
-        }
-
-        data[p.participant.id] = {
-            name: entry.playerName,
-            rank: '',
-            wins: 0,
-            losses: 0,
-            ties: 0,
-            byes: 0,
-            score: 0,
-            active: entry.active,
-            roundDropped: entry.roundDropped,
-            roundsWithoutBye: [],
-            opponents: [],
-            opponentScores: [],
-            defeated: [],
-            winsVsTied: 0,
-            rawBuchholz: 0,
-            medianBuchholz: 0
-        }
-    }
-
-    for (let i = 0; i < matches.length; i++) {
-        const match = matches[i].match
-        const round = parseInt(match.round)
-
-        if (match.state === 'pending') {
-            continue
-        } else if (match.state === 'open') {
-            if (round > currentRound) currentRound = round
-            data[match.player1_id].roundsWithoutBye.push(round)
-            data[match.player2_id].roundsWithoutBye.push(round)
-        } else if (match.state === 'complete' && match.winner_id && match.loser_id) {
-            if (round > currentRound) currentRound = match.round
-            data[match.winner_id].wins++
-            data[match.winner_id].defeated.push(match.loser_id)
-            data[match.winner_id].opponents.push(match.loser_id)
-            data[match.winner_id].roundsWithoutBye.push(round)
-            data[match.loser_id].losses++
-            data[match.loser_id].opponents.push(match.winner_id)
-            data[match.loser_id].roundsWithoutBye.push(round)
-        } else if (match.state === 'complete') {
-            if (round > currentRound) currentRound = round
-            data[match.player1_id].ties++
-            data[match.player1_id].opponents.push(match.player2_id)
-            data[match.player1_id].roundsWithoutBye.push(round)
-            data[match.player2_id].ties++
-            data[match.player2_id].opponents.push(match.player1_id)
-            data[match.player2_id].roundsWithoutBye.push(round)
-        }
-    }
-
-    const rounds = []
-    let i = 1
-    while (i <= currentRound) {
-        rounds.push(i)
-        i++
-    }
-    
-    const keys = Object.keys(data)
-
-    keys.forEach((k) => {
-        for (let j = 1; j <= currentRound; j++) {
-            if (!data[k].roundsWithoutBye.includes(j) && (data[k].active || data[k].roundDropped > j)) {
-                console.log(`round ${j} BYE found for ${data[k].name}`)
-                data[k].byes++
-            }
-        }
-    })
-
-    keys.forEach((k) => {
-        data[k].score = data[k].wins + data[k].byes
-    })
-
-    keys.forEach((k) => {
-        for (let i = 0; i < data[k].opponents.length; i++) {
-            const opponentId = data[k].opponents[i]
-            data[k].opponentScores.push(data[opponentId].score)
-        }
-
-        for (let i = 0; i < data[k].defeated.length; i++) {
-            const opponentId = data[k].defeated[i]
-            if (data[opponentId].score === k.score) k.winsVsTied++
-        }
-
-        const arr = [...data[k].opponentScores.sort()]
-        arr.shift()
-        arr.pop()
-        data[k].rawBuchholz = data[k].opponentScores.reduce((accum, val) => accum + val, 0)
-        data[k].medianBuchholz = arr.reduce((accum, val) => accum + val, 0)
-    })
-
-    const standings = Object.values(data).sort((a, b) => {
-        if (a.score > b.score) {
-            return -1
-        } else if (a.score < b.score) {
-            return 1
-        } else if (a.medianBuchholz > b.medianBuchholz) {
-            return -1
-        } else if (a.medianBuchholz < b.medianBuchholz) {
-            return 1
-        } else if (a.winsVsTied > b.winsVsTied) {
-            return -1
-        } else if (a.winsVsTied < b.winsVsTied) {
-            return 1
-        } else {
-            return 0
-        }
-    })
-
+    const standings = await calculateStandings(matches, participants)
     const results = [ `${tournament.logo} - ${tournament.name} Standings - ${tournament.emoji}` , `__Rk.  Name  -  Score  (W-L-T)  [Med-Buch / WvT]__`]
 
     for (let index = 0; index < standings.length; index++) {

@@ -13,9 +13,9 @@ import { Membership, Player, Server } from '@fl/models'
 // FUNCTION IMPORTS
 import { assignTourRoles, conductCensus, downloadNewCards, getMidnightCountdown, markInactives, purgeEntries, 
     purgeRatedDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices ,updateSets, updateServers, fixDeckFolder,
-    calculateStandings, checkTimer, closeTournament, createTournament, dropFromTournament, getFilm, 
+    postStandings, checkTimer, closeTournament, createTournament, dropFromTournament, getFilm, 
     joinTournament, openTournament, processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, 
-    signupForTournament, startChallongeBracket, startTournament, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, fetchOPCardNames,  
+    signupForTournament, startChallongeBracket, startTournament, endTournament, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, fetchOPCardNames,  
     hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation
 } from '@fl/bot-functions'
 
@@ -171,6 +171,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const tournamentId = interaction.values[0]
             await dropFromTournament(interaction, tournamentId)
             return interaction.message.edit({ components: []})
+        }  else if (command.data.name === 'end') {
+            if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+            const tournamentId = interaction.values[0]
+            await endTournament(interaction, tournamentId)
+            return interaction.message.edit({components: []})
         } else if (command.data.name === 'film') {
             const tournamentId = interaction.values[0]
             const userId = interaction.message.components[0].components[0].data.custom_id
@@ -222,7 +227,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const userId = interaction.message.components[0].components[0].data.custom_id
             if (userId !== interaction.member.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
-            await calculateStandings(interaction, tournamentId)
+            const standings = await postStandings(interaction, tournamentId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'start') {
             if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)

@@ -16,7 +16,10 @@ export const MobileDeckRow = (props) => {
               rel="noopener noreferrer"
           >
             <div className="format-cell-flexbox">
-              <img src={`https://cdn.formatlibrary.com/images/emojis/${deck.format.icon}.png`}/>
+                <img 
+                    src={`https://cdn.formatlibrary.com/images/emojis/${deck.format.icon}.png`}
+                    alt="format-emoji"
+                />
             </div>
           </Link>
         </td>

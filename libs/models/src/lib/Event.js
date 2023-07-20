@@ -23,7 +23,10 @@ export const Event = db.define('events', {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
-  tournamentId: {
+  primaryTournamentId: {
+    type: Sequelize.STRING
+  },
+  topCutTournamentId: {
     type: Sequelize.STRING
   },
   winner: {

@@ -72,6 +72,7 @@ export const StatsRow = (props) => {
 
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
     const displayName = player.globalName?.length <= 24 ? player.globalName : player.globalName?.slice(0, 24).split(' ').slice(0, -1).join(' ')
+    console.log('displayName', displayName)
     const goToPlayer = () => navigate(`/players/${extension}`) 
 
     if (!player) {

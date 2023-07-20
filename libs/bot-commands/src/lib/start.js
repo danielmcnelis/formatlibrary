@@ -77,7 +77,7 @@ export default {
                 if (tournament.isTeamTournament) {
                     return sendTeamPairings(interaction.guild, server, tournament, format, false)
                 } else {
-                    return sendPairings(interaction.guild, server, tournament, format, false)
+                    return sendPairings(interaction.guild, server, tournament, false)
                 }
             } else {
                 const row = new ActionRowBuilder()

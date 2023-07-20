@@ -62,6 +62,13 @@ export const Tournament = db.define('tournaments', {
   },
   topCut: {
     type: Sequelize.INTEGER
+  },
+  isTopCutTournament: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+  assocTournamentId: {
+    type: Sequelize.STRING
   }
 })
 

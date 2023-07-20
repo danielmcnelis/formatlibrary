@@ -18,10 +18,11 @@ export const createDecks = async (event, data) => {
     for (let i = 0; i < data.length; i++) {
         try {
             const participant = data[i].participant
+
             const entries = await Entry.findAll({
                 where: {
                     participantId: participant.id,
-                    tournamentId: event.tournamentId
+                    tournamentId: event.primaryTournamentId
                 },
                 include: Player
             })

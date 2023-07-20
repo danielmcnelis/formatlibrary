@@ -1,9 +1,9 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Entry, Format, Server, Tournament } from '@fl/models'
+import { Format, Server, Tournament } from '@fl/models'
 import { emojis } from '@fl/bot-emojis'
 import { hasPartnerAccess } from '@fl/bot-functions'
-import { getMatches, getParticipants, selectTournament } from '@fl/bot-functions'
+import { calculateStandings, getMatches, getParticipants, selectTournament } from '@fl/bot-functions'
 
 export default {
     data: new SlashCommandBuilder()
@@ -23,133 +23,8 @@ export default {
         interaction.editReply(`Calculating standings, please wait.`)
         const matches = await getMatches(server, tournament.id)
         const participants = await getParticipants(server, tournament.id)
-
-        const data = {}
-
-        let currentRound = 1
-
-        for (let i = 0; i < participants.length; i++) {
-            const p = participants[i]
-
-            const entry = await Entry.findOne({
-                where: {
-                    participantId: p.participant.id
-                }
-            })
-
-            if (!entry) {
-                console.log(`no entry:`, p.participant)
-                continue
-            }
-
-            data[p.participant.id] = {
-                name: entry.playerName,
-                rank: '',
-                wins: 0,
-                losses: 0,
-                ties: 0,
-                byes: 0,
-                score: 0,
-                active: entry.active,
-                roundDropped: entry.roundDropped,
-                roundsWithoutBye: [],
-                opponents: [],
-                opponentScores: [],
-                defeated: [],
-                winsVsTied: 0,
-                rawBuchholz: 0,
-                medianBuchholz: 0
-            }
-        }
-
-        for (let i = 0; i < matches.length; i++) {
-            const match = matches[i].match
-            const round = parseInt(match.round)
-
-            if (match.state === 'pending') {
-                continue
-            } else if (match.state === 'open') {
-                if (round > currentRound) currentRound = round
-                data[match.player1_id].roundsWithoutBye.push(round)
-                data[match.player2_id].roundsWithoutBye.push(round)
-            } else if (match.state === 'complete' && match.winner_id && match.loser_id) {
-                if (round > currentRound) currentRound = match.round
-                data[match.winner_id].wins++
-                data[match.winner_id].defeated.push(match.loser_id)
-                data[match.winner_id].opponents.push(match.loser_id)
-                data[match.winner_id].roundsWithoutBye.push(round)
-                data[match.loser_id].losses++
-                data[match.loser_id].opponents.push(match.winner_id)
-                data[match.loser_id].roundsWithoutBye.push(round)
-            } else if (match.state === 'complete') {
-                if (round > currentRound) currentRound = round
-                data[match.player1_id].ties++
-                data[match.player1_id].opponents.push(match.player2_id)
-                data[match.player1_id].roundsWithoutBye.push(round)
-                data[match.player2_id].ties++
-                data[match.player2_id].opponents.push(match.player1_id)
-                data[match.player2_id].roundsWithoutBye.push(round)
-            }
-        }
-
-        const rounds = []
-        let i = 1
-        while (i <= currentRound) {
-            rounds.push(i)
-            i++
-        }
-        
-        const keys = Object.keys(data)
-
-        keys.forEach((k) => {
-            for (let j = 1; j <= currentRound; j++) {
-                if (!data[k].roundsWithoutBye.includes(j) && (data[k].active || data[k].roundDropped > j)) {
-                    console.log(`round ${j} BYE found for ${data[k].name}`)
-                    data[k].byes++
-                }
-            }
-        })
-
-        keys.forEach((k) => {
-            data[k].score = data[k].wins + data[k].byes
-        })
-
-        keys.forEach((k) => {
-            for (let i = 0; i < data[k].opponents.length; i++) {
-                const opponentId = data[k].opponents[i]
-                data[k].opponentScores.push(data[opponentId].score)
-            }
-
-            for (let i = 0; i < data[k].defeated.length; i++) {
-                const opponentId = data[k].defeated[i]
-                if (data[opponentId].score === data[k].score) data[k].winsVsTied++
-            }
-
-            const arr = [...data[k].opponentScores.sort()]
-            arr.shift()
-            arr.pop()
-            data[k].rawBuchholz = data[k].opponentScores.reduce((accum, val) => accum + val, 0)
-            data[k].medianBuchholz = arr.reduce((accum, val) => accum + val, 0)
-        })
-
-        const standings = Object.values(data).sort((a, b) => {
-            if (a.score > b.score) {
-                return -1
-            } else if (a.score < b.score) {
-                return 1
-            } else if (a.medianBuchholz > b.medianBuchholz) {
-                return -1
-            } else if (a.medianBuchholz < b.medianBuchholz) {
-                return 1
-            } else if (a.winsVsTied > b.winsVsTied) {
-                return -1
-            } else if (a.winsVsTied < b.winsVsTied) {
-                return 1
-            } else {
-                return 0
-            }
-        })
-
+        const standings = await calculateStandings(matches, participants)
+        console.log('standings', standings)
         const results = [ `${tournament.logo} - ${tournament.name} Standings - ${tournament.emoji}` , `__Rk.  Name  -  Score  (W-L-T)  [Med-Buch / WvT]__`]
 
         for (let index = 0; index < standings.length; index++) {

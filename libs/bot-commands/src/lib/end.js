@@ -2,11 +2,10 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { Deck, Entry, Event, Format, Player, Server, Team, Tournament } from '@fl/models'
 import { selectTournament } from '@fl/bot-functions'
-import { isMod, hasPartnerAccess } from '@fl/bot-functions'
+import { capitalize, createDecks, isMod, hasPartnerAccess, getMatches, getParticipants, calculateStandings, createTopCut, autoRegisterTopCut } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { emojis } from '@fl/bot-emojis'
-import { createDecks } from '@fl/bot-functions'
 
 export default {
 	data: new SlashCommandBuilder()
@@ -60,7 +59,39 @@ export default {
             interaction.channel.send({ content: `Unable to connect to Challonge.com.`})
         }
 
-        let event = await Event.findOne({ where: { tournamentId: tournament.id }})
+        if (tournament.type === 'swiss' && !tournament.assocTournamentId) {
+            const topCutTournament = await createTopCut(server, tournament, format)
+            if (topCutTournament) {
+                interaction.channel.send({ content: 
+                    `Created a new top cut tournament:` + 
+                    `\nName: ${topCutTournament.name} ${topCutTournament.logo}` + 
+                    `\nFormat: ${topCutTournament.formatName} ${topCutTournament.emoji}` + 
+                    `\nType: ${capitalize(topCutTournament.type, true)}` +
+                    `\nBracket: https://challonge.com/${topCutTournament.url}`
+                })
+
+                await tournament.update({ assocTournamentId: topCutTournament.id })
+
+                try {
+                    const matches = await getMatches(server, tournament.id)
+                    const participants = await getParticipants(server, tournament.id)
+                    const standings = await calculateStandings(matches, participants)
+                    const {errors, size} = await autoRegisterTopCut(server, tournament, topCutTournament, standings)
+                    if (errors.length > 1) {
+                        interaction.channel.send({ content: errors })
+                    } else {
+                        interaction.channel.send({ content: `Successfully registered the Top ${size} players in the new bracket! Please review the bracket and type **/start** if everything looks good. ${emojis.mlday}` })
+                    }
+                } catch (err) {
+                    console.log(err)
+                    interaction.channel.send({ content: `Oops! An unknown error occurred when registering the top cut players on Challonge. ${emojis.high_alert}` })
+                }
+            } else {
+                return interaction.channel.send({ content: `Oops! Failed to create a new top cut tournament on Challonge. ${emojis.high_alert}` })
+            }
+        }
+
+        let event = await Event.findOne({ where: { primaryTournamentId: tournament.id }})
 
         if (!event) {
             event = await Event.create({
@@ -70,7 +101,7 @@ export default {
                 formatId: tournament.formatId,
                 referenceUrl: `https://challonge.com/${tournament.url}`,
                 display: false,
-                tournamentId: tournament.id,
+                primaryTournamentId: tournament.id,
                 type: tournament.type,
                 isTeamEvent: tournament.isTeamTournament,
                 community: tournament.community,
