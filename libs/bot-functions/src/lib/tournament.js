@@ -822,6 +822,7 @@ export const seed = async (interaction, tournamentId, shuffle = false) => {
         for (let i = 0; i < entries.length; i++) {
             const entry = entries[i]
             const playerId = entry.playerId
+            console.log('entry.name', entry.name)
             const stats = await Stats.findOne({ where: { format: tournament.formatName, playerId, serverId }})
             
             if (stats) {
@@ -835,6 +836,8 @@ export const seed = async (interaction, tournamentId, shuffle = false) => {
         let count = 0
         const results = []
         let e = 0
+
+        console.log('seeds', seeds)
     
         for (let i = 0; i < seeds.length; i++) {
             const participantId = seeds[i][0]
@@ -851,11 +854,13 @@ export const seed = async (interaction, tournamentId, shuffle = false) => {
                     }
                 })
                 
+                console.log(`${name} is now the ${i+1} seed.`)
                 results.push(`${name} is now the ${i+1} seed.`)
                 count++
             } catch (err) {
                 e++
                 if (e >= (seeds.length * 10)) {
+                    console.log(`Error: Failed to set ${name} (participantId: ${participantId}) as the ${i+1} seed.`)
                     results.push(`Error: Failed to set ${name} (participantId: ${participantId}) as the ${i+1} seed.`)
                 } else {
                     console.log(`Error: Failed to set ${name} (participantId: ${participantId}) as the ${i+1} seed.`)
