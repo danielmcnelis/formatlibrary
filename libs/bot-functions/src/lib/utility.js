@@ -5,8 +5,10 @@
 const Canvas = require('canvas')
 import { ActionRowBuilder, EmbedBuilder, AttachmentBuilder, StringSelectMenuBuilder } from 'discord.js'
 import { Op } from 'sequelize'
+import axios from 'axios'
 import { Card, OPCard, Membership, Player, Print, Role, Set, Stats, Status, Tournament } from '@fl/models'
 import { emojis, rarities } from '@fl/bot-emojis'
+import { config } from '@fl/config'
 
 //DATE TO SIMPLE
 export const dateToSimple = (date = 'N/A') => {
@@ -486,6 +488,20 @@ export const convertArrayToObject = (arr = []) => {
 //CREATE PLAYER
 export const createPlayer = async (member, data) => {
     if (member && !member.user.bot) {
+        if (!data) {
+            try {
+                const res = await axios.get(`https://discord.com/api/v9/users/${member.user.id}`, {
+                    headers: {
+                      Authorization: `Bot ${config.services.bot.token}`
+                    }
+                })
+
+                if (res) data = res.data
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
         try {
             const id = await Player.generateId()
             await Player.create({

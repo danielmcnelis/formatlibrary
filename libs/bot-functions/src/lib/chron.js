@@ -106,7 +106,7 @@ export const conductCensus = async (client) => {
                 if (member.user.bot) continue
                 const player = await Player.findOne({ where: { discordId: member.user.id } })
                 
-                if (player && player.duelingBook && player.discriminator === '0') {
+                if (player && player.duelingBook && (player.discriminator === '0' || !player.name)) {
                     try {
                         const {data} = await axios.get(`https://discord.com/api/v9/users/${member.user.id}`, {
                             headers: {
