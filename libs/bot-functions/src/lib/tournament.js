@@ -22,12 +22,14 @@ export const askForSimName = async (member, player, simulator, override = false,
     : `${greeting}This appears to be ${pronoun} first time using our system. Can you please provide ${pronoun} ${simulator} name?`
 	const message = await member.send({ content: prompt.toString() }).catch((err) => console.log(err))
     if (!message || !message.channel) return false
+    
     return await message.channel.awaitMessages({
         filter,
 		max: 1,
         time: 15000
     }).then(async (collected) => {
         const name = collected.first().content
+        console.log('name', name)
         if (name.toLowerCase().includes("duelingbook.com/deck") || name.toLowerCase().includes("imgur.com")) {
             if (attempt >= 3) {
                 member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))
