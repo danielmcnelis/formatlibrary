@@ -29,7 +29,6 @@ export const askForSimName = async (member, player, simulator, override = false,
         time: 15000
     }).then(async (collected) => {
         const name = collected.first().content
-        console.log('name', name)
         if (name.toLowerCase().includes("duelingbook.com/deck") || name.toLowerCase().includes("imgur.com")) {
             if (attempt >= 3) {
                 member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))

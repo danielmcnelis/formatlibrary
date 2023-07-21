@@ -33,9 +33,6 @@ export default {
         if (!tournaments.length && format) return await interaction.editReply({ content: `There are no active ${format.name} ${server.emoji || format.emoji} tournaments.`})
         if (!tournaments.length && !format) return await interaction.editReply({ content: `There are no active tournaments.`})
         
-        const tournament = await selectTournament(interaction, tournaments, hours, minutes)
-        if (!tournament) return
-
         let hours = interaction.options.getNumber('hours')
         let minutes = interaction.options.getNumber('minutes')
         
@@ -43,6 +40,9 @@ export default {
             hours++
             minutes-= 60
         }
+
+        const tournament = await selectTournament(interaction, tournaments, hours, minutes)
+        if (!tournament) return
 
         const ignoreRound1 = !tournament.deadline
         const timestamp = Date.now()
