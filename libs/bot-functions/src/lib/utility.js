@@ -490,6 +490,7 @@ export const createPlayer = async (member, data) => {
             const id = await Player.generateId()
             await Player.create({
                 id: id,
+                name: data?.global_name || data?.display_name || `${member.user.username}`,
                 discordId: `${member.user.id}`,
                 discordName: `${member.user.username}`,
                 globalName: data?.global_name,
