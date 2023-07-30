@@ -152,7 +152,7 @@ export default {
             await entry.update({ participantId: participant.id })
             
             const deckAttachments = format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
-interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
+            interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
             deckAttachments.forEach((attachment, index) => {
                 if (index === 0) {
@@ -182,7 +182,18 @@ interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
             })
 
             return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (${team ? team.name : 'Free Agent'}) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
-        } else {
+        } else if (entry) {
+            if (!entry.participantId) {
+                const { participant } = await postParticipant(server, tournament, player).catch((err) => console.log(err))
+        
+                if (!participant) {
+                    await entry.destroy()
+                    return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
+                } else {
+                    await entry.update({ participantId: participant.id })
+                }
+            }
+
             await entry.update({ url: data.url, ydk: data.ydk || data.opdk })
             const deckAttachments = format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
             interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
