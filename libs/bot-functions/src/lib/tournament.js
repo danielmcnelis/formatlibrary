@@ -1907,12 +1907,17 @@ export const calculateStandings = async (matches, participants) => {
 
 // AUTO REGISTER TOP CUT
 export const autoRegisterTopCut = async (server, tournament, topCutTournament, standings) => {
+    console.log('tournament.topCut', tournament.topCut)
+    console.log('standings', standings)
     const topCut = standings.filter((s) => {
         const rawRankValue = parseInt(s.rank.replace(/^\D+/g, ''))
         if (rawRankValue > tournament.topCut) return s
     })
+    console.log('topCut', topCut)
+
 
     const size = topCut.length
+    console.log('size', size)
     let errors = [`Unable to register the following players on Challonge for ${topCutTournament.name}:`]
 
     for (let i = 0; i < topCut.length; i++) {
@@ -1926,6 +1931,8 @@ export const autoRegisterTopCut = async (server, tournament, topCutTournament, s
                 },
                 include: Player
             })
+            console.log('!!entry', !!entry)
+
             const topCutEntry = await Entry.create({
                 name: entry.name,
                 playerId: entry.playerId,
@@ -1935,6 +1942,7 @@ export const autoRegisterTopCut = async (server, tournament, topCutTournament, s
                 ydk: entry.ydk
             })
             
+            console.log('!!topCutEntry', !!topCutEntry)
             const { participant } = await postParticipant(server, topCutTournament, entry.player)
             if (!participant) errors.push(`- ${entry.name} (${i + 1} seed`)        
             await topCutEntry.update({ participantId: participant.id })
