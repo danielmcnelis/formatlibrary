@@ -19,13 +19,13 @@ export default {
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
             const tournament = await Tournament.findOne({
                 where: { 
-                    id: '13191851'
+                    id: '13212474'
                 }
             })
             
             const topCutTournament = await Tournament.findOne({
                 where: { 
-                    id: '13285197'
+                    id: '13212474'
                 }
             })
             
