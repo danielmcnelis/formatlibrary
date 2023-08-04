@@ -91,7 +91,6 @@ export default {
             }
         }
 
-        return
         let event = await Event.findOne({ where: { primaryTournamentId: tournament.id }})
 
         if (!event) {
