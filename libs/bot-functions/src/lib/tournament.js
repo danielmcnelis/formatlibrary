@@ -1902,6 +1902,47 @@ export const calculateStandings = async (matches, participants) => {
         }
     })
 
+    for (let index = 0; index < standings.length; index++) {
+        const s = standings[index]
+        if (!s) continue
+        if (
+            (
+                // if at the end or has a better score/tie-breakers than the next player
+                index + 1 === standings.length || (
+                    s.score > standings[index + 1].score || 
+                    s.score === standings[index + 1].score && s.medianBuchholz > standings[index + 1].medianBuchholz || 
+                    s.score === standings[index + 1].score && s.medianBuchholz === standings[index + 1].medianBuchholz && s.winsVsTied > standings[index + 1].winsVsTied
+                )
+            ) && (
+                // and at the beginning or not tied with the previous player
+                index === 0 || (
+                    s.score !== standings[index - 1].score ||
+                    s.medianBuchholz !== standings[index - 1].medianBuchholz || 
+                    s.winsVsTied !== standings[index - 1].winsVsTied
+                )
+            )
+        ) {
+            // then assign a unique ranking for this index position
+            if (index >= participants.length / 2 || s.losses > 2) break
+            s.rank = `${index + 1}`
+        } else if (index === 0) {
+            // else if at the beginning then assign T1 ranking
+            s.rank = 'T1'
+        } else if (
+            // else if tied with previous player
+            s.score === standings[index - 1].score && 
+            s.medianBuchholz === standings[index - 1].medianBuchholz && 
+            s.winsVsTied === standings[index - 1].winsVsTied
+        ) {
+            // then assign the same ranking as the previous player
+            s.rank = standings[index - 1].rank
+        } else {
+            // assign a new tied ranking for this index position
+            if (index >= participants.length / 2 || s.losses > 2) break
+            s.rank = `T${index + 1}`
+        }
+    }
+
     return standings
 }
 
