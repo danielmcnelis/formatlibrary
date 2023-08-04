@@ -1952,7 +1952,7 @@ export const autoRegisterTopCut = async (server, tournament, topCutTournament, s
     console.log('standings', standings)
     const topCut = standings.filter((s) => {
         const rawRankValue = parseInt(s.rank.replace(/^\D+/g, ''))
-        if (rawRankValue > tournament.topCut) return s
+        if (rawRankValue <= tournament.topCut) return s
     })
     console.log('topCut', topCut)
 
