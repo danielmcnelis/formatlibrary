@@ -105,6 +105,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     } else if (interaction.message?.content?.includes('Should this tournament be seeded')) {
         await interaction.message.edit({ components: [] })
         const customId = interaction.customId
+        console.log('customId', customId)
         const toBeSeeded = customId.charAt(0) !== 'N'
         const toBeShuffled = customId.charAt(0) === 'S'
         const ids = customId.slice(2).split('-')

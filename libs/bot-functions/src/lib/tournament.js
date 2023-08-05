@@ -2413,19 +2413,19 @@ export const startTournament = async (interaction, tournamentId) => {
         } else {
             const row = new ActionRowBuilder()
                 .addComponents(new ButtonBuilder()
-                    .setCustomId(`Y${tournament.id}`)
+                    .setCustomId(`Y-${tournament.id}`)
                     .setLabel('Yes')
                     .setStyle(ButtonStyle.Primary)
                 )
     
                 .addComponents(new ButtonBuilder()
-                    .setCustomId(`N${tournament.id}`)
+                    .setCustomId(`N-${tournament.id}`)
                     .setLabel('No')
                     .setStyle(ButtonStyle.Primary)
                 )
     
                 .addComponents(new ButtonBuilder()
-                    .setCustomId(`S${tournament.id}`)
+                    .setCustomId(`S-${tournament.id}`)
                     .setLabel('Shuffle')
                     .setStyle(ButtonStyle.Primary)
                 )
