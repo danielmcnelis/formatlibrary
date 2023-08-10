@@ -20,7 +20,7 @@ export default {
         if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.` })
         
         const input = interaction.options.getString('tournament')     
-        const event = await Event.findOne({ 
+        const event = await Event.findOne({
             where: { 
                 [Op.or]: {
                     name: input,
@@ -37,6 +37,7 @@ export default {
         await displayDecks(interaction, event)
         await publishDecks(interaction, event)
         await composeThumbnails(interaction, event)
+        await publishDecks(interaction, event)
 
         if (event.tournament) {
             await generateMatchupData(interaction, server, event, event.tournament)

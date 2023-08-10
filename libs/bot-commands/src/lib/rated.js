@@ -310,10 +310,11 @@ export default {
         .setDescription('Join the rated pool for any format. 🎮'),
     async execute(interaction) {
         if (interaction.guildId) return await interaction.reply(`Try using **/rated** by DM'ing it to me.`)
-        const player = await Player.findOne({ where: { discordId: interaction.user.id } })
-        if (player.hidden) return await interaction.reply(`You are not allowed to play rated at this time.`)
-        if (!player) return await interaction.reply(`You are not in the database. Please join the Format Library Discord server to register.`)
-        interaction.reply('🥸')
-        return getRatedInformation(interaction, player)
+        return await interaction.reply(`All rated pools are currently disabled while DuelingBook fixes an exploit. We will be back soon!`)
+        // const player = await Player.findOne({ where: { discordId: interaction.user.id } })
+        // if (player.hidden) return await interaction.reply(`You are not allowed to play rated at this time.`)
+        // if (!player) return await interaction.reply(`You are not in the database. Please join the Format Library Discord server to register.`)
+        // interaction.reply('🥸')
+        // return getRatedInformation(interaction, player)
     }
 }

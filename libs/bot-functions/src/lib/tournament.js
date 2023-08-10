@@ -2165,7 +2165,8 @@ export const createTopCut = async (server, primaryTournament, format) => {
                 channelId: primaryTournament.channelId,
                 serverId: primaryTournament.serverId,
                 community: primaryTournament.community,
-                assocTournamentId: primaryTournament.id
+                assocTournamentId: primaryTournament.id,
+                isTopCutTournament: true
             })
 
             return tournament
@@ -2512,6 +2513,8 @@ export const endTournament = async (interaction, tournamentId) => {
             referenceUrl: `https://challonge.com/${tournament.url}`,
             display: false,
             tournamentId: tournament.id,
+            primaryTournamentId: tournament.id,
+            topCutTournamentId: tournament.assocTournamentId, 
             type: tournament.type,
             isTeamEvent: tournament.isTeamTournament,
             community: tournament.community,

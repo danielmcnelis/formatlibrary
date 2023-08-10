@@ -354,6 +354,46 @@ export const publishDecks = async (interaction, event) => {
     return await interaction.channel.send(`Published ${decks.length} new deck lists for ${event.name}.`)
 }
 
+// DISPLAY DECKS
+export const displayReplays = async (interaction, event) => {
+    const minPlacement = event.size <= 8 ? 1 :
+        event.size > 8 && event.size <= 16 ? 2 :
+        event.size > 16 && event.size <= 24 ? 3 :
+        event.size > 24 && event.size <= 32 ? 4 :
+        event.size > 32 && event.size <= 48 ? 6 :
+        event.size > 48 && event.size <= 64 ? 8 :
+        event.size > 64 && event.size <= 96 ? 12 :
+        event.size > 96 && event.size <= 128 ? 16 :
+        event.size > 128 && event.size <= 224 ? 24 :
+        32
+        
+    const decks = await Deck.findAll({ 
+        where: {
+            eventId: event.id,
+            display: false,
+            placement: {[Op.lte]: minPlacement}
+        }
+    })
+
+    if (!decks.length) {
+        const count = await Deck.count({
+            where: {
+                eventId: event.id,
+                display: true
+            }
+        })
+
+        return await interaction.channel.send(`The top ${count} deck lists for ${event.name} were already published.`)
+    }
+
+    for (let i = 0; i < decks.length; i++) {
+        const deck = decks[i]
+        await deck.update({ display: true })
+    }
+    
+    return await interaction.channel.send(`Displayed ${decks.length} new deck lists for ${event.name}.`)
+}
+
 // GENERATE MATCHUP DATA
 export const generateMatchupData = async (interaction, server, event, tournament) => {
     const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)

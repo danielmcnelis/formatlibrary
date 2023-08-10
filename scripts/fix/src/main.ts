@@ -1,4 +1,4 @@
-import { Card, Deck, DeckType, DeckThumb, Event, Format, Match, Player, Status } from '@fl/models'
+import { Card, Deck, DeckType, DeckThumb, Event, Format, Match, Player, Status, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 
 // ;(async () => {
@@ -198,20 +198,86 @@ import { Op } from 'sequelize'
 //     }
 // })()
 
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+//     const players = await Player.findAll({
+//         where: {
+//             discordId: {[Op.not]: null},
+//             globalName: null
+//         }
+//     })
+
+//     for (let i = 0; i < players.length; i++) {
+//         try {
+//             const player = players[i]
+//             await player.update({ globalName: player.discordName })
+//             b++
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     return console.log(`fixed ${b} players and encountered ${e} errors`)
+// })()
+
 ;(async () => {
     let b = 0
     let e = 0
-    const players = await Player.findAll({
+    const tournaments = await Tournament.findAll({
         where: {
-            discordId: {[Op.not]: null},
-            globalName: null
+            abbreviation: {
+                [Op.or]: {
+                    [Op.substring]: 'top',
+                    [Op.substring]: 'Top', 
+                }
+            }
         }
     })
 
-    for (let i = 0; i < players.length; i++) {
+    for (let i = 0; i < tournaments.length; i++) {
+        const tournament = tournaments[i]
+        await tournament.update({ isTopCut: true })
+    }
+
+    const events = await Event.findAll()
+
+    for (let i = 0; i < events.length; i++) {
         try {
-            const player = players[i]
-            await player.update({ globalName: player.discordName })
+            const event = events[i]
+            const tournament = await Tournament.findOne({
+                where: {
+                    [Op.or]: {
+                        name: {[Op.iLike]: event.name },
+                        abbreviation: {[Op.iLike]: event.abbreviation },
+                        url: {[Op.iLike]: event.abbreviation }
+                    }
+                }
+            })
+
+            await event.update({ topCutTournamentId: tournament.assocTournamentId })
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    for (let i = 0; i < events.length; i++) {
+        try {
+            const event = events[i]
+            const tournament = await Tournament.findOne({
+                where: {
+                    [Op.or]: {
+                        name: {[Op.iLike]: event.name },
+                        abbreviation: {[Op.iLike]: event.abbreviation },
+                        url: {[Op.iLike]: event.abbreviation }
+                    }
+                }
+            })
+
+            await event.update({ topCutTournamentId: tournament.assocTournamentId })
             b++
         } catch (err) {
             console.log(err)

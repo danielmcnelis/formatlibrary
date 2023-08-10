@@ -415,6 +415,7 @@ export const eventsCreate = async (req, res, next) => {
       formatName: req.body.format.name,
       formatId: req.body.format.id,
       referenceUrl: req.body.referenceUrl,
+      tournamentId: req.body.id,
       primaryTournamentId: req.body.id,
       display: true,
       size: req.body.size,
