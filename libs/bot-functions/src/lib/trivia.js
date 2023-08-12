@@ -2,10 +2,10 @@
 import { Player, TriviaEntry, TriviaQuestion, TriviaKnowledge } from '@fl/models'
 const FuzzySet = require('fuzzyset')
 import { emojis } from '@fl/bot-emojis'
+import { shuffleArray } from '@fl/bot-functions'
 const triviaRole = '1085310457126060153'
 import { client } from '../client'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
-import e from 'express'
 
 //INITIATE TRIVIA
 export const initiateTrivia = async (interaction) => {
@@ -19,6 +19,29 @@ export const initiateTrivia = async (interaction) => {
         order: [["order", "ASC"]],
         limit: 10
     })
+
+    if (!questions.length) {
+        console.log(`all questions have been asked!`)
+        let askedQuestions = await TriviaQuestion.findAll({
+            where: { askedRecently: true }
+        })
+
+        const shuffledQuestions = shuffleArray(askedQuestions)
+
+        for (let i = 0; i < shuffledQuestions.length; i++) {
+            const q = shuffledQuestions[i]
+            await q.update({
+                order: i + 1,
+                askedRecently: false
+            })
+        }
+
+        questions = await TriviaQuestion.findAll({
+            where: { askedRecently: false },
+            order: [["order", "ASC"]],
+            limit: 10
+        })
+    }
 
     if (questions.length < 10) {
         questions = [...questions, ...await TriviaQuestion.findAll({
