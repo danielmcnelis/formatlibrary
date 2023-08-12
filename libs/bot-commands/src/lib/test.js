@@ -5,7 +5,6 @@ import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { Tournament, Server } from '@fl/models'
 import axios from 'axios'
-import * as cheerio from "cheerio"
 // import { config } from '@fl/config'
 
 export default {
@@ -15,13 +14,6 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
-            const {data} = await axios.get('https://www.duelingbook.com/replay?id=5213728')
-            console.log('data', data)
-            const html = cheerio.load(data)
-            const parsed = html.parseHTML()
-            console.log('parsed', parsed)
-            console.log('parsed.player1', parsed.player1)
-            console.log('parsed.player2', parsed.player2)
             await interaction.editReply(emojis.yellow)
         } else {
             await interaction.editReply('🧪')
