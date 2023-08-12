@@ -17,7 +17,7 @@ export default {
         if (isProgrammer(interaction.member)) {
             const {data} = await axios.get('https://www.duelingbook.com/replay?id=5213728')
             console.log('data', data)
-            const html = cheerio.load(data)
+            const html = cheerio.load(data)?.parseHTML()
             console.log('html', html)
             console.log('html.player1', html.player1)
             console.log('html.player2', html.player2)
