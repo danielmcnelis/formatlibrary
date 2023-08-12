@@ -25,8 +25,8 @@ export const undoMatch = async (server, channel, id) => {
         const losingPlayer = await Player.findOne({ where: { id: loserId } })
         const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, format: match.formatName, serverId: match.serverId } })
     
-        if (!winnerStats.backupElo) channel.send({ content: `${winningPlayer.globalName} has no backup stats: Remember to **/recalculate** when finished.`})
-        if (!loserStats.backupElo) channel.send({ content: `${losingPlayer.globalName} has no backup stats: Remember to **/recalculate** when finished.`})
+        if (!winnerStats.backupElo) channel.send({ content: `${winningPlayer.globalName || winningPlayer.discordName} has no backup stats: Remember to **/recalculate** when finished.`})
+        if (!loserStats.backupElo) channel.send({ content: `${losingPlayer.globalName || losingPlayer.discordName} has no backup stats: Remember to **/recalculate** when finished.`})
 
         winnerStats.elo = winnerStats.backupElo
         winnerStats.backupElo = null
@@ -41,7 +41,7 @@ export const undoMatch = async (server, channel, id) => {
         await loserStats.save()
     
         await match.destroy()
-        return channel.send({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${match.formatName} Format ${server.emoji || match.format?.emoji || ''} ${match.isTournament ? 'Tournament ' : ''}match in which ${winningPlayer.globalName} defeated ${losingPlayer.globalName} has been erased.`})	
+        return channel.send({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${match.formatName} Format ${server.emoji || match.format?.emoji || ''} ${match.isTournament ? 'Tournament ' : ''}match in which ${winningPlayer.globalName || winningPlayer.discordName} defeated ${losingPlayer.globalName || losingPlayer.discordName} has been erased.`})	
     } catch (err) {
         console.log(err)
     }

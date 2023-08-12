@@ -30,7 +30,7 @@ export default {
         const noShowPlayer = await Player.findOne({ where: { discordId: noShow.id } })
         if (!noShowPlayer) return await interaction.editReply({ content: `Sorry, <@${noShow.id}> is not in the database.`})
         const tournaments = [...await Entry.findAll({ where: { playerId: noShowPlayer.id }, include: Tournament })].map((e) => e.tournament).filter((t) => t.serverId === interaction.guildId)
-        if (!tournaments.length || !noShowMember.roles.cache.some(role => role.id === server.tourRole)) return await interaction.editReply({ content: `Sorry, ${noShowPlayer.globalName} is not any tournaments.`})
+        if (!tournaments.length || !noShowMember.roles.cache.some(role => role.id === server.tourRole)) return await interaction.editReply({ content: `Sorry, ${noShowPlayer.globalName || noShowPlayer.discordName} is not any tournaments.`})
         
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return

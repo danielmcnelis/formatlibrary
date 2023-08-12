@@ -71,8 +71,8 @@ export const StatsRow = (props) => {
     if (player?.discriminator && player?.discriminator !== '0') extension += `#${player.discriminator}`
 
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
-    const displayName = player.globalName?.length <= 24 ? player.globalName : player.globalName?.slice(0, 24).split(' ').slice(0, -1).join(' ')
-    console.log('displayName', displayName)
+    const name = player.globalName || player.discordName || ''
+    const displayName = name.length <= 24 ? name : name.slice(0, 24).split(' ').slice(0, -1).join(' ')
     const goToPlayer = () => navigate(`/players/${extension}`) 
 
     if (!player) {

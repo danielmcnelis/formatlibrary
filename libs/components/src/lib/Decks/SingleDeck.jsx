@@ -138,7 +138,7 @@ export const SingleDeck = () => {
     setDeck({downloads, ...deck})
   }
 
-  const fullName = deck.player?.globalName || deck.player?.name || deck.builder || ''
+  const fullName = deck.player?.globalName || deck.player?.discordName || deck.player?.name || deck.builder || ''
   const displayName = fullName.length <= 24 ? fullName : fullName.slice(0, 24).split(' ').slice(0, -1).join(' ')
 
   return (

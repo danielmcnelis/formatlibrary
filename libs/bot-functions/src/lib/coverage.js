@@ -184,7 +184,7 @@ export const composeBlogPost = async (interaction, event) => {
                 `</p>` +
                 `<div className="blogpost-images-flexbox">` +
                     `<div className="blogpost-pfp-community-flexbox">` +
-                        `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${event.player.discordId || event.player.globalName}.png" />` +
+                        `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${event.player.discordId || event.player.globalName || event.player.discordName}.png" />` +
                         `<img className="blogpost-community"  src="https://cdn.formatlibrary.com/images/logos/${event.community}.png" />` +
                     `</div>` +
                     `<div className="blogpost-deck-box">` + 
@@ -458,7 +458,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
                 })
 
                 if (!deck) {
-                    console.log(`NO DECK FOUND for ${player.globalName}`)
+                    console.log(`NO DECK FOUND for ${player.globalName || player.discordName}`)
                     continue   
                 }                 
 

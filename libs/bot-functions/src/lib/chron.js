@@ -58,7 +58,7 @@ export const updateAvatars = async (client) => {
     
                         const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/pfps/${player.discordId}.png`, Body: buffer, ContentType: `image/png` }).promise()
                         console.log('uri', uri)
-                        console.log(`saved new pfp for ${player.globalName}`)
+                        console.log(`saved new pfp for ${player.globalName || player.discordName}`)
                         count++
                     } else {
                         continue
@@ -106,7 +106,7 @@ export const conductCensus = async (client) => {
                 if (member.user.bot) continue
                 const player = await Player.findOne({ where: { discordId: member.user.id } })
                 
-                if (player && player.duelingBook && (player.discriminator === '0' || !player.name)) {
+                if (player && (player.duelingBook || player.OpTcgSim) && (member.user.discriminator === '0' || !player.name)) {
                     try {
                         const {data} = await axios.get(`https://discord.com/api/v9/users/${member.user.id}`, {
                             headers: {
@@ -115,7 +115,6 @@ export const conductCensus = async (client) => {
                         })
 
                         if (player.globalName !== data.global_name ||
-                            player.displayName !== data.display_name || 
                             player.discordName !== member.user.username || 
                             player.discriminator !== member.user.discriminator 
                         ) {
@@ -123,7 +122,6 @@ export const conductCensus = async (client) => {
                             updateCount++
                             await player.update({
                                 globalName: data.global_name,
-                                displayName: data.display_name,
                                 discordName: member.user.username,
                                 discriminator: member.user.discriminator
                             })
@@ -228,7 +226,7 @@ export const markInactives = async () => {
         })
 
         if (!count) { 
-            console.log(`INACTIVATING ${s.player ? s.player.globalName : s.playerId}'s STATS IN ${s.format} FORMAT`)
+            console.log(`INACTIVATING ${s.player ? s.player.globalName || s.player.discordName : s.playerId}'s STATS IN ${s.format} FORMAT`)
             await s.update({ inactive: true })
             b++
         } else {

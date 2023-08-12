@@ -50,7 +50,7 @@ export default {
             
             return await interaction.reply({ content: 
                 `${emojis.no} --- Trivia Stats --- ${emojis.yes}`
-                + `\nName: ${player.globalName}`
+                + `\nName: ${player.globalName || player.discordName}`
                 + `\nRanking: ${rank}`
                 + `\nTrivia Wins: ${player.triviaWins} ${emojis.award}`
                 + `\nCorrectly Answered: ${smarts} ${emojis.stoned}`
@@ -95,7 +95,7 @@ export default {
             return await interaction.reply({ content: 
                 `${server.emoji || format.emoji} --- ${format.name} Stats --- ${server.emoji || format.emoji}`
                 + `${server.internalLadder ? `\nServer: ${server.name}` : ''}`
-                + `\nName: ${player.globalName}`
+                + `\nName: ${player.globalName || player.discordName}`
                 + `\nMedal: ${medal}`
                 + `\nRanking: ${rank}`
                 + `\nElo Rating: ${elo}`

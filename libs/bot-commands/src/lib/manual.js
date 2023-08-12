@@ -164,7 +164,7 @@ export default {
                 await ironPersonA.save()
                 setTimeout(() => postStory(interaction.channel, format), 5000)
             } else {
-                return await interaction.editReply({ content: `Sorry, ${winningPlayer.globalName} is not ${losingPlayer.globalName}'s ${format.name} Iron opponent. ${server.emoji || format.emoji} ${emojis.iron}`})
+                return await interaction.editReply({ content: `Sorry, ${winningPlayer.globalName || winningPlayer.discordName} is not ${losingPlayer.globalName || losingPlayer.discordName}'s ${format.name} Iron opponent. ${server.emoji || format.emoji} ${emojis.iron}`})
             }
         }
         
@@ -194,9 +194,9 @@ export default {
         await loserStats.save()
 
         const match = await Match.create({
-            winner: winningPlayer.globalName,
+            winner: winningPlayer.globalName || winningPlayer.discordName,
             winnerId: winningPlayer.id,
-            loser: losingPlayer.globalName,
+            loser: losingPlayer.globalName || winningPlayer.discordName,
             loserId: losingPlayer.id,
             isTournament: isTournament,
             tournamentId: tournamentId,

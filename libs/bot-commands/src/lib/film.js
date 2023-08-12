@@ -48,9 +48,9 @@ export default {
         })
 
         if (!replays.length) {
-            return await interaction.editReply(`No replays found featuring ${player.globalName} in ${tournament.name}. ${tournament.emoji}`)
+            return await interaction.editReply(`No replays found featuring ${player.globalName || player.discordName} in ${tournament.name}. ${tournament.emoji}`)
         } else {
-            return await interaction.editReply(`${player.globalName}'s ${tournament.name} ${tournament.emoji} replays:\n${replays.join('\n')}`)
+            return await interaction.editReply(`${player.globalName || player.discordName}'s ${tournament.name} ${tournament.emoji} replays:\n${replays.join('\n')}`)
         }
     }
 }

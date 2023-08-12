@@ -100,14 +100,14 @@ export default {
                     formatId: format.id,
                     tournamentId: tournament.id,
                     winnerId: winningPlayer.id,
-                    winnerName: winningPlayer.globalName,
+                    winnerName: winningPlayer.globalName || winningPlayer.discordName,
                     loserId: losingPlayer.id,
-                    loserName: losingPlayer.globalName,
+                    loserName: losingPlayer.globalName || losingPlayer.discordName,
                     matchId: match.id,
                     round: challongeMatch?.match?.round
                 })
                 
-                return await interaction.editReply({ content: `New replay saved for Round ${challongeMatch?.match?.round} of ${tournament.name} ${tournament.logo}:\nMatch: ${winningPlayer.globalName} vs ${losingPlayer.globalName}\nURL: <${url}>`})	
+                return await interaction.editReply({ content: `New replay saved for Round ${challongeMatch?.match?.round} of ${tournament.name} ${tournament.logo}:\nMatch: ${winningPlayer.globalName || winningPlayer.discordName} vs ${losingPlayer.globalName || losingPlayer.discordName}\nURL: <${url}>`})	
             } catch (err) {
                 console.log(err)
             }

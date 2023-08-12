@@ -19,7 +19,7 @@ export default {
         if (!alreadyIn) {
             if (isConfirming || isPlaying) {
                 await TriviaEntry.create({ 
-                    playerName: player.globalName,
+                    playerName: player.globalName || player.discordName,
                     playerId: player.id,
                     status: isConfirming ? 'confirming' : 'playing',
                     confirmed: true
@@ -28,7 +28,7 @@ export default {
                 return await interaction.reply({ content: `You joined the Trivia game. 📚 🐛`})
             } else {
                 await TriviaEntry.create({ 
-                    playerName: player.globalName,
+                    playerName: player.globalName || player.discordName,
                     playerId: player.id,
                     status: 'pending',
                     confirmed: false

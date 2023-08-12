@@ -117,7 +117,7 @@ const getRatedInformation = async (interaction, player) => {
             playerId: player.id
         }
     }) : await Pool.create({
-        name: player.globalName,
+        name: player.globalName || player.discordName,
         formatName: format.name,
         formatId: format.id,
         status: 'pending',
@@ -219,7 +219,7 @@ const getRatedInformation = async (interaction, player) => {
                     `New pairing for Rated ${format.name}${format.category !== 'OP' ? ' Format' : ''} ${format.emoji}!` +
                     `\nServer: ${commonServer.name} ${commonServer.logo}` +
                     `\nChannel: <#${channelId}>` +
-                    `\nDiscord: ${player.globalName}${player.discriminator !== '0' ? `#${player.discriminator}` : ''}` +
+                    `\nDiscord: ${player.globalName || player.discordName}${player.discriminator !== '0' ? `#${player.discriminator}` : ''}` +
                     `\n${format.category !== 'OP' ? `DuelingBook: ${player.duelingBook}` : `OPTCGSim: ${player.opTcgSim}`}`
                 ).catch((err) => console.log(err))
 
@@ -227,7 +227,7 @@ const getRatedInformation = async (interaction, player) => {
                     `New pairing for Rated ${format.name}${format.category !== 'OP' ? ' Format' : ''} ${format.emoji}!` + 
                     `\nServer: ${commonServer.name} ${commonServer.logo}` + 
                     `\nChannel: <#${channelId}>` +
-                    `\nDiscord: ${opponent.globalName}${opponent.discriminator !== '0' ? `#${opponent.discriminator}` : ''}` +
+                    `\nDiscord: ${opponent.globalName || opponent.discordName}${opponent.discriminator !== '0' ? `#${opponent.discriminator}` : ''}` +
                     `\n${format.category !== 'OP' ? `DuelingBook: ${opponent.duelingBook}` : `OPTCGSim: ${opponent.opTcgSim}`}`
                 ).catch((err) => console.log(err))
 

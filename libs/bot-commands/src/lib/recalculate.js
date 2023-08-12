@@ -94,7 +94,7 @@ export default {
 
             match.delta = delta
             await match.save()
-            console.log(`${format.name} Match ${i+1}: ${winnerStats.player.globalName} > ${loserStats.player.globalName}`)
+            console.log(`${format.name} Match ${i+1}: ${winnerStats.player.globalName || winnerStats.player.discordName} > ${loserStats.player.globalName || loserStats.player.discordName}`)
         }
 
         return await interaction.channel.send({ content: `Recalculation complete!`})	

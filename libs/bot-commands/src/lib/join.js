@@ -57,7 +57,7 @@ export default {
 
             try { 
                 await Entry.create({
-                    playerName: player.globalName,
+                    playerName: player.globalName || player.discordName,
                     url: data.url,
                     ydk: data.ydk || data.opdk,
                     participantId: team.participantId,
@@ -87,7 +87,7 @@ export default {
         } else if (!entry && tournament.isTeamTournament && !team) {
             try { 
                 await Entry.create({
-                    playerName: player.globalName,
+                    playerName: player.globalName || player.discordName,
                     url: data.url,
                     ydk: data.ydk || data.opdk,
                     playerId: player.id,
@@ -130,7 +130,7 @@ export default {
 
             try {
                 entry = await Entry.create({
-                    playerName: player.globalName,
+                    playerName: player.globalName || player.discordName,
                     url: data.url,
                     ydk: data.ydk || data.opdk,
                     playerId: player.id,

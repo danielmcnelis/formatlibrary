@@ -71,7 +71,7 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
             `New pairing for Rated ${format.name}${format.category !== 'OP' ? ` Format` : ''} ${format.emoji}!` +
             `\nServer: ${commonServer.name} ${commonServer.logo}` +
             `\nChannel: <#${channelId}>` +
-            `\nDiscord: ${player.globalName}${player.discriminator !== '0' ? `#${player.discriminator}` : ''}` +
+            `\nDiscord: ${player.globalName || player.discordName}${player.discriminator !== '0' ? `#${player.discriminator}` : ''}` +
             `\n${format.category !== 'OP' ? `DuelingBook: ${player.duelingBook}` : `OPTCGSim: ${player.opTcgSim}`}`
         ).catch((err) => console.log(err))
         
@@ -79,7 +79,7 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
             `New pairing for Rated ${format.name}${format.category !== 'OP' ? ` Format` : ''} ${format.emoji}!` +
             `\nServer: ${commonServer.name} ${commonServer.logo}` +
             `\nChannel: <#${channelId}>` +
-            `\nDiscord: ${opponent.globalName}${opponent.discriminator !== '0' ? `#${opponent.discriminator}` : ''}` +
+            `\nDiscord: ${opponent.globalName || opponent.discordName}${opponent.discriminator !== '0' ? `#${opponent.discriminator}` : ''}` +
             `\n${format.category !== 'OP' ? `DuelingBook: ${opponent.duelingBook}` : `OPTCGSim: ${opponent.opTcgSim}`}`
         ).catch((err) => console.log(err))
         
@@ -275,7 +275,7 @@ export const getNewRatedDeck = async (user, player, format) => {
                 user.send({ content: `Thanks, ${user.username}, your deck is perfectly legal. ${emojis.legend}`}).catch((err) => console.log(err))
                 const deckName = await askForDeckName(user, player) || 'Unnamed Deck'
                 const newRatedDeck = await Deck.create({
-                    builder: player.globalName,
+                    builder: player.globalName || player.discordName,
                     formatName: format.name,
                     formatId: format.id,
                     name: deckName,
@@ -380,7 +380,7 @@ export const getNewOPRatedDeck = async (user) => {
 //ASK FOR DECK NAME
 export const askForDeckName = async (member, player, override = false) => {
     const filter = m => m.author.id === member.id || member.user.id
-    const pronoun = override ? `${player.globalName}'s` : 'your'
+    const pronoun = override ? `${player.globalName || player.discordName}'s` : 'your'
     const message = await member.send({ content: `Please provide a nickname for ${pronoun} deck.` }).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     return await message.channel.awaitMessages({
