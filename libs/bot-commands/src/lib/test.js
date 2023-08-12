@@ -17,10 +17,11 @@ export default {
         if (isProgrammer(interaction.member)) {
             const {data} = await axios.get('https://www.duelingbook.com/replay?id=5213728')
             console.log('data', data)
-            const html = cheerio.load(data)?.parseHTML()
-            console.log('html', html)
-            console.log('html.player1', html.player1)
-            console.log('html.player2', html.player2)
+            const html = cheerio.load(data)
+            const parsed = html.parseHTML()
+            console.log('parsed', parsed)
+            console.log('parsed.player1', parsed.player1)
+            console.log('parsed.player2', parsed.player2)
             await interaction.editReply(emojis.yellow)
         } else {
             await interaction.editReply('🧪')
