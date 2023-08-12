@@ -4,7 +4,7 @@ import { getMatches, getParticipants, calculateStandings, autoRegisterTopCut, is
 import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { Tournament, Server } from '@fl/models'
-// import axios from 'axios'
+import axios from 'axios'
 // import { config } from '@fl/config'
 
 export default {
@@ -14,7 +14,8 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
-            updateMarketPrices(client)
+            const {data} = await axios.get('https://www.duelingbook.com/replay?id=5213728')
+            console.log('data', data)
             await interaction.editReply(emojis.yellow)
         } else {
             await interaction.editReply('🧪')
