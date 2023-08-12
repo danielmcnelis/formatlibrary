@@ -5,9 +5,9 @@ import './BlogPost.css'
 
 // BLOGPOST
 export const BlogPost = (props) => {
-    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+    const isMobile = useMediaQuery({ query: '(max-width: 1000px)' })
     
-    if (isTabletOrMobile) {
+    if (isMobile) {
         return (
             <div className="blogpost">
                 {parse(props.content)}

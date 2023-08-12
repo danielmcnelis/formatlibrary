@@ -19,7 +19,7 @@
   }
   
   .eventThumbnail-image {
-    width: 100px;
+    width: 30%;
     -webkit-filter: drop-shadow(1px 0px 0 rgb(83, 74, 74))
                     drop-shadow(-1px 0px 0 rgb(83, 74, 74));
     filter: drop-shadow(1px 0px 0 rgb(83, 74, 74)) 
@@ -28,10 +28,10 @@
   
   .eventThumbnail-player-pfp {
     border: 5px solid black;
-    border-radius: 100px;
+    border-radius: 30%;
     background-color: #000000;
-    width: 100px;
-    margin: 0px 3px;
+    width: 30%;
+    margin: 0px 2px;
   }
 
 @media only screen and (max-width: 1000px) {
