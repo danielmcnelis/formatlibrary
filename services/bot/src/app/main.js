@@ -145,6 +145,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 // SELECT MENUS
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isStringSelectMenu()) return
+    await interaction.deferReply()
 
     const commandName = interaction.commandName || interaction.message.interaction.commandName
 	const command = interaction.client.commands.get(commandName)
@@ -214,8 +215,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
             if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
             const [hours, minutes] = interaction.message.components[0].components[0].data.custom_id.split(':')
-            console.log('hours', hours)
-            console.log('minutes', minutes)
             await setTimerForTournament(interaction, tournamentId, hours, minutes)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'signup') {

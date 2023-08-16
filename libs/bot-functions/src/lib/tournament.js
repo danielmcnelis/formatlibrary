@@ -221,7 +221,7 @@ export const getOPDeckList = async (member, player, override = false) => {
 // SEND DECK
 export const sendDeck = async (interaction, entryId) => {
     const entry = await Entry.findOne({ where: { id: entryId }, include: [Player, Tournament] })
-    interaction.reply({ content: `Please check your DMs.` })
+    interaction.editReply({ content: `Please check your DMs.` })
     const deckAttachments = entry.tournament.formatName === 'One Piece' ? await drawOPDeck(entry.ydk) || [] : await drawDeck(entry.ydk) || []
     const ydkFile = new AttachmentBuilder(Buffer.from(entry.ydk), { name: `${entry.player.globalName || entry.player.discordName}#${entry.player.discriminator}_${entry.tournament.abbreviation || entry.tournament.name}.ydk` })
     const isAuthor = interaction.user.id === entry.player.discordId
@@ -311,9 +311,9 @@ export const getFilm = async (interaction, tournamentId, userId) => {
     })
 
     if (!replays.length) {
-        return await interaction.reply(`No replays found featuring ${player.globalName || player.discordName} in ${tournament.name}. ${tournament.emoji}`)
+        return await interaction.editReply(`No replays found featuring ${player.globalName || player.discordName} in ${tournament.name}. ${tournament.emoji}`)
     } else {
-        return await interaction.reply(`${player.globalName || player.discordName}'s ${tournament.name} ${tournament.emoji} replays:\n${replays.join('\n')}`)
+        return await interaction.editReply(`${player.globalName || player.discordName}'s ${tournament.name} ${tournament.emoji} replays:\n${replays.join('\n')}`)
     }
 }
 
@@ -322,14 +322,14 @@ export const getFilm = async (interaction, tournamentId, userId) => {
 export const closeTournament = async (interaction, tournamentId) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
     await tournament.update({ state: 'standby' })
-    return await interaction.reply({ content: `Registration for ${tournament.name} ${tournament.logo} is now closed.`})
+    return await interaction.editReply({ content: `Registration for ${tournament.name} ${tournament.logo} is now closed.`})
 }
 
 // OPEN TOURNAMENT
 export const openTournament = async (interaction, tournamentId) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
     await tournament.update({ state: 'pending' })
-    return await interaction.reply({ content: `Registration for ${tournament.name} ${tournament.logo} is now open.`})
+    return await interaction.editReply({ content: `Registration for ${tournament.name} ${tournament.logo} is now open.`})
 }
 
 // JOIN TOURNAMENT 
@@ -365,7 +365,7 @@ export const joinTournament = async (interaction, tournamentId) => {
     }) : null
 
     let entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournamentId }})
-    interaction.reply({ content: `Please check your DMs.` })
+    interaction.editReply({ content: `Please check your DMs.` })
     
     const simName = tournament.format?.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.member, player, 'OPTCGSim') :
         player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
@@ -538,7 +538,7 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
 
     let entry
     entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournamentId }})
-    interaction.reply({ content: `Please check your DMs.` })
+    interaction.editReply({ content: `Please check your DMs.` })
     
     const simName = tournament.format?.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.member, player, 'OPTCGSim') :
         player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
@@ -604,8 +604,8 @@ export const checkTimer = async (interaction, tournamentId) => {
     const now = new Date()
     const difference = tournament.deadline - now
 
-    if (difference < 0) return await interaction.reply(`The deadline has passed.`)
-    if (difference < 60 * 1000) return await interaction.reply(`Remaining time: less than 1 minute.`)
+    if (difference < 0) return await interaction.editReply(`The deadline has passed.`)
+    if (difference < 60 * 1000) return await interaction.editReply(`Remaining time: less than 1 minute.`)
 
     let hours = Math.floor(difference / (1000 * 60 * 60))
     const word1 = hours === 1 ? 'hour' : 'hours'
@@ -618,10 +618,10 @@ export const checkTimer = async (interaction, tournamentId) => {
 
     if (hours < 1) {
         const word2 = minutes === 1 ? 'minute' : 'minutes'
-        return await interaction.reply(`Remaining time: ${minutes} ${word2}.`)
+        return await interaction.editReply(`Remaining time: ${minutes} ${word2}.`)
     } else {
         const word2 = minutes === 1 ? 'minute' : 'minutes'
-        return await interaction.reply(`Remaining time: ${hours} ${word1} and ${minutes} ${word2}.`)
+        return await interaction.editReply(`Remaining time: ${hours} ${word1} and ${minutes} ${word2}.`)
     }
 }
 
@@ -655,9 +655,9 @@ export const setTimerForTournament = async (interaction, tournamentId, hours, mi
     const word2 = minutes === 1 ? 'minute' : 'minutes'
 
     if (hours < 1) {
-        interaction.reply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
+        interaction.editReply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
     } else {
-        interaction.reply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${hours} ${word1} and ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
+        interaction.editReply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${hours} ${word1} and ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
     }
 
     if (tournament.isTeamTournament) {
@@ -667,7 +667,7 @@ export const setTimerForTournament = async (interaction, tournamentId, hours, mi
     }
 
     return setTimeout(async () => {
-        return await interaction.reply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`)
+        return await interaction.editReply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`)
     }, timeRemaining)
 }
 
@@ -1938,7 +1938,6 @@ export const calculateStandings = async (matches, participants) => {
             s.rank = standings[index - 1].rank
         } else {
             // assign a new tied ranking for this index position
-            if (index >= participants.length / 2 || s.losses > 2) break
             s.rank = `T${index + 1}`
         }
     }
@@ -1948,8 +1947,6 @@ export const calculateStandings = async (matches, participants) => {
 
 // AUTO REGISTER TOP CUT
 export const autoRegisterTopCut = async (server, tournament, topCutTournament, standings) => {
-    console.log('tournament.topCut', tournament.topCut)
-    console.log('standings', standings)
     const topCut = standings.filter((s) => {
         const rawRankValue = parseInt(s.rank.replace(/^\D+/g, ''))
         if (rawRankValue <= tournament.topCut) return s
@@ -1997,7 +1994,6 @@ export const autoRegisterTopCut = async (server, tournament, topCutTournament, s
 
 // CREATE TOURNAMENT
 export const createTournament = async (interaction, formatName, name, abbreviation, tournament_type, channelName) => {
-    await interaction.deferReply()
     const server = !interaction.guildId ? {} : 
         await Server.findOne({ where: { id: interaction.guildId }}) || 
         await Server.create({ id: interaction.guildId, name: interaction.guild.name })
@@ -2309,7 +2305,7 @@ export const dropFromTournament = async (interaction, tournamentId) => {
                 if (match.winnerId === player.id || match.loserId === player.id) success = true 
             })
     
-            if (!success) return await interaction.reply({ content: `If you played a match, please report the result before dropping. Otherwise ask a Moderator to remove you.`})
+            if (!success) return await interaction.editReply({ content: `If you played a match, please report the result before dropping. Otherwise ask a Moderator to remove you.`})
         }
     
         const entry = await Entry.findOne({ 
@@ -2360,13 +2356,13 @@ export const startTournament = async (interaction, tournamentId) => {
 
     if (unregistered.length) {
         const names = unregistered.map((e) => e.playerName)
-        return await interaction.reply({ content: `Error: The following player(s) are not properly registered with the bot:\n${names.join('\n')}`})
+        return await interaction.editReply({ content: `Error: The following player(s) are not properly registered with the bot:\n${names.join('\n')}`})
     }
 
     if (!entryCount) {
-        return await interaction.reply({ content: `Error: No entrants found.`})
+        return await interaction.editReply({ content: `Error: No entrants found.`})
     } else if (entryCount < 2) {
-        return await interaction.reply({ content: `At least 2 players are required to start a tournament.`})
+        return await interaction.editReply({ content: `At least 2 players are required to start a tournament.`})
     }
     
     if (tournament?.type?.toLowerCase() === 'swiss') {
@@ -2406,7 +2402,7 @@ export const startTournament = async (interaction, tournamentId) => {
     
         if (data?.tournament?.state === 'underway') {
             await tournament.update({ state: 'underway' })
-            interaction.reply({ content: `Your tournament was already underway on Challonge.com: https://challonge.com/${tournament.url} ${tournament.emoji}`})
+            interaction.editReply({ content: `Your tournament was already underway on Challonge.com: https://challonge.com/${tournament.url} ${tournament.emoji}`})
             
             if (tournament.isTeamTournament) {
                 return sendTeamPairings(interaction.guild, server, tournament)
@@ -2433,7 +2429,7 @@ export const startTournament = async (interaction, tournamentId) => {
                     .setStyle(ButtonStyle.Primary)
                 )
     
-            await interaction.reply({ content: `Should this tournament be seeded by Format Library ${emojis.FL} rankings?`, components: [row] })
+            await interaction.editReply({ content: `Should this tournament be seeded by Format Library ${emojis.FL} rankings?`, components: [row] })
         }
     } catch (err) {
         console.log(err)
@@ -2448,8 +2444,8 @@ export const endTournament = async (interaction, tournamentId) => {
     if (!tournament) return
     const format = tournament.format
     
-    if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.reply({ content: `This tournament has not begun.`})
-    if (tournament.state === 'complete') return await interaction.reply({ content: `This tournament has already ended.`})
+    if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `This tournament has not begun.`})
+    if (tournament.state === 'complete') return await interaction.editReply({ content: `This tournament has already ended.`})
 
     try {
         const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
@@ -2578,13 +2574,13 @@ export const endTournament = async (interaction, tournamentId) => {
             const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
             const success = await createDecks(event, data)
             if (!success) {
-                return await interaction.reply(`Failed to save all decks.`)
+                return await interaction.editReply(`Failed to save all decks.`)
             } else {
                 count = event.size
             }
         } catch (err) {
             console.log(err)
-            return await interaction.reply(`Failed to save all decks.`)
+            return await interaction.editReply(`Failed to save all decks.`)
         }
     }
     
@@ -2621,7 +2617,7 @@ export const endTournament = async (interaction, tournamentId) => {
         }
 
         await tournament.update({ state: 'complete' })
-        return await interaction.reply({ content: `Congrats! The results of ${tournament.name} ${tournament.logo} have been finalized.`})
+        return await interaction.editReply({ content: `Congrats! The results of ${tournament.name} ${tournament.logo} have been finalized.`})
     }
 }
 
@@ -2650,11 +2646,11 @@ export const processNoShow = async (interaction, tournamentId, userId) => {
 
     if (!tournament || !noShowPlayer || !server) return
  
-    if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.reply({ content: `Sorry, ${tournament.name} has not started yet.`})
-    if (tournament.state !== 'underway') return await interaction.reply({ content: `Sorry, ${tournament.name} is not underway.`})
+    if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
+    if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
     
     const noShowEntry = await Entry.findOne({ where: { playerId: noShowPlayer.id, tournamentId: tournament.id } })
-    if (!noShowEntry) return await interaction.reply({ content: `Sorry I could not find that player's tournament entry in the database.`})
+    if (!noShowEntry) return await interaction.editReply({ content: `Sorry I could not find that player's tournament entry in the database.`})
 
     const matchesArr = await getMatches(server, tournament.id)
     let winnerParticipantId = false
@@ -2666,18 +2662,18 @@ export const processNoShow = async (interaction, tournamentId, userId) => {
     }
 
     const winningEntry = await Entry.findOne({ where: { participantId: winnerParticipantId, tournamentId: tournament.id }, include: Player })
-    if (!winningEntry) return await interaction.reply({ content: `Error: could not find opponent.`})
+    if (!winningEntry) return await interaction.editReply({ content: `Error: could not find opponent.`})
     const winningPlayer = winningEntry.player
     const winner = await interaction.guild.members.fetch(winningPlayer.discordId)
     const success = await processMatchResult(server, interaction, winner, winningPlayer, noShow, noShowPlayer, tournament, tournament.format, true)
     if (!success) return
 
-    return await interaction.reply({ content: `<@${noShowPlayer.discordId}>, your Tournament loss to <@${winningPlayer.discordId}> has been recorded as a no-show.`})	
+    return await interaction.editReply({ content: `<@${noShowPlayer.discordId}>, your Tournament loss to <@${winningPlayer.discordId}> has been recorded as a no-show.`})	
 }
 
 // POST STANDINGS
 export const postStandings = async (interaction, tournamentId) => {
-    interaction.reply(`Calculating standings, please wait.`)
+    interaction.editReply(`Calculating standings, please wait.`)
 
     const server = await Server.findOne({
         where: {
@@ -2731,7 +2727,7 @@ export const postStandings = async (interaction, tournamentId) => {
             s.rank = standings[index - 1].rank
         } else {
             // assign a new tied ranking for this index position
-            if (index >= participants.length / 2 || s.losses > 2) break
+            if (s.losses > 2) break
             s.rank = `T${index + 1}`
         }
 

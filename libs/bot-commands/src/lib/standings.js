@@ -24,11 +24,11 @@ export default {
         const matches = await getMatches(server, tournament.id)
         const participants = await getParticipants(server, tournament.id)
         const standings = await calculateStandings(matches, participants)
-        console.log('standings', standings)
         const results = [ `${tournament.logo} - ${tournament.name} Standings - ${tournament.emoji}` , `__Rk.  Name  -  Score  (W-L-T)  [Med-Buch / WvT]__`]
 
         for (let index = 0; index < standings.length; index++) {
             const s = standings[index]
+            if (s.losses > 2) break
             results.push(`${s.rank}.  ${s.name}  -  ${s.score.toFixed(1)}  (${s.wins}-${s.losses}-${s.ties})${s.byes ? ` +BYE` : ''}  [${s.medianBuchholz.toFixed(1)} / ${s.winsVsTied}]`)
         }
 
