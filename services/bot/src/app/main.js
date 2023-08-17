@@ -227,7 +227,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const userId = interaction.message.components[0].components[0].data.custom_id
             if (userId !== interaction.member.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
-            const standings = await postStandings(interaction, tournamentId)
+            await postStandings(interaction, tournamentId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'start') {
             if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)

@@ -28,7 +28,6 @@ export default {
 
         for (let index = 0; index < standings.length; index++) {
             const s = standings[index]
-            if (s.losses > 2) break
             results.push(`${s.rank}.  ${s.name}  -  ${s.score.toFixed(1)}  (${s.wins}-${s.losses}-${s.ties})${s.byes ? ` +BYE` : ''}  [${s.medianBuchholz.toFixed(1)} / ${s.winsVsTied}]`)
         }
 

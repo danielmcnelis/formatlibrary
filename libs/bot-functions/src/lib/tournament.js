@@ -2727,7 +2727,6 @@ export const postStandings = async (interaction, tournamentId) => {
             s.rank = standings[index - 1].rank
         } else {
             // assign a new tied ranking for this index position
-            if (s.losses > 2) break
             s.rank = `T${index + 1}`
         }
 
