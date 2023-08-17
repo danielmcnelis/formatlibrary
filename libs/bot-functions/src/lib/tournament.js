@@ -1923,7 +1923,6 @@ export const calculateStandings = async (matches, participants) => {
             )
         ) {
             // then assign a unique ranking for this index position
-            if (index >= participants.length / 2 || s.losses > 2) break
             s.rank = `${index + 1}`
         } else if (index === 0) {
             // else if at the beginning then assign T1 ranking
@@ -2712,7 +2711,6 @@ export const postStandings = async (interaction, tournamentId) => {
             )
         ) {
             // then assign a unique ranking for this index position
-            if (index >= participants.length / 2 || s.losses > 2) break
             s.rank = `${index + 1}`
         } else if (index === 0) {
             // else if at the beginning then assign T1 ranking
