@@ -127,6 +127,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 // MODAL SUBMIT
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isModalSubmit()) return
+    await interaction.deferReply()
 
 	const name = interaction.fields.getTextInputValue('name')
 	let tournament_type = interaction.fields.getTextInputValue('tournament_type')
