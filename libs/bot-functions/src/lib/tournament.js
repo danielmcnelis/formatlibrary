@@ -1790,28 +1790,47 @@ export const calculateStandings = async (matches, participants) => {
 
         if (!entry) {
             console.log(`no entry:`, p.participant)
-            continue
+            data[p.participant.id] = {
+                participantId: p.participant.id,
+                name: p.participant.name,
+                rank: '',
+                wins: 0,
+                losses: 0,
+                ties: 0,
+                byes: 0,
+                score: 0,
+                active: p.participant.active,
+                roundDropped: null,
+                roundsWithoutBye: [],
+                opponents: [],
+                opponentScores: [],
+                defeated: [],
+                winsVsTied: 0,
+                rawBuchholz: 0,
+                medianBuchholz: 0
+            }
+        } else {
+            data[p.participant.id] = {
+                participantId: p.participant.id,
+                name: entry.playerName,
+                rank: '',
+                wins: 0,
+                losses: 0,
+                ties: 0,
+                byes: 0,
+                score: 0,
+                active: entry.active,
+                roundDropped: entry.roundDropped,
+                roundsWithoutBye: [],
+                opponents: [],
+                opponentScores: [],
+                defeated: [],
+                winsVsTied: 0,
+                rawBuchholz: 0,
+                medianBuchholz: 0
+            }
         }
 
-        data[p.participant.id] = {
-            participantId: p.participant.id,
-            name: entry.playerName,
-            rank: '',
-            wins: 0,
-            losses: 0,
-            ties: 0,
-            byes: 0,
-            score: 0,
-            active: entry.active,
-            roundDropped: entry.roundDropped,
-            roundsWithoutBye: [],
-            opponents: [],
-            opponentScores: [],
-            defeated: [],
-            winsVsTied: 0,
-            rawBuchholz: 0,
-            medianBuchholz: 0
-        }
     }
 
     for (let i = 0; i < matches.length; i++) {
