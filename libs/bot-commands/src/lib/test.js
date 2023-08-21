@@ -14,19 +14,7 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
-            console.log(`all questions have been asked!`)
-            let askedQuestions = await TriviaQuestion.findAll()
-
-            const shuffledQuestions = shuffleArray(askedQuestions)
-
-            for (let i = 0; i < shuffledQuestions.length; i++) {
-                const q = shuffledQuestions[i]
-                await q.update({
-                    order: i + 1,
-                    askedRecently: false
-                })
-            }
-
+            updateMarketPrices()
             await interaction.editReply(emojis.yellow)
         } else {
             await interaction.editReply('🧪')
