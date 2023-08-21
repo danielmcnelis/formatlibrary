@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Event, Format, Player, Server, Tournament } from '@fl/models'
-import { composeBlogPost, composeThumbnails, displayDecks, generateMatchupData, publishDecks, isMod } from '@fl/bot-functions'
+import { composeBlogPost, composeThumbnails, displayDecks, displayReplays, generateMatchupData, publishDecks, isMod } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 
 export default {
@@ -36,6 +36,7 @@ export default {
         await interaction.editReply({ content: `Generating coverage for ${event.name}. Please wait.` })
         await displayDecks(interaction, event)
         await publishDecks(interaction, event)
+        await displayReplays(interaction, event)
         await composeThumbnails(interaction, event)
         await publishDecks(interaction, event)
 

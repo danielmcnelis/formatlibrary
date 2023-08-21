@@ -3,7 +3,7 @@ const Canvas = require('canvas')
 import axios from 'axios'
 import { S3 } from 'aws-sdk'
 import { Op } from 'sequelize'
-import { Alius, BlogPost, Card, Deck, DeckType, Entry, Match, Matchup, Player, Tournament, Server }  from '@fl/models'
+import { Alius, BlogPost, Card, Deck, DeckType, Entry, Match, Matchup, Player, Replay, Tournament, Server }  from '@fl/models'
 import { capitalize, dateToVerbose } from './utility'
 import { getDeckType } from './deck'
 import { config } from '@fl/config'
@@ -355,43 +355,45 @@ export const publishDecks = async (interaction, event) => {
 }
 
 // DISPLAY DECKS
-export const displayReplays = async (interaction, event) => {
-    const minPlacement = event.size <= 8 ? 1 :
-        event.size > 8 && event.size <= 16 ? 2 :
-        event.size > 16 && event.size <= 24 ? 3 :
-        event.size > 24 && event.size <= 32 ? 4 :
-        event.size > 32 && event.size <= 48 ? 6 :
-        event.size > 48 && event.size <= 64 ? 8 :
-        event.size > 64 && event.size <= 96 ? 12 :
-        event.size > 96 && event.size <= 128 ? 16 :
-        event.size > 128 && event.size <= 224 ? 24 :
-        32
-        
-    const decks = await Deck.findAll({ 
+export const displayReplays = async (interaction, event) => {    
+    const primaryReplays = await Replay.findAll({ 
         where: {
-            eventId: event.id,
+            tournamentId: event.primaryTournamentId
+        }
+    })
+ 
+    for (let i = 0; i < primaryReplays.length; i++) {
+        const replay = primaryReplays[i]
+        await replay.update({ 
+            eventName: event.abbreviation,
+            eventId: event.id
+         })
+    }
+
+    const topCutReplays = await Replay.findAll({ 
+        where: {
+            tournamentId: event.topCutTournamentId,
             display: false,
-            placement: {[Op.lte]: minPlacement}
+            topCut: false
         }
     })
 
-    if (!decks.length) {
-        const count = await Deck.count({
-            where: {
-                eventId: event.id,
-                display: true
-            }
-        })
-
-        return await interaction.channel.send(`The top ${count} deck lists for ${event.name} were already published.`)
+    for (let i = 0; i < topCutReplays.length; i++) {
+        const replay = primaryReplays[i]
+        await replay.update({ 
+            eventName: event.abbreviation,
+            eventId: event.id,
+            display: true,
+            topCut: true
+         })
     }
 
-    for (let i = 0; i < decks.length; i++) {
-        const deck = decks[i]
-        await deck.update({ display: true })
+    if (!topCutReplays.length) {
+        return await interaction.channel.send(`The top cut replays for ${event.name} were already published.`)
+    } else {
+        return await interaction.channel.send(`Displayed ${topCutReplays.length} new replays for ${event.name}.`)
     }
-    
-    return await interaction.channel.send(`Displayed ${decks.length} new deck lists for ${event.name}.`)
+
 }
 
 // GENERATE MATCHUP DATA
