@@ -334,6 +334,7 @@ import { Op } from 'sequelize'
                 }
             })
 
+            console.log(i, !!hasMembership, !!hasDecks, !!hasStats)
             if (!hasMembership && !hasDecks && !hasStats) {
                 await player.destroy()
                 b++
