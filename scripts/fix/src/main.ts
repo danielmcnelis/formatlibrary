@@ -1,4 +1,4 @@
-import { Card, Deck, DeckType, DeckThumb, Event, Format, Match, Player, Status, Tournament } from '@fl/models'
+import { Card, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Server, Stats, Status, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 
 // ;(async () => {
@@ -222,68 +222,117 @@ import { Op } from 'sequelize'
 //     return console.log(`fixed ${b} players and encountered ${e} errors`)
 // })()
 
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+//     const tournaments = await Tournament.findAll({
+//         where: {
+//             abbreviation: {
+//                 [Op.or]: {
+//                     [Op.substring]: 'top',
+//                     [Op.substring]: 'Top', 
+//                 }
+//             }
+//         }
+//     })
+
+//     for (let i = 0; i < tournaments.length; i++) {
+//         const tournament = tournaments[i]
+//         await tournament.update({ isTopCut: true })
+//     }
+
+//     const events = await Event.findAll()
+
+//     for (let i = 0; i < events.length; i++) {
+//         try {
+//             const event = events[i]
+//             const tournament = await Tournament.findOne({
+//                 where: {
+//                     [Op.or]: {
+//                         name: {[Op.iLike]: event.name },
+//                         abbreviation: {[Op.iLike]: event.abbreviation },
+//                         url: {[Op.iLike]: event.abbreviation }
+//                     }
+//                 }
+//             })
+
+//             await event.update({ topCutTournamentId: tournament.assocTournamentId })
+//             b++
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     for (let i = 0; i < events.length; i++) {
+//         try {
+//             const event = events[i]
+//             const tournament = await Tournament.findOne({
+//                 where: {
+//                     [Op.or]: {
+//                         name: {[Op.iLike]: event.name },
+//                         abbreviation: {[Op.iLike]: event.abbreviation },
+//                         url: {[Op.iLike]: event.abbreviation }
+//                     }
+//                 }
+//             })
+
+//             await event.update({ topCutTournamentId: tournament.assocTournamentId })
+//             b++
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     return console.log(`fixed ${b} players and encountered ${e} errors`)
+// })()
+
+
 ;(async () => {
     let b = 0
     let e = 0
-    const tournaments = await Tournament.findAll({
-        where: {
-            abbreviation: {
-                [Op.or]: {
-                    [Op.substring]: 'top',
-                    [Op.substring]: 'Top', 
+    
+    const players = await Player.findAll()
+
+    for (let i = 0; i < players.length; i++) {
+        try {
+            const player = players[i]
+            if (player.email || player.firstName || player.lastName || 
+                player.hash || player.subscriber || player.admin || 
+                player.contentManager || player.creator || 
+                player.googleId || player.duelingBook
+            ) continue
+
+            const hasMembership = await Membership.count({
+                where: {
+                    playerId: player.id,
+                    '$server.access': {[Op.not]: 'free'}
+                },
+                include: Server
+            })
+            
+            const hasDecks = await Deck.count({
+                where: {
+                    playerId: player.id,
                 }
+            })
+
+            const hasStats = await Stats.count({
+                where: {
+                    playerId: player.id,
+                }
+            })
+
+            if (!hasMembership && !hasDecks && !hasStats) {
+                await player.destroy()
+                b++
             }
-        }
-    })
-
-    for (let i = 0; i < tournaments.length; i++) {
-        const tournament = tournaments[i]
-        await tournament.update({ isTopCut: true })
-    }
-
-    const events = await Event.findAll()
-
-    for (let i = 0; i < events.length; i++) {
-        try {
-            const event = events[i]
-            const tournament = await Tournament.findOne({
-                where: {
-                    [Op.or]: {
-                        name: {[Op.iLike]: event.name },
-                        abbreviation: {[Op.iLike]: event.abbreviation },
-                        url: {[Op.iLike]: event.abbreviation }
-                    }
-                }
-            })
-
-            await event.update({ topCutTournamentId: tournament.assocTournamentId })
-            b++
         } catch (err) {
             console.log(err)
             e++
         }
     }
 
-    for (let i = 0; i < events.length; i++) {
-        try {
-            const event = events[i]
-            const tournament = await Tournament.findOne({
-                where: {
-                    [Op.or]: {
-                        name: {[Op.iLike]: event.name },
-                        abbreviation: {[Op.iLike]: event.abbreviation },
-                        url: {[Op.iLike]: event.abbreviation }
-                    }
-                }
-            })
-
-            await event.update({ topCutTournamentId: tournament.assocTournamentId })
-            b++
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
-
-    return console.log(`fixed ${b} players and encountered ${e} errors`)
+    return console.log(`deleted ${b} players and encountered ${e} errors`)
 })()

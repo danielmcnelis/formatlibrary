@@ -81,7 +81,12 @@ export const updateAvatars = async (client) => {
 export const conductCensus = async (client) => {
     // Update every player's username and tag to match their Discord account.
     // It also creates new players if they are not in the database (i.e. they joined while bot was down).
-    const servers = await Server.findAll()
+    const servers = await Server.findAll({
+        where: {
+            access: {[Op.not]: 'free'}
+        }
+    })
+    
     for (let s = 0; s < servers.length; s++) {
         try {
             const server = servers[s]
@@ -90,6 +95,7 @@ export const conductCensus = async (client) => {
                 console.log(`cannot find cached guild for ${server.name}`)
                 continue
             }
+            
             const membersMap = await guild.members.fetch()
             const members = [...membersMap.values()]
             const rolesMap = guild.roles.cache
