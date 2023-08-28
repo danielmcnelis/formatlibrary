@@ -300,7 +300,7 @@ import { Op } from 'sequelize'
             lastName: null,
             googleId: null,
             duelingBook: null,
-            opTCGSim: null,
+            opTcgSim: null,
             hash: null,
             subscriber: false,
             admin: false,
