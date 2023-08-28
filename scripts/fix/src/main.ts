@@ -293,17 +293,27 @@ import { Op } from 'sequelize'
     let b = 0
     let e = 0
     
-    const players = await Player.findAll()
+    const players = await Player.findAll({
+        where: {
+            email: null,
+            firstName: null,
+            lastName: null,
+            googleId: null,
+            duelingBook: null,
+            opTCGSim: null,
+            hash: null,
+            subscriber: false,
+            admin: false,
+            contentManager: false,
+            creator: false
+        }
+    })
+
+    console.log('potential purge players.length', players.length)
 
     for (let i = 0; i < players.length; i++) {
         try {
             const player = players[i]
-            if (player.email || player.firstName || player.lastName || 
-                player.hash || player.subscriber || player.admin || 
-                player.contentManager || player.creator || 
-                player.googleId || player.duelingBook
-            ) continue
-
             const hasMembership = await Membership.count({
                 where: {
                     playerId: player.id,
