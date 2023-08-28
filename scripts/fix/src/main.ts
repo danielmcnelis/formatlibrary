@@ -307,7 +307,7 @@ import { Op } from 'sequelize'
             const hasMembership = await Membership.count({
                 where: {
                     playerId: player.id,
-                    '$server.access': {[Op.not]: 'free'}
+                    '$server.access$': {[Op.not]: 'free'}
                 },
                 include: Server
             })
