@@ -293,7 +293,7 @@ import { Op } from 'sequelize'
     let b = 0
     let e = 0
     
-    const players = await Player.findAll({
+    const count = await Player.count({
         where: {
             email: null,
             firstName: null,
@@ -309,42 +309,64 @@ import { Op } from 'sequelize'
         }
     })
 
-    console.log('potential purge players.length', players.length)
+    console.log('potential purge players count', count)
 
-    for (let i = 0; i < players.length; i++) {
-        try {
-            const player = players[i]
-            const hasMembership = await Membership.count({
-                where: {
-                    playerId: player.id,
-                    '$server.access$': {[Op.not]: 'free'}
-                },
-                include: Server
-            })
-            
-            const hasDecks = await Deck.count({
-                where: {
-                    playerId: player.id,
+    for (let offset = 0; offset < count; offset += 100) {
+        const players = await Player.findAll({
+            where: {
+                email: null,
+                firstName: null,
+                lastName: null,
+                googleId: null,
+                duelingBook: null,
+                opTcgSim: null,
+                hash: null,
+                subscriber: false,
+                admin: false,
+                contentManager: false,
+                creator: false
+            },
+            limit: 100,
+            offset: offset,
+            subQuery:false
+        })
+
+        for (let i = 0; i < players.length; i++) {
+            try {
+                const player = players[i]
+                const hasMembership = await Membership.count({
+                    where: {
+                        playerId: player.id,
+                        '$server.access$': {[Op.not]: 'free'}
+                    },
+                    include: Server
+                })
+                
+                const hasDecks = await Deck.count({
+                    where: {
+                        playerId: player.id,
+                    }
+                })
+
+                const hasStats = await Stats.count({
+                    where: {
+                        playerId: player.id,
+                    }
+                })
+
+                console.log(offset + i, !!hasMembership, !!hasDecks, !!hasStats)
+                if (!hasMembership && !hasDecks && !hasStats) {
+                    await player.destroy()
+                    console.log('PURGED')
+                    b++
                 }
-            })
-
-            const hasStats = await Stats.count({
-                where: {
-                    playerId: player.id,
-                }
-            })
-
-            console.log(i, !!hasMembership, !!hasDecks, !!hasStats)
-            if (!hasMembership && !hasDecks && !hasStats) {
-                await player.destroy()
-                console.log('PURGED')
-                b++
+            } catch (err) {
+                console.log(err)
+                e++
             }
-        } catch (err) {
-            console.log(err)
-            e++
         }
     }
+
 
     return console.log(`deleted ${b} players and encountered ${e} errors`)
 })()
