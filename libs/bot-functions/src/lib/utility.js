@@ -632,9 +632,17 @@ export const selectMatch = async (interaction, matches) => {
     if (matches.length === 0) return false
     if (matches.length === 1) return matches[0]
 
+    const now = Date.now()
     const options = matches.map((match, index) => {
+        const difference = now - match.createdAt
+        const timeAgo = difference < 1000 * 60 * 60 ?  `${Math.round(difference / (1000 * 60))}m ago` :
+            difference >= 1000 * 60 * 60 && difference < 1000 * 60 * 60 * 24 ? `${Math.round(difference / (1000 * 60 * 60))}h ago` :
+            difference >= 1000 * 60 * 60 * 24 && difference < 1000 * 60 * 60 * 24 * 30 ? `${Math.round(difference / (1000 * 60 * 60 * 24))}d ago` :
+            difference >= 1000 * 60 * 60 * 24 * 30 && difference < 1000 * 60 * 60 * 24 * 365 ? `${Math.round(difference / (1000 * 60 * 60 * 24 * 30))}mo ago` :
+            `${Math.round(difference / (1000 * 60 * 60 * 24 * 365))}y ago`
+                        
         return {
-            label: `(${index + 1}) ${match.winner} > ${match.loser}`,
+            label: `(${index + 1}) ${match.winner} > ${match.loser} (${timeAgo})`,
             value: `${matches[index].id}`,
         }
     })
@@ -642,12 +650,12 @@ export const selectMatch = async (interaction, matches) => {
     const row = new ActionRowBuilder()
         .addComponents(
             new StringSelectMenuBuilder()
-                .setCustomId('select')
+                .setCustomId(interaction.member.id)
                 .setPlaceholder('Nothing selected')
                 .addOptions(...options),
         )
 
-    await interaction.editReply({ content: `Please select a match to undo:`, components: [row] })
+    await interaction.editReply({ content: `Please select a match:`, components: [row] })
 }
 
 // SET TIMERS

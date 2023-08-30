@@ -8,14 +8,14 @@ const FuzzySet = require('fuzzyset')
 import { client } from './client'
 
 // DATABASE IMPORTS 
-import { Membership, Player, Server } from '@fl/models'
+import { Match, Membership, Player, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
 import { assignTourRoles, conductCensus, downloadNewCards, getMidnightCountdown, markInactives, purgeEntries, 
     purgeRatedDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices ,updateSets, updateServers, fixDeckFolder,
     postStandings, checkTimer, closeTournament, createTournament, dropFromTournament, getFilm, 
     joinTournament, openTournament, processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, 
-    signupForTournament, startChallongeBracket, startTournament, endTournament, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, fetchOPCardNames,  
+    signupForTournament, startChallongeBracket, startTournament, endTournament, saveReplay, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, fetchOPCardNames,  
     hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation
 } from '@fl/bot-functions'
 
@@ -81,6 +81,16 @@ client.on(Events.InteractionCreate, async interaction => {
     } else {
         return command.execute(interaction)
     }
+})
+
+// AUTO COMPLETE
+client.on(Events.InteractionCreate, async (interaction) => {
+	if (!interaction.isAutocomplete()) return
+
+    const command = interaction.client.commands.get(interaction.commandName);
+	if (!command) return console.error(`No command matching ${interaction.commandName} was found.`)
+
+    return command.autocomplete(interaction)
 })
 
 // BUTTON SUBMIT
@@ -212,6 +222,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const userId = interaction.message.components[0].components[0].data.custom_id
             await removeFromTournament(interaction, tournamentId, userId)
             return interaction.message.edit({ components: []})
+        } else if (command.data.name === 'replay') {
+            const userId = interaction.message.components[0].components[0].data.custom_id
+            if (userId !== interaction.member.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+            const match = await Match.findOne({ where: { id: interaction.values[0] }, include: Tournament})
+            await saveReplay(server, interaction.channel, match)
+            return interaction.message.edit({components: []})
         } else if (command.data.name === 'settimer') {
             if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
