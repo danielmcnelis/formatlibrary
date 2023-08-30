@@ -55,7 +55,7 @@ export default {
                 serverId: server.id
             },
             limit: 10,
-            order: ["createdAt", "DESC"]
+            order: [["createdAt", "DESC"]]
         })
 
 		await interaction.respond(
