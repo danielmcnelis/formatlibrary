@@ -374,82 +374,20 @@ import { config } from '@fl/config'
 // })()
 
 
-;(async () => {
-    let b = 0
-    let e = 0
-
-    const tournaments = await Tournament.findAll()
-
-    for (let i = 0; i < tournaments.length; i++) {
-        try {
-            const tournament = tournaments[i]
-            const {data} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${config.challonge['Format Library']}`)
-            const finalMatch = data[data.length - 1]
-            const rounds = finalMatch.match.round         
-            await tournament.update({ rounds: rounds })
-            console.log(`${tournament.name} (${tournament.type}) has ${rounds} rounds`)   
-            b++
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
-
-    return console.log(`updated ${b} tournaments and encountered ${e} errors`)
-})()
-
 // ;(async () => {
 //     let b = 0
 //     let e = 0
-    
-//     const replays = await Replay.findAll({
-//         where: {
-//             tournamentId: {[Op.not]: null}
-//         },
-//         include: [Match, Tournament]
-//     })
 
-//     for (let i = 0; i < replays.length; i++) {
+//     const tournaments = await Tournament.findAll()
+
+//     for (let i = 0; i < tournaments.length; i++) {
 //         try {
-//             const replay = replays[i]
-//             const {data} = await axios.get(`https://api.challonge.com/v1/tournaments/${replay.tournamentId}/matches/${replay.match.challongeMatchId}.json?api_key=${config.challonge['Format Library']}`)
-//             let roundName 
-
-//             if (replay.tournament.type === 'swiss' ||replay. tournament.type === 'round robin') {
-//                 roundName = `Round ${data.match.round}`
-//             } else if (replay.tournament.type === 'single elimination') {
-//                 roundName = replay.tournament.rounds - data.match.round === 0 ? 'Finals' :
-//                     replay.tournament.rounds - data.match.round === 1 ? 'Semi Finals' :
-//                     replay.tournament.rounds - data.match.round === 2 ? 'Quarter Finals' :
-//                     replay.tournament.rounds - data.match.round === 3 ? 'Round of 16' :
-//                     replay.tournament.rounds - data.match.round === 4 ? 'Round of 32' :
-//                     replay.tournament.rounds - data.match.round === 5 ? 'Round of 64' :
-//                     replay.tournament.rounds - data.match.round === 6 ? 'Round of 128' :
-//                     replay.tournament.rounds - data.match.round === 7 ? 'Round of 256' :
-//                     null
-//             } else if (replay.tournament.type === 'double elimination') {
-//                 if (data.match.round > 0) {
-//                     roundName = replay.tournament.rounds - data.match.round === 0 ? 'Grand Finals' :
-//                         replay.tournament.rounds - data.match.round === 1 ? `Winner's Finals` :
-//                         replay.tournament.rounds - data.match.round === 2 ? `Winner's Semis` :
-//                         replay.tournament.rounds - data.match.round === 3 ? `Winner's Quarters` :
-//                         `Winner's Round ${data.match.round}`
-//                 } else {
-//                     roundName = replay.tournament.rounds - Math.abs(data.match.round) === -1 ? `Loser's Finals` :
-//                         replay.tournament.rounds - Math.abs(data.match.round) === 0 ? `Loser's Semis` :
-//                         replay.tournament.rounds - Math.abs(data.match.round) === 1 ? `Loser's Quarters` :
-//                         `Loser's Round ${Math.abs(data.match.round)}`
-//                 }
-//             } else {
-//                 roundName = `${data.match.round}`
-//             }
-
-//             await replay.update({ 
-//                 suggestedOrder: data.match.suggested_play_order, 
-//                 roundInt: data.match.round,
-//                 round: roundName 
-//             })
-
+//             const tournament = tournaments[i]
+//             const {data} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${config.challonge['Format Library']}`)
+//             const finalMatch = data[data.length - 1]
+//             const rounds = finalMatch.match.round         
+//             await tournament.update({ rounds: rounds })
+//             console.log(`${tournament.name} (${tournament.type}) has ${rounds} rounds`)   
 //             b++
 //         } catch (err) {
 //             console.log(err)
@@ -457,5 +395,67 @@ import { config } from '@fl/config'
 //         }
 //     }
 
-//     return console.log(`updated ${b} replays and encountered ${e} errors`)
+//     return console.log(`updated ${b} tournaments and encountered ${e} errors`)
 // })()
+
+;(async () => {
+    let b = 0
+    let e = 0
+    
+    const replays = await Replay.findAll({
+        where: {
+            tournamentId: {[Op.not]: null}
+        },
+        include: [Match, Tournament]
+    })
+
+    for (let i = 0; i < replays.length; i++) {
+        try {
+            const replay = replays[i]
+            const {data} = await axios.get(`https://api.challonge.com/v1/tournaments/${replay.tournamentId}/matches/${replay.match.challongeMatchId}.json?api_key=${config.challonge['Format Library']}`)
+            let roundName 
+
+            if (replay.tournament.type === 'swiss' ||replay. tournament.type === 'round robin') {
+                roundName = `Round ${data.match.round}`
+            } else if (replay.tournament.type === 'single elimination') {
+                roundName = replay.tournament.rounds - data.match.round === 0 ? 'Finals' :
+                    replay.tournament.rounds - data.match.round === 1 ? 'Semi Finals' :
+                    replay.tournament.rounds - data.match.round === 2 ? 'Quarter Finals' :
+                    replay.tournament.rounds - data.match.round === 3 ? 'Round of 16' :
+                    replay.tournament.rounds - data.match.round === 4 ? 'Round of 32' :
+                    replay.tournament.rounds - data.match.round === 5 ? 'Round of 64' :
+                    replay.tournament.rounds - data.match.round === 6 ? 'Round of 128' :
+                    replay.tournament.rounds - data.match.round === 7 ? 'Round of 256' :
+                    null
+            } else if (replay.tournament.type === 'double elimination') {
+                if (data.match.round > 0) {
+                    roundName = replay.tournament.rounds - data.match.round === 0 ? 'Grand Finals' :
+                        replay.tournament.rounds - data.match.round === 1 ? `Winner's Finals` :
+                        replay.tournament.rounds - data.match.round === 2 ? `Winner's Semis` :
+                        replay.tournament.rounds - data.match.round === 3 ? `Winner's Quarters` :
+                        `Winner's Round ${data.match.round}`
+                } else {
+                    roundName = replay.tournament.rounds - Math.abs(data.match.round) === -1 ? `Loser's Finals` :
+                        replay.tournament.rounds - Math.abs(data.match.round) === 0 ? `Loser's Semis` :
+                        replay.tournament.rounds - Math.abs(data.match.round) === 1 ? `Loser's Quarters` :
+                        `Loser's Round ${Math.abs(data.match.round)}`
+                }
+            } else {
+                roundName = `${data.match.round}`
+            }
+
+            await replay.update({ 
+                suggestedOrder: data.match.suggested_play_order, 
+                roundInt: data.match.round,
+                round: roundName 
+            })
+
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    return console.log(`updated ${b} replays and encountered ${e} errors`)
+})()
