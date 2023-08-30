@@ -51,10 +51,11 @@ export default {
                     name: {[Op.substring]: focusedValue},
                     abbreviation: {[Op.substring]: focusedValue}
                 },
+                state: {[Op.not]: 'pending'},
                 formatId: format.id,
                 serverId: server.id
             },
-            limit: 10,
+            limit: 5,
             order: [["createdAt", "DESC"]]
         })
 
