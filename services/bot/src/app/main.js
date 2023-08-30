@@ -225,9 +225,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
         } else if (command.data.name === 'replay') {
             const [userId, replayExtension] = interaction.message.components[0].components[0].data.custom_id.split(':')
             if (userId !== interaction.member.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
-            const match = await Match.findOne({ where: { id: interaction.values[0] }, include: Tournament})
+            const match = await Match.findOne({ where: { id: interaction.values[0] }})
+            const tournament = await Tournament.findOne({ where: { id: match.tournamentId }})
             const url = `https://www.duelingbook.com/replay?id=${replayExtension}`
-            await saveReplay(server, interaction, match, url)
+            await saveReplay(server, interaction, match, tournament, url)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'settimer') {
             if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)

@@ -318,12 +318,11 @@ export const getFilm = async (interaction, tournamentId, userId) => {
 }
 
 // SAVE REPLAY
-export const saveReplay = async (server, interaction, url, match) => {
-    const { tournament } = match
+export const saveReplay = async (server, interaction, match, tournament, url) => {
     const format = await Format.findOne({ where: { id: match.formatId }})
     const winningPlayer = await Player.findOne({ where: { id: match.winnerId }})
     const losingPlayer = await Player.findOne({ where: { id: match.loserId }})
-    
+
     const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
     if (!challongeMatch) return await interaction.channel.send({ content: `Error: Challonge match not found.`})	
     const replay = await Replay.findOne({ where: { matchId: match.id }})
