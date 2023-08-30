@@ -356,44 +356,51 @@ export const publishDecks = async (interaction, event) => {
 
 // DISPLAY DECKS
 export const displayReplays = async (interaction, event) => {    
-    const primaryReplays = await Replay.findAll({ 
-        where: {
-            tournamentId: event.primaryTournamentId
+    if (event.primaryTournamentId) {
+        const primaryReplays = await Replay.findAll({ 
+            where: {
+                tournamentId: event.primaryTournamentId
+            }
+        })
+     
+        for (let i = 0; i < primaryReplays.length; i++) {
+            const replay = primaryReplays[i]
+            await replay.update({ 
+                eventName: event.abbreviation,
+                eventId: event.id
+             })
         }
-    })
- 
-    for (let i = 0; i < primaryReplays.length; i++) {
-        const replay = primaryReplays[i]
-        await replay.update({ 
-            eventName: event.abbreviation,
-            eventId: event.id
-         })
-    }
 
-    const topCutReplays = await Replay.findAll({ 
-        where: {
-            tournamentId: event.topCutTournamentId,
-            display: false,
-            topCut: false
-        }
-    })
-
-    for (let i = 0; i < topCutReplays.length; i++) {
-        const replay = primaryReplays[i]
-        await replay.update({ 
-            eventName: event.abbreviation,
-            eventId: event.id,
-            display: true,
-            topCut: true
-         })
-    }
-
-    if (!topCutReplays.length) {
-        return await interaction.channel.send(`The top cut replays for ${event.name} were already published.`)
+        await interaction.channel.send(`Published ${primaryReplays.length} new primary tournament replays for ${event.name}.`)
     } else {
-        return await interaction.channel.send(`Displayed ${topCutReplays.length} new replays for ${event.name}.`)
+        await interaction.channel.send(`No primary tournament replays found for ${event.name}.`)
     }
 
+    if (event.topCutTournamentId) {
+        const topCutReplays = await Replay.findAll({ 
+            where: {
+                tournamentId: event.topCutTournamentId,
+                display: false
+            }
+        })
+    
+        for (let i = 0; i < topCutReplays.length; i++) {
+            const replay = topCutReplays[i]
+            await replay.update({ 
+                eventName: event.abbreviation,
+                eventId: event.id,
+                display: true
+             })
+        }
+    
+        if (topCutReplays.length) {
+            return await interaction.channel.send(`Displayed ${topCutReplays.length} new top cut replays for ${event.name}.`)
+        } else {
+            return await interaction.channel.send(`The top cut replays for ${event.name} were already published.`)
+        }
+    } else {
+        return await interaction.channel.send(`No top cut replays found for ${event.name}.`)
+    }
 }
 
 // GENERATE MATCHUP DATA

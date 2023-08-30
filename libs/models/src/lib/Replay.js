@@ -45,9 +45,5 @@ export const Replay = db.define('replays', {
     display: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
-    },
-    topCut: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
     }
 })
