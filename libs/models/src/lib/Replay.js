@@ -39,6 +39,12 @@ export const Replay = db.define('replays', {
     round: {
         type: Sequelize.STRING
     },
+    roundInt: {
+        type: Sequelize.INTEGER
+    },
+    suggestedOrder: {
+        type: Sequelize.INTEGER
+    },
     display: {
         type: Sequelize.BOOLEAN,
         defaultValue: false

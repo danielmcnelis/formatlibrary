@@ -1,5 +1,7 @@
 import { Card, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Replay, Server, Stats, Status, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
+import axios from 'axios'
+import { config } from '@fl/config' 
 
 // ;(async () => {
 //     const decks = await Deck.findAll({ include: [DeckType, Event, Format, Player] })
@@ -378,18 +380,18 @@ import { Op } from 'sequelize'
     
     const replays = await Replay.findAll({
         where: {
-            eventName: null,
-            eventId: {[Op.not]: null}
+            tournamentId: {[Op.not]: null}
         },
-        include: Event
+        include: Match
     })
 
     for (let i = 0; i < replays.length; i++) {
         try {
             const replay = replays[i]
-            await replay.update({
-                eventName: replay.event.abbreviation
-            })
+            const {data} = await axios.get(`https://api.challonge.com/v1/tournaments/${replay.tournamentId}/matches/${replay.match.challongeMatchId}.json?api_key=${config.challonge['Format Library']}`)
+            const suggestedOrder = data.match.suggested_play_order
+            const roundInt = data.match.round
+            await replay.update({ suggestedOrder, roundInt })
             b++
         } catch (err) {
             console.log(err)
@@ -397,5 +399,5 @@ import { Op } from 'sequelize'
         }
     }
 
-    return console.log(`fixed ${b} replays and encountered ${e} errors`)
+    return console.log(`updated ${b} replays and encountered ${e} errors`)
 })()
