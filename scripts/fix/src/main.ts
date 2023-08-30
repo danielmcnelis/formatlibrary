@@ -1,4 +1,4 @@
-import { Card, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Server, Stats, Status, Tournament } from '@fl/models'
+import { Card, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Replay, Server, Stats, Status, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 
 // ;(async () => {
@@ -289,84 +289,113 @@ import { Op } from 'sequelize'
 // })()
 
 
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+    
+//     const count = await Player.count({
+//         where: {
+//             email: null,
+//             firstName: null,
+//             lastName: null,
+//             googleId: null,
+//             duelingBook: null,
+//             opTcgSim: null,
+//             hash: null,
+//             subscriber: false,
+//             admin: false,
+//             contentManager: false,
+//             creator: false
+//         }
+//     })
+
+//     console.log('potential purge players count', count)
+
+//     for (let offset = 0; offset < count; offset += 100) {
+//         const players = await Player.findAll({
+//             where: {
+//                 email: null,
+//                 firstName: null,
+//                 lastName: null,
+//                 googleId: null,
+//                 duelingBook: null,
+//                 opTcgSim: null,
+//                 hash: null,
+//                 subscriber: false,
+//                 admin: false,
+//                 contentManager: false,
+//                 creator: false
+//             },
+//             limit: 100,
+//             offset: offset,
+//             subQuery:false
+//         })
+
+//         for (let i = 0; i < players.length; i++) {
+//             try {
+//                 const player = players[i]
+//                 const hasMembership = await Membership.count({
+//                     where: {
+//                         playerId: player.id,
+//                         '$server.access$': {[Op.not]: 'free'}
+//                     },
+//                     include: Server
+//                 })
+                
+//                 const hasDecks = await Deck.count({
+//                     where: {
+//                         playerId: player.id,
+//                     }
+//                 })
+
+//                 const hasStats = await Stats.count({
+//                     where: {
+//                         playerId: player.id,
+//                     }
+//                 })
+
+//                 console.log(offset + i, !!hasMembership, !!hasDecks, !!hasStats)
+//                 if (!hasMembership && !hasDecks && !hasStats) {
+//                     await player.destroy()
+//                     console.log('PURGED')
+//                     b++
+//                 }
+//             } catch (err) {
+//                 console.log(err)
+//                 e++
+//             }
+//         }
+//     }
+
+
+//     return console.log(`deleted ${b} players and encountered ${e} errors`)
+// })()
+
+
 ;(async () => {
     let b = 0
     let e = 0
     
-    const count = await Player.count({
+    const replays = await Replay.findAll({
         where: {
-            email: null,
-            firstName: null,
-            lastName: null,
-            googleId: null,
-            duelingBook: null,
-            opTcgSim: null,
-            hash: null,
-            subscriber: false,
-            admin: false,
-            contentManager: false,
-            creator: false
-        }
+            eventName: null,
+            eventId: {[Op.not]: null}
+        },
+        include: Event
     })
 
-    console.log('potential purge players count', count)
-
-    for (let offset = 0; offset < count; offset += 100) {
-        const players = await Player.findAll({
-            where: {
-                email: null,
-                firstName: null,
-                lastName: null,
-                googleId: null,
-                duelingBook: null,
-                opTcgSim: null,
-                hash: null,
-                subscriber: false,
-                admin: false,
-                contentManager: false,
-                creator: false
-            },
-            limit: 100,
-            offset: offset,
-            subQuery:false
-        })
-
-        for (let i = 0; i < players.length; i++) {
-            try {
-                const player = players[i]
-                const hasMembership = await Membership.count({
-                    where: {
-                        playerId: player.id,
-                        '$server.access$': {[Op.not]: 'free'}
-                    },
-                    include: Server
-                })
-                
-                const hasDecks = await Deck.count({
-                    where: {
-                        playerId: player.id,
-                    }
-                })
-
-                const hasStats = await Stats.count({
-                    where: {
-                        playerId: player.id,
-                    }
-                })
-
-                console.log(offset + i, !!hasMembership, !!hasDecks, !!hasStats)
-                if (!hasMembership && !hasDecks && !hasStats) {
-                    await player.destroy()
-                    console.log('PURGED')
-                    b++
-                }
-            } catch (err) {
-                console.log(err)
-                e++
-            }
+    for (let i = 0; i < replays.length; i++) {
+        try {
+            const replay = replays[i]
+            await replay.update({
+                eventName: replay.event.abbreviation
+            })
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
         }
     }
 
-
-    return console.log(`deleted ${b} players and encountered ${e} errors`)
+    return console.log(`fixed ${b} replays and encountered ${e} errors`)
 })()

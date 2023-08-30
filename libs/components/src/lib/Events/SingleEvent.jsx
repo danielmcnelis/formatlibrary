@@ -420,12 +420,12 @@ export const SingleEvent = () => {
             <div className="replays-flexbox">
             {
               replays.map((replay, index) => {
-                const roundName = replay.topCut && index === 0 ? `Finals` :
-                    replay.topCut && (index === 1 || index === 2) ? `Semi-Finals` :
-                    replay.topCut && index >= 3 && index <= 6 ? `Quarter-Finals` :
-                    replay.topCut && index >= 7 && index <= 14 ? `Round of 16` :
-                    replay.topCut && index >= 15 && index <= 30 ? `Round of 32` :
-                    replay.topCut && index >= 31 && index <= 62 ? `Round of 64` :
+                const roundName = replay.display && index === 0 ? `Finals` :
+                    replay.display && (index === 1 || index === 2) ? `Semi-Finals` :
+                    replay.display && index >= 3 && index <= 6 ? `Quarter-Finals` :
+                    replay.display && index >= 7 && index <= 14 ? `Round of 16` :
+                    replay.display && index >= 15 && index <= 30 ? `Round of 32` :
+                    replay.display && index >= 31 && index <= 62 ? `Round of 64` :
                     `Round ${replay.round}`
 
                 return <
