@@ -100,8 +100,8 @@ export default {
         })
 
         if (!matches.length) return await interaction.editReply({ content: `Error: No match report found for ${winner.username} vs ${loser.username}.`})	
-
-        const match = await selectMatch(interaction, matches)
+        const replayExtension = url.slice(url.indexOf('replay?id=') + 10)
+        const match = await selectMatch(interaction, matches, replayExtension)
 		if (!match) return
 
         const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))

@@ -628,7 +628,7 @@ export const isNewUser = async (discordId) => !await Player.count({ where: { dis
 export const isTourPlayer = (server, member) => member?._roles.includes(server?.tourRole)
 
 // SELECT MATCH
-export const selectMatch = async (interaction, matches) => {
+export const selectMatch = async (interaction, matches, replayExtension = '') => {
     if (matches.length === 0) return false
     if (matches.length === 1) return matches[0]
 
@@ -650,7 +650,7 @@ export const selectMatch = async (interaction, matches) => {
     const row = new ActionRowBuilder()
         .addComponents(
             new StringSelectMenuBuilder()
-                .setCustomId(interaction.member.id)
+                .setCustomId(`${interaction.member.id}:${replayExtension}`)
                 .setPlaceholder('Nothing selected')
                 .addOptions(...options),
         )

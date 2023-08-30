@@ -8,7 +8,7 @@ import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, String
 import { Deck, Entry, Format, Match, OPCard, Player, Replay, Stats, Server, Team, Tournament } from '@fl/models'
 import { getIssues } from './deck.js'
 import { createDecks } from './coverage.js'
-import { capitalize, drawDeck, drawOPDeck, generateRandomString, shuffleArray } from './utility.js'
+import { capitalize, drawDeck, drawOPDeck, generateRandomString, isMod, shuffleArray } from './utility.js'
 import { emojis } from '@fl/bot-emojis'
 
 ////// TOURNAMENT REGISTRATION FUNCTIONS ///////
@@ -318,16 +318,20 @@ export const getFilm = async (interaction, tournamentId, userId) => {
 }
 
 // SAVE REPLAY
-export const saveReplay = async (server, channel, match) => {
+export const saveReplay = async (server, interaction, url, match) => {
     const { tournament } = match
+    const format = await Format.findOne({ where: { id: match.formatId }})
+    const winningPlayer = await Player.findOne({ where: { id: match.winnerId }})
+    const losingPlayer = await Player.findOne({ where: { id: match.loserId }})
+    
     const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
-    if (!challongeMatch) return await interaction.editReply({ content: `Error: Challonge match not found.`})	
-    const replay = await Replay.findOne({ where: { matchId: matchId }})
+    if (!challongeMatch) return await interaction.channel.send({ content: `Error: Challonge match not found.`})	
+    const replay = await Replay.findOne({ where: { matchId: match.id }})
     if (replay && await isMod(server, interaction.member)) {
         await replay.update({ url })
-        return await channel.send({ content: `Replay updated for Round ${challongeMatch?.match?.round} of ${tournament.name} ${tournament.logo}:\nMatch: ${replay.winnerName} vs ${replay.loserName}\nURL: <${url}>`})	
+        return await interaction.channel.send({ content: `Replay updated for Round ${challongeMatch?.match?.round} of ${tournament.name} ${tournament.logo}:\nMatch: ${replay.winnerName} vs ${replay.loserName}\nURL: <${url}>`})	
     } if (replay) {
-        return await channel.send({ content: `The replay from this match was already saved:\n<${replay.url}>\n\nIf this link is incorrect, please get a Moderator to help you.`})	
+        return await interaction.channel.send({ content: `The replay from this match was already saved:\n<${replay.url}>\n\nIf this link is incorrect, please get a Moderator to help you.`})	
     } else {
         const round = challongeMatch?.match?.round || ''
         let roundName 
@@ -381,6 +385,7 @@ export const saveReplay = async (server, channel, match) => {
         } catch (err) {
             console.log(err)
         }
+    }
 }
 
 
