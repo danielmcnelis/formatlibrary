@@ -57,17 +57,17 @@ export default {
         })
 
 		await interaction.respond(
-			tournaments.map(t => ({ name: t.name, value: t.id })),
+			tournaments.map(t => ({ name: t.name, value: t.name })),
 		)
     },            
     async execute(interaction) {
         await interaction.deferReply()
         const url = interaction.options.getString('url')
-        const tournamentName = interaction.options.getString('tournament')
+        const tournamentId = interaction.options.getString('tournament')
         const winner = interaction.options.getUser('winner')
         const loser = interaction.options.getUser('loser')
-        const tournament = await Tournament.findOne({ where: { name: tournamentName }})
-        if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournament "${tournamentName}".`})	
+        const tournament = await Tournament.findOne({ where: { id: tournamentId }})
+        if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
 
         const winningPlayer = await Player.findOne({
             where: {
