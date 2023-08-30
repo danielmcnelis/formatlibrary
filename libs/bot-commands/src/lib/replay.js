@@ -57,13 +57,14 @@ export default {
         })
 
 		await interaction.respond(
-			tournaments.map(t => ({ name: t.name, value: t.name })),
+			tournaments.map(t => ({ name: t.name, value: t.id })),
 		)
     },            
     async execute(interaction) {
         await interaction.deferReply()
         const url = interaction.options.getString('url')
         const tournamentId = interaction.options.getString('tournament')
+        console.log('tournamentId', tournamentId)
         const winner = interaction.options.getUser('winner')
         const loser = interaction.options.getUser('loser')
         const tournament = await Tournament.findOne({ where: { id: tournamentId }})
