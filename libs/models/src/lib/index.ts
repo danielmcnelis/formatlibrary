@@ -204,6 +204,9 @@ Player.hasMany(Pool)
 Replay.belongsTo(Tournament)
 Tournament.hasMany(Replay)
 
+Replay.belongsTo(Event)
+Event.hasMany(Replay)
+
 Replay.belongsTo(Player, {
     as: 'loser',
     id: 'loserId'
