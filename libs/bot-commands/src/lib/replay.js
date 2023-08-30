@@ -53,7 +53,9 @@ export default {
                 },
                 formatId: format.id,
                 serverId: server.id
-            }
+            },
+            limit: 10,
+            order: ["createdAt", "DESC"]
         })
 
 		await interaction.respond(
@@ -64,7 +66,6 @@ export default {
         await interaction.deferReply()
         const url = interaction.options.getString('url')
         const tournamentId = interaction.options.getString('tournament')
-        console.log('tournamentId', tournamentId)
         const winner = interaction.options.getUser('winner')
         const loser = interaction.options.getUser('loser')
         const tournament = await Tournament.findOne({ where: { id: tournamentId }})
