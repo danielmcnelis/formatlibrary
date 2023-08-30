@@ -41,7 +41,7 @@ export default {
                 '$tournament.state$': 'underway'
             },
             include: Tournament,
-            order: [['createdAt', 'ASC']]
+            order: [['suggestedOrder', 'ASC']]
         })].map((r) => {
             const round = tournament.type === 'double elimination' ? r.round < 0 ? `Losers Round ${Math.abs(r.round)}` : `Winners Round ${r.round}` : `Round ${r.round}`
             return `${round} ${r.winnerId === player.id ? `(W) vs ${r.loserName}` : `(L) vs ${r.winnerName}`}: <${r.url}>`
