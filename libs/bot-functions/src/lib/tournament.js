@@ -305,10 +305,7 @@ export const getFilm = async (interaction, tournamentId, userId) => {
         },
         include: Tournament,
         order: [['createdAt', 'ASC']]
-    })].map((r) => {
-        const round = tournament.type === 'double elimination' ? r.round < 0 ? `Losers Round ${Math.abs(r.round)}` : `Winners Round ${r.round}` : `Round ${r.round}`
-        return `${round} ${r.winnerId === player.id ? `(W) vs ${r.loserName}` : `(L) vs ${r.winnerName}`}: <${r.url}>`
-    })
+    })].map((r) => `${r.roundName} ${r.winnerId === player.id ? `(W) vs ${r.loserName}` : `(L) vs ${r.winnerName}`}: <${r.url}>`)
 
     if (!replays.length) {
         return await interaction.editReply(`No replays found featuring ${player.globalName || player.discordName} in ${tournament.name}. ${tournament.emoji}`)
@@ -376,7 +373,7 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
                 loserName: losingPlayer.globalName || losingPlayer.discordName,
                 matchId: match.id,
                 suggestedOrder: challongeMatch?.match?.suggested_play_order,
-                round: round,
+                roundInt: round,
                 roundName: roundName
             })
             

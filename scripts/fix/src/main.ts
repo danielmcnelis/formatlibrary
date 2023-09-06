@@ -447,7 +447,7 @@ import { config } from '@fl/config'
             await replay.update({ 
                 suggestedOrder: data.match.suggested_play_order, 
                 roundInt: data.match.round,
-                round: roundName 
+                roundName: roundName 
             })
 
             b++

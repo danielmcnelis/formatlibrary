@@ -43,7 +43,7 @@ export default {
             include: Tournament,
             order: [['suggestedOrder', 'ASC']]
         })].map((r) => {
-            return `${r.round || `Round ${r.roundInt}`} ${r.winnerId === player.id ? `(W) vs ${r.loserName}` : `(L) vs ${r.winnerName}`}: <${r.url}>`
+            return `${r.roundName || `Round ${r.roundInt}`} ${r.winnerId === player.id ? `(W) vs ${r.loserName}` : `(L) vs ${r.winnerName}`}: <${r.url}>`
         })
 
         if (!replays.length) {
