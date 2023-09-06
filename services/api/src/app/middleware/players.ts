@@ -185,6 +185,41 @@ export const playersUpdateId = async (req, res, next) => {
     }
 }
 
+
+export const adminPlayerUpdate = async (req, res, next) => {
+    try {
+        const player = await Player.findOne({ 
+            where: {
+                id: req.params.id
+            },
+            attributes: ['id', 'name', 'firstName', 'lastName', 'country']
+        })
+
+        if (!req.body.name || !req.body.name.length) {
+            res.sendStatus(400)
+        } else if (req.body.youtube && req.body.youtube.length && !req.body.youtube.includes('youtube.com/channel/')) {
+            res.sendStatus(400)
+        } else {
+            await player.update({ 
+                name: req.body.name,
+                duelingBook: req.body.duelingBook,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                country: req.body.country,
+                timeZone: req.body.timeZone,
+                youtube: req.body.youtube,
+                twitch: req.body.twitch,
+                twitter: req.body.twitter,
+            })
+    
+            res.json(player)
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+
 export const playersCreate = async (req, res, next) => {
     try {
         if (req.body.pfp) {

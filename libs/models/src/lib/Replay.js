@@ -36,7 +36,7 @@ export const Replay = db.define('replays', {
     eventId: {
         type: Sequelize.INTEGER,
     },
-    round: {
+    roundName: {
         type: Sequelize.STRING
     },
     roundInt: {

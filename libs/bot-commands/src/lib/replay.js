@@ -41,7 +41,6 @@ export default {
         ),    
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused()
-        console.log('focusedValue', focusedValue)
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         
@@ -160,7 +159,7 @@ export default {
                     loserName: losingPlayer.globalName || losingPlayer.discordName,
                     matchId: match.id,
                     suggestedOrder: challongeMatch?.match?.suggested_play_order,
-                    round: round,
+                    roundInt: round,
                     roundName: roundName
                 })
                 
