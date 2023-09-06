@@ -424,7 +424,7 @@ export const SingleEvent = () => {
                         ReplayThumbnail
                         key={replay.id}
                         index={index} 
-                        roundName={replay.round}
+                        roundName={replay.roundName}
                         url={replay.url}
                         winner={replay.winner}
                         loser={replay.loser}
