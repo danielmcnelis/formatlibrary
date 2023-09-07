@@ -19,10 +19,10 @@ export const DeckImage = (props) => {
               rel="noopener noreferrer"
           >
               <div id="main" className="DeckImages">
-              <h4 style={{width}}>{title}</h4>
-              <div id="main" style={{width, margin, padding}} className="deck-flexbox">
-                  <img src={`https://cdn.formatlibrary.com/images/decks/thumbnails/${deck.id}.png`} alt="deck"></img>
-              </div>
+                <h4 style={{width}}>{title}</h4>
+                <div id="main" style={{maxWidth: '98vw', width, margin, padding}} className="deck-flexbox">
+                    <img src={`https://cdn.formatlibrary.com/images/decks/thumbnails/${deck.id}.png`} alt="deck"></img>
+                </div>
               </div>
           </Link>
       </div>

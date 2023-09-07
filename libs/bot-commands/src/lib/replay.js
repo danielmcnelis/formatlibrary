@@ -163,7 +163,7 @@ export default {
                     roundName: roundName
                 })
                 
-                return await interaction.editReply({ content: `New replay saved for Round ${roundName} of ${tournament.name} ${tournament.logo}:\nMatch: ${winningPlayer.globalName || winningPlayer.discordName} vs ${losingPlayer.globalName || losingPlayer.discordName}\nURL: <${url}>`})	
+                return await interaction.editReply({ content: `New replay saved for ${roundName} of ${tournament.name} ${tournament.logo}:\nMatch: ${winningPlayer.globalName || winningPlayer.discordName} vs ${losingPlayer.globalName || losingPlayer.discordName}\nURL: <${url}>`})	
             } catch (err) {
                 console.log(err)
             }

@@ -150,6 +150,8 @@
     flex-direction: row;
     flex-wrap: wrap;
     margin: 5px auto;
+    align-content: center;
+    justify-content: center;
   }
   
   .searchWrapper {

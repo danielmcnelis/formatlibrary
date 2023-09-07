@@ -1,7 +1,6 @@
 
 #leaderboard-table {
     width: 900px;
-    max-width: 98vw;
     display: table;
     border-top: 2px;
     border-bottom: 2px;
@@ -26,3 +25,9 @@
     justify-content: space-evenly;
     align-items: center;
   }
+
+  @media only screen and (max-width: 900px) {
+    #leaderboard-table {
+        width: 98vw;
+    }
+}

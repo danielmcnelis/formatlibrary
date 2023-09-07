@@ -259,27 +259,49 @@ export const deckTypesDownload = async (req, res, next) => {
   
 export const deckTypesSummary = async (req, res, next) => {
   try {
-    const decks = await Deck.findAll({
-        where: {
-            type: { [Op.iLike]: req.query.id },
-            formatName: { [Op.iLike]: req.query.format },
-            origin: 'event',
-            eventId: { [Op.not]: null }
-        },
-        attributes: ['id', 'type', 'category', 'ydk', 'formatName']
-    })
-    
-    const format = await Format.findOne({
-        where: {
-            name: { [Op.iLike]: req.query.format }
-        },
-        attributes: ['id', 'name', 'banlist', 'date', 'icon']
-    })
-
     const deckType = await DeckType.findOne({
         where: {
             name: { [Op.iLike]: req.query.id }
         }
+    })
+
+    console.log('req.query.id', req.query.id)
+
+    let format
+
+    if (req.query.format) {
+        format = await Format.findOne({
+            where: {
+                name: { [Op.iLike]: req.query.format }
+            },
+            attributes: ['id', 'name', 'banlist', 'date', 'icon']
+        })
+    } else {
+        const deckThumb = await DeckThumb.findOne({
+            where: {
+                deckTypeId: deckType.id,
+                primary: true
+            }
+        })
+
+        console.log("deckThumb.formatId" ,deckThumb.formatId)
+
+        format = await Format.findOne({
+            where: {
+                id: deckThumb.formatId
+            },
+            attributes: ['id', 'name', 'banlist', 'date', 'icon']
+        })
+    }
+
+    const decks = await Deck.findAll({
+        where: {
+            deckTypeId: deckType.id,
+            formatId: format.id,
+            origin: 'event',
+            eventId: { [Op.not]: null }
+        },
+        attributes: ['id', 'type', 'category', 'ydk', 'formatName']
     })
 
     const showExtra = format.date >= '2008-08-05' || !format.date

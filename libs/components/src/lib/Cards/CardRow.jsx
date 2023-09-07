@@ -32,7 +32,7 @@ export const CardRow = (props) => {
     const symbol2 = card.link ? `https://cdn.formatlibrary.com/images/arrows/${card.arrows}.png` :
       card.xyz ? `https://cdn.formatlibrary.com/images/symbols/rank.png` :
       category === 'Monster' ? `https://cdn.formatlibrary.com/images/symbols/star.png` :
-      card.icon ? `https://cdn.formatlibrary.com/images/symbols/${card.icon.toLowerCase()}.png` :
+      card.icon ? `https://cdn.formatlibrary.com/images/symbols/${card.icon.toLowerCase().replaceAll(' ', '-')}.png` :
       ''
   
     const line2 = card.link ? `Link ${rating}` :
@@ -40,7 +40,7 @@ export const CardRow = (props) => {
     category === 'Monster' ? `Level ${level}` :
     card.icon
   
-    const symbol3 = category === 'Monster' && card.type ? `https://cdn.formatlibrary.com/images/symbols/${card.type.toLowerCase()}.png` : null
+    const symbol3 = category === 'Monster' && card.type ? `https://cdn.formatlibrary.com/images/symbols/${card.type.toLowerCase().replaceAll(' ', '-')}.png` : null
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
     const filePath = `https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`
     

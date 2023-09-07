@@ -340,7 +340,7 @@ export const SearchPanel = (props) => {
 
     // USE EFFECT IF FORMAT CHANGES
     useEffect(() => {
-        const year = format.date ? parseInt(format.date.slice(0, 4)) : now.getFullYear() || 2022
+        const year = format.date ? parseInt(format.date.slice(0, 4)) : now.getFullYear()
         const month = format.date ? parseInt(format.date.slice(6, 7)) : 12
         const day = format.date ? parseInt(format.date.slice(-2)) : 31
         setCutoff(format.date || `${year}-12-31`)

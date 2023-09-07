@@ -311,6 +311,12 @@ export const decksPopular = async (req, res, next) => {
               deckTypeId: deckType.id
             },
             attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+          })) ||
+          (await DeckThumb.findOne({
+            where: {
+              deckTypeId: deckType.id
+            },
+            attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
           }))
 
         data.push({ ...deckType.dataValues, ...deckThumb.dataValues })
@@ -373,6 +379,12 @@ export const decksGallery = async (req, res, next) => {
           (await DeckThumb.findOne({
             where: {
               primary: true,
+              deckTypeId: deckType.id
+            },
+            attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+          })) ||
+          (await DeckThumb.findOne({
+            where: {
               deckTypeId: deckType.id
             },
             attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']

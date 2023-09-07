@@ -20,6 +20,7 @@
   
   .deckThumbnail-image {
     width: 30%;
+    aspect-ratio: 1/1;
     margin: 0px 2px;
     border: 1px solid white;
   }
