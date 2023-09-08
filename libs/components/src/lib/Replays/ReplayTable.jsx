@@ -17,7 +17,7 @@ export const ReplayTable = () => {
     const [format, setFormat] = useState(null)
     const [formats, setFormats] = useState([])
     const [page, setPage] = useState(1)
-    const [sortBy, setSortBy] = useState('publishDate:desc,suggestedOrder:desc')
+    const [sortBy, setSortBy] = useState('publishDate:desc,display:desc,suggestedOrder:desc')
     const [total, setTotal] = useState(0)
     const [isAdmin, setIsAdmin] = useState(false)
     const [isSubscriber, setIsSubscriber] = useState(false)
@@ -101,7 +101,7 @@ export const ReplayTable = () => {
       setPage(1)
       setFormat(null)
       setReplays(replays)
-      setSortBy('publishDate:desc,display:asc,suggestedOrder:desc')
+      setSortBy('publishDate:desc,display:desc,suggestedOrder:desc')
       setQueryParams({
         player: null,
         event: null,
@@ -132,7 +132,7 @@ export const ReplayTable = () => {
     // USE EFFECT
     useEffect(() => {
         const fetchReplays = async () => {
-          const {data} = await axios.get(`/api/replays?page=1&limit=10&sortBy=publishDate:desc,display:asc,suggestedOrder:desc`)
+          const {data} = await axios.get(`/api/replays?page=1&limit=10&sortBy=publishDate:desc,display:desc,suggestedOrder:desc`)
           setReplays(data)
         }
   
@@ -236,16 +236,16 @@ export const ReplayTable = () => {
     
                 <select
                     id="sortSelector"
-                    defaultValue="publishDate:desc,display:asc,suggestedOrder:desc"
+                    defaultValue="publishDate:desc,display:desc,suggestedOrder:desc"
                     style={{width: '230px'}}
                     onChange={(e) => {setSortBy(e.target.value); setPage(1)}}
                 >
-                <option value="publishDate:desc,display:asc,suggestedOrder:desc">Date: New ⮕ Old</option>
-                <option value="publishDate:asc,display:asc,suggestedOrder:desc">Date: Old ⮕ New</option>
-                <option value="winnerName:asc,display:asc,suggestedOrder:desc">Winner: A ⮕ Z</option>
-                <option value="winnerName:desc,display:asc,suggestedOrder:desc">Winner: Z ⮕ A</option>
-                <option value="winningDeckType:asc,display:asc,suggestedOrder:desc">Winning Deck: A ⮕ Z</option>
-                <option value="winningDeckType:desc,display:asc,suggestedOrder:desc">Winning Deck: Z ⮕ A</option>
+                <option value="publishDate:desc,display:desc,suggestedOrder:desc">Date: New ⮕ Old</option>
+                <option value="publishDate:asc,display:desc,suggestedOrder:desc">Date: Old ⮕ New</option>
+                <option value="winnerName:asc,display:desc,suggestedOrder:desc">Winner: A ⮕ Z</option>
+                <option value="winnerName:desc,display:desc,suggestedOrder:desc">Winner: Z ⮕ A</option>
+                <option value="winningDeckType:asc,display:desc,suggestedOrder:desc">Winning Deck: A ⮕ Z</option>
+                <option value="winningDeckType:desc,display:desc,suggestedOrder:desc">Winning Deck: Z ⮕ A</option>
                 </select>
     
                 <div
@@ -394,16 +394,16 @@ export const ReplayTable = () => {
     
                 <select
                 id="sortSelector"
-                    defaultValue="publishDate:desc,display:asc,suggestedOrder:desc"
+                    defaultValue="publishDate:desc,display:desc,suggestedOrder:desc"
                     style={{width: '230px'}}
                     onChange={() => sortReplays()}
                 >
-                <option value="publishDate:desc,display:asc,suggestedOrder:desc">Date: New ⮕ Old</option>
-                <option value="publishDate:asc,display:asc,suggestedOrder:desc">Date: Old ⮕ New</option>
-                <option value="winnerName:asc,display:asc,suggestedOrder:desc">Winner: A ⮕ Z</option>
-                <option value="winnerName:desc,display:asc,suggestedOrder:desc">Winner: Z ⮕ A</option>
-                <option value="winningDeckType:asc,display:asc,suggestedOrder:desc">Winning Deck: A ⮕ Z</option>
-                <option value="winningDeckType:desc,display:asc,suggestedOrder:desc">Winning Deck: Z ⮕ A</option>
+                <option value="publishDate:desc,display:desc,suggestedOrder:desc">Date: New ⮕ Old</option>
+                <option value="publishDate:asc,display:desc,suggestedOrder:desc">Date: Old ⮕ New</option>
+                <option value="winnerName:asc,display:desc,suggestedOrder:desc">Winner: A ⮕ Z</option>
+                <option value="winnerName:desc,display:desc,suggestedOrder:desc">Winner: Z ⮕ A</option>
+                <option value="winningDeckType:asc,display:desc,suggestedOrder:desc">Winning Deck: A ⮕ Z</option>
+                <option value="winningDeckType:desc,display:desc,suggestedOrder:desc">Winning Deck: Z ⮕ A</option>
                 </select>
     
                 <div
