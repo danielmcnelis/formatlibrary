@@ -43,7 +43,7 @@ export const getReplays = async (req, res, next) => {
         const sort = req.query.sort ? req.query.sort.split(',').reduce((reduced, val) => {
             reduced.push(val.split(':'))
             return reduced
-        }, []) : [['publishDate', 'desc'], ['suggestedOrder', 'desc']]
+        }, []) : [['publishDate', 'desc'], ['display', 'true'], ['suggestedOrder', 'desc']]
 
         const replays = await Replay.find(filter, limit, page, sort)
         res.json(replays)
