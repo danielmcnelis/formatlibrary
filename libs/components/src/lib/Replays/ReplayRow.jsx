@@ -41,7 +41,7 @@ export const ReplayRow = (props) => {
                     }
                     alt={replay.winner.discordName || replay.winner.name}
                 />
-                <div>{replay.winnerName?.length <= 17 ? replay.winnerName : replay.winnerName.slice(0, 17).split(' ')[0] || ''}</div>
+                <div>{!replay.winnerName ? '' : replay.winnerName?.length <= 17 ? replay.winnerName : replay.winnerName?.slice(0, 17)?.split(' ')[0] || ''}</div>
               </div>
           </td>
 
@@ -61,7 +61,7 @@ export const ReplayRow = (props) => {
                     }
                     alt={replay.loser.discordName || replay.loser.name}
                 />
-                <div>{replay.loserName?.length <= 17 ? replay.loserName : replay.loserName.slice(0, 17).split(' ')[0] || ''}</div>
+                <div>{!replay.loserName ? '' : replay.loserName?.length <= 17 ? replay.loserName : replay.loserName?.slice(0, 17)?.split(' ')[0] || ''}</div>
               </div>
           </td>
 

@@ -5,7 +5,6 @@ export const countReplays = async (req, res, next) => {
     try {
         const isAdmin = req.query.isAdmin
         const isSubscriber = req.query.isSubscriber
-
         const display = isAdmin === 'true' ? { display: {operator: 'or', value: [true, false]} } :
             isSubscriber === 'true' ? { publishDate: {operator: 'not', value: null }} :
             { display: {operator: 'eq', value: true} }
@@ -28,14 +27,11 @@ export const getReplays = async (req, res, next) => {
     try {
         const isAdmin = req.query.isAdmin
         const isSubscriber = req.query.isSubscriber
-
+        const limit = parseInt(req.query.limit || 10)
+        const page = parseInt(req.query.page || 1)
         const display = isAdmin === 'true' ? { display: {operator: 'or', value: [true, false]} } :
             isSubscriber === 'true' ? { publishDate: {operator: 'not', value: null }} :
             { display: {operator: 'eq', value: true} }
-
-
-        const limit = parseInt(req.query.limit || 10)
-        const page = parseInt(req.query.page || 1)
 
         const filter = req.query.filter ? req.query.filter.split(',').reduce((reduced, val) => {
             let [field, operator, value] = val.split(':')

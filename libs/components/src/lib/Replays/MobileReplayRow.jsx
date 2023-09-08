@@ -36,7 +36,7 @@ export const MobileReplayRow = (props) => {
                             e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                         }
                     }
-                    alt={replay.winnerName?.length <= 17 ? replay.winnerName : replay.winnerName.slice(0, 17).split(' ')[0] || ''}
+                    alt={!replay.winnerName ? '' : replay.winnerName?.length > 0 && replay.winnerName?.length <= 17 ? replay.winnerName : replay.winnerName.slice(0, 17)?.split(' ')[0] || ''}
                 />
                 <div><i>VS</i></div>
                 <img
@@ -47,7 +47,7 @@ export const MobileReplayRow = (props) => {
                             e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                         }
                     }
-                    alt={replay.loserName?.length <= 17 ? replay.loserName : replay.loserName.slice(0, 17).split(' ')[0] || ''}
+                    alt={!replay.loserName ? '' : replay.loserName?.length <= 17 ? replay.loserName : replay.loserName.slice(0, 17)?.split(' ')[0] || ''}
                 />
           </td>
         </tr>
