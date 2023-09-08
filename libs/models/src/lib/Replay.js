@@ -91,7 +91,7 @@ Replay.countResults = async (filter = {}) => {
             }
         }
 
-        if (['display'].includes(key)) { value = value.toLowerCase() === 'true' }
+        // if (['display'].includes(key)) { value = value.toLowerCase() === 'true' }
         
         if (operator === 'eq') {
             operator = Op.eq
@@ -155,7 +155,7 @@ Replay.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
             }
         }
 
-        if (['display'].includes(key)) { value = value.toLowerCase() === 'true' }
+        // if (['display'].includes(key)) { value = value.toLowerCase() === 'true' }
        
         if (operator === 'eq') {
             operator = Op.eq
