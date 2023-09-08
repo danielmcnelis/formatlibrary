@@ -5,6 +5,7 @@ import { ReplayRow } from './ReplayRow.jsx'
 import { MobileReplayRow } from './MobileReplayRow.jsx'
 import { Pagination } from '../General/Pagination.jsx'
 import { useMediaQuery } from 'react-responsive'
+import { getCookie } from '@fl/utils'
 import './ReplayTable.css' 
 
 const playerId = getCookie('playerId')
