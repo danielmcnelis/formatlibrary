@@ -90,7 +90,7 @@ export const Navigation = () => {
                 <Link to="/events/">
                     <h3 className="hamburger-header">Events</h3>
                 </Link>
-                <Link to="/events/">
+                <Link to="/replays/">
                     <h3 className="hamburger-header">Replays</h3>
                 </Link>
                 <Link to="/formats/">
