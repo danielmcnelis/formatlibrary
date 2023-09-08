@@ -7,6 +7,8 @@ import { Pagination } from '../General/Pagination.jsx'
 import { useMediaQuery } from 'react-responsive'
 import './ReplayTable.css' 
 
+const playerId = getCookie('playerId')
+
 export const ReplayTable = () => {
     const [community, setCommunity] = useState(null)
     const [replays, setReplays] = useState([])
@@ -16,6 +18,8 @@ export const ReplayTable = () => {
     const [page, setPage] = useState(1)
     const [sortBy, setSortBy] = useState('publishDate:desc,suggestedOrder:desc')
     const [total, setTotal] = useState(0)
+    const [isAdmin, setIsAdmin] = useState(false)
+    const [isSubscriber, setIsSubscriber] = useState(false)
     const [queryParams, setQueryParams] = useState({
       player: null,
       event: null,
@@ -25,6 +29,30 @@ export const ReplayTable = () => {
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [page])
   
+    // USE EFFECT
+    useEffect(() => {
+        const checkIfAdmin = async () => {
+            try {
+                const { status } = await axios.get(`/api/players/admin/${playerId}`)
+                if (status === 200) setIsAdmin(true)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        const checkIfSubscriber = async () => {
+            try {
+                const { status } = await axios.get(`/api/players/subscriber/${playerId}`)
+                if (status === 200) setIsSubscriber(true)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        checkIfAdmin()
+        checkIfSubscriber()
+    }, [])
+
     // SORT REPLAYS
     const sortReplays = () => {
       setSortBy(document.getElementById('sortSelector').value)
@@ -33,7 +61,7 @@ export const ReplayTable = () => {
   
     // COUNT
     const count = async () => {
-        let url = `/api/replays/count`
+        let url = `/api/replays/count?isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`
         let filter = ''
   
         if (queryParams.player) filter += `,player:or:${queryParams.player}`
@@ -49,7 +77,7 @@ export const ReplayTable = () => {
 
     // SEARCH
     const search = async () => {
-        let url = `/api/replays?page=${page}&limit=${replaysPerPage}&sort=${sortBy}`
+        let url = `/api/replays?page=${page}&limit=${replaysPerPage}&isAdmin=${isAdmin}&isSubscriber=${isSubscriber}&sort=${sortBy}`
         let filter = ''
   
         if (queryParams.player) filter += `,player:or:${queryParams.player}`
@@ -121,13 +149,13 @@ export const ReplayTable = () => {
     // USE EFFECT COUNT
     useEffect(() => {
         count()
-      }, [format, community, queryParams])
+      }, [isAdmin, isSubscriber, format, community, queryParams])
 
 
     // USE EFFECT SEARCH
     useEffect(() => {
       search()
-    }, [page, replaysPerPage, format, community, queryParams, sortBy])
+    }, [isAdmin, isSubscriber, page, replaysPerPage, format, community, queryParams, sortBy])
   
 
     // RENDER
