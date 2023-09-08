@@ -13,6 +13,7 @@ import {
   images,
   matchups,
   players,
+  replays,
   sets,
   stats,
   statuses
@@ -41,7 +42,7 @@ app.use(express.json({ limit: '1mb' }))
 app.use(express.urlencoded({ extended: true, limit: '1mb' }))
 
 // routes
-const routes = { banlists, blogposts, cards, decks, deckTypes, events, formats, images, matchups, players, sets, stats, statuses }
+const routes = { banlists, blogposts, cards, decks, deckTypes, events, formats, images, matchups, players, replays, sets, stats, statuses }
 Object.values(routes).forEach((route) => {
   route.stack.forEach((route) => {
     const path = route.route.path

@@ -204,6 +204,9 @@ Player.hasMany(Pool)
 Replay.belongsTo(Tournament)
 Tournament.hasMany(Replay)
 
+Replay.belongsTo(Format)
+Format.hasMany(Replay)
+
 Replay.belongsTo(Event)
 Event.hasMany(Replay)
 

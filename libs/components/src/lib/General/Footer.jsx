@@ -32,6 +32,9 @@ export const Footer = () => (
         <Link to="/events/">
           <p className="footer-item">Event Coverage</p>
         </Link>
+        <Link to="/replays/">
+          <p className="footer-item">Replay Database</p>
+        </Link>
         <Link to="/formats/">
           <p className="footer-item">Format Intros</p>
         </Link>

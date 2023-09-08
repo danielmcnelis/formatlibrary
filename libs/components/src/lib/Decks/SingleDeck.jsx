@@ -139,7 +139,7 @@ export const SingleDeck = () => {
   }
 
   const fullName = deck.player?.globalName || deck.player?.discordName || deck.player?.name || deck.builder || ''
-  const displayName = fullName.length <= 24 ? fullName : fullName.slice(0, 24).split(' ').slice(0, -1).join(' ')
+  const displayName = fullName.length <= 24 ? fullName : fullName.slice(0, 24).split(' ')[0] || ''
 
   return (
     <div className="body">

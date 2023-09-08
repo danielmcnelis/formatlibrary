@@ -33,35 +33,6 @@ export const EventTable = (props) => {
       setPage(1)
     }
   
-    // GO TO PAGE
-    const goToPage = (num, location) => {
-      setPage(num)
-      if (location === 'bottom') {
-        const tableTop = document.getElementById('resultsWrapper0').offsetTop - 10
-        window.scrollTo(0, tableTop)
-      }
-    }
-  
-    // PREVIOUS PAGE
-    const previousPage = (location) => {
-      if (page <= 1) return
-      setPage(page - 1)
-      if (location === 'bottom') {
-        const tableTop = document.getElementById('resultsWrapper0').offsetTop - 10
-        window.scrollTo(0, tableTop)
-      }
-    }
-  
-    // NEXT PAGE
-    const nextPage = (location) => {
-      if (page >= Math.ceil(total / eventsPerPage)) return
-      setPage(page + 1)
-      if (location === 'bottom') {
-        const tableTop = document.getElementById('resultsWrapper0').offsetTop - 10
-        window.scrollTo(0, tableTop)
-      }
-    }
-  
     // COUNT
     const count = async () => {
         let url = `/api/events/count`
@@ -94,15 +65,21 @@ export const EventTable = (props) => {
   
     // RESET
     const reset = () => {
-      document.getElementById('format').value = null
+      document.getElementById('format').value = ''
+      document.getElementById('community').value = ''
       document.getElementById('searchBar').value = null
+      document.getElementById('searchTypeSelector').value = 'name'
       setPage(1)
       setFormat(null)
       setEvents(events)
+      setSortBy('startDate:desc')
       setQueryParams({
         name: null,
         winner: null
       })
+
+      count()
+      search()
     }
   
     // RUN QUERY
@@ -226,7 +203,7 @@ export const EventTable = (props) => {
   
             <select
               id="sortSelector"
-              defaultValue="startDateDESC"
+              defaultValue="startDate:desc"
               style={{width: '230px'}}
               onChange={(e) => {setSortBy(e.target.value); setPage(1)}}
             >

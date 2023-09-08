@@ -4,42 +4,8 @@ import { Op } from 'sequelize'
 import { S3 } from 'aws-sdk'
 import { config } from '@fl/config'
 
-export const eventsAll = async (req, res, next) => {
-  try {
-    const events = await Event.findAll({
-      where: {
-        display: true
-      },
-      attributes: [
-        'id',
-        'name',
-        'abbreviation',
-        'formatName',
-        'formatId',
-        'size',
-        'winner',
-        'playerId',
-        'community',
-        'startDate',
-        'endDate'
-      ],
-      include: [
-        { model: Format, attributes: ['id', 'name', 'icon'] },
-        { model: Player, attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp'] }
-      ],
-      order: [['startDate', 'DESC']]
-    })
-
-    res.json(events)
-  } catch (err) {
-    next(err)
-  }
-}
-
-
 export const eventsGallery = async (req, res, next) => {
     try {
-        console.log('req.params.format', req.params.format)
       const format = await Format.findOne({
         where: {
           name: { [Op.iLike]: req.params.format }
@@ -48,7 +14,6 @@ export const eventsGallery = async (req, res, next) => {
       })
   
       if (!format) return false
-      console.log('!!format', !!format)
 
       const events = await Event.findAll({
         where: {
@@ -62,7 +27,6 @@ export const eventsGallery = async (req, res, next) => {
         order: [['endDate', 'DESC']]
       })
   
-      console.log('events.length', events.length)
       if (!events.length) return false
       const winners = events.map((e) => e.player)
 
@@ -178,37 +142,6 @@ export const eventsRecent = async (req, res, next) => {
     }
 
     res.json(data)
-  } catch (err) {
-    next(err)
-  }
-}
-
-export const eventsFirst = async (req, res, next) => {
-  try {
-    const events = await Event.findAll({
-      where: { display: true },
-      attributes: [
-        'id',
-        'name',
-        'abbreviation',
-        'formatName',
-        'formatId',
-        'size',
-        'winner',
-        'playerId',
-        'community',
-        'startDate',
-        'endDate'
-      ],
-      include: [
-        { model: Format, attributes: ['id', 'name', 'icon'] },
-        { model: Player, attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp'] }
-      ],
-      order: [['startDate', 'DESC']],
-      limit: req.params.x
-    })
-
-    res.json(events)
   } catch (err) {
     next(err)
   }

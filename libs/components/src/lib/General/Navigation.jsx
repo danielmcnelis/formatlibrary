@@ -38,6 +38,9 @@ export const Navigation = () => {
                 <Link to="/events/">
                     <h2 className="nav-header">EVENTS</h2>
                 </Link>
+                <Link to="/replays/">
+                    <h2 className="nav-header">REPLAYS</h2>
+                </Link>
                 <Link to="/formats/">
                     <h2 className="nav-header">FORMATS</h2>
                 </Link>
@@ -86,6 +89,9 @@ export const Navigation = () => {
                 </Link>
                 <Link to="/events/">
                     <h3 className="hamburger-header">Events</h3>
+                </Link>
+                <Link to="/events/">
+                    <h3 className="hamburger-header">Replays</h3>
                 </Link>
                 <Link to="/formats/">
                     <h3 className="hamburger-header">Formats</h3>

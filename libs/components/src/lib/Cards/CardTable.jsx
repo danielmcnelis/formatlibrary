@@ -211,6 +211,8 @@ export const CardTable = () => {
       if (formatSelector) formatSelector.value = ''
       document.getElementById('category').value = ''
       document.getElementById('searchTypeSelector').value = 'name'
+      document.getElementById('booster').value = ''
+      document.getElementById('searchBar').value = null
   
       setSliders({
         year: now.getFullYear(),
@@ -223,13 +225,13 @@ export const CardTable = () => {
       
       setPage(1)
       if (!formatName) {
-          const {data} = await axios.get(`/api/formats/current`)
-          setFormat(data.format)
-          document.getElementById('format').value = ""
+        document.getElementById('format').value = ""
+        setCutoff(`${now.getFullYear()}-12-31`)
+        const {data} = await axios.get(`/api/formats/current`)
+        setFormat(data.format)
       }
   
       setBooster(null)
-      document.getElementById('booster').value = ""
       setSortBy('name:asc')
       
       setQueryParams({
@@ -237,8 +239,6 @@ export const CardTable = () => {
         description: null,
         category: null
       })
-  
-      document.getElementById('searchBar').value = ""
     
       setIconParams({
         continuous: false,
