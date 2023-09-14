@@ -48,6 +48,9 @@ export const cards = async (req, res, next) => {
             reduced[field] = {operator, value}
             return reduced
         }, { tcgLegal: {operator: 'eq', value: 'true'}, tcgDate: {operator: 'not', value: null} }) : { tcgLegal: {operator: 'eq', value: 'true'}, tcgDate: {operator: 'not', value: null} }
+        
+        if (req.headers.name) filter.name = {operator: 'inc', value: req.headers.name}
+        if (req.headers.description) filter.description = {operator: 'inc', value: req.headers.description}
 
         const sort = req.query.sort ? req.query.sort.split(',').reduce((reduced, val) => {
             const [field, value] = val.split(':')
@@ -63,73 +66,82 @@ export const cards = async (req, res, next) => {
 }
 
 export const cardsId = async (req, res, next) => {
-  try {
-    const card = await Card.findOne({
-      where: {
-        name: { [Op.iLike]: req.params.id }
-      },
-      attributes: { exclude: ['konamiCode', 'tcgLegal', 'ocgLegal', 'ocgDate', 'extraDeck', 'createdAt', 'updatedAt'] }
-    })
+    const id = req.params.id.replaceAll('%2F', '/')
+        .replaceAll('%3F', '?')
+        .replaceAll('%23', '#')
+        .replaceAll('%25', '%')
+        .replaceAll('%26', '&')
 
-    const statuses =
-      (
-        await Status.findAll({
-          where: {
-            cardId: card.id
-          },
-          attributes: { exclude: ['createdAt', 'updatedAt'] }
+    try {
+        const card = await Card.findOne({
+            where: {
+                [Op.or]: {
+                    name: {[Op.iLike]: id},
+                    cleanName: {[Op.iLike]: id}
+                }
+            },
+            attributes: { exclude: ['konamiCode', 'tcgLegal', 'ocgLegal', 'ocgDate', 'extraDeck', 'createdAt', 'updatedAt'] }
         })
-      ).map((s) => [s.banlist, s.restriction]) || []
 
-    const prints = await Print.findAll({
-      where: {
-        cardId: card.id
-      },
-      attributes: { exclude: ['tcgPlayerProductId', 'createdAt', 'updatedAt'] },
-      include: [{ model: Set, attributes: ['tcgDate'] }],
-      order: [[Set, 'tcgDate', 'ASC']]
-    })
+        const statuses =
+        (
+            await Status.findAll({
+            where: {
+                cardId: card.id
+            },
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+            })
+        ).map((s) => [s.banlist, s.restriction]) || []
 
-    const genericRulings = await Ruling.findAll({
+        const prints = await Print.findAll({
         where: {
-          cardId: card.id,
-          formatId: null
+            cardId: card.id
         },
-        attributes: { exclude: ['createdAt', 'updatedAt'] }
-      })
+        attributes: { exclude: ['tcgPlayerProductId', 'createdAt', 'updatedAt'] },
+        include: [{ model: Set, attributes: ['tcgDate'] }],
+        order: [[Set, 'tcgDate', 'ASC']]
+        })
 
-    const additionalRulings = await Ruling.findAll({
-        where: {
-          cardId: card.id,
-          formatId: {[Op.not]: null}
-        },
-        include: Format,
-        attributes: { exclude: ['createdAt', 'updatedAt'] },
-        order: [[Format, 'date', 'ASC']]
-      })
+        const genericRulings = await Ruling.findAll({
+            where: {
+            cardId: card.id,
+            formatId: null
+            },
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+        })
 
-    const specificRulings = {}
+        const additionalRulings = await Ruling.findAll({
+            where: {
+            cardId: card.id,
+            formatId: {[Op.not]: null}
+            },
+            include: Format,
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+            order: [[Format, 'date', 'ASC']]
+        })
 
-    for (let i = 0; i < additionalRulings.length; i++) {
-        const additionalRuling = additionalRulings[i]
-        const formatName = additionalRuling.formatName
-        specificRulings[formatName] ? specificRulings[formatName] = [...specificRulings[formatName], additionalRuling] : specificRulings[formatName] = [additionalRuling]
+        const specificRulings = {}
+
+        for (let i = 0; i < additionalRulings.length; i++) {
+            const additionalRuling = additionalRulings[i]
+            const formatName = additionalRuling.formatName
+            specificRulings[formatName] ? specificRulings[formatName] = [...specificRulings[formatName], additionalRuling] : specificRulings[formatName] = [additionalRuling]
+        }
+
+        const info = {
+        card: card,
+        statuses: Object.fromEntries(statuses),
+        prints: prints || [],
+        rulings: {
+            generic: genericRulings || [],
+            specific: specificRulings || {}
+        }
+        }
+
+        res.json(info)
+    } catch (err) {
+        next(err)
     }
-
-    const info = {
-      card: card,
-      statuses: Object.fromEntries(statuses),
-      prints: prints || [],
-      rulings: {
-        generic: genericRulings || [],
-        specific: specificRulings || {}
-      }
-    }
-
-    res.json(info)
-  } catch (err) {
-    next(err)
-  }
 }
 
 export const cardsCreate = async (req, res, next) => {

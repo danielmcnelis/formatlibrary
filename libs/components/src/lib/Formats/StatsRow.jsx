@@ -62,11 +62,13 @@ export const StatsRow = (props) => {
     const {elo, wins, losses, player} = stats
     const navigate = useNavigate()
     
-    let extension =  (player?.discordName || '').replaceAll('%', '%252525')
+    let extension =  (player?.discordName || '').replaceAll('%', '%25')
         .replaceAll('/', '%2F')
         .replaceAll(' ', '_')
         .replaceAll('#', '%23')
         .replaceAll('?', '%3F')
+        .replaceAll('&', '%26')
+        .replaceAll('★', '_')
 
     if (player?.discriminator && player?.discriminator !== '0') extension += `#${player.discriminator}`
 

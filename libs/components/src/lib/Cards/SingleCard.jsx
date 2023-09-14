@@ -90,7 +90,14 @@ export const SingleCard = () => {
     const [statuses, setStatuses] = useState({})
     const [prints, setPrints] = useState([])
     const [rulings, setRulings] = useState({})
-    const { id } = useParams()
+    let { id } = useParams()
+    id = id.replaceAll('%', '%25')
+        .replaceAll('/', '%2F')
+        .replaceAll(' ', '_')
+        .replaceAll('#', '%23')
+        .replaceAll('?', '%3F')
+        .replaceAll('&', '%26')
+        .replaceAll('★', '_')
     
     // USE EFFECT
     useEffect(() => {
@@ -132,7 +139,7 @@ export const SingleCard = () => {
           console.log(err)
           setCard(null)
         }
-      } 
+      }
   
       fetchData()
     }, [id])

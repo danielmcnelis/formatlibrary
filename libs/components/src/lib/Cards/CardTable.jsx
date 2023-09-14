@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useLayoutEffect } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react'
 import axios from 'axios'
 import { AdvButton } from './AdvButton'
 import { MiniAdvButton } from './MiniAdvButton'
@@ -16,6 +16,7 @@ import './CardTable.css'
 const now = new Date()
 
 export const CardTable = () => {
+    const isMounted = useRef(false)
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1000px)' })
     const location = useLocation()
     const formatName = location?.search?.slice(8)
@@ -32,7 +33,7 @@ export const CardTable = () => {
     const [booster, setBooster] = useState(null)
     const [advanced, setAdvanced] = useState(false)
     const [cutoff, setCutoff] = useState(`${now.getFullYear()}-12-31`)
-  
+    
     const [sliders, setSliders] = useState({
       year: now.getFullYear(),
       month: 12,
@@ -113,7 +114,10 @@ export const CardTable = () => {
     })
   
     // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, 0), [page])
+    useLayoutEffect(() => {
+        setAdvanced(false)
+        window.scrollTo(0, 0)
+    }, [page])
     
     // CHANGE CARDS PER PAGE
     const changeCardsPerPage = (e) => {
@@ -122,7 +126,7 @@ export const CardTable = () => {
     }
     
     // COUNT
-    const count = async () => {
+    const count = useCallback(async () => {
       let url = `/api/cards/count`   
       let filter = ''
       if (queryParams.name) filter += `,name:inc:${queryParams.name}`
@@ -162,17 +166,18 @@ export const CardTable = () => {
           }
       }
   
-      const { data } = await axios.get(url)
+      const { data } = await axios.get(url, { headers: { name: queryParams.name, description: queryParams.description }})
       setTotal(data)
-    }
+    }, [queryParams, iconParams, attributeParams, typeParams, groupParams, sliders.atk, sliders.level, sliders.def, booster, cutoff])
   
     // SEARCH
-    const search = async () => {
-      let url = `/api/cards?limit=${cardsPerPage}&page=${page}&sort=${sortBy}`   
+    const search = useCallback(async () => {
+      let url = `/api/cards?limit=${cardsPerPage}&page=${page}&sort=${sortBy}`
       let filter = ''
-      if (queryParams.name) filter += `,name:inc:${queryParams.name}`
+      let headers = {}
+      if (queryParams.name) headers.name = queryParams.name
       if (queryParams.category) filter += `,category:eq:${queryParams.category}`
-      if (queryParams.description) filter += `,description:inc:${queryParams.description}`
+      if (queryParams.description) headers.description = queryParams.description
   
       const icons = Object.entries(iconParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
       const attributes = Object.entries(attributeParams).filter((e) => !!e[1]).map((e) => e[0].toUpperCase())
@@ -201,9 +206,9 @@ export const CardTable = () => {
       if (filter.length) url += ('&filter=' + filter.slice(1))
       if (booster) url += `&booster=${booster}`
   
-      const { data } = await axios.get(url)
+      const { data } = await axios.get(url, { headers })
       setCards(data)
-    }
+    }, [cardsPerPage, page, sortBy, queryParams, iconParams, attributeParams, typeParams, groupParams, sliders.atk, sliders.level, sliders.def, booster, cutoff])
   
     // RESET
     const reset = async () => {
@@ -309,14 +314,28 @@ export const CardTable = () => {
     }
   
     // UPDATE FORMAT
-    const updateFormat = async (e) => {
+    const updateFormat = useCallback(async (e) => {
       if (e.target.value.length) {
-        const {data} = await axios.get(`/api/formats/${e.target.value}`) 
-        setFormat(data.format)
+        const {data: formatData} = await axios.get(`/api/formats/${e.target.value}`) 
+        setFormat(formatData.format)
+        const {data: banlistData} = await axios.get(`/api/banlists/simple/${formatData.format.banlist || 'jun23'}`)
+        setBanlist(banlistData)
+        const year = formatData.format.date ? parseInt(formatData.format.date.slice(0, 4)) : now.getFullYear()
+        const month = formatData.format.date ? parseInt(formatData.format.date.slice(6, 7)) : 12
+        const day = formatData.format.date ? parseInt(formatData.format.date.slice(-2)) : 31
+        if (sliders.year !== year || sliders.month !== month || sliders.day !== day) setSliders({ ...sliders, year, month, day })
+        let newCutoff = formatData.format.date || `${year}-12-31`
+        if (cutoff !== newCutoff) setCutoff(newCutoff)
       } else {
+        const year = now.getFullYear()
+        const month = 12
+        const day = 31
+        if (sliders.year !== year || sliders.month !== month || sliders.day !== day) setSliders({ ...sliders, year, month, day })
+        let newCutoff = `${year}-12-31`
+        if (cutoff !== newCutoff) setCutoff(newCutoff)
         setFormat({})
       }
-    }
+    }, [cutoff, sliders])
   
     // APPLY FILTER
     const applyFilter = (buttonClass, id) => {
@@ -357,66 +376,40 @@ export const CardTable = () => {
         }
       })
     }
-  
-    // USE EFFECT FETCH CARDS
+
+    // USE EFFECT FETCH DATA
     useEffect(() => {
-      if (formatName) {
-          updateFormat({target: { value: formatName } })
-          count()
-          search()
-      } else {
-          const fetchData = async () => {
-            const {data} = await axios.get(`/api/formats`)
-            setFormats(data)
-          }
-  
-          const fetchData2 = async () => {
-            const {data} = await axios.get(`/api/sets/boosters`)
-            setBoosters(data)
-          }
-  
-          fetchData()
-          fetchData2()
-          count()
-          search()
-      }
-    }, [])
-  
-    // USE EFFECT IF FORMAT CHANGES
-    useEffect(() => {
-      const year = format.date ? parseInt(format.date.slice(0, 4)) : now.getFullYear()
-      const month = format.date ? parseInt(format.date.slice(6, 7)) : 12
-      const day = format.date ? parseInt(format.date.slice(-2)) : 31
-      setCutoff(format.date || `${year}-12-31`)
-      setSliders({ ...sliders, year, month, day })
-  
-      const fetchData = async () => {
-        try {
-          const {data} = await axios.get(`/api/banlists/simple/${format.banlist || 'jun23'}`)
-          setBanlist(data)
-        } catch (err) {
-          console.log(err)
+        const fetchData = async () => {
+            if (formatName) {
+                await updateFormat({target: { value: formatName } })  
+            }
+
+            const {data: formatData} = await axios.get(`/api/formats`)
+            setFormats(formatData)
+
+            const {data: boosterData} = await axios.get(`/api/sets/boosters`)
+            setBoosters(boosterData)       
+            isMounted.current = true
         }
-      }
-  
-      fetchData()
-    }, [format])
+
+        fetchData()
+    }, [formatName, updateFormat])
   
     // USE EFFECT IF DATE SLIDERS CHANGE
     useEffect(() => {
-      if (!format || !format.id) {
-          const month = sliders.month >= 10 ? sliders.month : `0${sliders.month}`
-          const day = sliders.day >= 10 ? sliders.day : `0${sliders.day}`
-          setCutoff(`${sliders.year}-${month}-${day}`)
-      }
-    }, [sliders])
+        if (!isMounted.current) return
+        const month = sliders.month >= 10 ? sliders.month : `0${sliders.month}`
+        const day = sliders.day >= 10 ? sliders.day : `0${sliders.day}`
+        setCutoff(`${sliders.year}-${month}-${day}`)
+    }, [sliders.year, sliders.month, sliders.day])
   
     // USE EFFECT IF RELEVANT SEARCH PARAM STATES CHANGE
     useEffect(() => {
-      count()
-      search()
-    }, [page, cardsPerPage, sortBy, format, booster, cutoff, sliders, queryParams, groupParams, iconParams, attributeParams, typeParams])
-  
+        if (!isMounted.current) return
+        count()
+        search()
+    }, [isMounted.current, page, cardsPerPage, sortBy, cutoff, format, booster, sliders.atk, sliders.def, sliders.level, queryParams, groupParams, iconParams, attributeParams, typeParams, count, search])
+
     const advancedButtons = {
       icon: [
         ['normal', 'Normal'], 

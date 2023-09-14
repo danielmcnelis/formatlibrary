@@ -284,8 +284,6 @@ export const deckTypesSummary = async (req, res, next) => {
             }
         })
 
-        console.log("deckThumb.formatId" ,deckThumb.formatId)
-
         format = await Format.findOne({
             where: {
                 id: deckThumb.formatId

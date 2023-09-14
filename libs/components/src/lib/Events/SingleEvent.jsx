@@ -30,11 +30,13 @@ export const SingleEvent = () => {
   const { id } = useParams()
   const navigate = useNavigate()
 
-  let extension =  (winner?.discordName || winner?.name || '').replaceAll('%', '%252525')
+  let extension =  (winner?.discordName || winner?.name || '').replaceAll('%', '%25')
     .replaceAll('/', '%2F')
     .replaceAll(' ', '_')
     .replaceAll('#', '%23')
     .replaceAll('?', '%3F')
+    .replaceAll('&', '%26')
+    .replaceAll('★', '_')
 
   if (winner?.discordName && winner?.discriminator !== '0') extension += `#${winner.discriminator}`
 
