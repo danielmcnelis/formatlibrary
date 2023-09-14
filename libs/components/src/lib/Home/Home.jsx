@@ -17,7 +17,7 @@ export const Home = () => {
     useLayoutEffect(() => window.scrollTo(0, 0, []))
 
     // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, document.getElementById('zeta')?.offsetTop), [page])
+    useLayoutEffect(() => window.scrollTo(0, document.getElementById('blog')?.offsetTop), [page])
   
     // USE EFFECT
     useEffect(() => {
@@ -47,7 +47,7 @@ export const Home = () => {
     if (!blogPosts?.length) return <div/>
   
     return (
-        <div className="blog" id="zeta">
+        <div className="blog" id="blog">
             {
                 blogPosts.map((bp, index) => {
                 return (

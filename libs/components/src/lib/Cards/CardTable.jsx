@@ -116,7 +116,7 @@ export const CardTable = () => {
     // USE LAYOUT EFFECT
     useLayoutEffect(() => {
         setAdvanced(false)
-        window.scrollTo(0, 0)
+        window.scrollTo(0, document.getElementById('sortSelector')?.offsetTop - 10)
     }, [page])
     
     // CHANGE CARDS PER PAGE
