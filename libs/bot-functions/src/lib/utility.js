@@ -198,14 +198,13 @@ export const getCard = async (query, fuzzyCards, format) => {
             `\n\nhttps://formatlibrary.com/cards/${
                 card.name.replaceAll(' ', '_')
                     .replaceAll('★', '_')
+                    .replaceAll('%', '%25')
                     .replaceAll(`"`, '%22')
                     .replaceAll('#', '%23')
-                    .replaceAll('%', '%25')
                     .replaceAll('&', '%26')
                     .replaceAll(`'`, '%27')
                     .replaceAll('/', '%2F')
                     .replaceAll('?', '%3F')
-                    
             }`
         )
 	return { cardEmbed, attachment }
