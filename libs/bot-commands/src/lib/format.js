@@ -2,6 +2,7 @@
 import { SlashCommandBuilder } from 'discord.js'    
 import { hasAffiliateAccess, isMod, isServerManager } from '@fl/bot-functions'
 import { Format, Server } from '@fl/models'
+import { emojis } from '@fl/emojis'
 
 export default {
     data: new SlashCommandBuilder()
@@ -30,6 +31,7 @@ export default {
         await interaction.deferReply()
         const formatId = interaction.options.getString('format')
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+        if (server.access === 'full') return await interaction.editReply({ content: `This command has no application on Format Library. ${emojis.FL}`})
         if (hasAffiliateAccess(server) && !isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
         if (!hasAffiliateAccess(server) && !isServerManager(interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that. You must have the "Server Manager" permission to set the format.`})
         
