@@ -110,7 +110,7 @@
     max-width: 98vw;
   }
   
-  .eventThumbnail:hover, .deckThumbnail:hover, .badge:hover, .subheading#event-events:hover, .subheading#popular-decks:hover {
+  .eventThumbnail:hover, .deckThumbnail:hover, .badge:hover, .subheading#recent-events:hover, .subheading#popular-decks:hover {
     cursor: pointer;
     color: #34AD5A;
   }

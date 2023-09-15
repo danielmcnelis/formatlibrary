@@ -197,6 +197,7 @@ export const SingleDeck = () => {
               </div>       
             </td>
             <td>
+            
               <div onClick={() => goToFormat()} className="single-deck-cell">
                 <div className="single-deck-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {deck.formatName}</div>
                 <img 

@@ -1,17 +1,17 @@
 
 import { useState, useEffect, useLayoutEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { capitalize, dateToSimple, dateToVerbose, getCookie } from '@fl/utils'
 import { ReplayThumbnail } from './ReplayThumbnail'
 import { DeckImage } from '../Decks/DeckImage'
 import { NotFound } from '../General/NotFound'
 import './SingleEvent.css'
-const playerId = getCookie('playerId')
-
 import { Chart as ChartJS, ArcElement, CategoryScale, BarElement, Title, LinearScale, Tooltip, Legend } from 'chart.js'
 import { Bar, Doughnut } from 'react-chartjs-2'
+
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+const playerId = getCookie('playerId')
 
 export const SingleEvent = () => {
   const [event, setEvent] = useState({})
@@ -219,7 +219,9 @@ export const SingleEvent = () => {
                 </td>
                 <td className="desktop-only">
                   <div className="single-event-cell">
-                    <div style={{paddingRight:'7px'}}><b>Winning Deck:</b> {capitalize(topDecks[0] ? topDecks[0].type : '', true)}</div> 
+                    <Link to={`/decktypes/${topDecks[0]?.type?.toLowerCase()?.replace(/\s/g, '_')}?format=${event.format.name}`}>
+                        <div className="winning-deck-link" style={{paddingRight:'7px'}}><b>Winning Deck:</b> {capitalize(topDecks[0] ? topDecks[0].type : '', true)}</div> 
+                    </Link>
                   </div>   
                 </td>
                 <td>

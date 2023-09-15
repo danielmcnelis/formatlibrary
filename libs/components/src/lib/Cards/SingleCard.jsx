@@ -102,12 +102,12 @@ export const SingleCard = () => {
     // USE EFFECT
     useEffect(() => {
         const checkIfAdmin = async () => {
-        try {
-            const { status } = await axios.get(`/api/players/admin/${playerId}`)
-            if (status === 200) setIsAdmin(true)
-        } catch (err) {
-            console.log(err)
-        }
+            try {
+                const { status } = await axios.get(`/api/players/admin/${playerId}`)
+                if (status === 200) setIsAdmin(true)
+            } catch (err) {
+                console.log(err)
+            }
         }
 
         checkIfAdmin()

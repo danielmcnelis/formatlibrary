@@ -16,12 +16,6 @@ export default {
                 .setDescription('Enter replay URL.')
                 .setRequired(true)
         )
-        // .addStringOption(str =>
-        //     str
-        //         .setName('tournament')
-        //         .setDescription('Enter tournament name or abbreviation.')
-        //         .setRequired(true)
-        // )
 		.addStringOption(option =>
 			option.setName('tournament')
 				.setDescription('Enter tournament name or abbreviation')

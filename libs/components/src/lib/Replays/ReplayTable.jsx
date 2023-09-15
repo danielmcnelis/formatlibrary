@@ -383,13 +383,13 @@ export const ReplayTable = () => {
                 <select
                 id="replaysPerPageSelector"
                 defaultValue="10"
-                style={{width: '195px'}}
+                style={{width: '160px', maxWidth: '45vw'}}
                 onChange={(e) => { setReplaysPerPage(e.target.value); setPage(1) }}
                 >
-                <option value={10}>Show 10 Replays / Page</option>
-                <option value={25}>Show 25 Replays / Page</option>
-                <option value={50}>Show 50 Replays / Page</option>
-                <option value={100}>Show 100 Replays / Page</option>
+                <option value={10}>10 Replays / Page</option>
+                <option value={25}>25 Replays / Page</option>
+                <option value={50}>50 Replays / Page</option>
+                <option value={100}>100 Replays / Page</option>
                 </select>
     
                 <select

@@ -619,6 +619,9 @@ export const isAdmin = (server, member) => member?._roles.includes(server?.admin
 //IS MOD?
 export const isMod = (server, member) => member?._roles.includes(server?.modRole) || member?._roles.includes(server?.adminRole) || member?._roles.includes(server?.judgeRole) || member?.user?.id === '194147938786738176'
 
+//IS SERVER MANAGER?
+export const isServerManager = (member) => member.hasPermission('MANAGE_SERVER')
+
 //IS IRON PLAYER?
 export const isIronPlayer = (member) => member?._roles.includes('948006324237643806')
 

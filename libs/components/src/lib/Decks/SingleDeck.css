@@ -162,7 +162,7 @@
     color: black
   }
   
-  .single-deck-builder-link:hover, .single-deck-format-link:hover {
+  .single-deck-title:hover, .single-deck-builder-link:hover, .single-deck-format-link:hover, .single-deck-event-link:hover {
     cursor: pointer;
     color: #34AD5A;
   }

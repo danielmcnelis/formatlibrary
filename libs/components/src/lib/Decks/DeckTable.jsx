@@ -15,7 +15,7 @@ export const DeckTable = () => {
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const [decks, setDecks] = useState([])
-    const [decksPerPage, setDecksPerPage] = useState(12)
+    const [decksPerPage, setDecksPerPage] = useState(10)
     const [view, setView] = useState('table')
     const [sortBy, setSortBy] = useState('publishDate:desc')
     const [origin, setOrigin] = useState('event')
@@ -243,13 +243,13 @@ export const DeckTable = () => {
             <select
               id="decksPerPageSelector"
               defaultValue="12"
-              style={{width: '195px'}}
+              style={{width: '160px', maxWidth: '45vw'}}
               onChange={(e) => {setDecksPerPage(e.target.value); setPage(1)}}
             >
-              <option value={12}>Show 12 Decks / Page</option>
-              <option value={24}>Show 24 Decks / Page</option>
-              <option value={48}>Show 48 Decks / Page</option>
-              <option value={90}>Show 90 Decks / Page</option>
+              <option value={10}>10 Decks / Page</option>
+              <option value={25}>25 Decks / Page</option>
+              <option value={50}>50 Decks / Page</option>
+              <option value={100}>100 Decks / Page</option>
             </select>
   
             <select

@@ -1,7 +1,9 @@
 
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import './Navigation.css'
 import { getCookie } from '@fl/utils'
+import axios from 'axios'
+import './Navigation.css'
 
 const playerId = getCookie('playerId')
 const discordId = getCookie('discordId')
@@ -17,6 +19,22 @@ const toggle = () => {
 
 // NAVIGATION
 export const Navigation = () => {
+    const [isAdmin, setIsAdmin] = useState(false)
+
+    // USE EFFECT
+    useEffect(() => {
+        const checkIfAdmin = async () => {
+            try {
+                const { status } = await axios.get(`/api/players/admin/${playerId}`)
+                if (status === 200) setIsAdmin(true)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        checkIfAdmin()
+    }, [])
+    
     return (
         <div className="nav-bar">
             <Link to="/">
@@ -47,6 +65,13 @@ export const Navigation = () => {
                 <Link to="/builder/">
                     <h2 className="nav-header">BUILDER</h2>
                 </Link>
+                {
+                    isAdmin ? (
+                        <Link to="/admin-portal/">
+                            <h2 className="nav-header">ADMIN</h2>
+                        </Link>
+                    ) : ''
+                }
                 {
                     playerId ? (
                         <a href="/settings/">
@@ -96,6 +121,13 @@ export const Navigation = () => {
                 <Link to="/formats/">
                     <h3 className="hamburger-header">Formats</h3>
                 </Link>
+                {
+                    isAdmin ? (
+                        <Link to="/admin-portal/">
+                            <h3 className="hamburger-header">Admin</h3>
+                        </Link>
+                    ) : ''
+                }
                 {
                     playerId ? (
                         <a href="/auth/logout/">

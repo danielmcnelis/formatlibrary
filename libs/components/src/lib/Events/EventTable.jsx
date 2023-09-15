@@ -354,13 +354,13 @@ export const EventTable = (props) => {
             <select
               id="eventsPerPageSelector"
               defaultValue="10"
-              style={{width: '195px'}}
+              style={{width: '160px', maxWidth: '45vw'}}
               onChange={(e) => { setEventsPerPage(e.target.value); setPage(1) }}
             >
-              <option value={10}>Show 10 Events / Page</option>
-              <option value={25}>Show 25 Events / Page</option>
-              <option value={50}>Show 50 Events / Page</option>
-              <option value={100}>Show 100 Events / Page</option>
+              <option value={10}>10 Events / Page</option>
+              <option value={25}>25 Events / Page</option>
+              <option value={50}>50 Events / Page</option>
+              <option value={100}>100 Events / Page</option>
             </select>
   
             <select

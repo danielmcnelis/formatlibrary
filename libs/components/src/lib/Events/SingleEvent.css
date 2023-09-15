@@ -101,7 +101,7 @@
     color: black
   }
   
-  .single-event-format-link:hover, .single-event-winner-link:hover {
+  .single-event-format-link:hover, .single-event-winner-link:hover, .winning-deck-link:hover {
     cursor: pointer;
     color: #34AD5A;
   }
