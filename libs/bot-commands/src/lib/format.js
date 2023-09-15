@@ -19,29 +19,26 @@ export default {
         const focusedValue = interaction.options.getFocused()
         const formats = await Format.findAll({ 
             where: { 
-                cleanName: focusedValue.toLowerCase(),
+                cleanName: {[Op.startsWith]: focusedValue.toLowerCase()},
                 category: {[Op.not]: 'OP'}
-            }
+            },
+            limit: 5,
+            order: [["popular", "DESC"], ["name", "ASC"]]
         })
     
 		await interaction.respond(
-			formats.map(f => ({ name: f.name, value: f.id })),
+			formats.map(f => ({ name: f.name, value: f.name })),
 		)
     },            
     async execute(interaction) {
         await interaction.deferReply()
-        const formatId = interaction.options.getString('format')
+        const name = interaction.options.getString('name')
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (server.access === 'full') return await interaction.editReply({ content: `This command has no application on Format Library. ${emojis.FL}`})
         if (hasAffiliateAccess(server) && !isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
         if (!hasAffiliateAccess(server) && !isServerManager(interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that. You must have the "Server Manager" permission to set the format.`})
-        
-        const format = await Format.findOne({
-            where: {
-                id: formatId 
-            }
-        })
 
+        const format = await Format.findOne({ where: { name }})
         const hadFormatSet = !!server.format
 
         await server.update({

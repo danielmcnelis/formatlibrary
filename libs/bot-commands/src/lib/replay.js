@@ -41,8 +41,8 @@ export default {
         const tournaments = await Tournament.findAll({
             where: {
                 [Op.or]: {
-                    name: {[Op.substring]: focusedValue},
-                    abbreviation: {[Op.substring]: focusedValue}
+                    name: {[Op.startsWith]: focusedValue},
+                    abbreviation: {[Op.startsWith]: focusedValue}
                 },
                 state: {[Op.not]: 'pending'},
                 formatId: format.id,
