@@ -9,7 +9,7 @@ export default {
         .setName('format')
         .setDescription(`Set the format for your server. `)
 		.addStringOption(option =>
-			option.setName('format')
+			option.setName('name')
 				.setDescription('Enter format name')
 				.setAutocomplete(true)
                 .setRequired(true)

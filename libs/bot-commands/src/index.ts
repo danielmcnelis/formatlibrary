@@ -17,6 +17,7 @@ import exit from './lib/exit'
 import film from './lib/film'
 import fix from './lib/fix'
 import flair from './lib/flair'
+import format from './lib/format'
 import h2h from './lib/h2h'
 import help from './lib/help'
 import history from './lib/history'
@@ -84,6 +85,7 @@ export default {
         end,
         exit,
         film,
+        format,
         h2h,
         help,
         history,
