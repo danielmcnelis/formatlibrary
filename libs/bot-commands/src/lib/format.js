@@ -3,6 +3,7 @@ import { SlashCommandBuilder } from 'discord.js'
 import { hasAffiliateAccess, isMod, isServerManager } from '@fl/bot-functions'
 import { Format, Server } from '@fl/models'
 import { emojis } from '@fl/bot-emojis'
+import { Op } from 'sequelize'
 
 export default {
     data: new SlashCommandBuilder()
@@ -19,7 +20,7 @@ export default {
         const formats = await Format.findAll({ 
             where: { 
                 cleanName: focusedValue.toLowerCase(),
-                game: 'YGO'
+                category: {[Op.not]: 'OP'}
             }
         })
     
