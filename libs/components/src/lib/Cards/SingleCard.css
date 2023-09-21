@@ -160,7 +160,7 @@
   .single-card-description-box {
     padding: 10px 20px 40px 20px;
     text-align: justify;
-    background-color: #e3dede;
+    background-color: var(--card-description);
     border-radius: 20px;
     margin: 0px 0px 30px 0px;
   }

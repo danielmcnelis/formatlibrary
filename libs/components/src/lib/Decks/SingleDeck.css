@@ -8,26 +8,26 @@
   }
   
   .deck-bubble#main {
-    border: solid #990099;
+    border: solid var(--main-deck-border);
+    background-color: var(--main-deck-background);
     border-width: 5px 0px;
     padding: 10px 0px;
-    background-color: #ffe6ff;
     margin-bottom: 5px;
   }
   
   .deck-bubble#side {
-    border: solid #00a3cc;
+    border: solid var(--side-deck-border);
+    background-color: var(--side-deck-background);
     border-width: 5px 0px;
     padding: 5px 0px;
-    background-color: #e6faff;
     margin-bottom: 2px;
   }
   
   .deck-bubble#extra {
-    border: solid #ffbf00;
+    border: solid var(--extra-deck-border);
+    background-color: var(--extra-deck-background);
     border-width: 5px 0px;
     padding: 5px 0px;
-    background-color: #ffffe6;
   }
   
   .format-link {
@@ -133,18 +133,18 @@
     vertical-align: middle;
     margin-left: auto;
     margin-right: auto;
-    border-top: 2px solid #2e2215;
-    border-bottom: 2px solid #2e2215;
+    border-top: 2px solid var(--text-tertiary);
+    border-bottom: 2px solid var(--text-tertiary);
     border-radius: 6px;
   }
   
   .single-deck-info-1 {
-    border-bottom: 1px solid #2e2215;
-    background-color: #f7f7f7;
+    border-bottom: 1px solid var(--text-tertiary);
+    background-color: var(--background);
   }
   
   .single-deck-info-2 {
-    background-color: #eef2f5;
+    background-color: var(--even-row);
   }
   
   .single-deck-cell {
@@ -159,7 +159,7 @@
   }
   
   .single-deck-builder-link, .single-deck-format-link {
-    color: black
+    color: var(--text-primary);
   }
   
   .single-deck-title:hover, .single-deck-builder-link:hover, .single-deck-format-link:hover, .single-deck-event-link:hover {

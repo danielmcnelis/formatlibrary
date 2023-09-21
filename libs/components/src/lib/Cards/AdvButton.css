@@ -20,14 +20,14 @@
 }
 
 .iconButton {
-  color: black;
-  background-color: #f5f7fa;
+    color: var(--text-primary);
+  background-color: var(--adv-button);
 }
 
 .clickedIconButton {
-  color: white;
+    color: var(--text-opposite);
   font-weight: 600;
-  background-color: #6d6f8a;
+  background-color: var(--adv-button-clicked);
 }
 
 .attributeButton,
@@ -51,14 +51,14 @@
 }
 
 .attributeButton {
-  color: black;
-  background-color: #f5f7fa;
+    color: var(--text-primary);
+  background-color: var(--adv-button);
 }
 
 .clickedAttributeButton {
-  color: white;
+    color: var(--text-opposite);
   font-weight: 600;
-  background-color: #6d6f8a;
+  background-color: var(--adv-button-clicked);
 }
 
 .typeButton,
@@ -82,9 +82,9 @@
 }
 
 .clickedTypeButton {
-    color: white;
+    color: var(--text-opposite);
     font-weight: 600;
-    background-color: #6d6f8a;
+    background-color: var(--adv-button-clicked);
   }
   
   .groupButton,
@@ -107,20 +107,26 @@
     vertical-align: middle;
   }
   
-  .groupButton {
-    color: black;
-    background-color: #f5f7fa;
+  .groupButton, .typeButton, .attributeButton, .iconButton {
+    color: var(--text-primary);
+    background-color: var(--adv-button);
   }
   
-  .clickedGroupButton {
-    color: white;
+  .clickedGroupButton, .clickedAttributeButton, .clickedGroupButton, .clickedIconButton {
+    color: var(--text-opposite);
     font-weight: 600;
-    background-color: #6d6f8a;
+    background-color: var(--adv-button-clicked);
   }
 
   .clickedAttributeButton:hover,
   .clickedTypeButton:hover,
   .clickedIconButton:hover,
-  .clickedGroupButton:hover {
+  .clickedGroupButton:hover,
+  .attributeButton:hover,
+  .typeButton:hover,
+  .iconButton:hover,
+  .groupButton:hover {
     cursor: pointer;
+    background-color: var(--adv-button-clicked);
+    color: var(--text-opposite);
   }

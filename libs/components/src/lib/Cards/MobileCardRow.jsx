@@ -73,7 +73,7 @@ export const MobileCardRow = (props) => {
     return (
         <tr className={`${evenOrOdd}-search-results-row`}>
                   <td className="no-padding-2" style={{verticalAlign: 'top'}}>
-                      <Link className="black-text" to={`/cards/${
+                      <Link className="search-results-link" to={`/cards/${
                           card.name.replaceAll('%', '%25')
                           .replaceAll('/', '%2F')
                           .replaceAll(' ', '_')
@@ -106,7 +106,7 @@ export const MobileCardRow = (props) => {
                       </Link>
                   </td>
                   <td className="no-padding-2" style={{verticalAlign: 'top'}}>
-                      <Link className="black-text" to={`/cards/${
+                      <Link className="search-results-link" to={`/cards/${
                           card.name.replaceAll('%', '%25')
                           .replaceAll('/', '%2F')
                           .replaceAll(' ', '_')

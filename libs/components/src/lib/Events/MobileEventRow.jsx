@@ -10,14 +10,14 @@ export const MobileEventRow = (props) => {
     return (
         <tr className={`${evenOrOdd}-search-results-row`}>
           <td className="no-padding">
-            <Link className="black-text" to={`/events/${event.abbreviation}`}>
+            <Link className="search-results-link" to={`/events/${event.abbreviation}`}>
               <div className="format-cell-flexbox">
                 <img src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`}/>
               </div>
             </Link>
           </td>
           <td className="no-padding">
-              <Link className="black-text" to={`/events/${event.abbreviation}`}>
+              <Link className="search-results-link" to={`/events/${event.abbreviation}`}>
               <div className="community-cell-flexbox">
                   <img src={`https://cdn.formatlibrary.com/images/logos/${event.community}.png`}/>
                   <div>{event.name}</div>
@@ -25,7 +25,7 @@ export const MobileEventRow = (props) => {
               </Link>
           </td>
           <td className="no-padding">
-              <Link className="black-text" to={`/events/${event.abbreviation}`}>
+              <Link className="search-results-link" to={`/events/${event.abbreviation}`}>
               <div className="player-cell">
                   <img 
                       className="player-cell-pfp"

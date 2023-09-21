@@ -14,14 +14,14 @@
   .odd-print-row, .odd-ruling-row {
     align-content: left;
     vertical-align: middle;
-    background-color: #f7f7f7;
+    background-color: var(--background);
     border-bottom: 2px solid #9ba9cc;
   }
   
   .even-print-row, .event-ruling-row {
     align-content: left;
     vertical-align: middle;
-    background-color: #eef2f5;
+    background-color: var(--even-row);
     border-bottom: 2px solid #9ba9cc;
   }
   

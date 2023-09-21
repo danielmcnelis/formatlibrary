@@ -8,41 +8,42 @@
   
   .banlist-bubble#forbidden {
     width: 760px;
-    border: solid #b30000;
+    border: solid var(--forbidden-border);
     border-width: 5px 0px;
-    background-color: #ffe6e6;
+    background-color: var(--forbidden-background);
     padding: 10px 0px;
     margin-bottom: 5px;
   }
   
   .banlist-bubble#limited {
     width: 760px;
-    border: solid #cc7a00;
+    border: solid var(--limited-border);
     border-width: 5px 0px;
-    background-color: #fff5e6;
+    background-color: var(--limited-background);
     padding: 10px 0px;
     margin-bottom: 5px;
   }
   
   .banlist-bubble#semi-limited {
     width: 760px;
-    border: solid #ffbf00;
+    border: solid var(--semi-limited-border);
     border-width: 5px 0px;
-    background-color: #ffffe6;
+    background-color: var(--semi-limited-background);
     padding: 10px 0px;
     margin-bottom: 5px;
   }
 
   .banlist-bubble#unlimited {
     width: 760px;
-    border: solid #7db300;
+    border: solid var(--unlimited-border);
     border-width: 5px 0px;
-    background-color: #f4ffe6ff;
+    background-color: var(--unlimited-background);
     padding: 10px 0px;
     margin-bottom: 5px;
   }
   
   .banlist-category {
+    color: var(--text-primary);
     font-size: 24px;
     font-weight: bold;
     font-family: 'Roboto-Bold';

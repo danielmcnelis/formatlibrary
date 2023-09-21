@@ -73,8 +73,6 @@
     padding: 10px 0px;
   }
 
-
-  
   .single-event-table {
     display: table;
     width: 900px;
@@ -82,23 +80,23 @@
     vertical-align: middle;
     margin-left: auto;
     margin-right: auto;
-    border-top: 2px solid #2e2215;
-    border-bottom: 2px solid #2e2215;
+    border-top: 2px solid var(--text-tertiary);
+    border-bottom: 2px solid var(--text-tertiary);
     border-radius: 6px;
   }
   
   .single-event-info-1 {
-    border-bottom: 1px solid #2e2215;
-    background-color: #f7f7f7;
+    border-bottom: 1px solid var(--text-tertiary);
+    background-color: var(--background);
   }
   
   .single-event-info-2 {
-    background-color: #eef2f5;
+    background-color: var(--even-row);
   }
   
   
   .single-event-format-link, .single-event-winner-link {
-    color: black
+    color: var(--text-primary);
   }
   
   .single-event-format-link:hover, .single-event-winner-link:hover, .winning-deck-link:hover {
@@ -129,6 +127,7 @@
     font-size: 18px;
     padding: 2px 6px;
     height: 36px;
+
   }
   
   .single-event-table td {

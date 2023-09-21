@@ -106,26 +106,26 @@
   }
   
   .deck-bubble#main {
-    border: solid #990099;
+    border: solid var(--main-deck-border);
     border-width: 5px 0px;
     padding: 10px 0px;
-    background-color: #ffe6ff;
+    background-color: var(--main-deck-background);
     margin-bottom: 5px;
   }
   
   .deck-bubble#side {
-    border: solid #00a3cc;
+    border: solid var(--side-deck-border);
     border-width: 5px 0px;
     padding: 5px 0px;
-    background-color: #e6faff;
+    background-color: var(--side-deck-background);
     margin-bottom: 2px;
   }
   
   .deck-bubble#extra {
-    border: solid #ffbf00;
+    border: solid var(--extra-deck-border);
     border-width: 5px 0px;
     padding: 5px 0px;
-    background-color: #ffffe6;
+    background-color: var(--extra-deck-background);
   }
 
   .deck-flexbox {

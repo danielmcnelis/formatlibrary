@@ -29,6 +29,7 @@ export const SingleEvent = () => {
 
   const { id } = useParams()
   const navigate = useNavigate()
+  const [labelColor, gridColor] = JSON.parse(localStorage.getItem('theme')) === 'dark' ? ['#ccc', '#313131'] : ['#666', '#e1e1e1']
 
   let extension =  (winner?.discordName || winner?.name || '').replaceAll('%', '%25')
     .replaceAll('/', '%2F')
@@ -146,17 +147,53 @@ export const SingleEvent = () => {
     ]
   } : {}
 
-  const options = {
-    responsive: false,
-    maintainAspectRatio: true,
-    plugins: {
-      legend: {
-          display: true,
-          position: 'bottom',
-          align: 'start'
-      }
+    const doughnutOptions = {
+        responsive: false,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+                align: 'start',
+                labels: {    
+                    color: labelColor
+                }
+            },
+        }
     }
-  }
+
+    const barOptions = {
+        responsive: false,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+                align: 'start',
+                labels: {    
+                    color: labelColor
+                }
+            },
+        },
+        scales: {
+            y: {
+                grid: {
+                    color: gridColor
+                },
+                ticks: {
+                    color: labelColor
+                }
+            },
+            x: {
+                grid: {
+                    color: gridColor
+                },
+                ticks: {
+                    color: labelColor
+                }
+            }
+        }
+    }
 
   return (
     <div className="body">
@@ -361,7 +398,7 @@ export const SingleEvent = () => {
                   height="500px"
                   width="500px"
                   data={deckTypeData}
-                  options={options}
+                  options={doughnutOptions}
                 />
               </div>
               <div className="doughnut-container">
@@ -372,7 +409,7 @@ export const SingleEvent = () => {
                   height={parseInt(500 - (20 * Math.ceil(metagame.deckTypes.length / 4)))}
                   width="500px"
                   data={deckCategoryData}
-                  options={options}
+                  options={doughnutOptions}
                 />
               </div>
             </div>
@@ -386,7 +423,7 @@ export const SingleEvent = () => {
                   height="400px"
                   width="500px"
                   data={topMainDeckCardsData}
-                  options={options}
+                  options={barOptions}
                 />
               </div>
               <div className="bargraph-container">
@@ -397,7 +434,7 @@ export const SingleEvent = () => {
                   height="400px"
                   width="500px"
                   data={topSideDeckCardsData}
-                  options={options}
+                  options={barOptions}
                 />
               </div>
             </div>

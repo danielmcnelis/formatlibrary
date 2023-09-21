@@ -12,7 +12,7 @@
 
   .DeckImages {
     display: block;
-    color: black;
+    color: var(--text-primary);
     padding: 5px 0px;
     margin: 5px 0px;
   }

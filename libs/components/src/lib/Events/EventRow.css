@@ -50,19 +50,27 @@
   .odd-search-results-row {
     text-align: center;
     display: table-row;
-    color: black;
-    background-color: #f7f7f7;
+    color: var(--text-primary);
+    background-color: var(--background);
     border-bottom: 2px solid #9faac2;
   }
   
   .even-search-results-row {
     text-align: center;
     display: table-row;
-    color: black;
-    background-color: #eef2f5;
+    color: var(--text-primary);
+    background-color: var(--even-row);
     border-bottom: 2px solid #9faac2;
   }
+
+  .search-results-link {
+    color: var(--text-primary);
+  }
   
+  .search-results-link:hover {
+    color: white;
+  }
+
   .odd-search-results-row:hover, .even-search-results-row:hover {
     cursor: pointer;
     color: white;

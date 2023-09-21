@@ -18,8 +18,9 @@ const toggle = () => {
 }
 
 // NAVIGATION
-export const Navigation = () => {
+export const Navigation = (props) => {
     const [isAdmin, setIsAdmin] = useState(false)
+    const { switchTheme, theme } = props
 
     // USE EFFECT
     useEffect(() => {
@@ -72,6 +73,9 @@ export const Navigation = () => {
                         </Link>
                     ) : ''
                 }
+                <div id={`theme-toggle-${theme}`} onClick={() => switchTheme()}>
+                    <div id={`theme-toggle-inner-circle-${theme}`}></div>
+                </div>
                 {
                     playerId ? (
                         <a href="/settings/">

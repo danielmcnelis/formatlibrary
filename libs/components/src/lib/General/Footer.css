@@ -73,7 +73,7 @@
     justify-content: space-between;
     flex-direction: row;
     color: #f7f7f7;
-    background-color: #0c0e17;
+    background-color: var(--background-secondary);
 }
 
 #footer-menu {

@@ -1,7 +1,7 @@
 
 /* DESKTOP */
 .blog {
-    background-color: #f7f7f7;
+    background-color: var(--background);
     min-height: 70vh;
     padding-top: 20px; 
 }

@@ -14,7 +14,7 @@
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
-    background-color: #0c0e17;
+    background-color: var(--background-secondary);
     color: #f7f7f7;
     padding: 5px;
     margin: 0px;
@@ -27,15 +27,15 @@
 }
 
 #logo img {
-    width: 4.4vw;
+    width: 4.0vw;
     padding: 0px 5px;
 }
 
 #logo h1 {
-    font-size: 2.55vw;
+    font-size: 2.4vw;
     font-family: 'Roboto-Bold';
     color: #4ebf71;
-    padding: 0px 30px 0px 10px;
+    padding: 0px 15px 0px 10px;
     text-align: left;
 }
 
@@ -44,7 +44,7 @@
     font-size: 20px;
     color: #f7f7f7;
     padding: 11px;
-    margin: 0px 20px 0px 40px; 
+    margin: 0px 20px; 
     text-align: right;
     border-radius: 5px;
 }
@@ -53,6 +53,58 @@
     background-color: rgb(209, 156, 70);
     color: #0c0e17;
 }
+
+#theme-toggle-light {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: rgb(198, 175, 124);
+    padding: 2px;
+    margin: 0px 0.2vw;
+    border-radius: 24px;
+    width: 48px;
+    height: 24px;
+}
+
+#theme-toggle-dark {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    background-color: rgb(46, 61, 132);
+    padding: 2px;
+    margin: 0px 0.2vw;
+    border-radius: 24px;
+    width: 48px;
+    height: 24px;
+}
+
+#theme-toggle-inner-circle-dark {
+    background: url("https://em-content.zobj.net/source/apple/354/crescent-moon_1f319.png") no-repeat center;
+    background-size: 16px;
+    background-color: rgb(40, 136, 200);
+    border-radius: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+#theme-toggle-inner-circle-light {
+    background: url("https://em-content.zobj.net/source/apple/354/sun_2600-fe0f.png") no-repeat center;
+    background-size: 16px;
+    background-color: rgb(172, 111, 57);
+    border-radius: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+#theme-toggle-light:hover {
+    cursor: pointer;
+}
+
+#theme-toggle-dark:hover {
+    cursor: pointer;
+}
+
 
 #hamburger-menu {
     display: none;
@@ -70,7 +122,7 @@
 .nav-header {
     color: #f7f7f7;
     padding: 10px;
-    margin: 0px 0.7vw;
+    margin: 0px 0.35vw;
     border-radius: 5px;
     font-size: 22px;
     text-decoration: none;

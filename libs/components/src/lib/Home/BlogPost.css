@@ -29,13 +29,13 @@
     justify-content: space-between;
     align-items: flex-start;
     text-align: left;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--border);
 }
   
 .blogpost-title {
     margin-right: 0px;
     padding: 0px 15px;
-    color: #2e2215;
+    color: var(--text-tertiary);
     text-align: left;
     font-size: 32pt;
     font-family:'Roboto-Bold';
@@ -49,7 +49,7 @@
 .blogpost-date {
     margin-top: 4px;
     padding: 3px 20px;
-    color: black;
+    color: var(--text-primary);
 }
   
 .blogpost-title-emojis {
@@ -101,7 +101,7 @@
 }
   
 .blogpost-event-link {
-    color: black;
+    color: var(--text-secondary);
     display: inline;
 }
   
@@ -131,18 +131,18 @@
     border-radius: 3px;
     display: block;
     padding: 2px;
-    background-color: #a0a3d8;
+    background-color: var(--accent-1);
     margin: 0px;
 }
   
 .blogpost-deck:hover {
     border: 3px solid #2b2738;
     padding: 2px;
-    background-color: #d5ef95;
+    background-color: var(--accent-2);
 }
 
 .black-text {
-    color: #151414;
+    color: var(--text-secondary);
 }
 
 .hover-green:hover {

@@ -3,12 +3,11 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
-
 const playerId = getCookie('playerId')
 
 const App = () => {
     const [isSubscriber, setIsSubscriber] = useState(false)
-    const [checkedSubscription, setCheckedSubscription] = useState(false)
+    const [checkedSubscription, setCheckedSubscription] = useState(false)  
 
     // USE EFFECT
     useEffect(() => {
@@ -27,7 +26,6 @@ const App = () => {
             checkIfSubscriber()
         }
     }, [])
-
   return (
     <div>
         <Helmet>

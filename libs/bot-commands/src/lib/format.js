@@ -19,7 +19,7 @@ export default {
         const focusedValue = interaction.options.getFocused()
         const formats = await Format.findAll({ 
             where: { 
-                cleanName: {[Op.startsWith]: focusedValue.toLowerCase()},
+                cleanName: {[Op.substring]: focusedValue.toLowerCase()},
                 category: {[Op.not]: 'OP'}
             },
             limit: 5,

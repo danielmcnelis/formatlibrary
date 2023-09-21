@@ -10,7 +10,7 @@ export const DeckRow = (props) => {
     return (
           <tr className={`${evenOrOdd}-search-results-row`}>
             <td className="no-padding">
-              <Link className="black-text" 
+              <Link className="search-results-link" 
                   to={`/decks/${deck.id}`}
                   target="_blank" 
                   rel="noopener noreferrer"
@@ -22,7 +22,7 @@ export const DeckRow = (props) => {
               </Link>
             </td>
             <td className="no-padding">
-              <Link className="black-text" 
+              <Link className="search-results-link" 
                   to={`/decks/${deck.id}`}
                   target="_blank" 
                   rel="noopener noreferrer"
@@ -33,7 +33,7 @@ export const DeckRow = (props) => {
               </Link>
             </td>
             <td className="no-padding">
-              <Link className="black-text" 
+              <Link className="search-results-link" 
                   to={`/decks/${deck.id}`}
                   target="_blank" 
                   rel="noopener noreferrer"
@@ -54,7 +54,7 @@ export const DeckRow = (props) => {
               </Link>
             </td>
             <td className="no-padding">
-              <Link className="black-text" 
+              <Link className="search-results-link" 
                   to={`/decks/${deck.id}`}
                   target="_blank" 
                   rel="noopener noreferrer"
@@ -65,7 +65,7 @@ export const DeckRow = (props) => {
               </Link>
             </td>
             <td className="no-padding">
-              <Link className="black-text"
+              <Link className="search-results-link"
                   to={`/decks/${deck.id}`}
                   target="_blank" 
                   rel="noopener noreferrer"
@@ -79,7 +79,7 @@ export const DeckRow = (props) => {
               </Link>
             </td>
             <td className="no-padding">
-              <Link className="black-text" 
+              <Link className="search-results-link" 
                   to={`/decks/${deck.id}`}
                   target="_blank" 
                   rel="noopener noreferrer"
@@ -90,7 +90,7 @@ export const DeckRow = (props) => {
               </Link>
             </td>
             <td className="no-padding">
-              <Link className="black-text" 
+              <Link className="search-results-link" 
                   to={`/decks/${deck.id}`}
                   target="_blank" 
                   rel="noopener noreferrer"
@@ -101,7 +101,7 @@ export const DeckRow = (props) => {
               </Link>
             </td>
             <td className="no-padding">
-              <Link className="black-text" 
+              <Link className="search-results-link" 
                   to={`/decks/${deck.id}`}
                   target="_blank" 
                   rel="noopener noreferrer"

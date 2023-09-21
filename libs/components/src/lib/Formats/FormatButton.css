@@ -17,6 +17,8 @@
     background-position: 2px;
     background-size: 64px;
     vertical-align: middle;
+    color: var(--text-primary);
+    background-color: var(--format-button);
   }
 
   .format-button {
@@ -28,6 +30,6 @@
 
   .format-link:hover {
     cursor: pointer;
-    color: white;
-    background-color: #41474f;
+    color: var(--text-opposite);
+    background-color: var(--format-button-hover);
   }
