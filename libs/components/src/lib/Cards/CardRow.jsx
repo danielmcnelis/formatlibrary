@@ -114,7 +114,7 @@ export const CardRow = (props) => {
                               borderBottom: '2px solid #CFDCE5'
                               }}
                           >
-                              {card.tcgDate.substring(0, 10)}
+                              {card.tcgDate?.substring(0, 10) || 'N/A'}
                           </th>
                           </tr>
                           <tr>
