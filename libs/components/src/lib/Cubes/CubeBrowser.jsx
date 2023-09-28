@@ -392,7 +392,7 @@ export const CubeBrowser = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const {data} = await axios.get(`/api/cubes/${id}`)
+                const {data} = await axios.get(`/api/cubes/${id}?view=browser`)
                 setCube(data)
             } catch (err) {
                 console.log(err)
@@ -769,7 +769,7 @@ export const CubeBrowser = () => {
             <table id="cards">
               <tbody>
                 {cards.length ? (
-                  cards.map((card, index) => {
+                  cards.slice((page - 1) * cardsPerPage, page * cardsPerPage).map((card, index) => {
                       if (isTabletOrMobile) {
                           return <MobileCardRow key={card.id} index={index} card={card}/>
                       } else {
@@ -785,7 +785,7 @@ export const CubeBrowser = () => {
         ) : (
           <div id="cardGalleryFlexBox">
             {cards.length ? (
-              cards.map((card) => {
+              cards.slice((page - 1) * cardsPerPage, page * cardsPerPage).map((card) => {
                 return <
                           CardImage 
                           key={card.id} 

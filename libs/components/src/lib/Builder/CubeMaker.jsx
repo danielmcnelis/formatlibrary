@@ -187,7 +187,7 @@ export const CubeMaker = () => {
 
     // UPDATE CUBE
     const updateCube = async (id) => {
-        const {data} = await axios.get(`/api/cubes/${id}`) 
+        const {data} = await axios.get(`/api/cubes/${id}?view=editor`) 
         setCube(data.cube)
     }
 

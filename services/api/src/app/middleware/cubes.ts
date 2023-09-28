@@ -8,9 +8,8 @@ export const cubesId = async (req, res, next) => {
       const id = parseInt(req.params.id)
       const shareLink = req.params.id
       const isAdmin = req.query?.isAdmin
-      console.log('id', id)
-      console.log('shareLink', shareLink)
-      console.log('isAdmin', isAdmin)
+      const view = req.query?.view
+      console.log('view', view)
       
       const cube = await Cube.findOne({
           where: !isNaN(id) && isAdmin === 'true' ? {
@@ -37,8 +36,6 @@ export const cubesId = async (req, res, next) => {
               { model: Player, attributes: ['id', 'name', 'discriminator', 'discordName', 'discordId', 'discordPfp'] }
           ]
       })
-
-      console.log('!!cube', !!cube)
   
       if (!cube) return res.sendStatus(404)
   
@@ -63,7 +60,15 @@ export const cubesId = async (req, res, next) => {
         cardPool.push(card)
       }
   
-      const sortFn = (a, b) => {
+      const sortFn = view === 'browser' ? (a, b) => {
+        if (a.name > b.name) {
+          return 1
+        } else if (b.name > a.name) {
+          return -1
+        } else {
+          return 0
+        }
+      } : (a, b) => {
         if (a.sortPriority > b.sortPriority) {
           return 1
         } else if (b.sortPriority > a.sortPriority) {
