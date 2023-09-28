@@ -216,9 +216,9 @@ export const CardTable = () => {
       const formatSelector = document.getElementById('format')
       if (formatSelector) formatSelector.value = ''
       document.getElementById('category').value = ''
-      document.getElementById('searchTypeSelector').value = 'name'
+      document.getElementById('search-by').value = 'name'
       document.getElementById('booster').value = ''
-      document.getElementById('searchBar').value = null
+      document.getElementById('search-bar').value = null
   
       setSliders({
         year: now.getFullYear(),
@@ -367,12 +367,12 @@ export const CardTable = () => {
     // RUN QUERY
     const runQuery = () => {
       setPage(1)
-      const id = document.getElementById('searchTypeSelector').value
+      const id = document.getElementById('search-by').value
       const otherId = id === 'description' ? 'name' : 'description'
       setQueryParams(() => {
         return {
           ...queryParams,
-          [id]: document.getElementById('searchBar').value,
+          [id]: document.getElementById('search-bar').value,
           [otherId]: null
         }
       })
@@ -478,388 +478,400 @@ export const CardTable = () => {
   
     // RENDER
     return (
-      <div className="body">
-        <div className="card-database-flexbox">
-          <img src={`https://cdn.formatlibrary.com/images/artworks/${format.icon ? `${format.icon}.jpg` : 'nibiru.jpg'}`} className="format-icon-medium desktop-only" />
-          <div>
-            <h1>{format.event ? format.name + ' ' : ''}Card Database</h1>
-            <h2 className="desktop-only">{format.event || 'May 2002 - Present'}</h2>
-          </div>
-          <img src={`https://cdn.formatlibrary.com/images/artworks/${format.icon ? `${format.icon}.jpg` : 'nibiru.jpg'}`} className="format-icon-medium" />
-        </div>
-        {
-          isTabletOrMobile ? (
-              <div className="searchWrapper">
-                  <div className="query-box">
-                      <input
-                          id="searchBar"
-                          className="filter"
-                          type="text"
-                          style={{maxWidth: '60vw'}}
-                          placeholder="🔍"
-                          onChange={() => runQuery()}
-                          onKeyDown={(e) => {
-                              if (e.key === 'Enter') { count(); search() }
-                          }}
-                      />
-  
-                      <select
-                          id="searchTypeSelector"
-                          defaultValue="name"
-                          className="filter"
-                          style={{maxWidth: '30vw'}}
-                          onChange={() => runQuery()}
-                          >
-                          <option value="name">Name</option>
-                          <option value="description">Text</option>
-                      </select>
-                  </div>
-                  <div className="query-box">
-                      <select
-                          id="category"
-                          defaultValue=""
-                          style={{maxWidth: '29vw'}}
-                          className="filter"
-                          onChange={() => setQueryParams({ ...queryParams, category: document.getElementById('category').value })}
-                      >
-                          <option value="">Cards</option>
-                          <option value="Monster">Monster</option>
-                          <option value="Spell">Spell</option>
-                          <option value="Trap">Trap</option>
-                      </select>
-  
-                      {
-                          formatName ? '' : (
-                          <select
-                              id="format"
-                              defaultValue=""
-                              style={{maxWidth: '35vw'}}
-                              className="filter"
-                              onChange={(e) => updateFormat(e)}
-                          >
-                          <option key="Current" value="">Current</option>
-                          {
-                              formats.filter((f) => !!f.date).map((f) => <option key={f.name} value={f.name}>{capitalize(f.name, true)}</option>)
-                          }
-                          </select>
-                          )
-                      }
-  
-                      <select
-                          id="booster"
-                          defaultValue=""
-                          className="filter"
-                          style={{maxWidth: '27vw'}}
-                          onChange={(e) => setBooster(e.target.value)}
-                          >
-                          <option key="All Sets" value="">Sets</option>
-                          {
-                          boosters.map((b) => <option key={b.id} value={b.setCode}>{b.setCode}</option>)
-                          }
-                      </select>
-  
-                      <a
-                          className="searchButton desktop-only"
-                          type="submit"
-                          onClick={() => {
-                              count()
-                              search()
-                              if (advanced) setAdvanced(false)
-                          }
-                          }
-                          
-                      >
-                          Search
-                      </a>
-                  </div>
-              </div>
-              ) : (
-                  <div className="searchWrapper">
-                      <input
-                          id="searchBar"
-                          className="filter"
-                          type="text"
-                          placeholder="🔍"
-                          onChange={() => runQuery()}
-                          onKeyDown={(e) => {
-                              if (e.key === 'Enter') { count(); search() }
-                          }}
-                      />
-  
-                      <select
-                          id="searchTypeSelector"
-                          defaultValue="name"
-                          className="filter"
-                          onChange={() => runQuery()}
-                          >
-                          <option value="name">Card Name</option>
-                          <option value="description">Card Text</option>
-                      </select>
-  
-                      <select
-                          id="category"
-                          defaultValue=""
-                          className="filter"
-                          onChange={() => setQueryParams({ ...queryParams, category: document.getElementById('category').value })}
-                      >
-                          <option value="">All Cards</option>
-                          <option value="Monster">Monsters</option>
-                          <option value="Spell">Spells</option>
-                          <option value="Trap">Traps</option>
-                      </select>
-  
-                      {
-                          formatName ? '' : (
-                          <select
-                          id="format"
-                          defaultValue=""
-                          className="filter"
-                          onChange={(e) => updateFormat(e)}
-                          >
-                          <option key="Current" value="">Current</option>
-                          {
-                              formats.filter((f) => !!f.date).map((f) => <option key={f.name} value={f.name}>{capitalize(f.name, true)}</option>)
-                          }
-                          </select>
-                          )
-                      }
-  
-                      <select
-                          id="booster"
-                          defaultValue=""
-                          className="filter"
-                          onChange={(e) => setBooster(e.target.value)}
-                          >
-                          <option key="All Sets" value="">All Sets</option>
-                          {
-                          boosters.map((b) => <option key={b.id} value={b.setCode}>{b.setCode}</option>)
-                          }
-                      </select>
-  
-                      <a
-                          className="searchButton desktop-only"
-                          type="submit"
-                          onClick={() => {
-                              count()
-                              search()
-                              if (advanced) setAdvanced(false)
-                          }
-                          }
-                          
-                      >
-                          Search
-                      </a>
-                  </div>
-              )
-          }
-  
-        {!advanced ? (
-          <div className="refinedWrapper">
-            <a
-              className="refinedButton"
-              type="submit"
-              onClick={() => setAdvanced(!advanced)}
-            >
-              Show Advanced Options
-            </a>
-          </div>
-        ) : (
-          <div className="refinedWrapper">
-            <a
-              className="refinedButton"
-              type="submit"
-              onClick={() => setAdvanced(!advanced)}
-            >
-              Hide Advanced Options
-            </a>
-            <br />
-            {
-              advancedButtonKeys.map((buttonClass) => (
-                <div key={buttonClass} className="refinedInnerWrapper">
-                  {
-                    
-                    advancedButtons[buttonClass].map((el) => {
-                      const params = buttonClass === 'icon' ? iconParams : 
-                        buttonClass === 'attribute' ? attributeParams : 
-                        buttonClass === 'type' ? typeParams : 
-                        groupParams
-
-                        return isTabletOrMobile ? (
-                            <MiniAdvButton 
-                                key={el[0]} 
-                                id={el[0]} 
-                                buttonClass={buttonClass} 
-                                clicked={params[el[0]]}
-                                removeFilter={removeFilter} 
-                                applyFilter={applyFilter}
-                            />
-                        ) : (
-                            <AdvButton 
-                            key={el[0]} 
-                            id={el[0]} 
-                            display={el[1]}
-                            buttonClass={buttonClass} 
-                            clicked={params[el[0]]}
-                            removeFilter={removeFilter} 
-                            applyFilter={applyFilter}
-                          />
-                        )}
-                    )
-                  }
+        <div className="body">
+            <div className="card-database-flexbox">
+                <img src={`https://cdn.formatlibrary.com/images/artworks/${format.icon ? `${format.icon}.jpg` : 'nibiru.jpg'}`} alt={format.icon} className="format-icon-medium desktop-only"/>
+                <div>
+                    <h1>{format.event ? format.name + ' ' : ''}Card Database</h1>
+                    <h2 className="desktop-only">{format.event || 'May 2002 - Present'}</h2>
                 </div>
-              ))
-            }          
-            <br />
-  
-            <div className="sliderWrapper0">
-              <div className="sliderWrapper1">
-                <Slider
-                  id="level"
-                  type="range-slider"
-                  symbol="https://cdn.formatlibrary.com/images/symbols/star.png"
-                  label="Level"
-                  step={1}
-                  min={1}
-                  max={12}
-                  sliders = {sliders}
-                  setSliders = {setSliders}
-                  defaultValue = {sliders.level}
-                />
-                <Slider
-                  id="atk"
-                  type="range-slider"
-                  symbol="https://cdn.formatlibrary.com/images/emojis/swords.png"
-                  label="ATK"
-                  step={50}
-                  min={0}
-                  max={5000}
-                  sliders = {sliders}
-                  setSliders = {setSliders}
-                  defaultValue = {sliders.atk}
-                />
-                <Slider
-                  id="def"
-                  type="range-slider"
-                  symbol="https://cdn.formatlibrary.com/images/emojis/shield.png"
-                  label="DEF"
-                  step={50}
-                  min={0}
-                  max={5000}
-                  sliders = {sliders}
-                  setSliders = {setSliders}
-                  defaultValue = {sliders.def}
-                />
-              </div>
-  
-              <div className="sliderWrapper1 desktop-only">
-                <Slider
-                  id="year"
-                  type="continuous-slider"
-                  symbol="https://cdn.formatlibrary.com/images/emojis/calendar.png"
-                  label="Year"
-                  step={1}
-                  min={2002}
-                  max={new Date().getFullYear()}
-                  disabled={!!format.date}
-                  sliders = {sliders}
-                  setSliders = {setSliders}
-                  defaultValue = {sliders.year}
-                />
-                <Slider
-                  id="month"
-                  type="continuous-slider"
-                  symbol="https://cdn.formatlibrary.com/images/emojis/calendar.png"
-                  label="Month"
-                  step={1}
-                  min={1}
-                  max={12}
-                  disabled={!!format.date}
-                  sliders = {sliders}
-                  setSliders = {setSliders}
-                  defaultValue = {sliders.month}
-                />
-                <Slider
-                  id="day"
-                  type="continuous-slider"
-                  symbol="https://cdn.formatlibrary.com/images/emojis/calendar.png"
-                  label="Day"
-                  step={1}
-                  min={1}
-                  max={31}
-                  disabled={!!format.date}
-                  sliders = {sliders}
-                  setSliders = {setSliders}
-                  defaultValue = {sliders.day}
-                />
-              </div>
+                <img src={`https://cdn.formatlibrary.com/images/artworks/${format.icon ? `${format.icon}.jpg` : 'nibiru.jpg'}`} alt={format.icon} className="format-icon-medium"/>
             </div>
-          </div>
-        )}
+
+        {
+            isTabletOrMobile ? (
+                <>
+                    <div className="card-search-flexbox">
+                        <input
+                            id="search-bar"
+                            className="filter"
+                            type="text"
+                            style={{maxWidth: '60vw'}}
+                            placeholder="🔍"
+                            onChange={() => runQuery()}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') { count(); search() }
+                            }}
+                        />
+  
+                        <select
+                            id="search-by"
+                            defaultValue="name"
+                            className="filter"
+                            style={{maxWidth: '30vw'}}
+                            onChange={() => runQuery()}
+                            >
+                            <option value="name">Name</option>
+                            <option value="description">Text</option>
+                        </select>
+                    </div>
+
+                    <div className="card-search-flexbox">
+                        <select
+                            id="region"
+                            defaultValue="tcg"
+                            className="filter"
+                            onChange={() => setQueryParams({ ...queryParams, region: document.getElementById('region').value })}
+                        >
+                            <option value="tcg">TCG</option>
+                            <option value="ocg">OCG</option>
+                            <option value="union">Union</option>
+                        </select>
+
+                        <select
+                            id="category"
+                            defaultValue=""
+                            style={{maxWidth: '29vw'}}
+                            className="filter"
+                            onChange={() => setQueryParams({ ...queryParams, category: document.getElementById('category').value })}
+                        >
+                            <option value="">Categories</option>
+                            <option value="monster">Monster</option>
+                            <option value="spell">Spell</option>
+                            <option value="trap">Trap</option>
+                        </select>
+
+                        <select
+                            id="format"
+                            defaultValue={formatName}
+                            style={{maxWidth: '35vw'}}
+                            className="filter"
+                            onChange={(e) => updateFormat(e)}
+                            disabled={!!formatName}
+                        >
+                            <option key="Current" value="">Current</option>
+                            {
+                                formats.filter((f) => !!f.date).map((f) => <option key={f.name} value={f.name}>{capitalize(f.name, true)}</option>)
+                            }
+                        </select>
+  
+                        <select
+                            id="booster"
+                            defaultValue=""
+                            className="filter"
+                            style={{maxWidth: '27vw'}}
+                            onChange={(e) => setBooster(e.target.value)}
+                        >
+                            <option key="All Sets" value="">Sets</option>
+                            {
+                                boosters.map((b) => <option key={b.id} value={b.setCode}>{b.setCode}</option>)
+                            }
+                        </select>
+                    </div>
+                </>
+              ) : (
+                <>
+                    <div className="card-search-flexbox">
+                        <input
+                            id="search-bar"
+                            className="filter"
+                            type="text"
+                            placeholder="🔍"
+                            onChange={() => runQuery()}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') { count(); search() }
+                            }}
+                        />
+  
+                        <select
+                            id="search-by"
+                            defaultValue="name"
+                            className="filter"
+                            onChange={() => runQuery()}
+                        >
+                            <option value="name">Search By: Name</option>
+                            <option value="description">Search By: Text</option>
+                        </select>
+                    </div>
+
+                    <div className="card-search-flexbox">
+                        <select
+                            id="region"
+                            defaultValue="tcg"
+                            className="filter"
+                            onChange={() => setQueryParams({ ...queryParams, region: document.getElementById('region').value })}
+                        >
+                            <option value="tcg">TCG Only</option>
+                            <option value="ocg">OCG Only</option>
+                            <option value="union">TCG + OCG</option>
+                        </select>
+
+                        <select
+                          id="category"
+                          defaultValue=""
+                          className="filter"
+                          onChange={() => setQueryParams({ ...queryParams, category: document.getElementById('category').value })}
+                        >
+                            <option value="">All Categories</option>
+                            <option value="monster">Monsters</option>
+                            <option value="spell">Spells</option>
+                            <option value="trap">Traps</option>
+                        </select>
+
+                        <select
+                            id="format"
+                            defaultValue={formatName}
+                            className="filter"
+                            onChange={(e) => updateFormat(e)}
+                            disabled={!!formatName}
+                        >
+                            <option key="Current" value="">Current</option>
+                            {
+                                formats.filter((f) => !!f.date).map((f) => <option key={f.name} value={f.name}>{capitalize(f.name, true)}</option>)
+                            }
+                        </select>
+  
+                        <select
+                            id="booster"
+                            defaultValue=""
+                            className="filter"
+                            onChange={(e) => setBooster(e.target.value)}
+                        >
+                            <option key="All Sets" value="">All Sets</option>
+                            {
+                                boosters.map((b) => <option key={b.id} value={b.setCode}>{b.setName}</option>)
+                            }
+                        </select>
+  
+                        <div
+                            className="search-button desktop-only"
+                            type="submit"
+                            onClick={() => {
+                                count()
+                                search()
+                                if (advanced) setAdvanced(false)
+                            }}
+                        >
+                            Search
+                        </div>
+                    </div>
+                </>      
+            )
+        }
+  
+        {
+            !advanced ? (
+                <div className="advanced-search">
+                    <div
+                        className="show-advanced-button"
+                        type="submit"
+                        onClick={() => setAdvanced(!advanced)}
+                    >
+                        Show Advanced Options
+                    </div>
+                </div>
+            ) : (
+                <div className="advanced-search">
+                    <div
+                        className="show-advanced-button"
+                        type="submit"
+                        onClick={() => setAdvanced(!advanced)}
+                    >
+                        Hide Advanced Options
+                    </div>
+
+                    <br />
+
+                    {
+                        advancedButtonKeys.map((buttonClass) => (
+                            <div key={buttonClass} className="refinedInnerWrapper">
+                            {
+                                advancedButtons[buttonClass].map((el) => {
+                                    const params = buttonClass === 'icon' ? iconParams : 
+                                        buttonClass === 'attribute' ? attributeParams : 
+                                        buttonClass === 'type' ? typeParams : 
+                                        groupParams
+
+                                    return isTabletOrMobile ? (
+                                        <MiniAdvButton 
+                                            key={el[0]} 
+                                            id={el[0]} 
+                                            buttonClass={buttonClass} 
+                                            clicked={params[el[0]]}
+                                            removeFilter={removeFilter} 
+                                            applyFilter={applyFilter}
+                                        />
+                                    ) : (
+                                        <AdvButton 
+                                            key={el[0]} 
+                                            id={el[0]} 
+                                            display={el[1]}
+                                            buttonClass={buttonClass} 
+                                            clicked={params[el[0]]}
+                                            removeFilter={removeFilter} 
+                                            applyFilter={applyFilter}
+                                        />
+                                    )
+                                })
+                            }
+                            </div>
+                        ))
+                    }
+
+                    <br />
+  
+                    <div className="slider-flexbox">
+                        <div className="slider-column">
+                            <Slider
+                                id="level"
+                                type="range-slider"
+                                symbol="https://cdn.formatlibrary.com/images/symbols/star.png"
+                                label="Level"
+                                step={1}
+                                min={1}
+                                max={12}
+                                sliders = {sliders}
+                                setSliders = {setSliders}
+                                defaultValue = {sliders.level}
+                            />
+
+                            <Slider
+                                id="atk"
+                                type="range-slider"
+                                symbol="https://cdn.formatlibrary.com/images/emojis/swords.png"
+                                label="ATK"
+                                step={50}
+                                min={0}
+                                max={5000}
+                                sliders = {sliders}
+                                setSliders = {setSliders}
+                                defaultValue = {sliders.atk}
+                            />
+
+                            <Slider
+                                id="def"
+                                type="range-slider"
+                                symbol="https://cdn.formatlibrary.com/images/emojis/shield.png"
+                                label="DEF"
+                                step={50}
+                                min={0}
+                                max={5000}
+                                sliders = {sliders}
+                                setSliders = {setSliders}
+                                defaultValue = {sliders.def}
+                            />
+                        </div>
+            
+                        <div className="slider-column desktop-only">
+                            <Slider
+                                id="year"
+                                type="continuous-slider"
+                                symbol="https://cdn.formatlibrary.com/images/emojis/calendar.png"
+                                label="Year"
+                                step={1}
+                                min={2002}
+                                max={new Date().getFullYear()}
+                                disabled={!!format.date}
+                                sliders = {sliders}
+                                setSliders = {setSliders}
+                                defaultValue = {sliders.year}
+                            />
+                            <Slider
+                                id="month"
+                                type="continuous-slider"
+                                symbol="https://cdn.formatlibrary.com/images/emojis/calendar.png"
+                                label="Month"
+                                step={1}
+                                min={1}
+                                max={12}
+                                disabled={!!format.date}
+                                sliders = {sliders}
+                                setSliders = {setSliders}
+                                defaultValue = {sliders.month}
+                            />
+                            <Slider
+                                id="day"
+                                type="continuous-slider"
+                                symbol="https://cdn.formatlibrary.com/images/emojis/calendar.png"
+                                label="Day"
+                                step={1}
+                                min={1}
+                                max={31}
+                                disabled={!!format.date}
+                                sliders = {sliders}
+                                setSliders = {setSliders}
+                                defaultValue = {sliders.day}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )
+        }
   
         <div id="resultsWrapper0" className="resultsWrapper0">
-          <div className="results desktop-only" style={{width: '360px'}}>
-            Results:{' '}
-            {
-              total ? `${cardsPerPage * page - cardsPerPage + 1} - ${
-                  total >=
-                    cardsPerPage * page
-                      ? cardsPerPage * page
-                      : total
-                  } of ${total}`
-              : total
-            }
-          </div>
-  
-          <div className="buttonWrapper">
-            <select
-              className="desktop-only"
-              id="viewSwitch"
-              defaultValue="spoilers"
-              style={{width: '100px'}}
-              onChange={() => setView(document.getElementById('viewSwitch').value)}
-            >
-              <option value="spoilers">Spoilers</option>
-              <option value="gallery">Gallery</option>
-            </select>
-  
-            <select
-              id="cardsPerPageSelector"
-              defaultValue="10"
-              style={{width: '160px', maxWidth: '45vw'}}
-              onChange={(e) => changeCardsPerPage(e)}
-            >
-              <option value="10">10 Cards / Page</option>
-              <option value="25">25 Cards / Page</option>
-              <option value="50">50 Cards / Page</option>
-              <option value="100">100 Cards / Page</option>
-            </select>
-  
-            <select
-              id="sortSelector"
-              defaultValue="nameASC"
-              style={{width: '160px', maxWidth: '45vw'}}
-              onChange={(e) => { setSortBy(e.target.value); setPage(1)}}
-            >
-              <option value="name:asc">Name: A ⮕ Z</option>
-              <option value="name:desc">Name: Z ⮕ A</option>
-              <option value="tcgDate:asc">Date: Old ⮕ New</option>
-              <option value="tcgDate:desc">Date: New ⮕ Old</option>
-              <option value="atk:desc nulls last">ATK: Desc. ⬇</option>
-              <option value="atk:asc nulls last">ATK: Asc. ⬆</option>
-              <option value="def:desc nulls last">DEF: Desc. ⬇</option>
-              <option value="def:asc nulls last">DEF: Asc. ⬆</option>
-              <option value="level:desc nulls last,rating:desc nulls last">Level: Desc. ⬇</option>
-              <option value="level:asc nulls last,rating:asc nulls last">Level: Asc. ⬆</option>
-            </select>
-  
-            <div
-              className="searchButton desktop-only"
-              type="submit"
-              onClick={() => reset()}
-            >
-              Reset
+            <div className="results desktop-only" style={{width: '360px'}}>
+                Results:{' '}
+                {
+                total ? `${cardsPerPage * page - cardsPerPage + 1} - ${
+                    total >=
+                        cardsPerPage * page
+                        ? cardsPerPage * page
+                        : total
+                    } of ${total}`
+                : total
+                }
             </div>
-          </div>
+  
+            <div className="buttonWrapper">
+                <select
+                    className="desktop-only"
+                    id="viewSwitch"
+                    defaultValue="spoilers"
+                    style={{width: '100px'}}
+                    onChange={() => setView(document.getElementById('viewSwitch').value)}
+                >
+                    <option value="spoilers">Spoilers</option>
+                    <option value="gallery">Gallery</option>
+                </select>
+    
+                <select
+                    id="cardsPerPageSelector"
+                    defaultValue="10"
+                    style={{width: '160px', maxWidth: '45vw'}}
+                    onChange={(e) => changeCardsPerPage(e)}
+                >
+                    <option value="10">10 Cards / Page</option>
+                    <option value="25">25 Cards / Page</option>
+                    <option value="50">50 Cards / Page</option>
+                    <option value="100">100 Cards / Page</option>
+                </select>
+    
+                <select
+                    id="sortSelector"
+                    defaultValue="nameASC"
+                    style={{width: '160px', maxWidth: '45vw'}}
+                    onChange={(e) => { setSortBy(e.target.value); setPage(1)}}
+                >
+                    <option value="name:asc">Name: A ⮕ Z</option>
+                    <option value="name:desc">Name: Z ⮕ A</option>
+                    <option value="tcgDate:asc">Date: Old ⮕ New</option>
+                    <option value="tcgDate:desc">Date: New ⮕ Old</option>
+                    <option value="atk:desc nulls last">ATK: Desc. ⬇</option>
+                    <option value="atk:asc nulls last">ATK: Asc. ⬆</option>
+                    <option value="def:desc nulls last">DEF: Desc. ⬇</option>
+                    <option value="def:asc nulls last">DEF: Asc. ⬆</option>
+                    <option value="level:desc nulls last,rating:desc nulls last">Level: Desc. ⬇</option>
+                    <option value="level:asc nulls last,rating:asc nulls last">Level: Asc. ⬆</option>
+                </select>
+    
+                <div
+                className="search-button desktop-only"
+                type="submit"
+                onClick={() => reset()}
+                >
+                    Reset
+                </div>
+            </div>
         </div>
   
         <div className="paginationWrapper desktop-only">

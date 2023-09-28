@@ -47,7 +47,7 @@ export const dateToSimple = (date) => {
 
 //DATE TO VERBOSE
 export const dateToVerbose = (date, long = true, ordinal = true, includeYear = true) => {
-  if (!date) return ''
+  if (!date) return 'N/A'
   const year = typeof date === 'string' ? date.slice(0, 4) : date.getFullYear()
   const longMonths = [
     'January',

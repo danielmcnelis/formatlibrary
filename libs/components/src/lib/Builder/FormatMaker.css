@@ -1,0 +1,205 @@
+
+.builder-bottom-panel {
+    margin: 10px 2px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.builder-control-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 50px;
+  margin: 40px 2px 2px;
+}
+
+.control-panel-button {
+    position: relative;
+    margin: 5px 2px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+}
+
+.control-panel-button:hover {
+    background-color:#00a3cc;
+    border-radius: 4px; 
+}
+
+.control-panel-text {
+    height: 38px;
+    margin: 0px 0px 0px 36px;
+    padding: 8px 0px 0px 0px;
+    visibility: hidden;
+    width: 120px;
+    background-color:#00a3cc;
+    color: white;
+    text-align: center;
+    border-radius: 4px;   
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+  }
+
+.control-panel-button:hover .control-panel-text {
+    visibility: visible;
+}
+
+.single-deck-title-flexbox {
+    display: flex;
+    justify-content: center;
+    width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .SearchPanel {
+    margin: 0px 15px 0px 5px;
+}
+
+  
+.searchButton {
+    display: inline-block;
+    padding: 0.36em 0.84em;
+    border: 1px solid #000000;
+    border-radius: 0.5em;
+    margin: 0.1em 0.5em 0.2em 0.5em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    color: #ede6e6;
+    background-color: black;
+    text-align: center;
+    transition: all 0.15s;
+  }
+  
+  .searchButton:hover {
+    cursor: pointer;
+    text-shadow: 0 0 2em rgba(255, 255, 255, 1);
+    color: black;
+    background-color: #ede6e6;
+    border-color: #ede6e6;
+  }
+
+  #builderGalleryFlexBox {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    width: 260px;
+    max-width: 260px;
+    flex-wrap: wrap;
+    align-items: top;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  
+  .deck-bubble {
+    width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 5px;
+  }
+  
+  .deck-bubble#main {
+    border: solid var(--main-deck-border);
+    border-width: 5px 0px;
+    padding: 10px 0px;
+    background-color: var(--main-deck-background);
+    margin-bottom: 5px;
+  }
+  
+  .deck-bubble#side {
+    border: solid var(--side-deck-border);
+    border-width: 5px 0px;
+    padding: 5px 0px;
+    background-color: var(--side-deck-background);
+    margin-bottom: 2px;
+  }
+  
+  .deck-bubble#extra {
+    border: solid var(--extra-deck-border);
+    border-width: 5px 0px;
+    padding: 5px 0px;
+    background-color: var(--extra-deck-background);
+  }
+
+  .deck-flexbox {
+    padding: 0px 10px;
+    max-width: 800px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: left;
+    flex-direction: row;
+    overflow: visible;
+  }
+  
+  .refinedButton {
+    display: inline-block;
+    padding: 0.36em 0.84em;
+    width: 50%;
+    max-width: 250px;
+    border: 1px solid #000000;
+    border-radius: 0.5em;
+    margin: 0.8em 0.5em 0.8em 0.5em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 12px;
+    color: #ede6e6;
+    background-color: black;
+    text-align: center;
+    transition: all 0.15s;
+  }
+  
+  .refinedButton:hover {
+    cursor: pointer;
+    text-shadow: 0 0 2em rgba(255, 255, 255, 1);
+    color: black;
+    background-color: #ede6e6;
+    border-color: #ede6e6;
+  }
+  
+  #searchBar {
+    font-size: 14pt;
+    width: 65%;
+    border: 1px solid black;
+    padding: 4px;
+    margin: 0px 8px;
+  }
+  
+  .EmptyImage-box {
+    position: relative;
+  }
+
+  
+  .deck-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: left;
+    align-items: center;
+    font-size: 18px;
+    height: 38px;
+    margin: 0px 2px;
+    padding: 2px 5px;
+  }
+  
+  .deck-button:hover {
+      color: white;
+      background-color:#00a3cc;
+      border-radius: 4px; 
+  }
+  
+  /* MEDIUM AND LARGE CELL PHONES */
+  @media only screen and (max-width: 600px) {
+    .single-deck-title-flexbox, .event-title-flexbox {
+        margin: 5px 0px;
+        padding: 0px;
+        width: 100%;
+    }
+}

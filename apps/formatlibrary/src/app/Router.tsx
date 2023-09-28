@@ -3,6 +3,7 @@ import {
   AdminPortal,
   Builder,
   CardTable,
+  CubeMaker,
   DeckGallery,
   DeckTable,
   DeckType,
@@ -33,6 +34,7 @@ export const Router = () => {
                     <Route path="/auth/"/>
 					<Route path="/builder" element=<Page element=<Builder /> /> />
 					<Route path="/settings" element=<Page element=<Settings /> /> />
+					<Route path="/cube-maker" element=<Page element=<CubeMaker /> /> />
 					<Route path="/format-maker" element=<Page element=<FormatMaker /> /> />
 					<Route path="/great-library.html" element=<Page element= <CardTable /> /> />
 					<Route path="/great-library" element=<Page element= <CardTable /> /> />

@@ -25,7 +25,7 @@ const { Shield, Swords } = emojis
 const now = new Date()
 
 export const SearchPanel = (props) => {
-    const {format} = props
+    const format = props.format || {}
     const cardsPerPage = 20
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 860px)' })
     const [page, setPage] = useState(1)
@@ -356,7 +356,7 @@ export const SearchPanel = (props) => {
         }
 
         fetchData()
-    }, [props, format])
+    }, [format.id])
 
     // USE EFFECT IF DATE SLIDERS CHANGE
     useEffect(() => {
@@ -470,14 +470,14 @@ export const SearchPanel = (props) => {
 
                 <select
                     id="format"
-                    value={format.name || ""}
+                    value={format?.name || ""}
                     style={{maxWidth: '35vw'}}
                     className="filter"
                     onChange={(e) => updateFormat(e)}
                 >
                 <option key="Current" value="">Current</option>
                 {
-                    props.formats.filter((f) => !!f.date).map((f) => <option key={f.name} value={f.name}>{f.name}</option>)
+                    props.formats?.filter((f) => !!f.date).map((f) => <option key={f.name} value={f.name}>{f.name}</option>)
                 }
                 </select>
             </div>

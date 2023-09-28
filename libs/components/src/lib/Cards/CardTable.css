@@ -1,5 +1,5 @@
 
-.searchButton {
+.search-button {
     display: inline-block;
     padding: 0.36em 0.84em;
     border: 1px solid #000000;
@@ -15,7 +15,7 @@
     transition: all 0.15s;
   }
   
-  .searchButton:hover {
+  .search-button:hover {
     cursor: pointer;
     text-shadow: 0 0 2em rgba(255, 255, 255, 1);
     color: black;
@@ -66,7 +66,7 @@
     justify-content: center;
   }
 
-  .refinedButton {
+  .show-advanced-button {
     display: inline-block;
     padding: 0.36em 0.84em;
     width: 50%;
@@ -84,7 +84,7 @@
     transition: all 0.15s;
   }
   
-  .refinedButton:hover {
+  .show-advanced-button:hover {
     cursor: pointer;
     text-shadow: 0 0 2em rgba(255, 255, 255, 1);
     color: black;
@@ -92,7 +92,7 @@
     border-color: #ede6e6;
   }
 
-  .sliderWrapper0 {
+  .slider-flexbox {
     min-width: 760px;
     display: flex;
     flex-direction: row;
@@ -100,7 +100,7 @@
     align-items: left;
   }
   
-  .sliderWrapper1 {
+  .slider-column {
     min-width: 375px;
   }
 
@@ -134,7 +134,7 @@
     margin-right: auto;
   }
   
-  .refinedWrapper {
+  .advanced-search {
     width: 90%;
     min-width: 764px;
     max-width: 1080px;
@@ -154,14 +154,12 @@
     justify-content: center;
   }
   
-  .searchWrapper {
-    width: 90%;
-    min-width: 764px;
+  .card-search-flexbox {
     margin-left: auto;
     margin-right: auto;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     text-align: center;
     padding: 4px 4px 2px 4px;
@@ -183,9 +181,9 @@
     margin-right: auto;
   }
 
-  #searchBar {
+  #search-bar {
     font-size: 14pt;
-    width: 65%;
+    width: 50%;
     border: 1px solid black;
     padding: 4px;
     margin: 0px 8px;
@@ -213,7 +211,7 @@
         display: none;
     }
 
-    .searchWrapper, .resultsWrapper0 {
+    .card-search-flexbox, .resultsWrapper0 {
         width: 98vw !important;
         min-width: 0px;   
         display: flex;
@@ -225,21 +223,21 @@
         margin: 2px 2px 4px;
     }
 
-    .refinedWrapper, .refinedInnerWrapper {
+    .advanced-search, .refinedInnerWrapper {
         width: 90vw !important;
         min-width: 0px;   
         align-content: center;
         justify-content: center; 
     }
 
-    .sliderWrapper0 {
+    .slider-flexbox {
         width: 90vw !important;
         min-width: 0px;   
         align-content: center;
         justify-content: center; 
     }
 
-    .sliderWrapper1 {
+    .slider-column {
         width: 90vw !important;
         min-width: 0px;   
         align-content: center;

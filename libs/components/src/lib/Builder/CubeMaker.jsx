@@ -6,14 +6,16 @@ import {SearchPanel} from './SearchPanel'
 import { getCookie } from '@fl/utils'
 import axios from 'axios'
 import {Button, Form, Modal} from 'react-bootstrap'
-import './FormatMaker.css'
+import './CubeMaker.css'
 
-export const FormatMaker = () => {
-    const [cardPool, setCardPool] = useState([])
-    const [format, setFormat] = useState({})
-    const [name, setName] = useState('New Card Pool')
-    const [customFormats, setCustomFormats] = useState([])
-    const [formats, setFormats] = useState([])
+// CUBE MAKER
+export const CubeMaker = () => {
+    const [cube, setCube] = useState({
+        name: 'New Cube',
+        cardPool: []
+    })
+
+    const [cubes, setCubes] = useState([])
     const [edited, setEdited] = useState(false)
     const [showOpenModal, setShowOpenModal] = useState(false)
     const [showSaveModal, setShowSaveModal] = useState(false)
@@ -34,39 +36,79 @@ export const FormatMaker = () => {
         }
     }
 
-    // SORT CARD POOL
-    const sortCardPool = () => {
-        setCardPool(cardPool.sort(sortFn))
+    // SORT CUBE
+    const sortCube = () => {
+        console.log('sortCube()')
+        const data = {
+            ...cube,
+            cardPool: cube.cardPool.sort(sortFn)
+        }
+
+        setCube(data)
+        setEdited(true)
+
+    }
+
+    // COPY CUBE
+    const copyCube = async () => {
+        if (edited || !cube.id) return alert('Save Cube before copying.')
+        setCube({
+            ...cube,
+            name: cube.name + ' (copy)',
+            id: null
+        })
+
         setEdited(true)
     }
 
-    // COPY CARD POOL
-    const copyCardPool = async () => {
-        if (edited || !cardPool.id) return alert('Save Format before copying.')
-        setName(name + ' (copy)')
-        setFormat({})
-        setEdited(true)
-    }
-
-    // SAVE CARD POOL
-    const saveCardPool = async () => {
-        const main = cardPool.main.map((card) => card.konamiCode)
+    // SAVE CUBE
+    const saveCube = async () => {
+        const name = document.getElementById('save-as-name') ? document.getElementById('save-as-name').value : cube.name
+        const main = cube.cardPool.map((card) => card.konamiCode)
         const ydk = ['created by...', '#main', ...main, ''].join('\n')
+        const playerId = getCookie('playerId')
 
-        if (format.id) {
+        if (!playerId) {
+            alert('Must be logged in to save a Cube.')
+        } else if (cube.id) {
             try {
-                await axios.put(`/api/formats/save-cardpool?id=${format.id}`, {
+                await axios.put(`/api/cubes/update/${cube.id}`, {
+                    name: name,
                     ydk: ydk
                 })
 
                 setEdited(false)
-                alert('Saved Card Pool!')
+                alert('Saved Cube!')
             } catch (err) {
                 console.log(err)
-                alert('Error saving Card Pool.')
+                if (err.response.status === 400) {
+                    alert('Name is already in use.')
+                } else {
+                    alert('Error Saving Cube.')
+                }
             }
         } else {
-            alert(`Please select a Format.`)
+            try {
+                const { data } = await axios.post(`/api/cubes/create`, {
+                    name: cube.name,
+                    playerId: playerId,
+                    ydk: ydk,
+                    display: false
+                })
+
+                setCube({
+                    ...cube,
+                    name: name,
+                    id: data.id
+                })
+
+                setEdited(false)
+                alert('Saved Cube!')
+                getCubes()
+            } catch (err) {
+                console.log(err)
+                alert('Error Saving Cube.')
+            }
         }
 
         setShowSaveModal(false)
@@ -77,26 +119,33 @@ export const FormatMaker = () => {
         const reader = new FileReader()
         reader.readAsBinaryString(file)
         reader.onloadend = async () => {
-            const { data } = await axios.put(`/api/formats/read-ydk`, {
-                name: file.name.slice(0, -4),
+            const { data } = await axios.put(`/api/cubes/read-ydk`, {
+                name: file?.name.slice(0, -4),
                 ydk: reader.result
             })
 
-            setCardPool(data)
+            setCube(data)
             setShowUploadModal(false)
         }
     }
 
-    // CLEAR CARD POOL
-    const clearCardPool = () => {
-        setCardPool([])
+    // CLEAR CUBE
+    const clearCube = () => {
+        setCube({
+            ...cube,
+            cardPool: []
+        })
+
         setEdited(true)
     }
 
-    // NEW CARD POOL
-    const newCardPool = () => {
-        setCardPool([])
-        setName('New Card Pool')
+    // NEW CUBE
+    const newCube = () => {
+        setCube({
+            name: 'New Cube',
+            cardPool: []
+        })
+        
         setEdited(false)
     }
 
@@ -104,11 +153,15 @@ export const FormatMaker = () => {
     const addCard = async (e, card) => {
         try {
             if (e.type === 'contextmenu') {
-                const cardIds = cardPool.map((card) => card.id)
+                const cardIds = cube.cardPool.map((card) => card.id)
                 if (cardIds.includes(card.id)) {
                     return
                 } else {
-                    setCardPool([...cardPool, card])
+                    setCube({
+                        ...cube,
+                        cardPool: [...cube.cardPool, card]  
+                    })
+
                     setEdited(true)
                 }
             }
@@ -121,8 +174,8 @@ export const FormatMaker = () => {
     const removeCard = async (e, index) => {
         try {
             if (e.type === 'contextmenu') {
-                cardPool.splice(index, 1)
-                setCardPool(cardPool)
+                cube.cardPool.splice(index, 1)
+                setCube({ ...cube })
                 setEdited(true)
             }
         } catch (err) {
@@ -130,55 +183,56 @@ export const FormatMaker = () => {
         }
     }
 
-    // UPDATE FORMAT
-    const updateFormat = async (formatName) => {
-        const {data} = await axios.get(`/api/formats/${formatName}`) 
-        setFormat(data.format)
-    }
-
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0), [])
 
-  // USE EFFECT SET DECK
-  useEffect(() => {
-    const fetchData = async () => {
+    // UPDATE CUBE
+    const updateCube = async (id) => {
+        console.log('updateCube()')
+        const {data} = await axios.get(`/api/cubes/${id}`) 
+        setCube(data.cube)
+    }
+
+
+    // GET CUBES
+    const getCubes = async () => {
         try {
-          const {data} = await axios.get(`/api/formats`)
-          setFormats(data)
+            const accessToken = getCookie('access')
+            if (!accessToken) {
+                alert('Must be logged in to open your Cubes.')
+            } else {
+                const {data} = await axios.get(`/api/cubes/my-cubes`, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
+                
+                setCubes(data)
+            }
         } catch (err) {
-          console.log(err)
+            console.log(err)
         }
     }
 
-    const fetchData2 = async () => {
-        try {
-          const {data} = await axios.get(`/api/formats?category=Custom`)
-          setCustomFormats(data)
-        } catch (err) {
-          console.log(err)
-        }
-    }
-
-    fetchData()
-    fetchData2()
-  }, [])
+  // USE EFFECT GET CUBES
+  useEffect(() => getCubes(), [])
 
   return (
     <>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossOrigin="anonymous"/>
     <link rel="stylesheet" href="/style.css" />
     <div className="body" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Modal show={showOpenModal} onHide={() => {setShowOpenModal(false); setControlPanelFormat(null)}}>
+        <Modal show={showOpenModal} onHide={() => {setShowOpenModal(false)}}>
             <Modal.Header closeButton>
-            <Modal.Title>Open Format:</Modal.Title>
+            <Modal.Title>Open Cube:</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form>
                     <Form.Group className="mb-3">
-                            <Form.Label>Format:</Form.Label>
-                            <Form.Select id="format-selector" style={{width: '200px'}} aria-label="Format:" onChange={(e) => {updateFormat(e.target.value); setShowOpenModal(false)}}>
+                            <Form.Label>Cube:</Form.Label>
+                            <Form.Select id="cube-selector" style={{width: '200px'}} aria-label="Cube:" onChange={(e) => {updateCube(e.target.value); setShowOpenModal(false)}}>
                             {
-                                customFormats.map((f) => <option key={f.name} value={f.name}>{f.name}</option>)
+                                cubes.map((c) => <option key={c.name} value={c.name}>{c.name}</option>)
                             }
                             </Form.Select>
                     </Form.Group>
@@ -209,36 +263,39 @@ export const FormatMaker = () => {
 
         <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
             <Modal.Header closeButton style={{width: '560px'}}>
-            <Modal.Title>{format.id ? 'Select Format:' : 'Save Deck:'}</Modal.Title>
+            <Modal.Title>{cube?.id ? 'Edit Name:' : 'Save Cube:'}</Modal.Title>
             </Modal.Header>
             <Modal.Body style={{width: '560px'}}>
                 <Form style={{width: '560px'}}>
                     <Form.Group className="mb-3">
-                        <Form.Label>Format:</Form.Label>
-                        <Form.Select 
-                            aria-label="Format:" 
-                            style={{width: '180px'}}
-                            defaultValue={format.name || ''}
-                            onChange={(e) => updateFormat(e.target.value)}
-                        >
-                        <option key={format.name} value={format.name}>{format.name}</option>
-                        {
-                            formats.filter((f) => !!f.banlist).map((f) => <option key={f.name} value={f.name}>{f.name}</option>)
-                        }
-                        </Form.Select>
+                        <Form.Label>Name:</Form.Label>
+                        <Form.Control
+                            type="name"
+                            id="save-as-name"
+                            defaultValue={cube.name}
+                            autoFocus
+                        />
                     </Form.Group>
                 </Form>
             </Modal.Body>
+            <Modal.Footer style={{width: '560px'}}>
+            <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
+                Cancel
+            </Button>
+            <Button variant="primary" onClick={() => saveCube()}>
+                Save
+            </Button>
+            </Modal.Footer>
         </Modal>        
 
     <div style={{display: 'flex', justifyContent: 'center', margin: '0px 5px 0px 15px'}}>
         <div className="builder-control-panel">
             <div 
                 className={"show-cursor control-panel-button"}
-                onClick={() => newCardPool()}
+                onClick={() => newCube()}
             >                                    
                 <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/new-file.png`} alt="new file"/></div> 
-                <div className="control-panel-text"><b>New Card Pool</b></div> 
+                <div className="control-panel-text"><b>New Cube</b></div> 
             </div>
             
             <div 
@@ -246,7 +303,7 @@ export const FormatMaker = () => {
                 onClick={() => setShowOpenModal(true)}
             >                                    
                 <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`} alt="open file"/></div> 
-                <div className="control-panel-text"><b>Open Card Pool</b></div> 
+                <div className="control-panel-text"><b>Open Cube</b></div> 
             </div> 
 
             <div 
@@ -254,61 +311,61 @@ export const FormatMaker = () => {
                 onClick={() => setShowUploadModal(true)}
             >                                    
                 <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/upload.png`} alt="upload"/></div> 
-                <div className="control-panel-text"><b>Upload Card Pool</b></div> 
+                <div className="control-panel-text"><b>Upload Cube</b></div> 
             </div>
 
             <div 
                 className={"show-cursor control-panel-button"}
-                onClick={() => clearCardPool()}
+                onClick={() => clearCube()}
             >                                    
                 <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/erase.png`} alt="clear"/></div> 
-                <div className="control-panel-text"><b>Clear Card Pool</b></div>
+                <div className="control-panel-text"><b>Clear Cube</b></div>
             </div> 
 
             <div 
                 className={"show-cursor control-panel-button"}
-                onClick={() => copyCardPool()}
+                onClick={() => copyCube()}
             >                  
                 <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/copy.png`} alt="copy"/></div> 
-                <div className="control-panel-text"><b>Copy Card Pool</b></div> 
+                <div className="control-panel-text"><b>Copy Cube</b></div> 
             </div> 
 
             <div 
                 className={"show-cursor control-panel-button"}
-                onClick={() => updateFormat(format.name)}
+                onClick={() => updateCube(cube?.id)}
             >                  
                 <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/revert.png`} alt="revert"/></div> 
-                <div className="control-panel-text"><b>Revert Card Pool</b></div> 
+                <div className="control-panel-text"><b>Revert Cube</b></div> 
             </div> 
 
             <div 
                 className={"show-cursor control-panel-button"}
-                onClick={() => sortCardPool()}
+                onClick={() => sortCube()}
             >                         
                 <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/sort.png`} alt="sort"/></div> 
-                <div className="control-panel-text"><b>Sort Card Pool</b></div> 
+                <div className="control-panel-text"><b>Sort Cube</b></div> 
             </div>
 
             <div 
                 className={"show-cursor control-panel-button"}
-                onClick={() => format.id ? saveCardPool() : setShowSaveModal(true)}
+                onClick={() => cube?.id ? saveCube() : setShowSaveModal(true)}
             >                  
                 <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/save.png`} alt="save"/></div> 
-                <div className="control-panel-text"><b>Save Card Pool</b></div> 
+                <div className="control-panel-text"><b>Save Cube</b></div> 
             </div> 
         </div>
 
         <div>
             <div className="single-deck-title-flexbox">
                 <div style={{width: '80px'}}/>
-                <div className="single-deck-title">{format.name + ' Card Pool' || 'New Card Pool'} <img style={{width:'32px', margin: '10px 20px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon || 'master'}.png`} alt={format.icon || 'millennium-puzzle'}/></div>
+                <div className="single-deck-title">{cube.name || 'New Cube'} <img style={{width:'32px', margin: '10px 20px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube?.icon || 'master'}.png`} alt={cube?.icon || 'millennium-puzzle'}/></div>
                 <div style={{width: '80px', color: '#CBC5C3', margin: '0px', alignSelf: 'center'}}>{edited ? <i>Edited</i> : ''}</div>
             </div>
 
             <div id="main" className="deck-bubble">
                 <div id="main" className="deck-flexbox">
                 {
-                    cardPool.map((card, index) => {
+                    cube.cardPool.map((card, index) => {
                         if (!card) {
                             return <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${index}`}/>
                         } else {
@@ -317,21 +374,21 @@ export const FormatMaker = () => {
                     })
                 }
                 {
-                    cardPool.length < 40 ? [...Array(40 - cardPool.length)].map((x, i) => <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>) :
-                    cardPool.length % 10 ? [...Array(10 -  cardPool.length % 10)].map((x, i) => <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>) :
+                    cube.cardPool.length < 40 ? [...Array(40 - cube.cardPool.length)].map((x, i) => <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>) :
+                    cube.cardPool.length % 10 ? [...Array(10 -  cube.cardPool.length % 10)].map((x, i) => <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>) :
                     ''
                 }
                 </div>
             </div>
             
                 {
-                    format.id ? (
+                    cube?.id ? (
                         <div className="builder-bottom-panel">                     
                             <div>
                                 <a
                                     className="link"
-                                    href={`/api/formats/download/${format.id}`} 
-                                    download={`${format.name}-cardpool.ydk`}
+                                    href={`/api/formats/download/${cube?.id}`} 
+                                    download={`${cube.name}-cardpool.ydk`}
                                 >                                    
                                     <div className="deck-button">
                                         <b style={{padding: '0px 6px'}}>Download</b>
@@ -344,7 +401,7 @@ export const FormatMaker = () => {
                 }
             </div>
         </div>
-        <SearchPanel addCard={addCard} formats={formats}/>
+        <SearchPanel addCard={addCard}/>
     </div>
     </>
   )

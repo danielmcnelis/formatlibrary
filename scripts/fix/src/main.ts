@@ -1,4 +1,4 @@
-import { Card, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Replay, Server, Stats, Status, Tournament } from '@fl/models'
+import { Card, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Print, Replay, Server, Stats, Status, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { config } from '@fl/config' 
@@ -461,47 +461,91 @@ import { config } from '@fl/config'
 // })()
 
 
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+    
+//     const replays = await Replay.findAll({
+//         where: {
+//             eventId: {[Op.not]: null}
+//         },
+//         include: Event
+//     })
+
+//     for (let i = 0; i < replays.length; i++) {
+//         try {
+//             const replay = replays[i]
+//             const winningDeck = await Deck.findOne({
+//                 where: {
+//                     playerId: replay.winnerId,
+//                     eventId: replay.eventId
+//                 }
+//             })
+
+//             const losingDeck = await Deck.findOne({
+//                 where: {
+//                     playerId: replay.loserId,
+//                     eventId: replay.eventId
+//                 }
+//             })
+
+//             await replay.update({ 
+//                 winningDeckType: winningDeck.type,
+//                 winningDeckId: winningDeck.id,
+//                 losingDeckType: losingDeck.type,
+//                 losingDeckId: losingDeck.id,
+//                 publishDate: replay.event.endDate 
+//             })
+//             b++
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     return console.log(`updated ${b} replays and encountered ${e} errors`)
+// })()
+
+
 ;(async () => {
     let b = 0
     let e = 0
     
-    const replays = await Replay.findAll({
+    const sets = await Set.findAll({
         where: {
-            eventId: {[Op.not]: null}
+            name: {[Op.substring]: 'Speed Duel'}
         },
-        include: Event
+        order: [['tcgDate', 'ASC']]
     })
 
-    for (let i = 0; i < replays.length; i++) {
+    for (let i = 0; i < sets.length; i++) {
         try {
-            const replay = replays[i]
-            const winningDeck = await Deck.findOne({
+            const set = sets[i]
+            const prints = await Print.findAll({
                 where: {
-                    playerId: replay.winnerId,
-                    eventId: replay.eventId
-                }
+                    setId: set.id
+                },
+                include: Card
             })
 
-            const losingDeck = await Deck.findOne({
-                where: {
-                    playerId: replay.loserId,
-                    eventId: replay.eventId
-                }
-            })
+            for (let j = 0; j < prints.length; j++) {
+                const print = prints[i]
+                const card = print.card
+                
+                if (!card.speedLegal) {
+                    await card.update({
+                        speedLegal: true,
+                        speedDate: set.tcgDate
+                    })
 
-            await replay.update({ 
-                winningDeckType: winningDeck.type,
-                winningDeckId: winningDeck.id,
-                losingDeckType: losingDeck.type,
-                losingDeckId: losingDeck.id,
-                publishDate: replay.event.endDate 
-            })
-            b++
+                    b++
+                }
+            }
         } catch (err) {
             console.log(err)
             e++
         }
     }
 
-    return console.log(`updated ${b} replays and encountered ${e} errors`)
+    return console.log(`updated ${b} cards from ${sets.length} speed duel sets and encountered ${e} errors`)
 })()

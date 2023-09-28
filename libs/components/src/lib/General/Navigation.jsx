@@ -38,16 +38,13 @@ export const Navigation = (props) => {
     
     return (
         <div className="nav-bar">
-            <Link to="/">
+            <Link to="/" state={{ page: 1 }}>
                 <div id="logo">
                     <img src={'https://cdn.formatlibrary.com/images/logos/Format Library.png'} alt="logo"/>
                     <h1>Format Library</h1>
                 </div>
             </Link>
             <div id="nav-menu">
-                <Link to="/" state={{ page: 1 }}>
-                    <h2 className="nav-header">HOME</h2>
-                </Link>
                 <Link to="/cards/">
                     <h2 className="nav-header">CARDS</h2>
                 </Link>
@@ -107,9 +104,6 @@ export const Navigation = (props) => {
                 <div id="hamburger-button" className="open-menu" style={{fontSize: '44px'}}>
                     ⌄
                 </div>
-                <Link to="/" state={{ page: 1 }}>
-                    <h3 className="hamburger-header">Home</h3>
-                </Link>
                 <Link to="/cards/">
                     <h3 className="hamburger-header">Cards</h3>
                 </Link>

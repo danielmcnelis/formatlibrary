@@ -285,8 +285,11 @@ export const SingleCard = () => {
                         <td id="def-td" className="single-card-label-td"><span>DEF: </span>{card.def}</td>
                       </tr>
                       <tr className="single-card-date-row">
-                        <td colSpan="5">
-                          Release Date: {dateToVerbose(card.tcgDate, false, false)}
+                        <td colSpan="3">
+                          TCG Release: {dateToVerbose(card.tcgDate, false, false)}
+                        </td>
+                        <td colSpan="3">
+                          OCG Release: {dateToVerbose(card.ocgDate, false, false)}
                         </td>
                       </tr>
                     </tbody>
@@ -328,8 +331,11 @@ export const SingleCard = () => {
                         </td>
                       </tr>
                       <tr className="single-card-date-row">
-                        <td colSpan="5">
-                          Release Date: {dateToVerbose(card.tcgDate, false, false)}
+                        <td colSpan="3">
+                          TCG Release: {dateToVerbose(card.tcgDate, false, false)}
+                        </td>
+                        <td colSpan="3">
+                          OCG Release: {dateToVerbose(card.ocgDate, false, false)}
                         </td>
                       </tr>
                     </tbody>
@@ -337,7 +343,7 @@ export const SingleCard = () => {
                 </table>
               </div>
               <div className="status-flexbox">
-                <div>Status History:</div>
+                <div>TCG Status History:</div>
                 <div className="status-box">
                   {banlists.map((b) => {
                     const banlist = b[0]
@@ -348,25 +354,29 @@ export const SingleCard = () => {
                 </div>
               </div>
               <div className="prints-flexbox">
-                <div>Prints:</div>
-                <div className="print-box">
-                  <table>
-                    <tbody>
-                      {prints.map((print, index) => <PrintRow key={print.id} index={index} print={print}/>)}
-                    </tbody>
-                  </table>
+                {prints?.length ? (
+                    <>
+                        <div>Prints:</div>
+                        <div className="print-box">
+                        <table>
+                            <tbody>
+                            {prints.map((print, index) => <PrintRow key={print.id} index={index} print={print}/>)}
+                            </tbody>
+                        </table>
+                        </div>
+                    </>
+                ) : ''}
                 </div>
-              </div>
 
               <div className="prints-flexbox">
                 {rulings?.generic?.length ? (
-                    <div>
+                    <>
                         <div>Generic Rulings:</div>
                         <div>
                             {rulings.generic.map((ruling) => <li className="ruling">{ruling.content}</li>)}
                         </div>
                         <br/>
-                    </div>
+                    </>
                 ) : ''}
                 <div> 
                     {rulings && rulings.specific && Object.keys(rulings.specific).length ? (

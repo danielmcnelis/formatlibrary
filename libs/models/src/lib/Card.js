@@ -25,6 +25,9 @@ export const Card = db.define('cards', {
   ocgLegal: {
     type: Sequelize.BOOLEAN
   },
+  speedLegal: {
+    type: Sequelize.BOOLEAN
+  },
   category: {
     type: Sequelize.STRING
   },
@@ -106,6 +109,9 @@ export const Card = db.define('cards', {
   ocgDate: {
     type: Sequelize.STRING
   },
+  speedDate: {
+    type: Sequelize.STRING
+  },
   color: {
     type: Sequelize.STRING
   },
@@ -122,7 +128,7 @@ Card.countResults = async (filter = {}, booster) => {
         let value = by.value
         if (typeof value === 'string') value.replaceAll('%20', ' ')
         let operator = by.operator
-        if (['tcgLegal', 'ocgLegal', 'normal', 'effect', 'fusion', 'ritual', 'synchro', 'xyz', 'pendulum', 'link', 'flip', 'gemini', 'spirit', 'toon', 'tuner', 'union', 'extraDeck'].includes(key)) { value = value.toLowerCase() === 'true' }
+        if (['tcgLegal', 'ocgLegal', 'speedLegal', 'normal', 'effect', 'fusion', 'ritual', 'synchro', 'xyz', 'pendulum', 'link', 'flip', 'gemini', 'spirit', 'toon', 'tuner', 'union', 'extraDeck'].includes(key)) { value = value.toLowerCase() === 'true' }
         if (['level', 'rating', 'scale', 'sortPriority'].includes(key) && operator !== 'btw') { value = parseInt(value) }
         
         if (operator === 'eq') {
@@ -173,7 +179,7 @@ Card.find = async (filter = {}, booster, limit = 10, page = 1, sort = []) => {
         let value = by.value
         if (typeof value === 'string') value.replaceAll('%20', ' ')
         let operator = by.operator
-        if (['tcgLegal', 'ocgLegal', 'normal', 'effect', 'fusion', 'ritual', 'synchro', 'xyz', 'pendulum', 'link', 'flip', 'gemini', 'spirit', 'toon', 'tuner', 'union', 'extraDeck'].includes(key)) { value = value.toLowerCase() === 'true' }
+        if (['tcgLegal', 'ocgLegal', 'speedLegal', 'normal', 'effect', 'fusion', 'ritual', 'synchro', 'xyz', 'pendulum', 'link', 'flip', 'gemini', 'spirit', 'toon', 'tuner', 'union', 'extraDeck'].includes(key)) { value = value.toLowerCase() === 'true' }
         if (['level', 'rating', 'scale', 'sortPriority'].includes(key) && operator !== 'btw') { value = parseInt(value) }
 
         if (operator === 'eq') {
@@ -213,7 +219,7 @@ Card.find = async (filter = {}, booster, limit = 10, page = 1, sort = []) => {
         offset: (page - 1) * limit,
         limit: limit,
         subQuery: false,
-        attributes: { exclude: ['tcgLegal', 'ocgLegal', 'ocgDate', 'createdAt', 'updatedAt'] },
+        attributes: { exclude: ['tcgLegal', 'ocgLegal', 'ocgDate', 'speedLegal', 'speedDate', 'createdAt', 'updatedAt'] },
         include: [{ model: Print, separate: !booster, attributes: ['id'] }],
         order: sort
     })

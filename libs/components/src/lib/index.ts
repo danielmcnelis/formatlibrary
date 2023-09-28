@@ -1,6 +1,7 @@
 
 export * from './Admin/AdminPortal'
 export * from './Builder/Builder'
+export * from './Builder/CubeMaker'
 export * from './Builder/FormatMaker'
 export * from './Cards/CardTable'
 export * from './Cards/SingleCard'

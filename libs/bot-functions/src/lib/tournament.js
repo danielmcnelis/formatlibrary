@@ -1101,7 +1101,7 @@ export const getParticipants = async (server, tournamentId) => {
     } catch (err) {
         console.log(err)
         return []
-    }
+    }   
 }
 
 //GET PAIRING

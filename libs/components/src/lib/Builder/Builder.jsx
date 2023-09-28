@@ -130,8 +130,11 @@ export const Builder = () => {
         const side = deck.side.map((card) => card.konamiCode)
         const extra = deck.extra.map((card) => card.konamiCode)
         const ydk = ['created by...', '#main', ...main, '#extra', ...extra, '!side', ...side, ''].join('\n')
+        const playerId = getCookie('playerId')
 
-        if (deck.id) {
+        if (!playerId) {
+            alert('Must be logged in to save Deck.')
+        } else if (deck.id) {
             try {
                 await axios.put(`/api/decks/update/${deck.id}`, {
                     name: name,
@@ -162,7 +165,7 @@ export const Builder = () => {
             try {
                 const { data } = await axios.post(`/api/decks/create`, {
                     name: name,
-                    playerId: getCookie('playerId'),
+                    playerId: playerId,
                     type: deck.type,
                     deckTypeId: deck.deckTypeId,
                     category: deck.category,
@@ -196,7 +199,6 @@ export const Builder = () => {
                 }
             }
         }
-
 
         setShowSaveModal(false)
     }

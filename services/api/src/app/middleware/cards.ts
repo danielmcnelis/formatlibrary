@@ -80,7 +80,7 @@ export const cardsId = async (req, res, next) => {
                     cleanName: {[Op.iLike]: id}
                 }
             },
-            attributes: { exclude: ['konamiCode', 'tcgLegal', 'ocgLegal', 'ocgDate', 'extraDeck', 'createdAt', 'updatedAt'] }
+            attributes: { exclude: ['konamiCode', 'tcgLegal', 'ocgLegal', 'extraDeck', 'createdAt', 'updatedAt'] }
         })
 
         const statuses =
