@@ -3,10 +3,14 @@ import { Op } from 'sequelize'
 
 // CUBES ID
 export const cubesId = async (req, res, next) => {
+    console.log('cubesIUd()')
     try {
       const id = parseInt(req.params.id)
       const shareLink = req.params.id
-      const isAdmin = req.query.isAdmin
+      const isAdmin = req.query?.isAdmin
+      console.log('id', id)
+      console.log('shareLink', shareLink)
+      console.log('isAdmin', isAdmin)
       
       const cube = await Cube.findOne({
           where: !isNaN(id) && isAdmin === 'true' ? {
@@ -33,28 +37,30 @@ export const cubesId = async (req, res, next) => {
               { model: Player, attributes: ['id', 'name', 'discriminator', 'discordName', 'discordId', 'discordPfp'] }
           ]
       })
+
+      console.log('!!cube', !!cube)
   
       if (!cube) return res.sendStatus(404)
   
-      const main = []
-      const mainKonamiCodes = cube.ydk
+      const cardPool = []
+      const konamiCodes = cube.ydk
         .split('#main')[1]
         .split('#extra')[0]
         .split('\n')
         .filter((e) => e.length)
   
-      for (let i = 0; i < mainKonamiCodes.length; i++) {
-        let konamiCode = mainKonamiCodes[i]
+      for (let i = 0; i < konamiCodes.length; i++) {
+        let konamiCode = konamiCodes[i]
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode
         const card = await Card.findOne({
           where: {
             konamiCode: konamiCode
           },
-          attributes: ['name', 'id', 'ypdId', 'sortPriority']
+          attributes: { exclude: ['tcgLegal', 'ocgLegal', 'ocgDate', 'speedLegal', 'speedDate', 'createdAt', 'updatedAt'] },
         })
   
         if (!card) continue
-        main.push(card)
+        cardPool.push(card)
       }
   
       const sortFn = (a, b) => {
@@ -71,14 +77,14 @@ export const cubesId = async (req, res, next) => {
         }
       }
   
-      main.sort(sortFn)
+      cardPool.sort(sortFn)
   
       cube.views++
       await cube.save()
   
       const data = {
         ...cube.dataValues,
-        main
+        cardPool
       }
   
       res.json(data)
@@ -88,7 +94,6 @@ export const cubesId = async (req, res, next) => {
   }
 
 export const cubesReadYdk = async (req, res, next) => {
-    console.log('cubesReadYdk()')
     try {
         const cardPool = []
         const konamiCodes = req.body.ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length)

@@ -38,7 +38,6 @@ export const CubeMaker = () => {
 
     // SORT CUBE
     const sortCube = () => {
-        console.log('sortCube()')
         const data = {
             ...cube,
             cardPool: cube.cardPool.sort(sortFn)
@@ -119,13 +118,10 @@ export const CubeMaker = () => {
         const reader = new FileReader()
         reader.readAsBinaryString(file)
         reader.onloadend = async () => {
-            console.log(`file?.name.slice(0, -4)`, file?.name.slice(0, -4))
             const { data } = await axios.put(`/api/cubes/read-ydk`, {
                 name: file?.name.slice(0, -4),
                 ydk: reader.result
             })
-
-            console.log('data', data)
 
             setCube(data)
             setShowUploadModal(false)
@@ -191,7 +187,6 @@ export const CubeMaker = () => {
 
     // UPDATE CUBE
     const updateCube = async (id) => {
-        console.log('updateCube()')
         const {data} = await axios.get(`/api/cubes/${id}`) 
         setCube(data.cube)
     }
