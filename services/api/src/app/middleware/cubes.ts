@@ -88,12 +88,13 @@ export const cubesId = async (req, res, next) => {
   }
 
 export const cubesReadYdk = async (req, res, next) => {
+    console.log('cubesReadYdk()')
     try {
-        const main = []
-        const mainKonamiCodes = req.body.ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length)
+        const cardPool = []
+        const konamiCodes = req.body.ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length)
         
-        for (let i = 0; i < mainKonamiCodes.length; i++) {
-            let konamiCode = mainKonamiCodes[i]
+        for (let i = 0; i < konamiCodes.length; i++) {
+            let konamiCode = konamiCodes[i]
             while (konamiCode.length < 8) konamiCode = '0' + konamiCode
             const card = await Card.findOne({ 
                 where: { 
@@ -103,12 +104,12 @@ export const cubesReadYdk = async (req, res, next) => {
             })
 
             if (!card) continue
-            main.push(card)
+            cardPool.push(card)
         }
 
         const data = {
             name: req.body.name,
-            main
+            cardPool
         }
 
         res.json(data)
@@ -167,9 +168,6 @@ export const cubesUpdateId = async (req, res, next) => {
 }
 
 export const cubesCreate = async (req, res, next) => {
-    console.log('cubesCreate()')
-    console.log('req.body', req.body)
-    
     try {
       const player = await Player.findOne({ where: { id: req.body.playerId } })
   
