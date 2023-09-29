@@ -500,7 +500,41 @@ export const updatePrints = async (set, groupId) => {
                 })
     
                 if (!count) {
-                    const name = result.name.replace(/ *\([^)]*\) */g, '')
+                    let name = result.name.replace(/ *\([^)]*\) */g, '')
+                    if (
+                        name.includes('Booster Pack') ||
+                        name.includes('Booster Box') ||
+                        name.includes('Booster Case') ||
+                        name.includes('Blister Pack') ||
+                        name.includes('Mega Pack') ||
+                        name.includes('Millennium Pack') ||
+                        name.includes('Retro Pack') ||
+                        name.includes('Duelist Pack') ||
+                        name.includes('Tournament Pack') ||
+                        name.includes('Champion Pack') ||
+                        name.includes('Premium Pack') ||
+                        name.includes('Turbo Pack') ||
+                        name.includes('Starter Deck') ||
+                        name.includes('Structure Deck') ||
+                        name.includes('Display Box') ||
+                        name.includes('Box Display') ||
+                        name.includes('Box Set') ||
+                        name.includes('Promo Pack') ||
+                        name.includes('Special Edition') || 
+                        name.includes('Deluxe Edition') ||  
+                        name.includes('Master Collection') || 
+                        name.includes('Legendary Collection') || 
+                        name.includes('Collector\'s Set') || 
+                        name.includes('Collector Set') || 
+                        name.includes('God Deck') || 
+                        name.includes('[1st Edition]') ||
+                        name.includes('[Limited Edition]') ||
+                        name.includes('[Unlimited Edition]') ||
+                        name.includes('Art Token') ||
+                        name.includes('Field Center Token')
+                    ) continue
+
+                    if (name.startsWith('Token: ')) name = name.slice(7) + ' Token'
                         
                     const card = await Card.findOne({
                         where: {
@@ -890,10 +924,12 @@ export const updateSets = async () => {
                 }
 
                 if (set && set.tcgPlayerGroupId) {
-                    console.log(`updating size of ${set.setName} from ${set.size} to ${datum.num_of_cards}`)
-                    set.size = datum.num_of_cards
-                    await set.save()
-                    c++
+                    if (set.size !== datum.num_of_cards) {
+                        console.log(`updating size of ${set.setName} from ${set.size} to ${datum.num_of_cards}`)
+                        set.size = datum.num_of_cards
+                        await set.save()
+                        c++
+                    }
 
                     try {
                         await updatePrints(set, set.tcgPlayerGroupId)
