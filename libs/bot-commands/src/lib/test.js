@@ -16,6 +16,10 @@ export default {
         if (isProgrammer(interaction.member)) {
             const data = await interaction.guild.invites.fetch()
             console.log('data', data)
+            for (const [, value] of data.entries()) {
+                console.log(value.createdTimestamp, new Date(value.createdTimestamp))
+              }
+
             await interaction.editReply(emojis.yellow)
         } else {
             await interaction.editReply('🧪')
