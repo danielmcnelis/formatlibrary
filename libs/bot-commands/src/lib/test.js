@@ -21,7 +21,7 @@ export default {
                 arr.push({inviterId: value.inviterId, timestamp: value.createdTimestamp, date: new Date(value.createdTimestamp)})
             }
 
-            console.log(arr.sort((a, b) => b.timestamp - a.timestamp))
+            console.dir(arr.sort((a, b) => b.timestamp - a.timestamp), {'maxArrayLength': null})
             await interaction.editReply(emojis.yellow)
         } else {
             await interaction.editReply('🧪')
