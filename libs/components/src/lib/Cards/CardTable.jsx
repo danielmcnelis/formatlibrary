@@ -133,6 +133,9 @@ export const CardTable = () => {
       if (queryParams.name) filter += `,name:inc:${queryParams.name}`
       if (queryParams.category) filter += `,category:eq:${queryParams.category}`
       if (queryParams.description) filter += `,description:inc:${queryParams.description}`
+      if (queryParams.region === 'speed') filter += `,speedLegal:eq:true`
+      if (queryParams.region === 'tcg' || queryParams.region === 'union') filter += `,tcgLegal:eq:true`
+      if (queryParams.region === 'ocg' || queryParams.region === 'union') filter += `,ocgLegal:eq:true`
   
       const icons = Object.entries(iconParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
       const attributes = Object.entries(attributeParams).filter((e) => !!e[1]).map((e) => e[0].toUpperCase())
@@ -179,6 +182,9 @@ export const CardTable = () => {
       if (queryParams.name) headers.name = queryParams.name
       if (queryParams.category) filter += `,category:eq:${queryParams.category}`
       if (queryParams.description) headers.description = queryParams.description
+      if (queryParams.region === 'speed') filter += `,speedLegal:eq:true`
+      if (queryParams.region === 'tcg' || queryParams.region === 'union') filter += `,tcgLegal:eq:true`
+      if (queryParams.region === 'ocg' || queryParams.region === 'union') filter += `,ocgLegal:eq:true`
   
       const icons = Object.entries(iconParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
       const attributes = Object.entries(attributeParams).filter((e) => !!e[1]).map((e) => e[0].toUpperCase())
@@ -525,7 +531,8 @@ export const CardTable = () => {
                         >
                             <option value="tcg">TCG</option>
                             <option value="ocg">OCG</option>
-                            <option value="union">Union</option>
+                            <option value="union">TCG + OCG</option>
+                            <option value="speed">Speed</option>
                         </select>
 
                         <select
@@ -604,6 +611,7 @@ export const CardTable = () => {
                             <option value="tcg">TCG Only</option>
                             <option value="ocg">OCG Only</option>
                             <option value="union">TCG + OCG</option>
+                            <option value="speed">Speed Duel</option>
                         </select>
 
                         <select
