@@ -511,7 +511,7 @@ import { config } from '@fl/config'
     let b = 0
     let e = 0
     
-    const sets = await Print.findAll({
+    const sets = await Set.findAll({
         where: {
             setName: {[Op.substring]: 'Speed Duel'}
         },
