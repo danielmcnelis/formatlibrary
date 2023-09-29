@@ -15,11 +15,13 @@ export default {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
             const data = await interaction.guild.invites.fetch()
-            console.log('data', data)
-            for (const [, value] of data.entries()) {
-                console.log(value.createdTimestamp, new Date(value.createdTimestamp))
-              }
+            const arr = []
 
+            for (const [, value] of data.entries()) {
+                arr.push({inviterId: value.inviterId, timestamp: value.createdTimestamp, date: new Date(value.createdTimestamp)})
+            }
+
+            console.log(arr.sort((a, b) => b.timestamp - a.timestamp))
             await interaction.editReply(emojis.yellow)
         } else {
             await interaction.editReply('🧪')
