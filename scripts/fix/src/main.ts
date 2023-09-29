@@ -549,3 +549,35 @@ import { config } from '@fl/config'
 
     return console.log(`updated ${b} cards from ${sets.length} speed duel sets and encountered ${e} errors`)
 })()
+
+
+
+;(async () => {
+    let b = 0
+    let e = 0
+    
+    const cards = await Card.findAll({
+        where: {
+            category: 'Skill'
+        }
+    })
+
+    for (let i = 0; i < cards.length; i++) {
+        try {
+            const card = cards[i]
+            await card.update({
+                tcgLegal: false,
+                tcgDate: null,
+                ocgLegal: false,
+                ocgDate: null
+            })
+
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    return console.log(`fixed ${b} skill cards and encountered ${e} errors`)
+})()
