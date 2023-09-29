@@ -500,30 +500,62 @@ export const updatePrints = async (set, groupId) => {
                 })
     
                 if (!count) {
-                    let name = result.name.replace(/ *\([^)]*\) */g, '')
+                    let name = result.name.replace(/ *\[^]*\) */g, '')
+                    if (name.includes(' (Super Rare)')) name = name.replace(' (Super Rare)', '')
+
                     if (
+                        name.includes('Yu-Gi-Oh!') ||
                         name.includes('Booster Pack') ||
                         name.includes('Booster Box') ||
                         name.includes('Booster Case') ||
                         name.includes('Blister Pack') ||
+                        name.includes('Power Box') ||
                         name.includes('Mega Pack') ||
                         name.includes('Millennium Pack') ||
                         name.includes('Retro Pack') ||
                         name.includes('Duelist Pack') ||
+                        name.includes('Battle Pack') ||
                         name.includes('Tournament Pack') ||
                         name.includes('Champion Pack') ||
                         name.includes('Anniversary Pack') ||
                         name.includes('Premium Pack') ||
+                        name.includes('Premium Gold') ||
                         name.includes('Turbo Pack') ||
                         name.includes('Starter Deck') ||
                         name.includes('Structure Deck') ||
+                        name.includes('Anniversary Tin') ||
+                        name.includes('Sarcophagus Tin') ||
+                        name.includes('Collectors Tin') ||
+                        name.includes('Collector\'s Tin') ||
+                        name.includes('2020 Tin') ||
+                        name.includes('2021 Tin') ||
+                        name.includes('2022 Tin') ||
+                        name.includes('2023 Tin') ||
+                        name.includes('2024 Tin') ||
+                        name.includes('2026 Tin') ||
+                        name.includes('2027 Tin') ||
+                        name.includes('2028 Tin') ||
+                        name.includes('2029 Tin') ||
                         name.includes('Display Box') ||
+                        name.includes('Academy Box') ||
+                        name.includes('Devastator Box') ||
+                        name.includes('Saga Box') ||
                         name.includes('Box Display') ||
                         name.includes('Box Set') ||
+                        name.includes('Value Box') ||
+                        name.includes('Speed Duel Deck') ||
+                        name.includes('Battle City Box') ||
+                        name.includes('Mini Box') ||
+                        name.includes('Starter Display') ||
+                        name.includes('Mavens Box') ||
                         name.includes('Promo Pack') ||
+                        name.includes('Master\'s Guide') || 
+                        name.includes('Advance Edition') || 
                         name.includes('Special Edition') || 
+                        name.includes('Domination Display') || 
                         name.includes('Deluxe Edition') ||  
                         name.includes('Master Collection') || 
+                        name.includes('Hero Collection') ||
                         name.includes('Legendary Collection') || 
                         name.includes('Collector\'s Set') || 
                         name.includes('Collector Set') || 
