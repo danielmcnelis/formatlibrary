@@ -18,8 +18,8 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         const opponent = interaction.options.getUser('opponent')
-        const member = await interaction.guild.members.fetch(interaction.user.id)
-        const winner = await interaction.guild.members.fetch(opponent.id)
+        const member = await interaction.guild?.members.fetch(interaction.user.id)
+        const winner = await interaction.guild?.members.fetch(opponent.id)
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)

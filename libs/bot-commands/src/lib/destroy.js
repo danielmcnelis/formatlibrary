@@ -40,7 +40,7 @@ export default {
                         const playerId = entry.player.id
                         await entry.destroy()
                         
-                        const member = await interaction.guild.members.fetch(discordId)
+                        const member = await interaction.guild?.members.fetch(discordId)
                         if (!member) continue
 
                         const count = await Entry.count({ 

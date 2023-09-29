@@ -20,7 +20,7 @@ export default {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const user = interaction.options.getUser('player')
-        const member = await interaction.guild.members.fetch(user.id)
+        const member = await interaction.guild?.members.fetch(user.id)
 
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})

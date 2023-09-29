@@ -15,7 +15,7 @@ export default {
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.reply({ content: `Try using **/role** in channels like: <#414575168174948372> or <#629464112749084673>.`})    
         const roleId = server.rankedRole || format.role
-        const discordRole = await interaction.guild.roles.cache.find((role) => role.id === roleId)
+        const discordRole = await interaction.guild?.roles.cache.find((role) => role.id === roleId)
 
         const membership = await Membership.findOne({ where: { '$player.discordId$': interaction.user.id, serverId: interaction.guildId }, include: Player })
         if (!membership) return await interaction.reply({ content: `You are not in the database.`})

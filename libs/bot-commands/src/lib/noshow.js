@@ -23,7 +23,7 @@ export default {
         if (!format) return await interaction.editReply({ content: `Try using **/noShow** in channels like: <#414575168174948372> or <#629464112749084673>.`})
 
         const noShow = interaction.options.getUser('player')
-        const noShowMember = await interaction.guild.members.fetch(noShow.id)
+        const noShowMember = await interaction.guild?.members.fetch(noShow.id)
         if ((noShowMember && noShow.bot)) return await interaction.editReply({ content: `Sorry, Bots do not play ${format.name} Format... *yet*.`})
         if (noShowMember && await isNewUser(noShow.id)) await createPlayer(noShow)
 
@@ -52,7 +52,7 @@ export default {
         const winningEntry = await Entry.findOne({ where: { participantId: winnerParticipantId, tournamentId: tournament.id }, include: Player })
         if (!winningEntry) return await interaction.editReply({ content: `Error: could not find opponent.`})
         const winningPlayer = winningEntry.player
-        const winner = await interaction.guild.members.fetch(winningPlayer.discordId)
+        const winner = await interaction.guild?.members.fetch(winningPlayer.discordId)
         const success = await processMatchResult(server, interaction, winner, winningPlayer, noShow, noShowPlayer, tournament, format, true)
         if (!success) return
 

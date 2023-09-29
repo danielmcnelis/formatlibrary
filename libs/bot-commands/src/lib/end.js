@@ -199,7 +199,7 @@ export default {
                     })
 
                     if (!count) {
-                        const member = await interaction.guild.members.fetch(discordId)
+                        const member = await interaction.guild?.members.fetch(discordId)
                         if (!member) continue
                         console.log(`Removing ${playerName}'s tournament role on ${server.name}.`)
                         member.roles.remove(server.tourRole)

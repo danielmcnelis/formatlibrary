@@ -478,7 +478,7 @@ export const joinTournament = async (interaction, tournamentId) => {
             }
         })
         
-        return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (${team.name}) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+        return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (${team.name}) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else if (!entry && !tournament.isTeamTournament) {
         if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
             return interaction.member.send({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
@@ -530,7 +530,7 @@ export const joinTournament = async (interaction, tournamentId) => {
             }
         })
 
-        return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+        return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else if (entry && entry.active === false && tournament.isTeamTournament) {
         await entry.update({
             url: data.url,
@@ -549,7 +549,7 @@ export const joinTournament = async (interaction, tournamentId) => {
             }
         })
 
-        return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+        return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else if (entry) {
         if (!entry.participantId) {
             const { participant } = await postParticipant(server, tournament, player).catch((err) => console.log(err))
@@ -574,7 +574,7 @@ export const joinTournament = async (interaction, tournamentId) => {
             }
         })
         
-        return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> resubmitted their deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+        return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> resubmitted their deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     }
 }
 
@@ -582,7 +582,7 @@ export const joinTournament = async (interaction, tournamentId) => {
 // SIGNUP FOR TOURNAMENT 
 export const signupForTournament = async (interaction, tournamentId, userId) => {
     if (!userId) userId = await interaction.options.getUser('player').id
-    const member = await interaction.guild.members.fetch(userId)
+    const member = await interaction.guild?.members.fetch(userId)
 
     const player = await Player.findOne({
         where: {
@@ -638,7 +638,7 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
 
         member.roles.add(server.tourRole).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need for ${player.globalName || player.discordName}.` }).catch((err) => console.log(err))
-        return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+        return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else if (entry && entry.active === false) {
         const { participant } = await postParticipant(server, tournament, player)
         if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
@@ -652,11 +652,11 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
 
         member.roles.add(server.tourRole).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need for ${player.globalName || player.discordName}.` }).catch((err) => console.log(err))
-        return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+        return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else if (entry && entry.active === true) {
         await entry.update({ url: data.url, ydk: data.ydk || data.opdk })
         interaction.member.send({ content: `Thanks! I have ${player.globalName || player.discordName}'s updated deck list for the tournament.` }).catch((err) => console.log(err))
-        return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `A moderator resubmitted <@${player.discordId}>'s deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))   
+        return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator resubmitted <@${player.discordId}>'s deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))   
     }
 }
 
@@ -1253,7 +1253,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                 }
 
                 try {
-                    const member = await interaction.guild.members.fetch(loserNextOpponent.player.discordId)
+                    const member = await interaction.guild?.members.fetch(loserNextOpponent.player.discordId)
                     const name = losingPlayer.globalName || `${losingPlayer.discordName}#${losingPlayer.discriminator}`
                     member.user.send(`New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${name}\nDuelingBook: ${losingPlayer.duelingBook}`)
                 } catch (err) {
@@ -1288,7 +1288,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                     }
 
                     try {
-                        const member = await interaction.guild.members.fetch(winnerNextOpponent.player.discordId)
+                        const member = await interaction.guild?.members.fetch(winnerNextOpponent.player.discordId)
                         const name = winningPlayer.globalName || `${winningPlayer.discordName}#${winningPlayer.discriminator}`
                         const content = format?.category === 'OP' ? `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${name}\nOPTCGSim: ${winningPlayer.opTcgSim}` :
                             `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${name}\nDuelingBook: ${winningPlayer.duelingBook}`
@@ -1450,7 +1450,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                     const {player: playerA2} = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player})
                     
                     try {
-                        const pA1Member = await interaction.guild.members.fetch(playerA1.discordId)
+                        const pA1Member = await interaction.guild?.members.fetch(playerA1.discordId)
                         pA1Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
@@ -1464,7 +1464,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                     }
 
                     try {
-                        const pA2Member = await interaction.guild.members.fetch(playerA2.discordId)
+                        const pA2Member = await interaction.guild?.members.fetch(playerA2.discordId)
                         pA2Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
@@ -1481,7 +1481,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                     const {player: playerB2} = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
                     
                     try {
-                        const pB1Member = await interaction.guild.members.fetch(playerB1.discordId)
+                        const pB1Member = await interaction.guild?.members.fetch(playerB1.discordId)
                         pB1Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
@@ -1495,7 +1495,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                     }
 
                     try {
-                        const pB2Member = await interaction.guild.members.fetch(playerB2.discordId)
+                        const pB2Member = await interaction.guild?.members.fetch(playerB2.discordId)
                         pB2Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
@@ -1512,7 +1512,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                     const {player: playerC2} = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
 
                     try {
-                        const pC1Member = await interaction.guild.members.fetch(playerC1.discordId)
+                        const pC1Member = await interaction.guild?.members.fetch(playerC1.discordId)
                         pC1Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
@@ -1526,7 +1526,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                     }
 
                     try {
-                        const pC2Member = await interaction.guild.members.fetch(playerC2.discordId)
+                        const pC2Member = await interaction.guild?.members.fetch(playerC2.discordId)
                         pC2Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
@@ -1565,7 +1565,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                         const {player: playerA2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player})
 
                         try {
-                            const pA1Member = await interaction.guild.members.fetch(playerA1.discordId)
+                            const pA1Member = await interaction.guild?.members.fetch(playerA1.discordId)
                             pA1Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
@@ -1579,7 +1579,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                         }
     
                         try {
-                            const pA2Member = await interaction.guild.members.fetch(playerA2.discordId)
+                            const pA2Member = await interaction.guild?.members.fetch(playerA2.discordId)
                             pA2Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
@@ -1596,7 +1596,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                         const {player: playerB2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
 
                         try {
-                            const pB1Member = await interaction.guild.members.fetch(playerB1.discordId)
+                            const pB1Member = await interaction.guild?.members.fetch(playerB1.discordId)
                             pB1Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
@@ -1610,7 +1610,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                         }
     
                         try {
-                            const pB2Member = await interaction.guild.members.fetch(playerB2.discordId)
+                            const pB2Member = await interaction.guild?.members.fetch(playerB2.discordId)
                             pB2Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
@@ -1627,7 +1627,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                         const {player: playerC2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
 
                         try {
-                            const pC1Member = await interaction.guild.members.fetch(playerC1.discordId)
+                            const pC1Member = await interaction.guild?.members.fetch(playerC1.discordId)
                             pC1Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
@@ -1641,7 +1641,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                         }
     
                         try {
-                            const pC2Member = await interaction.guild.members.fetch(playerC2.discordId)
+                            const pC2Member = await interaction.guild?.members.fetch(playerC2.discordId)
                             pC2Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
@@ -2094,7 +2094,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
 
     const game_name = format.category === 'OP' ? 'One Piece TCG' : 'Yu-Gi-Oh!'
     const description = format.category === 'OP' ? 'One Piece TCG' : `${format.name} Format`
-    const channel = interaction.guild.name !== 'Format Library' ? await interaction.guild.channels.cache.find((channel) => channel.name === channelName) : {}
+    const channel = interaction.guild.name !== 'Format Library' ? await interaction.guild?.channels.cache.find((channel) => channel.name === channelName) : {}
     const channelId = interaction.guild.name === 'Format Library' ? format.channel : channel?.id
     if (!channelId) return
 
@@ -2299,7 +2299,7 @@ export const createTopCut = async (server, primaryTournament, format) => {
 // REMOVE FROM TOURNAMENT
 export const removeFromTournament = async (interaction, tournamentId, userId) => {
     const server = await Server.findOne({ where: { id: interaction.guildId }})
-    const member = userId ? await interaction.guild.members.fetch(userId) : interaction.member
+    const member = userId ? await interaction.guild?.members.fetch(userId) : interaction.member
     
     const entry = await Entry.findOne({
         where: { 
@@ -2691,7 +2691,7 @@ export const endTournament = async (interaction, tournamentId) => {
                 })
 
                 if (!count) {
-                    const member = await interaction.guild.members.fetch(discordId)
+                    const member = await interaction.guild?.members.fetch(discordId)
                     if (!member) continue
                     console.log(`Removing ${playerName}'s tournament role on ${server.name}.`)
                     member.roles.remove(server.tourRole)
@@ -2721,7 +2721,7 @@ export const processNoShow = async (interaction, tournamentId, userId) => {
         }
     })
 
-    const noShow = await interaction.guild.members.fetch(noShowPlayer.discordId)
+    const noShow = await interaction.guild?.members.fetch(noShowPlayer.discordId)
 
     const server = await Server.findOne({
         where: {
@@ -2749,7 +2749,7 @@ export const processNoShow = async (interaction, tournamentId, userId) => {
     const winningEntry = await Entry.findOne({ where: { participantId: winnerParticipantId, tournamentId: tournament.id }, include: Player })
     if (!winningEntry) return await interaction.editReply({ content: `Error: could not find opponent.`})
     const winningPlayer = winningEntry.player
-    const winner = await interaction.guild.members.fetch(winningPlayer.discordId)
+    const winner = await interaction.guild?.members.fetch(winningPlayer.discordId)
     const success = await processMatchResult(server, interaction, winner, winningPlayer, noShow, noShowPlayer, tournament, tournament.format, true)
     if (!success) return
 

@@ -83,7 +83,7 @@ export default {
                 }
             })
             
-            return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (${team.name}) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+            return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (${team.name}) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         } else if (!entry && tournament.isTeamTournament && !team) {
             try { 
                 await Entry.create({
@@ -110,7 +110,7 @@ export default {
                 }
             })
             
-            return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (Free Agent) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+            return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (Free Agent) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         } else if (!entry && !tournament.isTeamTournament) {
             if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
                 return interaction.member.send({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
@@ -162,7 +162,7 @@ export default {
                 }
             })
 
-            return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+            return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         } else if (entry && entry.active === false && tournament.isTeamTournament) {
             await entry.update({
                 url: data.url,
@@ -181,7 +181,7 @@ export default {
                 }
             })
 
-            return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (${team ? team.name : 'Free Agent'}) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+            return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (${team ? team.name : 'Free Agent'}) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         } else if (entry) {
             if (!entry.participantId) {
                 const { participant } = await postParticipant(server, tournament, player).catch((err) => console.log(err))
@@ -206,7 +206,7 @@ export default {
                 }
             })
             
-            return await interaction.guild.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> resubmitted their deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+            return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> resubmitted their deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         }
 	}
 }

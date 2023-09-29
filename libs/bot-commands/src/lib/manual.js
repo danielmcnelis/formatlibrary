@@ -23,9 +23,9 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         const winner = interaction.options.getUser('winner')
-        const winningMember = await interaction.guild.members.fetch(winner.id)
+        const winningMember = await interaction.guild?.members.fetch(winner.id)
         const loser = interaction.options.getUser('loser')
-        const losingMember = await interaction.guild.members.fetch(loser.id)
+        const losingMember = await interaction.guild?.members.fetch(loser.id)
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
