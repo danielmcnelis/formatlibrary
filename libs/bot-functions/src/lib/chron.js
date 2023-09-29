@@ -512,6 +512,7 @@ export const updatePrints = async (set, groupId) => {
                         name.includes('Duelist Pack') ||
                         name.includes('Tournament Pack') ||
                         name.includes('Champion Pack') ||
+                        name.includes('Anniversary Pack') ||
                         name.includes('Premium Pack') ||
                         name.includes('Turbo Pack') ||
                         name.includes('Starter Deck') ||
@@ -527,6 +528,7 @@ export const updatePrints = async (set, groupId) => {
                         name.includes('Collector\'s Set') || 
                         name.includes('Collector Set') || 
                         name.includes('God Deck') || 
+                        name.includes('Mega-Tin') || 
                         name.includes('[1st Edition]') ||
                         name.includes('[Limited Edition]') ||
                         name.includes('[Unlimited Edition]') ||
