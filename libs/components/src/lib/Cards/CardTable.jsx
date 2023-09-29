@@ -46,7 +46,8 @@ export const CardTable = () => {
     const [queryParams, setQueryParams] = useState({
       name: null,
       description: null,
-      category: null
+      category: null,
+      region: 'tcg'
     })
   
     const [iconParams, setIconParams] = useState({
@@ -135,6 +136,8 @@ export const CardTable = () => {
       if (queryParams.description) filter += `,description:inc:${queryParams.description}`
       if (queryParams.region === 'tcg') filter += `,tcgLegal:eq:true`
       if (queryParams.region === 'ocg') filter += `,ocgLegal:eq:true`
+      if (queryParams.region === 'tcg-exclusive') filter += `,tcgLegal:eq:true,ocgLegal:eq:false`
+      if (queryParams.region === 'ocg-exclusive') filter += `,tcgLegal:eq:false,ocgLegal:eq:true`
       if (queryParams.region === 'speed') filter += `,speedLegal:eq:true`
   
       const icons = Object.entries(iconParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
@@ -184,6 +187,8 @@ export const CardTable = () => {
       if (queryParams.description) headers.description = queryParams.description
       if (queryParams.region === 'tcg') filter += `,tcgLegal:eq:true`
       if (queryParams.region === 'ocg') filter += `,ocgLegal:eq:true`
+      if (queryParams.region === 'tcg-exclusive') filter += `,tcgLegal:eq:true,ocgLegal:eq:false`
+      if (queryParams.region === 'ocg-exclusive') filter += `,tcgLegal:eq:false,ocgLegal:eq:true`
       if (queryParams.region === 'speed') filter += `,speedLegal:eq:true`
       if (queryParams.region === 'duelLinks') filter += `,duelLinks:eq:true`
   
@@ -532,8 +537,10 @@ export const CardTable = () => {
                         >
                             <option value="tcg">TCG Legal</option>
                             <option value="ocg">OCG Legal</option>
-                            <option value="speed">Speed Duel</option>
                             <option value="all">All Cards</option>
+                            <option value="tcg-exclusive">TCG Excl.</option>
+                            <option value="ocg-exclusive">OCG Excl.</option>
+                            <option value="speed">Speed Duel</option>
                         </select>
 
                         <select
@@ -612,6 +619,8 @@ export const CardTable = () => {
                             <option value="tcg">TCG Legal</option>
                             <option value="ocg">OCG Legal</option>
                             <option value="all">All Cards</option>
+                            <option value="tcg-exclusive">TCG Exclusive</option>
+                            <option value="ocg-exclusive">OCG Exclusive</option>
                             <option value="speed">Speed Duel</option>
                         </select>
 
