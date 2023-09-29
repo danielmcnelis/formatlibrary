@@ -513,7 +513,7 @@ import { config } from '@fl/config'
     
     const sets = await Set.findAll({
         where: {
-            name: {[Op.substring]: 'Speed Duel'}
+            setName: {[Op.substring]: 'Speed Duel'}
         },
         order: [['tcgDate', 'ASC']]
     })
