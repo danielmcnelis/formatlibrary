@@ -935,7 +935,6 @@ export const updateSets = async () => {
 
                     try {
                         await updatePrints(set, set.tcgPlayerGroupId)
-                        console.log(`updated prints for old set: ${datum.set_name} (${datum.set_code})`)
                     } catch (err) {
                         console.log(err)
                     }
