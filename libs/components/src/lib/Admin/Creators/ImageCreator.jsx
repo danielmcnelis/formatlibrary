@@ -58,6 +58,7 @@ export const ImageCreator = () => {
                     <option value="emojis">Emojis</option>
                     <option value="logos">Logos</option>
                     <option value="pfps">PFPs</option>
+                    <option value="symbols">Symbols</option>
                 </select>
             </label>
             <label>Image:
