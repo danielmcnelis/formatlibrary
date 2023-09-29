@@ -627,6 +627,7 @@ export const getColor = (type = '') => {
         type.includes('Fusion') ? 'purple' :
         type.includes('Effect') ? 'orange' :
         type.includes('Normal') ? 'yellow' :
+        type.includes('Token') ? 'gray' :
         null
 
     return color
@@ -710,18 +711,7 @@ export const downloadNewCards = async () => {
     const { data } = await axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?misc=yes')
     for (let i = 0; i < data.data.length; i++) {
         const datum = data.data[i]
-        if (datum.type === 'Token' || datum.type === 'Skill Card') continue
         const id = datum.id.toString()
-        if (
-            id === '501000000' || 
-            id === '501000001' || 
-            id === '501000002' || 
-            id === '501000003' || 
-            id === '501000004' || 
-            id === '501000006' || 
-            id === '501000007' || 
-            id === '111000561'
-        ) continue
 
         try {
             const card = await Card.findOne({
@@ -741,17 +731,31 @@ export const downloadNewCards = async () => {
                 const type = datum.type
                 const category = type.includes('Monster') ? 'Monster' :
                     type.includes('Spell') ? 'Spell' :
+                    type.includes('Skill') ? 'Skill' :
                     type.includes('Trap') ? 'Trap' :
+                    type.includes('Token') ? 'Token' :
                     null
 
                 if (!category) console.log(`No category for ${datum.type}`)
-                        
+
+                const tcgLegal = (
+                    id === '501000000' || 
+                    id === '501000001' || 
+                    id === '501000002' || 
+                    id === '501000003' || 
+                    id === '501000004' || 
+                    id === '501000006' || 
+                    id === '501000007' || 
+                    id === '111000561'
+                ) ? false : !!datum.misc_info[0]?.tcg_date
+
                 await Card.create({
                     name: datum.name,
                     konamiCode: konamiCode,
                     ypdId: id,
-                    tcgLegal: !!datum.misc_info[0].tcg_date,
-                    ocgLegal: !!datum.misc_info[0].ocg_date,
+                    tcgLegal: tcgLegal,
+                    ocgLegal: !!datum.misc_info[0]?.ocg_date,
+                    speedLegal: !!datum.misc_info[0]?.formats?.includes('Speed Duel'),
                     category: category,
                     icon: category !== 'Monster' ? datum.race : null,
                     normal: category === 'Monster' && type.includes('Normal'),
@@ -779,13 +783,13 @@ export const downloadNewCards = async () => {
                     tuner: category === 'Monster' && type.includes('Tuner'),
                     union: category === 'Monster' && type.includes('Union'),
                     attribute: datum.attribute,
-                    type: category === 'Monster' ? datum.race : null,
-                    level: category === 'Monster' && !type.includes('Link') ? datum.level : null,
+                    type: (category === 'Monster' || category === 'Token') ? datum.race : null,
+                    level: (category === 'Monster' || category === 'Token') && !type.includes('Link') ? datum.level : null,
                     rating: category === 'Monster' && type.includes('Link') ? datum.linkval : null,
                     arrows: category === 'Monster' && type.includes('Link') ? getLinkArrows(datum.linkmarkers) : null,
                     scale: category === 'Monster' && type.includes('Pendulum') ? datum.scale : null,
-                    atk: category === 'Monster' ? datum.atk : null,
-                    def: category === 'Monster' && !type.includes('Link') ? datum.def : null,
+                    atk: (category === 'Monster' || category === 'Token') ? datum.atk : null,
+                    def: (category === 'Monster' || category === 'Token') && !type.includes('Link') ? datum.def : null,
                     description: datum.desc,
                     tcgDate: datum.misc_info[0].tcg_date ? datum.misc_info[0].tcg_date : null,
                     ocgDate: datum.misc_info[0].ocg_date ? datum.misc_info[0].ocg_date : null,

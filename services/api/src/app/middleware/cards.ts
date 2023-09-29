@@ -27,7 +27,7 @@ export const cardsCount = async (req, res, next) => {
             if (value.startsWith('arr(') && value.endsWith(')')) value = (value.slice(4, -1)).split(';')
             reduced[field] = {operator, value}
             return reduced
-        }, { tcgLegal: {operator: 'eq', value: 'true'}, tcgDate: {operator: 'not', value: null} }) : { tcgLegal: {operator: 'eq', value: 'true'}, tcgDate: {operator: 'not', value: null} }
+        }, {}) : { tcgLegal: {operator: 'eq', value: 'true'}}
 
         const count = await Card.countResults(filter, booster)
         res.json(count)
@@ -47,7 +47,7 @@ export const cards = async (req, res, next) => {
             if (value.startsWith('arr(') && value.endsWith(')')) value = (value.slice(4, -1)).split(';')
             reduced[field] = {operator, value}
             return reduced
-        }, { tcgLegal: {operator: 'eq', value: 'true'}, tcgDate: {operator: 'not', value: null} }) : { tcgLegal: {operator: 'eq', value: 'true'}, tcgDate: {operator: 'not', value: null} }
+        }, {}) : { tcgLegal: {operator: 'eq', value: 'true'}}
         
         if (req.headers.name) filter.name = {operator: 'inc', value: req.headers.name}
         if (req.headers.description) filter.description = {operator: 'inc', value: req.headers.description}
