@@ -707,6 +707,7 @@ export const downloadNewCards = async () => {
     let c = 0
     let t = 0
     let o = 0
+    let p = 0
     let e = 0
     const { data } = await axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?misc=yes')
     for (let i = 0; i < data.data.length; i++) {
@@ -791,13 +792,13 @@ export const downloadNewCards = async () => {
                     atk: (category === 'Monster' || category === 'Token') ? datum.atk : null,
                     def: (category === 'Monster' || category === 'Token') && !type.includes('Link') ? datum.def : null,
                     description: datum.desc,
-                    tcgDate: datum.misc_info[0].tcg_date ? datum.misc_info[0].tcg_date : null,
-                    ocgDate: datum.misc_info[0].ocg_date ? datum.misc_info[0].ocg_date : null,
+                    tcgDate: datum.misc_info[0]?.tcg_date || null,
+                    ocgDate: datum.misc_info[0]?.ocg_date || null,
                     extraDeck: type.includes('Fusion') || type.includes('Synchro') || type.includes('Xyz') || type.includes('Link'),
                     color: getColor(datum.type),
                     sortPriority: getSortPriority(datum.type)
                 })
-                console.log(`New card: ${datum.name} (TCG Date: ${datum.misc_info[0].tcg_date}, OCG Date: ${datum.misc_info[0].ocg_date})`)
+                console.log(`New card: ${datum.name} (TCG Date: ${datum.misc_info[0]?.tcg_date}, OCG Date: ${datum.misc_info[0]?.ocg_date})`)
                 await downloadCardImage(id)
                 console.log(`Image saved (${datum.name})`)
             } else if (card && (card.name !== datum.name || card.ypdId !== id)) {
@@ -809,31 +810,36 @@ export const downloadNewCards = async () => {
                 while (konamiCode.length < 8) konamiCode = '0' + konamiCode
                 card.konamiCode = konamiCode
                 card.description = datum.desc
-                card.tcgLegal = !!datum.misc_info[0].tcg_date
-                card.ocgLegal = !!datum.misc_info[0].ocg_date
-                card.tcgDate = datum.misc_info[0].tcg_date ? datum.misc_info[0].tcg_date : null
-                card.ocgDate = datum.misc_info[0].ocg_date ? datum.misc_info[0].ocg_date : null
+                card.tcgLegal = !!datum.misc_info[0]?.tcg_date
+                card.ocgLegal = !!datum.misc_info[0]?.ocg_date
+                card.tcgDate = datum.misc_info[0]?.tcg_date ? datum.misc_info[0]?.tcg_date : null
+                card.ocgDate = datum.misc_info[0]?.ocg_date ? datum.misc_info[0]?.ocg_date : null
                 await card.save()
                 await downloadCardImage(id)
                 console.log(`Image saved (${datum.name})`)
-            } else if (card && (!card.tcgDate || !card.tcgLegal) && datum.misc_info[0].tcg_date) {
+            } else if (card && (!card.tcgDate || !card.tcgLegal) && datum.misc_info[0]?.tcg_date) {
                 t++
                 card.name = datum.name
                 card.description = datum.desc
-                card.tcgDate = datum.misc_info[0].tcg_date
+                card.tcgDate = datum.misc_info[0]?.tcg_date
                 card.tcgLegal = true
                 await card.save()
                 console.log(`New TCG Card: ${card.name}`)
                 await downloadCardImage(id)
                 console.log(`Image saved (${card.name})`)
-            } else if (card && (!card.ocgDate || !card.ocgLegal) && datum.misc_info[0].ocg_date) {
+            } else if (card && (!card.ocgDate || !card.ocgLegal) && datum.misc_info[0]?.ocg_date) {
                 o++
-                card.name = datum.name
-                card.description = datum.desc
-                card.ocgDate = datum.misc_info[0].ocg_date
+                card.ocgDate = datum.misc_info[0]?.ocg_date
                 card.ocgLegal = true
                 await card.save()
                 console.log(`New OCG Card: ${card.name}`)
+                await downloadCardImage(id)
+                console.log(`Image saved (${card.name})`)
+            } else if (card && (!card.speedLegal) && datum.misc_info[0]?.formats?.includes('Speed Duel')) {
+                p++
+                card.speedLegal = true
+                await card.save()
+                console.log(`New Speed Duel Card: ${card.name}`)
                 await downloadCardImage(id)
                 console.log(`Image saved (${card.name})`)
             }
@@ -843,7 +849,7 @@ export const downloadNewCards = async () => {
         }
     }
 
-    console.log(`Found ${b} new cards, ${c} new names, ${t} new TCG cards, ${o} new OCG cards, encountered ${e} errors`)
+    console.log(`Found ${b} new cards, ${c} new names, ${t} new TCG cards, ${o} new OCG cards, ${p} new Speed Duel cards, encountered ${e} errors`)
     return setTimeout(() => downloadNewCards(), (24 * 60 * 60 * 1000))
 }
 

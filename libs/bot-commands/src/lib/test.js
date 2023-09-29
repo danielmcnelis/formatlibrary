@@ -14,7 +14,8 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
-            downloadNewCards()
+            const data = await interaction.guild.invites.fetch()
+            console.log('data', data)
             await interaction.editReply(emojis.yellow)
         } else {
             await interaction.editReply('🧪')
