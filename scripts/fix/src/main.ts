@@ -552,32 +552,32 @@ import { config } from '@fl/config'
 
 
 
-;(async () => {
-    let b = 0
-    let e = 0
+// ;(async () => {
+//     let b = 0
+//     let e = 0
     
-    const cards = await Card.findAll({
-        where: {
-            category: 'Skill'
-        }
-    })
+//     const cards = await Card.findAll({
+//         where: {
+//             category: 'Skill'
+//         }
+//     })
 
-    for (let i = 0; i < cards.length; i++) {
-        try {
-            const card = cards[i]
-            await card.update({
-                tcgLegal: false,
-                tcgDate: null,
-                ocgLegal: false,
-                ocgDate: null
-            })
+//     for (let i = 0; i < cards.length; i++) {
+//         try {
+//             const card = cards[i]
+//             await card.update({
+//                 tcgLegal: false,
+//                 tcgDate: null,
+//                 ocgLegal: false,
+//                 ocgDate: null
+//             })
 
-            b++
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
+//             b++
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
 
-    return console.log(`fixed ${b} skill cards and encountered ${e} errors`)
-})()
+//     return console.log(`fixed ${b} skill cards and encountered ${e} errors`)
+// })()
