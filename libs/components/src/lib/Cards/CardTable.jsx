@@ -544,9 +544,9 @@ export const CardTable = () => {
                             onChange={() => setQueryParams({ ...queryParams, category: document.getElementById('category').value })}
                         >
                             <option value="">Categories</option>
-                            <option value="monster">Monster</option>
-                            <option value="spell">Spell</option>
-                            <option value="trap">Trap</option>
+                            <option value="Monster">Monster</option>
+                            <option value="Spell">Spell</option>
+                            <option value="Trap">Trap</option>
                         </select>
 
                         <select
@@ -622,9 +622,9 @@ export const CardTable = () => {
                           onChange={() => setQueryParams({ ...queryParams, category: document.getElementById('category').value })}
                         >
                             <option value="">All Categories</option>
-                            <option value="monster">Monsters</option>
-                            <option value="spell">Spells</option>
-                            <option value="trap">Traps</option>
+                            <option value="Monster">Monsters</option>
+                            <option value="Spell">Spells</option>
+                            <option value="Trap">Traps</option>
                         </select>
 
                         <select
