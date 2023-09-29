@@ -480,6 +480,7 @@ export const updatePrints = async (set, groupId) => {
     let c = 0
     let e = 0
     const size = set.size
+
     for (let offset = 0; offset < size; offset += 100) {
         try {
             const endpoint = `https://api.tcgplayer.com/catalog/products?groupId=${groupId}&getExtendedFields=true&offset=${offset}&limit=100`
@@ -514,6 +515,14 @@ export const updatePrints = async (set, groupId) => {
                         c++
                         console.log(`could not find card for new print: ${result.name}`)
                         continue
+                    }
+
+                    const isSpeedDuel = set.name?.includes('Speed Duel')
+                    if (isSpeedDuel && !card.speedLegal) {
+                        await card.update({ 
+                            speedLegal: true,
+                            speedDate: set.tcgDate
+                        })
                     }
     
                     const print = await Print.create({

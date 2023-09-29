@@ -1,4 +1,4 @@
-import { Card, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Print, Replay, Server, Stats, Status, Tournament } from '@fl/models'
+import { Card, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Print, Replay, Set, Server, Stats, Status, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { config } from '@fl/config' 
