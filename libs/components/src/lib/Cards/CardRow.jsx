@@ -114,7 +114,11 @@ export const CardRow = (props) => {
                               borderBottom: '2px solid #CFDCE5'
                               }}
                           >
-                              {card.tcgDate?.substring(0, 10) || 'N/A'}
+                            {
+                                props.region === 'speed' ? `Speed Release: ${card.speedDate?.substring(0, 10) || 'N/A'}` : 
+                                props.region === 'ocg' ? `OCG Release: ${card.ocgDate?.substring(0, 10) || 'N/A'}` : 
+                                `TCG Release: ${card.tcgDate?.substring(0, 10) || 'N/A'}`            
+                            }
                           </th>
                           </tr>
                           <tr>

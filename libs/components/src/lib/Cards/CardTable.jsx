@@ -150,7 +150,11 @@ export const CardTable = () => {
       if (types.length) filter += `,type:or:arr(${types.join(';')})`
       groups.forEach((g) => filter += `,${g}:eq:true`)
       if (groupParams.effect) filter += `,extraDeck:eq:false`
-      if (cutoff !== `${now.getFullYear()}-12-31`) filter += `,tcgDate:lte:${cutoff}`
+
+      if (cutoff !== `${now.getFullYear()}-12-31`) {
+        queryParams.region === 'ocg' ? filter += `,ocgDate:lte:${cutoff}` : 
+            filter += `,tcgDate:lte:${cutoff}`
+      }
   
       const minLevel = sliders.level[0]
       const maxLevel = sliders.level[1]
@@ -202,7 +206,11 @@ export const CardTable = () => {
       if (types.length) filter += `,type:or:arr(${types.join(';')})`
       groups.forEach((g) => filter += `,${g}:eq:true`)
       if (groupParams.effect) filter += `,extraDeck:eq:false`
-      if (cutoff !== `${now.getFullYear()}-12-31`) filter += `,tcgDate:lte:${cutoff}`
+      
+      if (cutoff !== `${now.getFullYear()}-12-31`) {
+        queryParams.region === 'ocg' ? filter += `,ocgDate:lte:${cutoff}` : 
+            filter += `,tcgDate:lte:${cutoff}`
+      }
   
       const minLevel = sliders.level[0]
       const maxLevel = sliders.level[1]
@@ -874,8 +882,16 @@ export const CardTable = () => {
                 >
                     <option value="name:asc">Name: A ⮕ Z</option>
                     <option value="name:desc">Name: Z ⮕ A</option>
-                    <option value="tcgDate:asc">Date: Old ⮕ New</option>
-                    <option value="tcgDate:desc">Date: New ⮕ Old</option>
+                    <option value={
+                        queryParams.region === 'ocg' ? "ocgDate:asc" : 
+                        queryParams.region === 'speed' ? "speedDate:asc" : 
+                        "tcgDate:asc"
+                    }>Date: Old ⮕ New</option>
+                    <option value={
+                        queryParams.region === 'ocg' ? "ocgDate:desc" : 
+                        queryParams.region === 'speed' ? "speedDate:desc" : 
+                        "tcgDate:desc"
+                    }>Date: New ⮕ Old</option>
                     <option value="atk:desc nulls last">ATK: Desc. ⬇</option>
                     <option value="atk:asc nulls last">ATK: Asc. ⬆</option>
                     <option value="def:desc nulls last">DEF: Desc. ⬇</option>
@@ -914,7 +930,7 @@ export const CardTable = () => {
                       if (isTabletOrMobile) {
                           return <MobileCardRow key={card.id} index={index} card={card} status={banlist[card.id.toString()]}/>
                       } else {
-                          return <CardRow key={card.id} index={index} card={card} status={banlist[card.id.toString()]}/>
+                          return <CardRow key={card.id} index={index} card={card} status={banlist[card.id.toString()]} region={queryParams.region}/>
                       }
                   })
                 ) : (
