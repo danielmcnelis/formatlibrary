@@ -989,7 +989,12 @@ export const purgeBetaCards = async () => {
             } else if (betaCard && !card) {
                 console.log(`Beta Card: ${betaCard.name} (${betaCard.ypdId}) exists, but ${card.name} (${card.ypdId}) does not ⚠️`)
             } else if (!betaCard && card) {
-                console.log(`${card.name} (${card.ypdId}) exists, while Beta Card: ${card.name} (${card.ypdId}) does not 👍`)
+                if (card.name !== name) {
+                    console.log(`UPDATING the name of ${card.name} (${card.ypdId}) to ${name} (${id}) !!!`)
+                    await card.update({ name })
+                } else {
+                    console.log(`${card.name} (${card.ypdId}) exists, while Beta Card: ${card.name} (${card.ypdId}) does not 👍`)
+                }
             } else {                
                 console.log(`Beta Card: ${betaCard.name} (${betaCard.ypdId}) and ${card.name} (${card.ypdId}) share the same FL id????? (${betaCard.id})`)
             }
