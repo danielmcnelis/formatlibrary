@@ -975,7 +975,7 @@ export const purgeBetaCards = async () => {
                 }
             })
     
-            const card = await card.findOne({
+            const card = await Card.findOne({
                 where: {
                     ypdId: id,
                     name: name
