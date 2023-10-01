@@ -883,13 +883,13 @@ export const CardTable = () => {
                     <option value="name:asc">Name: A ⮕ Z</option>
                     <option value="name:desc">Name: Z ⮕ A</option>
                     <option value={
-                        queryParams.region === 'ocg' ? "ocgDate:asc" : 
-                        queryParams.region === 'speed' ? "speedDate:asc" : 
+                        queryParams.region.includes('ocg') ? "ocgDate:asc" : 
+                        queryParams.region.includes('speed') ? "speedDate:asc" : 
                         "tcgDate:asc"
                     }>Date: Old ⮕ New</option>
                     <option value={
-                        queryParams.region === 'ocg' ? "ocgDate:desc" : 
-                        queryParams.region === 'speed' ? "speedDate:desc" : 
+                        queryParams.region.includes('ocg') ? "ocgDate:desc" : 
+                        queryParams.region.includes('speed') ? "speedDate:desc" : 
                         "tcgDate:desc"
                     }>Date: New ⮕ Old</option>
                     <option value="atk:desc nulls last">ATK: Desc. ⬇</option>
