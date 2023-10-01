@@ -949,6 +949,61 @@ export const downloadNewCards = async () => {
     return setTimeout(() => downloadNewCards(), (24 * 60 * 60 * 1000))
 }
 
+
+// PURGE BETA CARDS
+export const purgeBetaCards = async () => {
+    let b = 0
+    let c = 0
+    let t = 0
+    let o = 0
+    let p = 0
+    let e = 0
+    const { data } = await axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?misc=yes')
+    for (let i = 0; i < data.data.length; i++) {
+        const datum = data.data[i]
+        const id = datum.id.toString()
+        const name = datum.name
+        const betaId = datum.misc_info[0]?.beta_id
+        const betaName = datum.misc_info[0]?.beta_name
+        if (!betaId || !betaName) continue
+
+        try {
+            const betaCard = await Card.findOne({
+                where: {
+                    ypdId: betaId,
+                    name: betaName
+                }
+            })
+    
+            const card = await card.findOne({
+                where: {
+                    ypdId: id,
+                    name: name
+                }
+            })
+
+            if (betaCard && card && betaCard.id !== card.id) {
+                console.log(`destroying ${betaCard.name} (${betaCard.ypdId}), which is now ${card.name} (${card.ypdId})`)
+                await betaCard.destroy()
+                b++
+            } else if (betaCard && !card) {
+                console.log(`Beta Card: ${betaCard.name} (${betaCard.ypdId}) exists, but ${card.name} (${card.ypdId}) does not ⚠️`)
+            } else if (!betaCard && card) {
+                console.log(`${card.name} (${card.ypdId}) exists, while Beta Card: ${card.name} (${card.ypdId}) does not 👍`)
+            } else {                
+                console.log(`Beta Card: ${betaCard.name} (${betaCard.ypdId}) and ${card.name} (${card.ypdId}) share the same FL id????? (${betaCard.id})`)
+            }
+        } catch (err) {
+            e++ 
+            console.log(err)
+        }
+    }
+
+    console.log(`Purged ${b} beta cards, encountered ${e} errors`)
+    return setTimeout(() => purgeBetaCards(), (24 * 60 * 60 * 1000))
+}
+
+
 // UPDATE SETS
 export const updateSets = async () => {
     let b = 0
