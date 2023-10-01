@@ -963,7 +963,7 @@ export const purgeBetaCards = async () => {
         const datum = data.data[i]
         const id = datum.id.toString()
         const name = datum.name
-        const betaId = datum.misc_info[0]?.beta_id
+        const betaId = datum.misc_info[0]?.beta_id?.toString()
         const betaName = datum.misc_info[0]?.beta_name
         if (!betaId || !betaName) continue
 
