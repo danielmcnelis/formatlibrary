@@ -115,8 +115,8 @@ export const CardRow = (props) => {
                               }}
                           >
                             {
-                                props.region === 'speed' ? `Speed Release: ${card.speedDate?.substring(0, 10) || 'N/A'}` : 
-                                props.region === 'ocg' ? `OCG Release: ${card.ocgDate?.substring(0, 10) || 'N/A'}` : 
+                                props.region.includes('speed') ? `Speed Release: ${card.speedDate?.substring(0, 10) || 'N/A'}` : 
+                                props.region.includes('ocg') ? `OCG Release: ${card.ocgDate?.substring(0, 10) || 'N/A'}` : 
                                 `TCG Release: ${card.tcgDate?.substring(0, 10) || 'N/A'}`            
                             }
                           </th>
