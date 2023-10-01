@@ -954,9 +954,6 @@ export const downloadNewCards = async () => {
 export const purgeBetaCards = async () => {
     let b = 0
     let c = 0
-    let t = 0
-    let o = 0
-    let p = 0
     let e = 0
     const { data } = await axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?misc=yes')
     for (let i = 0; i < data.data.length; i++) {
@@ -991,9 +988,10 @@ export const purgeBetaCards = async () => {
             } else if (!betaCard && card) {
                 if (card.name !== name) {
                     console.log(`UPDATING the name of ${card.name} (${card.ypdId}) to ${name} (${id}) !!!`)
+                    c++
                     await card.update({ name })
                 } else {
-                    console.log(`${card.name} (${card.ypdId}) exists, while Beta Card: ${card.name} (${card.ypdId}) does not 👍`)
+                    console.log(`${card.name} (${card.ypdId}) exists, while Beta Card: ${betaName} (${betaId}) does not 👍`)
                 }
             } else {                
                 console.log(`Beta Card: ${betaCard.name} (${betaCard.ypdId}) and ${card.name} (${card.ypdId}) share the same FL id????? (${betaCard.id})`)
@@ -1004,7 +1002,7 @@ export const purgeBetaCards = async () => {
         }
     }
 
-    console.log(`Purged ${b} beta cards, encountered ${e} errors`)
+    console.log(`Purged ${b} beta cards, updating ${c} card names, encountered ${e} errors`)
     return setTimeout(() => purgeBetaCards(), (24 * 60 * 60 * 1000))
 }
 
