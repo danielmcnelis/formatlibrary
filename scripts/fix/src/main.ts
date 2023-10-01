@@ -507,77 +507,111 @@ import { config } from '@fl/config'
 // })()
 
 
-;(async () => {
-    let b = 0
-    let e = 0
-    
-    const sets = await Set.findAll({
-        where: {
-            setName: {[Op.substring]: 'Speed Duel'}
-        },
-        order: [['tcgDate', 'ASC']]
-    })
-
-    for (let i = 0; i < sets.length; i++) {
-        try {
-            const set = sets[i]
-            const prints = await Print.findAll({
-                where: {
-                    setId: set.id
-                },
-                include: Card
-            })
-
-            for (let j = 0; j < prints.length; j++) {
-                const print = prints[j]
-                const card = print.card
-                
-                if (!card.speedLegal) {
-                    await card.update({
-                        speedLegal: true,
-                        speedDate: set.tcgDate
-                    })
-
-                    b++
-                }
-            }
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
-
-    return console.log(`updated ${b} cards from ${sets.length} speed duel sets and encountered ${e} errors`)
-})()
-
-
-
 // ;(async () => {
 //     let b = 0
 //     let e = 0
     
-//     const cards = await Card.findAll({
+//     const sets = await Set.findAll({
 //         where: {
-//             category: 'Skill'
-//         }
+//             setName: {[Op.substring]: 'Speed Duel'}
+//         },
+//         order: [['tcgDate', 'ASC']]
 //     })
 
-//     for (let i = 0; i < cards.length; i++) {
+//     for (let i = 0; i < sets.length; i++) {
 //         try {
-//             const card = cards[i]
-//             await card.update({
-//                 tcgLegal: false,
-//                 tcgDate: null,
-//                 ocgLegal: false,
-//                 ocgDate: null
+//             const set = sets[i]
+//             const prints = await Print.findAll({
+//                 where: {
+//                     setId: set.id
+//                 },
+//                 include: Card
 //             })
 
-//             b++
+//             for (let j = 0; j < prints.length; j++) {
+//                 const print = prints[j]
+//                 const card = print.card
+                
+//                 if (!card.speedLegal) {
+//                     await card.update({
+//                         speedLegal: true,
+//                         speedDate: set.tcgDate
+//                     })
+
+//                     b++
+//                 }
+//             }
 //         } catch (err) {
 //             console.log(err)
 //             e++
 //         }
 //     }
 
-//     return console.log(`fixed ${b} skill cards and encountered ${e} errors`)
+//     return console.log(`updated ${b} cards from ${sets.length} speed duel sets and encountered ${e} errors`)
 // })()
+
+
+
+;(async () => {
+    let b = 0
+    let e = 0
+    
+    const cards = await Card.findAll({
+        where: {
+            category: 'Token'
+        }
+    })
+
+    for (let i = 0; i < cards.length; i++) {
+        try {
+            const card = cards[i]
+            await card.update({
+                tcgLegal: false,
+                tcgDate: null,
+                ocgLegal: false,
+                ocgDate: null,
+                speedLegal: false,
+                speedDate: null
+            })
+
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    return console.log(`fixed ${b} skill cards and encountered ${e} errors`)
+})()
+
+;(async () => {
+    let b = 0
+    let e = 0
+    
+    const cards = await Card.findAll({
+        where: {
+            category: 'Skill'
+        }
+    })
+
+    for (let i = 0; i < cards.length; i++) {
+        try {
+            const card = cards[i]
+            const speedDate = card.speedDate || card.tcgDate
+            await card.update({
+                speedDate: speedDate,
+                tcgLegal: false,
+                tcgDate: null,
+                ocgLegal: false,
+                ocgDate: null
+            })
+
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    return console.log(`fixed ${b} skill cards and encountered ${e} errors`)
+})()

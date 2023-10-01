@@ -802,38 +802,49 @@ export const downloadNewCards = async () => {
                 }
             })
     
+            let konamiCode = id
+            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+            const type = datum.type
+            const category = type.includes('Monster') ? 'Monster' :
+                type.includes('Spell') ? 'Spell' :
+                type.includes('Skill') ? 'Skill' :
+                type.includes('Trap') ? 'Trap' :
+                type.includes('Token') ? 'Token' :
+                null
+
+            if (!category) console.log(`No category for ${datum.type}`)
+
+            const tcgLegal = (
+                id === '501000000' || 
+                id === '501000001' || 
+                id === '501000002' || 
+                id === '501000003' || 
+                id === '501000004' || 
+                id === '501000006' || 
+                id === '501000007' || 
+                id === '111000561' ||
+                category === 'Skill' ||
+                category === 'Token'
+            ) ? false : !!datum.misc_info[0]?.tcg_date
+
+            const ocgLegal = (
+                category === 'Skill' ||
+                category === 'Token'
+            ) ? false : !!datum.misc_info[0]?.ocg_date
+
+            const speedLegal = datum.misc_info[0]?.formats?.includes('Speed Duel')
+
+            const tcgDate = category !== 'Skill' ? datum.misc_info[0]?.tcg_date || null : null
+            const ocgDate = category !== 'Skill' ? datum.misc_info[0]?.ocg_date || null : null
+
             if (!card) {
-                b++
-                let konamiCode = id
-                while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-                const type = datum.type
-                const category = type.includes('Monster') ? 'Monster' :
-                    type.includes('Spell') ? 'Spell' :
-                    type.includes('Skill') ? 'Skill' :
-                    type.includes('Trap') ? 'Trap' :
-                    type.includes('Token') ? 'Token' :
-                    null
-
-                if (!category) console.log(`No category for ${datum.type}`)
-
-                const tcgLegal = (
-                    id === '501000000' || 
-                    id === '501000001' || 
-                    id === '501000002' || 
-                    id === '501000003' || 
-                    id === '501000004' || 
-                    id === '501000006' || 
-                    id === '501000007' || 
-                    id === '111000561'
-                ) ? false : !!datum.misc_info[0]?.tcg_date
-
                 await Card.create({
                     name: datum.name,
                     konamiCode: konamiCode,
                     ypdId: id,
                     tcgLegal: tcgLegal,
-                    ocgLegal: !!datum.misc_info[0]?.ocg_date,
-                    speedLegal: !!datum.misc_info[0]?.formats?.includes('Speed Duel'),
+                    ocgLegal: ocgLegal,
+                    speedLegal: speedLegal,
                     category: category,
                     icon: category !== 'Monster' ? datum.race : null,
                     normal: category === 'Monster' && type.includes('Normal'),
@@ -869,53 +880,61 @@ export const downloadNewCards = async () => {
                     atk: (category === 'Monster' || category === 'Token') ? datum.atk : null,
                     def: (category === 'Monster' || category === 'Token') && !type.includes('Link') ? datum.def : null,
                     description: datum.desc,
-                    tcgDate: datum.misc_info[0]?.tcg_date || null,
-                    ocgDate: datum.misc_info[0]?.ocg_date || null,
+                    tcgDate: tcgDate,
+                    ocgDate: ocgDate,
                     extraDeck: type.includes('Fusion') || type.includes('Synchro') || type.includes('Xyz') || type.includes('Link'),
                     color: getColor(datum.type),
                     sortPriority: getSortPriority(datum.type)
                 })
+                b++
                 console.log(`New card: ${datum.name} (TCG Date: ${datum.misc_info[0]?.tcg_date}, OCG Date: ${datum.misc_info[0]?.ocg_date})`)
                 await downloadCardImage(id)
                 console.log(`Image saved (${datum.name})`)
             } else if (card && (card.name !== datum.name || card.ypdId !== id)) {
                 c++
                 console.log(`New name and/or ID: ${card.name} (${card.ypdId}) is now: ${datum.name} (${id})`)
-                card.name = datum.name
-                card.ypdId = id
-                let konamiCode = id
-                while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-                card.konamiCode = konamiCode
-                card.description = datum.desc
-                card.tcgLegal = !!datum.misc_info[0]?.tcg_date
-                card.ocgLegal = !!datum.misc_info[0]?.ocg_date
-                card.tcgDate = datum.misc_info[0]?.tcg_date ? datum.misc_info[0]?.tcg_date : null
-                card.ocgDate = datum.misc_info[0]?.ocg_date ? datum.misc_info[0]?.ocg_date : null
-                await card.save()
+                
+                await card.update({
+                    name: datum.name,
+                    ypdId: id,
+                    konamiCode: konamiCode,
+                    description: datum.desc,
+                    tcgLegal: tcgLegal,
+                    ocgLegal: ocgLegal,
+                    tcgDate: tcgDate,
+                    ocgDate: ocgDate
+                })
+
                 await downloadCardImage(id)
                 console.log(`Image saved (${datum.name})`)
-            } else if (card && (!card.tcgDate || !card.tcgLegal) && datum.misc_info[0]?.tcg_date) {
+            } else if (card && (!card.tcgDate || !card.tcgLegal) && tcgDate) {
+                await card.update({
+                    name: datum.name,
+                    description: datum.desc,
+                    tcgDate: tcgDate,
+                    tcgLegal: tcgLegal
+                })
+
                 t++
-                card.name = datum.name
-                card.description = datum.desc
-                card.tcgDate = datum.misc_info[0]?.tcg_date
-                card.tcgLegal = true
-                await card.save()
                 console.log(`New TCG Card: ${card.name}`)
                 await downloadCardImage(id)
                 console.log(`Image saved (${card.name})`)
-            } else if (card && (!card.ocgDate || !card.ocgLegal) && datum.misc_info[0]?.ocg_date) {
+            } else if (card && (!card.ocgDate || !card.ocgLegal) && ocgDate) {
+                await card.update({
+                    ocgDate: ocgDate,
+                    ocgLegal: ocgLegal  
+                })
+
                 o++
-                card.ocgDate = datum.misc_info[0]?.ocg_date
-                card.ocgLegal = true
-                await card.save()
                 console.log(`New OCG Card: ${card.name}`)
                 await downloadCardImage(id)
                 console.log(`Image saved (${card.name})`)
-            } else if (card && (!card.speedLegal) && datum.misc_info[0]?.formats?.includes('Speed Duel')) {
+            } else if (card && (!card.speedLegal) && speedLegal) {
+                await card.save({
+                    speedLegal: true
+                })
+
                 p++
-                card.speedLegal = true
-                await card.save()
                 console.log(`New Speed Duel Card: ${card.name}`)
                 await downloadCardImage(id)
                 console.log(`Image saved (${card.name})`)
