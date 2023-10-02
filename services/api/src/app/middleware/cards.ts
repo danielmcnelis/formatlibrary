@@ -56,7 +56,7 @@ export const cards = async (req, res, next) => {
             const [field, value] = val.split(':')
             reduced.push([field, value])
             return reduced
-        }, ['name', 'asc']) : [['name', 'asc']]
+        }, [['name', 'asc']]) : [['name', 'asc']]
 
         const cards = await Card.find(filter, booster, limit, page, sort)
         res.json(cards)
