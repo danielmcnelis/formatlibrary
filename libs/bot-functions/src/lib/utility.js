@@ -182,7 +182,7 @@ export const getCard = async (query, fuzzyCards, format) => {
 
     let labels = [
 		`\nRelease Date: ${releaseDate}`,
-		`\nFirst Print: ${firstPrint || format.category === 'Speed' ? 'N/A' : 'OCG Only'}`,
+		`\nFirst Print: ${firstPrint || (format.category === 'Speed' ? 'N/A' : 'OCG Only')}`,
         `${format && format.name ? `\n${format.name} ${format.emoji} Status: ${capitalize(position, true)} ${indicator}` : ''}`
     ]
 
