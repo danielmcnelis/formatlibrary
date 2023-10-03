@@ -49,6 +49,8 @@ export const CardTable = () => {
       category: null,
       region: 'tcg'
     })
+    
+    console.log('queryParams', queryParams)
   
     const [iconParams, setIconParams] = useState({
       continuous: false,
@@ -338,17 +340,21 @@ export const CardTable = () => {
       count()
       search()
     }
-  
+
     // UPDATE FORMAT
     const updateFormat = useCallback(async (e) => {
       if (e.target.value.length) {
         const {data: formatData} = await axios.get(`/api/formats/${e.target.value}`) 
         setFormat(formatData.format)
+        setQueryParams({...queryParams, region: formatData.format?.category })
+
         const category = queryParams.region.includes('tcg') ? 'TCG' :
             queryParams.region.includes('ocg') ? 'OCG' :
             queryParams.region.includes('speed') ? 'Speed' :
-            'TCG'
+            formatData?.format?.category || 'TCG'
             
+        console.log('category', category)
+
         const {data: banlistData} = await axios.get(`/api/banlists/simple/${formatData.format.banlist || 'jun23'}?category=${category}`)
 
         setBanlist(banlistData)
@@ -552,9 +558,10 @@ export const CardTable = () => {
                     <div className="card-search-flexbox">
                         <select
                             id="region"
-                            defaultValue="tcg"
+                            defaultValue={queryParams.region || "tcg"}
                             className="filter"
                             onChange={() => setQueryParams({ ...queryParams, region: document.getElementById('region').value })}
+                            disabled={!!formatName}
                         >
                             <option value="tcg">TCG Legal</option>
                             <option value="ocg">OCG Legal</option>
