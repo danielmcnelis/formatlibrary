@@ -280,7 +280,7 @@ export const getSkillCard = async (member, format, returnCard = false) => {
         time: 15000
     }).then(async (collected) => {
         const query = collected.first().content.toLowerCase()
-        const card_name = findCard(query, fuzzySkillCards)
+        const card_name = await findCard(query, fuzzySkillCards)
 
         const skillCard = await Card.findOne({
             where: {

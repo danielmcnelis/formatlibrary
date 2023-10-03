@@ -2,8 +2,9 @@ import { Card, Status } from '@fl/models'
 
 export const banlistsAll = async (req, res, next) => {
   try {
+    const category = req.query?.category || 'TCG'
     const onlyUnique = (value, index, self) => self.indexOf(value) === index
-    const banlists = [...(await Status.findAll())]
+    const banlists = [...(await Status.findAll({ where: { category }}))]
       .map((s) => s.banlist)
       .filter(onlyUnique)
       .sort()
@@ -135,7 +136,9 @@ export const banlistsDate = async (req, res, next) => {
 
 export const banlistsSimpleDate = async (req, res, next) => {
   try {
-    const {date, category} = req.params
+    const {date} = req.params
+    const category = req.query?.category || 'TCG'
+
     const statuses = [
       ...(await Status.findAll({
         where: {

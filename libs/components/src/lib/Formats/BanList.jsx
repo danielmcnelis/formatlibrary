@@ -10,13 +10,13 @@ export const BanList = (props) => {
     const [banlist, setBanlist] = useState({})
     const {format} = props
     const { id } = useParams()
-    const BL = format ? format.banlist : id
+    const BL = format?.banlist || id
   
     // USE EFFECT SET CARD
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const {data} = await axios.get(`/api/banlists/${BL}`)
+          const {data} = await axios.get(`/api/banlists/${BL}?category=${format?.category}`)
           return setBanlist(data)
         } catch (err) {
           console.log(err)
@@ -25,7 +25,7 @@ export const BanList = (props) => {
       }
   
       fetchData()
-    }, [BL])
+    }, [BL, format?.category])
   
     if (banlist === null) return <NotFound/>
     if (!banlist.limited) return <div />

@@ -102,7 +102,7 @@ export const BanListCreator = () => {
     // USE EFFECT
     useEffect(() => {
         const fetchBanlists = async () => {
-            const {data} = await axios.get(`/api/banlists/all`)
+            const {data} = await axios.get(`/api/banlists/all?category=${category}`)
             setBanlists(data)
         }
         

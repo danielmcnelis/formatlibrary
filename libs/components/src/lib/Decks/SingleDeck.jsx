@@ -85,7 +85,7 @@ export const SingleDeck = () => {
     if (!deck || !deck.format) return
     const fetchData = async () => {
       try {
-        const {data} = await axios.get(`/api/banlists/simple/${deck.format.banlist}`)
+        const {data} = await axios.get(`/api/banlists/simple/${deck.format.banlist}?category=${deck.format.category}`)
         setBanlist(data)
       } catch (err) {
         console.log(err)

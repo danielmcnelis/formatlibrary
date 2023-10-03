@@ -344,7 +344,13 @@ export const CardTable = () => {
       if (e.target.value.length) {
         const {data: formatData} = await axios.get(`/api/formats/${e.target.value}`) 
         setFormat(formatData.format)
-        const {data: banlistData} = await axios.get(`/api/banlists/simple/${formatData.format.banlist || 'jun23'}`)
+        const category = queryParams.region.includes('tcg') ? 'TCG' :
+            queryParams.region.includes('ocg') ? 'OCG' :
+            queryParams.region.includes('speed') ? 'Speed' :
+            ''
+            
+        const {data: banlistData} = await axios.get(`/api/banlists/simple/${formatData.format.banlist || 'jun23'}?category=${category}`)
+
         setBanlist(banlistData)
         const year = formatData.format.date ? parseInt(formatData.format.date.slice(0, 4)) : now.getFullYear()
         const month = formatData.format.date ? parseInt(formatData.format.date.slice(6, 7)) : 12

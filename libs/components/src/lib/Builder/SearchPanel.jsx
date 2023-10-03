@@ -348,7 +348,7 @@ export const SearchPanel = (props) => {
 
         const fetchData = async () => {
             try {
-                const {data} = await axios.get(`/api/banlists/simple/${format.banlist || 'oct22'}`)
+                const {data} = await axios.get(`/api/banlists/simple/${format.banlist || 'oct22'}?category=${format.category}`)
                 setBanlist(data)
             } catch (err) {
                 console.log(err)

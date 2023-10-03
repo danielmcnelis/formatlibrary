@@ -654,11 +654,7 @@ import { config } from '@fl/config'
     let b = 0
     let e = 0
     
-    const statuses = await Status.findAll({
-        where: {
-            category: 'Skill'
-        }
-    })
+    const statuses = await Status.findAll()
 
     for (let i = 0; i < statuses.length; i++) {
         try {
