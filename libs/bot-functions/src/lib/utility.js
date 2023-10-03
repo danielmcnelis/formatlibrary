@@ -119,7 +119,7 @@ export const getCard = async (query, fuzzyCards, format) => {
         await Print.findOne({
             where: {
                 cardId: card.id,
-                setName: {[Op.substring]: 'Speel Duel'}
+                setName: {[Op.substring]: 'Speed Duel'}
             },
             include: Set,
             order: [[Set, 'tcgDate', 'ASC'], ['marketPrice', 'DESC']]
