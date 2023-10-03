@@ -17,7 +17,9 @@ export const banlistsAll = async (req, res, next) => {
 
 export const banlistsDate = async (req, res, next) => {
   try {
-    const {date, category} = req.params
+    const {date} = req.params
+    const category = req.query?.category || 'TCG'
+
     const forbidden = await Status.findAll({
       where: {
         banlist: date,
