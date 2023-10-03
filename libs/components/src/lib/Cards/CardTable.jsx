@@ -136,11 +136,11 @@ export const CardTable = () => {
       if (queryParams.name) filter += `,name:inc:${queryParams.name}`
       if (queryParams.category) filter += `,category:eq:${queryParams.category}`
       if (queryParams.description) filter += `,description:inc:${queryParams.description}`
-      if (queryParams.region === 'tcg') filter += `,tcgLegal:eq:true`
-      if (queryParams.region === 'ocg') filter += `,ocgLegal:eq:true`
+      if (queryParams.region?.toLowerCase() === 'tcg') filter += `,tcgLegal:eq:true`
+      if (queryParams.region?.toLowerCase() === 'ocg') filter += `,ocgLegal:eq:true`
       if (queryParams.region === 'tcg-exclusive') filter += `,tcgLegal:eq:true,ocgLegal:eq:false`
       if (queryParams.region === 'ocg-exclusive') filter += `,tcgLegal:eq:false,ocgLegal:eq:true`
-      if (queryParams.region === 'speed') filter += `,speedLegal:eq:true`
+      if (queryParams.region?.toLowerCase() === 'speed') filter += `,speedLegal:eq:true`
   
       const icons = Object.entries(iconParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
       const attributes = Object.entries(attributeParams).filter((e) => !!e[1]).map((e) => e[0].toUpperCase())
@@ -191,11 +191,11 @@ export const CardTable = () => {
       if (queryParams.name) headers.name = queryParams.name
       if (queryParams.category) filter += `,category:eq:${queryParams.category}`
       if (queryParams.description) headers.description = queryParams.description
-      if (queryParams.region === 'tcg') filter += `,tcgLegal:eq:true`
-      if (queryParams.region === 'ocg') filter += `,ocgLegal:eq:true`
+      if (queryParams.region?.toLowerCase() === 'tcg') filter += `,tcgLegal:eq:true`
+      if (queryParams.region?.toLowerCase() === 'ocg') filter += `,ocgLegal:eq:true`
       if (queryParams.region === 'tcg-exclusive') filter += `,tcgLegal:eq:true,ocgLegal:eq:false`
       if (queryParams.region === 'ocg-exclusive') filter += `,tcgLegal:eq:false,ocgLegal:eq:true`
-      if (queryParams.region === 'speed') filter += `,speedLegal:eq:true`
+      if (queryParams.region?.toLowerCase() === 'speed') filter += `,speedLegal:eq:true`
       if (queryParams.region === 'duelLinks') filter += `,duelLinks:eq:true`
   
       const icons = Object.entries(iconParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
