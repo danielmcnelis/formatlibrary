@@ -123,7 +123,8 @@ export const getCard = async (query, fuzzyCards, format) => {
             },
             include: Set,
             order: [[Set, 'tcgDate', 'ASC'], ['marketPrice', 'DESC']]
-        }) : await Print.findOne({
+        }) : 
+        await Print.findOne({
             where: {
                 cardId: card.id
             },
@@ -131,7 +132,9 @@ export const getCard = async (query, fuzzyCards, format) => {
             order: [[Set, 'tcgDate', 'ASC'], ['marketPrice', 'DESC']]
         })
 
+    console.log('print?.cardCode', print?.cardCode)
     const firstPrint = print ? `${rarities[print.rarity]} ${print.set.setName}` : null 
+    console.log('firstPrint', firstPrint)
 
     const dateType = format.category.toLowerCase() + 'Date'
     const legal = format && card[dateType] && (card[dateType] <= format.date || format.name === 'Traditional' || format.name === 'Current')
