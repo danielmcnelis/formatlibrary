@@ -3,20 +3,25 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { CardImage } from '../Cards/CardImage'
 import { NotFound } from '../General/NotFound'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import './BanList.css'
+
 
 export const BanList = (props) => {
     const [banlist, setBanlist] = useState({})
+    const [searchParams, ] = useSearchParams()
     const {format} = props
     const { id } = useParams()
+    const category = searchParams.get('category') || format?.category || 'TCG'
     const BL = format?.banlist || id
+    console.log('banlist', banlist)
+    console.log('category', category)
   
     // USE EFFECT SET CARD
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const {data} = await axios.get(`/api/banlists/${BL}?category=${format?.category || 'TCG'}`)
+          const {data} = await axios.get(`/api/banlists/${BL}?category=${category}`)
           return setBanlist(data)
         } catch (err) {
           console.log(err)
