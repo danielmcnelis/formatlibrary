@@ -154,7 +154,7 @@ export const CardTable = () => {
       if (groupParams.effect) filter += `,extraDeck:eq:false`
 
       if (cutoff !== `${now.getFullYear()}-12-31`) {
-        queryParams.region?.toLowerCase === 'speed' ? filter += `,speedDate:lte:${cutoff}`: 
+        queryParams.region?.toLowerCase() === 'speed' ? filter += `,speedDate:lte:${cutoff}`: 
         queryParams.region?.toLowerCase().includes('ocg') ? filter += `,ocgDate:lte:${cutoff}` : 
         filter += `,tcgDate:lte:${cutoff}`
       }
@@ -211,7 +211,7 @@ export const CardTable = () => {
       if (groupParams.effect) filter += `,extraDeck:eq:false`
       
       if (cutoff !== `${now.getFullYear()}-12-31`) {
-        queryParams.region?.toLowerCase === 'speed' ? filter += `,speedDate:lte:${cutoff}`: 
+        queryParams.region?.toLowerCase() === 'speed' ? filter += `,speedDate:lte:${cutoff}`: 
         queryParams.region?.toLowerCase().includes('ocg') ? filter += `,ocgDate:lte:${cutoff}` : 
         filter += `,tcgDate:lte:${cutoff}`
       }
