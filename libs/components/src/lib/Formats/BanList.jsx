@@ -28,8 +28,8 @@ export const BanList = (props) => {
     }, [BL, format?.category])
   
     if (banlist === null) return <NotFound/>
-    if (!banlist.limited) return <div />
-    const { forbidden, limited, semiLimited, unlimited } = banlist
+    if (!banlist.id) return <div />
+    const { forbidden, limited, semiLimited, unlimited, limited1, limited2, limited3 } = banlist
   
   /* eslint-disable */
   const convertToTitle = (param = '') => {
@@ -60,12 +60,12 @@ export const BanList = (props) => {
         {
           forbidden.length ? (
             <div>
-              <div id="forbidden" className="banlist-bubble">
-                <div id="forbidden" className="banlist-category">Forbidden:</div>
-                  <div id="forbidden" className="banlist-flexbox">
+                <div id="forbidden" className="banlist-bubble">
+                    <div id="forbidden" className="banlist-category">Forbidden:</div>
+                    <div id="forbidden" className="banlist-flexbox">
                     {
-                      forbidden.map((el) => 
-                      <
+                    forbidden.map((el) => 
+                    <
                         CardImage 
                         width='72px' 
                         padding='1px' 
@@ -73,51 +73,141 @@ export const BanList = (props) => {
                         previous={el.restriction !== el.previous ? el.previous : null}
                         key={el.card.id} 
                         card={el.card}
-                      />
+                    />
                     )
                     }
-                  </div>
-              </div>
+                    </div>
+                </div>
             </div>
           ) : ''
         }
-        
-        <div id="limited" className="banlist-bubble">
-          <div id="limited" className="banlist-category">Limited:</div>
-            <div id="limited" className="banlist-flexbox">
-            {
-              limited.map((el) => 
-              <
-                CardImage 
-                width='72px' 
-                padding='1px' 
-                margin='0px'
-                previous={el.restriction !== el.previous ? el.previous : null}
-                key={el.card.id} 
-                card={el.card}
-              />
-            )
-            }
+
+        {
+          limited.length ? (
+            <div>
+                <div id="limited" className="banlist-bubble">
+                    <div id="limited" className="banlist-category">Limited:</div>
+                    <div id="limited" className="banlist-flexbox">
+                    {
+                    limited.map((el) => 
+                    <
+                        CardImage 
+                        width='72px' 
+                        padding='1px' 
+                        margin='0px'
+                        previous={el.restriction !== el.previous ? el.previous : null}
+                        key={el.card.id} 
+                        card={el.card}
+                    />
+                    )
+                    }
+                    </div>
+                </div>
             </div>
-        </div>
-        <div id="semi-limited" className="banlist-bubble">
-          <div id="semi-limited" className="banlist-category">Semi-Limited:</div>
-            <div id="semi-limited" className="banlist-flexbox">
-            {
-              semiLimited.map((el) => 
-                <
-                  CardImage 
-                  width='72px' 
-                  padding='1px' 
-                  margin='0px'
-                  previous={el.restriction !== el.previous ? el.previous : null}
-                  key={el.card.id}
-                  card={el.card}
-                />
-              )
-            }
-          </div>
-        </div>
+          ) : ''
+        }
+
+        {
+          semiLimited.length ? (
+            <div>
+                <div id="semi-limited" className="banlist-bubble">
+                    <div id="semi-limited" className="banlist-category">Semi-Limited:</div>
+                    <div id="semi-limited" className="banlist-flexbox">
+                    {
+                    semiLimited.map((el) => 
+                    <
+                        CardImage 
+                        width='72px' 
+                        padding='1px' 
+                        margin='0px'
+                        previous={el.restriction !== el.previous ? el.previous : null}
+                        key={el.card.id} 
+                        card={el.card}
+                    />
+                    )
+                    }
+                    </div>
+                </div>
+            </div>
+          ) : ''
+        }
+
+
+        {
+          limited1.length ? (
+            <div>
+                <div id="limited-1" className="banlist-bubble">
+                    <div id="limited-1" className="banlist-category">Up to 1 Per Deck:</div>
+                    <div id="limited-1" className="banlist-flexbox">
+                    {
+                    limited1.map((el) => 
+                    <
+                        CardImage 
+                        width='72px' 
+                        padding='1px' 
+                        margin='0px'
+                        previous={el.restriction !== el.previous ? el.previous : null}
+                        key={el.card.id} 
+                        card={el.card}
+                    />
+                    )
+                    }
+                    </div>
+                </div>
+            </div>
+          ) : ''
+        }
+
+        {  
+          limited2.length ? (
+            <div>
+                <div id="limited-2" className="banlist-bubble">
+                    <div id="limited-2" className="banlist-category">Up to 2 Per Deck:</div>
+                    <div id="limited-2" className="banlist-flexbox">
+                    {
+                    limited1.map((el) => 
+                    <
+                        CardImage 
+                        width='72px' 
+                        padding='1px' 
+                        margin='0px'
+                        previous={el.restriction !== el.previous ? el.previous : null}
+                        key={el.card.id} 
+                        card={el.card}
+                    />
+                    )
+                    }
+                    </div>
+                </div>
+            </div>
+          ) : ''
+        }
+
+        {
+          limited3.length ? (
+            <div>
+                <div id="limited-3" className="banlist-bubble">
+                    <div id="limited-3" className="banlist-category">Up to 3 Per Deck:</div>
+                    <div id="limited-3" className="banlist-flexbox">
+                    {
+                    limited3.map((el) => 
+                    <
+                        CardImage 
+                        width='72px' 
+                        padding='1px' 
+                        margin='0px'
+                        previous={el.restriction !== el.previous ? el.previous : null}
+                        key={el.card.id} 
+                        card={el.card}
+                    />
+                    )
+                    }
+                    </div>
+                </div>
+            </div>
+          ) : ''
+        }
+
         {
             unlimited.length ? (
                 <div id="unlimited" className="banlist-bubble">
