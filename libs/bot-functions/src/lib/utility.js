@@ -125,15 +125,16 @@ export const getCard = async (query, fuzzyCards, format) => {
 
     const firstPrint = print ? `${rarities[print.rarity]} ${print.set.setName}` : null 
 
-    const legal = format && card.tcgDate && (card.tcgDate <= format.date || format.name === 'Traditional' || format.name === 'Current')
+    const dateType = format.category.toLowerCase() + 'Date'
+    const legal = format && card[dateType] && (card[dateType] <= format.date || format.name === 'Traditional' || format.name === 'Current')
     const position = format && format.name === 'Traditional' && legal && status && status.restriction === 'Forbidden' ? 'limited' :
         legal && status ? status.restriction :
         legal && !status ? 'unlimited' :
         'not legal'
 
-    const indicator = position === 'semi-limited' ? emojis.semi :
-        position === 'limited' ? emojis.limited :
-        position === 'unlimited' ? emojis.unlimited :
+    const indicator = position === 'limited' || position === 'limited-1' ? emojis.limited :
+        position === 'semi-limited' || position === 'limited-2' ? emojis.semi :
+        position === 'unlimited' || position === 'limited-3' ? emojis.unlimited :
         emojis.forbidden
 
 	const color = card.category === "Spell" ? "#42f578" :
