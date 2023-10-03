@@ -121,6 +121,7 @@ export const banlistsDate = async (req, res, next) => {
       })
   
     const banlist = {
+      id: date,
       forbidden: forbidden,
       limited: limited,
       semiLimited: semiLimited,
