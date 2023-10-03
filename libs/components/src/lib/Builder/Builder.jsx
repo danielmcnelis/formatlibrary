@@ -469,7 +469,7 @@ export const Builder = () => {
     if (!format.banlist) return
     const fetchData = async () => {
       try {
-        const {data} = await axios.get(`/api/banlists/simple/${format.banlist}?category=${format.category}`)
+        const {data} = await axios.get(`/api/banlists/simple/${format.banlist}?category=${format.category || 'TCG'}`)
         setBanlist(data)
       } catch (err) {
         console.log(err)

@@ -16,7 +16,7 @@ export const BanList = (props) => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const {data} = await axios.get(`/api/banlists/${BL}?category=${format?.category}`)
+          const {data} = await axios.get(`/api/banlists/${BL}?category=${format?.category || 'TCG'}`)
           return setBanlist(data)
         } catch (err) {
           console.log(err)

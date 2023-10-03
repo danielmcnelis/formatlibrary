@@ -347,7 +347,7 @@ export const CardTable = () => {
         const category = queryParams.region.includes('tcg') ? 'TCG' :
             queryParams.region.includes('ocg') ? 'OCG' :
             queryParams.region.includes('speed') ? 'Speed' :
-            ''
+            'TCG'
             
         const {data: banlistData} = await axios.get(`/api/banlists/simple/${formatData.format.banlist || 'jun23'}?category=${category}`)
 

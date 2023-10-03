@@ -97,7 +97,7 @@ export const DeckType = () => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const {data} = await axios.get(`/api/banlists/simple/${summary?.format?.banlist}?category=${summary?.format?.category}`)
+          const {data} = await axios.get(`/api/banlists/simple/${summary?.format?.banlist}?category=${summary?.format?.category || 'TCG'}`)
           setBanList(data)
         } catch (err) {
           console.log(err)

@@ -7,7 +7,7 @@ export const formatsName = async (req, res, next) => {
       where: {
         name: { [Op.iLike]: req.params.name.replace(' ', '_').replace('-', '_') }
       },
-      attributes: ['id', 'name', 'icon', 'date', 'banlist', 'event', 'description']
+      attributes: ['id', 'name', 'icon', 'date', 'banlist', 'category', 'event', 'description']
     })
 
     const deckCount = await Deck.count({
@@ -51,7 +51,7 @@ export const formatsAll = async (req, res, next) => {
           date: { [Op.not]: null }
         }
       },
-      attributes: ['id', 'name', 'icon', 'date', 'banlist', 'event', 'description', 'popular', 'spotlight'],
+      attributes: ['id', 'name', 'icon', 'date', 'banlist', 'category', 'event', 'description', 'popular', 'spotlight'],
       order: [
         ['popular', 'DESC'],
         ['date', 'ASC']
