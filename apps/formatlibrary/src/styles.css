@@ -37,6 +37,12 @@
     --limited-background: #fff5e6;
     --semi-limited-border: #ffbf00;
     --semi-limited-background: #ffffe6;
+    --limited-1-border: #cc7a00;
+    --limited-1-background: #fff5e6;
+    --limited-2-border: #ffbf00;
+    --limited-2-background: #ffffe6;
+    --limited-3-border: #c5cc00;
+    --limited-3-background: #f2fce0;
     --unlimited-border: #7db300;
     --unlimited-background: #f4ffe6ff;
     --main-deck-border: #990099;
@@ -71,6 +77,12 @@
     --limited-background: #846d48;
     --semi-limited-border: #3b1b00;
     --semi-limited-background: #7f5f45;
+    --limited-1-border: #302300;
+    --limited-1-background: #fff846d485e6;
+    --limited-2-border: #3b1b00;
+    --limited-2-background: #7f5f45;
+    --limited-3-border: #3b3000;
+    --limited-3-background: #7f7a45;
     --unlimited-border: #1e2b00;
     --unlimited-background: #576339;
     --main-deck-border: #2c002c;

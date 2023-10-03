@@ -33,6 +33,33 @@
     margin-bottom: 5px;
   }
 
+  .banlist-bubble#limited-1 {
+    width: 760px;
+    border: solid var(--limited-1-border);
+    border-width: 5px 0px;
+    background-color: var(--limited-1-background);
+    padding: 10px 0px;
+    margin-bottom: 5px;
+  }
+
+  .banlist-bubble#limited-2 {
+    width: 760px;
+    border: solid var(--limited-2-border);
+    border-width: 5px 0px;
+    background-color: var(--limited-2-background);
+    padding: 10px 0px;
+    margin-bottom: 5px;
+  }
+
+  .banlist-bubble#limited-3 {
+    width: 760px;
+    border: solid var(--limited-3-border);
+    border-width: 5px 0px;
+    background-color: var(--limited-3-background);
+    padding: 10px 0px;
+    margin-bottom: 5px;
+  }
+  
   .banlist-bubble#unlimited {
     width: 760px;
     border: solid var(--unlimited-border);
