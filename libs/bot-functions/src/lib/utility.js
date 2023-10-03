@@ -115,13 +115,21 @@ export const getCard = async (query, fuzzyCards, format) => {
         }
     }) : null
 
-    const print = await Print.findOne({
-        where: {
-            cardId: card.id
-        },
-        include: Set,
-        order: [[Set, 'tcgDate', 'ASC'], ['marketPrice', 'DESC']]
-    })
+    const print = format.category === 'Speed' ? 
+        await Print.findOne({
+            where: {
+                cardId: card.id,
+                setName: {[Op.includes]: 'Speel Duel'}
+            },
+            include: Set,
+            order: [[Set, 'speedDate', 'ASC'], ['marketPrice', 'DESC']]
+        }) : await Print.findOne({
+            where: {
+                cardId: card.id
+            },
+            include: Set,
+            order: [[Set, 'tcgDate', 'ASC'], ['marketPrice', 'DESC']]
+        })
 
     const firstPrint = print ? `${rarities[print.rarity]} ${print.set.setName}` : null 
 
@@ -165,7 +173,7 @@ export const getCard = async (query, fuzzyCards, format) => {
 	if (card.union) classes.push("Union")
 	if (card.effect) classes.push("Effect")
 
-    const releaseDate = card.tcgDate ? dateToVerbose(card.tcgDate, true, false, true) : 'OCG Only'
+    const releaseDate = card[dateType] ? dateToVerbose(card[dateType], true, false, true) : 'OCG Only'
     let labels = [
 		`\nRelease Date: ${releaseDate}`,
 		`\nFirst Print: ${firstPrint || 'OCG Only'}`,
