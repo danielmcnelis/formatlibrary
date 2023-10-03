@@ -28,8 +28,18 @@ export const BanList = (props) => {
     }, [BL, format?.category])
   
     if (banlist === null) return <NotFound/>
-    if (!banlist.id) return <div />
     const { forbidden, limited, semiLimited, unlimited, limited1, limited2, limited3 } = banlist
+    if (
+        !banlist.id || (
+            !forbidden?.length &&
+            !limited?.length &&
+            !semiLimited?.length &&
+            !limited1?.length &&
+            !limited2?.length &&
+            !limited3?.length &&
+            !unlimited?.length
+        )
+    ) return <div />
   
   /* eslint-disable */
   const convertToTitle = (param = '') => {
