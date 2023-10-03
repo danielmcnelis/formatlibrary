@@ -49,8 +49,6 @@ export const CardTable = () => {
       category: null,
       region: 'tcg'
     })
-    
-    console.log('queryParams', queryParams)
   
     const [iconParams, setIconParams] = useState({
       continuous: false,
@@ -346,15 +344,8 @@ export const CardTable = () => {
       if (e.target.value.length) {
         const {data: formatData} = await axios.get(`/api/formats/${e.target.value}`) 
         setFormat(formatData.format)
-        setQueryParams({...queryParams, region: formatData.format?.category })
-
-        const category = queryParams.region.includes('tcg') ? 'TCG' :
-            queryParams.region.includes('ocg') ? 'OCG' :
-            queryParams.region.includes('speed') ? 'Speed' :
-            formatData?.format?.category || 'TCG'
-            
-        console.log('category', category)
-
+        setQueryParams({...queryParams, region: formatData.format?.category?.toLowerCase() })
+        const category = formatData?.format?.category || 'TCG'
         const {data: banlistData} = await axios.get(`/api/banlists/simple/${formatData.format.banlist || 'jun23'}?category=${category}`)
 
         setBanlist(banlistData)
@@ -558,7 +549,7 @@ export const CardTable = () => {
                     <div className="card-search-flexbox">
                         <select
                             id="region"
-                            defaultValue={queryParams.region || "tcg"}
+                            value={queryParams.region || "tcg"}
                             className="filter"
                             onChange={() => setQueryParams({ ...queryParams, region: document.getElementById('region').value })}
                             disabled={!!formatName}
@@ -587,7 +578,7 @@ export const CardTable = () => {
 
                         <select
                             id="format"
-                            defaultValue={formatName}
+                            value={formatName.toLowerCase() || format?.name?.toLowerCase()}
                             style={{maxWidth: '35vw'}}
                             className="filter"
                             onChange={(e) => updateFormat(e)}
@@ -595,7 +586,7 @@ export const CardTable = () => {
                         >
                             <option key="Current" value="">Current</option>
                             {
-                                formats.filter((f) => !!f.date).map((f) => <option key={f.name} value={f.name}>{capitalize(f.name, true)}</option>)
+                                formats.filter((f) => !!f.date).map((f) => <option key={f.name} value={f.name.toLowerCase()}>{capitalize(f.name, true)}</option>)
                             }
                         </select>
   
@@ -641,9 +632,11 @@ export const CardTable = () => {
                     <div className="card-search-flexbox">
                         <select
                             id="region"
-                            defaultValue="tcg"
+                            value={queryParams.region?.toLowerCase() || "tcg"}
                             className="filter"
                             onChange={() => setQueryParams({ ...queryParams, region: document.getElementById('region').value })}
+                            disabled={!!formatName}
+                            
                         >
                             <option value="tcg">TCG Legal</option>
                             <option value="ocg">OCG Legal</option>
@@ -668,14 +661,14 @@ export const CardTable = () => {
 
                         <select
                             id="format"
-                            defaultValue={formatName}
+                            value={formatName.toLowerCase() || format?.name?.toLowerCase()}
                             className="filter"
                             onChange={(e) => updateFormat(e)}
                             disabled={!!formatName}
                         >
                             <option key="Current" value="">Current</option>
                             {
-                                formats.filter((f) => !!f.date).map((f) => <option key={f.name} value={f.name}>{capitalize(f.name, true)}</option>)
+                                formats.filter((f) => !!f.date).map((f) => <option key={f.name} value={f.name.toLowerCase()}>{capitalize(f.name, true)}</option>)
                             }
                         </select>
   
