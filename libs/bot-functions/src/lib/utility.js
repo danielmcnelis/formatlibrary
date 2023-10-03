@@ -133,9 +133,9 @@ export const getCard = async (query, fuzzyCards, format) => {
         })
 
     const firstPrint = print ? `${rarities[print.rarity]} ${print.set.setName}` : null 
-    const dateType = format.category.toLowerCase() + 'Date'
+    const dateType = format?.category?.toLowerCase() + 'Date'
     const legal = format && card[dateType] && (card[dateType] <= format.date || format.name === 'Traditional' || format.name === 'Current')
-    const position = format && format.name === 'Traditional' && legal && status && status.restriction === 'Forbidden' ? 'limited' :
+    const position = format?.name === 'Traditional' && legal && status && status.restriction === 'Forbidden' ? 'limited' :
         legal && status ? status.restriction :
         legal && !status ? 'unlimited' :
         'not legal'
@@ -174,13 +174,13 @@ export const getCard = async (query, fuzzyCards, format) => {
 	if (card.effect) classes.push("Effect")
 
     const releaseDate = card[dateType] ? dateToVerbose(card[dateType], true, false, true) : 
-        format.category === 'Speed' ? 'N/A' : 
+        format?.category === 'Speed' ? 'N/A' : 
         'OCG Only'
 
     let labels = [
 		`\nRelease Date: ${releaseDate}`,
-		`\nFirst Print: ${firstPrint || (format.category === 'Speed' ? 'N/A' : 'OCG Only')}`,
-        `${format && format.name ? `\n${format.name} ${format.emoji} Status: ${capitalize(position, true)} ${indicator}` : ''}`
+		`\nFirst Print: ${firstPrint || (format?.category === 'Speed' ? 'N/A' : 'OCG Only')}`,
+        `${format && format?.name ? `\n${format?.name} ${format?.emoji} Status: ${capitalize(position, true)} ${indicator}` : ''}`
     ]
 
     if (card.category === 'Monster') {
