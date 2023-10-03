@@ -617,28 +617,58 @@ import { config } from '@fl/config'
 // })()
 
 
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+    
+//     const cards = await Card.findAll({
+//         where: {
+//             category: 'Skill'
+//         }
+//     })
+
+//     for (let i = 0; i < cards.length; i++) {
+//         try {
+//             const card = cards[i]
+//             const speedDate = card.speedDate || card.tcgDate
+//             await card.update({
+//                 speedDate: speedDate,
+//                 tcgLegal: false,
+//                 tcgDate: null,
+//                 ocgLegal: false,
+//                 ocgDate: null
+//             })
+
+//             b++
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     return console.log(`fixed ${b} skill cards and encountered ${e} errors`)
+// })()
+
+
 ;(async () => {
     let b = 0
     let e = 0
     
-    const cards = await Card.findAll({
+    const statuses = await Status.findAll({
         where: {
             category: 'Skill'
         }
     })
 
-    for (let i = 0; i < cards.length; i++) {
+    for (let i = 0; i < statuses.length; i++) {
         try {
-            const card = cards[i]
-            const speedDate = card.speedDate || card.tcgDate
-            await card.update({
-                speedDate: speedDate,
-                tcgLegal: false,
-                tcgDate: null,
-                ocgLegal: false,
-                ocgDate: null
-            })
+            const status = statuses[i]
+            const category = status.category === 'tcg' ? 'TCG' :
+                status.category === 'ocg' ? 'OCG' :
+                status.category === 'speed' ? 'Speed' :
+                null
 
+            await status.update({ category })
             b++
         } catch (err) {
             console.log(err)
@@ -646,5 +676,5 @@ import { config } from '@fl/config'
         }
     }
 
-    return console.log(`fixed ${b} skill cards and encountered ${e} errors`)
+    return console.log(`fixed ${b} statuses and encountered ${e} errors`)
 })()

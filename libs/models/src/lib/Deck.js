@@ -77,6 +77,9 @@ export const Deck = db.define('decks', {
   },
   url: {
     type: Sequelize.STRING
+  },
+  skillCardId: {
+    type: Sequelize.INTEGER
   }
 })
 
@@ -180,11 +183,21 @@ Deck.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
     return decks
 }
 
-Deck.verifyLegality = async (ydk, formatName, formatDate, formatBanlist) => { 
-    const cardIds = formatName === 'Current' ? [...await Card.findAll({ where: { tcgLegal: true }})].map(c => c.konamiCode) : [...await Card.findAll({ where: { tcgDate: { [Op.lte]: formatDate } }})].map(c => c.konamiCode)
-    const forbiddenIds = [...await Status.findAll({ where: { banlist: formatBanlist, restriction: 'forbidden' }, include: Card })].map(s => s.card.konamiCode)
-    const limitedIds = [...await Status.findAll({ where: { banlist: formatBanlist, restriction: 'limited' }, include: Card })].map(s => s.card.konamiCode)
-    const semiIds = [...await Status.findAll({ where: { banlist: formatBanlist, restriction: 'semi-limited' }, include: Card })].map(s => s.card.konamiCode)
+Deck.verifyLegality = async (ydk, formatName, formatDate, formatBanlist, formatCategory) => { 
+    const legalType = formatCategory.toLowerCase() + 'Legal'
+    const dateType = formatCategory.toLowerCase() + 'Date'
+    const cardIds = formatName === 'Current' ? [...await Card.findAll({ where: { [legalType]: true }})].map(c => c.konamiCode) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: formatDate } }})].map(c => c.konamiCode)
+    const forbiddenIds = [...await Status.findAll({ where: { banlist: formatBanlist, category: formatCategory, restriction: 'forbidden' }, include: Card })].map(s => s.card.konamiCode)
+    const limitedIds = [...await Status.findAll({ where: { banlist: formatBanlist, category: formatCategory, restriction: 'limited' }, include: Card })].map(s => s.card.konamiCode)
+    const semiIds = [...await Status.findAll({ where: { banlist: formatBanlist, category: formatCategory, restriction: 'semi-limited' }, include: Card })].map(s => s.card.konamiCode)
+    
+    const limited1Ids = [...await Status.findAll({ where: { banlist: formatBanlist, category: formatCategory, restriction: 'limited-1' }, include: Card })].map(s => s.card.konamiCode)
+    const limited2Ids = [...await Status.findAll({ where: { banlist: formatBanlist, category: formatCategory, restriction: 'limited-2' }, include: Card })].map(s => s.card.konamiCode)
+    const limited3Ids = [...await Status.findAll({ where: { banlist: formatBanlist, category: formatCategory, restriction: 'limited-3' }, include: Card })].map(s => s.card.konamiCode)
+
+    let limited1Count = 0
+    let limited2Count = 0
+    let limited3Count = 0
 
     const main = ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length)
     const extra = ydk.split('#extra')[1].split('!side')[0].split('\n').filter((e) => e.length)
@@ -205,7 +218,17 @@ Deck.verifyLegality = async (ydk, formatName, formatDate, formatBanlist) => {
             return false
         } else if (semiIds.includes(konamiCode) && deck[konamiCode] > 2) {
             return false
+        } else if (limited1Ids.includes(konamiCode)) {
+            limited1Count += deck[konamiCode]
+        } else if (limited2Ids.includes(konamiCode)) {
+            limited2Count += deck[konamiCode]
+        } else if (limited3Ids.includes(konamiCode)) {
+            limited3Count += deck[konamiCode]
         }
+
+        if (limited1Count > 1) return false
+        if (limited2Count > 2) return false
+        if (limited3Count > 3) return false
     }
     
     return true

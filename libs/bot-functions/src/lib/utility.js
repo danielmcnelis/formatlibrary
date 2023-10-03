@@ -54,6 +54,12 @@ export const fetchCardNames = async () => {
     return names
 }
 
+//FETCH SKILL CARD NAMES
+export const fetchSkillCardNames = async () => {
+    const names = [...await Card.findAll({ where: { category: 'Skill' }})].map((card) => card.name)
+    return names
+}
+
 //FETCH OP CARD NAMES
 export const fetchOPCardNames = async () => {
     const names = [...await OPCard.findAll()].map((card) => card.name)
@@ -102,6 +108,7 @@ export const getCard = async (query, fuzzyCards, format) => {
     const status = format ? await Status.findOne({ 
         where: { 
             banlist: format.banlist,
+            category: format.category,
             name: {
                 [Op.iLike]: card_name
             }

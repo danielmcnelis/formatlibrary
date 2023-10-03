@@ -7,6 +7,7 @@ export const BanListCreator = () => {
 	const [month, setMonth] = useState(null)
     const [year, setYear] = useState(null)
     const [previous, setPrevious] = useState(null)
+    const [category, setCategory] = useState('TCG')
     const [changes, setChanges] = useState([])
     const [banlists, setBanlists] = useState([])
     const [card, setCard] = useState(null)
@@ -44,7 +45,7 @@ export const BanListCreator = () => {
         if (!changes || !changes.length) return alert('Please add some changes.')
         
         try {
-            const { data } = await axios.post('/api/banlists/create', { month, year, changes, previous })
+            const { data } = await axios.post('/api/banlists/create', { month, year, category, changes, previous })
             alert(`Success! Added ${data} Cards to the ${month}${year} Ban List`)
             return reset()
         } catch (err) {
@@ -67,6 +68,7 @@ export const BanListCreator = () => {
         const {data} = await axios.get(`/api/statuses/query`, {
             headers: {
                 name: name,
+                category: category,
                 banlist: previous
             }
         })
@@ -109,6 +111,17 @@ export const BanListCreator = () => {
 
     return (
         <div className="admin-portal">
+            <label>Category:
+                <select
+                    id="category"
+                    onChange={(e) => setCategory(e.target.value)}
+                >
+                    <option value="TCG">TCG</option>
+                    <option value="OCG">OCG</option>
+                    <option value="Speed">Speed</option>
+                </select>
+            </label>
+            
             <label>Month:
                 <select
                     id="month"

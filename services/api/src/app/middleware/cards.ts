@@ -88,7 +88,8 @@ export const cardsId = async (req, res, next) => {
         (
             await Status.findAll({
             where: {
-                cardId: card.id
+                cardId: card.id,
+                category: 'TCG'
             },
             attributes: { exclude: ['createdAt', 'updatedAt'] }
             })

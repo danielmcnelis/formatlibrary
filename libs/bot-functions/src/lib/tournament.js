@@ -6,7 +6,7 @@ import axios from 'axios'
 import { Op } from 'sequelize'
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } from 'discord.js'
 import { Deck, Entry, Format, Match, OPCard, Player, Replay, Stats, Server, Team, Tournament } from '@fl/models'
-import { getIssues } from './deck.js'
+import { getIssues, getSkillCard } from './deck.js'
 import { createDecks } from './coverage.js'
 import { capitalize, drawDeck, drawOPDeck, generateRandomString, isMod, shuffleArray } from './utility.js'
 import { emojis } from '@fl/bot-emojis'
@@ -121,6 +121,90 @@ export const getDeckList = async (member, player, format, override = false) => {
              } else {
                 member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck is perfectly legal. ${emojis.legend}`}).catch((err) => console.log(err))
                 return { url, ydk }
+            }
+        } else {
+            member.send({ content: "Sorry, I only accept duelingbook.com/deck links."}).catch((err) => console.log(err))    
+            return false  
+        }
+    }).catch((err) => {
+        console.log(err)
+        member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))
+        return false
+    })
+}
+
+//GET SPEED DECK LIST
+export const getSpeedDeckList = async (member, player, format, override = false) => {      
+    const skillCard = await getSkillCard(member, format, true)  
+    if (!skillCard) return    
+
+    const filter = m => m.author.id === member.user.id
+    const pronoun = override ? `${player.globalName || player.discordName}'s` : 'your'
+    const message = await member.send({ content: `Please provide a duelingbook.com/deck link for ${pronoun} tournament deck.`}).catch((err) => console.log(err))
+    if (!message || !message.channel) return false
+    return await message.channel.awaitMessages({
+        filter,
+        max: 1,
+        time: 180000
+    }).then(async (collected) => {
+        const url = collected.first().content
+        if (url.includes('duelingbook.com/deck?id=')) {		
+            member.send({ content: 'Thanks. Please wait while I download the .YDK file.'})
+            const id = url.slice(url.indexOf('?id=') + 4)
+            const {data} = await axios.get(`https://www.duelingbook.com/php-scripts/load-deck.php/deck?id=${id}`)
+            if (!data) return false
+            const main = data.main.map((e) => e.serial_number)
+            const minimum = format.category === 'Speed' ? 20 : 40
+
+            if (main.length < minimum) {
+                member.send(`I'm sorry, your deck must contain at least ${minimum} cards.`).catch((err) => console.log(err))    
+                return false 
+            }
+
+            const side = data.side.map((e) => e.serial_number)
+            const extra = data.extra.map((e) => e.serial_number)
+            const ydk = ['created by...', '#main', ...main, '#extra', ...extra, '!side', ...side, ''].join('\n')
+            if (format.category !== 'TCG') {
+                member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck has been saved. ${emojis.legend}\n\nPlease note: Decks for ${format.category} Formats cannot be verified at this time. Be sure your deck is legal for this tournament!`}).catch((err) => console.log(err))
+                return { url, ydk }
+            }
+            const deckArr = [...main, ...extra, ...side, skillCard.konamiCode]
+            const issues = await getIssues(deckArr, format)
+            if (!issues) return false
+
+            const { illegalCards, forbiddenCards, limited1Cards, limited2Cards, limited3Cards, unrecognizedCards } = issues
+            if (!illegalCards || !forbiddenCards || !limited1Cards || !limited2Cards || !limited3Cards || !unrecognizedCards) return false
+                
+            if (override) {
+                member.send({ content: `Thanks, ${member.user.username}, I saved a copy of ${pronoun} deck. ${emojis.legend}`}).catch((err) => console.log(err))
+                return { url, ydk }
+            } else if (illegalCards.length || forbiddenCards.length || limited1Cards.length || limited2Cards.length || limited3Cards.length) {
+                let response = [`I'm sorry, ${member.user.username}, your deck is not legal. ${emojis.mad}`]
+                if (illegalCards.length) response = [...response, `\nThe following cards are not included in this format:`, ...illegalCards]
+                if (forbiddenCards.length) response = [...response, `\nThe following cards are forbidden:`, ...forbiddenCards]
+                if (limited1Cards.length) response = [...response, `\nThe following cards are limited to 1 slot per deck:`, ...limited1Cards]
+                if (limited2Cards.length) response = [...response, `\nThe following cards are limited to 2 slots per deck:`, ...limited2Cards]
+                if (limited3Cards.length) response = [...response, `\nThe following cards are limited to 3 slots per deck:`, ...limited3Cards]
+                
+                for (let i = 0; i < response.length; i += 50) {
+                    if (response[i+50] && response[i+50].startsWith("\n")) {
+                        member.send({ content: response.slice(i, i+51).join('\n').toString()}).catch((err) => console.log(err))
+                        i++
+                    } else {
+                        member.send({ content: response.slice(i, i+50).join('\n').toString()}).catch((err) => console.log(err))
+                    }
+                }
+            
+                return false
+            } else if (unrecognizedCards.length) {
+                let response = `I'm sorry, ${member.user.username}, the following card IDs were not found in our database:\n${unrecognizedCards.join('\n')}`
+                response += `\n\nThese cards are either alternate artwork or incorrect in our database. Please contact the Tournament Organizer or the Admin if you can't resolve this.`
+                
+                member.send({ content: response.toString() }).catch((err) => console.log(err))
+                return false
+             } else {
+                member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck is perfectly legal. ${emojis.legend}`}).catch((err) => console.log(err))
+                return { url, ydk, skillCard }
             }
         } else {
             member.send({ content: "Sorry, I only accept duelingbook.com/deck links."}).catch((err) => console.log(err))    

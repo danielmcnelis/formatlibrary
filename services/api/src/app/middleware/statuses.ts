@@ -2,10 +2,12 @@ import { Status } from '@fl/models'
 
 export const statusesQuery = async (req, res, next) => {
   try {
+    const { name, banlist, category } = req.headers
     const status = await Status.findOne({
       where: {
-        name: req.headers.name,
-        banlist: req.headers.banlist
+        name: name,
+        banlist: banlist,
+        category: category
       }
     })
 

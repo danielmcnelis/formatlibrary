@@ -46,6 +46,9 @@ export const Entry = db.define('entries', {
     },
     slot: {
         type: Sequelize.STRING
+    },
+    skillCardId: {
+      type: Sequelize.INTEGER
     }
 })
 

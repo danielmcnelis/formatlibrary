@@ -12,11 +12,13 @@ import { Match, Membership, Player, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
 import { assignTourRoles, conductCensus, downloadNewCards, getMidnightCountdown, markInactives, purgeEntries, 
-    purgeRatedDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices ,updateSets, updateServers, fixDeckFolder,
-    postStandings, checkTimer, closeTournament, createTournament, dropFromTournament, getFilm, 
-    joinTournament, openTournament, processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, 
-    signupForTournament, startChallongeBracket, startTournament, endTournament, saveReplay, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, fetchOPCardNames,  
-    hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation
+    purgeRatedDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices ,updateSets, 
+    updateServers, fixDeckFolder, postStandings, checkTimer, closeTournament, createTournament, 
+    dropFromTournament, getFilm, joinTournament, openTournament, processNoShow, removeFromTournament, 
+    seed, sendDeck, setTimerForTournament, signupForTournament, startChallongeBracket, startTournament, 
+    endTournament, saveReplay, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, 
+    fetchOPCardNames, fetchSkillCardNames, hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, 
+    isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS

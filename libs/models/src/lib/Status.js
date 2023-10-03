@@ -16,5 +16,8 @@ export const Status = db.define('statuses', {
   },
   previous: {
     type: Sequelize.STRING
+  },
+  category: {
+    type: Sequelize.STRING
   }
 })

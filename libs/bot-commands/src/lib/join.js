@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Server, Team, Tournament } from '@fl/models'
-import { askForSimName, getDeckList, getOPDeckList, postParticipant, selectTournament } from '@fl/bot-functions'
+import { askForSimName, getDeckList, getOPDeckList, getSpeedDeckList, postParticipant, selectTournament } from '@fl/bot-functions'
 import { drawDeck, drawOPDeck, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
@@ -45,6 +45,7 @@ export default {
         }) : null
 
         const data = format.category === 'OP' ? await getOPDeckList(interaction.member, player) :
+            format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
             await getDeckList(interaction.member, player, format)
 
         if (!data) return
@@ -55,11 +56,12 @@ export default {
                 team.playerCId === player.id ? 'C' :
                 null
 
-            try { 
+            try {
                 await Entry.create({
                     playerName: player.globalName || player.discordName,
                     url: data.url,
                     ydk: data.ydk || data.opdk,
+                    skillCardId: data.skillCard?.id,
                     participantId: team.participantId,
                     playerId: player.id,
                     tournamentId: tournament.id,
@@ -90,6 +92,7 @@ export default {
                     playerName: player.globalName || player.discordName,
                     url: data.url,
                     ydk: data.ydk || data.opdk,
+                    skillCardId: data.skillCard?.id,
                     playerId: player.id,
                     tournamentId: tournament.id,
                     compositeKey: player.id + tournament.id
@@ -133,6 +136,7 @@ export default {
                     playerName: player.globalName || player.discordName,
                     url: data.url,
                     ydk: data.ydk || data.opdk,
+                    skillCardId: data.skillCard?.id,
                     playerId: player.id,
                     compositeKey: player.id + tournament.id,
                     tournamentId: tournament.id
@@ -167,6 +171,7 @@ export default {
             await entry.update({
                 url: data.url,
                 ydk: data.ydk || data.opdk,
+                skillCardId: data.skillCard?.id,
                 active: true
             })
 

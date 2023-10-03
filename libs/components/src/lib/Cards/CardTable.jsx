@@ -74,6 +74,7 @@ export const CardTable = () => {
       aqua: false,
       beast: false,
       'beast-warrior': false,
+      'creator god': false,
       cyberse: false,
       dinosaur: false,
       'divine-beast': false,
@@ -81,6 +82,7 @@ export const CardTable = () => {
       fairy: false,
       fiend: false,
       fish: false,
+      illusion: false,
       insect: false,
       machine: false,
       plant: false,
@@ -263,7 +265,8 @@ export const CardTable = () => {
       setQueryParams({
         name: null,
         description: null,
-        category: null
+        category: null,
+        region: null
       })
     
       setIconParams({
@@ -290,6 +293,7 @@ export const CardTable = () => {
         aqua: false,
         beast: false,
         'beast-warrior': false,
+        'creator god': false,
         cyberse: false,
         dinosaur: false,
         'divine-beast': false,
@@ -297,6 +301,7 @@ export const CardTable = () => {
         fairy: false,
         fiend: false,
         fish: false,
+        illusion: false,
         insect: false,
         machine: false,
         plant: false,
@@ -454,6 +459,7 @@ export const CardTable = () => {
         ['aqua', 'Aqua'], 
         ['beast', 'Beast'], 
         ['beast-warrior', 'Beast-W.'], 
+        ['creator god', 'Creator G.'], 
         ['cyberse', 'Cyberse'], 
         ['dinosaur', 'Dinosaur'], 
         ['dragon', 'Dragon'], 
@@ -461,6 +467,7 @@ export const CardTable = () => {
         ['fairy', 'Fairy'], 
         ['fiend', 'Fiend'], 
         ['fish', 'Fish'], 
+        ['illusion', 'Illusion'], 
         ['insect', 'Insect'], 
         ['machine', 'Machine'], 
         ['plant', 'Plant'], 

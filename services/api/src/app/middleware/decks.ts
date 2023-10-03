@@ -89,7 +89,7 @@ export const decksUpdateId = async (req, res, next) => {
             }
         })
 
-        const legal = await Deck.verifyLegality(req.body.ydk, req.body.formatName, req.body.formatDate, req.body.formatBanlist)
+        const legal = await Deck.verifyLegality(req.body.ydk, req.body.formatName, req.body.formatDate, req.body.formatBanlist, req.body.formatCategory)
 
         if (!legal) {
             res.sendStatus(409)

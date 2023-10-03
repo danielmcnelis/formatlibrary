@@ -3,9 +3,10 @@
 
 //MODULE IMPORTS
 import axios from 'axios'
+const FuzzySet = require('fuzzyset')
 import { Op } from 'sequelize'
 import { Card, OPCard, Format, Status, Deck, DeckType } from '@fl/models'
-import { convertArrayToObject } from './utility.js'
+import { convertArrayToObject, fetchSkillCardNames, findCard } from './utility.js'
 
 // COMPARE DECKS
 export const compareDecks = (arr1, arr2) => {
@@ -56,17 +57,31 @@ export const getDeckFormat = async (server, message, interaction) => {
 
 // GET ISSUES
 export const getIssues = async (deckArr, format) => {
-    const deck = convertArrayToObject(deckArr)        
-    const cardIds = !format.date ? [...await Card.findAll({ where: { tcgLegal: true }})].map(c => c.konamiCode) : [...await Card.findAll({ where: { tcgDate: { [Op.lte]: format.date } }})].map(c => c.konamiCode)
-    const forbiddenIds = [...await Status.findAll({ where: { banlist: [format.banlist], restriction: 'forbidden' }, include: Card })].map(s => s.card.konamiCode)
-    const limitedIds = [...await Status.findAll({ where: { banlist: [format.banlist], restriction: 'limited' }, include: Card })].map(s => s.card.konamiCode)
-    const semiIds = [...await Status.findAll({ where: { banlist: [format.banlist], restriction: 'semi-limited' }, include: Card })].map(s => s.card.konamiCode)
-
+    const deck = convertArrayToObject(deckArr)   
+    const legalType = format.category.toLowerCase() + 'Legal'    
+    const dateType = format.category.toLowerCase() + 'Date'      
+    const cardIds = format.category === 'Custom' ? [...await Card.findAll()].map(c => c.konamiCode) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: format.date } }})].map(c => c.konamiCode)
+    const forbiddenIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'forbidden' }, include: Card })].map(s => s.card.konamiCode)
+    const limitedIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited' }, include: Card })].map(s => s.card.konamiCode)
+    const semiIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'semi-limited' }, include: Card })].map(s => s.card.konamiCode)
+    
+    const limited1Ids = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-1' }, include: Card })].map(s => s.card.konamiCode)
+    const limited2Ids = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-2' }, include: Card })].map(s => s.card.konamiCode)
+    const limited3Ids = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-3' }, include: Card })].map(s => s.card.konamiCode)
+    
     const illegalCards = []
     const forbiddenCards = []
     const limitedCards = []
     const semiLimitedCards = []
     const unrecognizedCards = []
+
+    let limited1Cards = []
+    let limited2Cards = []
+    let limited3Cards = []
+
+    let limited1Count = 0
+    let limited2Count = 0
+    let limited3Count = 0
 
     const keys = Object.keys(deck)
     for (let i = 0; i < keys.length; i++) {
@@ -89,21 +104,43 @@ export const getIssues = async (deckArr, format) => {
         } else if (semiIds.includes(konamiCode) && deck[konamiCode] > 2) {
             const card = await Card.findOne({ where: { konamiCode: konamiCode } })
             if (card) semiLimitedCards.push(card.name)
+        } else if (limited1Ids.includes(konamiCode)) {
+            const card = await Card.findOne({ where: { konamiCode: konamiCode } })
+            if (card) limited1Cards.push(card.name)
+            limited1Count += deck[konamiCode]
+        } else if (limited2Ids.includes(konamiCode)) {
+            const card = await Card.findOne({ where: { konamiCode: konamiCode } })
+            if (card) limited2Cards.push(card.name)
+            limited2Count += deck[konamiCode]
+        } else if (limited3Ids.includes(konamiCode)) {
+            const card = await Card.findOne({ where: { konamiCode: konamiCode } })
+            if (card) limited3Cards.push(card.name)
+            limited3Count += deck[konamiCode]
         }
     }
+
+    if (limited1Count <= 1) limited1Cards = []
+    if (limited2Count <= 2) limited2Cards = []
+    if (limited3Count <= 3) limited3Cards = []
     
     illegalCards.sort()
     forbiddenCards.sort()
     limitedCards.sort()
     semiLimitedCards.sort()
     unrecognizedCards.sort()
+    limited1Cards.sort()
+    limited2Cards.sort()
+    limited3Cards.sort()
 
     const issues = {
         illegalCards,
         forbiddenCards,
         limitedCards,
         semiLimitedCards,
-        unrecognizedCards
+        unrecognizedCards,
+        limited1Cards,
+        limited2Cards,
+        limited3Cards
     }
 
     return issues
@@ -162,6 +199,107 @@ export const checkDeckList = async (member, format) => {
     }).catch(err => {
         console.log(err)
         member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))
+        return false
+    })
+}
+
+//CHECK SPEED DECK LIST
+export const checkSpeedDeckList = async (member, format, skillCard) => {  
+    const filter = m => m.author.id === member.user.id
+    const message = await member.send({ content: `Please provide a duelingbook.com/deck link for the ${format.name} Format ${format.emoji} deck you would like to check.`}).catch((err) => console.log(err))
+    if (!message || !message.channel) return {}
+    return await message.channel.awaitMessages({
+        filter,
+        max: 1,
+        time: 30000
+    }).then(async collected => {
+        const response = collected.first().content
+        if (response.includes('duelingbook.com/deck?id=')) {		
+            const id = response.slice(response.indexOf('?id=') + 4)
+            const {data} = await axios.get(`https://www.duelingbook.com/php-scripts/load-deck.php/deck?id=${id}`)
+            if (!data) return member.send(`Error: Unable to load duelingbook.com/deck link.`).catch((err) => console.log(err))    
+
+            const main = data.main.map((e) => e.serial_number)
+            const minimum = format.category === 'Speed' ? 20 : 40
+            if (main.length < minimum) return member.send(`I'm sorry, your deck must contain at least ${minimum} cards.`).catch((err) => console.log(err))    
+
+            const side = data.side.map((e) => e.serial_number)
+            const extra = data.extra.map((e) => e.serial_number)
+            const deckArr = [...main, ...side, ...extra, skillCard.konamiCode]
+            const { illegalCards, forbiddenCards, limited1Cards, limited2Cards, limited3Cards, unrecognizedCards } = await getIssues(deckArr, format)
+
+            if (illegalCards.length || forbiddenCards.length || limited1Cards.length || limited2Cards.length || limited3Cards.length) {      
+                let response = [`I'm sorry, ${member.user.username}, your deck is not legal for ${format.name} Format. ${format.emoji}`]
+                if (illegalCards.length) response = [...response, `\nThe following cards are not included in this format:`, ...illegalCards]
+                if (forbiddenCards.length) response = [...response, `\nThe following cards are forbidden:`, ...forbiddenCards]
+                if (limited1Cards.length) response = [...response, `\nThe following cards are limited to 1 slot per deck:`, ...limited1Cards]
+                if (limited2Cards.length) response = [...response, `\nThe following cards are limited to 2 slots per deck:`, ...limited2Cards]
+                if (limited3Cards.length) response = [...response, `\nThe following cards are limited to 3 slots per deck:`, ...limited3Cards]
+                
+                for (let i = 0; i < response.length; i += 50) {
+                    if (response[i+50] && response[i+50].startsWith("\n")) {
+                        member.send({ content: response.slice(i, i+51).join('\n').toString()}).catch((err) => console.log(err))
+                        i++
+                    } else {
+                        member.send({ content: response.slice(i, i+50).join('\n').toString()}).catch((err) => console.log(err))
+                    }
+                }
+            } else if (unrecognizedCards.length) {
+                let response = `I'm sorry, ${member.user.username}, the following card IDs were not found in our database:\n${unrecognizedCards.join('\n')}`
+                response += `\n\nThese cards are either alternate artwork or incorrect in our database. Please contact an admin to resolve this.`
+                return await member.send({ content: response }).catch((err) => console.log(err))
+            } else {
+                return await member.send({ content: `Congrats, your ${format.name} Format deck is perfectly legal! ${format.emoji}`}).catch((err) => console.log(err))
+            }
+        } else {
+            return member.send({ content: "Sorry, I only accept duelingbook.com/deck links."}).catch((err) => console.log(err))    
+        }
+    }).catch(err => {
+        console.log(err)
+        member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))
+        return false
+    })
+}
+
+// GET SKILL CARD
+export const getSkillCard = async (member, format, returnCard = false) => {
+    const fuzzySkillCards = FuzzySet([], false)
+
+    try {
+        const names = await fetchSkillCardNames()
+        names.forEach((card) => fuzzySkillCards.add(card))
+    } catch (err) {
+        console.log(err)
+    }
+
+    const filter = m => m.author.id === member.user.id
+    const message = await member.user.send({ content: `What Skill Card does your deck use?`})
+    return await message.channel.awaitMessages({
+        filter,
+        max: 1,
+        time: 15000
+    }).then(async (collected) => {
+        const query = collected.first().content.toLowerCase()
+        const card_name = findCard(query, fuzzySkillCards)
+
+        const skillCard = await Card.findOne({
+            where: {
+                name: card_name,
+                category: 'Skill'
+            }
+        })
+
+        if (!skillCard) {
+            message.channel.send({ content: `Sorry, could not find Skill card.`})
+            return false
+        } else if (returnCard) {
+            return skillCard
+        } else {
+            return checkSpeedDeckList(member, format, skillCard)
+        }
+    }).catch((err) => {
+        console.log(err)
+        message.channel.send({ content: `Sorry, time's up.`})
         return false
     })
 }
