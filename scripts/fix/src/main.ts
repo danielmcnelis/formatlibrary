@@ -507,48 +507,49 @@ import { config } from '@fl/config'
 // })()
 
 
-// ;(async () => {
-//     let b = 0
-//     let e = 0
+;(async () => {
+    let b = 0
+    let e = 0
     
-//     const sets = await Set.findAll({
-//         where: {
-//             setName: {[Op.substring]: 'Speed Duel'}
-//         },
-//         order: [['tcgDate', 'ASC']]
-//     })
+    const sets = await Set.findAll({
+        where: {
+            setName: {[Op.substring]: 'Speed Duel'}
+        },
+        order: [['tcgDate', 'ASC']]
+    })
 
-//     for (let i = 0; i < sets.length; i++) {
-//         try {
-//             const set = sets[i]
-//             const prints = await Print.findAll({
-//                 where: {
-//                     setId: set.id
-//                 },
-//                 include: Card
-//             })
+    for (let i = 0; i < sets.length; i++) {
+        try {
+            const set = sets[i]
+            const prints = await Print.findAll({
+                where: {
+                    setId: set.id
+                },
+                include: Card
+            })
 
-//             for (let j = 0; j < prints.length; j++) {
-//                 const print = prints[j]
-//                 const card = print.card
+            for (let j = 0; j < prints.length; j++) {
+                const print = prints[j]
+                const card = print.card
                 
-//                 if (!card.speedLegal) {
-//                     await card.update({
-//                         speedLegal: true,
-//                         speedDate: set.tcgDate
-//                     })
+                if (!card.speedLegal || !card.speedDate || card.speedDate < set.tcgDate) {
+                    await card.update({
+                        speedLegal: true,
+                        speedDate: set.tcgDate
+                    })
 
-//                     b++
-//                 }
-//             }
-//         } catch (err) {
-//             console.log(err)
-//             e++
-//         }
-//     }
+                    console.log(`${card.name} was released for speed duels on ${card.speedDate}`)
+                    b++
+                } 
+            }
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
 
-//     return console.log(`updated ${b} cards from ${sets.length} speed duel sets and encountered ${e} errors`)
-// })()
+    return console.log(`updated ${b} cards from ${sets.length} speed duel sets and encountered ${e} errors`)
+})()
 
 
 
@@ -650,27 +651,27 @@ import { config } from '@fl/config'
 // })()
 
 
-;(async () => {
-    let b = 0
-    let e = 0
+// ;(async () => {
+//     let b = 0
+//     let e = 0
     
-    const statuses = await Status.findAll()
+//     const statuses = await Status.findAll()
 
-    for (let i = 0; i < statuses.length; i++) {
-        try {
-            const status = statuses[i]
-            const category = status.category === 'tcg' ? 'TCG' :
-                status.category === 'ocg' ? 'OCG' :
-                status.category === 'speed' ? 'Speed' :
-                null
+//     for (let i = 0; i < statuses.length; i++) {
+//         try {
+//             const status = statuses[i]
+//             const category = status.category === 'tcg' ? 'TCG' :
+//                 status.category === 'ocg' ? 'OCG' :
+//                 status.category === 'speed' ? 'Speed' :
+//                 null
 
-            await status.update({ category })
-            b++
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
+//             await status.update({ category })
+//             b++
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
 
-    return console.log(`fixed ${b} statuses and encountered ${e} errors`)
-})()
+//     return console.log(`fixed ${b} statuses and encountered ${e} errors`)
+// })()

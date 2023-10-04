@@ -6,6 +6,9 @@ import {SearchPanel} from './SearchPanel'
 import { getCookie } from '@fl/utils'
 import axios from 'axios'
 import {Button, Form, Modal} from 'react-bootstrap'
+import {DndContext} from '@dnd-kit/core'
+import {Droppable} from '../General/Droppable'
+import './Builder.css'
 import './CubeMaker.css'
 
 // CUBE MAKER
@@ -20,6 +23,20 @@ export const CubeMaker = () => {
     const [showOpenModal, setShowOpenModal] = useState(false)
     const [showSaveModal, setShowSaveModal] = useState(false)
     const [showUploadModal, setShowUploadModal] = useState(false)
+
+    // HANDLE DRAG END
+    const handleDragEnd = (event) => {
+        if (event.over && event.over.id?.includes('droppable')) {
+            const card = event.active?.data?.current?.card
+            if (event.over.id === 'droppable-main') {
+                addCard(card, 'main')
+            } else if (event.over.id === 'droppable-side') {
+                addCard(card, 'side')
+            } else if (event.over.id === 'droppable-extra') {
+                addCard(card, 'extra')
+            }
+        }
+    }
 
     // SORT FUNCTION
     const sortFn = (a, b) => {
@@ -67,9 +84,7 @@ export const CubeMaker = () => {
         const ydk = ['created by...', '#main', ...main, ''].join('\n')
         const playerId = getCookie('playerId')
 
-        if (!playerId) {
-            alert('Must be logged in to save a Cube.')
-        } else if (cube.id) {
+        if (cube.id) {
             try {
                 await axios.put(`/api/cubes/update/${cube.id}`, {
                     name: name,
@@ -149,20 +164,18 @@ export const CubeMaker = () => {
     }
 
     // ADD CARD
-    const addCard = async (e, card) => {
+    const addCard = async (card) => {
         try {
-            if (e.type === 'contextmenu') {
-                const cardIds = cube.cardPool.map((card) => card.id)
-                if (cardIds.includes(card.id)) {
-                    return
-                } else {
-                    setCube({
-                        ...cube,
-                        cardPool: [...cube.cardPool, card]  
-                    })
+            const cardIds = cube.cardPool.map((card) => card.id)
+            if (cardIds.includes(card.id)) {
+                return
+            } else {
+                setCube({
+                    ...cube,
+                    cardPool: [...cube.cardPool, card]  
+                })
 
-                    setEdited(true)
-                }
+                setEdited(true)
             }
         } catch (err) {
             console.log(err)
@@ -170,13 +183,11 @@ export const CubeMaker = () => {
     }
 
     // REMOVE CARD
-    const removeCard = async (e, index) => {
+    const removeCard = async (index) => {
         try {
-            if (e.type === 'contextmenu') {
-                cube.cardPool.splice(index, 1)
-                setCube({ ...cube })
-                setEdited(true)
-            }
+            cube.cardPool.splice(index, 1)
+            setCube({ ...cube })
+            setEdited(true)
         } catch (err) {
             console.log(err)
         }
@@ -196,9 +207,7 @@ export const CubeMaker = () => {
     const getCubes = async () => {
         try {
             const accessToken = getCookie('access')
-            if (!accessToken) {
-                alert('Must be logged in to open your Cubes.')
-            } else {
+            if (accessToken) {
                 const {data} = await axios.get(`/api/cubes/my-cubes`, {
                     headers: {
                         ...(accessToken && {authorization: `Bearer ${accessToken}`})
@@ -216,10 +225,10 @@ export const CubeMaker = () => {
   useEffect(() => getCubes(), [])
 
   return (
-    <>
+    <DndContext onDragEnd={handleDragEnd}>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossOrigin="anonymous"/>
     <link rel="stylesheet" href="/style.css" />
-    <div className="body" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+    <div className="body" id="cube-maker" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <Modal show={showOpenModal} onHide={() => {setShowOpenModal(false)}}>
             <Modal.Header closeButton>
             <Modal.Title>Open Cube:</Modal.Title>
@@ -360,24 +369,26 @@ export const CubeMaker = () => {
                 <div style={{width: '80px', color: '#CBC5C3', margin: '0px', alignSelf: 'center'}}>{edited ? <i>Edited</i> : ''}</div>
             </div>
 
-            <div id="main" className="deck-bubble">
-                <div id="main" className="deck-flexbox">
-                {
-                    cube.cardPool.map((card, index) => {
-                        if (!card) {
-                            return <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${index}`}/>
-                        } else {
-                            return <CardImage removeCard={removeCard} locale="main" index={index} width='72px' height='107px' padding='1px' margin='0px' key={`main-${index}`} card={card}/>
-                        }
-                    })
-                }
-                {
-                    cube.cardPool.length < 40 ? [...Array(40 - cube.cardPool.length)].map((x, i) => <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>) :
-                    cube.cardPool.length % 10 ? [...Array(10 -  cube.cardPool.length % 10)].map((x, i) => <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>) :
-                    ''
-                }
+            <Droppable locale="main">
+                <div id="main" className="deck-bubble">
+                    <div id="main" className="deck-flexbox">
+                    {
+                        cube.cardPool.map((card, index) => {
+                            if (!card) {
+                                return <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${index}`}/>
+                            } else {
+                                return <CardImage removeCard={removeCard} locale="main" index={index} width='72px' height='107px' padding='1px' margin='0px' key={`main-${index}`} card={card}/>
+                            }
+                        })
+                    }
+                    {
+                        cube.cardPool.length < 40 ? [...Array(40 - cube.cardPool.length)].map((x, i) => <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>) :
+                        cube.cardPool.length % 10 ? [...Array(10 -  cube.cardPool.length % 10)].map((x, i) => <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>) :
+                        ''
+                    }
+                    </div>
                 </div>
-            </div>
+            </Droppable>
             
                 {
                     cube?.id ? (
@@ -401,6 +412,6 @@ export const CubeMaker = () => {
         </div>
         <SearchPanel addCard={addCard}/>
     </div>
-    </>
+    </DndContext>
   )
 }

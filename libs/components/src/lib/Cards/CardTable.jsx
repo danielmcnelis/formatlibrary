@@ -575,6 +575,7 @@ export const CardTable = () => {
                             <option value="Monster">Monsters</option>
                             <option value="Spell">Spells</option>
                             <option value="Trap">Traps</option>
+                            <option value="Skill">Skills</option>
                             <option value="Token">Tokens</option>
                         </select>
 
@@ -658,6 +659,7 @@ export const CardTable = () => {
                             <option value="Monster">Monsters</option>
                             <option value="Spell">Spells</option>
                             <option value="Trap">Traps</option>
+                            <option value="Skill">Skills</option>
                             <option value="Token">Tokens</option>
                         </select>
 

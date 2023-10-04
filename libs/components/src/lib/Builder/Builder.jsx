@@ -7,6 +7,9 @@ import { useLocation } from 'react-router-dom'
 import axios from 'axios'
 import {Button, Form, Modal} from 'react-bootstrap'
 import { getCookie } from '@fl/utils'
+import {DndContext} from '@dnd-kit/core'
+import {Draggable} from '../General/Draggable'
+import {Droppable} from '../General/Droppable'
 import './Builder.css'
 
 export const Builder = () => {
@@ -34,6 +37,47 @@ export const Builder = () => {
     const [showShareModal, setShowShareModal] = useState(false)
     const [showUploadModal, setShowUploadModal] = useState(false)
     const location = useLocation()
+
+    // HANDLE DRAG END
+    const handleDragEnd = (event) => {
+        const card = event.active?.data?.current?.card
+        const [, locale, index] = event.active?.id?.split('-') || []
+        
+        if (event.over && event.over.id?.includes('droppable')) {
+            const [, , index2] = event.over?.id?.split('-') || []
+            if (event.over.id.includes('main') && event.active.id.includes('search')) {
+                addCard(card, 'main')
+            } else if (event.over.id.includes('main') && event.active.id.includes('main')) {
+                changeSlot(locale, index, index2)
+            } else if (event.over.id.includes('main') && event.active.id.includes('side')) {
+                removeCard(locale, index)
+                addCard(card, 'main')
+            } else if (event.over.id.includes('side') && event.active.id.includes('search')) {
+                addCard(card, 'side')
+            } else if (event.over.id.includes('side') && event.active.id.includes('main')) {
+                removeCard(locale, index)
+                addCard(card, 'side')
+            }  else if (event.over.id.includes('side') && event.active.id.includes('extra')) {
+                removeCard(locale, index)
+                addCard(card, 'side')
+            } else if (event.over.id.includes('extra') && event.active.id.includes('search')) {
+                addCard(card, 'extra')
+            } else if (event.over.id.includes('extra') && event.active.id.includes('side')) {
+                removeCard(locale, index)
+                addCard(card, 'extra')
+            } 
+        } else {
+            if (event.active.id.includes('main')) {
+                removeCard(locale, index)
+            } else if (event.active.id.includes('side')) {
+                const [, locale, index] = event.active.id.split('-')
+                removeCard(locale, index)
+            } else if (event.active.id.includes('extra')) {
+                const [, locale, index] = event.active.id.split('-')
+                removeCard(locale, index)
+            }
+        }
+    }
 
     // SORT FUNCTION
     const sortFn = (a, b) => {
@@ -257,40 +301,38 @@ export const Builder = () => {
     }
 
     // ADD CARD
-    const addCard = async (e, card, locale) => {
+    const addCard = async (card, locale) => {
         try {
-            if (e.type === 'contextmenu') {
-                const limit = banlist[card.id] === 'forbidden' ? 0 :
-                    banlist[card.id] === 'limited' ? 1 :
-                    banlist[card.id] === 'semi-limited' ? 2 :
-                    3
+            const limit = banlist[card.id] === 'forbidden' ? 0 :
+                banlist[card.id] === 'limited' ? 1 :
+                banlist[card.id] === 'semi-limited' ? 2 :
+                3
 
-                const count = [...deck.main, ...deck.side, ...deck.extra].reduce((accum, val) => { 
-                    if (val && val.id === card.id) {
-                        return accum + 1
-                    } else {
-                        return accum
-                    }
-                }, 1)
-
-                if (count > limit) return
-
-                if (card.extraDeck) {
-                    if (format.date > '2008-08-05' && deck.extra.length >= 15) return
-                    const extra = [...deck.extra, card].sort((a, b) => {if (b === null) return -1}).filter((e, index) => !!e || index <= 14)
-                    setDeck({...deck, extra})
-                    setEdited(true)
-                } else if (locale === 'main') {
-                    if (format.date > '2008-08-05' && deck.main.length >= 60) return
-                    const main = [...deck.main, card].sort((a, b) => {if (b === null) return -1}).filter((e, index) => !!e || index <= 39)
-                    setDeck({...deck, main})
-                    setEdited(true)
-                } else if (locale === 'side') {
-                    if (deck.side.length >= 15) return
-                    const side = [...deck.side, card].sort((a, b) => {if (b === null) return -1}).filter((e, index) => !!e || index <= 14)
-                    setDeck({...deck, side})
-                    setEdited(true)
+            const count = [...deck.main, ...deck.side, ...deck.extra].reduce((accum, val) => { 
+                if (val && val.id === card.id) {
+                    return accum + 1
+                } else {
+                    return accum
                 }
+            }, 1)
+
+            if (count > limit) return
+
+            if (locale === 'main') {
+                if (format.date > '2008-08-05' && deck.main.length >= 60) return
+                const main = [...deck.main, card].sort((a, b) => {if (b === null) { return -1 } else { return 1}}).filter((e, index) => !!e || index <= 39)
+                setDeck({...deck, main})
+                setEdited(true)
+            } else if (locale === 'side') {
+                if (deck.side.length >= 15) return
+                const side = [...deck.side, card].sort((a, b) => {if (b === null) { return -1 } else { return 1}}).filter((e, index) => !!e || index <= 14)
+                setDeck({...deck, side})
+                setEdited(true)
+            }  else if (locale === 'extra' || card.extraDeck) {
+                if (format.date > '2008-08-05' && deck.extra.length >= 15) return
+                const extra = [...deck.extra, card].sort((a, b) => {if (b === null) { return -1 } else { return 1}}).filter((e, index) => !!e || index <= 14)
+                setDeck({...deck, extra})
+                setEdited(true)
             }
         } catch (err) {
             console.log(err)
@@ -298,13 +340,29 @@ export const Builder = () => {
     }
 
     // REMOVE CARD
-    const removeCard = async (e, locale, index) => {
+    const removeCard = async (locale, index) => {
         try {
-            if (e.type === 'contextmenu') {
-                deck[locale].splice(index, 1)
-                setDeck({ ...deck })
-                setEdited(true)
-            }
+            deck[locale].splice(index, 1)
+            setDeck({ ...deck })
+            setEdited(true)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    // CHANGE SLOT
+    const changeSlot = async (locale, index1, index2) => {
+        console.log('locale, index1, index2', locale, index1, index2)
+        try {
+            const card = deck[locale][index1]
+            console.log('card', card)
+            console.log('deck[locale].length - 1', deck[locale].length - 1)
+            index2 = index2 <= deck[locale].length - 1 ? index2 : deck[locale].length - 1
+            console.log('index2', index2)
+            deck[locale].splice(index1, 1)
+            deck[locale].splice(index2, 0, card)
+            setDeck({ ...deck })
+            setEdited(true)
         } catch (err) {
             console.log(err)
         }
@@ -480,390 +538,459 @@ export const Builder = () => {
   }, [format])
 
   return (
-    <>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossOrigin="anonymous"/>
-    <link rel="stylesheet" href="/assets/css/styles.css" />
-    <div className="body" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Modal show={showOpenModal} onHide={() => {setShowOpenModal(false); setControlPanelFormat(null)}}>
-            <Modal.Header closeButton>
-            <Modal.Title>Open Deck:</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form>
-                    <Form.Group className="mb-3">
-                            <Form.Label>Format:</Form.Label>
-                            <Form.Select id="format-selector" style={{width: '200px'}} aria-label="Format:" onChange={(e) => setControlPanelFormat(e.target.value || null)}>
-                                <option key="all-formats" value="">All Formats</option>
-                            {
-                                formats.filter((f) => f.banlist && myFormats.includes(f.name)).map((f) => <option key={f.name} value={f.name}>{f.name}</option>)
-                            }
-                            </Form.Select>
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                            <Form.Label>Deck-Type:</Form.Label>
-                            <Form.Select id="format-selector" style={{width: '200px'}} aria-label="Format:" onChange={(e) => setControlPanelDeckType(e.target.value || null)}>
-                                <option key="all-formats" value="">All Deck-Types</option>
-                            {
-                                deckTypes.filter((dt) => myDeckTypes.includes(dt.name)).map((dt) => <option key={dt.id} value={dt.name}>{dt.name}</option>)
-                            }
-                            </Form.Select>
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Deck:</Form.Label>
-                        <Form.Select
-                            aria-label="deck-name" 
-                            id="deck-name"
-                            defaultValue=""
-                            className="filter"
-                            onChange={(e) => {getDeck(e.target.value || null); setControlPanelFormat(null); setControlPanelDeckType(null)}}
-                        >
-                        {
-                            decks.filter((d) => (!controlPanelFormat && !controlPanelDeckType) || (!controlPanelFormat || d.formatName === controlPanelFormat) && (!controlPanelDeckType || d.type === controlPanelDeckType)).map((d) => <option key={d.id} value={d.id}>{d.id === deck.id ? deck.name : d.name}</option>)
-                        }
-                        </Form.Select>
-                    </Form.Group>
-                </Form>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="primary" onClick={() => {getDeck(document.getElementById('deck-name').value); setControlPanelFormat(null)}}>Open</Button>
-                <Button variant="secondary" onClick={() => {setShowOpenModal(false); setControlPanelFormat(null)}}>Cancel</Button>
-            </Modal.Footer>
-        </Modal>
-        
-        <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-            <Modal.Header closeButton> 
-                <Modal.Title>Delete Deck:</Modal.Title> 
-            </Modal.Header>
-            <Modal.Body>Are you sure you want to delete {deck.name}?</Modal.Body>
-            <Modal.Footer>
-                <Button variant="primary" onClick={() => deleteDeck()}> Delete </Button>
-                <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
-            </Modal.Footer>
-        </Modal>
-        
-        <Modal show={showUploadModal} onHide={() => setShowUploadModal(false)}>
-            <Modal.Header closeButton> 
-                <Modal.Title>Import YDK:</Modal.Title> 
-            </Modal.Header>
-            <Modal.Body>
-                <label>YDK:
-                    <input
-                        id="ydk"
-                        className="login"
-                        type="file"
-                        accept=".ydk"
-                        onChange={(e) => readYDK(e.target.files[0])}
-                    />
-                </label>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="primary" onClick={() => readYDK(document.getElementById('ydk').files[0])}>Upload</Button>
-                <Button variant="secondary" onClick={() => setShowUploadModal(false)}>Cancel</Button>
-            </Modal.Footer>
-        </Modal>
-    
-        <Modal show={showPublishModal} onHide={() => setShowPublishModal(false)}>
-            <Modal.Header closeButton> 
-                <Modal.Title>{deck.display ? 'Unpublish Deck' : 'Publish Deck'}</Modal.Title> 
-            </Modal.Header>
-            <Modal.Body>Are you sure you want make {deck.name} {deck.display ? 'private' : 'public'}?</Modal.Body>
-            <Modal.Footer>
-                <Button variant="primary" onClick={() => deck.display ? unpublishDeck() : publishDeck()}>{deck.display ? 'Unpublish' : 'Publish'}</Button>
-                <Button variant="secondary" onClick={() => setShowPublishModal(false)}>Cancel</Button>
-            </Modal.Footer>
-        </Modal>
-
-        <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
-            <Modal.Header closeButton style={{width: '560px'}}>
-            <Modal.Title>{deck.id ? 'Edit Labels:' : 'Save Deck:'}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body style={{width: '560px'}}>
-                <Form style={{width: '560px'}}>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Name:</Form.Label>
-                        <Form.Control
-                            type="name"
-                            id="save-as-name"
-                            defaultValue={deck.name}
-                            autoFocus
-                        />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Format:</Form.Label>
-                        <Form.Select 
-                            aria-label="Format:" 
-                            style={{width: '180px'}}
-                            defaultValue={deck.format ? deck.format.name : ''}
-                            onChange={(e) => updateFormat(e)}
-                        >
-                        <option key={format.name} value={format.name}>{format.name}</option>
-                        {
-                            formats.filter((f) => !!f.banlist).map((f) => <option key={f.name} value={f.name}>{f.name}</option>)
-                        }
-                        </Form.Select>
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Deck-Type:</Form.Label>
-                        <Form.Select 
-                            id="deck-type" 
-                            aria-label="Deck Type:" 
-                            defaultValue={deck.type}
-                            onChange={(e) => handleDeckTypeSelect(e)}
-                        >
-                        <option key="None" value="">None</option>
-                        {
-                            deckTypes.map((dt) => <option key={dt.id} value={dt.name}>{dt.name}</option>)
-                        }
-                        </Form.Select>
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Deck-Type (Not Listed):</Form.Label>
-                        <Form.Control
-                            type="other-deck-type"
-                            id="other-deck-type"
-                            defaultValue={deck.suggestedType}
-                            onChange={(e) => handleOtherDeckTypeInput(e)}
-                        />
-                    </Form.Group>
-                </Form>
-            </Modal.Body>
-            <Modal.Footer style={{width: '560px'}}>
-            <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
-                Cancel
-            </Button>
-            <Button variant="primary" onClick={() => saveDeck()}>
-                Save
-            </Button>
-            </Modal.Footer>
-        </Modal>        
-
-        <Modal show={showShareModal} onHide={() => setShowShareModal(false)}>
-            <Modal.Header closeButton> 
-                <Modal.Title>Share Deck</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form.Group className="mb-3">
-                    <Form.Label>Link Expires After:</Form.Label>
-                    <Form.Select id="link-expiration" aria-label="Link Expires:">
-                        <option key="1 hour" value={60 * 60 * 1000}>1 hour</option>
-                        <option key="24 hours" value={24 * 60 * 60 * 1000}>24 hours</option>
-                        <option key="7 days" value={7 * 24 * 60 * 60 * 1000}>7 days</option>
-                        <option key="30 days" value={30 * 24 * 60 * 60 * 1000}>30 days</option>
-                        <option key="never" value="">Never</option>
-                    </Form.Select>
-                </Form.Group>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="primary" onClick={() => shareDeck()}>Share</Button>
-                <Button variant="secondary" onClick={() => setShowShareModal(false)}>Cancel</Button>
-            </Modal.Footer>
-        </Modal>       
-
-    <div style={{display: 'flex', justifyContent: 'center', margin: '0px 5px 0px 15px'}}>
-        <div className="builder-control-panel">
-            <div 
-                className={"show-cursor control-panel-button"}
-                onClick={() => newDeck()}
-            >                                    
-                <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/new-file.png`} alt="new-file"/></div> 
-                <div className="control-panel-text"><b>New Deck</b></div> 
-            </div> 
-            
-            <div 
-                className={"show-cursor control-panel-button"}
-                onClick={() => {
-                    setShowOpenModal(true)
-                }}
-            >                                    
-                <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`} alt="open-file"/></div> 
-                <div className="control-panel-text"><b>Open Deck</b></div> 
-            </div> 
-
-            <div 
-                className={"show-cursor control-panel-button"}
-                onClick={() => setShowUploadModal(true)}
-            >                                    
-                <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/upload.png`}/></div> 
-                <div className="control-panel-text"><b>Upload Deck</b></div> 
-            </div>
-
-            <div 
-                className={"show-cursor control-panel-button"}
-                onClick={() => setShowSaveModal(true)}
-            >                                   
-                <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/edit.png`}/></div> 
-                <div className="control-panel-text"><b>Edit Labels</b></div> 
-            </div>
-
-            <div 
-                className={"show-cursor control-panel-button"}
-                onClick={() => clearDeck()}
-            >                                    
-                <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/erase.png`}/></div> 
-                <div className="control-panel-text"><b>Clear Deck</b></div> 
-            </div> 
-
-            <div 
-                className={"show-cursor control-panel-button"}
-                onClick={() => copyDeck()}
-            >                  
-                <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/copy.png`}/></div> 
-                <div className="control-panel-text"><b>Copy Deck</b></div> 
-            </div> 
-
-            <div 
-                className={"show-cursor control-panel-button"}
-                onClick={() => getDeck(deck.id)}
-            >                  
-                <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/revert.png`}/></div> 
-                <div className="control-panel-text"><b>Revert Deck</b></div> 
-            </div> 
-
-            <div 
-                className={"show-cursor control-panel-button"}
-                onClick={() => sortDeck()}
-            >                         
-                <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/sort.png`}/></div> 
-                <div className="control-panel-text"><b>Sort Deck</b></div> 
-            </div>
-
-            <div 
-                className={"show-cursor control-panel-button"}
-                onClick={() => deck.id ? saveDeck() : setShowSaveModal(true)}
-            >                  
-                <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/save.png`}/></div> 
-                <div className="control-panel-text"><b>Save Deck</b></div> 
-            </div> 
-        </div>
-
-        <div>
-            <div className="single-deck-title-flexbox">
-                <div style={{width: '80px'}}/>
-                <div className="single-deck-title">{deck.name || 'New Deck'} <img style={{width:'32px', margin: '10px 20px'}} src={`https://cdn.formatlibrary.com/images/emojis/${deck.format ? format.icon : 'master'}.png`}/></div>
-                <div style={{width: '80px', color: '#CBC5C3', margin: '0px', alignSelf: 'center'}}>{edited ? <i>Edited</i> : ''}</div>
-            </div>
-
-            <div id="main" className="deck-bubble">
-                <div id="main" className="deck-flexbox">
-                {
-                    deck.main.map((card, index) => {
-                        if (!card) {
-                            return <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${index}`}/>
-                        } else {
-                            return <CardImage removeCard={removeCard} locale="main" index={index} width='72px' height='107px' padding='1px' margin='0px' key={`main-${index}`} card={card} status={banlist[card.id]}/>
-                        }
-                    })
-                }
-                {
-                    deck.main.length < 40 ? [...Array(40 - deck.main.length)].map((x, i) => <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>) :
-                    deck.main.length % 10 ? [...Array(10 -  deck.main.length % 10)].map((x, i) => <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>) :
-                    ''
-                }
-                </div>
-            </div>
-            
-                <div id="side" className="deck-bubble">
-                    <div id="side" className="deck-flexbox">
-                    {
-                        deck.side.map((card, index) => {
-                            if (!card) {
-                                return <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`side-${index}`}/>
-                            } else {
-                                return <CardImage className="card-image" removeCard={removeCard} locale="side" index={index} width='48px' height='71px' padding='0.5px' margin='0px' key={`side-${index}`} card={card} status={banlist[card.id]}/>
-                            }
-                        })              
-                    }
-                    {
-                        [...Array(15 - deck.side.length)].map((x, i) => <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`side-${i}`}/>)
-                    }
-                    </div>
-                </div>
-        
-                <div id="extra" className="deck-bubble">
-                    <div id="extra" className="deck-flexbox">
-                    {
-                        deck.extra.map((card, index) => {
-                            if (!card) {
-                                return <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`extra-${index}`}/>
-                            } else {
-                                return <CardImage className="card-image" removeCard={removeCard} locale="extra" index={index} onContextMenu={() => removeCard('extra', index)} width='48px' height='71px' padding='0.5px' margin='0px' key={`extra-${index}`} card={card} status={banlist[card.id]}/>
-                            }
-                        })
-                    }
-                    {
-                        deck.extra.length < 15 ? [...Array(15 - deck.extra.length)].map((x, i) => <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`extra-${i}`}/>) :
-                        deck.extra.length % 15 ? [...Array(15 -  deck.extra.length % 15)].map((x, i) => <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`extra-${i}`}/>) :
-                        ''
-                    }
-                    </div>
-                </div>
-                {
-                    deck.id ? (
-                        <div className="builder-bottom-panel">                     
-                            <div 
-                                className="show-cursor deck-button" 
-                                onClick={() => setShowDeleteModal(true)}
-                            >
-                                <b style={{padding: '0px 6px'}}>Delete</b>
-                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/delete.png`}/>
-                            </div>   
-                                
-                            <div>
-                                <a
-                                    className="link"
-                                    href={`/api/decks/download/${deck.id}?playerId=${deck.playerId}`} 
-                                    download={`${deck.builder}-${deck.name || deck.type}.ydk`}
-                                >                                    
-                                    <div className="deck-button">
-                                        <b style={{padding: '0px 6px'}}>Download</b>
-                                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`}/>
-                                    </div> 
-                                </a>
-                            </div>   
-                            
-                            <div>
-                                <div 
-                                    className="show-cursor deck-button"
-                                    onClick={() => {
-                                        if (deck.display) {
-                                            window.open(`/decks/${deck.id}`, "_blank")
-                                        } else if (deck.shareLink && new Date() < deck.linkExpiration) {
-                                            window.open(`/decks/${deck.shareLink}`, "_blank")
-                                        } else {
-                                            setShowShareModal(true)
-                                        }
-                                    }}
-                                >
-                                    <b style={{padding: '0px 6px'}}>Share</b>
-                                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/share.png`}/>
-                                </div>
-                            </div>
-                                
-                            <div 
-                                className="show-cursor deck-button"
-                                onClick={() => setShowPublishModal(true)}
-                            >
+    <DndContext onDragEnd={handleDragEnd}>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossOrigin="anonymous"/>
+        <link rel="stylesheet" href="/assets/css/styles.css" />
+        <div className="body" id="builder" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Modal show={showOpenModal} onHide={() => {setShowOpenModal(false); setControlPanelFormat(null)}}>
+                <Modal.Header closeButton>
+                <Modal.Title>Open Deck:</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group className="mb-3">
+                                <Form.Label>Format:</Form.Label>
+                                <Form.Select id="format-selector" style={{width: '200px'}} aria-label="Format:" onChange={(e) => setControlPanelFormat(e.target.value || null)}>
+                                    <option key="all-formats" value="">All Formats</option>
                                 {
-                                    deck.display ? (
-                                        <div className="deck-button">
-                                            <b style={{padding: '0px 6px'}}>Unpublish</b>
-                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/hide.png`}/>
-                                        </div> 
-                                    ) : (
-                                        <div className="deck-button">
-                                            <b style={{padding: '0px 6px'}}>Publish</b>
-                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/globe.png`}/>
-                                        </div> 
+                                    formats.filter((f) => f.banlist && myFormats.includes(f.name)).map((f) => <option key={f.name} value={f.name}>{f.name}</option>)
+                                }
+                                </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                                <Form.Label>Deck-Type:</Form.Label>
+                                <Form.Select id="format-selector" style={{width: '200px'}} aria-label="Format:" onChange={(e) => setControlPanelDeckType(e.target.value || null)}>
+                                    <option key="all-formats" value="">All Deck-Types</option>
+                                {
+                                    deckTypes.filter((dt) => myDeckTypes.includes(dt.name)).map((dt) => <option key={dt.id} value={dt.name}>{dt.name}</option>)
+                                }
+                                </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Deck:</Form.Label>
+                            <Form.Select
+                                aria-label="deck-name" 
+                                id="deck-name"
+                                defaultValue=""
+                                className="filter"
+                                onChange={(e) => {getDeck(e.target.value || null); setControlPanelFormat(null); setControlPanelDeckType(null)}}
+                            >
+                            {
+                                decks.filter((d) => (!controlPanelFormat && !controlPanelDeckType) || (!controlPanelFormat || d.formatName === controlPanelFormat) && (!controlPanelDeckType || d.type === controlPanelDeckType)).map((d) => <option key={d.id} value={d.id}>{d.id === deck.id ? deck.name : d.name}</option>)
+                            }
+                            </Form.Select>
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={() => {getDeck(document.getElementById('deck-name').value); setControlPanelFormat(null)}}>Open</Button>
+                    <Button variant="secondary" onClick={() => {setShowOpenModal(false); setControlPanelFormat(null)}}>Cancel</Button>
+                </Modal.Footer>
+            </Modal>
+            
+            <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+                <Modal.Header closeButton> 
+                    <Modal.Title>Delete Deck:</Modal.Title> 
+                </Modal.Header>
+                <Modal.Body>Are you sure you want to delete {deck.name}?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={() => deleteDeck()}> Delete </Button>
+                    <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
+                </Modal.Footer>
+            </Modal>
+            
+            <Modal show={showUploadModal} onHide={() => setShowUploadModal(false)}>
+                <Modal.Header closeButton> 
+                    <Modal.Title>Import YDK:</Modal.Title> 
+                </Modal.Header>
+                <Modal.Body>
+                    <label>YDK:
+                        <input
+                            id="ydk"
+                            className="login"
+                            type="file"
+                            accept=".ydk"
+                            onChange={(e) => readYDK(e.target.files[0])}
+                        />
+                    </label>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={() => readYDK(document.getElementById('ydk').files[0])}>Upload</Button>
+                    <Button variant="secondary" onClick={() => setShowUploadModal(false)}>Cancel</Button>
+                </Modal.Footer>
+            </Modal>
+        
+            <Modal show={showPublishModal} onHide={() => setShowPublishModal(false)}>
+                <Modal.Header closeButton> 
+                    <Modal.Title>{deck.display ? 'Unpublish Deck' : 'Publish Deck'}</Modal.Title> 
+                </Modal.Header>
+                <Modal.Body>Are you sure you want make {deck.name} {deck.display ? 'private' : 'public'}?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={() => deck.display ? unpublishDeck() : publishDeck()}>{deck.display ? 'Unpublish' : 'Publish'}</Button>
+                    <Button variant="secondary" onClick={() => setShowPublishModal(false)}>Cancel</Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
+                <Modal.Header closeButton style={{width: '560px'}}>
+                <Modal.Title>{deck.id ? 'Edit Labels:' : 'Save Deck:'}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{width: '560px'}}>
+                    <Form style={{width: '560px'}}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Name:</Form.Label>
+                            <Form.Control
+                                type="name"
+                                id="save-as-name"
+                                defaultValue={deck.name}
+                                autoFocus
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Format:</Form.Label>
+                            <Form.Select 
+                                aria-label="Format:" 
+                                style={{width: '180px'}}
+                                defaultValue={deck.format ? deck.format.name : ''}
+                                onChange={(e) => updateFormat(e)}
+                            >
+                            <option key={format.name} value={format.name}>{format.name}</option>
+                            {
+                                formats.filter((f) => !!f.banlist).map((f) => <option key={f.name} value={f.name}>{f.name}</option>)
+                            }
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Deck-Type:</Form.Label>
+                            <Form.Select 
+                                id="deck-type" 
+                                aria-label="Deck Type:" 
+                                defaultValue={deck.type}
+                                onChange={(e) => handleDeckTypeSelect(e)}
+                            >
+                            <option key="None" value="">None</option>
+                            {
+                                deckTypes.map((dt) => <option key={dt.id} value={dt.name}>{dt.name}</option>)
+                            }
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Deck-Type (Not Listed):</Form.Label>
+                            <Form.Control
+                                type="other-deck-type"
+                                id="other-deck-type"
+                                defaultValue={deck.suggestedType}
+                                onChange={(e) => handleOtherDeckTypeInput(e)}
+                            />
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer style={{width: '560px'}}>
+                <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
+                    Cancel
+                </Button>
+                <Button variant="primary" onClick={() => saveDeck()}>
+                    Save
+                </Button>
+                </Modal.Footer>
+            </Modal>        
+
+            <Modal show={showShareModal} onHide={() => setShowShareModal(false)}>
+                <Modal.Header closeButton> 
+                    <Modal.Title>Share Deck</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Link Expires After:</Form.Label>
+                        <Form.Select id="link-expiration" aria-label="Link Expires:">
+                            <option key="1 hour" value={60 * 60 * 1000}>1 hour</option>
+                            <option key="24 hours" value={24 * 60 * 60 * 1000}>24 hours</option>
+                            <option key="7 days" value={7 * 24 * 60 * 60 * 1000}>7 days</option>
+                            <option key="30 days" value={30 * 24 * 60 * 60 * 1000}>30 days</option>
+                            <option key="never" value="">Never</option>
+                        </Form.Select>
+                    </Form.Group>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={() => shareDeck()}>Share</Button>
+                    <Button variant="secondary" onClick={() => setShowShareModal(false)}>Cancel</Button>
+                </Modal.Footer>
+            </Modal>       
+
+        <div style={{display: 'flex', justifyContent: 'center', margin: '0px 5px 0px 15px'}}>
+            <div className="builder-control-panel">
+                <div 
+                    className={"show-cursor control-panel-button"}
+                    onClick={() => newDeck()}
+                >                                    
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/new-file.png`} alt="new-file"/></div> 
+                    <div className="control-panel-text"><b>New Deck</b></div> 
+                </div> 
+                
+                <div 
+                    className={"show-cursor control-panel-button"}
+                    onClick={() => {
+                        setShowOpenModal(true)
+                    }}
+                >                                    
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`} alt="open-file"/></div> 
+                    <div className="control-panel-text"><b>Open Deck</b></div> 
+                </div> 
+
+                <div 
+                    className={"show-cursor control-panel-button"}
+                    onClick={() => setShowUploadModal(true)}
+                >                                    
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/upload.png`}/></div> 
+                    <div className="control-panel-text"><b>Upload Deck</b></div> 
+                </div>
+
+                <div 
+                    className={"show-cursor control-panel-button"}
+                    onClick={() => setShowSaveModal(true)}
+                >                                   
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/edit.png`}/></div> 
+                    <div className="control-panel-text"><b>Edit Labels</b></div> 
+                </div>
+
+                <div 
+                    className={"show-cursor control-panel-button"}
+                    onClick={() => clearDeck()}
+                >                                    
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/erase.png`}/></div> 
+                    <div className="control-panel-text"><b>Clear Deck</b></div> 
+                </div> 
+
+                <div 
+                    className={"show-cursor control-panel-button"}
+                    onClick={() => copyDeck()}
+                >                  
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/copy.png`}/></div> 
+                    <div className="control-panel-text"><b>Copy Deck</b></div> 
+                </div> 
+
+                <div 
+                    className={"show-cursor control-panel-button"}
+                    onClick={() => getDeck(deck.id)}
+                >                  
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/revert.png`}/></div> 
+                    <div className="control-panel-text"><b>Revert Deck</b></div> 
+                </div> 
+
+                <div 
+                    className={"show-cursor control-panel-button"}
+                    onClick={() => sortDeck()}
+                >                         
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/sort.png`}/></div> 
+                    <div className="control-panel-text"><b>Sort Deck</b></div> 
+                </div>
+
+                <div 
+                    className={"show-cursor control-panel-button"}
+                    onClick={() => deck.id ? saveDeck() : setShowSaveModal(true)}
+                >                  
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/save.png`}/></div> 
+                    <div className="control-panel-text"><b>Save Deck</b></div> 
+                </div> 
+            </div>
+
+            <div>
+                <div className="single-deck-title-flexbox">
+                    <div style={{width: '80px'}}/>
+                    <div className="single-deck-title">{deck.name || 'New Deck'} <img style={{width:'32px', margin: '10px 20px'}} src={`https://cdn.formatlibrary.com/images/emojis/${deck.format ? format.icon : 'master'}.png`}/></div>
+                    <div style={{width: '80px', color: '#CBC5C3', margin: '0px', alignSelf: 'center'}}>{edited ? <i>Edited</i> : ''}</div>
+                </div>
+
+                    <div id="main" className="deck-bubble">
+                        <div id="main" className="deck-flexbox">
+                        {
+                            deck.main.map((card, index) => {
+                                if (!card) {
+                                    return (
+                                        <Droppable locale="main" index={index}>
+                                            <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${index}`}/>
+                                        </Droppable>
+                                    )
+                                } else {
+                                    return (
+                                        <Droppable locale="main" index={index}>
+                                            <Draggable>
+                                                <CardImage 
+                                                    removeCard={removeCard}
+                                                    locale="main"
+                                                    index={index}
+                                                    width='72px'
+                                                    height='107px'
+                                                    padding='1px'
+                                                    margin='0px'
+                                                    key={`main-${index}`}
+                                                    card={card}
+                                                    disableLink={true}
+                                                    status={banlist[card.id]}
+                                                />
+                                            </Draggable>
+                                         </Droppable>
                                     )
                                 }
-                            </div>
+                            })
+                        }
+                        {
+                            deck.main.length < 40 ? [...Array(40 - deck.main.length)].map((x, i) => (
+                                <Droppable locale="main" index={i}>
+                                    <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>
+                                </Droppable>
+                            )) :
+                            deck.main.length % 10 ? [...Array(10 -  deck.main.length % 10)].map((x, i) => (
+                                <Droppable locale="main" index={i}>
+                                    <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>
+                                </Droppable>   
+                            )) :
+                            ''
+                        }
                         </div>
-                    ) : ''
-                }
+                    </div>
+                
+                <Droppable locale="side">
+                    <div id="side" className="deck-bubble">
+                        <div id="side" className="deck-flexbox">
+                        {
+                            deck.side.map((card, index) => {
+                                if (!card) {
+                                    return <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`side-${index}`}/>
+                                } else {
+                                    return (
+                                        <Draggable>
+                                            <CardImage 
+                                                className="card-image" 
+                                                removeCard={removeCard} 
+                                                locale="side" 
+                                                index={index} 
+                                                width='48px' 
+                                                height='71px' 
+                                                padding='0.5px' 
+                                                margin='0px' 
+                                                key={`side-${index}`} 
+                                                card={card} 
+                                                disableLink={true}
+                                                status={banlist[card.id]}
+                                            />
+                                        </Draggable>
+                                    )
+                                }
+                            })              
+                        }
+                        {
+                            [...Array(15 - deck.side.length)].map((x, i) => <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`side-${i}`}/>)
+                        }
+                        </div>
+                    </div>
+                </Droppable>
+            
+                <Droppable locale="extra">
+                    <div id="extra" className="deck-bubble">
+                        <div id="extra" className="deck-flexbox">
+                        {
+                            deck.extra.map((card, index) => {
+                                if (!card) {
+                                    return <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`extra-${index}`}/>
+                                } else {
+                                    return (
+                                        <Draggable>
+                                            <CardImage 
+                                                className="card-image" 
+                                                removeCard={removeCard} 
+                                                locale="extra" 
+                                                index={index} 
+                                                onContextMenu={() => removeCard('extra', index)} 
+                                                width='48px' 
+                                                height='71px' 
+                                                padding='0.5px' 
+                                                margin='0px' 
+                                                key={`extra-${index}`} 
+                                                card={card} 
+                                                disableLink={true}
+                                                status={banlist[card.id]}
+                                            />            
+                                        </Draggable>
+                                    )
+                                }
+                            })
+                        }
+                        {
+                            deck.extra.length < 15 ? [...Array(15 - deck.extra.length)].map((x, i) => <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`extra-${i}`}/>) :
+                            deck.extra.length % 15 ? [...Array(15 -  deck.extra.length % 15)].map((x, i) => <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`extra-${i}`}/>) :
+                            ''
+                        }
+                        </div>
+                    </div>
+                </Droppable>
+                    {
+                        deck.id ? (
+                            <div className="builder-bottom-panel">                     
+                                <div 
+                                    className="show-cursor deck-button" 
+                                    onClick={() => setShowDeleteModal(true)}
+                                >
+                                    <b style={{padding: '0px 6px'}}>Delete</b>
+                                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/delete.png`}/>
+                                </div>   
+                                    
+                                <div>
+                                    <a
+                                        className="link"
+                                        href={`/api/decks/download/${deck.id}?playerId=${deck.playerId}`} 
+                                        download={`${deck.builder}-${deck.name || deck.type}.ydk`}
+                                    >                                    
+                                        <div className="deck-button">
+                                            <b style={{padding: '0px 6px'}}>Download</b>
+                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`}/>
+                                        </div> 
+                                    </a>
+                                </div>   
+                                
+                                <div>
+                                    <div 
+                                        className="show-cursor deck-button"
+                                        onClick={() => {
+                                            if (deck.display) {
+                                                window.open(`/decks/${deck.id}`, "_blank")
+                                            } else if (deck.shareLink && new Date() < deck.linkExpiration) {
+                                                window.open(`/decks/${deck.shareLink}`, "_blank")
+                                            } else {
+                                                setShowShareModal(true)
+                                            }
+                                        }}
+                                    >
+                                        <b style={{padding: '0px 6px'}}>Share</b>
+                                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/share.png`}/>
+                                    </div>
+                                </div>
+                                    
+                                <div 
+                                    className="show-cursor deck-button"
+                                    onClick={() => setShowPublishModal(true)}
+                                >
+                                    {
+                                        deck.display ? (
+                                            <div className="deck-button">
+                                                <b style={{padding: '0px 6px'}}>Unpublish</b>
+                                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/hide.png`}/>
+                                            </div> 
+                                        ) : (
+                                            <div className="deck-button">
+                                                <b style={{padding: '0px 6px'}}>Publish</b>
+                                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/globe.png`}/>
+                                            </div> 
+                                        )
+                                    }
+                                </div>
+                            </div>
+                        ) : ''
+                    }
+                </div>
             </div>
+            <SearchPanel addCard={addCard} format={format} formats={formats} setFormat={setFormat}/>
         </div>
-        <SearchPanel addCard={addCard} format={format} formats={formats} setFormat={setFormat}/>
-    </div>
-    </>
+    </DndContext>
   )
 }

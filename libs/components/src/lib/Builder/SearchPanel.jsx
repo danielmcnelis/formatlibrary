@@ -8,6 +8,8 @@ import {MiniPagination} from '../General/MiniPagination'
 import axios from 'axios'
 import { capitalize } from '@fl/utils'
 import { useMediaQuery } from 'react-responsive'
+import {Draggable} from '../General/Draggable'
+
 import './Builder.css'
 
 const symbols = {
@@ -618,16 +620,20 @@ export const SearchPanel = (props) => {
                     <div id="builderGalleryFlexBox" >
                         {total ? (
                             cards.map((card) => {
-                            return <
-                                        CardImage 
-                                        addCard={props.addCard}
-                                        key={card.id} 
-                                        card={card} 
-                                        width="60px"
-                                        margin="1px"
-                                        padding="0.5px"
-                                        status={banlist[card.id]}
-                                    />
+                                return (
+                                    <Draggable>
+                                        <CardImage 
+                                            addCard={props.addCard}
+                                            key={'search-' + card.id} 
+                                            card={card}
+                                            disableLink={true}
+                                            width="60px"
+                                            margin="1px"
+                                            padding="0.5px"
+                                            status={banlist[card.id]}
+                                        />
+                                    </Draggable>
+                                )
                             })
                         ) : (
                             <div />
