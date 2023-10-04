@@ -532,7 +532,7 @@ import { config } from '@fl/config'
                 const print = prints[j]
                 const card = print.card
                 
-                if (!card.speedLegal || !card.speedDate || card.speedDate < set.tcgDate) {
+                if (!card.speedLegal || !card.speedDate || card.speedDate > set.tcgDate) {
                     await card.update({
                         speedLegal: true,
                         speedDate: set.tcgDate
