@@ -4,6 +4,7 @@ import cards from './cards'
 import cubes from './cubes'
 import decks from './decks'
 import deckTypes from './deckTypes'
+import drafts from './drafts'
 import events from './events'
 import formats from './formats'
 import images from './images'
@@ -14,4 +15,4 @@ import sets from './sets'
 import stats from './stats'
 import statuses from './statuses'
 
-export { banlists, blogposts, cards, cubes, decks, deckTypes, events, formats, images, matchups, players, replays, sets, stats, statuses }
+export { banlists, blogposts, cards, cubes, decks, deckTypes, drafts, events, formats, images, matchups, players, replays, sets, stats, statuses }

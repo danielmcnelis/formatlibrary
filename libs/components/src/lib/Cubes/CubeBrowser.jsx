@@ -25,6 +25,7 @@ export const CubeBrowser = () => {
         builder: '',
         cardPool: []
     })
+    console.log('cube', cube)
 
     const [advanced, setAdvanced] = useState(false)
     const { id } = useParams()
@@ -122,31 +123,31 @@ export const CubeBrowser = () => {
     const search = useCallback(async () => {
         const sortFn = (a, b) => {
             const [key, dir] = sortBy.split(':')
-            if (key === 'name' && dir.includes('asc')) {
+            if (key === 'name' && dir?.includes('asc')) {
                 if (b.name < a.name) {
                     return 1
                 } else if (b.name > a.name) {
                     return -1
                 }
-            } else if (key === 'name' && dir.includes('desc')) {
+            } else if (key === 'name' && dir?.includes('desc')) {
                 if (b.name > a.name) {
                     return 1
                 } else if (b.name < a.name) {
                     return -1
                 }
-            } else if (key === 'tcgDate' && dir.includes('asc'))  {
+            } else if (key === 'tcgDate' && dir?.includes('asc'))  {
                 if (b.tcgDate < a.tcgDate) {
                     return 1
                 } else if (b.tcgDate > a.tcgDate) {
                     return -1
                 }
-            } else if (key === 'tcgDate' && dir.includes('desc')) {
+            } else if (key === 'tcgDate' && dir?.includes('desc')) {
                 if (b.tcgDate > a.tcgDate) {
                     return 1
                 } else if (b.tcgDate < a.tcgDate) {
                     return -1
                 }
-            } else if (key === 'atk' && dir.includes('asc'))  {
+            } else if (key === 'atk' && dir?.includes('asc'))  {
                 if (a.atk === null) {
                     return 1
                 } else if (b.atk < a.atk) {
@@ -154,7 +155,7 @@ export const CubeBrowser = () => {
                 } else if (b.atk > a.atk) {
                     return -1
                 }
-            } else if (key === 'atk' && dir.includes('desc')) {
+            } else if (key === 'atk' && dir?.includes('desc')) {
                 if (a.atk === null) {
                     return 1
                 } else if (b.atk > a.atk) {
@@ -162,7 +163,7 @@ export const CubeBrowser = () => {
                 } else if (b.atk < a.atk) {
                     return -1
                 }
-            } else if (key === 'def' && dir.includes('asc'))  {
+            } else if (key === 'def' && dir?.includes('asc'))  {
                 if (a.def === null) {
                     return 1
                 } else if (b.def < a.def) {
@@ -170,7 +171,7 @@ export const CubeBrowser = () => {
                 } else if (b.def > a.def) {
                     return -1
                 }
-            } else if (key === 'def' && dir.includes('desc')) {
+            } else if (key === 'def' && dir?.includes('desc')) {
                 if (a.def === null) {
                     return 1
                 } else if (b.def > a.def) {
@@ -178,7 +179,7 @@ export const CubeBrowser = () => {
                 } else if (b.def < a.def) {
                     return -1
                 }
-            } else if (key === 'level' && dir.includes('asc'))  {
+            } else if (key === 'level' && dir?.includes('asc'))  {
                 if (a.level === null && a.rating === null) {
                     return 1
                 } else if (b.level < a.level || b.rating < a.rating) {
@@ -186,7 +187,7 @@ export const CubeBrowser = () => {
                 } else if (b.level > a.level || b.rating > a.rating) {
                     return -1
                 }
-            } else if (key === 'level' && dir.includes('desc')) {
+            } else if (key === 'level' && dir?.includes('desc')) {
                 if (a.level === null && a.rating === null) {
                     return 1
                 } else if (b.level > a.level || b.rating > a.rating) {
@@ -201,11 +202,11 @@ export const CubeBrowser = () => {
 
       const results = cube.cardPool.filter((c) => {
         if (queryParams.name) {
-            if (!c.name?.toLowerCase().includes(queryParams.name?.toLowerCase())) return false
+            if (!c.name?.toLowerCase()?.includes(queryParams.name?.toLowerCase())) return false
         }
 
         if (queryParams.description) {
-            if (!c.description?.toLowerCase().includes(queryParams.description?.toLowerCase())) return false
+            if (!c.description?.toLowerCase()?.includes(queryParams.description?.toLowerCase())) return false
         }
 
         if (queryParams.category) {

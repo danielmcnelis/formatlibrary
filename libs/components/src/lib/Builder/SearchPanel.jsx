@@ -50,7 +50,8 @@ export const SearchPanel = (props) => {
     const [queryParams, setQueryParams] = useState({
         name: null,
         description: null,
-        category: null
+        category: null,
+        region: 'tcg'
     })
 
     const [iconParams, setIconParams] = useState({
@@ -127,6 +128,9 @@ export const SearchPanel = (props) => {
         if (queryParams.name) filter += `,name:inc:${queryParams.name}`
         if (queryParams.category) filter += `,category:eq:${queryParams.category}`
         if (queryParams.description) filter += `,description:inc:${queryParams.description}`
+        if (queryParams.region?.toLowerCase() === 'tcg') filter += `,tcgLegal:eq:true`
+        if (queryParams.region?.toLowerCase() === 'ocg') filter += `,ocgLegal:eq:true`
+        if (queryParams.region?.toLowerCase() === 'speed') filter += `,speedLegal:eq:true`
 
         const icons = Object.entries(iconParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
         const attributes = Object.entries(attributeParams).filter((e) => !!e[1]).map((e) => e[0].toUpperCase())
@@ -138,7 +142,12 @@ export const SearchPanel = (props) => {
         if (types.length) filter += `,type:or:arr(${types.join(';')})`
         groups.forEach((g) => filter += `,${g}:eq:true`)
         if (groupParams.effect) filter += `,extraDeck:eq:false`
-        if (cutoff !== `${now.getFullYear()}-12-31`) filter += `,tcgDate:lte:${cutoff}`
+
+        if (cutoff !== `${now.getFullYear()}-12-31`) {
+            queryParams.region?.toLowerCase() === 'speed' ? filter += `,speedDate:lte:${cutoff}`: 
+            queryParams.region?.toLowerCase().includes('ocg') ? filter += `,ocgDate:lte:${cutoff}` : 
+            filter += `,tcgDate:lte:${cutoff}`
+        }
 
         const minLevel = sliders.level[0]
         const maxLevel = sliders.level[1]
@@ -165,6 +174,9 @@ export const SearchPanel = (props) => {
         if (queryParams.name) filter += `,name:inc:${queryParams.name}`
         if (queryParams.category) filter += `,category:eq:${queryParams.category}`
         if (queryParams.description) filter += `,description:inc:${queryParams.description}`
+        if (queryParams.region?.toLowerCase() === 'tcg') filter += `,tcgLegal:eq:true`
+        if (queryParams.region?.toLowerCase() === 'ocg') filter += `,ocgLegal:eq:true`
+        if (queryParams.region?.toLowerCase() === 'speed') filter += `,speedLegal:eq:true`
 
         const icons = Object.entries(iconParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
         const attributes = Object.entries(attributeParams).filter((e) => !!e[1]).map((e) => e[0].toUpperCase())
@@ -176,7 +188,12 @@ export const SearchPanel = (props) => {
         if (types.length) filter += `,type:or:arr(${types.join(';')})`
         groups.forEach((g) => filter += `,${g}:eq:true`)
         if (groupParams.effect) filter += `,extraDeck:eq:false`
-        if (cutoff !== `${now.getFullYear()}-12-31`) filter += `,tcgDate:lte:${cutoff}`
+
+        if (cutoff !== `${now.getFullYear()}-12-31`) {
+            queryParams.region?.toLowerCase() === 'speed' ? filter += `,speedDate:lte:${cutoff}`: 
+            queryParams.region?.toLowerCase().includes('ocg') ? filter += `,ocgDate:lte:${cutoff}` : 
+            filter += `,tcgDate:lte:${cutoff}`
+        }
 
         const minLevel = sliders.level[0]
         const maxLevel = sliders.level[1]
@@ -376,78 +393,80 @@ export const SearchPanel = (props) => {
     }, [props, page, sortBy, cutoff, queryParams, groupParams, iconParams, attributeParams, typeParams])
 
     const advancedButtons = {
-    icon: [
-        ['normal'], 
-        ['continuous'], 
-        ['counter'], 
-        ['equip'], 
-        ['field'], 
-        ['ritual'], 
-        ['quick-play']
-    ],
-    attribute: [
-        ['dark'], 
-        ['light'], 
-        ['earth'], 
-        ['wind'], 
-        ['water'], 
-        ['fire'], 
-        ['divine']
-    ],
-    type: [
-        ['aqua'], 
-        ['beast'], 
-        ['beast-warrior'], 
-        ['cyberse'], 
-        ['dinosaur'], 
-        ['dragon'], 
-        ['divine-beast'], 
-        ['fairy'], 
-        ['fiend'], 
-        ['fish'], 
-        ['insect'], 
-        ['machine'], 
-        ['plant'], 
-        ['psychic'], 
-        ['pyro'], 
-        ['reptile'], 
-        ['rock'], 
-        ['sea serpent'],
-        ['spellcaster'], 
-        ['thunder'], 
-        ['warrior'], 
-        ['winged beast'],
-        ['wyrm'], 
-        ['zombie']
-    ],
-    group: [
-        ['normal'], 
-        ['effect'], 
-        ['ritual'], 
-        ['pendulum'], 
-        ['fusion'], 
-        ['synchro'], 
-        ['xyz'], 
-        ['link'], 
-        ['flip'], 
-        ['gemini'], 
-        ['spirit'], 
-        ['toon'], 
-        ['tuner'], 
-        ['union']
-    ]
+        icon: [
+            ['normal'], 
+            ['continuous'], 
+            ['counter'], 
+            ['equip'], 
+            ['field'], 
+            ['ritual'], 
+            ['quick-play']
+        ],
+        attribute: [
+            ['dark'], 
+            ['light'], 
+            ['earth'], 
+            ['wind'], 
+            ['water'], 
+            ['fire'], 
+            ['divine']
+        ],
+        type: [
+            ['aqua'], 
+            ['beast'], 
+            ['beast-warrior'], 
+            ['creator-god'], 
+            ['cyberse'], 
+            ['dinosaur'], 
+            ['dragon'], 
+            ['divine-beast'], 
+            ['fairy'], 
+            ['fiend'], 
+            ['fish'], 
+            ['illusion'], 
+            ['insect'], 
+            ['machine'], 
+            ['plant'], 
+            ['psychic'], 
+            ['pyro'], 
+            ['reptile'], 
+            ['rock'], 
+            ['sea serpent'],
+            ['spellcaster'], 
+            ['thunder'], 
+            ['warrior'], 
+            ['winged beast'],
+            ['wyrm'], 
+            ['zombie']
+        ],
+        group: [
+            ['normal'], 
+            ['effect'], 
+            ['ritual'], 
+            ['pendulum'], 
+            ['fusion'], 
+            ['synchro'], 
+            ['xyz'], 
+            ['link'], 
+            ['flip'], 
+            ['gemini'], 
+            ['spirit'], 
+            ['toon'], 
+            ['tuner'], 
+            ['union']
+        ]
     }
 
     const advancedButtonKeys = Object.keys(advancedButtons)
     
     return (
         <div className="SearchPanel">
-            <div>
+            <div className="search-panel-flexbox">
                 <input
                     id="searchBar"
                     className="filter"
                     type="text"
-                    style={{width:"240px", margin: "2px 0px"}}
+                    style={{width:"100%", margin: "2px 8px"}}
                     placeholder="🔍"
                     onChange={() => runQuery()}
                     onKeyDown={(e) => {
@@ -456,15 +475,38 @@ export const SearchPanel = (props) => {
                 />
             </div>
 
-            <div>
+            <div className="search-panel-flexbox">
+                <select
+                    id="search-by"
+                    defaultValue="name"
+                    className="filter"
+                    onChange={() => runQuery()}
+                >
+                    <option value="name">Search: Name</option>
+                    <option value="description">Search: Text</option>
+                </select>
+
+                <select
+                    id="region"
+                    value={queryParams.region || "tcg"}
+                    className="filter"
+                    onChange={() => setQueryParams({ ...queryParams, region: document.getElementById('region').value })}
+                >
+                    <option value="tcg">TCG Legal</option>
+                    <option value="ocg">OCG Legal</option>
+                    <option value="all">All Cards</option>
+                    <option value="speed">Speed Duel</option>
+                </select>
+            </div>
+
+            <div className="search-panel-flexbox">
                 <select
                     id="category"
                     defaultValue=""
-                    style={{maxWidth: '29vw', margin: '0px 2px'}}
                     className="filter"
                     onChange={() => setQueryParams({ ...queryParams, category: document.getElementById('category').value })}
                 >
-                    <option value="">Cards</option>
+                    <option value="">Card Type</option>
                     <option value="Monster">Monster</option>
                     <option value="Spell">Spell</option>
                     <option value="Trap">Trap</option>
@@ -473,7 +515,6 @@ export const SearchPanel = (props) => {
                 <select
                     id="format"
                     value={format?.name || ""}
-                    style={{maxWidth: '35vw'}}
                     className="filter"
                     onChange={(e) => updateFormat(e)}
                 >
@@ -484,169 +525,173 @@ export const SearchPanel = (props) => {
                 </select>
             </div>
 
-            {!advanced ? (
-                <div
-                    className="refinedButton"
-                    type="submit"
-                    style={{width:"240px"}}
-                    onClick={() => setAdvanced(!advanced)}
-                >
-                    Show Advanced Options
-                </div>
-            ) : (
-                <div style={{alignItems: 'center', justifyContent: 'center'}}>
+            <div className="centered-content-flexbox">
+                {!advanced ? (
                     <div
                         className="refinedButton"
                         type="submit"
-                        style={{width:"240px"}}
+                        style={{width:"100%"}}
                         onClick={() => setAdvanced(!advanced)}
                     >
-                        Hide Advanced Options
+                        Show Advanced Options
                     </div>
-                    <br />
-                    {
-                        advancedButtonKeys.map((buttonClass) => (
-                        <div key={buttonClass} style={{margin: '0px auto', alignItems: 'center', justifyContent: 'center', width: '240px', flexWrap: 'wrap' }}>
-                            {
-                            advancedButtons[buttonClass].map((el) => {
-                                const params = buttonClass === 'icon' ? iconParams : 
-                                buttonClass === 'attribute' ? attributeParams : 
-                                buttonClass === 'type' ? typeParams : 
-                                groupParams
-
-                                return (
-                                <MiniAdvButton 
-                                    key={el[0]} 
-                                    id={el[0]} 
-                                    display={el[1]}
-                                    buttonClass={buttonClass} 
-                                    clicked={params[el[0]]}
-                                    removeFilter={removeFilter} 
-                                    applyFilter={applyFilter}
-                                />
-                                )}
-                            )
-                            }
+                ) : (
+                    <div style={{alignItems: 'center', justifyContent: 'center'}}>
+                        <div
+                            className="refinedButton"
+                            type="submit"
+                            style={{width:"240px"}}
+                            onClick={() => setAdvanced(!advanced)}
+                        >
+                            Hide Advanced Options
                         </div>
-                        ))
-                    }          
-                    <br />
+                        <br />
+                        {
+                            advancedButtonKeys.map((buttonClass) => (
+                            <div key={buttonClass} style={{margin: '0px auto', alignItems: 'center', justifyContent: 'center', width: '240px', flexWrap: 'wrap' }}>
+                                {
+                                advancedButtons[buttonClass].map((el) => {
+                                    const params = buttonClass === 'icon' ? iconParams : 
+                                    buttonClass === 'attribute' ? attributeParams : 
+                                    buttonClass === 'type' ? typeParams : 
+                                    groupParams
 
-                    <div>
-                        <div>
-                        <Slider
-                            id="level"
-                            type="range-slider"
-                            symbol={Star}
-                            step={1}
-                            min={1}
-                            max={12}
-                            margin="none"
-                            maxWidth="210px"
-                            sliders = {sliders}
-                            setSliders = {setSliders}
-                            defaultValue = {sliders.level}
-                        />
-                        <Slider
-                            id="atk"
-                            type="range-slider"
-                            symbol={Swords}
-                            step={50}
-                            min={0}
-                            max={5000}
-                            margin="none"
-                            maxWidth="210px"
-                            sliders = {sliders}
-                            setSliders = {setSliders}
-                            defaultValue = {sliders.atk}
-                        />
-                        <Slider
-                            id="def"
-                            type="range-slider"
-                            symbol={Shield}
-                            step={50}
-                            min={0}
-                            max={5000}
-                            margin="none"
-                            maxWidth="210px"
-                            sliders = {sliders}
-                            setSliders = {setSliders}
-                            defaultValue = {sliders.def}
-                        />
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            <div>
-                <div>
-                Results:{' '}
-                {
-                    total ? `${cardsPerPage * page - cardsPerPage + 1} - ${
-                        total >=
-                        cardsPerPage * page
-                            ? cardsPerPage * page
-                            : total
-                        } of ${total}`
-                    : total
-                }
-                </div>
-
-                <div>
-                    <select
-                        id="sortSelector"
-                        defaultValue="nameASC"
-                        style={{width: '160px', maxWidth: '45vw'}}
-                        onChange={(e) => { setSortBy(e.target.value); setPage(1)}}
-                    >
-                        <option value="name:asc">Name: A ⮕ Z</option>
-                        <option value="name:desc">Name: Z ⮕ A</option>
-                        <option value="tcgDate:asc">Date: Old ⮕ New</option>
-                        <option value="tcgDate:desc">Date: New ⮕ Old</option>
-                        <option value="atk:desc nulls last">ATK: Desc. ⬇</option>
-                        <option value="atk:asc nulls last">ATK: Asc. ⬆</option>
-                        <option value="def:desc nulls last">DEF: Desc. ⬇</option>
-                        <option value="def:asc nulls last">DEF: Asc. ⬆</option>
-                        <option value="level:desc nulls last,rating:desc nulls last">Level: Desc. ⬇</option>
-                        <option value="level:asc nulls last,rating:asc nulls last">Level: Asc. ⬆</option>
-                    </select>
-                    <div
-                        className="searchButton desktop-only"
-                        type="submit"
-                        onClick={() => reset()}
-                    >
-                        Reset
-                    </div>
-                    <div id="builderGalleryFlexBox" >
-                        {total ? (
-                            cards.map((card) => {
-                                return (
-                                    <Draggable>
-                                        <CardImage 
-                                            addCard={props.addCard}
-                                            key={'search-' + card.id} 
-                                            card={card}
-                                            disableLink={true}
-                                            width="60px"
-                                            margin="1px"
-                                            padding="0.5px"
-                                            status={banlist[card.id]}
-                                        />
-                                    </Draggable>
+                                    return (
+                                    <MiniAdvButton 
+                                        key={el[0]} 
+                                        id={el[0]} 
+                                        display={el[1]}
+                                        buttonClass={buttonClass} 
+                                        clicked={params[el[0]]}
+                                        removeFilter={removeFilter} 
+                                        applyFilter={applyFilter}
+                                    />
+                                    )}
                                 )
-                            })
-                        ) : (
-                            <div />
-                        )}
+                                }
+                            </div>
+                            ))
+                        }          
+                        <br />
+
+                        <div>
+                            <div>
+                            <Slider
+                                id="level"
+                                type="range-slider"
+                                symbol={Star}
+                                step={1}
+                                min={1}
+                                max={12}
+                                margin="none"
+                                maxWidth="210px"
+                                sliders = {sliders}
+                                setSliders = {setSliders}
+                                defaultValue = {sliders.level}
+                            />
+                            <Slider
+                                id="atk"
+                                type="range-slider"
+                                symbol={Swords}
+                                step={50}
+                                min={0}
+                                max={5000}
+                                margin="none"
+                                maxWidth="210px"
+                                sliders = {sliders}
+                                setSliders = {setSliders}
+                                defaultValue = {sliders.atk}
+                            />
+                            <Slider
+                                id="def"
+                                type="range-slider"
+                                symbol={Shield}
+                                step={50}
+                                min={0}
+                                max={5000}
+                                margin="none"
+                                maxWidth="210px"
+                                sliders = {sliders}
+                                setSliders = {setSliders}
+                                defaultValue = {sliders.def}
+                            />
+                            </div>
+                        </div>
                     </div>
-                    <MiniPagination
-                        setPage={setPage}
-                        itemCount={total}
-                        page={page}
-                        itemsPerPage={cardsPerPage}
-                    />
+                )}
+            </div>
+
+            <div className="centered-content-flexbox">
+                <div>
+                    Results:{' '}
+                    {
+                        total ? `${cardsPerPage * page - cardsPerPage + 1} - ${
+                            total >=
+                            cardsPerPage * page
+                                ? cardsPerPage * page
+                                : total
+                            } of ${total}`
+                        : total
+                    }
                 </div>
             </div>
+
+            <div className="search-panel-flexbox">
+                <select
+                    id="sortSelector"
+                    defaultValue="nameASC"
+                    onChange={(e) => { setSortBy(e.target.value); setPage(1)}}
+                >
+                    <option value="name:asc">Name: A ⮕ Z</option>
+                    <option value="name:desc">Name: Z ⮕ A</option>
+                    <option value="tcgDate:asc">Date: Old ⮕ New</option>
+                    <option value="tcgDate:desc">Date: New ⮕ Old</option>
+                    <option value="atk:desc nulls last">ATK: Desc. ⬇</option>
+                    <option value="atk:asc nulls last">ATK: Asc. ⬆</option>
+                    <option value="def:desc nulls last">DEF: Desc. ⬇</option>
+                    <option value="def:asc nulls last">DEF: Asc. ⬆</option>
+                    <option value="level:desc nulls last,rating:desc nulls last">Level: Desc. ⬇</option>
+                    <option value="level:asc nulls last,rating:asc nulls last">Level: Asc. ⬆</option>
+                </select>
+
+                <div
+                    className="searchButton desktop-only"
+                    type="submit"
+                    onClick={() => reset()}
+                >
+                    Reset
+                </div>
+            </div>
+
+            <div id="builderGalleryFlexBox" >
+                {total ? (
+                    cards.map((card) => {
+                        return (
+                            <Draggable>
+                                <CardImage 
+                                    addCard={props.addCard}
+                                    setCard={props.setCard}
+                                    key={'search-' + card.id} 
+                                    card={card}
+                                    disableLink={true}
+                                    width="60px"
+                                    margin="1px"
+                                    padding="0.5px"
+                                    status={banlist[card.id]}
+                                />
+                            </Draggable>
+                        )
+                    })
+                ) : (
+                    <div />
+                )}
+            </div>
+            <MiniPagination
+                setPage={setPage}
+                itemCount={total}
+                page={page}
+                itemsPerPage={cardsPerPage}
+            />
         </div>
     )
 }

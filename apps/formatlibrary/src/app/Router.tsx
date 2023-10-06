@@ -4,10 +4,12 @@ import {
   Builder,
   CardTable,
   CubeBrowser,
+  CubeLauncher,
   CubeMaker,
   DeckGallery,
   DeckTable,
   DeckType,
+  DraftLobby,
   EventGallery,
   EventTable,
   FormatMaker,
@@ -37,6 +39,7 @@ export const Router = () => {
 					<Route path="/settings" element=<Page element=<Settings /> /> />
 					<Route path="/cube-maker" element=<Page element=<CubeMaker /> /> />
 					<Route path="/cubes/:id" element=<Page element=<CubeBrowser /> /> />
+					<Route path="/drafts/:id" element=<Page element=<DraftLobby /> /> />
 					<Route path="/format-maker" element=<Page element=<FormatMaker /> /> />
 					<Route path="/great-library.html" element=<Page element= <CardTable /> /> />
 					<Route path="/great-library" element=<Page element= <CardTable /> /> />
@@ -70,6 +73,7 @@ export const Router = () => {
 					<Route path="/formats/:id" element=<Page element= <FormatIntro /> /> />
 					<Route path="/leaderboards/:id" element=<Page element= <LeaderBoard /> /> />
 					<Route path="/replays/" element=<Page element= <ReplayTable /> /> />
+					<Route path="/start-cube/" element=<Page element= <CubeLauncher /> /> />
 					<Route path="/banlists/:id" element=<Page element= <SingleBanList /> /> />
 					<Route path="/players/:id" element=<Page element= <PlayerProfile /> /> />
 					<Route path="/admin-portal" element=<Page element= <AdminPortal /> /> />

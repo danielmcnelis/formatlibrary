@@ -1064,7 +1064,7 @@
     flex-direction: column;
     justify-content: flex-start;
     width: 50px;
-    margin: 40px 2px 2px;
+    margin: 2px;
   }
   
   .control-panel-button {
@@ -1931,6 +1931,9 @@
   #beast-Warrior {
     background-image: url('https://cdn.formatlibrary.com/images/symbols/beast-warrior.png');
   }
+  #creator-God {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/creator-god.png');
+  }
   #cyberse {
     background-image: url('https://cdn.formatlibrary.com/images/symbols/cyberse.png');
   }
@@ -1951,6 +1954,9 @@
   }
   #fish {
     background-image: url('https://cdn.formatlibrary.com/images/symbols/fish.png');
+  }
+  #illusion {
+    background-image: url('https://cdn.formatlibrary.com/images/symbols/illusion.png');
   }
   #insect {
     background-image: url('https://cdn.formatlibrary.com/images/symbols/insect.png');

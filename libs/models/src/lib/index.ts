@@ -6,6 +6,10 @@ import { BlogPost } from './BlogPost'
 import { CardDeckType } from './CardDeckType'
 import { Card } from './Card'
 import { Cube } from './Cube'
+import { CubeDraft } from './CubeDraft'
+import { CubeDraftEntry } from './CubeDraftEntry'
+import { CubeDraftInventory } from './CubeDraftInventory'
+import { CubePackContent } from './CubePackContent'
 import { Deck } from './Deck'
 import { DeckTypeArchetype } from './DeckTypeArchetype'
 import { DeckThumb } from './DeckThumb'
@@ -73,6 +77,26 @@ Deck.belongsTo(DeckType)
 
 DeckType.hasMany(DeckThumb)
 DeckThumb.belongsTo(DeckType)
+
+//CUBE
+CubeDraft.belongsTo(Cube)
+Cube.hasMany(CubeDraft)
+
+CubeDraftEntry.belongsTo(Player)
+Player.hasMany(CubeDraftEntry)
+
+CubeDraftEntry.belongsTo(CubeDraft)
+CubeDraft.hasMany(CubeDraftEntry)
+
+CubePackContent.belongsTo(CubeDraft)
+CubeDraft.hasMany(CubePackContent)
+
+CubeDraftInventory.belongsTo(Card)
+Card.hasMany(CubeDraftInventory)
+
+CubePackContent.belongsTo(Card)
+Card.hasMany(CubePackContent)
+
 
 //ENTRY
 Entry.belongsTo(Player)
@@ -285,6 +309,10 @@ export {
   Card,
   CardDeckType,
   Cube,
+  CubeDraft,
+  CubeDraftEntry,
+  CubeDraftInventory,
+  CubePackContent,
   Deck,
   DeckTypeArchetype,
   DeckThumb,

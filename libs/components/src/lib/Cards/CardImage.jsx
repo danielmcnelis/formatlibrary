@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import './CardImage.css'
 
 export const CardImage = (props) => {
-    const {addCard, removeCard, card, previous, status, width, margin, padding, index, locale, disableLink} = props
+    const {addCard, removeCard, card, previous, status, width, margin, padding, index, locale, disableLink, setCard} = props
 
     if (disableLink) {
         return (
@@ -14,6 +14,7 @@ export const CardImage = (props) => {
                 <img
                     src={`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`}
                     card={card}
+                    onMouseOver={() => setCard(card)}
                     onContextMenu={(e)=> {
                         e?.preventDefault()
                         if (locale === 'main' || locale === 'side' || locale === 'extra') {

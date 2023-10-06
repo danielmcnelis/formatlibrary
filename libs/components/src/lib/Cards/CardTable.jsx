@@ -74,7 +74,7 @@ export const CardTable = () => {
       aqua: false,
       beast: false,
       'beast-warrior': false,
-      'creator god': false,
+      'creator-god': false,
       cyberse: false,
       dinosaur: false,
       'divine-beast': false,
@@ -295,7 +295,7 @@ export const CardTable = () => {
         aqua: false,
         beast: false,
         'beast-warrior': false,
-        'creator god': false,
+        'creator-god': false,
         cyberse: false,
         dinosaur: false,
         'divine-beast': false,
@@ -464,7 +464,7 @@ export const CardTable = () => {
         ['aqua', 'Aqua'], 
         ['beast', 'Beast'], 
         ['beast-warrior', 'Beast-W.'], 
-        ['creator god', 'Creator G.'], 
+        ['creator-god', 'Creator G.'], 
         ['cyberse', 'Cyberse'], 
         ['dinosaur', 'Dinosaur'], 
         ['dragon', 'Dragon'], 
@@ -571,12 +571,12 @@ export const CardTable = () => {
                             className="filter"
                             onChange={() => setQueryParams({ ...queryParams, category: document.getElementById('category').value })}
                         >
-                            <option value="">Categories</option>
-                            <option value="Monster">Monsters</option>
-                            <option value="Spell">Spells</option>
-                            <option value="Trap">Traps</option>
-                            <option value="Skill">Skills</option>
-                            <option value="Token">Tokens</option>
+                            <option value="">Card Type</option>
+                            <option value="Monster">Monster</option>
+                            <option value="Spell">Spell</option>
+                            <option value="Trap">Trap</option>
+                            <option value="Skill">Skill</option>
+                            <option value="Token">Token</option>
                         </select>
 
                         <select
@@ -627,8 +627,8 @@ export const CardTable = () => {
                             className="filter"
                             onChange={() => runQuery()}
                         >
-                            <option value="name">Search By: Name</option>
-                            <option value="description">Search By: Text</option>
+                            <option value="name">Search: Name</option>
+                            <option value="description">Search: Text</option>
                         </select>
                     </div>
 
@@ -639,7 +639,6 @@ export const CardTable = () => {
                             className="filter"
                             onChange={() => setQueryParams({ ...queryParams, region: document.getElementById('region').value })}
                             disabled={!!formatName}
-                            
                         >
                             <option value="tcg">TCG Legal</option>
                             <option value="ocg">OCG Legal</option>
@@ -655,12 +654,12 @@ export const CardTable = () => {
                           className="filter"
                           onChange={() => setQueryParams({ ...queryParams, category: document.getElementById('category').value })}
                         >
-                            <option value="">All Categories</option>
-                            <option value="Monster">Monsters</option>
-                            <option value="Spell">Spells</option>
-                            <option value="Trap">Traps</option>
-                            <option value="Skill">Skills</option>
-                            <option value="Token">Tokens</option>
+                            <option value="">Card Type</option>
+                            <option value="Monster">Monster</option>
+                            <option value="Spell">Spell</option>
+                            <option value="Trap">Trap</option>
+                            <option value="Skill">Skill</option>
+                            <option value="Token">Token</option>
                         </select>
 
                         <select

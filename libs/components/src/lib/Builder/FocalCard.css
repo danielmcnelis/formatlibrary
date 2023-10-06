@@ -1,0 +1,24 @@
+
+.focal-card-flexbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 20%;
+}
+
+.focal-card-image {
+    margin: 2px 0px;  
+    width: 100%;
+}
+
+.focal-card-description {
+    width: 100%;
+    font-size: 14px;
+    padding: 3px 6px;    
+    margin: 2px 0px;  
+    text-align: justify;
+    background-color: var(--card-description);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}

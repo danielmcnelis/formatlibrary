@@ -2,6 +2,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react'
 import {CardImage} from '../Cards/CardImage'
 import {EmptySlot} from './EmptySlot'
+import {FocalCard} from './FocalCard'
 import {SearchPanel} from './SearchPanel'
 import { useLocation } from 'react-router-dom'
 import axios from 'axios'
@@ -23,6 +24,8 @@ export const Builder = () => {
 
     const myFormats = [...new Set(decks.map((d) => d.formatName))]
     const myDeckTypes = [...new Set(decks.map((d) => d.type))]
+    const [card, setCard] = useState({})
+    console.log('card', card)
     const [format, setFormat] = useState({})
     const [controlPanelDeckType, setControlPanelDeckType] = useState(null)
     const [controlPanelFormat, setControlPanelFormat] = useState(null)
@@ -795,60 +798,55 @@ export const Builder = () => {
             </div>
 
             <div>
-                <div className="single-deck-title-flexbox">
-                    <div style={{width: '80px'}}/>
-                    <div className="single-deck-title">{deck.name || 'New Deck'} <img style={{width:'32px', margin: '10px 20px'}} src={`https://cdn.formatlibrary.com/images/emojis/${deck.format ? format.icon : 'master'}.png`}/></div>
-                    <div style={{width: '80px', color: '#CBC5C3', margin: '0px', alignSelf: 'center'}}>{edited ? <i>Edited</i> : ''}</div>
-                </div>
-
-                    <div id="main" className="deck-bubble">
-                        <div id="main" className="deck-flexbox">
-                        {
-                            deck.main.map((card, index) => {
-                                if (!card) {
-                                    return (
-                                        <Droppable locale="main" index={index}>
-                                            <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${index}`}/>
+                <div id="main" className="deck-bubble">
+                    <div id="main" className="deck-flexbox">
+                    {
+                        deck.main.map((card, index) => {
+                            if (!card) {
+                                return (
+                                    <Droppable locale="main" index={index}>
+                                        <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${index}`}/>
+                                    </Droppable>
+                                )
+                            } else {
+                                return (
+                                    <Droppable locale="main" index={index}>
+                                        <Draggable>
+                                            <CardImage 
+                                                removeCard={removeCard}
+                                                setCard={setCard}
+                                                locale="main"
+                                                index={index}
+                                                width='72px'
+                                                height='107px'
+                                                padding='1px'
+                                                margin='0px'
+                                                key={`main-${index}`}
+                                                card={card}
+                                                disableLink={true}
+                                                status={banlist[card.id]}
+                                            />
+                                        </Draggable>
                                         </Droppable>
-                                    )
-                                } else {
-                                    return (
-                                        <Droppable locale="main" index={index}>
-                                            <Draggable>
-                                                <CardImage 
-                                                    removeCard={removeCard}
-                                                    locale="main"
-                                                    index={index}
-                                                    width='72px'
-                                                    height='107px'
-                                                    padding='1px'
-                                                    margin='0px'
-                                                    key={`main-${index}`}
-                                                    card={card}
-                                                    disableLink={true}
-                                                    status={banlist[card.id]}
-                                                />
-                                            </Draggable>
-                                         </Droppable>
-                                    )
-                                }
-                            })
-                        }
-                        {
-                            deck.main.length < 40 ? [...Array(40 - deck.main.length)].map((x, i) => (
-                                <Droppable locale="main" index={i}>
-                                    <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>
-                                </Droppable>
-                            )) :
-                            deck.main.length % 10 ? [...Array(10 -  deck.main.length % 10)].map((x, i) => (
-                                <Droppable locale="main" index={i}>
-                                    <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>
-                                </Droppable>   
-                            )) :
-                            ''
-                        }
-                        </div>
+                                )
+                            }
+                        })
+                    }
+                    {
+                        deck.main.length < 40 ? [...Array(40 - deck.main.length)].map((x, i) => (
+                            <Droppable locale="main" index={i}>
+                                <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>
+                            </Droppable>
+                        )) :
+                        deck.main.length % 10 ? [...Array(10 -  deck.main.length % 10)].map((x, i) => (
+                            <Droppable locale="main" index={i}>
+                                <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>
+                            </Droppable>   
+                        )) :
+                        ''
+                    }
                     </div>
+                </div>
                 
                 <Droppable locale="side">
                     <div id="side" className="deck-bubble">
@@ -863,6 +861,7 @@ export const Builder = () => {
                                             <CardImage 
                                                 className="card-image" 
                                                 removeCard={removeCard} 
+                                                setCard={setCard}
                                                 locale="side" 
                                                 index={index} 
                                                 width='48px' 
@@ -899,6 +898,7 @@ export const Builder = () => {
                                             <CardImage 
                                                 className="card-image" 
                                                 removeCard={removeCard} 
+                                                setCard={setCard}
                                                 locale="extra" 
                                                 index={index} 
                                                 onContextMenu={() => removeCard('extra', index)} 
@@ -924,6 +924,7 @@ export const Builder = () => {
                         </div>
                     </div>
                 </Droppable>
+
                     {
                         deck.id ? (
                             <div className="builder-bottom-panel">                     
@@ -989,7 +990,8 @@ export const Builder = () => {
                     }
                 </div>
             </div>
-            <SearchPanel addCard={addCard} format={format} formats={formats} setFormat={setFormat}/>
+            <FocalCard card={card}/>
+            <SearchPanel addCard={addCard} setCard={setCard} format={format} formats={formats} setFormat={setFormat}/>
         </div>
     </DndContext>
   )

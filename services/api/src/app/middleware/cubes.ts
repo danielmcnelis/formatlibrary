@@ -1,15 +1,16 @@
-import { Card, Cube, Player } from '@fl/models'
+import { Card, Cube, CubeDraft, Player } from '@fl/models'
 import { Op } from 'sequelize'
+const Canvas = require('canvas')
+import { S3 } from 'aws-sdk'
+import { config } from '@fl/config'
 
 // CUBES ID
 export const cubesId = async (req, res, next) => {
-    console.log('cubesIUd()')
     try {
       const id = parseInt(req.params.id)
       const shareLink = req.params.id
       const isAdmin = req.query?.isAdmin
       const view = req.query?.view
-      console.log('view', view)
       
       const cube = await Cube.findOne({
           where: !isNaN(id) && isAdmin === 'true' ? {
@@ -195,3 +196,116 @@ export const cubesCreate = async (req, res, next) => {
     }
   }
   
+  export const cubesAll = async (req, res, next) => {
+    try {    
+        const cubes = await Cube.findAll({
+          display: true,
+        })
+    
+        res.json(cubes)
+      } catch (err) {
+        next(err)
+      }
+  }
+
+  export const drawCube = async (req, res, next) => {  
+    try {
+        const cube = await Cube.findOne({
+            where: {
+                id: req.params.id
+            },
+            attributes: [
+                'id',
+                'ydk'
+            ]
+        })
+    
+        if (!cube) return res.sendStatus(404)
+        const mainArr = cube.ydk.split('#main')[1].split('\n').filter((e) => e.length) || []
+        const main = []
+        
+        for (let i = 0; i < mainArr.length; i++) {
+            let konamiCode = mainArr[i]
+            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+            const card = await Card.findOne({ where: { konamiCode: konamiCode }})
+            if (!card) continue
+            main.push(card)
+        }
+    
+        main.sort((a: any, b: any) => {
+            if (a.sortPriority > b.sortPriority) {
+                return 1
+            } else if (b.sortPriority > a.sortPriority) {
+                return -1
+            } else if (a.name > b.name) {
+                return 1
+            } else if (b.name > a.name) {
+                return -1
+            } else {
+                return false
+            }
+        })
+    
+        const card_width = 72
+        const card_height = 105
+        console.log('card_width * main.length', card_width * main.length)
+        const canvas = Canvas.createCanvas(card_width * main.length, card_height)
+        const context = canvas.getContext('2d')
+    
+        for (let i = 0; i < main.length; i++) {
+            const card = main[i]
+            const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`) 
+            context.drawImage(image, card_width * i, 0, card_width, card_height)
+        }
+    
+        const buffer = canvas.toBuffer('image/png')
+        const s3 = new S3({
+            region: config.s3.region,
+            credentials: {
+                accessKeyId: config.s3.credentials.accessKeyId,
+                secretAccessKey: config.s3.credentials.secretAccessKey
+            }
+        })
+    
+        const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cubes/slideshows/${cube.id}.png`, Body: buffer, ContentType: `image/png` }).promise()
+        console.log('uri', uri)
+        res.json(uri)
+    } catch (err) {
+        next(err)
+    }
+  }
+
+
+export const cubesLaunch = async (req, res, next) => {
+    try {  
+        console.log('req.body', req.body)
+      const cube = await Cube.findOne({
+        where: {
+            id: req.body.cubeId
+        }
+      })
+
+      const player = await Player.findOne({
+        where: {
+            id: req.body.hostId
+        }
+      })
+
+      const shareLink = await CubeDraft.generateShareLink()
+
+      const cubeDraft = await CubeDraft.create({
+        cubeId: cube.id,
+        cubeName: `${cube.name} by ${cube.builder}`,
+        hostName: player.name,
+        hostId: player.id,
+        packSize: req.body.packSize,
+        packsPerPlayer: req.body.packsPerPlayer,
+        timer: req.body.timer,
+        shareLink: shareLink
+      })
+
+      res.json(`https://formatlibrary.com/drafts/${cubeDraft.shareLink}`)
+    } catch (err) {
+      next(err)
+    }
+  }

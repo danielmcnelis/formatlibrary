@@ -115,8 +115,8 @@ export const CardRow = (props) => {
                               }}
                           >
                             {
-                                props.region.includes('speed') ? `Speed Release: ${card.speedDate?.substring(0, 10) || 'N/A'}` : 
-                                props.region.includes('ocg') ? `OCG Release: ${card.ocgDate?.substring(0, 10) || 'N/A'}` : 
+                                props.region?.includes('speed') ? `Speed Release: ${card.speedDate?.substring(0, 10) || 'N/A'}` : 
+                                props.region?.includes('ocg') ? `OCG Release: ${card.ocgDate?.substring(0, 10) || 'N/A'}` : 
                                 `TCG Release: ${card.tcgDate?.substring(0, 10) || 'N/A'}`            
                             }
                           </th>
@@ -192,8 +192,8 @@ export const CardRow = (props) => {
                                   style={{fontSize: '16px', borderTop: '2px solid #CFDCE5'}}
                               >
                                   {
-                                  card.description.includes('[ Pendulum Effect ]') ? 
-                                  card.description.slice(20, card.description.indexOf('----')) :
+                                  card.description?.includes('[ Pendulum Effect ]') ? 
+                                  card.description?.slice(20, card.description.indexOf('----')) :
                                   ''
                                   }
                               </td>
@@ -209,10 +209,10 @@ export const CardRow = (props) => {
                                   style={{padding: '10px 20px 20px 10px', fontSize: '16px', borderTop: '2px solid #CFDCE5'}}
                               >
                                   {
-                                  card.description.includes('[ Monster Effect ]') ? 
-                                  card.description.slice(card.description.indexOf('[ Monster Effect ]') + 19) :
-                                  card.description.includes('[ Flavor Text ]') ?
-                                  <i>{card.description.slice(card.description.indexOf('[ Flavor Text ]') + 16)}</i> :
+                                  card.description?.includes('[ Monster Effect ]') ? 
+                                  card.description?.slice(card.description.indexOf('[ Monster Effect ]') + 19) :
+                                  card.description?.includes('[ Flavor Text ]') ?
+                                  <i>{card.description?.slice(card.description.indexOf('[ Flavor Text ]') + 16)}</i> :
                                   card.description
                                   }
                               </td>
