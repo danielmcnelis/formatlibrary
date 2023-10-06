@@ -232,19 +232,19 @@ export const cubesCreate = async (req, res, next) => {
             main.push(card)
         }
     
-        main.sort((a: any, b: any) => {
-            if (a.sortPriority > b.sortPriority) {
-                return 1
-            } else if (b.sortPriority > a.sortPriority) {
-                return -1
-            } else if (a.name > b.name) {
-                return 1
-            } else if (b.name > a.name) {
-                return -1
-            } else {
-                return false
-            }
-        })
+        // main.sort((a: never, b: never) => {
+        //     if (a.sortPriority > b.sortPriority) {
+        //         return 1
+        //     } else if (b.sortPriority > a.sortPriority) {
+        //         return -1
+        //     } else if (a.name > b.name) {
+        //         return 1
+        //     } else if (b.name > a.name) {
+        //         return -1
+        //     } else {
+        //         return false
+        //     }
+        // })
     
         const card_width = 72
         const card_height = 105
