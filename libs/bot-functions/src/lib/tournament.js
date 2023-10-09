@@ -2199,10 +2199,11 @@ export const createTournament = async (interaction, formatName, name, abbreviati
         server.logo || emojis.legend
 
     try {
+        console.log('server.challongeCommunity', server.challongeCommunity)
         const tournament = server.challongeCommunity ? {
             name: name,
             url: abbreviation || name,
-            subdomain: `${server.challongeCommunity}.challonge.com`,
+            subdomain: server.challongeCommunity,
             tournament_type: tournament_type,
             description: description,
             game_name: game_name,
@@ -2215,6 +2216,8 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             game_name: game_name,
             pts_for_match_tie: "0.0"
         }
+
+        console.log('tournament', tournament)
         
         const { status, data } = await axios({
             method: 'post',
@@ -2256,7 +2259,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             const tournament = server.challongeCommunity ? {
                 name: name,
                 url: str,
-                subdomain: `${server.challongeCommunity}.challonge.com`,
+                subdomain: server.challongeCommunity,
                 tournament_type: tournament_type,
                 description: description,
                 game_name: game_name,
@@ -2269,6 +2272,8 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 game_name: game_name,
                 pts_for_match_tie: "0.0"
             }
+
+            console.log('2276 tournament', tournament)
             
             const { status, data } = await axios({
                 method: 'post',
@@ -2320,7 +2325,8 @@ export const createTopCut = async (server, primaryTournament, format) => {
     try {
         const tournament = server.challongeCommunity ? {
             name: name,
-            subdomain: `${server.challongeCommunity}.challonge.com/${abbreviation}`,
+            url: abbreviation,
+            subdomain: server.challongeCommunity,
             tournament_type: 'single elimination',
             description: description,
             game_name: game_name,
@@ -2368,7 +2374,8 @@ export const createTopCut = async (server, primaryTournament, format) => {
         try {
             const tournament = server.challongeCommunity ? {
                 name: name,
-                subdomain: `${server.challongeCommunity}.challonge.com/${str}`,
+                url: str,
+                subdomain: server.challongeCommunity,
                 tournament_type: 'single elimination',
                 description: description,
                 game_name: game_name,
