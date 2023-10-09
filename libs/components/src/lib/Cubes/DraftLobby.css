@@ -1,12 +1,21 @@
 
   
 
+
 .participants-flexbox {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     padding: 20px 10px;
+}
+
+.pack-flexbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 10px;
 }
 
   .draft-participant-pfp {

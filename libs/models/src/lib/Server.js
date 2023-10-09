@@ -35,6 +35,9 @@ export const Server = db.define('servers', {
   challongeAPIKey: {
       type: Sequelize.STRING
   },
+  challongeCommunity: {
+      type: Sequelize.STRING
+  },
   googleToken: {
       type: Sequelize.TEXT
   },

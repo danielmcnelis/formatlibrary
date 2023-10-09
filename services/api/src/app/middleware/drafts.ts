@@ -19,7 +19,6 @@ const shuffleArray = (arr) => {
 // DRAFTS ID
 export const draftsId = async (req, res, next) => {
     try {
-        console.log('req.params.id', req.params.id)
         const draft = await CubeDraft.findOne({
             where: {
                 shareLink: req.params.id
@@ -27,25 +26,54 @@ export const draftsId = async (req, res, next) => {
             include: Cube
         })
 
-        const participants = await CubeDraftEntry.findAll({
-            where: {
-                cubeDraftId: draft.id
-            },
-            include: Player
-        })
+        res.json(draft)
+    } catch (err) {
+      next(err)
+    }
+  }
 
-        const packs = await CubePackContent.findAll({
+
+// GET PACK
+export const getPack = async (req, res, next) => {
+    try {
+
+        const { draftId, playerId } = req.query
+        const { slot } = await CubeDraftEntry.findOne({
             where: {
-                cubeDraftId: draft.id
+                playerId: playerId,
+                cubeDraftId: draftId
             }
         })
 
+        const { round, pick, packsPerPlayer, playerCount} = await CubeDraft.findOne({
+            where: {
+                id: draftId
+            }
+        })
+
+        const arr = []
+        const nums = Array.from(Array(packsPerPlayer * playerCount).keys()).map((e) => e + 1)
+        for (let i = 0; i < packsPerPlayer; i++) { arr[i] = [...nums.slice(i * playerCount, i * playerCount + playerCount)] }
+        const packNumber = arr[round - 1][(pick + slot - 2) % playerCount]
+        console.log('round, pick, slot, playerCount', round, pick, slot, playerCount)
+        console.log('round - 1', round - 1)
+        console.log('pick + slot - 2', pick + slot - 2)
+        console.log('(pick + slot - 2) % playerCount', (pick + slot - 2) % playerCount)
+        console.log('arr', arr)
+        console.log('packNumber', packNumber)
+
+        const contents = await CubePackContent.findAll({
+            where: {
+                packNumber: packNumber,
+                cubeDraftId: req.query.draftId,
+            },
+            include: Card,
+            order: [[Card, 'sortPriority', 'ASC'], [Card, 'name', 'ASC']]
+        })
+
         const data = {
-            draft: draft,
-            participants: participants,
-            packs: packs,
-            pick: draft.pick,
-            round: draft.round
+            contents: contents, 
+            packNumber: packNumber
         }
 
         res.json(data)
@@ -55,34 +83,62 @@ export const draftsId = async (req, res, next) => {
   }
 
 
+// GET DRAFT PARTICIPANTS
+export const getDraftParticipants = async (req, res, next) => {
+    try {
+        const participants = await CubeDraftEntry.findAll({
+            where: {
+                cubeDraftId: req.params.id
+            },
+            include: Player
+        })
+
+        res.json(participants)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+
+
 // JOIN DRAFT
 export const joinDraft = async (req, res, next) => {
     try {
-        console.log('joinDraft()')
-        console.log('req.body.playerId', req.body.playerId)
         const player = await Player.findOne({
             where: {
                 id: req.body.playerId
             }
         })
 
-        console.log('!!player', !!player)
-        console.log('req.params.id', req.params.id)
-        console.log('player.name', player.name)
-        console.log('player.id', player.id)
         const entry = await CubeDraftEntry.create({
             cubeDraftId: req.params.id,
             playerName: player.name,
             playerId: player.id
         })
-        
-        console.log('!!entry', !!entry)
 
         if (entry) {
             res.sendStatus(200)
         } else {
             res.sendStatus(400)
         }
+    } catch (err) {
+      next(err)
+    }
+  }
+
+
+// LEAVE DRAFT
+export const leaveDraft = async (req, res, next) => {
+    try {
+        const entry = await CubeDraftEntry.findOne({
+            where: {
+                cubeDraftId: req.params.id,
+                playerId: req.body.playerId
+            }
+        })
+
+        await entry.destroy()
+        res.sendStatus(200)
     } catch (err) {
       next(err)
     }
@@ -122,22 +178,25 @@ export const startDraft = async (req, res, next) => {
         }
 
         const shuffledCards = shuffleArray(cards)
+        let index = 0
 
         for (let i = 0; i < playerCount; i++) {
-            for (let j = 1; j <= draft.packsPerPlayer; j++) {
-                for (let k = 1; k <= draft.packSize; k++) {
-                    const index = (i * j * draft.packSize) + k
-                    console.log('index', index)
+            for (let j = 0; j < draft.packsPerPlayer; j++) {
+                for (let k = 0; k < draft.packSize; k++) {
                     const card = shuffledCards[index]
                     await CubePackContent.create({
                         cardId: card.id,
-                        packNumber: i * j,
+                        cardName: card.name,
+                        packNumber: i * draft.packsPerPlayer + j + 1,
                         cubeDraftId: draft.id
                     })
+
+                    index++
                 }
             }
         }
 
+        await draft.update({ state: 'underway' })
         res.json(draft)
     } catch (err) {
       next(err)

@@ -1,13 +1,17 @@
 import { Router } from 'express'
-import { draftsId, joinDraft, startDraft } from '../middleware'
+import { draftsId, getDraftParticipants, getPack, joinDraft, leaveDraft, startDraft } from '../middleware'
 
 const router = Router()
 
-console.log('!!joinDraft', !!joinDraft)
+router.get('/api/drafts/participants/:id', getDraftParticipants)
+
+router.get('/api/drafts/pack', getPack)
 
 router.get('/api/drafts/:id', draftsId)
 
 router.post('/api/drafts/join/:id', joinDraft)
+
+router.post('/api/drafts/leave/:id', leaveDraft)
 
 router.post('/api/drafts/start/:id', startDraft)
 

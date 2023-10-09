@@ -2206,6 +2206,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 tournament: {
                     name: name,
                     url: abbreviation || name,
+                    subdomain: server.challongeCommunity,
                     tournament_type: tournament_type,
                     description: description,
                     game_name: game_name,
@@ -2249,6 +2250,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     tournament: {
                         name: name,
                         url: str,
+                        subdomain: server.challongeCommunity,
                         tournament_type: tournament_type,
                         game_name: game_name,
                         description: description,
@@ -2304,6 +2306,7 @@ export const createTopCut = async (server, primaryTournament, format) => {
                 tournament: {
                     name: name,
                     url: abbreviation,
+                    subdomain: server.challongeCommunity,
                     tournament_type: 'single elimination',
                     description: description,
                     game_name: game_name,
@@ -2343,6 +2346,7 @@ export const createTopCut = async (server, primaryTournament, format) => {
                     tournament: {
                         name: name,
                         url: str,
+                        subdomain: server.challongeCommunity,
                         tournament_type: 'single elimination',
                         game_name: game_name,
                         description: description,

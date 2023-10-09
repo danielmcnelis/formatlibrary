@@ -10,7 +10,7 @@ export const CubeDraftEntry = db.define('cubeDraftEntries', {
         type: Sequelize.STRING
     },
     slot: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
     },
     currentPackNumber: {
         type: Sequelize.INTEGER

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
+import { CardImage } from '../Cards/CardImage'
 import { getCookie } from '@fl/utils'
 import './DraftLobby.css' 
 
@@ -11,32 +12,32 @@ const getRandomElement = (arr) => {
     return arr[index]
 }
 
+const altPlayerId = getRandomElement([
+    'UeyvnNBD6CD53gsqRQsxCY', 'Cc2FhYrRPctZ4y72Y79gKp',
+    'ruStGFXbGiM7mwog5Jd4Jt', 'zF1wim2pNCk2gWDunfozgL',
+    'bo7HSv1LpfrGMra8auc69k', 'iTkrXF8eLxJKUia4rbxuTw',
+    'zYJ9nZFqGPC47RAHRBn5ki', 'zhLjqncZ7Erxh2zDAYEfqL',
+    'M51s4imwKi3nTd3KK4qYAu'
+])
+
+const playerId = getCookie('playerId') || altPlayerId
+
 export const DraftLobby = () => {
     const [draft, setDraft] = useState({})
-    const [packs, setPacks] = useState([])
     const [pack, setPack] = useState({})
-    const [pick, setPick] = useState(null)
-    const [round, setRound] = useState(null)
+    const [player, setPlayer] = useState({})
+    const [timer, setTimer] = useState(null)
+    const [packNumber, setPackNumber] = useState(null)
     const [inventory, setInventory] = useState([])
     const [participants, setParticipants] = useState([])
-    const [isParticipant, setIsPartipant] = useState(false)
-    const altPlayerId = getRandomElement([
-        'UeyvnNBD6CD53gsqRQsxCY', 'Cc2FhYrRPctZ4y72Y79gKp',
-        'ruStGFXbGiM7mwog5Jd4Jt', 'zF1wim2pNCk2gWDunfozgL',
-        'bo7HSv1LpfrGMra8auc69k', 'iTkrXF8eLxJKUia4rbxuTw',
-        'zYJ9nZFqGPC47RAHRBn5ki', 'zhLjqncZ7Erxh2zDAYEfqL',
-        'M51s4imwKi3nTd3KK4qYAu'
-    ])
-
-    const playerId = getCookie('playerId') || altPlayerId
-    console.log('playerId', playerId)
+    const [isParticipant, setIsParticipant] = useState(false)
 
     const { id } = useParams()
+    console.log('timer', timer)
     console.log('draft', draft)
-    console.log('packs', packs)
     console.log('pack', pack)
-    console.log('pick', pick)
-    console.log('round', round)
+    console.log('packNumber', packNumber)
+    console.log('player', player)
     console.log('inventory', inventory)
     console.log('participants', participants)
     console.log('isParticipant', isParticipant)
@@ -44,11 +45,26 @@ export const DraftLobby = () => {
     // JOIN
     const join = async () => {        
         try {
-            const { data } = await axios.post(`/api/drafts/join/${draft.id}`, {
+            const { status } = await axios.post(`/api/drafts/join/${draft.id}`, {
                 playerId: playerId
             })
 
-            if (data.id) setIsPartipant(true)
+            console.log('status', status)
+            if (status === 200) setIsParticipant(true)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    // LEAVE
+    const leave = async () => {        
+        try {
+            const { status } = await axios.post(`/api/drafts/leave/${draft.id}`, {
+                playerId: playerId
+            })
+
+            console.log('status', status)
+            if (status === 200) setIsParticipant(false)
         } catch (err) {
             console.log(err)
         }
@@ -66,16 +82,15 @@ export const DraftLobby = () => {
 
     // USE EFFECT CHECK IF PARTICIPANT
     useEffect(() => {
-        if (isParticipant) return
-
         for (let i = 0; i < participants.length; i++) {
-            if (participants.playerId === playerId) {
-                setIsPartipant(true)
-                break
+            if (participants[i].playerId === playerId) {
+                setPlayer(participants[i].player)
+                return setIsParticipant(true)
             }
         }
 
-    }, [isParticipant, playerId, participants])
+        setIsParticipant(false)
+    }, [isParticipant, participants])
 
     // USE EFFECT GET INVENTORY
     useEffect(() => {
@@ -95,29 +110,37 @@ export const DraftLobby = () => {
     // USE EFFECT GET PACK
     useEffect(() => {
         const fetchData = async () => {
-            if (isParticipant) {
-                const {data} = await axios.get(`/api/drafts/pack/${draft.id}`, {
-                    round: round,
-                    pick: pick,
-                    playerId: playerId
-                })
-
-                setPack(data)
+            if (isParticipant && draft.state === 'underway') {
+                const {data} = await axios.get(`/api/drafts/pack?draftId=${draft.id}&playerId=${playerId}`)
+                setPack(data.contents)
+                setPackNumber(data.packNumber)
             }
         }
 
         fetchData()
-    }, [draft, round, pick, playerId, isParticipant])
+    }, [draft.id, draft.state, isParticipant])
+
+    // USE EFFECT
+    useEffect(() => {
+        const fetchData = async () => {
+            const {data} = await axios.get(`/api/drafts/participants/${draft.id}`)
+            setParticipants(data)
+        }
+        
+        fetchData()
+    }, [draft.id, isParticipant])
 
     // USE EFFECT
     useEffect(() => {
         const fetchData = async () => {
             const {data} = await axios.get(`/api/drafts/${id}`)
-            setDraft(data.draft)
-            setParticipants(data.participants)
-            setPacks(data.packContents)
-            setPick(data.pick)
-            setRound(data.round)
+            const timeExpiresAt = (new Date(data.updatedAt)).now() + ((data.timer * 1000) || (60 * 1000))
+            console.log('timeExpiresAt', timeExpiresAt)
+            console.log('(new Date()).now() ', (new Date()).now() )
+            const timeRemaining = timeExpiresAt - (new Date()).now()
+            console.log('timeRemaining', timeRemaining)
+            setDraft(data)
+            setTimer(timeRemaining)
         }
         
         fetchData()
@@ -142,50 +165,99 @@ export const DraftLobby = () => {
                         </div>
                         <br/>
                         <h3>Hosted by {draft.hostName}</h3>
-                    </>
-                ) : ''
-            }
-
-            <div className="participants-flexbox">
-                {
-                    participants.map((p) => (
-                        <img 
-                            className="draft-participant-pfp" 
-                            src={`https://cdn.formatlibrary.com/images/pfps/${p.player.discordId || p.player.name}.png`}
-                            onError={(e) => {
-                                    e.target.onerror = null
-                                    e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
-                                }
+                        <div className="participants-flexbox">
+                            {
+                                participants.map((p) => (
+                                    <img 
+                                        className="draft-participant-pfp" 
+                                        src={`https://cdn.formatlibrary.com/images/pfps/${p.player.discordId || p.player.name}.png`}
+                                        onError={(e) => {
+                                                e.target.onerror = null
+                                                e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
+                                            }
+                                        }
+                                        alt={p.discordName || p.name}
+                                    />
+                                ))
                             }
-                            alt={p.discordName || p.name}
-                        />
-                    ))
-                }
-            </div>
-
-            {
-                !isParticipant ? (
-                    <div
-                        className="cube-button"
-                        type="submit"
-                        onClick={() => join()}
-                    >
-                        Join
-                    </div>
-                ) : ''
+                        </div>
+                        {
+                            !isParticipant ? (
+                                <div
+                                    className="cube-button"
+                                    type="submit"
+                                    onClick={() => join()}
+                                >
+                                    Join
+                                </div>
+                            ) : isParticipant && playerId !== draft.hostId ? (
+                                <div
+                                    className="cube-button"
+                                    type="submit"
+                                    onClick={() => leave()}
+                                >
+                                    Leave
+                                </div>
+                            ) : isParticipant && playerId === draft.hostId ? (
+                                <div
+                                    className="cube-button"
+                                    type="submit"
+                                    onClick={() => start()}
+                                >
+                                    Start
+                                </div>
+                            ) : ''
+                        }
+                    </>
+                ) : (
+                    <>
+                        <div className="card-database-flexbox">
+                            <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
+                            <div>
+                                <h1>Live Draft!</h1>
+                                <h2>{draft.cubeName}</h2>
+                            </div>
+                            <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
+                        </div>
+                        <h3>Round {draft.round} - Pick {draft.pick}</h3>
+                        <br/>
+                        <div className="pack-flexbox">
+                            {
+                                pack.length ? (
+                                    pack.map((p) => (   
+                                        <CardImage  
+                                            key={p.card.id} 
+                                            card={p.card} 
+                                            width="72px"
+                                            margin="2px"
+                                            padding="2px"
+                                        />
+                                    ))
+                                ) : ''
+                            }
+                        </div>
+                        <br/>
+                        <h3>{player?.name}'s Inventory:</h3>
+                        <div className="pack-flexbox">
+                            {
+                                inventory?.length ? (
+                                    inventory.map((card) => (   
+                                        <CardImage  
+                                            key={card.id} 
+                                            card={card} 
+                                            width="72px"
+                                            margin="4px"
+                                            padding="2px"
+                                        />
+                                    ))
+                                ) : ''
+                            }
+                        </div>
+                        <br/>
+                    </>
+                )
             }
 
-            {
-                playerId === draft.hostId ? (
-                    <div
-                        className="cube-button"
-                        type="submit"
-                        onClick={() => start()}
-                    >
-                        Start
-                    </div>
-                ) : ''
-            }
         </div>
     )
 }
