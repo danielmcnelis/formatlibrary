@@ -2199,19 +2199,27 @@ export const createTournament = async (interaction, formatName, name, abbreviati
         server.logo || emojis.legend
 
     try {
+        const tournament = server.challongeCommunity ? {
+            name: name,
+            subdomain: `${server.challongeCommunity}.challonge.com/${abbreviation || name}`,
+            tournament_type: tournament_type,
+            description: description,
+            game_name: game_name,
+            pts_for_match_tie: "0.0"
+        } : {
+            name: name,
+            url: abbreviation || name,
+            tournament_type: tournament_type,
+            description: description,
+            game_name: game_name,
+            pts_for_match_tie: "0.0"
+        }
+        
         const { status, data } = await axios({
             method: 'post',
             url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
             data: {
-                tournament: {
-                    name: name,
-                    url: abbreviation || name,
-                    subdomain: server.challongeCommunity ? `${server.challongeCommunity}.challonge.com/${abbreviation || name}` : null,
-                    tournament_type: tournament_type,
-                    description: description,
-                    game_name: game_name,
-                    pts_for_match_tie: "0.0"
-                }
+                tournament
             }
         })
         
@@ -2243,19 +2251,28 @@ export const createTournament = async (interaction, formatName, name, abbreviati
     } catch (err) {
         console.log(err)
         try {
+
+            const tournament = server.challongeCommunity ? {
+                name: name,
+                subdomain: `${server.challongeCommunity}.challonge.com/${str}`,
+                tournament_type: tournament_type,
+                description: description,
+                game_name: game_name,
+                pts_for_match_tie: "0.0"
+            } : {
+                name: name,
+                url: str,
+                tournament_type: tournament_type,
+                description: description,
+                game_name: game_name,
+                pts_for_match_tie: "0.0"
+            }
+            
             const { status, data } = await axios({
                 method: 'post',
                 url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
                 data: {
-                    tournament: {
-                        name: name,
-                        url: str,
-                        subdomain: server.challongeCommunity ? `${server.challongeCommunity}.challonge.com/${str}` : null,
-                        tournament_type: tournament_type,
-                        game_name: game_name,
-                        description: description,
-                        pts_for_match_tie: "0.0"
-                    }
+                    tournament
                 }
             })
             
@@ -2299,19 +2316,27 @@ export const createTopCut = async (server, primaryTournament, format) => {
     const abbreviation = `${primaryTournament.abbreviation}_Top${primaryTournament.topCut}`
 
     try {
+        const tournament = server.challongeCommunity ? {
+            name: name,
+            subdomain: `${server.challongeCommunity}.challonge.com/${abbreviation}`,
+            tournament_type: 'single elimination',
+            description: description,
+            game_name: game_name,
+            pts_for_match_tie: "0.0"
+        } :  {
+            name: name,
+            url: abbreviation,
+            tournament_type: 'single elimination',
+            description: description,
+            game_name: game_name,
+            pts_for_match_tie: "0.0"
+        }
+
         const { status, data } = await axios({
             method: 'post',
             url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
             data: {
-                tournament: {
-                    name: name,
-                    url: abbreviation,
-                    subdomain: server.challongeCommunity ? `${server.challongeCommunity}.challonge.com/${abbreviation}` : null,
-                    tournament_type: 'single elimination',
-                    description: description,
-                    game_name: game_name,
-                    pts_for_match_tie: "0.0"
-                }
+                tournament
             }
         })
         
@@ -2339,19 +2364,27 @@ export const createTopCut = async (server, primaryTournament, format) => {
     } catch (err) {
         console.log(err)
         try {
+            const tournament = server.challongeCommunity ? {
+                name: name,
+                subdomain: `${server.challongeCommunity}.challonge.com/${str}`,
+                tournament_type: 'single elimination',
+                description: description,
+                game_name: game_name,
+                pts_for_match_tie: "0.0"
+            } : {
+                name: name,
+                url: str,
+                tournament_type: 'single elimination',
+                description: description,
+                game_name: game_name,
+                pts_for_match_tie: "0.0"
+            }
+             
             const { status, data } = await axios({
                 method: 'post',
                 url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
                 data: {
-                    tournament: {
-                        name: name,
-                        url: str,
-                        subdomain: server.challongeCommunity ? `${server.challongeCommunity}.challonge.com/${str}` : null,
-                        tournament_type: 'single elimination',
-                        game_name: game_name,
-                        description: description,
-                        pts_for_match_tie: "0.0"
-                    }
+                    tournament
                 }
             })
             
