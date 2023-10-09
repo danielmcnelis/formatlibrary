@@ -62,7 +62,7 @@ export default {
         if (tournament.type === 'swiss' && !tournament.assocTournamentId) {
             const topCutTournament = await createTopCut(server, tournament, format)
             if (topCutTournament) {
-                const subdomain = server.challongeCommunity ? `${server.challongeCommunity}.` : ''
+                const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
                 interaction.channel.send({ content: 
                     `Created a new top cut tournament:` + 
                     `\nName: ${topCutTournament.name} ${topCutTournament.logo}` + 

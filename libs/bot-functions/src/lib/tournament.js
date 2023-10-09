@@ -2199,11 +2199,11 @@ export const createTournament = async (interaction, formatName, name, abbreviati
         server.logo || emojis.legend
 
     try {
-        console.log('server.challongeCommunity', server.challongeCommunity)
-        const tournament = server.challongeCommunity ? {
+        console.log('server.challongeSubdomain', server.challongeSubdomain)
+        const tournament = server.challongeSubdomain ? {
             name: name,
             url: abbreviation || name,
-            subdomain: server.challongeCommunity,
+            subdomain: server.challongeSubdomain,
             tournament_type: tournament_type,
             description: description,
             game_name: game_name,
@@ -2244,7 +2244,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 community: server.name
             })
 
-            const subdomain = server.challongeCommunity ? `${server.challongeCommunity}.` : ''
+            const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
             return await interaction.editReply({ content: 
                 `You created a new tournament:` + 
                 `\nName: ${name} ${logo}` + 
@@ -2257,10 +2257,10 @@ export const createTournament = async (interaction, formatName, name, abbreviati
         console.log(err)
         try {
 
-            const tournament = server.challongeCommunity ? {
+            const tournament = server.challongeSubdomain ? {
                 name: name,
                 url: str,
-                subdomain: server.challongeCommunity,
+                subdomain: server.challongeSubdomain,
                 tournament_type: tournament_type,
                 description: description,
                 game_name: game_name,
@@ -2300,7 +2300,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     community: server.name
                 })
 
-                const subdomain = server.challongeCommunity ? `${server.challongeCommunity}.` : ''
+                const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
                 return await interaction.editReply({ content: 
                     `You created a new tournament:` + 
                     `\nName: ${data.tournament.name} ${logo}` + 
@@ -2325,10 +2325,10 @@ export const createTopCut = async (server, primaryTournament, format) => {
     const abbreviation = `${primaryTournament.abbreviation}_Top${primaryTournament.topCut}`
 
     try {
-        const tournament = server.challongeCommunity ? {
+        const tournament = server.challongeSubdomain ? {
             name: name,
             url: abbreviation,
-            subdomain: server.challongeCommunity,
+            subdomain: server.challongeSubdomain,
             tournament_type: 'single elimination',
             description: description,
             game_name: game_name,
@@ -2374,10 +2374,10 @@ export const createTopCut = async (server, primaryTournament, format) => {
     } catch (err) {
         console.log(err)
         try {
-            const tournament = server.challongeCommunity ? {
+            const tournament = server.challongeSubdomain ? {
                 name: name,
                 url: str,
-                subdomain: server.challongeCommunity,
+                subdomain: server.challongeSubdomain,
                 tournament_type: 'single elimination',
                 description: description,
                 game_name: game_name,
@@ -2681,8 +2681,8 @@ export const endTournament = async (interaction, tournamentId) => {
     }
 
     if (tournament.type === 'swiss' && !tournament.assocTournamentId) {
-        const topCutTournament = await createTopCut(server, tournament, format)
-        const subdomain = server.challongeCommunity ? `${server.challongeCommunity}.` : ''
+        const topCutTournament = await createTopCut(server, tournament, format)        
+        const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
         if (topCutTournament) {
             interaction.channel.send({ content: 
                 `Created a new top cut tournament:` + 
