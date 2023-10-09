@@ -26,7 +26,7 @@ export default {
         if (tournament.state === 'complete' && !isProgrammer(interaction.member)) return await interaction.editReply({ content: `This tournament is complete, therefore it may only be deleted by the database manager.`})
 
         try {
-            const tournamentId = server.challongeCommunity ? `${server.challongeCommunity}.${tournament.url}` : tournament.id
+            const tournamentId = server.challongeCommunity ? `${server.challongeCommunity}-${tournament.url}` : tournament.id
             const { status } = await axios({
                 method: 'delete',
                 url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`
