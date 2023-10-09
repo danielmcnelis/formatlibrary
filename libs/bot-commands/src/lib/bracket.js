@@ -18,9 +18,10 @@ export default {
         const results = []
         for (let i = 0; i < tournaments.length; i++) {
             const tournament = tournaments[i]
+            const subdomain = server.challongeCommunity ? `${server.challongeCommunity}.` : ''
             results.push(`Name: ${tournament.name} ${tournament.logo}` +
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` + 
-                `\nBracket: <https://challonge.com/${tournament.url}>` +
+                `\nBracket: <https://${subdomain}challonge.com/${tournament.url}>` +
                 `\nType: ${capitalize(tournament.type, true)}` +
                 `${tournament.rounds ? `\nDetails: ${tournament.rounds} Rounds - ${tournament.topCut ? `Top ${tournament.topCut}` : `No Playoff` }` : ''}` +
                 `\nStatus: ${capitalize(tournament.state, true)}`

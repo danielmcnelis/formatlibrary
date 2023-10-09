@@ -2244,12 +2244,13 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 community: server.name
             })
 
+            const subdomain = server.challongeCommunity ? `${server.challongeCommunity}.` : ''
             return await interaction.editReply({ content: 
                 `You created a new tournament:` + 
                 `\nName: ${name} ${logo}` + 
                 `\nFormat: ${format.name} ${server.emoji || format.emoji}` + 
                 `\nType: ${capitalize(data.tournament.tournament_type, true)}` +
-                `\nBracket: https://challonge.com/${data.tournament.url}`
+                `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
             })
         } 
     } catch (err) {
@@ -2299,12 +2300,13 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     community: server.name
                 })
 
+                const subdomain = server.challongeCommunity ? `${server.challongeCommunity}.` : ''
                 return await interaction.editReply({ content: 
                     `You created a new tournament:` + 
                     `\nName: ${data.tournament.name} ${logo}` + 
                     `\nFormat: ${format.name} ${server.emoji || format.emoji}` + 
                     `\nType: ${capitalize(data.tournament.tournament_type, true)}` +
-                    `\nBracket: https://challonge.com/${data.tournament.url}`
+                    `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
                 })
             } 
         } catch (err) {
@@ -2680,13 +2682,14 @@ export const endTournament = async (interaction, tournamentId) => {
 
     if (tournament.type === 'swiss' && !tournament.assocTournamentId) {
         const topCutTournament = await createTopCut(server, tournament, format)
+        const subdomain = server.challongeCommunity ? `${server.challongeCommunity}.` : ''
         if (topCutTournament) {
             interaction.channel.send({ content: 
                 `Created a new top cut tournament:` + 
                 `\nName: ${topCutTournament.name} ${topCutTournament.logo}` + 
                 `\nFormat: ${topCutTournament.formatName} ${topCutTournament.emoji}` + 
                 `\nType: ${capitalize(topCutTournament.type, true)}` +
-                `\nBracket: https://challonge.com/${topCutTournament.url}`
+                `\nBracket: https://${subdomain}challonge.com/${topCutTournament.url}`
             })
 
             await tournament.update({ assocTournamentId: topCutTournament.id })

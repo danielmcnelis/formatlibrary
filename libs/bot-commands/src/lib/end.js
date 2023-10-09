@@ -62,12 +62,13 @@ export default {
         if (tournament.type === 'swiss' && !tournament.assocTournamentId) {
             const topCutTournament = await createTopCut(server, tournament, format)
             if (topCutTournament) {
+                const subdomain = server.challongeCommunity ? `${server.challongeCommunity}.` : ''
                 interaction.channel.send({ content: 
                     `Created a new top cut tournament:` + 
                     `\nName: ${topCutTournament.name} ${topCutTournament.logo}` + 
                     `\nFormat: ${topCutTournament.formatName} ${topCutTournament.emoji}` + 
                     `\nType: ${capitalize(topCutTournament.type, true)}` +
-                    `\nBracket: https://challonge.com/${topCutTournament.url}`
+                    `\nBracket: https://${subdomain}challonge.com/${topCutTournament.url}`
                 })
 
                 await tournament.update({ assocTournamentId: topCutTournament.id })
