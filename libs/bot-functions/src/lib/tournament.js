@@ -2201,7 +2201,8 @@ export const createTournament = async (interaction, formatName, name, abbreviati
     try {
         const tournament = server.challongeCommunity ? {
             name: name,
-            subdomain: `${server.challongeCommunity}.challonge.com/${abbreviation || name}`,
+            url: abbreviation || name,
+            subdomain: server.challongeCommunity || null,
             tournament_type: tournament_type,
             description: description,
             game_name: game_name,
