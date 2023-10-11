@@ -19,8 +19,8 @@ export const CubeLauncher = () => {
 
     // LAUNCH
     const launch = async () => {
-        if (!cube.id) return alert('Please select a Cube.')
-        if (!playerId) return alert('Please log in to Start a Cube Draft.')
+        if (!cube.id) return alert('Please Select a Cube.')
+        if (!playerId) return alert('Please Log-in to Start a Cube Draft.')
         
         try {
             const { data } = await axios.post('/api/cubes/launch', {

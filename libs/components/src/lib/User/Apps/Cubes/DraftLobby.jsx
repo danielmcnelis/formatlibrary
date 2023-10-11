@@ -54,6 +54,7 @@ export const DraftLobby = () => {
     // JOIN
     const join = async () => {        
         try {
+            if (!playerId) alert('Please Log-in to Join a Cube Draft.')
             const { data } = await axios.post(`/api/drafts/join/${draft.id}`, {
                 playerId: playerId
             })
@@ -121,9 +122,9 @@ export const DraftLobby = () => {
         if (draft.pick && draft.state !== 'pending') {
             if (inventory.length) {
                 setSelection(null)
-                alert('Next pick!')
+                alert('Next Pick!')
             } else {
-                alert('The Draft is starting now!')
+                alert('The Draft is Starting Now!')
             }
         }
     }, [draft.pick])
