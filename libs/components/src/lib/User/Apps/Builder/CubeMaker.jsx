@@ -7,6 +7,7 @@ import { getCookie } from '@fl/utils'
 import axios from 'axios'
 import {Button, Form, Modal} from 'react-bootstrap'
 import {DndContext} from '@dnd-kit/core'
+import {Draggable} from '../../../General/Draggable'
 import {Droppable} from '../../../General/Droppable'
 import './Builder.css'
 import './CubeMaker.css'
@@ -19,22 +20,45 @@ export const CubeMaker = () => {
     })
 
     const [cubes, setCubes] = useState([])
-    console.log('cubes', cubes)
     const [edited, setEdited] = useState(false)
     const [showOpenModal, setShowOpenModal] = useState(false)
     const [showSaveModal, setShowSaveModal] = useState(false)
     const [showUploadModal, setShowUploadModal] = useState(false)
 
+    // CHANGE SLOT
+    const changeSlot = async (locale, index1, index2) => {
+        try {
+            const card = cube.cardPool[index1]
+            index2 = index2 <= cube.cardPool.length - 1 ? index2 : cube.cardPool.length - 1
+            cube.cardPool.splice(index1, 1)
+            cube.cardPool.splice(index2, 0, card)
+            setCube({ ...cube })
+            setEdited(true)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     // HANDLE DRAG END
     const handleDragEnd = (event) => {
+        const card = event.active?.data?.current?.card
+        const [, locale, index] = event.active?.id?.split('-') || []
+        console.log('locale', locale)
+        console.log('index', index)
+        console.log('event.active?.id', event.active?.id)
+        console.log('event.over?.id', event.over?.id)
         if (event.over && event.over.id?.includes('droppable')) {
-            const card = event.active?.data?.current?.card
-            if (event.over.id === 'droppable-main') {
+            const [, , index2] = event.over?.id?.split('-') || []
+            console.log('index2', index2)
+            if (event.over.id.includes('main') && event.active.id.includes('search')) {
                 addCard(card, 'main')
-            } else if (event.over.id === 'droppable-side') {
-                addCard(card, 'side')
-            } else if (event.over.id === 'droppable-extra') {
-                addCard(card, 'extra')
+            } else if (event.over.id.includes('main') && event.active.id.includes('main')) {
+                console.log('change slot')
+                changeSlot(locale, index, index2)
+            }
+        } else {
+            if (event.active.id.includes('main')) {
+                removeCard(locale, index)
             }
         }
     }
@@ -237,17 +261,17 @@ export const CubeMaker = () => {
             <Modal.Body>
                 <Form>
                     <Form.Group className="mb-3">
-                            <Form.Label>Cube:</Form.Label>
-                            <Form.Select id="cube-selector" style={{width: '200px'}} aria-label="Cube:" onChange={(e) => {updateCube(e.target.value); setShowOpenModal(false)}}>
-                            {
-                                cubes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)
-                            }
-                            </Form.Select>
+                        <Form.Label>Cube:</Form.Label>
+                        <Form.Select id="cube-selector" style={{width: '200px'}} aria-label="Cube:" onChange={(e) => {updateCube(e.target.value)}}>
+                        {
+                            cubes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)
+                        }
+                        </Form.Select>
                     </Form.Group>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="primary" onClick={() => {updateCube(document.getElementById('cube-selector').value); setShowOpenModal(false)}}>Open</Button>
+                <Button variant="primary" onClick={() => {updateCube(document.getElementById('cube-selector')?.value); setShowOpenModal(false)}}>Open</Button>
                 <Button variant="secondary" onClick={() => {setShowOpenModal(false)}}>Cancel</Button>
             </Modal.Footer>
         </Modal>
@@ -380,15 +404,43 @@ export const CubeMaker = () => {
                     {
                         cube.cardPool.map((card, index) => {
                             if (!card) {
-                                return <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${index}`}/>
+                                return (
+                                    <Droppable locale="main" index={index}>
+                                        <EmptySlot 
+                                            className="card-image" 
+                                            width='72px' 
+                                            height='107px' 
+                                            padding='1px' 
+                                            margin='0px' 
+                                            key={`main-${index}`}
+                                        />
+                                    </Droppable>
+                                )
                             } else {
-                                return <CardImage removeCard={removeCard} locale="main" index={index} width='72px' height='107px' padding='1px' margin='0px' key={`main-${index}`} card={card}/>
+                                return (
+                                    <Droppable locale="main" index={index}>
+                                        <Draggable>
+                                            <CardImage 
+                                                removeCard={removeCard} 
+                                                locale="main" 
+                                                index={index} 
+                                                width='72px' 
+                                                height='107px' 
+                                                padding='1px' 
+                                                margin='0px' 
+                                                key={`main-${index}`} 
+                                                card={card}
+                                                disableLink={true}
+                                            />
+                                        </Draggable>
+                                    </Droppable>
+                                )
                             }
                         })
                     }
                     {
-                        cube.cardPool.length < 40 ? [...Array(40 - cube.cardPool.length)].map((x, i) => <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>) :
-                        cube.cardPool.length % 10 ? [...Array(10 -  cube.cardPool.length % 10)].map((x, i) => <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>) :
+                        cube.cardPool.length < 40 ? [...Array(40 - cube.cardPool.length)].map((x, i) => <Droppable local="main"><EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/></Droppable>) :
+                        cube.cardPool.length % 10 ? [...Array(10 -  cube.cardPool.length % 10)].map((x, i) => <Droppable local="main"><EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/></Droppable>) :
                         ''
                     }
                     </div>

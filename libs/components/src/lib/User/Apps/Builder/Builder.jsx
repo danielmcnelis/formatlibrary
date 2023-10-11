@@ -355,13 +355,9 @@ export const Builder = () => {
 
     // CHANGE SLOT
     const changeSlot = async (locale, index1, index2) => {
-        console.log('locale, index1, index2', locale, index1, index2)
         try {
             const card = deck[locale][index1]
-            console.log('card', card)
-            console.log('deck[locale].length - 1', deck[locale].length - 1)
             index2 = index2 <= deck[locale].length - 1 ? index2 : deck[locale].length - 1
-            console.log('index2', index2)
             deck[locale].splice(index1, 1)
             deck[locale].splice(index2, 0, card)
             setDeck({ ...deck })
