@@ -211,7 +211,7 @@ export const CubeMaker = () => {
     // REMOVE CARD
     const removeCard = async (index) => {
         try {
-            console.log('REMOVE CARD')
+            console.log('REMOVE CARD', index)
             console.log(cube?.cardPool.splice(index, 1))
             setCube({ ...cube })
             setEdited(true)
