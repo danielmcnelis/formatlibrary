@@ -9,13 +9,10 @@ export const cubesId = async (req, res, next) => {
     try {
       const id = parseInt(req.params.id)
       const shareLink = req.params.id
-      const isAdmin = req.query?.isAdmin
       const view = req.query?.view
       
       const cube = await Cube.findOne({
-          where: !isNaN(id) && isAdmin === 'true' ? {
-              id: id
-          } : !isNaN(id) ? {
+          where: !isNaN(id) ? {
               id: id,
               display: true,
           } : {

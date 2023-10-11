@@ -28,10 +28,10 @@ export const CubeMaker = () => {
     // CHANGE SLOT
     const changeSlot = async (locale, index1, index2) => {
         try {
-            const card = cube.cardPool[index1]
-            index2 = index2 <= cube.cardPool.length - 1 ? index2 : cube.cardPool.length - 1
-            cube.cardPool.splice(index1, 1)
-            cube.cardPool.splice(index2, 0, card)
+            const card = cube?.cardPool[index1]
+            index2 = index2 <= cube?.cardPool.length - 1 ? index2 : cube?.cardPool.length - 1
+            cube?.cardPool.splice(index1, 1)
+            cube?.cardPool.splice(index2, 0, card)
             setCube({ ...cube })
             setEdited(true)
         } catch (err) {
@@ -82,7 +82,7 @@ export const CubeMaker = () => {
     const sortCube = () => {
         const data = {
             ...cube,
-            cardPool: cube.cardPool.sort(sortFn)
+            cardPool: cube?.cardPool.sort(sortFn)
         }
 
         setCube(data)
@@ -92,7 +92,7 @@ export const CubeMaker = () => {
 
     // COPY CUBE
     const copyCube = async () => {
-        if (edited || !cube.id) return alert('Save Cube before copying.')
+        if (edited || !cube?.id) return alert('Save Cube before copying.')
         setCube({
             ...cube,
             name: cube?.name + ' (copy)',
@@ -105,13 +105,13 @@ export const CubeMaker = () => {
     // SAVE CUBE
     const saveCube = async () => {
         const name = document.getElementById('save-as-name') ? document.getElementById('save-as-name').value : cube?.name
-        const main = cube.cardPool.map((card) => card.konamiCode)
+        const main = cube?.cardPool.map((card) => card.konamiCode)
         const ydk = ['created by...', '#main', ...main, ''].join('\n')
         const playerId = getCookie('playerId') || 'ruStGFXbGiM7mwog5Jd4Jt'
 
-        if (cube.id) {
+        if (cube?.id) {
             try {
-                await axios.put(`/api/cubes/update/${cube.id}`, {
+                await axios.put(`/api/cubes/update/${cube?.id}`, {
                     name: name,
                     ydk: ydk
                 })
@@ -123,7 +123,7 @@ export const CubeMaker = () => {
                 if (err.response.status === 400) {
                     alert('Name is already in use.')
                 } else {
-                    alert('Error Saving Cube.')
+                    alert('Error Saving cube?.')
                 }
             }
         } else {
@@ -146,7 +146,7 @@ export const CubeMaker = () => {
                 getCubes()
             } catch (err) {
                 console.log(err)
-                alert('Error Saving Cube.')
+                alert('Error Saving cube?.')
             }
         }
 
@@ -191,13 +191,13 @@ export const CubeMaker = () => {
     // ADD CARD
     const addCard = async (card) => {
         try {
-            const cardIds = cube.cardPool.map((card) => card.id)
+            const cardIds = cube?.cardPool.map((card) => card.id)
             if (cardIds.includes(card.id)) {
                 return
             } else {
                 setCube({
                     ...cube,
-                    cardPool: [...cube.cardPool, card]  
+                    cardPool: [...cube?.cardPool, card]  
                 })
 
                 setEdited(true)
@@ -210,7 +210,7 @@ export const CubeMaker = () => {
     // REMOVE CARD
     const removeCard = async (index) => {
         try {
-            cube.cardPool.splice(index, 1)
+            cube?.cardPool.splice(index, 1)
             setCube({ ...cube })
             setEdited(true)
         } catch (err) {
@@ -402,7 +402,7 @@ export const CubeMaker = () => {
                 <div id="main" className="deck-bubble">
                     <div id="main" className="deck-flexbox">
                     {
-                        cube.cardPool.map((card, index) => {
+                        cube?.cardPool.map((card, index) => {
                             if (!card) {
                                 return (
                                     <Droppable locale="main" index={index}>
@@ -439,8 +439,8 @@ export const CubeMaker = () => {
                         })
                     }
                     {
-                        cube.cardPool.length < 40 ? [...Array(40 - cube.cardPool.length)].map((x, i) => <Droppable local="main"><EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/></Droppable>) :
-                        cube.cardPool.length % 10 ? [...Array(10 -  cube.cardPool.length % 10)].map((x, i) => <Droppable local="main"><EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/></Droppable>) :
+                        cube?.cardPool.length < 40 ? [...Array(40 - cube?.cardPool.length)].map((x, i) => <Droppable local="main"><EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/></Droppable>) :
+                        cube?.cardPool.length % 10 ? [...Array(10 -  cube?.cardPool.length % 10)].map((x, i) => <Droppable local="main"><EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/></Droppable>) :
                         ''
                     }
                     </div>
