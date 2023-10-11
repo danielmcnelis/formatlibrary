@@ -54,7 +54,10 @@ export const cubesId = async (req, res, next) => {
           attributes: { exclude: ['tcgLegal', 'ocgLegal', 'ocgDate', 'speedLegal', 'speedDate', 'createdAt', 'updatedAt'] },
         })
   
-        if (!card) continue
+        if (!card) {
+            console.log(`bad cube konamiCode:`, konamiCode)
+            continue
+        }
         cardPool.push(card)
       }
   
