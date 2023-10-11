@@ -1,0 +1,149 @@
+
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import { getCookie } from '@fl/utils'
+import './DraftLauncher.css' 
+
+export const DraftLauncher = () => {
+    const [packs, setPacks] = useState([])
+    const [pack, setPack] = useState({})
+    const [packSize, setPackSize] = useState(12)
+    const [packsPerPlayer, setPacksPerPlayer] = useState(4)
+    const [timer, setTimer] = useState(60)
+    const [draftLink, setDraftLink] = useState(null)
+    const playerId = getCookie('playerId')
+
+    const packSizeOptions = []
+    let upperLimit = (draft.cardPool?.length / packsPerPlayer) < 20 ? draft.cardPool?.length / packsPerPlayer : 20
+    for (let i = upperLimit; i >= 4; i--) packSizeOptions.push(i) 
+
+    // LAUNCH
+    const launch = async () => {
+        if (!draft.id) return alert('Please Select a Draft.')
+        if (!playerId) return alert('Please Log-in to Start a Draft Draft.')
+        
+        try {
+            const { data } = await axios.post('/api/drafts/launch', {
+                draftId: draft.id,
+                hostId: playerId,
+                packSize: packSize,
+                packsPerPlayer: packsPerPlayer,
+                timer: timer
+            })
+            
+            setDraftLink(data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    // FETCH DRAFT
+    const fetchDraft = async (draftId) => {
+        const {data} = await axios.get(`/api/drafts/${draftId}`)
+        setDraft(data)
+    }
+
+    // USE EFFECT
+    useEffect(() => {
+        const fetchData = async () => {
+            const {data} = await axios.get(`/api/drafts`)
+            setDrafts(data)
+        }
+        
+        fetchData()
+    }, [])
+
+    return (
+        <div className="draft-portal">
+            <div className="card-database-flexbox">
+                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.logo || 'draft.png'}`} alt="draft-logo"/>
+                <div>
+                    <h1>Start Draft Draft!</h1>
+                </div>
+                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.logo || 'draft.png'}`} alt="draft-logo"/>
+            </div>
+            <br/>
+
+            <div className="slideshow">
+                <div className="mover"></div>
+            </div>
+
+            <br/>
+            <label>Draft:
+                <select
+                    id="draft"
+                    onChange={(e) => fetchDraft(e.target.value)}
+                >
+                <option value="">Select Draft:</option>
+                {
+                    drafts.map((c) => <option value={c.id}>{c.name} by {c.builder}</option>)
+                }
+                </select>
+            </label>
+
+            <label>Pack Size:
+                <select
+                    id="pack-size"
+                    defaultValue="12"
+                    onChange={(e) => {setPackSize(e.target.value)}}
+                >
+                {
+                    packSizeOptions.map((size) => <option value={size}>{size} Cards / Pack</option>)
+                }
+                </select>
+            </label>
+
+            <label>Pack Number:
+                <select
+                    id="pack-number"
+                    defaultValue="4"
+                    onChange={(e) => {setPacksPerPlayer(e.target.value)}}
+                >
+                    <option value="6">6 Packs / Player</option>)
+                    <option value="5">5 Packs / Player</option>)
+                    <option value="4">4 Packs / Player</option>)
+                    <option value="3">3 Packs / Player</option>)
+                    <option value="2">2 Packs / Player</option>)
+                </select>
+            </label>
+
+            <label>Timer:
+                <select
+                    id="pack-number"
+                    defaultValue="60"
+                    onChange={(e) => {setTimer(e.target.value)}}
+                >
+                    <option value="90">90 Seconds / Pick</option>)
+                    <option value="75">75 Seconds / Pick</option>)
+                    <option value="60">60 Seconds / Pick</option>)
+                    <option value="45">45 Seconds / Pick</option>)
+                    <option value="30">30 Seconds / Pick</option>)
+                </select>
+            </label>
+
+            {
+                draft.id ? (
+                    <div className="settings-note">
+                        <i>These settings support up to {Math.floor(draft.cardPool?.length / (packsPerPlayer * packSize))} players.</i>
+                    </div>
+                ) : ''
+            }
+
+            <div
+                className="draft-button"
+                type="submit"
+                onClick={() => launch()}
+            >
+                Launch
+            </div>
+
+            {
+                draftLink ? (
+                    <div className="lobby-link">
+                        Draft Lobby: <a href={draftLink}>{draftLink}</a>
+                    </div>
+                ) : ''
+            }
+        </div>
+    )
+}

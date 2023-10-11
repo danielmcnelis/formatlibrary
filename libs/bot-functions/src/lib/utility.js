@@ -143,8 +143,9 @@ export const getCard = async (query, fuzzyCards, format) => {
 
     const indicator = position === 'limited' || position === 'limited-1' ? emojis.limited :
         position === 'semi-limited' || position === 'limited-2' ? emojis.semi :
-        position === 'unlimited' || position === 'limited-3' ? emojis.unlimited :
-        emojis.forbidden
+        position === 'no longer on list' || position === 'unlimited' || position === 'limited-3' ? emojis.unlimited :
+        position === 'forbidden' ? emojis.forbidden :
+        ''
 
 	const color = card.category === "Spell" ? "#42f578" :
 		card.category === "Trap" ? "#e624ed" :

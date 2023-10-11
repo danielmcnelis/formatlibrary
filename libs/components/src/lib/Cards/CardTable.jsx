@@ -348,7 +348,7 @@ export const CardTable = () => {
         setFormat(formatData.format)
         setQueryParams({...queryParams, region: formatData.format?.category?.toLowerCase() })
         const category = formatData?.format?.category || 'TCG'
-        const {data: banlistData} = await axios.get(`/api/banlists/simple/${formatData.format.banlist || 'jun23'}?category=${category}`)
+        const {data: banlistData} = await axios.get(`/api/banlists/simple/${formatData.format.banlist || 'sep23'}?category=${category}`)
 
         setBanlist(banlistData)
         const year = formatData.format.date ? parseInt(formatData.format.date.slice(0, 4)) : now.getFullYear()

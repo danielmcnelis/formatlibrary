@@ -191,6 +191,7 @@ export const Builder = () => {
                     suggestedType: deck.suggestedType,
                     formatName: format.name,
                     formatDate: format.date,
+                    formatCategory: format.category,
                     formatBanlist: format.banlist,
                     formatId: format.id,
                     ydk: ydk

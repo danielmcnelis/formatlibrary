@@ -25,7 +25,6 @@ export const CubeBrowser = () => {
         builder: '',
         cardPool: []
     })
-    console.log('cube', cube)
 
     const [advanced, setAdvanced] = useState(false)
     const { id } = useParams()

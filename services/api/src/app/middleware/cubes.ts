@@ -84,9 +84,6 @@ export const cubesId = async (req, res, next) => {
       }
   
       cardPool.sort(sortFn)
-      console.log('cube', cube)
-      console.log('cardPool', cardPool)
-  
       cube.views++
       await cube.save()
   
