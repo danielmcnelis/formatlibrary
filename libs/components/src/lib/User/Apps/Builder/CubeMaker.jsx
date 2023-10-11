@@ -209,7 +209,7 @@ export const CubeMaker = () => {
     }
 
     // REMOVE CARD
-    const removeCard = async (index) => {
+    const removeCard = async (locale, index) => {
         try {
             console.log('REMOVE CARD', index)
             console.log(cube?.cardPool.splice(index, 1))
