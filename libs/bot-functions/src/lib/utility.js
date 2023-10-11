@@ -174,9 +174,9 @@ export const getCard = async (query, fuzzyCards, format) => {
 	if (card.union) classes.push("Union")
 	if (card.effect) classes.push("Effect")
 
-    const releaseDate = card[dateType] ? dateToVerbose(card[dateType], true, false, true) : 
-        format?.category === 'Speed' ? 'N/A' : 
-        'OCG Only'
+    const releaseDate = card[dateType] ? 
+        dateToVerbose(card[dateType], true, false, true) : 
+        card.tcgDate || 'OCG Only'
 
     let labels = [
 		`\nRelease Date: ${releaseDate}`,
