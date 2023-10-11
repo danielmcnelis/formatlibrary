@@ -19,6 +19,7 @@ export const CubeMaker = () => {
     })
 
     const [cubes, setCubes] = useState([])
+    console.log('cubes', cubes)
     const [edited, setEdited] = useState(false)
     const [showOpenModal, setShowOpenModal] = useState(false)
     const [showSaveModal, setShowSaveModal] = useState(false)
@@ -82,7 +83,7 @@ export const CubeMaker = () => {
         const name = document.getElementById('save-as-name') ? document.getElementById('save-as-name').value : cube.name
         const main = cube.cardPool.map((card) => card.konamiCode)
         const ydk = ['created by...', '#main', ...main, ''].join('\n')
-        const playerId = getCookie('playerId')
+        const playerId = getCookie('playerId') || 'ruStGFXbGiM7mwog5Jd4Jt'
 
         if (cube.id) {
             try {
@@ -239,12 +240,16 @@ export const CubeMaker = () => {
                             <Form.Label>Cube:</Form.Label>
                             <Form.Select id="cube-selector" style={{width: '200px'}} aria-label="Cube:" onChange={(e) => {updateCube(e.target.value); setShowOpenModal(false)}}>
                             {
-                                cubes.map((c) => <option key={c.name} value={c.name}>{c.name}</option>)
+                                cubes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)
                             }
                             </Form.Select>
                     </Form.Group>
                 </Form>
             </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={() => {updateCube(document.getElementById('cube-selector').value); setShowOpenModal(false)}}>Open</Button>
+                <Button variant="secondary" onClick={() => {setShowOpenModal(false)}}>Cancel</Button>
+            </Modal.Footer>
         </Modal>
         
         <Modal show={showUploadModal} onHide={() => setShowUploadModal(false)}>

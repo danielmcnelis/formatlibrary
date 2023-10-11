@@ -23,7 +23,7 @@ const sortFn = (a, b) => {
     }
 }
 
-const playerId = getCookie('playerId')
+const playerId = getCookie('playerId') || 'UeyvnNBD6CD53gsqRQsxCY'
 
 export const DraftLobby = () => {
     const [draft, setDraft] = useState({})
@@ -123,7 +123,7 @@ export const DraftLobby = () => {
             if (inventory.length) {
                 setSelection(null)
                 alert('Next Pick!')
-            } else {
+            } else if (entry.id) {
                 alert('The Draft is Starting Now!')
             }
         }
