@@ -95,7 +95,7 @@ export const CubeMaker = () => {
         if (edited || !cube.id) return alert('Save Cube before copying.')
         setCube({
             ...cube,
-            name: cube.name + ' (copy)',
+            name: cube?.name + ' (copy)',
             id: null
         })
 
@@ -104,7 +104,7 @@ export const CubeMaker = () => {
 
     // SAVE CUBE
     const saveCube = async () => {
-        const name = document.getElementById('save-as-name') ? document.getElementById('save-as-name').value : cube.name
+        const name = document.getElementById('save-as-name') ? document.getElementById('save-as-name').value : cube?.name
         const main = cube.cardPool.map((card) => card.konamiCode)
         const ydk = ['created by...', '#main', ...main, ''].join('\n')
         const playerId = getCookie('playerId') || 'ruStGFXbGiM7mwog5Jd4Jt'
@@ -129,7 +129,7 @@ export const CubeMaker = () => {
         } else {
             try {
                 const { data } = await axios.post(`/api/cubes/create`, {
-                    name: cube.name,
+                    name: cube?.name,
                     playerId: playerId,
                     ydk: ydk,
                     display: false
@@ -308,7 +308,7 @@ export const CubeMaker = () => {
                         <Form.Control
                             type="name"
                             id="save-as-name"
-                            defaultValue={cube.name}
+                            defaultValue={cube?.name}
                             autoFocus
                         />
                     </Form.Group>
@@ -394,7 +394,7 @@ export const CubeMaker = () => {
         <div>
             <div className="single-deck-title-flexbox">
                 <div style={{width: '80px'}}/>
-                <div className="single-deck-title">{cube.name || 'New Cube'} <img style={{width:'32px', margin: '10px 20px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube?.icon || 'master'}.png`} alt={cube?.icon || 'millennium-puzzle'}/></div>
+                <div className="single-deck-title">{cube?.name || 'New Cube'} <img style={{width:'32px', margin: '10px 20px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube?.icon || 'master'}.png`} alt={cube?.icon || 'millennium-puzzle'}/></div>
                 <div style={{width: '80px', color: '#CBC5C3', margin: '0px', alignSelf: 'center'}}>{edited ? <i>Edited</i> : ''}</div>
             </div>
 
@@ -454,7 +454,7 @@ export const CubeMaker = () => {
                                 <a
                                     className="link"
                                     href={`/api/formats/download/${cube?.id}`} 
-                                    download={`${cube.name}-cardpool.ydk`}
+                                    download={`${cube?.name}-cardpool.ydk`}
                                 >                                    
                                     <div className="deck-button">
                                         <b style={{padding: '0px 6px'}}>Download</b>
