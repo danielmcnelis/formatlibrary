@@ -11,7 +11,7 @@ export const CubeLauncher = () => {
     const [packsPerPlayer, setPacksPerPlayer] = useState(4)
     const [timer, setTimer] = useState(60)
     const [cubeLink, setCubeLink] = useState(null)
-    const playerId = getCookie('playerId') || 'UeyvnNBD6CD53gsqRQsxCY'
+    const playerId = getCookie('playerId')
 
     const packSizeOptions = []
     let upperLimit = (cube.cardPool?.length / packsPerPlayer) < 20 ? cube.cardPool?.length / packsPerPlayer : 20
@@ -20,6 +20,7 @@ export const CubeLauncher = () => {
     // LAUNCH
     const launch = async () => {
         if (!cube.id) return alert('Please select a Cube.')
+        if (!playerId) return alert('Please log in to Start a Cube Draft.')
         
         try {
             const { data } = await axios.post('/api/cubes/launch', {
@@ -54,11 +55,10 @@ export const CubeLauncher = () => {
 
     return (
         <div className="cube-portal">
-
             <div className="card-database-flexbox">
                 <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
                 <div>
-                    <h1>Start a New Draft!</h1>
+                    <h1>Start Cube Draft!</h1>
                 </div>
                 <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
             </div>
@@ -140,7 +140,7 @@ export const CubeLauncher = () => {
             {
                 cubeLink ? (
                     <div className="lobby-link">
-                        Draft Lobby: {cubeLink || 'N/A'}
+                        Draft Lobby: <a href={cubeLink}>{cubeLink}</a>
                     </div>
                 ) : ''
             }

@@ -1,0 +1,151 @@
+
+  
+
+
+.participants-flexbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 10px;
+}
+
+.draft-interface {
+    display: flex;
+    width: 76%;
+    flex-direction: column;
+}
+
+.draft-info {
+    padding: 5px 10px;
+    text-align: left;
+}
+
+.pack-flexbox {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: left;
+    padding: 0px 10px;
+    flex-basis: 9%;
+    flex-wrap: wrap;
+}
+
+.react-countdown-clock {
+    padding: 20px 10px;
+}
+
+.empty-clock {
+    width: 96px;
+    height: 96px;
+    padding: 20px 10px;
+}
+
+.space-between {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.space-between-aligned {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 5px 10px;
+    margin: 5px 10px;
+}
+
+.focal-card-flexbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 22%;
+}
+
+.focal-card-image {
+    margin: 2px 10px 2px 0px;  
+    width: 100%;
+}
+
+.inventory-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-content: left;
+    align-items: center;
+    font-size: 18px;
+    height: 38px;
+    margin: 5px 10px;
+    padding: 2px 5px;
+  }
+  
+  .inventory-button:hover {
+      color: white;
+      background-color:#00a3cc;
+      border-radius: 4px; 
+  }
+
+  .space-evenly {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+.last-selection {
+    height: 30px;
+    width: 100%;
+    padding: 4px 10px;
+    font-size: 14pt;
+    text-align: center;
+}
+
+.focal-card-description {
+    width: 100%;
+    font-size: 14px;
+    padding: 3px 6px;    
+    margin: 2px 10px 2px 0px;  
+    text-align: justify;
+    background-color: var(--card-description);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.countdown {
+    color: var(--countdown) !important;
+}
+
+  .draft-participant-pfp {
+    border: 5px solid black;
+    border-radius: 100%;
+    background-color: #000000;
+    width: 64px;
+    margin: 0px 2px;
+  }
+
+  .slideshow {
+    height: 105px;
+    width: 90%;
+    margin: 0 auto;
+    overflow: hidden;
+    transform: translate3d(0, 0, 0);
+  }
+  
+  .slideshow > div {
+    height: 105px;
+    width: 31176px;
+    background: url(https://cdn.formatlibrary.com/images/cubes/slideshows/1.png);
+    transform: translate3d(0, 0, 0);
+  }
+
+  .slideshow .mover {
+    animation: moveSlideshow 180s linear infinite;
+  }
+
+  @keyframes moveSlideshow {
+    100% { 
+      transform: translateX(-66.6666%);  
+    }
+  }

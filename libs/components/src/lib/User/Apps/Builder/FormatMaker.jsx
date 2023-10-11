@@ -1,13 +1,13 @@
 
 import { useState, useEffect, useLayoutEffect } from 'react'
-import {CardImage} from '../Cards/CardImage'
+import {CardImage} from '../../../Cards/CardImage'
 import {EmptySlot} from './EmptySlot'
 import {SearchPanel} from './SearchPanel'
 import { getCookie } from '@fl/utils'
 import axios from 'axios'
 import {Button, Form, Modal} from 'react-bootstrap'
 import {DndContext} from '@dnd-kit/core'
-import {Droppable} from '../General/Droppable'
+import {Droppable} from '../../../General/Droppable'
 import './Builder.css'
 import './FormatMaker.css'
 

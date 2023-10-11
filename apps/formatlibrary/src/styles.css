@@ -51,6 +51,7 @@
     --side-deck-background: #e6faff;
     --extra-deck-border: #ffbf00;
     --extra-deck-background: #ffffe6;
+    --countdown: #334569;
   }
   
   [data-theme='dark'] {
@@ -91,6 +92,7 @@
     --side-deck-background: #36535b;
     --extra-deck-border: #302300;
     --extra-deck-background: #917a55;
+    --countdown: #00bca6;
   }
 
   body {

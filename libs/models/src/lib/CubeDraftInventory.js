@@ -11,5 +11,8 @@ export const CubeDraftInventory = db.define('cubeDraftInventories', {
     },
     cubeDraftId: {
         type: Sequelize.INTEGER
+    },
+    cubeDraftEntryId: {
+        type: Sequelize.INTEGER
     }
 })

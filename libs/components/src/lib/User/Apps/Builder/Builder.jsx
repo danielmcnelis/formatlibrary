@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useLayoutEffect } from 'react'
-import {CardImage} from '../Cards/CardImage'
+import {CardImage} from '../../../Cards/CardImage'
 import {EmptySlot} from './EmptySlot'
 import {FocalCard} from './FocalCard'
 import {SearchPanel} from './SearchPanel'
@@ -9,8 +9,8 @@ import axios from 'axios'
 import {Button, Form, Modal} from 'react-bootstrap'
 import { getCookie } from '@fl/utils'
 import {DndContext} from '@dnd-kit/core'
-import {Draggable} from '../General/Draggable'
-import {Droppable} from '../General/Droppable'
+import {Draggable} from '../../../General/Draggable'
+import {Droppable} from '../../../General/Droppable'
 import './Builder.css'
 
 export const Builder = () => {

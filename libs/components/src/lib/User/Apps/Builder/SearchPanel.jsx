@@ -1,14 +1,14 @@
 
 
 import { useState, useEffect, useLayoutEffect } from 'react'
-import {MiniAdvButton} from '../Cards/MiniAdvButton'
-import {CardImage} from '../Cards/CardImage'
-import {Slider} from '../General/Slider'
-import {MiniPagination} from '../General/MiniPagination'
+import {MiniAdvButton} from '../../../Cards/MiniAdvButton'
+import {CardImage} from '../../../Cards/CardImage'
+import {Slider} from '../../../General/Slider'
+import {MiniPagination} from '../../../General/MiniPagination'
 import axios from 'axios'
 import { capitalize } from '@fl/utils'
 import { useMediaQuery } from 'react-responsive'
-import {Draggable} from '../General/Draggable'
+import {Draggable} from '../../../General/Draggable'
 
 import './Builder.css'
 

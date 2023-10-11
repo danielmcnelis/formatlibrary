@@ -60,8 +60,8 @@ export const Navigation = (props) => {
                 <Link to="/formats/">
                     <h2 className="nav-header">FORMATS</h2>
                 </Link>
-                <Link to="/builder/">
-                    <h2 className="nav-header">BUILDER</h2>
+                <Link to="/apps/">
+                    <h2 className="nav-header">APPS</h2>
                 </Link>
                 {
                     isAdmin ? (

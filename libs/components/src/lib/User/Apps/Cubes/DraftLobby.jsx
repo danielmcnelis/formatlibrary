@@ -1,0 +1,389 @@
+
+import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import axios from 'axios'
+import { CardImage } from '../../../Cards/CardImage'
+import { FocalCard } from '../Builder/FocalCard'
+import { getCookie } from '@fl/utils'
+import ReactCountdownClock from 'react-countdown-clock'
+import './DraftLobby.css' 
+
+// SORT FUNCTION
+const sortFn = (a, b) => {
+    if (a.sortPriority > b.sortPriority) {
+        return 1
+    } else if (b.sortPriority > a.sortPriority) {
+        return -1
+    } else if (a.name > b.name) {
+        return 1
+    } else if (b.name > a.name) {
+        return -1
+    } else {
+        return false
+    }
+}
+
+const playerId = getCookie('playerId')
+
+export const DraftLobby = () => {
+    const [draft, setDraft] = useState({})
+    const [participants, setParticipants] = useState([])
+    const [entry, setEntry] = useState({})
+    const [inventory, setInventory] = useState([])
+    const [pack, setPack] = useState({})
+    const [card, setCard] = useState({})
+    const [selection, setSelection] = useState(null)
+    const [timer, setTimer] = useState(null)
+    const [onTheClock, setOnTheClock] = useState(false)
+    const [time, setTime] = useState(Date.now())
+    const [intervalId, setIntervalId] = useState(null)
+
+    // USE EFFECT SET INTERVAL
+    useEffect(() => {
+        const interval = setInterval(() => setTime(Date.now()), 1000)
+        setIntervalId(interval)
+
+        return () => {
+            clearInterval(interval)
+        }
+    }, [])
+
+    const timerColor = JSON.parse(localStorage.getItem('theme')) === 'dark' ? '#00bca6' : '#334569'
+    const { id } = useParams()
+
+    // JOIN
+    const join = async () => {        
+        try {
+            const { data } = await axios.post(`/api/drafts/join/${draft.id}`, {
+                playerId: playerId
+            })
+
+            setEntry(data)
+            setParticipants([ ...participants, data ])
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    // LEAVE
+    const leave = async () => {        
+        try {
+            const { status } = await axios.post(`/api/drafts/leave/${draft.id}`, {
+                playerId: playerId
+            })
+
+            if (status === 200) {
+                setEntry({})
+                setParticipants([...participants.filter((p) => p.playerId !== playerId)])
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    // START
+    const start = async () => {        
+        try {
+            const { data } = await axios.post(`/api/drafts/start/${draft.id}`)
+            setDraft(data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    // ADD CARD
+    const addCard = async (card) => {        
+        try {
+            const { data } = await axios.put(`/api/drafts/select/${draft.id}?cardId=${card.id}`, {
+                playerId: playerId
+            })
+
+            setPack(pack.filter((p) => p.cardId !== data.id))
+            setOnTheClock(false)
+            setSelection(data.name)
+            setInventory([...inventory, data])
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    // USE EFFECT CHECK IF PARTICIPANT
+    useEffect(() => {
+        for (let i = 0; i < participants.length; i++) {
+            if (participants[i].playerId === playerId) {
+                return setEntry(participants[i])
+            }
+        }
+    }, [participants])
+
+    // USE EFFECT CLEAR SELECTION
+    useEffect(() => {
+        if (draft.pick && draft.state !== 'pending') {
+            if (inventory.length) {
+                setSelection(null)
+                alert('Next pick!')
+            } else {
+                alert('The Draft is starting now!')
+            }
+        }
+    }, [draft.pick])
+
+    // USE EFFECT GET INVENTORY
+    useEffect(() => {
+        const fetchData = async () => {
+            if (entry.id) {
+                const {data} = await axios.get(`/api/drafts/inventory?entryId=${entry.id}`)
+                setInventory(data)
+                if (data.length >= draft.pick) setOnTheClock(false)
+            }
+        }
+
+        fetchData()
+    }, [entry, draft.pick])
+
+    // USE EFFECT GET PACK
+    useEffect(() => {
+        const fetchData = async () => {
+            if (entry.id && draft.state === 'underway') {
+                const {data} = await axios.get(`/api/drafts/pack?entryId=${entry.id}`)
+                setPack(data)
+            }
+        }
+
+        fetchData()
+    }, [draft, entry])
+
+    // USE EFFECT
+    useEffect(() => {
+        const fetchData = async () => {
+            if (draft.id) {
+                const {data} = await axios.get(`/api/drafts/participants/${draft.id}`)
+                setParticipants(data)
+            }
+        }
+        
+        fetchData()
+    }, [draft])
+
+    // USE EFFECT
+    useEffect(() => {
+        const lastUpdated = new Date(draft.updatedAt)
+        const lastUpdatedTimeStamp = lastUpdated.getTime()
+        const timeExpiresAt = lastUpdatedTimeStamp + 60 * 1000
+        const today = new Date()
+        const nowTimeStamp = today.getTime()
+        const timeRemaining = timeExpiresAt - nowTimeStamp
+        
+        if (timeRemaining > 0) {
+            setOnTheClock(true)
+            setTimer(timeRemaining / 1000)
+        }
+    }, [draft.updatedAt])
+
+    // USE EFFECT CLEAR INTERVAL
+    useEffect(() => {
+        if (draft.state === 'complete') {
+            return clearInterval(intervalId)
+        }
+    }, [draft.state, intervalId])
+
+    // USE EFFECT FETCH DATA DRAFT
+    useEffect(() => {
+        const fetchData = async () => {
+            const {data} = await axios.get(`/api/drafts/${id}`)
+            setDraft(data)
+        }
+        
+        fetchData()
+    }, [time])
+
+    return (
+        <div className="cube-portal">
+            {
+                draft.state === 'pending' ? (
+                    <>
+                        <div className="card-database-flexbox">
+                            <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
+                            <div>
+                                <h1>Upcoming Draft!</h1>
+                                <h2>{draft.cubeName}</h2>
+                            </div>
+                            <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
+                        </div>
+                        <br/>
+                        <div className="slideshow">
+                            <div className="mover"></div>
+                        </div>
+                        <br/>
+                        <h3>Hosted by {draft.hostName}</h3>
+                        <div className="participants-flexbox">
+                            {
+                                participants.map((p) => (
+                                    <img 
+                                        className="draft-participant-pfp" 
+                                        src={`https://cdn.formatlibrary.com/images/pfps/${p.player?.discordId || p.player?.name}.png`}
+                                        onError={(e) => {
+                                                e.target.onerror = null
+                                                e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
+                                            }
+                                        }
+                                        alt={p.player?.discordName || p.player?.name}
+                                    />
+                                ))
+                            }
+                        </div>
+                        {
+                            !entry.id ? (
+                                <div
+                                    className="cube-button"
+                                    type="submit"
+                                    onClick={() => join()}
+                                >
+                                    Join
+                                </div>
+                            ) : entry.id && playerId !== draft.hostId ? (
+                                <div
+                                    className="cube-button"
+                                    type="submit"
+                                    onClick={() => leave()}
+                                >
+                                    Leave
+                                </div>
+                            ) : entry.id && playerId === draft.hostId ? (
+                                <div
+                                    className="cube-button"
+                                    type="submit"
+                                    onClick={() => start()}
+                                >
+                                    Start
+                                </div>
+                            ) : ''
+                        }
+                    </>
+                ) : (
+                    <>
+                        <div className="space-between">
+                            {
+                                draft?.state === 'underway' && timer >= 0 && timer <= draft.timer ? (
+                                    <ReactCountdownClock 
+                                        color={timerColor}
+                                        seconds={timer}
+                                        alpha={0.9}
+                                        size={96}
+                                        onComplete={() => setOnTheClock(false)}
+                                    />
+                                ) : <div className="empty-clock"/>
+                            }
+                            <div className="card-database-flexbox">
+                                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
+                                <div>
+                                    <h1>{draft.state === 'underway' ? 'Live Draft!' : draft.state === 'complete' ? 'Draft Complete!' : ''}</h1>
+                                    <h2>{draft.state === 'underway' ? `Round ${draft.round} • Pick ${draft.pick}` : ''}</h2>
+                                </div>
+                                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
+                            </div>
+                            <div className="empty-clock"/>
+                        </div>
+                        <div className="last-selection"><i>{selection ? `You selected: ${selection}!` : ''}</i></div>
+                        <div className="space-between-aligned">
+                            <FocalCard card={card}/>
+                            <div className="draft-interface">
+                                {
+                                    draft.state === 'underway' && pack?.length ? (
+                                        <>
+                                            <h3 className="draft-info">Pack:</h3>
+                                            <div className="pack-flexbox">
+                                                {
+                                                    pack.map((p) => (   
+                                                        <CardImage  
+                                                            key={p.card.id} 
+                                                            card={p.card} 
+                                                            disableLink={!onTheClock} 
+                                                            addCard={addCard}
+                                                            setCard={setCard}
+                                                            isDraft={true}
+                                                            width="72px"
+                                                            margin="0.5px"
+                                                            padding="0.5px"
+                                                        />
+                                                    ))
+                                                }
+                                            </div>
+                                            <br/>
+                                        </>
+                                    ) : ''
+                                }
+                                
+                                {
+                                    inventory?.length ? (
+                                        <>
+                                            <h3 className="draft-info">Inventory:</h3>  
+                                            <div className="pack-flexbox">
+                                                {
+                                                    inventory.map((card) => (   
+                                                        <CardImage  
+                                                            key={card.id} 
+                                                            card={card}
+                                                            disableLink={true} 
+                                                            setCard={setCard}
+                                                            width="72px"
+                                                            margin="0.5px"
+                                                            padding="0.5px"
+                                                        />
+                                                    ))
+                                                }
+                                            </div> 
+                                            <br/>
+                                        </>
+                                    ) : '' 
+                                }
+
+                                {
+                                    inventory?.length ? (
+                                        <div className="space-evenly">
+                                            <div
+                                                className="show-cursor"
+                                                onClick={() => setInventory([...inventory.sort(sortFn)])}
+                                            >                                                                 
+                                                <div 
+                                                    className="inventory-button"
+                                                    style={{width: '170px'}}
+                                                >
+                                                    <b style={{padding: '0px 6px'}}>Sort Inventory</b>
+                                                    <img 
+                                                        style={{width:'28px'}} 
+                                                        src={`https://cdn.formatlibrary.com/images/emojis/sort.png`}
+                                                        alt="sort"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <a
+                                                className="show-cursor"
+                                                href={`/api/drafts/download?entryId=${entry.id}`} 
+                                                download={`${entry.playerName}_Draft_Inventory_${(new Date()).toISOString().slice(0, 10)}.ydk`}
+                                            >                                    
+                                                <div
+                                                    className="inventory-button"
+                                                    style={{width: '220px'}}
+                                                >
+                                                    <b style={{padding: '0px 6px'}}>Download Inventory</b>
+                                                    <img 
+                                                        style={{width:'28px'}} 
+                                                        src={`https://cdn.formatlibrary.com/images/emojis/download.png`}
+                                                        alt="download"
+                                                    />
+                                                </div>
+                                            </a>
+                                        </div>
+                                    ) : ''
+                                }
+                            </div>
+                        </div>
+                        <br/>
+                    </>
+                )
+            }
+
+        </div>
+    )
+}

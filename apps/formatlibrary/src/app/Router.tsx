@@ -25,7 +25,9 @@ import {
   SingleBanList,
   SingleCard,
   SingleDeck,
-  SingleEvent
+  SingleEvent,
+  UserPortal,
+  YDKCreator
 } from '@fl/components'
 
 export const Router = () => {
@@ -35,7 +37,9 @@ export const Router = () => {
 					<Route path="/" element=<Page element=<Home /> /> />
 					<Route path="/home" element=<Page element=<Home /> /> />
                     <Route path="/auth/"/>
+					<Route path="/apps" element=<Page element=<UserPortal /> /> />
 					<Route path="/builder" element=<Page element=<Builder /> /> />
+					<Route path="/text-to-ydk" element=<Page element=<YDKCreator /> /> />
 					<Route path="/settings" element=<Page element=<Settings /> /> />
 					<Route path="/cube-maker" element=<Page element=<CubeMaker /> /> />
 					<Route path="/cubes/:id" element=<Page element=<CubeBrowser /> /> />

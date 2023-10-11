@@ -23,12 +23,13 @@ export const CubeDraft = db.define('cubeDrafts', {
         defaultValue: 'pending'
     },
     round: {
-        type: Sequelize.INTEGER,
-        defaultValue: 1
+        type: Sequelize.INTEGER
     },
     pick: {
-        type: Sequelize.INTEGER,
-        defaultValue: 1
+        type: Sequelize.INTEGER
+    },
+    timer: {
+        type: Sequelize.INTEGER
     },
     packsPerPlayer: {
         type: Sequelize.INTEGER

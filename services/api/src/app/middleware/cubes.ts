@@ -248,7 +248,6 @@ export const cubesCreate = async (req, res, next) => {
     
         const card_width = 72
         const card_height = 105
-        console.log('card_width * main.length', card_width * main.length)
         const canvas = Canvas.createCanvas(card_width * main.length, card_height)
         const context = canvas.getContext('2d')
     
@@ -278,7 +277,6 @@ export const cubesCreate = async (req, res, next) => {
 
 export const cubesLaunch = async (req, res, next) => {
     try {  
-        console.log('req.body', req.body)
       const cube = await Cube.findOne({
         where: {
             id: req.body.cubeId

@@ -91,6 +91,12 @@ CubeDraft.hasMany(CubeDraftEntry)
 CubePackContent.belongsTo(CubeDraft)
 CubeDraft.hasMany(CubePackContent)
 
+CubeDraftInventory.belongsTo(CubeDraft)
+CubeDraft.hasMany(CubeDraftInventory)
+
+CubeDraftInventory.belongsTo(CubeDraftEntry)
+CubeDraftEntry.hasMany(CubeDraftInventory)
+
 CubeDraftInventory.belongsTo(Card)
 Card.hasMany(CubeDraftInventory)
 

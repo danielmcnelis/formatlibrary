@@ -2,9 +2,25 @@ import { Link } from 'react-router-dom'
 import './CardImage.css'
 
 export const CardImage = (props) => {
-    const {addCard, removeCard, card, previous, status, width, margin, padding, index, locale, disableLink, setCard} = props
+    const {addCard, removeCard, card, previous, status, width, margin, padding, index, locale, disableLink, setCard, isDraft} = props
 
-    if (disableLink) {
+    if (isDraft) {
+        return (
+            <div className="CardImage-box">
+                <div className="card-image-cell"  >
+                <img
+                    src={`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`}
+                    card={card}
+                    onMouseOver={() => setCard(card)}
+                    onClick={()=> disableLink ? '' : addCard(card)}
+                    style={{width, margin, padding}}
+                    className="CardImages"
+                    alt={card.name}
+                />
+                </div>
+            </div>
+          )
+    } else if (disableLink) {
         return (
             <div className="CardImage-box">
                 <div className="card-image-cell"  >
