@@ -352,7 +352,7 @@ export const CardTable = () => {
 
         setBanlist(banlistData)
         const year = formatData.format.date ? parseInt(formatData.format.date.slice(0, 4)) : now.getFullYear()
-        const month = formatData.format.date ? parseInt(formatData.format.date.slice(6, 7)) : 12
+        const month = formatData.format.date ? parseInt(formatData.format.date.slice(5, 7)) : 12
         const day = formatData.format.date ? parseInt(formatData.format.date.slice(-2)) : 31
         if (sliders.year !== year || sliders.month !== month || sliders.day !== day) setSliders({ ...sliders, year, month, day })
         let newCutoff = formatData.format.date || `${year}-12-31`

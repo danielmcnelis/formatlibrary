@@ -7,26 +7,20 @@ import './DraftLauncher.css'
 export const DraftLauncher = () => {
     const [packs, setPacks] = useState([])
     const [pack, setPack] = useState({})
-    const [packSize, setPackSize] = useState(12)
     const [packsPerPlayer, setPacksPerPlayer] = useState(4)
     const [timer, setTimer] = useState(60)
     const [draftLink, setDraftLink] = useState(null)
     const playerId = getCookie('playerId')
 
-    const packSizeOptions = []
-    let upperLimit = (draft.cardPool?.length / packsPerPlayer) < 20 ? draft.cardPool?.length / packsPerPlayer : 20
-    for (let i = upperLimit; i >= 4; i--) packSizeOptions.push(i) 
-
     // LAUNCH
     const launch = async () => {
-        if (!draft.id) return alert('Please Select a Draft.')
-        if (!playerId) return alert('Please Log-in to Start a Draft Draft.')
+        if (!pack.id) return alert('Please Select a Pack.')
+        if (!playerId) return alert('Please Log-in to Start a Draft.')
         
         try {
             const { data } = await axios.post('/api/drafts/launch', {
-                draftId: draft.id,
+                setId: pack.id,
                 hostId: playerId,
-                packSize: packSize,
                 packsPerPlayer: packsPerPlayer,
                 timer: timer
             })
@@ -56,11 +50,11 @@ export const DraftLauncher = () => {
     return (
         <div className="draft-portal">
             <div className="card-database-flexbox">
-                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.logo || 'draft.png'}`} alt="draft-logo"/>
+                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${pack.logo || 'pack.png'}`} alt="draft-logo"/>
                 <div>
                     <h1>Start Draft Draft!</h1>
                 </div>
-                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.logo || 'draft.png'}`} alt="draft-logo"/>
+                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${pack.logo || 'pack.png'}`} alt="draft-logo"/>
             </div>
             <br/>
 
@@ -122,9 +116,9 @@ export const DraftLauncher = () => {
             </label>
 
             {
-                draft.id ? (
+                pack.id ? (
                     <div className="settings-note">
-                        <i>These settings support up to {Math.floor(draft.cardPool?.length / (packsPerPlayer * packSize))} players.</i>
+                        <i>These settings support up to {Math.floor(pack.cardPool?.length / (packsPerPlayer * packSize))} players.</i>
                     </div>
                 ) : ''
             }
