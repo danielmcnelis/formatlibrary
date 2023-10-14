@@ -2316,115 +2316,6 @@ export const createTournament = async (interaction, formatName, name, abbreviati
     }
 }
 
-// CREATE TOP CUT
-export const createTopCut = async (server, primaryTournament, format) => {
-    const game_name = format.category === 'OP' ? 'One Piece TCG' : 'Yu-Gi-Oh!'
-    const description = format.category === 'OP' ? 'One Piece TCG' : `${format.name} Format`
-    const str = generateRandomString(10, '0123456789abcdefghijklmnopqrstuvwxyz')
-    const name = `${primaryTournament.name} - Top ${primaryTournament.topCut}`
-    const abbreviation = `${primaryTournament.abbreviation}_Top${primaryTournament.topCut}`
-
-    try {
-        const tournament = server.challongeSubdomain ? {
-            name: name,
-            url: abbreviation,
-            subdomain: server.challongeSubdomain,
-            tournament_type: 'single elimination',
-            description: description,
-            game_name: game_name,
-            pts_for_match_tie: "0.0"
-        } :  {
-            name: name,
-            url: abbreviation,
-            tournament_type: 'single elimination',
-            description: description,
-            game_name: game_name,
-            pts_for_match_tie: "0.0"
-        }
-
-        const { status, data } = await axios({
-            method: 'post',
-            url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
-            data: {
-                tournament
-            }
-        })
-        
-        if (status === 200 && data) {
-            const tournament = await Tournament.create({ 
-                id: data.tournament.id,
-                name: name,
-                abbreviation: abbreviation,
-                state: 'pending',
-                type: 'single elimination',
-                formatName: primaryTournament.formatName,
-                formatId: primaryTournament.formatId,
-                logo: primaryTournament.logo,
-                emoji: primaryTournament.emoji,
-                url: data.tournament.url,
-                channelId: primaryTournament.channelId,
-                serverId: primaryTournament.serverId,
-                community: primaryTournament.community,
-                assocTournamentId: primaryTournament.id,
-                isTopCutTournament: true
-            })
-
-            return tournament
-        } 
-    } catch (err) {
-        console.log(err)
-        try {
-            const tournament = server.challongeSubdomain ? {
-                name: name,
-                url: str,
-                subdomain: server.challongeSubdomain,
-                tournament_type: 'single elimination',
-                description: description,
-                game_name: game_name,
-                pts_for_match_tie: "0.0"
-            } : {
-                name: name,
-                url: str,
-                tournament_type: 'single elimination',
-                description: description,
-                game_name: game_name,
-                pts_for_match_tie: "0.0"
-            }
-             
-            const { status, data } = await axios({
-                method: 'post',
-                url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
-                data: {
-                    tournament
-                }
-            })
-            
-            if (status === 200 && data) {
-                const tournament = await Tournament.create({ 
-                    id: data.tournament.id,
-                    name: name,
-                    state: 'pending',
-                    type: 'single elimination',
-                    formatName: primaryTournament.formatName,
-                    formatId: primaryTournament.formatId,
-                    logo: primaryTournament.logo,
-                    emoji: primaryTournament.emoji,
-                    url: data.tournament.url,
-                    channelId: primaryTournament.channelId,
-                    serverId: primaryTournament.serverId,
-                    community: primaryTournament.community,
-                    assocTournamentId: primaryTournament.id
-                })
-
-                return tournament
-            } 
-        } catch (err) {
-            console.log(err)
-            return false
-        }
-    }
-}
-
 // REMOVE FROM TOURNAMENT
 export const removeFromTournament = async (interaction, tournamentId, userId) => {
     const server = await Server.findOne({ where: { id: interaction.guildId }})
@@ -2651,13 +2542,149 @@ export const startTournament = async (interaction, tournamentId) => {
     }
 }
 
-// END TOURNAMENT
-export const endTournament = async (interaction, tournamentId) => {
-    const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-    const tournament = await Tournament.findOne({ where: { id: tournamentId }, include: Format })
-    if (!tournament) return
-    const format = tournament.format
+// CREATE TOP CUT
+export const createTopCut = async(interaction, tournamentId) => {
+    const primaryTournament = await Tournament.findOne({ where: { id: tournamentId }}) 
     
+    if (primaryTournament.assocTournamentId) {
+        return await interaction.channel.send({ content: `Error: Top cut tournament was already created. ${emojis.megaphone}` })
+    }
+
+    const server = await Server.findOne({ where: { id: interaction.guildId }})  
+    const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
+    const game_name = format.category === 'OP' ? 'One Piece TCG' : 'Yu-Gi-Oh!'
+    const description = format.category === 'OP' ? 'One Piece TCG' : `${format.name} Format`
+    const str = generateRandomString(10, '0123456789abcdefghijklmnopqrstuvwxyz')
+    const name = `${primaryTournament.name} - Top ${primaryTournament.topCut}`
+    const abbreviation = `${primaryTournament.abbreviation}_Top${primaryTournament.topCut}`
+    let topCutTournament
+
+    try {
+        const tournament = server.challongeSubdomain ? {
+            name: name,
+            url: abbreviation,
+            subdomain: server.challongeSubdomain,
+            tournament_type: 'single elimination',
+            description: description,
+            game_name: game_name,
+            pts_for_match_tie: "0.0"
+        } :  {
+            name: name,
+            url: abbreviation,
+            tournament_type: 'single elimination',
+            description: description,
+            game_name: game_name,
+            pts_for_match_tie: "0.0"
+        }
+
+        const { status, data } = await axios({
+            method: 'post',
+            url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
+            data: {
+                tournament
+            }
+        })
+        
+        if (status === 200 && data) {
+            topCutTournament = await Tournament.create({ 
+                id: data.tournament.id,
+                name: name,
+                abbreviation: abbreviation,
+                state: 'pending',
+                type: 'single elimination',
+                formatName: primaryTournament.formatName,
+                formatId: primaryTournament.formatId,
+                logo: primaryTournament.logo,
+                emoji: primaryTournament.emoji,
+                url: data.tournament.url,
+                channelId: primaryTournament.channelId,
+                serverId: primaryTournament.serverId,
+                community: primaryTournament.community,
+                assocTournamentId: primaryTournament.id,
+                isTopCutTournament: true
+            })
+        } 
+    } catch (err) {
+        console.log(err)
+        try {
+            const tournament = server.challongeSubdomain ? {
+                name: name,
+                url: str,
+                subdomain: server.challongeSubdomain,
+                tournament_type: 'single elimination',
+                description: description,
+                game_name: game_name,
+                pts_for_match_tie: "0.0"
+            } : {
+                name: name,
+                url: str,
+                tournament_type: 'single elimination',
+                description: description,
+                game_name: game_name,
+                pts_for_match_tie: "0.0"
+            }
+             
+            const { status, data } = await axios({
+                method: 'post',
+                url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
+                data: {
+                    tournament
+                }
+            })
+            
+            if (status === 200 && data) {
+                topCutTournament = await Tournament.create({ 
+                    id: data.tournament.id,
+                    name: name,
+                    state: 'pending',
+                    type: 'single elimination',
+                    formatName: primaryTournament.formatName,
+                    formatId: primaryTournament.formatId,
+                    logo: primaryTournament.logo,
+                    emoji: primaryTournament.emoji,
+                    url: data.tournament.url,
+                    channelId: primaryTournament.channelId,
+                    serverId: primaryTournament.serverId,
+                    community: primaryTournament.community,
+                    assocTournamentId: primaryTournament.id
+                })
+            } 
+        } catch (err) {
+            console.log(err)
+            return await interaction.channel.send({ content: `Error generating top cut tournament on Challonge.com. ${emojis.high_alert}` })
+        }
+    }
+
+    interaction.channel.send({ content: 
+        `Created a new top cut tournament:` + 
+        `\nName: ${topCutTournament.name} ${topCutTournament.logo}` + 
+        `\nFormat: ${topCutTournament.formatName} ${topCutTournament.emoji}` + 
+        `\nType: ${capitalize(topCutTournament.type, true)}` +
+        `\nBracket: https://${subdomain}challonge.com/${topCutTournament.url}`
+    })
+
+    await primaryTournament.update({ assocTournamentId: topCutTournament.id })
+
+    try {
+        const matches = await getMatches(server, primaryTournament.id)
+        const participants = await getParticipants(server, primaryTournament.id)
+        const standings = await calculateStandings(matches, participants)
+        const {errors, size} = await autoRegisterTopCut(server, primaryTournament, topCutTournament, standings)
+        if (errors.length > 1) {
+            return interaction.channel.send({ content: errors })
+        } else {
+            return interaction.channel.send({ content: `Successfully registered the Top ${size} players in the new bracket! Please review the bracket and type **/start** if everything looks good. ${emojis.mlday}` })
+        }
+    } catch (err) {
+        console.log(err)
+        return interaction.channel.send({ content: `Oops! An unknown error occurred when registering the top cut players on Challonge. ${emojis.high_alert}` })
+    }
+}
+
+// INITIATE END TOURNAMENT
+export const initiateEndTournament = async (interaction, tournamentId) => {
+    const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+    const tournament = await Tournament.findOne({ where: { id: tournamentId }})    
     if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `This tournament has not begun.`})
     if (tournament.state === 'complete') return await interaction.editReply({ content: `This tournament has already ended.`})
 
@@ -2681,36 +2708,172 @@ export const endTournament = async (interaction, tournamentId) => {
     }
 
     if (tournament.type === 'swiss' && !tournament.assocTournamentId) {
-        const topCutTournament = await createTopCut(server, tournament, format)        
-        const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
-        if (topCutTournament) {
-            interaction.channel.send({ content: 
-                `Created a new top cut tournament:` + 
-                `\nName: ${topCutTournament.name} ${topCutTournament.logo}` + 
-                `\nFormat: ${topCutTournament.formatName} ${topCutTournament.emoji}` + 
-                `\nType: ${capitalize(topCutTournament.type, true)}` +
-                `\nBracket: https://${subdomain}challonge.com/${topCutTournament.url}`
+        const row = new ActionRowBuilder()
+            .addComponents(new ButtonBuilder()
+                .setCustomId(`Y-${interaction.user?.id}-${tournamentId}`)
+                .setLabel('Yes')
+                .setStyle(ButtonStyle.Primary)
+            )
+
+            .addComponents(new ButtonBuilder()
+                .setCustomId(`N-${interaction.user?.id}-${tournamentId}`)
+                .setLabel('No')
+                .setStyle(ButtonStyle.Primary)
+            )
+
+        return await interaction.editReply({ content: `Do you wish to create a top cut for this tournament?`, components: [row] })
+    } else {
+        let event = await Event.findOne({ where: { primaryTournamentId: tournament.id }})
+
+        if (!event) {
+            event = await Event.create({
+                name: tournament.name,
+                abbreviation: tournament.abbreviation,
+                formatName: tournament.formatName,
+                formatId: tournament.formatId,
+                referenceUrl: `https://challonge.com/${tournament.url}`,
+                display: false,
+                tournamentId: tournament.id,
+                primaryTournamentId: tournament.id,
+                secondaryTournamentId: tournament.assocTournamentId,
+                type: tournament.type,
+                isTeamEvent: tournament.isTeamTournament,
+                community: tournament.community,
+                logo: tournament.logo,
+                emoji: tournament.emoji
             })
+        }
 
-            await tournament.update({ assocTournamentId: topCutTournament.id })
-
+        if (event && !event.playerId) {
             try {
-                const matches = await getMatches(server, tournament.id)
-                const participants = await getParticipants(server, tournament.id)
-                const standings = await calculateStandings(matches, participants)
-                const {errors, size} = await autoRegisterTopCut(server, tournament, topCutTournament, standings)
-                if (errors.length > 1) {
-                    interaction.channel.send({ content: errors })
+                const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${event.secondaryTournamentId || tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+                let winnerParticipantId = null
+                for (let i = 0; i < data.length; i++) {
+                    const participant = data[i].participant
+                    if (participant.final_rank === 1) {
+                        winnerParticipantId = participant.id
+                        break
+                    }
+                }
+
+                if (event.isTeamEvent) {
+                    const winningTeam = await Team.findOne({ where: { participantId: parseInt(winnerParticipantId) }})
+                    await event.update({ winner: winningTeam.name })
+                    console.log(`Marked ${winningTeam.name} as the winner of ${event.name}.`)
                 } else {
-                    interaction.channel.send({ content: `Successfully registered the Top ${size} players in the new bracket! Please review the bracket and type **/start** if everything looks good. ${emojis.mlday}` })
+                    const winningEntry = await Entry.findOne({ where: { participantId: parseInt(winnerParticipantId) }})
+                    await event.update({
+                        winner: winningEntry.playerName,
+                        playerId: winningEntry.playerId
+                    })
+                    console.log(`Marked ${winningEntry.playerName} as the winner of ${event.name}.`)
                 }
             } catch (err) {
                 console.log(err)
-                interaction.channel.send({ content: `Oops! An unknown error occurred when registering the top cut players on Challonge. ${emojis.high_alert}` })
             }
-        } else {
-            return interaction.channel.send({ content: `Oops! Failed to create a new top cut tournament on Challonge. ${emojis.high_alert}` })
         }
+
+        if (event && !event.size) {
+            try {
+                const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+                const size = event.size || data.tournament.participants_count
+                const startDate = data.tournament.started_at ? `${data.tournament.started_at.slice(0, 10)} ${data.tournament.started_at.slice(11, 26)}` : ''
+                const endDate = data.tournament.completed_at ? `${data.tournament.completed_at.slice(0, 10)} ${data.tournament.completed_at.slice(11, 26)}` : ''
+
+                await event.update({
+                    size,
+                    startDate,
+                    endDate
+                })
+
+                console.log(`Recorded size, start date, and end date for ${event.name}`)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        let count = await Deck.count({ where: { eventId: event.id }})
+        
+        if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
+            try {
+                const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+                const success = await createDecks(event, data)
+                if (!success) {
+                    return await interaction.editReply(`Failed to save all decks.`)
+                } else {
+                    count = event.size
+                }
+            } catch (err) {
+                console.log(err)
+                return await interaction.editReply(`Failed to save all decks.`)
+            }
+        }
+        
+        if (event && event.size > 0 && ((!event.isTeamEvent && event.size === count) || (event.isTeamEvent && (event.size * 3) === count))) {
+            const entries = await Entry.findAll({ where: { tournamentId: tournament.id }, include: Player })
+    
+            for (let i = 0; i < entries.length; i++) {
+                try {            
+                    const entry = entries[i]
+                    const playerName = entry.playerName
+                    const playerId = entry.playerId
+                    const discordId = entry.player.discordId	
+                    console.log(`Deleting ${entry.playerName}'s entry for ${event.name}.`)
+                    await entry.destroy()
+
+                    const count = await Entry.count({ 
+                        where: {
+                            playerId: playerId,
+                            active: true,
+                            '$tournament.serverId$': server.id
+                        },
+                        include: Tournament,
+                    })
+
+                    if (!count) {
+                        const member = await interaction.guild?.members.fetch(discordId)
+                        if (!member) continue
+                        console.log(`Removing ${playerName}'s tournament role on ${server.name}.`)
+                        member.roles.remove(server.tourRole)
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+
+            await tournament.update({ state: 'complete' })
+            return await interaction.editReply({ content: `Congrats! The results of ${tournament.name} ${tournament.logo} have been finalized.`})
+        }
+    }
+}
+
+
+// END TOURNAMENT
+export const endTournament = async (interaction, tournamentId) => {
+    const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+    const tournament = await Tournament.findOne({ where: { id: tournamentId }, include: Format })
+    if (!tournament) return
+    
+    if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `This tournament has not begun.`})
+    if (tournament.state === 'complete') return await interaction.editReply({ content: `This tournament has already ended.`})
+
+    try {
+        const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+        if (data.tournament.state !== 'complete') {
+            const { status } = await axios({
+                method: 'post',
+                url: `https://api.challonge.com/v1/tournaments/${tournament.id}/finalize.json?api_key=${server.challongeAPIKey}`
+            })
+
+            if (status === 200) {   
+                interaction.channel.send({ content: `Congrats! The results of ${tournament.name} ${tournament.logo} have been finalized on Challonge.com.`})
+            } else {
+                interaction.channel.send({ content: `Unable to finalize ${tournament.name} ${tournament.logo} on Challonge.com.`})
+            }
+        }
+    } catch (err) {
+        console.log(err)
+        interaction.channel.send({ content: `Unable to connect to Challonge.com.`})
     }
 
     let event = await Event.findOne({ where: { primaryTournamentId: tournament.id }})
@@ -2736,7 +2899,7 @@ export const endTournament = async (interaction, tournamentId) => {
 
     if (event && !event.playerId) {
         try {
-            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${event.topCutTournamentId || tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
             let winnerParticipantId = null
             for (let i = 0; i < data.length; i++) {
                 const participant = data[i].participant

@@ -11,13 +11,13 @@ import { client } from './client'
 import { Match, Membership, Player, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
-import { assignTourRoles, conductCensus, downloadNewCards, getMidnightCountdown, markInactives, purgeEntries, 
+import { assignTourRoles, conductCensus, createTopCut, downloadNewCards, getMidnightCountdown, markInactives, purgeEntries, 
     purgeRatedDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices ,updateSets, 
     updateServers, fixDeckFolder, postStandings, checkTimer, closeTournament, createTournament, 
-    dropFromTournament, getFilm, joinTournament, openTournament, processNoShow, removeFromTournament, 
+    dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, processNoShow, removeFromTournament, 
     seed, sendDeck, setTimerForTournament, signupForTournament, startChallongeBracket, startTournament, 
     endTournament, saveReplay, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, 
-    fetchOPCardNames, fetchSkillCardNames, hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, 
+    fetchOPCardNames, hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, 
     isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation
 } from '@fl/bot-functions'
 
@@ -137,17 +137,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
         console.log('answer', answer)
         console.log('userId', userId)
         console.log('tournamentId', tournamentId)
-        const createTopCut = answer !== 'N'
+        return
         // if (userId !== interaction.user.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
 
-        if (createTopCut) {
-            await seed(interaction, tournamentId)
+        if (answer === 'Y') {
+            return await createTopCut(interaction, tournamentId)
         } else {
-            interaction.channel.send(`Okay, your seeds 🌱 will not been changed. 👍`)
-            await finalizeTournament()
+            return await endTournament(interaction, tournamentId)
         }
-    
-        return startChallongeBracket(interaction, tournamentId)
     }
 })
 
@@ -204,7 +201,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }  else if (command.data.name === 'end') {
             if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
-            await endTournament(interaction, tournamentId)
+            await initiateEndTournament(interaction, tournamentId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'film') {
             const tournamentId = interaction.values[0]
@@ -268,7 +265,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
         } else if (command.data.name === 'start') {
             if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
-            console.log('tournamentId', tournamentId)
             await startTournament(interaction, tournamentId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'timer') {
