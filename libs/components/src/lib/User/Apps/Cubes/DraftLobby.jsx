@@ -8,6 +8,28 @@ import { getCookie } from '@fl/utils'
 import ReactCountdownClock from 'react-countdown-clock'
 import './DraftLobby.css' 
 
+// USE AUDIO
+const useAudio = (url) => {
+  const [audio] = useState(new Audio(url))
+  const [playing, setPlaying] = useState(false)
+  const toggle = () => setPlaying(!playing)
+
+  useEffect(() => {
+      playing ? audio.play() : audio.pause()
+    },
+    [playing]
+  )
+
+  useEffect(() => {
+    audio.addEventListener('ended', () => setPlaying(false))
+    return () => {
+      audio.removeEventListener('ended', () => setPlaying(false))
+    }
+  }, [])
+
+  return [toggle]
+}
+
 // SORT FUNCTION
 const sortFn = (a, b) => {
     if (a.sortPriority > b.sortPriority) {
@@ -23,7 +45,7 @@ const sortFn = (a, b) => {
     }
 }
 
-const playerId = getCookie('playerId') || 'UeyvnNBD6CD53gsqRQsxCY'
+const playerId = getCookie('playerId')
 
 export const DraftLobby = () => {
     const [draft, setDraft] = useState({})
@@ -37,6 +59,8 @@ export const DraftLobby = () => {
     const [onTheClock, setOnTheClock] = useState(false)
     const [time, setTime] = useState(Date.now())
     const [intervalId, setIntervalId] = useState(null)
+    const [toggleChime] = useAudio('/assets/sounds/chime.mp3')
+    const [toggleHorn] = useAudio('/assets/sounds/horn.mp3')
 
     // USE EFFECT SET INTERVAL
     useEffect(() => {
@@ -122,8 +146,9 @@ export const DraftLobby = () => {
         if (draft.pick && draft.state !== 'pending') {
             if (inventory.length) {
                 setSelection(null)
-                alert('Next Pick!')
+                toggleChime()
             } else if (entry.id) {
+                toggleHorn()
                 alert('The Draft is Starting Now!')
             }
         }

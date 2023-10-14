@@ -29,9 +29,11 @@ const setInternalTimer = async (draftId, currentPick, timer = 60) => {
             
             for (let i = 0; i < entries.length; i++) {
                 const entry = entries[i]
-                const count = await CubeDraftInventory.count({ where: {
-                    cubeDraftEntryId: entry.id
-                }})
+                const count = await CubeDraftInventory.count({ 
+                    where: {
+                        cubeDraftEntryId: entry.id
+                    }
+                })
 
                 if (count < currentPick) {
                     const packNumber = arr[round - 1][(pick + entry.slot - 2) % playerCount]
@@ -46,14 +48,22 @@ const setInternalTimer = async (draftId, currentPick, timer = 60) => {
 
                     const packContent = getRandomElement(contents)
 
-                    await CubeDraftInventory.create({
-                        cardId: packContent.cardId,
-                        cardName: packContent.cardName,
-                        cubeDraftId: draftId,
-                        cubeDraftEntryId: entry.id
+                    const count2 = await CubeDraftInventory.count({ 
+                        where: {
+                            cubeDraftEntryId: entry.id
+                        }
                     })
 
-                    await packContent.destroy()
+                    if (count2 < currentPick) {
+                        await CubeDraftInventory.create({
+                            cardId: packContent.cardId,
+                            cardName: packContent.cardName,
+                            cubeDraftId: draftId,
+                            cubeDraftEntryId: entry.id
+                        })
+    
+                        await packContent.destroy()
+                    }
                 }
             }
 
@@ -75,7 +85,7 @@ const setInternalTimer = async (draftId, currentPick, timer = 60) => {
             }
 
         }
-    }, timer * 1000)
+    }, (timer + 2) * 1000)
 
 }
 
@@ -176,7 +186,7 @@ export const downloadInventory = async (req, res, next) => {
             include: Card
         })].map((c) => c.card?.konamiCode)
 
-        const ydk = 'created by...\n#main\n' + inventoryCodes.join('\n') + '\n'
+        const ydk = 'created by...\n#main\n' + inventoryCodes.join('\n') + '\n#extra\n!side\n'
         res.send(ydk)
     } catch (err) {
       next(err)
@@ -204,6 +214,12 @@ export const getDraftParticipants = async (req, res, next) => {
 // SELECT CARD
 export const selectCard = async (req, res, next) => {
     try {
+        const draft = await CubeDraft.findOne({
+            where: {
+                id: req.params.id
+            }
+        })
+        
         const entry = await CubeDraftEntry.findOne({
             where: {
                 cubeDraftId: req.params.id,
@@ -224,47 +240,49 @@ export const selectCard = async (req, res, next) => {
             }
         })
 
-        const inventory = await CubeDraftInventory.create({
-            cubeDraftId: req.params.id,
-            cubeDraftEntryId: entry.id,
-            cardId: packContent.cardId,
-            cardName: packContent.cardName
+        const count = await CubeDraftInventory.count({
+            where: {
+                cubeDraftEntryId: entry.id
+            }
         })
 
-        if (inventory) {
-            await packContent.destroy()
-            res.json(card)
-
-            const draft = await CubeDraft.findOne({
-                where: {
-                    id: req.params.id
-                }
+        if (count < draft.pick) {
+            const inventory = await CubeDraftInventory.create({
+                cubeDraftId: req.params.id,
+                cubeDraftEntryId: entry.id,
+                cardId: packContent.cardId,
+                cardName: packContent.cardName
             })
-
-            const count = await CubeDraftInventory.count({
-                cubeDraftId: req.params.id
-            })
-
-            if (count % draft.playerCount === 0) {
-                const nextPick = draft.pick + 1
-
-                if (nextPick > draft.packsPerPlayer * draft.packSize) {
-                    await draft.update({ state: 'complete' })
-                } else if ((nextPick) % draft.packSize === 1) {
-                    await draft.update({
-                        pick: nextPick,
-                        round: draft.round + 1
-                    })
-
-                    return setInternalTimer(draft.id, nextPick, draft.timer)
-                } else {
-                    await draft.update({
-                        pick: nextPick
-                    })
-
-                    return setInternalTimer(draft.id, nextPick, draft.timer)
+    
+            if (inventory) {
+                await packContent.destroy()
+                res.json(card)
+    
+                const cardsPulled = await CubeDraftInventory.count({
+                    where: {
+                        cubeDraftId: req.params.id
+                    }
+                })
+    
+                if (cardsPulled === (draft.playerCount * draft.pick)) {
+                    if ((draft.pick + 1) > draft.packsPerPlayer * draft.packSize) {
+                        await draft.update({ state: 'complete' })
+                    } else if ((draft.pick + 1) > (draft.round * draft.packSize)) {
+                        await draft.update({
+                            pick: draft.pick + 1,
+                            round: draft.round + 1
+                        })
+    
+                        return setInternalTimer(draft.id, draft.pick + 1, draft.timer)
+                    } else {
+                        await draft.update({
+                            pick: draft.pick + 1
+                        })
+    
+                        return setInternalTimer(draft.id, draft.pick + 1, draft.timer)
+                    }
                 }
-            }
+            }    
         } else {
             res.sendStatus(400)
         }
