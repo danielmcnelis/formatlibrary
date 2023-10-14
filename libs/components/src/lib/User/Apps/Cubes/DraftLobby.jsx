@@ -134,7 +134,7 @@ export const DraftLobby = () => {
         const fetchData = async () => {
             if (entry.id) {
                 const {data} = await axios.get(`/api/drafts/inventory?entryId=${entry.id}`)
-                setInventory(data)
+                if (inventory.length !== data.length) setInventory(data)
                 if (data.length >= draft.pick) setOnTheClock(false)
             }
         }
