@@ -100,7 +100,7 @@ export default {
     
             if (event && !event.playerId) {
                 try {
-                    const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+                    const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${event.secondaryTournamentId || tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
                     let winnerParticipantId = null
                     for (let i = 0; i < data.length; i++) {
                         const participant = data[i].participant
@@ -199,40 +199,6 @@ export default {
                 return await interaction.editReply({ content: `Congrats! The results of ${tournament.name} ${tournament.logo} have been finalized.`})
             }
         }
-            
-            const topCutTournament = await createTopCut(server, tournament, format)
-            if (topCutTournament) {
-                const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
-                interaction.channel.send({ content: 
-                    `Created a new top cut tournament:` + 
-                    `\nName: ${topCutTournament.name} ${topCutTournament.logo}` + 
-                    `\nFormat: ${topCutTournament.formatName} ${topCutTournament.emoji}` + 
-                    `\nType: ${capitalize(topCutTournament.type, true)}` +
-                    `\nBracket: https://${subdomain}challonge.com/${topCutTournament.url}`
-                })
-
-                await tournament.update({ assocTournamentId: topCutTournament.id })
-
-                try {
-                    const matches = await getMatches(server, tournament.id)
-                    const participants = await getParticipants(server, tournament.id)
-                    const standings = await calculateStandings(matches, participants)
-                    const {errors, size} = await autoRegisterTopCut(server, tournament, topCutTournament, standings)
-                    if (errors.length > 1) {
-                        interaction.channel.send({ content: errors })
-                    } else {
-                        interaction.channel.send({ content: `Successfully registered the Top ${size} players in the new bracket! Please review the bracket and type **/start** if everything looks good. ${emojis.mlday}` })
-                    }
-                } catch (err) {
-                    console.log(err)
-                    interaction.channel.send({ content: `Oops! An unknown error occurred when registering the top cut players on Challonge. ${emojis.high_alert}` })
-                }
-            } else {
-                return interaction.channel.send({ content: `Oops! Failed to create a new top cut tournament on Challonge. ${emojis.high_alert}` })
-            }
-        }
-
-       
     }
 }
 
