@@ -117,12 +117,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
     } else if (interaction.message?.content?.includes('Should this tournament be seeded')) {
         await interaction.message.edit({ components: [] })
         const [answer, userId, tournamentId] = interaction.customId?.split('-') || []
-        console.log('answer', answer)
-        console.log('userId', userId)
-        console.log('tournamentId', tournamentId)
         const toBeSeeded = answer !== 'N'
         const toBeShuffled = answer === 'S'
-        // if (userId !== interaction.user.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+        if (userId !== interaction.user.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
 
         if (toBeSeeded) {
             await seed(interaction, tournamentId, toBeShuffled)
@@ -134,10 +131,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
     } else if (interaction.message?.content?.includes('Do you wish to create a top cut')) {
         await interaction.message.edit({ components: [] })
         const [answer, userId, tournamentId] = interaction.customId?.split('-') || []
-        console.log('answer', answer)
-        console.log('userId', userId)
-        console.log('tournamentId', tournamentId)
-        console.log('interaction.user?.id', interaction.user?.id)
         if (userId !== interaction.user.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
 
         if (answer === 'Y') {

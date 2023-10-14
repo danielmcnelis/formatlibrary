@@ -2544,7 +2544,7 @@ export const startTournament = async (interaction, tournamentId) => {
 
 // CREATE TOP CUT
 export const createTopCut = async(interaction, tournamentId) => {
-    const primaryTournament = await Tournament.findOne({ where: { id: tournamentId }}) 
+    const primaryTournament = await Tournament.findOne({ where: { id: tournamentId }, include: Format }) 
     
     if (primaryTournament.assocTournamentId) {
         return await interaction.channel.send({ content: `Error: Top cut tournament was already created. ${emojis.megaphone}` })
@@ -2552,8 +2552,8 @@ export const createTopCut = async(interaction, tournamentId) => {
 
     const server = await Server.findOne({ where: { id: interaction.guildId }})  
     const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
-    const game_name = format.category === 'OP' ? 'One Piece TCG' : 'Yu-Gi-Oh!'
-    const description = format.category === 'OP' ? 'One Piece TCG' : `${format.name} Format`
+    const game_name = primaryTournament.format?.category === 'OP' ? 'One Piece TCG' : 'Yu-Gi-Oh!'
+    const description = primaryTournament.format?.category === 'OP' ? 'One Piece TCG' : `${primaryTournament.format?.name} Format`
     const str = generateRandomString(10, '0123456789abcdefghijklmnopqrstuvwxyz')
     const name = `${primaryTournament.name} - Top ${primaryTournament.topCut}`
     const abbreviation = `${primaryTournament.abbreviation}_Top${primaryTournament.topCut}`
