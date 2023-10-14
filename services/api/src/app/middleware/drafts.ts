@@ -336,7 +336,7 @@ export const startDraft = async (req, res, next) => {
             }
         })
 
-        await draft.update({ playerCount })
+        await draft.update({ playerCount, pick: 1, round: 1 })
 
         const entries = await CubeDraftEntry.findAll({ where: { cubeDraftId: draft.id }})
         const shuffledEntries = shuffleArray(entries)

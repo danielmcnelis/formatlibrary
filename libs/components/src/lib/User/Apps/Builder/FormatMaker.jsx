@@ -2,17 +2,20 @@
 import { useState, useEffect, useLayoutEffect } from 'react'
 import {CardImage} from '../../../Cards/CardImage'
 import {EmptySlot} from './EmptySlot'
+import {FocalCard} from './FocalCard'
 import {SearchPanel} from './SearchPanel'
 import { getCookie } from '@fl/utils'
 import axios from 'axios'
 import {Button, Form, Modal} from 'react-bootstrap'
 import {DndContext} from '@dnd-kit/core'
+import {Draggable} from '../../../General/Draggable'
 import {Droppable} from '../../../General/Droppable'
 import './Builder.css'
 import './FormatMaker.css'
 
 export const FormatMaker = () => {
     const [cardPool, setCardPool] = useState([])
+    const [card, setCard] = useState({})
     const [format, setFormat] = useState({})
     const [name, setName] = useState('New Card Pool')
     const [customFormats, setCustomFormats] = useState([])
@@ -22,16 +25,34 @@ export const FormatMaker = () => {
     const [showSaveModal, setShowSaveModal] = useState(false)
     const [showUploadModal, setShowUploadModal] = useState(false)
 
+    // CHANGE SLOT
+    const changeSlot = async (locale, index1, index2) => {
+        try {
+            const card = cardPool[index1]
+            index2 = index2 <= cardPool.length - 1 ? index2 : cardPool.length - 1
+            cardPool.splice(index1, 1)
+            cardPool.splice(index2, 0, card)
+            setCardPool({ ...cardPool })
+            setEdited(true)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     // HANDLE DRAG END
     const handleDragEnd = (event) => {
+        const card = event.active?.data?.current?.card
+        const [, locale, index] = event.active?.id?.split('-') || []
         if (event.over && event.over.id?.includes('droppable')) {
-            const card = event.active?.data?.current?.card
-            if (event.over.id === 'droppable-main') {
+            const [, , index2] = event.over?.id?.split('-') || []
+            if (event.over.id.includes('main') && event.active.id.includes('search')) {
                 addCard(card, 'main')
-            } else if (event.over.id === 'droppable-side') {
-                addCard(card, 'side')
-            } else if (event.over.id === 'droppable-extra') {
-                addCard(card, 'extra')
+            } else if (event.over.id.includes('main') && event.active.id.includes('main')) {
+                changeSlot(locale, index, index2)
+            }
+        } else {
+            if (event.active.id.includes('main')) {
+                removeCard(locale, index)
             }
         }
     }
@@ -133,7 +154,7 @@ export const FormatMaker = () => {
     }
 
     // REMOVE CARD
-    const removeCard = async (index) => {
+    const removeCard = async (locale, index) => {
         try {
             cardPool.splice(index, 1)
             setCardPool(cardPool)
@@ -314,7 +335,7 @@ export const FormatMaker = () => {
                 <div>
                     <div className="single-deck-title-flexbox">
                         <div style={{width: '80px'}}/>
-                        <div className="single-deck-title">{format.name + ' Card Pool' || 'New Card Pool'} <img style={{width:'32px', margin: '10px 20px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon || 'master'}.png`} alt={format.icon || 'millennium-puzzle'}/></div>
+                        <div className="single-deck-title">{format?.name || 'New Format'} <img style={{width:'32px', margin: '10px 20px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon || 'master'}.png`} alt={format.icon || 'millennium-puzzle'}/></div>
                         <div style={{width: '80px', color: '#CBC5C3', margin: '0px', alignSelf: 'center'}}>{edited ? <i>Edited</i> : ''}</div>
                     </div>
 
@@ -324,9 +345,40 @@ export const FormatMaker = () => {
                             {
                                 cardPool.map((card, index) => {
                                     if (!card) {
-                                        return <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${index}`}/>
+                                        return (
+                                            <Droppable locale="main" index={index}>
+                                                <Draggable>
+                                                    <EmptySlot 
+                                                        className="card-image" 
+                                                        width='72px' 
+                                                        height='107px' 
+                                                        padding='1px' 
+                                                        margin='0px' 
+                                                        key={`main-${index}`}
+                                                    />
+                                                </Draggable>
+                                            </Droppable>
+                                        )
                                     } else {
-                                        return <CardImage removeCard={removeCard} locale="main" index={index} width='72px' height='107px' padding='1px' margin='0px' key={`main-${index}`} card={card}/>
+                                        return (
+                                            <Droppable locale="main" index={index}>
+                                                <Draggable>
+                                                    <CardImage 
+                                                        removeCard={removeCard} 
+                                                        setCard={setCard} 
+                                                        locale="main" 
+                                                        index={index} 
+                                                        width='72px' 
+                                                        height='107px' 
+                                                        padding='1px' 
+                                                        margin='0px' 
+                                                        key={`main-${index}`} 
+                                                        card={card}
+                                                        disableLink={true}
+                                                    />
+                                                </Draggable>
+                                            </Droppable>
+                                        )
                                     }
                                 })
                             }
@@ -359,7 +411,8 @@ export const FormatMaker = () => {
                         }
                     </div>
                 </div>
-                <SearchPanel addCard={addCard} formats={formats}/>
+                <FocalCard card={card}/>
+                <SearchPanel addCard={addCard} setCard={setCard} formats={formats}/>
             </div>
         </DndContext>
     )

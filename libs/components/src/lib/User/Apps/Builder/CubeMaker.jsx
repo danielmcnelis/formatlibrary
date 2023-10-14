@@ -2,6 +2,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react'
 import {CardImage} from '../../../Cards/CardImage'
 import {EmptySlot} from './EmptySlot'
+import {FocalCard} from './FocalCard'
 import {SearchPanel} from './SearchPanel'
 import { getCookie } from '@fl/utils'
 import axios from 'axios'
@@ -18,9 +19,9 @@ export const CubeMaker = () => {
         name: 'New Cube',
         cardPool: []
     })
-    console.log('cube', cube)
 
     const [cubes, setCubes] = useState([])
+    const [card, setCard] = useState({})
     const [edited, setEdited] = useState(false)
     const [showOpenModal, setShowOpenModal] = useState(false)
     const [showSaveModal, setShowSaveModal] = useState(false)
@@ -44,17 +45,11 @@ export const CubeMaker = () => {
     const handleDragEnd = (event) => {
         const card = event.active?.data?.current?.card
         const [, locale, index] = event.active?.id?.split('-') || []
-        console.log('locale', locale)
-        console.log('index', index)
-        console.log('event.active?.id', event.active?.id)
-        console.log('event.over?.id', event.over?.id)
         if (event.over && event.over.id?.includes('droppable')) {
             const [, , index2] = event.over?.id?.split('-') || []
-            console.log('index2', index2)
             if (event.over.id.includes('main') && event.active.id.includes('search')) {
                 addCard(card, 'main')
             } else if (event.over.id.includes('main') && event.active.id.includes('main')) {
-                console.log('change slot')
                 changeSlot(locale, index, index2)
             }
         } else {
@@ -211,8 +206,7 @@ export const CubeMaker = () => {
     // REMOVE CARD
     const removeCard = async (locale, index) => {
         try {
-            console.log('REMOVE CARD', index)
-            console.log(cube?.cardPool.splice(index, 1))
+            cube?.cardPool?.splice(index, 1)
             setCube({ ...cube })
             setEdited(true)
         } catch (err) {
@@ -424,6 +418,7 @@ export const CubeMaker = () => {
                                         <Draggable>
                                             <CardImage 
                                                 removeCard={removeCard} 
+                                                setCard={setCard}
                                                 locale="main" 
                                                 index={index} 
                                                 width='72px' 
@@ -469,7 +464,8 @@ export const CubeMaker = () => {
                 }
             </div>
         </div>
-        <SearchPanel addCard={addCard}/>
+        <FocalCard card={card}/>
+        <SearchPanel addCard={addCard} setCard={setCard} />
     </div>
     </DndContext>
   )

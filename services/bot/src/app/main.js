@@ -116,20 +116,35 @@ client.on(Events.InteractionCreate, async (interaction) => {
         return handleRatedConfirmation(client, interaction, confirmed, yourPoolId, opponentsPoolId, serverId)
     } else if (interaction.message?.content?.includes('Should this tournament be seeded')) {
         await interaction.message.edit({ components: [] })
-        const customId = interaction.customId
-        console.log('customId', customId)
-        const toBeSeeded = customId.charAt(0) !== 'N'
-        const toBeShuffled = customId.charAt(0) === 'S'
-        const ids = customId.slice(2).split('-')
-        console.log('ids', ids)
-        const userId = ids[0]
-        const tournamentId = ids[1]
+        const [answer, userId, tournamentId] = interaction.customId?.split('-') || []
+        console.log('answer', answer)
+        console.log('userId', userId)
+        console.log('tournamentId', tournamentId)
+        const toBeSeeded = answer !== 'N'
+        const toBeShuffled = answer === 'S'
         // if (userId !== interaction.user.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
 
         if (toBeSeeded) {
             await seed(interaction, tournamentId, toBeShuffled)
         } else {
             interaction.channel.send(`Okay, your seeds 🌱 will not been changed. 👍`)
+        }
+    
+        return startChallongeBracket(interaction, tournamentId)
+    } else if (interaction.message?.content?.includes('Do you wish to create a top cut')) {
+        await interaction.message.edit({ components: [] })
+        const [answer, userId, tournamentId] = interaction.customId?.split('-') || []
+        console.log('answer', answer)
+        console.log('userId', userId)
+        console.log('tournamentId', tournamentId)
+        const createTopCut = answer !== 'N'
+        // if (userId !== interaction.user.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+
+        if (createTopCut) {
+            await seed(interaction, tournamentId)
+        } else {
+            interaction.channel.send(`Okay, your seeds 🌱 will not been changed. 👍`)
+            await finalizeTournament()
         }
     
         return startChallongeBracket(interaction, tournamentId)
