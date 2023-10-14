@@ -137,8 +137,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
         console.log('answer', answer)
         console.log('userId', userId)
         console.log('tournamentId', tournamentId)
-        return
-        // if (userId !== interaction.user.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+        console.log('interaction.user?.id', interaction.user?.id)
+        if (userId !== interaction.user.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
 
         if (answer === 'Y') {
             return await createTopCut(interaction, tournamentId)
