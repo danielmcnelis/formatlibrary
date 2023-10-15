@@ -48,8 +48,9 @@ export const formatsAll = async (req, res, next) => {
       where: {
         [Op.or]: {
           popular: true,
-          date: { [Op.not]: null }
-        }
+          category: 'TCG'
+        },
+        isHighlander: false
       },
       attributes: ['id', 'name', 'icon', 'date', 'banlist', 'category', 'event', 'description', 'popular', 'spotlight'],
       order: [

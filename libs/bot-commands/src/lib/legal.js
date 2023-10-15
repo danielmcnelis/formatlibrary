@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Format, Server } from '@fl/models'
-import { checkDeckList, checkOPDeckList, getSkillCard } from '@fl/bot-functions'
+import { checkDeckList, checkHighlanderList, checkOPDeckList, getSkillCard } from '@fl/bot-functions'
 
 export default {
     data: new SlashCommandBuilder()
@@ -14,7 +14,7 @@ export default {
         if (format.category !== 'TCG' && format.category !== 'Speed' && format.category !== 'OP') return await interaction.reply(`Sorry, ${format.category} formats are not supported at this time.`)
         await interaction.reply(`Please check your DMs.`)
         
-        if (format.category === 'TCG') {
+        if (format.category === 'TCG' || format.category === 'Highlander') {
             return await checkDeckList(interaction.member, format)
         } else if (format.category === 'Speed') {
             return await getSkillCard(interaction.member, format)

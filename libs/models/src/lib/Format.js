@@ -42,6 +42,9 @@ export const Format = db.define('formats', {
   category: {
     type: Sequelize.STRING
   },
+  isHighlander: {
+    type: Sequelize.BOOLEAN
+  },
   resetDate: {
     type: Sequelize.DATE
   }

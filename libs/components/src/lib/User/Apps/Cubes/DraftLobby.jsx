@@ -148,8 +148,8 @@ export const DraftLobby = () => {
                 setSelection(null)
                 toggleChime()
             } else if (entry.id) {
-                toggleHorn()
                 alert('The Draft is Starting Now!')
+                toggleHorn()
             }
         }
     }, [draft.pick])

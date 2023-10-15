@@ -58,8 +58,11 @@ export const getDeckFormat = async (server, message, interaction) => {
 // GET ISSUES
 export const getIssues = async (deckArr, format) => {
     const deck = convertArrayToObject(deckArr)   
-    const legalType = format.category.toLowerCase() + 'Legal'    
-    const dateType = format.category.toLowerCase() + 'Date'      
+    const [dateType, legalType] = format.category === 'TCG' ?  + ['tcgDate', 'tcgLegal'] :    
+        format.category === 'OCG' ?  + ['ocgDate', 'ocgLegal'] :
+        format.category === 'Speed' ?  + ['speedDate', 'speedLegal'] :
+        ['tcgDate', 'tcgLegal']
+
     const cardIds = format.category === 'Custom' ? [...await Card.findAll()].map(c => c.konamiCode) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: format.date } }})].map(c => c.konamiCode)
     const forbiddenIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'forbidden' }, include: Card })].map(s => s.card.konamiCode)
     const limitedIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited' }, include: Card })].map(s => s.card.konamiCode)
@@ -98,7 +101,7 @@ export const getIssues = async (deckArr, format) => {
         } else if (forbiddenIds.includes(konamiCode)) {
             const card = await Card.findOne({ where: { konamiCode: konamiCode } })
             if (card) forbiddenCards.push(card.name)
-        } else if (limitedIds.includes(konamiCode) && deck[konamiCode] > 1) {
+        } else if ((format.isHighlander || limitedIds.includes(konamiCode)) && deck[konamiCode] > 1) {
             const card = await Card.findOne({ where: { konamiCode: konamiCode } })
             if (card) limitedCards.push(card.name)
         } else if (semiIds.includes(konamiCode) && deck[konamiCode] > 2) {
