@@ -58,9 +58,9 @@ export const getDeckFormat = async (server, message, interaction) => {
 // GET ISSUES
 export const getIssues = async (deckArr, format) => {
     const deck = convertArrayToObject(deckArr)   
-    const [dateType, legalType] = format.category === 'TCG' ?  + ['tcgDate', 'tcgLegal'] :    
-        format.category === 'OCG' ?  + ['ocgDate', 'ocgLegal'] :
-        format.category === 'Speed' ?  + ['speedDate', 'speedLegal'] :
+    const [dateType, legalType] = format.category === 'TCG' ? ['tcgDate', 'tcgLegal'] :    
+        format.category === 'OCG' ? ['ocgDate', 'ocgLegal'] :
+        format.category === 'Speed' ? ['speedDate', 'speedLegal'] :
         ['tcgDate', 'tcgLegal']
 
     const cardIds = format.category === 'Custom' ? [...await Card.findAll()].map(c => c.konamiCode) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: format.date } }})].map(c => c.konamiCode)
