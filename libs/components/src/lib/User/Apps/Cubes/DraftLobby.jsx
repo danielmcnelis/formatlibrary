@@ -61,6 +61,7 @@ export const DraftLobby = () => {
     const [intervalId, setIntervalId] = useState(null)
     const [toggleChime] = useAudio('/assets/sounds/chime.mp3')
     const [toggleHorn] = useAudio('/assets/sounds/horn.mp3')
+    console.log('entry', entry)
 
     // USE EFFECT SET INTERVAL
     useEffect(() => {
@@ -147,9 +148,9 @@ export const DraftLobby = () => {
             if (inventory.length) {
                 setSelection(null)
                 toggleChime()
-            } else if (entry.id) {
-                alert('The Draft is Starting Now!')
+            } else {
                 toggleHorn()
+                alert('The Draft is Starting Now!')
             }
         }
     }, [draft.pick])
