@@ -144,7 +144,7 @@ export const DraftLobby = () => {
 
     // USE EFFECT CLEAR SELECTION
     useEffect(() => {
-        if (draft.pick && draft.state !== 'pending') {
+        if (draft.pick === 1 && draft.state === 'underway') {
             if (inventory.length) {
                 setSelection(null)
                 toggleChime()
@@ -153,7 +153,7 @@ export const DraftLobby = () => {
                 alert('The Draft is Starting Now!')
             }
         }
-    }, [draft.pick])
+    }, [draft.state])
 
     // USE EFFECT GET INVENTORY
     useEffect(() => {
