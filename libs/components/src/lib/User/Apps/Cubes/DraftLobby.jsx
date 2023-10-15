@@ -145,15 +145,15 @@ export const DraftLobby = () => {
     // USE EFFECT CLEAR SELECTION
     useEffect(() => {
         if (draft.pick === 1 && draft.state === 'underway') {
-            if (inventory.length) {
-                setSelection(null)
-                toggleChime()
-            } else {
-                toggleHorn()
-                alert('The Draft is Starting Now!')
-            }
+            alert('The Draft is Starting Now!')
+            toggleHorn()
+        } else if (draft.pick > 1 && draft.state === 'underway') {
+            setSelection(null)
+            toggleChime()
+        } else {
+            setSelection(null)
         }
-    }, [draft.state])
+    }, [draft.pick, draft.state])
 
     // USE EFFECT GET INVENTORY
     useEffect(() => {
