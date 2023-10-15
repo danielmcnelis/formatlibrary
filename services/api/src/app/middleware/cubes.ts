@@ -8,16 +8,12 @@ import { config } from '@fl/config'
 export const cubesId = async (req, res, next) => {
     try {
       const id = parseInt(req.params.id)
-      const shareLink = req.params.id
       const view = req.query?.view
       
       const cube = await Cube.findOne({
-          where: !isNaN(id) ? {
+          where: {
               id: id,
               display: true,
-          } : {
-              shareLink: shareLink,
-              linkExpiration: {[Op.gte]: new Date()}
           },
           attributes: [
               'id',
@@ -25,7 +21,6 @@ export const cubesId = async (req, res, next) => {
               'ydk',
               'builder',
               'playerId',
-              'publishDate',
               'downloads',
               'views',
               'rating'
@@ -185,7 +180,6 @@ export const cubesCreate = async (req, res, next) => {
         builder: player.name,
         playerId: player.id,
         ydk: req.body.ydk,
-        publishDate: req.body.publishDate,
         display: req.body.display
       })
   
