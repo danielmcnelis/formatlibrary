@@ -14,7 +14,6 @@ const setInternalTimer = async (draftId, currentPick, timer = 60) => {
             }
         })
 
-
         console.log('draft.pick', draft.pick)
         console.log('currentPick', currentPick)
         console.log('draft.pick === currentPick', draft.pick === currentPick)
@@ -278,21 +277,22 @@ export const selectCard = async (req, res, next) => {
                 })
     
                 if (cardsPulled === (draft.playerCount * draft.pick)) {
-                    if ((draft.pick + 1) > draft.packsPerPlayer * draft.packSize) {
+                    const nextPick = draft.pick + 1
+                    if (nextPick > draft.packsPerPlayer * draft.packSize) {
                         await draft.update({ state: 'complete' })
-                    } else if ((draft.pick + 1) > (draft.round * draft.packSize)) {
+                    } else if (nextPick > (draft.round * draft.packSize)) {
                         await draft.update({
-                            pick: draft.pick + 1,
+                            pick: nextPick,
                             round: draft.round + 1
                         })
     
-                        return setInternalTimer(draft.id, draft.pick + 1, draft.timer)
+                        return setInternalTimer(draft.id, nextPick, draft.timer)
                     } else {
                         await draft.update({
-                            pick: draft.pick + 1
+                            pick: nextPick
                         })
     
-                        return setInternalTimer(draft.id, draft.pick + 1, draft.timer)
+                        return setInternalTimer(draft.id, nextPick, draft.timer)
                     }
                 }
             }    
