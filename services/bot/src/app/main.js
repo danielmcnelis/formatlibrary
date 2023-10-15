@@ -320,12 +320,9 @@ client.on('guildMemberRemove', async (member) => {
 
 // SUBSCRIPTION
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
+    if (oldMember.guild.id !== '414551319031054346') return
     const oldRoles = oldMember.roles.cache
     const newRoles = newMember.roles.cache
-    console.log('oldMember', oldMember)
-    console.log('oldRoles', oldRoles)
-    console.log('newMember', newMember)
-    console.log('newRoles', newRoles)
 
     const wasSubscriber = oldRoles.has('1102002844850208810')
     const isSubscriber = newRoles.has('1102002844850208810')
@@ -351,12 +348,16 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
         
         if (isSupporter) {
             await player.update({ subscriber: true, subTier: 'Supporter' })
+            console.log(`Welcome ${oldMember.user?.username} to the Supporter Tier!`)
         } else if (isPremium) {
             await player.update({ subscriber: true, subTier: 'Premium' })
+            console.log(`Welcome ${oldMember.user?.username} to the Premium Tier!`)
         } else if (isDoublePremium) {
             await player.update({ subscriber: true, subTier: 'Double Premium' })
+            console.log(`Welcome ${oldMember.user?.username} to the Double Premium Tier!`)
         } else {
             await player.update({ subscriber: true })
+            console.log(`Welcome ${oldMember.user?.username} to the Subscribers!`)
         }
     }
 });
