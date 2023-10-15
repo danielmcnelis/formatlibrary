@@ -3,11 +3,14 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
+import { useDetectAdBlock } from "adblock-detect-react"
+
 const playerId = getCookie('playerId')
 
 const App = () => {
     const [isSubscriber, setIsSubscriber] = useState(false)
     const [checkedSubscription, setCheckedSubscription] = useState(false)  
+    const adBlockDetected = useDetectAdBlock()
 
     // USE EFFECT
     useEffect(() => {
@@ -25,6 +28,8 @@ const App = () => {
     
             checkIfSubscriber()
         }
+
+
     }, [])
   return (
     <div>
@@ -37,7 +42,18 @@ const App = () => {
             }
         </Helmet>
         <div className="app">
-            <Router />
+            {
+                playerId && !checkedSubscription ? <Router/> :
+                    adBlockDetected && !isSubscriber ? (
+                        <div className="ad-block-detected">
+                            <h2>Please disable your ad-blocker to view this website.</h2>
+                            <p>Format Library depends on modest ad revenue to operate and produce content. If you do not wish not to see ads, you can also subscribe on the <a style={{color: 'blue'}} href="https://discord.com/invite/formatlibrary">Format Library Discord server</a> and log-in below:</p>
+
+                            <a href="/auth/login/">
+                                <h1 className="login">LOGIN</h1>
+                            </a>
+                        </div>) : <Router />
+            }
         </div>
     </div>
   )

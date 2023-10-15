@@ -25,7 +25,6 @@ export const Builder = () => {
     const myFormats = [...new Set(decks.map((d) => d.formatName))]
     const myDeckTypes = [...new Set(decks.map((d) => d.type))]
     const [card, setCard] = useState({})
-    console.log('card', card)
     const [format, setFormat] = useState({})
     const [controlPanelDeckType, setControlPanelDeckType] = useState(null)
     const [controlPanelFormat, setControlPanelFormat] = useState(null)
@@ -930,10 +929,10 @@ export const Builder = () => {
                                     onClick={() => setShowDeleteModal(true)}
                                 >
                                     <b style={{padding: '0px 6px'}}>Delete</b>
-                                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/delete.png`}/>
+                                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/delete.png`} alt="trash"/>
                                 </div>   
                                     
-                                <div>
+                                <div className="show-cursor deck-button">
                                     <a
                                         className="link"
                                         href={`/api/decks/download/${deck.id}?playerId=${deck.playerId}`} 
@@ -941,7 +940,7 @@ export const Builder = () => {
                                     >                                    
                                         <div className="deck-button">
                                             <b style={{padding: '0px 6px'}}>Download</b>
-                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`}/>
+                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`} alt="download"/>
                                         </div> 
                                     </a>
                                 </div>   
@@ -960,7 +959,7 @@ export const Builder = () => {
                                         }}
                                     >
                                         <b style={{padding: '0px 6px'}}>Share</b>
-                                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/share.png`}/>
+                                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/share.png`} alt="social"/>
                                     </div>
                                 </div>
                                     
@@ -972,12 +971,12 @@ export const Builder = () => {
                                         deck.display ? (
                                             <div className="deck-button">
                                                 <b style={{padding: '0px 6px'}}>Unpublish</b>
-                                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/hide.png`}/>
+                                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/hide.png`} alt="disguised"/>
                                             </div> 
                                         ) : (
                                             <div className="deck-button">
                                                 <b style={{padding: '0px 6px'}}>Publish</b>
-                                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/globe.png`}/>
+                                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/globe.png`} alt="globe"/>
                                             </div> 
                                         )
                                     }

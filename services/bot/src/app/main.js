@@ -3,7 +3,7 @@
 // RETROBOT - A RANKINGS & TOURNAMENT MANAGEMENT DISCORD BOT
 
 // MODULE IMPORTS
-import { Collection, Events } from 'discord.js'
+import { Collection, Events, TeamMember } from 'discord.js'
 const FuzzySet = require('fuzzyset')
 import { client } from './client'
 
@@ -317,3 +317,46 @@ client.on('guildMemberRemove', async (member) => {
         console.log(err)
     }
 })
+
+// SUBSCRIPTION
+client.on('guildMemberUpdate', async (oldMember, newMember) => {
+    const oldRoles = oldMember.roles.cache
+    const newRoles = newMember.roles.cache
+    console.log('oldMember', oldMember)
+    console.log('oldRoles', oldRoles)
+    console.log('newMember', newMember)
+    console.log('newRoles', newRoles)
+
+    const wasSubscriber = oldRoles.has('1102002844850208810')
+    const isSubscriber = newRoles.has('1102002844850208810')
+
+    if (wasSubscriber && !isSubscriber) {
+        const player = await Player.findOne({
+            where: {
+                discordId: oldMember.id
+            }
+        })
+
+        await player.update({ subscriber: false, subTier: null })
+    } else if (!wasSubscriber && isSubscriber) {
+        const player = await Player.findOne({
+            where: {
+                discordId: oldMember.id
+            }
+        })
+
+        const isSupporter = newRoles.has('1102020060631011400')
+        const isPremium = newRoles.has('1102002847056400464')
+        const isDoublePremium = newRoles.has('1102796965592449044')
+        
+        if (isSupporter) {
+            await player.update({ subscriber: true, subTier: 'Supporter' })
+        } else if (isPremium) {
+            await player.update({ subscriber: true, subTier: 'Premium' })
+        } else if (isDoublePremium) {
+            await player.update({ subscriber: true, subTier: 'Double Premium' })
+        } else {
+            await player.update({ subscriber: true })
+        }
+    }
+});

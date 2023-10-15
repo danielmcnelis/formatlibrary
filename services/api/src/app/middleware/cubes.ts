@@ -198,7 +198,9 @@ export const cubesCreate = async (req, res, next) => {
   export const cubesAll = async (req, res, next) => {
     try {    
         const cubes = await Cube.findAll({
-          display: true,
+            where: {
+                display: true
+            }
         })
     
         res.json(cubes)
@@ -206,6 +208,37 @@ export const cubesCreate = async (req, res, next) => {
         next(err)
       }
   }
+
+  export const publishCube = async (req, res, next) => {
+    try {
+        const cube = await Cube.findOne({ 
+            where: {
+                id: req.params.id
+            }
+        })
+
+        await cube.update({ display: true })
+        res.sendStatus(200)
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+export const unpublishCube = async (req, res, next) => {
+    try {
+        const cube = await Cube.findOne({ 
+            where: {
+                id: req.params.id
+            }
+        })
+
+        await cube.update({ display: false })
+        res.sendStatus(200)
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 
   export const drawCube = async (req, res, next) => {  
     try {

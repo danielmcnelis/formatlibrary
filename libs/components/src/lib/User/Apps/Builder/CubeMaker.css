@@ -48,7 +48,7 @@
     visibility: visible;
 }
 
-.single-deck-title-flexbox {
+.single-cube-title-flexbox {
     display: flex;
     justify-content: center;
     width: 760px;
@@ -98,37 +98,37 @@
   }
 
   
-  .deck-bubble {
+  .cube-bubble {
     width: 760px;
     margin-left: auto;
     margin-right: auto;
     border-radius: 5px;
   }
   
-  .deck-bubble#main {
-    border: solid var(--main-deck-border);
+  .cube-bubble#main {
+    border: solid var(--main-cube-border);
     border-width: 5px 0px;
     padding: 10px 0px;
-    background-color: var(--main-deck-background);
+    background-color: var(--main-cube-background);
     margin-bottom: 5px;
   }
   
-  .deck-bubble#side {
-    border: solid var(--side-deck-border);
+  .cube-bubble#side {
+    border: solid var(--side-cube-border);
     border-width: 5px 0px;
     padding: 5px 0px;
-    background-color: var(--side-deck-background);
+    background-color: var(--side-cube-background);
     margin-bottom: 2px;
   }
   
-  .deck-bubble#extra {
-    border: solid var(--extra-deck-border);
+  .cube-bubble#extra {
+    border: solid var(--extra-cube-border);
     border-width: 5px 0px;
     padding: 5px 0px;
-    background-color: var(--extra-deck-background);
+    background-color: var(--extra-cube-background);
   }
 
-  .deck-flexbox {
+  .cube-flexbox {
     padding: 0px 10px;
     max-width: 800px;
     display: flex;
@@ -178,7 +178,7 @@
   }
 
   
-  .deck-button {
+  .cube-button {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -190,7 +190,7 @@
     padding: 2px 5px;
   }
   
-  .deck-button:hover {
+  .cube-button:hover {
       color: white;
       background-color:#00a3cc;
       border-radius: 4px; 
@@ -198,7 +198,7 @@
   
   /* MEDIUM AND LARGE CELL PHONES */
   @media only screen and (max-width: 600px) {
-    .single-deck-title-flexbox, .event-title-flexbox {
+    .single-cube-title-flexbox, .event-title-flexbox {
         margin: 5px 0px;
         padding: 0px;
         width: 100%;

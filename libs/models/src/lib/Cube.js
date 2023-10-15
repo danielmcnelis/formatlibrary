@@ -15,9 +15,6 @@ export const Cube = db.define('cubes', {
   ydk: {
     type: Sequelize.TEXT
   },
-  publishDate: {
-    type: Sequelize.DATE
-  },
   display: {
     type: Sequelize.BOOLEAN,
     defaultValue: false

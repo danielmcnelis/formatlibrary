@@ -23,7 +23,9 @@ export const CubeMaker = () => {
     const [cubes, setCubes] = useState([])
     const [card, setCard] = useState({})
     const [edited, setEdited] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showOpenModal, setShowOpenModal] = useState(false)
+    const [showPublishModal, setShowPublishModal] = useState(false)
     const [showSaveModal, setShowSaveModal] = useState(false)
     const [showUploadModal, setShowUploadModal] = useState(false)
 
@@ -147,6 +149,38 @@ export const CubeMaker = () => {
         }
 
         setShowSaveModal(false)
+    }
+
+    // PUBLISH CUBE 
+    const publishCube = async () => {
+        const { status } = await axios.put(`/api/cubes/publish/${cube.id}`)
+        if (status === 200) setCube({...cube, display: true})
+        setShowPublishModal(false)
+    }
+
+    // UNPUBLISH CUBE 
+    const unpublishCube = async () => {
+        const { status } = await axios.put(`/api/cubes/unpublish/${cube.id}`)
+        if (status === 200) setCube({...cube, display: false})
+        setShowPublishModal(false)
+    }
+
+    // DELETE CUBE
+    const deleteCube = async () => {
+        try {
+            const {status} = await axios.delete(`/api/cubes/delete/${cube.id}`)
+            if (status === 200) {
+                setCube({
+                    name: 'New Cube',
+                    cardPool: []
+                })
+            }
+
+            getCubes()
+            setShowDeleteModal(false)
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     // READ YDK
@@ -293,6 +327,28 @@ export const CubeMaker = () => {
             </Modal.Footer>
         </Modal>
 
+        <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+            <Modal.Header closeButton> 
+                <Modal.Title>Delete Deck:</Modal.Title> 
+            </Modal.Header>
+            <Modal.Body>Are you sure you want to delete {cube.name}?</Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={() => deleteCube()}> Delete </Button>
+                <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
+            </Modal.Footer>
+        </Modal>
+
+        <Modal show={showPublishModal} onHide={() => setShowPublishModal(false)}>
+            <Modal.Header closeButton> 
+                <Modal.Title>{cube.display ? 'Unpublish Cube' : 'Publish Cube'}</Modal.Title> 
+            </Modal.Header>
+            <Modal.Body>Are you sure you want make {cube.name} {cube.display ? 'private' : 'public'}?</Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={() => cube.display ? unpublishCube() : publishCube()}>{cube.display ? 'Unpublish' : 'Publish'}</Button>
+                <Button variant="secondary" onClick={() => setShowPublishModal(false)}>Cancel</Button>
+            </Modal.Footer>
+        </Modal>
+
         <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
             <Modal.Header closeButton style={{width: '560px'}}>
             <Modal.Title>{cube?.id ? 'Edit Name:' : 'Save Cube:'}</Modal.Title>
@@ -388,15 +444,15 @@ export const CubeMaker = () => {
         </div>
 
         <div>
-            <div className="single-deck-title-flexbox">
+            <div className="single-cube-title-flexbox">
                 <div style={{width: '80px'}}/>
-                <div className="single-deck-title">{cube?.name || 'New Cube'} <img style={{width:'32px', margin: '10px 20px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube?.icon || 'master'}.png`} alt={cube?.icon || 'millennium-puzzle'}/></div>
+                <div className="single-cube-title">{cube?.name || 'New Cube'} <img style={{width:'32px', margin: '10px 20px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube?.icon || 'master'}.png`} alt={cube?.icon || 'millennium-puzzle'}/></div>
                 <div style={{width: '80px', color: '#CBC5C3', margin: '0px', alignSelf: 'center'}}>{edited ? <i>Edited</i> : ''}</div>
             </div>
 
             <Droppable locale="main">
-                <div id="main" className="deck-bubble">
-                    <div id="main" className="deck-flexbox">
+                <div id="main" className="cube-bubble">
+                    <div id="main" className="cube-flexbox">
                     {
                         cube?.cardPool.map((card, index) => {
                             if (!card) {
@@ -447,19 +503,46 @@ export const CubeMaker = () => {
                 {
                     cube?.id ? (
                         <div className="builder-bottom-panel">                     
-                            <div>
+                            <div 
+                                className="show-cursor deck-button" 
+                                onClick={() => setShowDeleteModal(true)}
+                            >
+                                <b style={{padding: '0px 6px'}}>Delete</b>
+                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/delete.png`} alt="delete"/>
+                            </div>                     
+                            <div className="show-cursor cube-button">
                                 <a
                                     className="link"
                                     href={`/api/formats/download/${cube?.id}`} 
                                     download={`${cube?.name}-cardpool.ydk`}
                                 >                                    
-                                    <div className="deck-button">
+                                    <div className="cube-button">
                                         <b style={{padding: '0px 6px'}}>Download</b>
                                         <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`} alt="download"/>
                                     </div> 
                                 </a>
-                            </div>   
+                            </div>  
+                            
+                            <div 
+                                className="show-cursor cube-button"
+                                onClick={() => setShowPublishModal(true)}
+                            >
+                                {
+                                    cube.display ? (
+                                        <div className="cube-button">
+                                            <b style={{padding: '0px 6px'}}>Unpublish</b>
+                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/hide.png`} alt="disguised"/>
+                                        </div> 
+                                    ) : (
+                                        <div className="cube-button">
+                                            <b style={{padding: '0px 6px'}}>Publish</b>
+                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/globe.png`} alt="globe"/>
+                                        </div> 
+                                    )
+                                }
+                            </div> 
                         </div>
+                        
                     ) : ''
                 }
             </div>
