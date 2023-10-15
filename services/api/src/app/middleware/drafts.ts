@@ -13,40 +13,30 @@ const setInternalTimer = async (draftId, currentPick, timer = 60) => {
                 id: draftId
             }
         })
-
-        console.log('draft.pick', draft.pick)
-        console.log('currentPick', currentPick)
-        console.log('draft.pick === currentPick', draft.pick === currentPick)
+        
         if (draft.pick === currentPick) {
             const entries = await CubeDraftEntry.findAll({
                 where: {
                     cubeDraftId: draftId
                 }
             })
-            console.log('draftId', draftId)
-            console.log('entries.length', entries.length)
+            
             const nextPick = draft.pick + 1
             const { round, pick, packsPerPlayer, playerCount} = draft
-            console.log('round, pick, packsPerPlayer, playerCount', round, pick, packsPerPlayer, playerCount)
             const arr = []
             const nums = Array.from(Array(packsPerPlayer * playerCount).keys()).map((e) => e + 1)
             for (let i = 0; i < packsPerPlayer; i++) { arr[i] = [...nums.slice(i * playerCount, i * playerCount + playerCount)] }
-            console.log('nums', nums)
-            console.log('arr', arr)
+            
             for (let i = 0; i < entries.length; i++) {
                 const entry = entries[i]
-                console.log('entry.playerName', entry.playerName)
                 const count = await CubeDraftInventory.count({ 
                     where: {
                         cubeDraftEntryId: entry.id
                     }
                 })
-                console.log('count', count)
-                console.log('count < currentPick', count < currentPick)
-
+            
                 if (count < currentPick) {
                     const packNumber = arr[round - 1][(pick + entry.slot - 2) % playerCount]
-                    console.log('packNumber', packNumber)
                     const contents = await CubePackContent.findAll({
                         where: {
                             packNumber: packNumber,
@@ -55,7 +45,7 @@ const setInternalTimer = async (draftId, currentPick, timer = 60) => {
                         include: Card,
                         order: [[Card, 'sortPriority', 'ASC'], [Card, 'name', 'ASC']]
                     })
-                    console.log('contents.length', contents.length)
+            
                     const packContent = getRandomElement(contents)
 
                     const count2 = await CubeDraftInventory.count({ 
@@ -63,9 +53,7 @@ const setInternalTimer = async (draftId, currentPick, timer = 60) => {
                             cubeDraftEntryId: entry.id
                         }
                     })
-                    console.log('count2', count2)
-                    console.log('count2 < currentPick', count2 < currentPick)
-
+            
                     if (count2 < currentPick) {
                         await CubeDraftInventory.create({
                             cardId: packContent.cardId,
@@ -80,10 +68,8 @@ const setInternalTimer = async (draftId, currentPick, timer = 60) => {
             }
 
             if (nextPick > draft.packsPerPlayer * draft.packSize) {
-                console.log('COMPLETE')
                 await draft.update({ state: 'complete' })
             } else if (nextPick % draft.packSize === 1) {
-                console.log('draft.update -> next round')
                 await draft.update({
                     pick: nextPick,
                     round: draft.round + 1
@@ -91,7 +77,6 @@ const setInternalTimer = async (draftId, currentPick, timer = 60) => {
 
                 return setInternalTimer(draft.id, nextPick, draft.timer)
             } else {
-                console.log('draft.update -> next pick')
                 await draft.update({
                     pick: draft.pick + 1
                 })
