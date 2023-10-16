@@ -47,8 +47,7 @@ const App = () => {
                     adBlockDetected && !isSubscriber ? (
                         <div className="ad-block-detected">
                             <h2>Please disable your ad-blocker to view this website.</h2>
-                            <p>Format Library depends on modest ad revenue to operate and produce content. If you do not wish not to see ads, you can also subscribe on the <a style={{color: 'blue'}} href="https://discord.com/invite/formatlibrary">Format Library Discord server</a> and log-in below:</p>
-
+                            <p>Format Library depends on modest ad revenue to operate and produce content. If you do not wish to see ads, another option is to subscribe to the <a style={{color: 'blue'}} href="https://discord.com/invite/formatlibrary">Format Library Discord server</a> and log-in below:</p>
                             <a href="/auth/login/">
                                 <h1 className="login">LOGIN</h1>
                             </a>

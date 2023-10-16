@@ -52,6 +52,9 @@ export const generatePack = async (req, res, next) => {
         const supers = prints.filter((p) => p.rarity === 'Super Rare')
         const ultras = prints.filter((p) => p.rarity === 'Ultra Rare')
         const secrets = prints.filter((p) => p.rarity === 'Secret Rare')
+        const starfoils = prints.filter((p) => p.rarity === 'Starfoil Rare')
+        const mosaics = prints.filter((p) => p.rarity === 'Mosaic Rare')
+        const shatterfoils = prints.filter((p) => p.rarity === 'Shatterfoil Rare')
         const coreV1 = ['LOB', 'MRD', 'MRL', 'PSV', 'LON', 'LOD', 'PGD', 'MFC', 'DCR', 'IOC', 'AST']
         const coreV2 = ['SOD', 'RDS', 'FET', 'TLM', 'CRV', 'EEN', 'SOI', 'EOJ', 'POTD', 'CDIP']
         const coreV3 = ['STON', 'FOTB']
@@ -146,7 +149,19 @@ export const generatePack = async (req, res, next) => {
                 } else {
                     pack = [...getRandomSubset(monsterCommons, 6), ...getRandomSubset(spellCommons, 3), ...getRandomSubset(trapCommons, 2), foil]
                 }
-            }
+            } 
+        } else if (set.setCode === 'BP01') {
+            const commonsSlot2 = commons.filter((p) => parseInt(p.cardcode.replace(/^\D+/g, '')) >= 56 && parseInt(p.cardcode.replace(/^\D+/g, '')) <= 110)
+            const commonsSlot3 = commons.filter((p) => parseInt(p.cardcode.replace(/^\D+/g, '')) >= 111 && parseInt(p.cardcode.replace(/^\D+/g, '')) <= 170)
+            const commonsSlot4 = commons.filter((p) => parseInt(p.cardcode.replace(/^\D+/g, '')) >= 171 && parseInt(p.cardcode.replace(/^\D+/g, '')) <= 220)
+    
+            pack = [getRandomElement(rares), getRandomElement(commonsSlot2), getRandomElement(commonsSlot3), getRandomElement(commonsSlot4), getRandomElement(starfoils)].sort((a, b) => b.setCode - a.setCode)
+        } else if (set.setCode === 'BP02') {
+            pack = [getRandomElement(rares), ...getRandomSubset(commons, 3), getRandomElement(mosaics)].sort((a, b) => b.setCode - a.setCode)
+        } else if (set.setCode === 'BP03') {
+            pack = [getRandomElement(rares), ...getRandomSubset(commons, 3), getRandomElement(shatterfoils)].sort((a, b) => b.setCode - a.setCode)
+        } else if (set.setCode === 'BPW2') {
+            pack = [...getRandomSubset(commons, 9), ...getRandomSubset(supers, 6), getRandomElement(ultras)].sort((a, b) => b.setCode - a.setCode)
         }
 
         res.json(pack)
@@ -166,6 +181,9 @@ export const generateBox = async (req, res, next) => {
         const supers = prints.filter((p) => p.rarity === 'Super Rare')
         const ultras = prints.filter((p) => p.rarity === 'Ultra Rare')
         const secrets = prints.filter((p) => p.rarity === 'Secret Rare')
+        const mosaics = prints.filter((p) => p.rarity === 'Mosaic Rare')
+        const starfoils = prints.filter((p) => p.rarity === 'Starfoil Rare')
+        const shatterfoils = prints.filter((p) => p.rarity === 'Shatterfoil Rare')
         const coreV1 = ['LOB', 'MRD', 'MRL', 'PSV', 'LON', 'LOD', 'PGD', 'MFC', 'DCR', 'IOC', 'AST']
         const coreV2 = ['SOD', 'RDS', 'FET', 'TLM', 'CRV', 'EEN', 'SOI', 'EOJ', 'POTD', 'CDIP']
         const coreV3 = ['STON', 'FOTB']
@@ -256,6 +274,26 @@ export const generateBox = async (req, res, next) => {
                 } else {
                     box.push([...getRandomSubset(monsterCommons, 6), ...getRandomSubset(spellCommons, 3), ...getRandomSubset(trapCommons, 2), rare])
                 }
+            }
+        } else if (set.setCode === 'BP01') {
+            const commonsSlot2 = commons.filter((p) => parseInt(p.cardcode.replace(/^\D+/g, '')) >= 56 && parseInt(p.cardcode.replace(/^\D+/g, '')) <= 110)
+            const commonsSlot3 = commons.filter((p) => parseInt(p.cardcode.replace(/^\D+/g, '')) >= 111 && parseInt(p.cardcode.replace(/^\D+/g, '')) <= 170)
+            const commonsSlot4 = commons.filter((p) => parseInt(p.cardcode.replace(/^\D+/g, '')) >= 171 && parseInt(p.cardcode.replace(/^\D+/g, '')) <= 220)
+    
+            for (let i = 0; i < 36; i++) {
+                box.push([getRandomElement(commonsSlot2), getRandomElement(commonsSlot3), getRandomElement(commonsSlot4), getRandomElement(rares), getRandomElement(starfoils)].sort((a, b) => b.setCode - a.setCode))
+            }
+        } else if (set.setCode === 'BP02') {
+            for (let i = 0; i < 36; i++) {
+                box.push([...getRandomSubset(commons, 3), getRandomElement(rares), getRandomElement(mosaics)].sort((a, b) => b.setCode - a.setCode))
+            }
+        } else if (set.setCode === 'BP03') {
+            for (let i = 0; i < 36; i++) {
+                box.push([...getRandomSubset(commons, 3), getRandomElement(rares), getRandomElement(shatterfoils)].sort((a, b) => b.setCode - a.setCode))
+            }
+        } else if (set.setCode === 'BPW2') {
+            for (let i = 0; i < 36; i++) {
+                box.push([...getRandomSubset(commons, 9), ...getRandomSubset(supers, 6), getRandomElement(ultras)].sort((a, b) => b.setCode - a.setCode))
             }
         }
 

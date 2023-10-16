@@ -107,14 +107,14 @@
   }
 
   
-  .deck-bubble {
+  .builder-bubble {
     width: 740px !important;
     margin-left: auto;
     margin-right: auto;
     border-radius: 5px;
   }
   
-  .deck-bubble#main {
+  .builder-bubble#main {
     border: solid var(--main-deck-border);
     border-width: 5px 0px;
     padding: 10px 0px;
@@ -122,7 +122,7 @@
     margin-bottom: 5px;
   }
   
-  .deck-bubble#side {
+  .builder-bubble#side {
     border: solid var(--side-deck-border);
     border-width: 5px 0px;
     padding: 5px 0px;
@@ -130,14 +130,14 @@
     margin-bottom: 2px;
   }
   
-  .deck-bubble#extra {
+  .builder-bubble#extra {
     border: solid var(--extra-deck-border);
     border-width: 5px 0px;
     padding: 5px 0px;
     background-color: var(--extra-deck-background);
   }
 
-  .deck-flexbox {
+  .builder-flexbox {
     padding: 0px 10px;
     max-width: 740px !important;
     display: flex;
@@ -187,7 +187,7 @@
   }
 
   
-  .deck-button {
+  .builder-button {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -199,7 +199,7 @@
     padding: 2px 5px;
   }
   
-  .deck-button:hover {
+  .builder-button:hover {
       color: white;
       background-color:#00a3cc;
       border-radius: 4px; 

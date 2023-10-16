@@ -61,7 +61,6 @@ export const DraftLobby = () => {
     const [intervalId, setIntervalId] = useState(null)
     const [toggleChime] = useAudio('/assets/sounds/chime.mp3')
     const [toggleHorn] = useAudio('/assets/sounds/horn.mp3')
-    console.log('entry', entry)
 
     // USE EFFECT SET INTERVAL
     useEffect(() => {

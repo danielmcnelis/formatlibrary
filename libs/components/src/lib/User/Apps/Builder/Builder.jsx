@@ -794,8 +794,8 @@ export const Builder = () => {
             </div>
 
             <div>
-                <div id="main" className="deck-bubble">
-                    <div id="main" className="deck-flexbox">
+                <div id="main" className="builder-bubble">
+                    <div id="main" className="builder-flexbox">
                     {
                         deck.main.map((card, index) => {
                             if (!card) {
@@ -845,8 +845,8 @@ export const Builder = () => {
                 </div>
                 
                 <Droppable locale="side">
-                    <div id="side" className="deck-bubble">
-                        <div id="side" className="deck-flexbox">
+                    <div id="side" className="builder-bubble">
+                        <div id="side" className="builder-flexbox">
                         {
                             deck.side.map((card, index) => {
                                 if (!card) {
@@ -882,8 +882,8 @@ export const Builder = () => {
                 </Droppable>
             
                 <Droppable locale="extra">
-                    <div id="extra" className="deck-bubble">
-                        <div id="extra" className="deck-flexbox">
+                    <div id="extra" className="builder-bubble">
+                        <div id="extra" className="builder-flexbox">
                         {
                             deck.extra.map((card, index) => {
                                 if (!card) {
@@ -938,7 +938,7 @@ export const Builder = () => {
                                         href={`/api/decks/download/${deck.id}?playerId=${deck.playerId}`} 
                                         download={`${deck.builder}-${deck.name || deck.type}.ydk`}
                                     >                                    
-                                        <div className="deck-button">
+                                        <div className="builder-button">
                                             <b style={{padding: '0px 6px'}}>Download</b>
                                             <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`} alt="download"/>
                                         </div> 
@@ -969,12 +969,12 @@ export const Builder = () => {
                                 >
                                     {
                                         deck.display ? (
-                                            <div className="deck-button">
+                                            <div className="builder-button">
                                                 <b style={{padding: '0px 6px'}}>Unpublish</b>
                                                 <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/hide.png`} alt="disguised"/>
                                             </div> 
                                         ) : (
-                                            <div className="deck-button">
+                                            <div className="builder-button">
                                                 <b style={{padding: '0px 6px'}}>Publish</b>
                                                 <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/globe.png`} alt="globe"/>
                                             </div> 

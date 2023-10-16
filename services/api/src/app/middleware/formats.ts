@@ -47,7 +47,7 @@ export const formatsAll = async (req, res, next) => {
     const formats = await Format.findAll({
       where: {
         [Op.or]: {
-          popular: true,
+          spotlight: true,
           category: 'TCG'
         },
         isHighlander: false
