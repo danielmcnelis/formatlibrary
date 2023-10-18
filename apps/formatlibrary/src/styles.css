@@ -31,6 +31,8 @@
     --adv-button-clicked: #6d6f8a;
     --format-button: #f7f7f7;
     --format-button-hover: #41474f;
+    --portal-button: #f7f7f7;
+    --portal-button-hover: #41474f;
     --forbidden-border: #b30000;
     --forbidden-background: #ffe6e6;
     --limited-border: #cc7a00;
@@ -72,6 +74,8 @@
     --adv-button-clicked: #81a1d0;
     --format-button: #41474f;
     --format-button-hover: #f7f7f7;
+    --portal-button: #41474f;
+    --portal-button-hover: #f7f7f7;
     --forbidden-border: #390000;
     --forbidden-background: #774343;
     --limited-border: #302300;

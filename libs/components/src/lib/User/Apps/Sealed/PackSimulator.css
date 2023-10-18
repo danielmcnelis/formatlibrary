@@ -2,6 +2,31 @@
   
 
 
+
+.pack-button {
+    display: inline-block;
+    padding: 0.36em 0.84em;
+    border: 1px solid #000000;
+    border-radius: 0.5em;
+    margin: 0.1em 0.5em 0.2em 0.5em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    color: #ede6e6;
+    background-color: black;
+    text-align: center;
+    transition: all 0.15s;
+  }
+  
+  .pack-button:hover {
+    cursor: pointer;
+    text-shadow: 0 0 2em rgba(255, 255, 255, 1);
+    color: black;
+    background-color: #ede6e6;
+    border-color: #ede6e6;
+  }
+  
   select {
     display: inline;
     font-size: 15px;
@@ -74,41 +99,23 @@ label {
 }
   
 .pack-portal label {
-    margin-bottom: 12px;
     line-height: 1.3;
     font-size: 15px;
 }
 
-.pack-button, .clicked-pack-button {
+.pack-opener-options-flexbox {
     display: flex;
-    padding: 10px;
-    border: 1px solid #000000;
-    margin: 0.2em;
-    height: 48px;
-    width: 182px;
-    border-radius: 8px;
-    box-sizing: border-box;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 20px;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
     text-align: center;
-    justify-content: center;
-    align-content: center;
-    flex-direction: column;
-    transition: all 0.15s;
-  }
-  
-  .clicked-pack-button {
-    color: white;
-    font-weight: 600;
-    background-color: #41474f;
-  }
+    padding: 2px 4px;
+    margin: 8px 20px;
+}
 
-  .pack-button:hover {
-    cursor: pointer;
-    color: white;
-    background-color: #41474f;
-  }
+.pack-opener-label {
+    margin: 0px 10px;
+}
 
 .participants-flexbox {
     display: flex;
@@ -135,7 +142,7 @@ label {
     flex-direction: row;
     align-items: flex-start;
     justify-content: left;
-    padding: 5px 4px;
+    padding: 2px;
     flex-basis: 9%;
     flex-wrap: wrap;
 }
@@ -165,12 +172,25 @@ label {
     margin: 5px 10px;
 }
 
+.pack-opener-title-flexbox {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 84%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0px 10px;
+  }
+
 .focal-card-flexbox {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     width: 22%;
+    position: sticky; 
+    top: 0;
 }
 
 .focal-card-image {

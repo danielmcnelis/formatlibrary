@@ -3,7 +3,7 @@ import { camelize } from '@fl/utils'
 import './CardImage.css'
 
 export const CardImage = (props) => {
-    let {addCard, removeCard, card, previous, status, rarity, width, margin, padding, index, locale, disableLink, setCard, isDraft, isPackOpener} = props
+    let {addCard, removeCard, card, previous, status, rarity, width, margin, padding, index, locale, disableLink, setCard, isDraft, isPackSimulator} = props
     if (rarity?.includes('Short Print')) rarity = 'Common' 
     
     if (isDraft) {
@@ -22,7 +22,7 @@ export const CardImage = (props) => {
                 </div>
             </div>
           )
-    } else if (isPackOpener) {
+    } else if (isPackSimulator) {
          return (
             <div className="CardImage-box">
                 <Link to={`/cards/${

@@ -1,5 +1,6 @@
 
 import { Link } from 'react-router-dom'
+import { PortalButton } from './PortalButton'
 import './UserPortal.css'
 
 export const UserPortal = () => {
@@ -7,15 +8,10 @@ export const UserPortal = () => {
         <div className="body">
             <h1>Applications</h1>
             <div className="user-menu">
-                <Link to="/builder/">
-                    <div className="user-button">Deck Builder</div>
-                </Link>
-                <Link to="/start-cube/">
-                    <div className="user-button">Start Cube</div>
-                </Link>
-                <Link to="/text-to-ydk/">
-                    <div className="user-button">Text to YDK</div>
-                </Link>
+                <PortalButton label="Deck Builder" to="/deck-builder" icon="/emojis/deckbox.png" />
+                <PortalButton label="Pack Simulator" to="/pack-simulator" icon="/artworks/LOB.jpg" />
+                <PortalButton label="Start Cube" to="/start-cube" icon="/emojis/cube.png" />
+                <PortalButton label="Text to YDK" to="/text-to-ydk" icon="/emojis/ydk.png" />
             </div>
         </div>
     )

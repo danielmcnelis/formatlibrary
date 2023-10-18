@@ -1,0 +1,35 @@
+
+.portal-link {
+    display: inline-block;
+    padding: 14px 6px 6px 54px;
+    border: 1px solid #000000;
+    margin: 0.15em 0.4em 0.15em 0em;
+    height: 64px;
+    width: 200px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: left;
+    transition: all 0.15s;
+    background-repeat: no-repeat;
+    background-position: 2px;
+    background-size: 64px;
+    vertical-align: middle;
+    color: var(--text-primary);
+    background-color: var(--portal-button);
+  }
+
+  .portal-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .portal-link:hover {
+    cursor: pointer;
+    color: var(--text-opposite);
+    background-color: var(--portal-button-hover);
+  }

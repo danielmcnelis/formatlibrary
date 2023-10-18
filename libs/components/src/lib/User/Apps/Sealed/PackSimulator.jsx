@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { CardImage } from '../../../Cards/CardImage'
 import { FocalCard } from '../Builder/FocalCard'
-import './PackOpener.css' 
+import './PackSimulator.css' 
 
-export const PackOpener = () => {
+export const PackSimulator = () => {
     const [boosters, setBoosters] = useState([])
     const [booster, setBooster] = useState({})
     const [count, setCount] = useState(1)
@@ -39,54 +39,55 @@ export const PackOpener = () => {
 
     return (
         <div className="pack-portal">
-            <div className="card-database-flexbox">
-                <img style={{ height:'128px'}} src={`https://cdn.formatlibrary.com/images/artworks/${booster.setCode || 'back'}.jpg`} alt="pack art"/>
-                <div>
-                    <h1>Pack Opener</h1>
+            <div className="pack-opener-title-flexbox">
+                <img style={{ width:'100px'}} src={`https://cdn.formatlibrary.com/images/artworks/${booster.setCode || 'back'}.jpg`} alt="pack art"/>
+                <div style={{ width:'96%'}}>
+                    <h1 style={{ padding: '0px 0px 8px'}}>Pack Simulator</h1>
+                    <div className="slideshow">
+                        <div className="mover" style={{background: `url(https://cdn.formatlibrary.com/images/sets/slideshows/${booster?.setCode}.png)`}}></div>
+                    </div>
                 </div>
-                <img style={{ height:'128px'}} src={`https://cdn.formatlibrary.com/images/artworks/${booster.setCode || 'back'}.jpg`} alt="pack art"/>
+                <img style={{ width:'100px'}} src={`https://cdn.formatlibrary.com/images/artworks/${booster.setCode || 'back'}.jpg`} alt="pack art"/>
             </div>
             <br/>
 
-            <div className="slideshow">
-                <div className="mover" style={{background: `url(https://cdn.formatlibrary.com/images/sets/slideshows/${booster?.setCode}.png)`}}></div>
-            </div>
-
-            <label>Booster Set:
-                <select
-                    id="pack"
-                    onChange={(e) => fetchBooster(e.target.value)}
-                >
-                <option value="">Select Pack:</option>
-                {
-                    boosters.map((b) => <option value={b.id}>{b.setName}</option>)
-                }
-                </select>
-            </label>
-
-            <label>Number of Packs:
-                <select
-                    id="pack-size"
-                    defaultValue="1"
-                    onChange={(e) => {setCount(e.target.value)}}
-                >
-                {
-                    packNumberOptions.map((num) => <option value={num}>{num}</option>)
-                }
-                </select>
-            </label>
-
-            {
-                booster.id ? (
-                    <div
-                        className="pack-button"
-                        type="submit"
-                        onClick={() => openPacks()}
+            <div className="pack-opener-options-flexbox">
+                <label className="pack-opener-label">Booster Set:
+                    <select
+                        id="pack"
+                        onChange={(e) => fetchBooster(e.target.value)}
                     >
-                        Open
-                    </div>
-                ) : ''
-            } 
+                    <option value="">Select Pack:</option>
+                    {
+                        boosters.map((b) => <option value={b.id}>{b.setName}</option>)
+                    }
+                    </select>
+                </label>
+
+                <label className="pack-opener-label">Packs:
+                    <select
+                        id="pack-size"
+                        defaultValue="1"
+                        onChange={(e) => {setCount(e.target.value)}}
+                    >
+                    {
+                        packNumberOptions.map((num) => <option value={num}>{num}</option>)
+                    }
+                    </select>
+                </label>
+
+                {
+                    booster.id ? (
+                        <div
+                            className="pack-button"
+                            type="submit"
+                            onClick={() => openPacks()}
+                        >
+                            Purchase
+                        </div>
+                    ) : null
+                } 
+            </div>
 
             <div className="space-between-aligned">
                 <FocalCard card={card}/>
@@ -104,7 +105,7 @@ export const PackOpener = () => {
                                                         card={print.card} 
                                                         setCard={setCard}
                                                         rarity={print.rarity}
-                                                        isPackOpener={true}
+                                                        isPackSimulator={true}
                                                         width="84px"
                                                         margin="1px"
                                                         padding="1px"

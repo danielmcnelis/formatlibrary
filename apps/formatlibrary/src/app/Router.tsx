@@ -18,7 +18,7 @@ import {
   Home,
   LeaderBoard,
   NotFound,
-  PackOpener,
+  PackSimulator,
   Page,
   PlayerProfile,
   ReplayTable,
@@ -40,7 +40,7 @@ export const Router = () => {
                     <Route path="/auth/"/>
 					<Route path="/apps" element=<Page element=<UserPortal /> /> />
 					<Route path="/builder" element=<Page element=<Builder /> /> />
-					<Route path="/pack-opener" element=<Page element=<PackOpener /> /> />
+					<Route path="/pack-simulator" element=<Page element=<PackSimulator /> /> />
 					<Route path="/text-to-ydk" element=<Page element=<YDKCreator /> /> />
 					<Route path="/settings" element=<Page element=<Settings /> /> />
 					<Route path="/cube-maker" element=<Page element=<CubeMaker /> /> />
