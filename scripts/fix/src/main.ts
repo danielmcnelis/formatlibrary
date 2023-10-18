@@ -767,7 +767,7 @@ import { S3 } from 'aws-sdk
             main.push(card)
         }
     
-        main.sort((a, b) => {
+        const sortFn = (a: any, b: any) => {
             if (a.sortPriority > b.sortPriority) {
                 return 1
             } else if (b.sortPriority > a.sortPriority) {
@@ -777,9 +777,11 @@ import { S3 } from 'aws-sdk
             } else if (b.name > a.name) {
                 return -1
             } else {
-                return false
+                return 0
             }
-        })
+        }
+
+        main.sort(sortFn)
     
         const card_width = 72
         const card_height = 105
