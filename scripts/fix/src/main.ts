@@ -764,7 +764,8 @@ import { S3 } from 'aws-sdk'
             while (konamiCode.length < 8) konamiCode = '0' + konamiCode
             const card = await Card.findOne({ where: { konamiCode: konamiCode }})
             if (!card) continue
-            main.push(card)
+            const filtered = main.filter((c) => c.id === card.id)
+            if (!filtered.length) main.push(card)
         }
     
         const sortFn = (a: any, b: any) => {
