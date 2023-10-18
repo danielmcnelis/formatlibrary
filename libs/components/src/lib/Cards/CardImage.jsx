@@ -4,7 +4,7 @@ import './CardImage.css'
 
 export const CardImage = (props) => {
     let {addCard, removeCard, card, previous, status, rarity, width, margin, padding, index, locale, disableLink, setCard, isDraft, isPackOpener} = props
-    if (rarity.includes('Short Print')) rarity = 'Common' 
+    if (rarity?.includes('Short Print')) rarity = 'Common' 
     
     if (isDraft) {
         return (

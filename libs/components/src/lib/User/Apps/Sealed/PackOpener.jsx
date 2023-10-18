@@ -49,7 +49,7 @@ export const PackOpener = () => {
             <br/>
 
             <div className="slideshow">
-                <div className="mover"></div>
+                <div className="mover" style={{background: `url(https://cdn.formatlibrary.com/images/sets/slideshows/${booster?.setCode}.png)`}}></div>
             </div>
 
             <label>Booster Set:
