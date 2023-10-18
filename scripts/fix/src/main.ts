@@ -3,7 +3,7 @@ import { Op } from 'sequelize'
 import axios from 'axios'
 import { config } from '@fl/config' 
 const Canvas = require('canvas')
-import { S3 } from 'aws-sdk
+import { S3 } from 'aws-sdk'
 
 // ;(async () => {
 //     const decks = await Deck.findAll({ include: [DeckType, Event, Format, Player] })
