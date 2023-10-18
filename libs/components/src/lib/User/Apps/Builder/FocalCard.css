@@ -5,6 +5,8 @@
     align-items: center;
     justify-content: flex-start;
     width: 20%;
+    position: sticky; 
+    top: 0;
 }
 
 .focal-card-image {

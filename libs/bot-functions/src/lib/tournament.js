@@ -5,7 +5,7 @@
 import axios from 'axios'
 import { Op } from 'sequelize'
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } from 'discord.js'
-import { Deck, Entry, Format, Match, OPCard, Player, Replay, Stats, Server, Team, Tournament } from '@fl/models'
+import { Deck, Entry, Event, Format, Match, OPCard, Player, Replay, Stats, Server, Team, Tournament } from '@fl/models'
 import { getIssues, getSkillCard } from './deck.js'
 import { createDecks } from './coverage.js'
 import { capitalize, drawDeck, drawOPDeck, generateRandomString, isMod, shuffleArray } from './utility.js'

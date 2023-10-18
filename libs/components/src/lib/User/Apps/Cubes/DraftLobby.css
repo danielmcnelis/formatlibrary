@@ -63,6 +63,8 @@
     align-items: center;
     justify-content: flex-start;
     width: 22%;
+    position: sticky; 
+    top: 0;
 }
 
 .focal-card-image {
