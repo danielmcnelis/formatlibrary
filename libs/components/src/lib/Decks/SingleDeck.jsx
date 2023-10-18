@@ -164,7 +164,7 @@ export const SingleDeck = () => {
         <Link to={`/decktypes/${deck.type.toLowerCase().replace(/\s/g, '_')}?format=${deck.formatName.toLowerCase().replace(/\s/g, '_')}`}>
             <div className="single-deck-title">{deck.type || deck.name}</div>
         </Link>
-        <Link to="/builder" state={{ deck: deck }} className="desktop-only">                                    
+        <Link to="/deck-builder" state={{ deck: deck }} className="desktop-only">                                    
             <div className="deck-button">
                 <b style={{padding: '0px 6px'}}>Open Deck</b>
                 <img 

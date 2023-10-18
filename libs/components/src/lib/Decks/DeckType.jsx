@@ -165,7 +165,7 @@ export const DeckType = () => {
                 </div>
             </a>
             <div className="single-deck-title">{summary.deckType}</div>
-            <Link to="/builder" state={{ deck: {} }} className="desktop-only">                                    
+            <Link to="/deck-builder" state={{ deck: {} }} className="desktop-only">                                    
                 <div className="deck-button">
                     <b style={{padding: '0px 6px'}}>Open Deck</b>
                     <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`}/>
