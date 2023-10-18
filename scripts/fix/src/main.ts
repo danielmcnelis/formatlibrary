@@ -1,7 +1,9 @@
-import { Card, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Print, Replay, Set, Server, Stats, Status, Tournament } from '@fl/models'
+import { Card, Cube, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Print, Replay, Set, Server, Stats, Status, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { config } from '@fl/config' 
+const Canvas = require('canvas')
+import { S3 } from 'aws-sdk
 
 // ;(async () => {
 //     const decks = await Deck.findAll({ include: [DeckType, Event, Format, Player] })
@@ -507,49 +509,49 @@ import { config } from '@fl/config'
 // })()
 
 
-;(async () => {
-    let b = 0
-    let e = 0
+// ;(async () => {
+//     let b = 0
+//     let e = 0
     
-    const sets = await Set.findAll({
-        where: {
-            setName: {[Op.substring]: 'Speed Duel'}
-        },
-        order: [['tcgDate', 'ASC']]
-    })
+//     const sets = await Set.findAll({
+//         where: {
+//             setName: {[Op.substring]: 'Speed Duel'}
+//         },
+//         order: [['tcgDate', 'ASC']]
+//     })
 
-    for (let i = 0; i < sets.length; i++) {
-        try {
-            const set = sets[i]
-            const prints = await Print.findAll({
-                where: {
-                    setId: set.id
-                },
-                include: Card
-            })
+//     for (let i = 0; i < sets.length; i++) {
+//         try {
+//             const set = sets[i]
+//             const prints = await Print.findAll({
+//                 where: {
+//                     setId: set.id
+//                 },
+//                 include: Card
+//             })
 
-            for (let j = 0; j < prints.length; j++) {
-                const print = prints[j]
-                const card = print.card
+//             for (let j = 0; j < prints.length; j++) {
+//                 const print = prints[j]
+//                 const card = print.card
                 
-                if (!card.speedLegal || !card.speedDate || card.speedDate > set.tcgDate) {
-                    await card.update({
-                        speedLegal: true,
-                        speedDate: set.tcgDate
-                    })
+//                 if (!card.speedLegal || !card.speedDate || card.speedDate > set.tcgDate) {
+//                     await card.update({
+//                         speedLegal: true,
+//                         speedDate: set.tcgDate
+//                     })
 
-                    console.log(`${card.name} was released for speed duels on ${card.speedDate}`)
-                    b++
-                } 
-            }
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
+//                     console.log(`${card.name} was released for speed duels on ${card.speedDate}`)
+//                     b++
+//                 } 
+//             }
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
 
-    return console.log(`updated ${b} cards from ${sets.length} speed duel sets and encountered ${e} errors`)
-})()
+//     return console.log(`updated ${b} cards from ${sets.length} speed duel sets and encountered ${e} errors`)
+// })()
 
 
 
@@ -675,3 +677,131 @@ import { config } from '@fl/config'
 
 //     return console.log(`fixed ${b} statuses and encountered ${e} errors`)
 // })()
+
+
+// ;(async () => {
+//     const cubes = await Cube.findAll({
+//         where: {
+//             display: true
+//         }
+//     })
+
+//     for (let i = 0; i < cubes.length; i++) {
+//         const cube = cubes[i]
+//         const mainArr = cube.ydk.split('#main')[1].split('\n').filter((e) => e.length) || []
+//         const main = []
+        
+//         for (let i = 0; i < mainArr.length; i++) {
+//             let konamiCode = mainArr[i]
+//             while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+//             const card = await Card.findOne({ where: { konamiCode: konamiCode }})
+//             if (!card) continue
+//             main.push(card)
+//         }
+    
+//         main.sort((a, b) => {
+//             if (a.sortPriority > b.sortPriority) {
+//                 return 1
+//             } else if (b.sortPriority > a.sortPriority) {
+//                 return -1
+//             } else if (a.name > b.name) {
+//                 return 1
+//             } else if (b.name > a.name) {
+//                 return -1
+//             } else {
+//                 return false
+//             }
+//         })
+    
+//         const card_width = 72
+//         const card_height = 105
+//         const canvas = Canvas.createCanvas(card_width * main.length, card_height)
+//         const context = canvas.getContext('2d')
+    
+//         for (let i = 0; i < main.length; i++) {
+//             const card = main[i]
+//             const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`) 
+//             context.drawImage(image, card_width * i, 0, card_width, card_height)
+//         }
+    
+//         const buffer = canvas.toBuffer('image/png')
+//         const s3 = new S3({
+//             region: config.s3.region,
+//             credentials: {
+//                 accessKeyId: config.s3.credentials.accessKeyId,
+//                 secretAccessKey: config.s3.credentials.secretAccessKey
+//             }
+//         })
+    
+//         const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cubes/slideshows/${cube.id}.png`, Body: buffer, ContentType: `image/png` }).promise()
+//         console.log('uri', uri)
+//     }
+// })()
+
+;(async () => {
+    const sets = await Set.findAll({
+        where: {
+            booster: true,
+            game: 'YGO'
+        }
+    })
+
+    for (let i = 0; i < sets.length; i++) {
+        const set = sets[i]
+        const prints = await Print.findAll({
+            where: {
+                setId: set.id,
+                region: {[Op.or]: ['NA', null]}
+            },
+            order: ['cardCode', 'ASC'],
+            include: Card
+        })
+
+        const main = []
+        
+        for (let i = 0; i < prints.length; i++) {
+            let konamiCode = prints[i].card.konamiCode
+            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+            const card = await Card.findOne({ where: { konamiCode: konamiCode }})
+            if (!card) continue
+            main.push(card)
+        }
+    
+        main.sort((a, b) => {
+            if (a.sortPriority > b.sortPriority) {
+                return 1
+            } else if (b.sortPriority > a.sortPriority) {
+                return -1
+            } else if (a.name > b.name) {
+                return 1
+            } else if (b.name > a.name) {
+                return -1
+            } else {
+                return false
+            }
+        })
+    
+        const card_width = 72
+        const card_height = 105
+        const canvas = Canvas.createCanvas(card_width * main.length, card_height)
+        const context = canvas.getContext('2d')
+    
+        for (let i = 0; i < main.length; i++) {
+            const card = main[i]
+            const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`) 
+            context.drawImage(image, card_width * i, 0, card_width, card_height)
+        }
+    
+        const buffer = canvas.toBuffer('image/png')
+        const s3 = new S3({
+            region: config.s3.region,
+            credentials: {
+                accessKeyId: config.s3.credentials.accessKeyId,
+                secretAccessKey: config.s3.credentials.secretAccessKey
+            }
+        })
+    
+        const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/sets/slideshows/${set.setCode}.png`, Body: buffer, ContentType: `image/png` }).promise()
+        console.log('uri', uri)
+    }
+})()

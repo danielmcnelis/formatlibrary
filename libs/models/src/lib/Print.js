@@ -11,6 +11,9 @@ export const Print = db.define('prints', {
   setName: {
     type: Sequelize.STRING
   },
+  region: {
+    type: Sequelize.STRING
+  },
   rarity: {
     type: Sequelize.STRING
   },

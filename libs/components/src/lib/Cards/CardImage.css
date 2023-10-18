@@ -20,7 +20,14 @@
     left: 2.5%;
   }
 
-  
+  .rarity-icon {
+    position: absolute;
+    z-index: 1;
+    width: 33% !important;
+    top: 1%;
+    left: 2.5%;
+  }
+
   .remarks-icon {
     position: absolute;
     z-index: 1;

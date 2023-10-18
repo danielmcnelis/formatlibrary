@@ -27,40 +27,7 @@ export const Set = db.define('sets', {
     type: Sequelize.STRING,
     defaultValue: 'YGO'
   },
-  cardsPerPack: {
-    type: Sequelize.INTEGER
-  },
-  commonsPerPack: {
+  legalDate: {
     type: Sequelize.STRING
-  },
-  raresPerPack: {
-    type: Sequelize.STRING
-  },
-  supersPerPack: {
-    type: Sequelize.STRING
-  },
-  ultrasPerPack: {
-    type: Sequelize.STRING
-  },
-  secretsPerPack: {
-    type: Sequelize.STRING
-  },
-  packsPerBox: {
-    type: Sequelize.INTEGER
-  },
-  commonsPerBox: {
-    type: Sequelize.INTEGER
-  },
-  raresPerBox: {
-    type: Sequelize.INTEGER
-  },
-  supersPerBox: {
-    type: Sequelize.INTEGER
-  },
-  ultrasPerBox: {
-    type: Sequelize.INTEGER
-  },
-  secretsPerBox: {
-    type: Sequelize.INTEGER
   }
 })
