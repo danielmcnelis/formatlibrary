@@ -6,7 +6,7 @@ import './PortalButton.css'
 export const PortalButton = (props) => {
     return (
       <Link 
-        to={`/${props.to}`} 
+        to={props.to} 
         className="portal-link" 
         style={{ backgroundImage: `url(https://cdn.formatlibrary.com/images${props.icon})`}}
       >
