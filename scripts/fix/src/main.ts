@@ -2,7 +2,7 @@ import { Card, Cube, Deck, DeckType, DeckThumb, Event, Format, Match, Membership
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { config } from '@fl/config' 
-const Canvas = require('canvas')
+import Canvas = require('canvas')
 import { S3 } from 'aws-sdk'
 
 // ;(async () => {
@@ -753,7 +753,7 @@ import { S3 } from 'aws-sdk'
                 setId: set.id,
                 region: {[Op.or]: ['NA', null]}
             },
-            order: ['cardCode', 'ASC'],
+            order: [['cardCode', 'ASC']],
             include: Card
         })
 
