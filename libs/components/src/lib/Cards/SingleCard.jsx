@@ -205,7 +205,9 @@ export const SingleCard = () => {
         <>
             <Helmet>
                 <title>{`${card?.name} | Yu-Gi-Oh! Format Library`}</title>
+                <meta name="og:title" content={{`${card?.name} | Yu-Gi-Oh! Format Library`}} />
                 <meta name="description" content={card.description} />
+                <meta name="og:description" content={card.description} />
             </Helmet>
             <div className="body">
                 {card.id ? (
