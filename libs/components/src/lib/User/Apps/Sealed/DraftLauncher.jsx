@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { getCookie } from '@fl/utils'
+import { Helmet } from 'react-helmet'
 import './DraftLauncher.css' 
 
 export const DraftLauncher = () => {
@@ -48,96 +49,102 @@ export const DraftLauncher = () => {
     }, [])
 
     return (
-        <div className="draft-portal">
-            <div className="card-database-flexbox">
-                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${pack.logo || 'pack.png'}`} alt="draft-logo"/>
-                <div>
-                    <h1>Start Draft Draft!</h1>
+        <>
+            <Helmet>
+                <title>{`Yu-Gi-Oh! Booster Draft - Yu-Gi-Oh! Format Library`}</title>
+                <meta name="description" content={`Open free, virtual packs (or a box) of your favorite Yu-Gi-Oh! booster sets. Enjoy realistic pull rates and rarities for maximum nostalgia. ;)`}/>
+            </Helmet>
+            <div className="draft-portal">
+                <div className="card-database-flexbox">
+                    <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${pack.logo || 'pack.png'}`} alt="draft-logo"/>
+                    <div>
+                        <h1>Start Draft Draft!</h1>
+                    </div>
+                    <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${pack.logo || 'pack.png'}`} alt="draft-logo"/>
                 </div>
-                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${pack.logo || 'pack.png'}`} alt="draft-logo"/>
-            </div>
-            <br/>
+                <br/>
 
-            <div className="slideshow">
-                <div className="mover"></div>
-            </div>
+                <div className="slideshow">
+                    <div className="mover"></div>
+                </div>
 
-            <br/>
-            <label>Draft:
-                <select
-                    id="draft"
-                    onChange={(e) => fetchDraft(e.target.value)}
-                >
-                <option value="">Select Draft:</option>
+                <br/>
+                <label>Draft:
+                    <select
+                        id="draft"
+                        onChange={(e) => fetchDraft(e.target.value)}
+                    >
+                    <option value="">Select Draft:</option>
+                    {
+                        drafts.map((c) => <option value={c.id}>{c.name} by {c.builder}</option>)
+                    }
+                    </select>
+                </label>
+
+                <label>Pack Size:
+                    <select
+                        id="pack-size"
+                        defaultValue="12"
+                        onChange={(e) => {setPackSize(e.target.value)}}
+                    >
+                    {
+                        packSizeOptions.map((size) => <option value={size}>{size} Cards / Pack</option>)
+                    }
+                    </select>
+                </label>
+
+                <label>Pack Number:
+                    <select
+                        id="pack-number"
+                        defaultValue="4"
+                        onChange={(e) => {setPacksPerPlayer(e.target.value)}}
+                    >
+                        <option value="6">6 Packs / Player</option>)
+                        <option value="5">5 Packs / Player</option>)
+                        <option value="4">4 Packs / Player</option>)
+                        <option value="3">3 Packs / Player</option>)
+                        <option value="2">2 Packs / Player</option>)
+                    </select>
+                </label>
+
+                <label>Timer:
+                    <select
+                        id="pack-number"
+                        defaultValue="60"
+                        onChange={(e) => {setTimer(e.target.value)}}
+                    >
+                        <option value="90">90 Seconds / Pick</option>)
+                        <option value="75">75 Seconds / Pick</option>)
+                        <option value="60">60 Seconds / Pick</option>)
+                        <option value="45">45 Seconds / Pick</option>)
+                        <option value="30">30 Seconds / Pick</option>)
+                    </select>
+                </label>
+
                 {
-                    drafts.map((c) => <option value={c.id}>{c.name} by {c.builder}</option>)
+                    pack.id ? (
+                        <div className="settings-note">
+                            <i>These settings support up to {Math.floor(pack.cardPool?.length / (packsPerPlayer * packSize))} players.</i>
+                        </div>
+                    ) : ''
                 }
-                </select>
-            </label>
 
-            <label>Pack Size:
-                <select
-                    id="pack-size"
-                    defaultValue="12"
-                    onChange={(e) => {setPackSize(e.target.value)}}
+                <div
+                    className="draft-button"
+                    type="submit"
+                    onClick={() => launch()}
                 >
+                    Launch
+                </div>
+
                 {
-                    packSizeOptions.map((size) => <option value={size}>{size} Cards / Pack</option>)
+                    draftLink ? (
+                        <div className="lobby-link">
+                            Draft Lobby: <a href={draftLink}>{draftLink}</a>
+                        </div>
+                    ) : ''
                 }
-                </select>
-            </label>
-
-            <label>Pack Number:
-                <select
-                    id="pack-number"
-                    defaultValue="4"
-                    onChange={(e) => {setPacksPerPlayer(e.target.value)}}
-                >
-                    <option value="6">6 Packs / Player</option>)
-                    <option value="5">5 Packs / Player</option>)
-                    <option value="4">4 Packs / Player</option>)
-                    <option value="3">3 Packs / Player</option>)
-                    <option value="2">2 Packs / Player</option>)
-                </select>
-            </label>
-
-            <label>Timer:
-                <select
-                    id="pack-number"
-                    defaultValue="60"
-                    onChange={(e) => {setTimer(e.target.value)}}
-                >
-                    <option value="90">90 Seconds / Pick</option>)
-                    <option value="75">75 Seconds / Pick</option>)
-                    <option value="60">60 Seconds / Pick</option>)
-                    <option value="45">45 Seconds / Pick</option>)
-                    <option value="30">30 Seconds / Pick</option>)
-                </select>
-            </label>
-
-            {
-                pack.id ? (
-                    <div className="settings-note">
-                        <i>These settings support up to {Math.floor(pack.cardPool?.length / (packsPerPlayer * packSize))} players.</i>
-                    </div>
-                ) : ''
-            }
-
-            <div
-                className="draft-button"
-                type="submit"
-                onClick={() => launch()}
-            >
-                Launch
             </div>
-
-            {
-                draftLink ? (
-                    <div className="lobby-link">
-                        Draft Lobby: <a href={draftLink}>{draftLink}</a>
-                    </div>
-                ) : ''
-            }
-        </div>
+        </>
     )
 }

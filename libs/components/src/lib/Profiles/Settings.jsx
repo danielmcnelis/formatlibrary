@@ -4,17 +4,13 @@ import axios from 'axios'
 import { NotFound } from '../General/NotFound'
 import { getCookie, getCountry, countries, timezones } from '@fl/utils'
 import {Button, Form, Modal} from 'react-bootstrap'
+import { Helmet } from 'react-helmet'
 import './Settings.css'
 
 const playerId = getCookie('playerId')
 const discordId = getCookie('discordId')
 const discordPfp = getCookie('discordPfp')
 const googlePfp = getCookie('googlePfp')  
-console.log('playerId', playerId) 
-console.log('discordId', discordId)
-console.log('discordPfp', discordPfp)
-console.log('googlePfp', googlePfp)
-
 
 export const Settings = () => {
   const [player, setPlayer] = useState({})
@@ -22,7 +18,6 @@ export const Settings = () => {
   const [detectedTimeZone, setDetectedTimeZone] = useState(null)
   const [showEditModal, setShowEditModal] = useState(false)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
-  console.log('player', player)
 
   const togglePasswordFields = () => {
     const oldPasswordInput = document.getElementById('old-password')
@@ -131,6 +126,10 @@ export const Settings = () => {
   if (!id) return <div/>
   return (
     <>
+        <Helmet>
+            <title>{`Settings - Yu-Gi-Oh! Format Library`}</title>
+            <meta name="description" content={`View and edit your personal account settings for FormatLibrary.com.`}/>    
+        </Helmet>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossOrigin="anonymous"/>
         <link rel="stylesheet" href="/styles.css" />
         <div className="body">

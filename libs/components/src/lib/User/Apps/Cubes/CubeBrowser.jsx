@@ -10,6 +10,7 @@ import { MobileCardRow } from '../../../Cards/MobileCardRow'
 import { Slider } from '../../../General/Slider'
 import { Pagination } from '../../../General/Pagination'
 import { useMediaQuery } from 'react-responsive'
+import { Helmet } from 'react-helmet'
 import './CubeBrowser.css' 
 
 export const CubeBrowser = () => {
@@ -28,7 +29,7 @@ export const CubeBrowser = () => {
 
     const [advanced, setAdvanced] = useState(false)
     const { id } = useParams()
-    
+
     const [sliders, setSliders] = useState({
       level: [1, 12],
       atk: [0, 5000],
@@ -482,333 +483,339 @@ export const CubeBrowser = () => {
   
     // RENDER
     return (
-        <div className="body">
-            <div className="card-database-flexbox">
-                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
-                <div>
-                    <h1>{cube.name}</h1>
-                    <h2 className="desktop-only">Created By {cube.builder}</h2>
+        <>
+            <Helmet>
+                <title>{`${cube?.name} by ${cube?.builder} - Yu-Gi-Oh! Format Library`}</title>
+                <meta name="description" content={`Search the card pool for the cube, ${cube.name} by ${cube.builder}. Filter and sort by Category, Attribute, Type, ATK, DEF, Level/Rank, etc.`}/>
+            </Helmet>
+            <div className="body">
+                <div className="card-database-flexbox">
+                    <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
+                    <div>
+                        <h1>{cube.name}</h1>
+                        <h2 className="desktop-only">Created By {cube.builder}</h2>
+                    </div>
+                    <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
                 </div>
-                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
-            </div>
 
-        {
-            isTabletOrMobile ? (
-                <div className="card-search-flexbox">
-                    <input
-                        id="search-bar"
-                        className="filter"
-                        type="text"
-                        style={{maxWidth: '60vw'}}
-                        placeholder="🔍"
-                        onChange={() => runQuery()}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') { search() }
-                        }}
-                    />
+            {
+                isTabletOrMobile ? (
+                    <div className="card-search-flexbox">
+                        <input
+                            id="search-bar"
+                            className="filter"
+                            type="text"
+                            style={{maxWidth: '60vw'}}
+                            placeholder="🔍"
+                            onChange={() => runQuery()}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') { search() }
+                            }}
+                        />
 
-                    <select
-                        id="search-by"
-                        defaultValue="name"
-                        className="filter"
-                        style={{maxWidth: '30vw'}}
-                        onChange={() => runQuery()}
+                        <select
+                            id="search-by"
+                            defaultValue="name"
+                            className="filter"
+                            style={{maxWidth: '30vw'}}
+                            onChange={() => runQuery()}
+                            >
+                            <option value="name">Name</option>
+                            <option value="description">Text</option>
+                        </select>
+
+                        <select
+                            id="category"
+                            defaultValue=""
+                            style={{maxWidth: '29vw'}}
+                            className="filter"
+                            onChange={() => setQueryParams({ ...queryParams, category: document.getElementById('category').value })}
                         >
-                        <option value="name">Name</option>
-                        <option value="description">Text</option>
-                    </select>
+                            <option value="">Categories</option>
+                            <option value="monster">Monster</option>
+                            <option value="spell">Spell</option>
+                            <option value="trap">Trap</option>
+                        </select>
+                    </div>
+                ) : (
+                    <div className="card-search-flexbox">
+                        <input
+                            id="search-bar"
+                            className="filter"
+                            type="text"
+                            placeholder="🔍"
+                            onChange={() => runQuery()}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') { search() }
+                            }}
+                        />
 
-                    <select
-                        id="category"
-                        defaultValue=""
-                        style={{maxWidth: '29vw'}}
-                        className="filter"
-                        onChange={() => setQueryParams({ ...queryParams, category: document.getElementById('category').value })}
-                    >
-                        <option value="">Categories</option>
-                        <option value="monster">Monster</option>
-                        <option value="spell">Spell</option>
-                        <option value="trap">Trap</option>
-                    </select>
+                        <select
+                            id="search-by"
+                            defaultValue="name"
+                            className="filter"
+                            onChange={() => runQuery()}
+                        >
+                            <option value="name">Search By: Name</option>
+                            <option value="description">Search By: Text</option>
+                        </select>
+
+                        <select
+                            id="category"
+                            defaultValue=""
+                            className="filter"
+                            onChange={() => setQueryParams({ ...queryParams, category: document.getElementById('category').value })}
+                        >
+                            <option value="">All Categories</option>
+                            <option value="monster">Monsters</option>
+                            <option value="spell">Spells</option>
+                            <option value="trap">Traps</option>
+                        </select>
+
+                        <div
+                            className="search-button desktop-only"
+                            type="submit"
+                            onClick={() => {
+                                search()
+                                if (advanced) setAdvanced(false)
+                            }}
+                        >
+                            Search
+                        </div>
+                    </div>
+                )
+            }
+    
+            {
+                !advanced ? (
+                    <div className="advanced-search">
+                        <div
+                            className="show-advanced-button"
+                            type="submit"
+                            onClick={() => setAdvanced(!advanced)}
+                        >
+                            Show Advanced Options
+                        </div>
+                    </div>
+                ) : (
+                    <div className="advanced-search">
+                        <div
+                            className="show-advanced-button"
+                            type="submit"
+                            onClick={() => setAdvanced(!advanced)}
+                        >
+                            Hide Advanced Options
+                        </div>
+
+                        <br />
+
+                        {
+                            advancedButtonKeys.map((buttonClass) => (
+                                <div key={buttonClass} className="refinedInnerWrapper">
+                                {
+                                    advancedButtons[buttonClass].map((el) => {
+                                        const params = buttonClass === 'icon' ? iconParams : 
+                                            buttonClass === 'attribute' ? attributeParams : 
+                                            buttonClass === 'type' ? typeParams : 
+                                            groupParams
+
+                                        return isTabletOrMobile ? (
+                                            <MiniAdvButton 
+                                                key={el[0]} 
+                                                id={el[0]} 
+                                                buttonClass={buttonClass} 
+                                                clicked={params[el[0]]}
+                                                removeFilter={removeFilter} 
+                                                applyFilter={applyFilter}
+                                            />
+                                        ) : (
+                                            <AdvButton 
+                                                key={el[0]} 
+                                                id={el[0]} 
+                                                display={el[1]}
+                                                buttonClass={buttonClass} 
+                                                clicked={params[el[0]]}
+                                                removeFilter={removeFilter} 
+                                                applyFilter={applyFilter}
+                                            />
+                                        )
+                                    })
+                                }
+                                </div>
+                            ))
+                        }
+
+                        <br />
+    
+                        <div className="slider-flexbox">
+                            <div className="slider-column">
+                                <Slider
+                                    id="level"
+                                    type="range-slider"
+                                    symbol="https://cdn.formatlibrary.com/images/symbols/star.png"
+                                    label="Level"
+                                    step={1}
+                                    min={1}
+                                    max={12}
+                                    sliders = {sliders}
+                                    setSliders = {setSliders}
+                                    defaultValue = {sliders.level}
+                                />
+
+                                <Slider
+                                    id="atk"
+                                    type="range-slider"
+                                    symbol="https://cdn.formatlibrary.com/images/emojis/swords.png"
+                                    label="ATK"
+                                    step={50}
+                                    min={0}
+                                    max={5000}
+                                    sliders = {sliders}
+                                    setSliders = {setSliders}
+                                    defaultValue = {sliders.atk}
+                                />
+
+                                <Slider
+                                    id="def"
+                                    type="range-slider"
+                                    symbol="https://cdn.formatlibrary.com/images/emojis/shield.png"
+                                    label="DEF"
+                                    step={50}
+                                    min={0}
+                                    max={5000}
+                                    sliders = {sliders}
+                                    setSliders = {setSliders}
+                                    defaultValue = {sliders.def}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+    
+            <div id="resultsWrapper0" className="resultsWrapper0">
+                <div className="results desktop-only" style={{width: '360px'}}>
+                    Results:{' '}
+                    {
+                    cards.length ? `${cardsPerPage * page - cardsPerPage + 1} - ${
+                        cards.length >=
+                            cardsPerPage * page
+                            ? cardsPerPage * page
+                            : cards.length
+                        } of ${cards.length || 0}`
+                    : cards.length || 0
+                    }
                 </div>
-              ) : (
-                <div className="card-search-flexbox">
-                    <input
-                        id="search-bar"
-                        className="filter"
-                        type="text"
-                        placeholder="🔍"
-                        onChange={() => runQuery()}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') { search() }
-                        }}
-                    />
-
+    
+                <div className="buttonWrapper">
                     <select
-                        id="search-by"
-                        defaultValue="name"
-                        className="filter"
-                        onChange={() => runQuery()}
+                        className="desktop-only"
+                        id="viewSwitch"
+                        defaultValue="spoilers"
+                        style={{width: '100px'}}
+                        onChange={() => setView(document.getElementById('viewSwitch').value)}
                     >
-                        <option value="name">Search By: Name</option>
-                        <option value="description">Search By: Text</option>
+                        <option value="spoilers">Spoilers</option>
+                        <option value="gallery">Gallery</option>
                     </select>
-
+        
                     <select
-                        id="category"
-                        defaultValue=""
-                        className="filter"
-                        onChange={() => setQueryParams({ ...queryParams, category: document.getElementById('category').value })}
+                        id="cardsPerPageSelector"
+                        defaultValue="10"
+                        style={{width: '160px', maxWidth: '45vw'}}
+                        onChange={(e) => changeCardsPerPage(e)}
                     >
-                        <option value="">All Categories</option>
-                        <option value="monster">Monsters</option>
-                        <option value="spell">Spells</option>
-                        <option value="trap">Traps</option>
+                        <option value="10">10 Cards / Page</option>
+                        <option value="25">25 Cards / Page</option>
+                        <option value="50">50 Cards / Page</option>
+                        <option value="100">100 Cards / Page</option>
                     </select>
-
+        
+                    <select
+                        id="sortSelector"
+                        defaultValue="nameASC"
+                        style={{width: '160px', maxWidth: '45vw'}}
+                        onChange={(e) => { setSortBy(e.target.value); setPage(1)}}
+                    >
+                        <option value="name:asc">Name: A ⮕ Z</option>
+                        <option value="name:desc">Name: Z ⮕ A</option>
+                        <option value="tcgDate:asc">Date: Old ⮕ New</option>
+                        <option value="tcgDate:desc">Date: New ⮕ Old</option>
+                        <option value="atk:desc nulls last">ATK: Desc. ⬇</option>
+                        <option value="atk:asc nulls last">ATK: Asc. ⬆</option>
+                        <option value="def:desc nulls last">DEF: Desc. ⬇</option>
+                        <option value="def:asc nulls last">DEF: Asc. ⬆</option>
+                        <option value="level:desc nulls last,rating:desc nulls last">Level: Desc. ⬇</option>
+                        <option value="level:asc nulls last,rating:asc nulls last">Level: Asc. ⬆</option>
+                    </select>
+        
                     <div
                         className="search-button desktop-only"
                         type="submit"
-                        onClick={() => {
-                            search()
-                            if (advanced) setAdvanced(false)
-                        }}
+                        onClick={() => reset()}
                     >
-                        Search
+                        Reset
                     </div>
                 </div>
-            )
-        }
-  
-        {
-            !advanced ? (
-                <div className="advanced-search">
-                    <div
-                        className="show-advanced-button"
-                        type="submit"
-                        onClick={() => setAdvanced(!advanced)}
-                    >
-                        Show Advanced Options
-                    </div>
-                </div>
+            </div>
+    
+            <div className="paginationWrapper desktop-only">
+            <div className="pagination desktop-only">
+                <Pagination
+                setPage={setPage}
+                itemCount={cube.cardPool?.length || 0}
+                page={page}
+                itemsPerPage={cardsPerPage}
+                />
+            </div>
+            </div>
+    
+            {view === 'spoilers' ? (
+            <div id="card-table">
+                <table id="cards">
+                <tbody>
+                    {cards.length ? (
+                    cards.slice((page - 1) * cardsPerPage, page * cardsPerPage).map((card, index) => {
+                        if (isTabletOrMobile) {
+                            return <MobileCardRow key={card.id} index={index} card={card}/>
+                        } else {
+                            return <CardRow key={card.id} index={index} card={card}/>
+                        }
+                    })
+                    ) : (
+                    <tr />
+                    )}
+                </tbody>
+                </table>
+            </div>
             ) : (
-                <div className="advanced-search">
-                    <div
-                        className="show-advanced-button"
-                        type="submit"
-                        onClick={() => setAdvanced(!advanced)}
-                    >
-                        Hide Advanced Options
-                    </div>
-
-                    <br />
-
-                    {
-                        advancedButtonKeys.map((buttonClass) => (
-                            <div key={buttonClass} className="refinedInnerWrapper">
-                            {
-                                advancedButtons[buttonClass].map((el) => {
-                                    const params = buttonClass === 'icon' ? iconParams : 
-                                        buttonClass === 'attribute' ? attributeParams : 
-                                        buttonClass === 'type' ? typeParams : 
-                                        groupParams
-
-                                    return isTabletOrMobile ? (
-                                        <MiniAdvButton 
-                                            key={el[0]} 
-                                            id={el[0]} 
-                                            buttonClass={buttonClass} 
-                                            clicked={params[el[0]]}
-                                            removeFilter={removeFilter} 
-                                            applyFilter={applyFilter}
-                                        />
-                                    ) : (
-                                        <AdvButton 
-                                            key={el[0]} 
-                                            id={el[0]} 
-                                            display={el[1]}
-                                            buttonClass={buttonClass} 
-                                            clicked={params[el[0]]}
-                                            removeFilter={removeFilter} 
-                                            applyFilter={applyFilter}
-                                        />
-                                    )
-                                })
-                            }
-                            </div>
-                        ))
-                    }
-
-                    <br />
-  
-                    <div className="slider-flexbox">
-                        <div className="slider-column">
-                            <Slider
-                                id="level"
-                                type="range-slider"
-                                symbol="https://cdn.formatlibrary.com/images/symbols/star.png"
-                                label="Level"
-                                step={1}
-                                min={1}
-                                max={12}
-                                sliders = {sliders}
-                                setSliders = {setSliders}
-                                defaultValue = {sliders.level}
-                            />
-
-                            <Slider
-                                id="atk"
-                                type="range-slider"
-                                symbol="https://cdn.formatlibrary.com/images/emojis/swords.png"
-                                label="ATK"
-                                step={50}
-                                min={0}
-                                max={5000}
-                                sliders = {sliders}
-                                setSliders = {setSliders}
-                                defaultValue = {sliders.atk}
-                            />
-
-                            <Slider
-                                id="def"
-                                type="range-slider"
-                                symbol="https://cdn.formatlibrary.com/images/emojis/shield.png"
-                                label="DEF"
-                                step={50}
-                                min={0}
-                                max={5000}
-                                sliders = {sliders}
-                                setSliders = {setSliders}
-                                defaultValue = {sliders.def}
-                            />
-                        </div>
-                    </div>
-                </div>
-            )
-        }
-  
-        <div id="resultsWrapper0" className="resultsWrapper0">
-            <div className="results desktop-only" style={{width: '360px'}}>
-                Results:{' '}
-                {
-                cards.length ? `${cardsPerPage * page - cardsPerPage + 1} - ${
-                    cards.length >=
-                        cardsPerPage * page
-                        ? cardsPerPage * page
-                        : cards.length
-                    } of ${cards.length || 0}`
-                : cards.length || 0
-                }
-            </div>
-  
-            <div className="buttonWrapper">
-                <select
-                    className="desktop-only"
-                    id="viewSwitch"
-                    defaultValue="spoilers"
-                    style={{width: '100px'}}
-                    onChange={() => setView(document.getElementById('viewSwitch').value)}
-                >
-                    <option value="spoilers">Spoilers</option>
-                    <option value="gallery">Gallery</option>
-                </select>
-    
-                <select
-                    id="cardsPerPageSelector"
-                    defaultValue="10"
-                    style={{width: '160px', maxWidth: '45vw'}}
-                    onChange={(e) => changeCardsPerPage(e)}
-                >
-                    <option value="10">10 Cards / Page</option>
-                    <option value="25">25 Cards / Page</option>
-                    <option value="50">50 Cards / Page</option>
-                    <option value="100">100 Cards / Page</option>
-                </select>
-    
-                <select
-                    id="sortSelector"
-                    defaultValue="nameASC"
-                    style={{width: '160px', maxWidth: '45vw'}}
-                    onChange={(e) => { setSortBy(e.target.value); setPage(1)}}
-                >
-                    <option value="name:asc">Name: A ⮕ Z</option>
-                    <option value="name:desc">Name: Z ⮕ A</option>
-                    <option value="tcgDate:asc">Date: Old ⮕ New</option>
-                    <option value="tcgDate:desc">Date: New ⮕ Old</option>
-                    <option value="atk:desc nulls last">ATK: Desc. ⬇</option>
-                    <option value="atk:asc nulls last">ATK: Asc. ⬆</option>
-                    <option value="def:desc nulls last">DEF: Desc. ⬇</option>
-                    <option value="def:asc nulls last">DEF: Asc. ⬆</option>
-                    <option value="level:desc nulls last,rating:desc nulls last">Level: Desc. ⬇</option>
-                    <option value="level:asc nulls last,rating:asc nulls last">Level: Asc. ⬆</option>
-                </select>
-    
-                <div
-                    className="search-button desktop-only"
-                    type="submit"
-                    onClick={() => reset()}
-                >
-                    Reset
-                </div>
-            </div>
-        </div>
-  
-        <div className="paginationWrapper desktop-only">
-          <div className="pagination desktop-only">
-            <Pagination
-              setPage={setPage}
-              itemCount={cube.cardPool?.length || 0}
-              page={page}
-              itemsPerPage={cardsPerPage}
-            />
-          </div>
-        </div>
-  
-        {view === 'spoilers' ? (
-          <div id="card-table">
-            <table id="cards">
-              <tbody>
+            <div id="cardGalleryFlexBox">
                 {cards.length ? (
-                  cards.slice((page - 1) * cardsPerPage, page * cardsPerPage).map((card, index) => {
-                      if (isTabletOrMobile) {
-                          return <MobileCardRow key={card.id} index={index} card={card}/>
-                      } else {
-                          return <CardRow key={card.id} index={index} card={card}/>
-                      }
-                  })
+                cards.slice((page - 1) * cardsPerPage, page * cardsPerPage).map((card) => {
+                    return <
+                            CardImage 
+                            key={card.id} 
+                            card={card} 
+                            width="184px"
+                            margin="4px"
+                            padding="2px"
+                            />
+                })
                 ) : (
-                  <tr />
+                <div />
                 )}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div id="cardGalleryFlexBox">
-            {cards.length ? (
-              cards.slice((page - 1) * cardsPerPage, page * cardsPerPage).map((card) => {
-                return <
-                          CardImage 
-                          key={card.id} 
-                          card={card} 
-                          width="184px"
-                          margin="4px"
-                          padding="2px"
-                        />
-              })
-            ) : (
-              <div />
+            </div>
             )}
-          </div>
-        )}
-  
-        <div className="pagination">
-          <Pagination
-            setPage={setPage}
-            itemCount={cube.cardPool?.length || 0}
-            page={page}
-            itemsPerPage={cardsPerPage}
-          />
+    
+            <div className="pagination">
+            <Pagination
+                setPage={setPage}
+                itemCount={cube.cardPool?.length || 0}
+                page={page}
+                itemsPerPage={cardsPerPage}
+            />
+            </div>
         </div>
-      </div>
+        </>
     )
 }

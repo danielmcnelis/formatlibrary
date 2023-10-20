@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { FormatButton } from './FormatButton'
+import { Helmet } from 'react-helmet'
 import './FormatMenu.css'
 
 export const FormatMenu = () => {
@@ -24,32 +25,40 @@ export const FormatMenu = () => {
     if (!formats) return <div />
   
     return (
-      <div className="body">
-      <h1 className="format-menu-title">Popular Formats</h1>
-      <div className="format-menu">
-          {
-            formats.filter((f) => f.popular).map((format) => <FormatButton key={format.id} format={format}/>)
-          }
-      </div>
-      
-      <div className="divider"/>
-
-        <h1 className="format-menu-title">Spotlight Formats</h1>
-        <div className="format-menu">
-            {
-              formats.filter((f) => f.spotlight).map((format) => <FormatButton key={format.id} format={format}/>)
-            }
-        </div>
         
-        <div className="divider"/>
-  
-        <h1 className="format-menu-title">Other Formats</h1>
-        <div className="format-menu">
-            {
-              formats.filter((f) => !f.popular && !f.spotlight).map((format) => <FormatButton key={format.id} format={format}/>)
-            }
-        </div>
-        <br/>
-      </div>
+        <>
+            <Helmet>
+                <title>{`Yu-Gi-Oh! Formats - Yu-Gi-Oh! Format Library`}</title>
+                <meta name="description" content={`Information on all Yu-Gi-Oh! formats from 2002 to the present.\nPopular Formats • Spotlight Formats • All Formats • Speed Duel Formats • OCG Formats • Custom Formats`}/>
+            </Helmet>
+            <div className="body">
+                <h1 className="format-menu-title">Popular Formats</h1>
+                <div className="format-menu">
+                    {
+                        formats.filter((f) => f.popular).map((format) => <FormatButton key={format.id} format={format}/>)
+                    }
+                </div>
+                
+                <div className="divider"/>
+
+                <h1 className="format-menu-title">Spotlight Formats</h1>
+                <div className="format-menu">
+                    {
+                    formats.filter((f) => f.spotlight).map((format) => <FormatButton key={format.id} format={format}/>)
+                    }
+                </div>
+                
+                <div className="divider"/>
+        
+                <h1 className="format-menu-title">Other Formats</h1>
+                <div className="format-menu">
+                    {
+                    formats.filter((f) => !f.popular && !f.spotlight).map((format) => <FormatButton key={format.id} format={format}/>)
+                    }
+                </div>
+                <br/>
+            </div>
+        </>
+
     )
 }

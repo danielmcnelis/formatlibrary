@@ -14,8 +14,7 @@ export const BanList = (props) => {
     const { id } = useParams()
     const category = searchParams.get('category') || format?.category || 'TCG'
     const BL = format?.banlist || id
-    console.log('banlist', banlist)
-    console.log('category', category)
+    
   
     // USE EFFECT SET CARD
     useEffect(() => {

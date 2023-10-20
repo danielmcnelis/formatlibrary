@@ -26,7 +26,7 @@ export const CardImage = (props) => {
          return (
             <div className="CardImage-box">
                 <Link to={`/cards/${
-                card.name.replaceAll('%', '%25')
+                card.name.toLowerCase().replaceAll('%', '%25')
                     .replaceAll('/', '%2F')
                     .replaceAll(' ', '-')
                     .replaceAll('#', '%23')
@@ -99,13 +99,13 @@ export const CardImage = (props) => {
                   />
                 ) : (
                   <Link to={`/cards/${
-                    card.name.replaceAll('%', '%25')
+                    card.name.toLowerCase().replaceAll('%', '%25')
                       .replaceAll('/', '%2F')
-                      .replaceAll(' ', '_')
+                      .replaceAll(' ', '-')
                       .replaceAll('#', '%23')
                       .replaceAll('?', '%3F')
                       .replaceAll('&', '%26')
-                      .replaceAll('★', '_')
+                      .replaceAll('★', '-')
                     }`}
                     target="_blank" 
                     rel="noopener noreferrer"

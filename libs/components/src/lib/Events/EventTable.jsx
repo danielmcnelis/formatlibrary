@@ -6,6 +6,7 @@ import { MobileEventRow } from './MobileEventRow'
 // import { EventImage } from './EventImage'
 import { Pagination } from '../General/Pagination'
 import { useMediaQuery } from 'react-responsive'
+import { Helmet } from 'react-helmet'
 import './EventTable.css' 
 
 export const EventTable = (props) => {
@@ -132,308 +133,320 @@ export const EventTable = (props) => {
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
     
     if (isTabletOrMobile) return (
-      <div className="body">
-        <div className="event-database-flexbox">
-          <h1>Event Database</h1>
-          <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/event.png'} alt="trophy"/>
-        </div>
-  
-        <div className="searchWrapper">
-          <input
-            id="searchBar"
-            className="filter"
-            type="text"
-            placeholder="🔍"
-            onChange={() => runQuery()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') search()
-            }}
-          />
-  
-          <div className="buttonWrapper">
-            <select
-              id="searchTypeSelector"
-              defaultValue="name"
-              className="filter desktop-only"
-              onChange={() => runQuery()}
-            >
-              <option value="name">Event</option>
-              <option value="winner">Winner</option>
-            </select>
-  
-            <select
-              id="format"
-              defaultValue=""
-              className="filter"
-              onChange={(e) => setFormat(e.target.value || null)}
-            >
-              <option key={'All Formats'} value={''}>All Formats</option>
-              {
-                formats.map((f) => <option key={f.id} value={f.name}>{f.name}</option>)
-              }
-            </select>
-  
-            <div
-              className="searchButton desktop-only"
-              type="submit"
-              onClick={() => search()}
-            >
-              Search
+        <>
+            <Helmet>
+                <title>{`Yu-Gi-Oh! Tournament Database - Yu-Gi-Oh! Format Library`}</title>
+                <meta name="description" content={`Search through an interactive database of recent and historic Yu-Gi-Oh! events, linking into detailed tournament coverage that includes deck lists, stats, and match replays.`}/>
+            </Helmet>
+            <div className="body">
+                <div className="event-database-flexbox">
+                <h1>Event Database</h1>
+                <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/event.png'} alt="trophy"/>
+                </div>
+        
+                <div className="searchWrapper">
+                <input
+                    id="searchBar"
+                    className="filter"
+                    type="text"
+                    placeholder="🔍"
+                    onChange={() => runQuery()}
+                    onKeyDown={(e) => {
+                    if (e.key === 'Enter') search()
+                    }}
+                />
+        
+                <div className="buttonWrapper">
+                    <select
+                    id="searchTypeSelector"
+                    defaultValue="name"
+                    className="filter desktop-only"
+                    onChange={() => runQuery()}
+                    >
+                    <option value="name">Event</option>
+                    <option value="winner">Winner</option>
+                    </select>
+        
+                    <select
+                    id="format"
+                    defaultValue=""
+                    className="filter"
+                    onChange={(e) => setFormat(e.target.value || null)}
+                    >
+                    <option key={'All Formats'} value={''}>All Formats</option>
+                    {
+                        formats.map((f) => <option key={f.id} value={f.name}>{f.name}</option>)
+                    }
+                    </select>
+        
+                    <div
+                    className="searchButton desktop-only"
+                    type="submit"
+                    onClick={() => search()}
+                    >
+                    Search
+                    </div>
+                </div>
+                </div>
+        
+                <div id="resultsWrapper0" className="resultsWrapper0 desktop-only">
+                <div className="desktop-only results" style={{width: '360px'}}>
+                    Results:{events.length? ` ${eventsPerPage * (page - 1) + 1} - ${total < (eventsPerPage * page) ? total : (eventsPerPage * page)} of ${total}` : ''}
+                </div>
+        
+                <div className="buttonWrapper">
+                    <select
+                    id="eventsPerPageSelector"
+                    defaultValue="10"
+                    style={{width: '195px'}}
+                    onChange={(e) => {setEventsPerPage(e.target.value); setPage(1)}}
+                    >
+                    <option value={10}>10 / Page</option>
+                    <option value={25}>25 / Page</option>
+                    <option value={50}>50 / Page</option>
+                    <option value={100}>100 / Page</option>
+                    </select>
+        
+                    <select
+                    id="sortSelector"
+                    defaultValue="startDate:desc"
+                    style={{width: '230px'}}
+                    onChange={(e) => {setSortBy(e.target.value); setPage(1)}}
+                    >
+                    <option value="startDate:desc">Date: New ⮕ Old</option>
+                    <option value="startDate:asc">Date: Old ⮕ New</option>
+                    <option value="name:asc">Event: A ⮕ Z</option>
+                    <option value="name:desc">Event: Z ⮕ A</option>
+                    </select>
+        
+                    <div
+                    className="searchButton desktop-only"
+                    type="submit"
+                    onClick={() => reset()}
+                    >
+                    Reset
+                    </div>
+                </div>
+                </div>
+        
+                <div id="event-table">
+                <table id="events">
+                    <thead>
+                    <tr>
+                        <th>Format</th>
+                        <th>Event</th>
+                        <th>Winner</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {events.map((event, index) =>  <MobileEventRow key={event.id} index={index} event={event} />)}
+                    </tbody>
+                </table>
+                </div>
+        
+                <div className="pagination">
+                <Pagination
+                    setPage={setPage}
+                    itemCount={total}
+                    page={page}
+                    itemsPerPage={eventsPerPage}
+                />
+                </div>
             </div>
-          </div>
-        </div>
-  
-        <div id="resultsWrapper0" className="resultsWrapper0 desktop-only">
-          <div className="desktop-only results" style={{width: '360px'}}>
-            Results:{events.length? ` ${eventsPerPage * (page - 1) + 1} - ${total < (eventsPerPage * page) ? total : (eventsPerPage * page)} of ${total}` : ''}
-          </div>
-  
-          <div className="buttonWrapper">
-            <select
-              id="eventsPerPageSelector"
-              defaultValue="10"
-              style={{width: '195px'}}
-              onChange={(e) => {setEventsPerPage(e.target.value); setPage(1)}}
-            >
-              <option value={10}>10 / Page</option>
-              <option value={25}>25 / Page</option>
-              <option value={50}>50 / Page</option>
-              <option value={100}>100 / Page</option>
-            </select>
-  
-            <select
-              id="sortSelector"
-              defaultValue="startDate:desc"
-              style={{width: '230px'}}
-              onChange={(e) => {setSortBy(e.target.value); setPage(1)}}
-            >
-              <option value="startDate:desc">Date: New ⮕ Old</option>
-              <option value="startDate:asc">Date: Old ⮕ New</option>
-              <option value="name:asc">Event: A ⮕ Z</option>
-              <option value="name:desc">Event: Z ⮕ A</option>
-            </select>
-  
-            <div
-              className="searchButton desktop-only"
-              type="submit"
-              onClick={() => reset()}
-            >
-              Reset
-            </div>
-          </div>
-        </div>
-  
-        <div id="event-table">
-          <table id="events">
-            <thead>
-              <tr>
-                <th>Format</th>
-                <th>Event</th>
-                <th>Winner</th>
-              </tr>
-            </thead>
-            <tbody>
-              {events.map((event, index) =>  <MobileEventRow key={event.id} index={index} event={event} />)}
-            </tbody>
-          </table>
-        </div>
-  
-        <div className="pagination">
-          <Pagination
-            setPage={setPage}
-            itemCount={total}
-            page={page}
-            itemsPerPage={eventsPerPage}
-          />
-        </div>
-      </div>
+        </>
     )
   
     return (
-      <div className="body">
-        <div className="event-database-flexbox">
-          <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/event.png'} alt="trophy"/>
-          <h1>Event Database</h1>
-          <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/event.png'} alt="trophy"/>
-        </div>
+        <>
+            <Helmet>
+                <title>{`Yu-Gi-Oh! Tournament Database - Yu-Gi-Oh! Format Library`}</title>
+                <meta name="description" content={`Search through an interactive database of recent and historic Yu-Gi-Oh! tournaments, linking to detailed coverage that includes deck lists, stats, and match replays.`}/>
+            </Helmet>
+            <div className="body">
+                <div className="event-database-flexbox">
+                <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/event.png'} alt="trophy"/>
+                <h1>Event Database</h1>
+                <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/event.png'} alt="trophy"/>
+                </div>
+                
+                <br />
         
-        <br />
-  
-        <div className="searchWrapper">
-          <input
-            id="searchBar"
-            className="filter"
-            type="text"
-            placeholder="🔍"
-            onChange={() => runQuery()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') search()
-            }}
-          />
-  
-          <div className="buttonWrapper">
-            <select
-              id="searchTypeSelector"
-              defaultValue="name"
-              className="filter"
-              onChange={() => runQuery()}
-            >
-              <option value="name">Event Name</option>
-              <option value="winner">Winning Player</option>
-            </select>
-  
-            <select
-              id="community"
-              defaultValue="All Communities"
-              className="filter"
-              onChange={(e) => {setCommunity(e.target.value || null); setPage(1)}}
-            >
-              <option value="">All Communities</option>
-                    <option value="Format Library">Format Library</option>
-                    <option value="Androidland">Androidland</option>
-                    <option value="Aureum's Army">Aureum's Army</option>
-                    <option value="beastmode">Beastmode</option>
-                    <option value="Big Boy Gaming">Big Boy Gaming</option>
-                    <option value="Card Brawlers">Card Brawlers</option>
-                    <option value="DuelistGroundz">DuelistGroundz</option>
-                    <option value="EdisonFormat.com">EdisonFormat.com</option>
-                    <option value="Fire-Water Format">Fire-Water Format</option>
-                    <option value="GoatFormat.com">GoatFormat.com</option>
-                    <option value="Goat Community Italia">Goat Community Italia</option>
-                    <option value="Goat Format Europe">Goat Format Europe</option>
-                    <option value="Goat Format War League">Goat Format War League</option>
-                    <option value="HATformat.com">HATFormat.com</option>
-                    <option value="Ishizu Tear Format">Ishizu Tear Format</option>
-                    <option value="Konami">Konami</option>
-                    <option value="Reaper Format">Reaper Format</option>
-                    <option value="Shuffle Deck Gaming">Shuffle Deck Gaming</option>
-                    <option value="Tengu Plant Town">Tengu Plant Town</option>
-                    <option value="The Dice Jar">The Dice Jar</option>
-                    <option value="The H.A.T. Alliance">The H.A.T. Alliance</option>
-                    <option value="Upper Deck Entertainment">Upper Deck Entertainment</option>
-                    <option value="Vegas Format">Vegas Format</option>
-                    <option value="Wind-Up Factory">Wind-Up Factory</option>
-                    <option value="YGOFrom0">YGOFrom0</option>
-                    <option value="Yugi-Kaibaland">Yugi-Kaibaland</option>
-                    <option value="Yu-Gi-Oh! Legacy">Yu-Gi-Oh! Legacy</option>
-            </select>
-  
-            <select
-              id="format"
-              defaultValue=""
-              className="filter"
-              onChange={(e) => {setFormat(e.target.value || null); setPage(1)}}
-            >
-              <option key={'All Formats'} value={''}>All Formats</option>
-              {
-                formats.map((format) => <option key={format.id} value={format.name}>{format.name}</option>)
-              }
-            </select>
-  
-            <div
-              className="searchButton desktop-only"
-              type="submit"
-              onClick={() => search()}
-            >
-              Search
+                <div className="searchWrapper">
+                <input
+                    id="searchBar"
+                    className="filter"
+                    type="text"
+                    placeholder="🔍"
+                    onChange={() => runQuery()}
+                    onKeyDown={(e) => {
+                    if (e.key === 'Enter') search()
+                    }}
+                />
+        
+                <div className="buttonWrapper">
+                    <select
+                    id="searchTypeSelector"
+                    defaultValue="name"
+                    className="filter"
+                    onChange={() => runQuery()}
+                    >
+                    <option value="name">Event Name</option>
+                    <option value="winner">Winning Player</option>
+                    </select>
+        
+                    <select
+                    id="community"
+                    defaultValue="All Communities"
+                    className="filter"
+                    onChange={(e) => {setCommunity(e.target.value || null); setPage(1)}}
+                    >
+                    <option value="">All Communities</option>
+                            <option value="Format Library">Format Library</option>
+                            <option value="Androidland">Androidland</option>
+                            <option value="Aureum's Army">Aureum's Army</option>
+                            <option value="beastmode">Beastmode</option>
+                            <option value="Big Boy Gaming">Big Boy Gaming</option>
+                            <option value="Card Brawlers">Card Brawlers</option>
+                            <option value="DuelistGroundz">DuelistGroundz</option>
+                            <option value="EdisonFormat.com">EdisonFormat.com</option>
+                            <option value="Fire-Water Format">Fire-Water Format</option>
+                            <option value="GoatFormat.com">GoatFormat.com</option>
+                            <option value="Goat Community Italia">Goat Community Italia</option>
+                            <option value="Goat Format Europe">Goat Format Europe</option>
+                            <option value="Goat Format War League">Goat Format War League</option>
+                            <option value="HATformat.com">HATFormat.com</option>
+                            <option value="Ishizu Tear Format">Ishizu Tear Format</option>
+                            <option value="Konami">Konami</option>
+                            <option value="Reaper Format">Reaper Format</option>
+                            <option value="Shuffle Deck Gaming">Shuffle Deck Gaming</option>
+                            <option value="Tengu Plant Town">Tengu Plant Town</option>
+                            <option value="The Dice Jar">The Dice Jar</option>
+                            <option value="The H.A.T. Alliance">The H.A.T. Alliance</option>
+                            <option value="Upper Deck Entertainment">Upper Deck Entertainment</option>
+                            <option value="Vegas Format">Vegas Format</option>
+                            <option value="Wind-Up Factory">Wind-Up Factory</option>
+                            <option value="YGOFrom0">YGOFrom0</option>
+                            <option value="Yugi-Kaibaland">Yugi-Kaibaland</option>
+                            <option value="Yu-Gi-Oh! Legacy">Yu-Gi-Oh! Legacy</option>
+                    </select>
+        
+                    <select
+                    id="format"
+                    defaultValue=""
+                    className="filter"
+                    onChange={(e) => {setFormat(e.target.value || null); setPage(1)}}
+                    >
+                    <option key={'All Formats'} value={''}>All Formats</option>
+                    {
+                        formats.map((format) => <option key={format.id} value={format.name}>{format.name}</option>)
+                    }
+                    </select>
+        
+                    <div
+                    className="searchButton desktop-only"
+                    type="submit"
+                    onClick={() => search()}
+                    >
+                    Search
+                    </div>
+                </div>
+                </div>
+        
+                <div id="resultsWrapper0" className="resultsWrapper0">
+                <div className="results" style={{width: '360px'}}>
+                    Results:{events.length? ` ${eventsPerPage * (page - 1) + 1} - ${total < (eventsPerPage * page) ? total: (eventsPerPage * page)} of ${total}` : ''}
+                </div>
+        
+                <div className="buttonWrapper">
+                    {/* <select
+                    id="viewSwitch"
+                    defaultValue="table"
+                    style={{width: '130px'}}
+                    onChange={() => setView(document.getElementById('viewSwitch').value)}
+                    >
+                    <option value="table">View Table</option>
+                    <option value="gallery">View Gallery</option>
+                    </select> */}
+        
+                    <select
+                    id="eventsPerPageSelector"
+                    defaultValue="10"
+                    style={{width: '160px', maxWidth: '45vw'}}
+                    onChange={(e) => { setEventsPerPage(e.target.value); setPage(1) }}
+                    >
+                    <option value={10}>10 Events / Page</option>
+                    <option value={25}>25 Events / Page</option>
+                    <option value={50}>50 Events / Page</option>
+                    <option value={100}>100 Events / Page</option>
+                    </select>
+        
+                    <select
+                    id="sortSelector"
+                    defaultValue="startDate:desc"
+                    style={{width: '230px'}}
+                    onChange={() => sortEvents()}
+                    >
+                    <option value="startDate:desc">Sort Date: New ⮕ Old</option>
+                    <option value="startDate:asc">Sort Date: Old ⮕ New</option>
+                    <option value="name:asc">Sort Event: A ⮕ Z</option>
+                    <option value="name:desc">Sort Event: Z ⮕ A</option>
+                    <option value="size:asc">Sort Size: Large ⮕ Small </option>
+                    <option value="size:desc">Sort Size: Small ⮕ Large </option>
+                    </select>
+        
+                    <div
+                    className="searchButton desktop-only"
+                    type="submit"
+                    onClick={() => reset()}
+                    >
+                    Reset
+                    </div>
+                </div>
+                </div>
+        
+                <div className="paginationWrapper">
+                <div className="pagination">
+                    <Pagination
+                    setPage={setPage}
+                    itemCount={total}
+                    page={page}
+                    itemsPerPage={eventsPerPage}
+                    />
+                </div>
+                </div>
+        
+                {view === 'table' ? (
+                <div id="event-table">
+                    <table id="events">
+                    <thead>
+                        <tr>
+                        <th>Format</th>
+                        <th>Event Name</th>
+                        <th>Winning Player</th>
+                        <th>Community</th>
+                        <th>Size</th>
+                        <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {events.map((event, index) => <EventRow key={event.id} index={index} event={event} />)}
+                    </tbody>
+                    </table>
+                </div>
+                ) : (
+                <div id="eventGalleryFlexBox">
+                </div>
+                )}
+        
+                <div className="pagination">
+                <Pagination
+                    setPage={setPage}
+                    itemCount={total}
+                    page={page}
+                    itemsPerPage={eventsPerPage}
+                />
+                </div>
             </div>
-          </div>
-        </div>
-  
-        <div id="resultsWrapper0" className="resultsWrapper0">
-          <div className="results" style={{width: '360px'}}>
-            Results:{events.length? ` ${eventsPerPage * (page - 1) + 1} - ${total < (eventsPerPage * page) ? total: (eventsPerPage * page)} of ${total}` : ''}
-          </div>
-  
-          <div className="buttonWrapper">
-            {/* <select
-              id="viewSwitch"
-              defaultValue="table"
-              style={{width: '130px'}}
-              onChange={() => setView(document.getElementById('viewSwitch').value)}
-            >
-              <option value="table">View Table</option>
-              <option value="gallery">View Gallery</option>
-            </select> */}
-  
-            <select
-              id="eventsPerPageSelector"
-              defaultValue="10"
-              style={{width: '160px', maxWidth: '45vw'}}
-              onChange={(e) => { setEventsPerPage(e.target.value); setPage(1) }}
-            >
-              <option value={10}>10 Events / Page</option>
-              <option value={25}>25 Events / Page</option>
-              <option value={50}>50 Events / Page</option>
-              <option value={100}>100 Events / Page</option>
-            </select>
-  
-            <select
-              id="sortSelector"
-              defaultValue="startDate:desc"
-              style={{width: '230px'}}
-              onChange={() => sortEvents()}
-            >
-              <option value="startDate:desc">Sort Date: New ⮕ Old</option>
-              <option value="startDate:asc">Sort Date: Old ⮕ New</option>
-              <option value="name:asc">Sort Event: A ⮕ Z</option>
-              <option value="name:desc">Sort Event: Z ⮕ A</option>
-              <option value="size:asc">Sort Size: Large ⮕ Small </option>
-              <option value="size:desc">Sort Size: Small ⮕ Large </option>
-            </select>
-  
-            <div
-              className="searchButton desktop-only"
-              type="submit"
-              onClick={() => reset()}
-            >
-              Reset
-            </div>
-          </div>
-        </div>
-  
-        <div className="paginationWrapper">
-          <div className="pagination">
-            <Pagination
-              setPage={setPage}
-              itemCount={total}
-              page={page}
-              itemsPerPage={eventsPerPage}
-            />
-          </div>
-        </div>
-  
-        {view === 'table' ? (
-          <div id="event-table">
-            <table id="events">
-              <thead>
-                <tr>
-                  <th>Format</th>
-                  <th>Event Name</th>
-                  <th>Winning Player</th>
-                  <th>Community</th>
-                  <th>Size</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {events.map((event, index) => <EventRow key={event.id} index={index} event={event} />)}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div id="eventGalleryFlexBox">
-          </div>
-        )}
-  
-        <div className="pagination">
-          <Pagination
-            setPage={setPage}
-            itemCount={total}
-            page={page}
-            itemsPerPage={eventsPerPage}
-          />
-        </div>
-      </div>
+        </>
     )
 }

@@ -11,6 +11,7 @@ import { getCookie } from '@fl/utils'
 import {DndContext} from '@dnd-kit/core'
 import {Draggable} from '../../../General/Draggable'
 import {Droppable} from '../../../General/Droppable'
+import { Helmet } from 'react-helmet'
 import './Builder.css'
 
 export const Builder = () => {
@@ -537,7 +538,12 @@ export const Builder = () => {
   }, [format])
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <>
+        <Helmet>
+            <title>{`Yu-Gi-Oh! Deck Builder - Yu-Gi-Oh! Format Library`}</title>
+            <meta name="description" content={`Build decks for any Yu-Gi-Oh! format. Use this app to search for legal cards from your favorite formats while constructing your decks.\nOpen • Save • Edit • Share • Publish`}/>
+        </Helmet>
+        <DndContext onDragEnd={handleDragEnd}>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossOrigin="anonymous"/>
         <link rel="stylesheet" href="/assets/css/styles.css" />
         <div className="body" id="builder" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -990,5 +996,6 @@ export const Builder = () => {
             <SearchPanel addCard={addCard} setCard={setCard} format={format} formats={formats} setFormat={setFormat}/>
         </div>
     </DndContext>
+    </>
   )
 }

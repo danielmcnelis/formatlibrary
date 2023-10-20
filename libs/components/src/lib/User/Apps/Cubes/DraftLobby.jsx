@@ -6,6 +6,7 @@ import { CardImage } from '../../../Cards/CardImage'
 import { FocalCard } from '../Builder/FocalCard'
 import { getCookie } from '@fl/utils'
 import ReactCountdownClock from 'react-countdown-clock'
+import { Helmet } from 'react-helmet'
 import './DraftLobby.css' 
 
 // USE AUDIO
@@ -228,6 +229,10 @@ export const DraftLobby = () => {
             {
                 draft.state === 'pending' ? (
                     <>
+                        <Helmet>
+                            <title>{`Yu-Gi-Oh! Draft Lobby - Yu-Gi-Oh! Format Library`}</title>
+                            <meta name="description" content={`Click here to join the next draft for ${draft.cubeName}.`}/>
+                        </Helmet>
                         <div className="card-database-flexbox">
                             <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
                             <div>
@@ -288,6 +293,10 @@ export const DraftLobby = () => {
                     </>
                 ) : (
                     <>
+                        <Helmet>
+                            <title>{`Yu-Gi-Oh! Draft Lobby - Yu-Gi-Oh! Format Library`}</title>
+                            <meta name="description" content={`Live draft for ${draft.cubeName}.`}/>
+                        </Helmet>
                         <div className="space-between">
                             {
                                 draft?.state === 'underway' && timer >= 0 && timer <= draft.timer ? (

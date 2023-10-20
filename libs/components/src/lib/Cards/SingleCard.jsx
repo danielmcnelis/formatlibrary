@@ -7,6 +7,7 @@ import { NotFound } from '../General/NotFound'
 import { PrintRow } from './PrintRow'
 import { StatusBox } from './StatusBar'
 import { dateToVerbose, getCookie } from '@fl/utils'
+import { Helmet } from 'react-helmet'
 import './SingleCard.css'
 
 const banlists = [
@@ -201,220 +202,226 @@ export const SingleCard = () => {
       if (card.effect) cardType += ` / Effect`
   
       return (
-        <div className="body">
-          {card.id ? (
-            <div>
-              <div className="flexy">
-                <img className="single-card-image" src={imagePath} />
-                <table className="single-card-table">
-                  <thead>
-                    <tr>
-                      <th colSpan="5" className="single-card-title">
-                        {card.name}
-                      </th>
-                    </tr>
-                  </thead>
-                  {card.category === 'Monster' ? (
-                    <tbody>
-                      <tr className="single-card-standard-row">
-                        <td className="single-card-symbol-td">
-                          <img src={template} className="single-card-cardType" />
-                        </td>
-                        <td colSpan="4" className="single-card-large-label">
-                          {cardType}
-                        </td>
-                      </tr>
-                      <tr className="single-card-standard-row">
-                        <td className="single-card-symbol-td">
-                          <img src={attribute} className="single-card-symbol" />
-                        </td>
-                        <td className="single-card-label-inner-td">
-                          {card.attribute}
-                        </td>
-                        <td className="single-card-symbol-td">
-                          <img src={type} className="single-card-symbol" />
-                        </td>
-                        <td colSpan="2" className="single-card-label-td">
-                          {card.type}
-                        </td>
-                      </tr>
-                      <tr
-                        style={{
-                          alignContent: 'left',
-                          fontSize: '16px',
-                          fontStyle: 'italic'
-                        }}
-                      >
-                        <td className="single-card-description-label" colSpan="5">
-                          Description:
-                        </td>
-                      </tr>
-                      <tr style={{alignContent: 'left', fontSize: '18px'}}>
-                        <td colSpan="5" className="single-card-description-box">
-                          {card.pendulum ? 
-                            `${
-                              card.description.includes('[ Pendulum Effect ]') ?
-                              card.description.slice(20, card.description.indexOf('----')) + '\n\n' :
-                              ''
-                            }${
-                              card.description.includes('[ Monster Effect ]') ? 
-                              card.description.slice(card.description.indexOf('[ Monster Effect ]') + 19) :
-                              card.description.includes('[ Flavor Text ]') ? 
-                              <i>{card.description.slice(card.description.indexOf('[ Flavor Text ]') + 16)}</i> :
-                              card.description
-                            }` :
-                            card.normal ? <i>{card.description}</i> :
-                            card.description
-                          }
-                        </td>
-                      </tr>
-                      <tr className="blank-row">
-                        <td colSpan="5">
-                          <div />
-                        </td>
-                      </tr>
-                      <tr className="single-card-bottom-row">
-                        <td id="star-td" className="single-card-symbol-td">
-                          <img src={starType} className="single-card-symbol" />
-                        </td>
-                        <td id="level-td" colSpan="2" className="single-card-label-inner-td">
-                          {starWord} {card.level || card.rating}
-                        </td>
-                        <td id="atk-td" className="single-card-label-inner-td">
-                          <span>ATK: </span>{card.atk}
-                        </td>
-                        <td id="def-td" className="single-card-label-td"><span>DEF: </span>{card.def}</td>
-                      </tr>
-                      <tr className="single-card-date-row">
-                        <td colSpan="3">
-                          TCG Release: {dateToVerbose(card.tcgDate, false, false)}
-                        </td>
-                        <td colSpan="3">
-                          OCG Release: {dateToVerbose(card.ocgDate, false, false)}
-                        </td>
-                      </tr>
-                    </tbody>
-                  ) : (
-                    <tbody>
-                      <tr className="single-card-standard-row">
-                        <td className="single-card-symbol-td">
-                          <img src={template} className="single-card-cardType" />
-                        </td>
-                        <td className="single-card-label-inner-td">
-                          {card.category}
-                        </td>
-                        <td className="single-card-symbol-td">
-                          <img src={symbol} className="single-card-symbol" />
-                        </td>
-                        <td colSpan="2" className="single-card-label-td">
-                          {card.icon}
-                        </td>
-                      </tr>
-                      <tr
-                        style={{
-                          alignContent: 'left',
-                          fontSize: '16px',
-                          fontStyle: 'italic'
-                        }}
-                      >
-                        <td colSpan="5" style={{padding: '20px 0px 0px 10px'}}>
-                          Description:
-                        </td>
-                      </tr>
-                      <tr style={{alignContent: 'left', fontSize: '18px'}}>
-                        <td colSpan="5" className="single-card-description-box">
-                          {card.description}
-                        </td>
-                      </tr>
-                      <tr className="blank-row">
-                        <td colSpan="5">
-                          <div />
-                        </td>
-                      </tr>
-                      <tr className="single-card-date-row">
-                        <td colSpan="3">
-                          TCG Release: {dateToVerbose(card.tcgDate, false, false)}
-                        </td>
-                        <td colSpan="3">
-                          OCG Release: {dateToVerbose(card.ocgDate, false, false)}
-                        </td>
-                      </tr>
-                    </tbody>
-                  )}
-                </table>
-              </div>
-              <div className="status-flexbox">
-                <div>TCG Status History:</div>
-                <div className="status-box">
-                  {banlists.map((b) => {
-                    const banlist = b[0]
-                    const date = b[1]
-                    const status = statuses[banlist] ? statuses[banlist] : card.tcgDate < date ? 'unlimited' : null
-                    return <StatusBox key={banlist} banlist={banlist} status={status}/>
-                  })}
-                </div>
-              </div>
-              <div className="prints-flexbox">
-                {prints?.length ? (
-                    <>
-                        <div>Prints:</div>
-                        <div className="print-box">
-                        <table>
-                            <tbody>
-                            {prints.map((print, index) => <PrintRow key={print.id} index={index} print={print}/>)}
-                            </tbody>
-                        </table>
-                        </div>
-                    </>
-                ) : ''}
-                </div>
-
-              <div className="prints-flexbox">
-                {rulings?.generic?.length ? (
-                    <>
-                        <div>Generic Rulings:</div>
-                        <div>
-                            {rulings.generic.map((ruling) => <li className="ruling">{ruling.content}</li>)}
-                        </div>
-                        <br/>
-                    </>
-                ) : ''}
-                <div> 
-                    {rulings && rulings.specific && Object.keys(rulings.specific).length ? (
-                        <div>
-                            {
-                                Object.entries(rulings.specific).map((entry) => {
-                                    return (
-                                        <div>
-                                            <div>{entry[0] + ' Rulings:'}</div>
-                                            {
-                                                entry[1].map((ruling) => (<li className="ruling">{ruling.content}</li>))
-                                            }
-                                            <br/>
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
+        <>
+            <Helmet>
+                <title>{`${card?.name} | Yu-Gi-Oh! Format Library`}</title>
+                <meta name="description" content={card.description} />
+            </Helmet>
+            <div className="body">
+                {card.id ? (
+                <div>
+                    <div className="flexy">
+                    <img className="single-card-image" src={imagePath} />
+                    <table className="single-card-table">
+                        <thead>
+                        <tr>
+                            <th colSpan="5" className="single-card-title">
+                            {card.name}
+                            </th>
+                        </tr>
+                        </thead>
+                        {card.category === 'Monster' ? (
+                        <tbody>
+                            <tr className="single-card-standard-row">
+                            <td className="single-card-symbol-td">
+                                <img src={template} className="single-card-cardType" />
+                            </td>
+                            <td colSpan="4" className="single-card-large-label">
+                                {cardType}
+                            </td>
+                            </tr>
+                            <tr className="single-card-standard-row">
+                            <td className="single-card-symbol-td">
+                                <img src={attribute} className="single-card-symbol" />
+                            </td>
+                            <td className="single-card-label-inner-td">
+                                {card.attribute}
+                            </td>
+                            <td className="single-card-symbol-td">
+                                <img src={type} className="single-card-symbol" />
+                            </td>
+                            <td colSpan="2" className="single-card-label-td">
+                                {card.type}
+                            </td>
+                            </tr>
+                            <tr
+                            style={{
+                                alignContent: 'left',
+                                fontSize: '16px',
+                                fontStyle: 'italic'
+                            }}
+                            >
+                            <td className="single-card-description-label" colSpan="5">
+                                Description:
+                            </td>
+                            </tr>
+                            <tr style={{alignContent: 'left', fontSize: '18px'}}>
+                            <td colSpan="5" className="single-card-description-box">
+                                {card.pendulum ? 
+                                `${
+                                    card.description.includes('[ Pendulum Effect ]') ?
+                                    card.description.slice(20, card.description.indexOf('----')) + '\n\n' :
+                                    ''
+                                }${
+                                    card.description.includes('[ Monster Effect ]') ? 
+                                    card.description.slice(card.description.indexOf('[ Monster Effect ]') + 19) :
+                                    card.description.includes('[ Flavor Text ]') ? 
+                                    <i>{card.description.slice(card.description.indexOf('[ Flavor Text ]') + 16)}</i> :
+                                    card.description
+                                }` :
+                                card.normal ? <i>{card.description}</i> :
+                                card.description
+                                }
+                            </td>
+                            </tr>
+                            <tr className="blank-row">
+                            <td colSpan="5">
+                                <div />
+                            </td>
+                            </tr>
+                            <tr className="single-card-bottom-row">
+                            <td id="star-td" className="single-card-symbol-td">
+                                <img src={starType} className="single-card-symbol" />
+                            </td>
+                            <td id="level-td" colSpan="2" className="single-card-label-inner-td">
+                                {starWord} {card.level || card.rating}
+                            </td>
+                            <td id="atk-td" className="single-card-label-inner-td">
+                                <span>ATK: </span>{card.atk}
+                            </td>
+                            <td id="def-td" className="single-card-label-td"><span>DEF: </span>{card.def}</td>
+                            </tr>
+                            <tr className="single-card-date-row">
+                            <td colSpan="3">
+                                TCG Release: {dateToVerbose(card.tcgDate, false, false)}
+                            </td>
+                            <td colSpan="3">
+                                OCG Release: {dateToVerbose(card.ocgDate, false, false)}
+                            </td>
+                            </tr>
+                        </tbody>
+                        ) : (
+                        <tbody>
+                            <tr className="single-card-standard-row">
+                            <td className="single-card-symbol-td">
+                                <img src={template} className="single-card-cardType" />
+                            </td>
+                            <td className="single-card-label-inner-td">
+                                {card.category}
+                            </td>
+                            <td className="single-card-symbol-td">
+                                <img src={symbol} className="single-card-symbol" />
+                            </td>
+                            <td colSpan="2" className="single-card-label-td">
+                                {card.icon}
+                            </td>
+                            </tr>
+                            <tr
+                            style={{
+                                alignContent: 'left',
+                                fontSize: '16px',
+                                fontStyle: 'italic'
+                            }}
+                            >
+                            <td colSpan="5" style={{padding: '20px 0px 0px 10px'}}>
+                                Description:
+                            </td>
+                            </tr>
+                            <tr style={{alignContent: 'left', fontSize: '18px'}}>
+                            <td colSpan="5" className="single-card-description-box">
+                                {card.description}
+                            </td>
+                            </tr>
+                            <tr className="blank-row">
+                            <td colSpan="5">
+                                <div />
+                            </td>
+                            </tr>
+                            <tr className="single-card-date-row">
+                            <td colSpan="3">
+                                TCG Release: {dateToVerbose(card.tcgDate, false, false)}
+                            </td>
+                            <td colSpan="3">
+                                OCG Release: {dateToVerbose(card.ocgDate, false, false)}
+                            </td>
+                            </tr>
+                        </tbody>
+                        )}
+                    </table>
+                    </div>
+                    <div className="status-flexbox">
+                    <div>TCG Status History:</div>
+                    <div className="status-box">
+                        {banlists.map((b) => {
+                        const banlist = b[0]
+                        const date = b[1]
+                        const status = statuses[banlist] ? statuses[banlist] : card.tcgDate < date ? 'unlimited' : null
+                        return <StatusBox key={banlist} banlist={banlist} status={status}/>
+                        })}
+                    </div>
+                    </div>
+                    <div className="prints-flexbox">
+                    {prints?.length ? (
+                        <>
+                            <div>Prints:</div>
+                            <div className="print-box">
+                            <table>
+                                <tbody>
+                                {prints.map((print, index) => <PrintRow key={print.id} index={index} print={print}/>)}
+                                </tbody>
+                            </table>
+                            </div>
+                        </>
                     ) : ''}
+                    </div>
+
+                    <div className="prints-flexbox">
+                    {rulings?.generic?.length ? (
+                        <>
+                            <div>Generic Rulings:</div>
+                            <div>
+                                {rulings.generic.map((ruling) => <li className="ruling">{ruling.content}</li>)}
+                            </div>
+                            <br/>
+                        </>
+                    ) : ''}
+                    <div> 
+                        {rulings && rulings.specific && Object.keys(rulings.specific).length ? (
+                            <div>
+                                {
+                                    Object.entries(rulings.specific).map((entry) => {
+                                        return (
+                                            <div>
+                                                <div>{entry[0] + ' Rulings:'}</div>
+                                                {
+                                                    entry[1].map((ruling) => (<li className="ruling">{ruling.content}</li>))
+                                                }
+                                                <br/>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+                        ) : ''}
+                    </div>
+                    </div>
+                    <div>
+                        {
+                            isAdmin ? (
+                                <a
+                                    className="downloadButton"
+                                    onClick={()=> downloadCardImage()}
+                                >
+                                    Update Image
+                                </a>
+                            ) : ''
+                        }
+                    </div>
                 </div>
-              </div>
-              <div>
-                  {
-                      isAdmin ? (
-                          <a
-                              className="downloadButton"
-                              onClick={()=> downloadCardImage()}
-                          >
-                              Update Image
-                          </a>
-                      ) : ''
-                  }
-              </div>
+                ) : (
+                ''
+                )}
             </div>
-          ) : (
-            ''
-          )}
-        </div>
+        </>
       )
 }

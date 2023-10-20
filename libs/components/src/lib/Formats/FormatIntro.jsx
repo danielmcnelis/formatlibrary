@@ -8,6 +8,7 @@ import { PopularDecks } from './PopularDecks'
 import { RecentEvents } from '../Events/RecentEvents'
 import { useParams } from 'react-router-dom'
 import { underscorize } from '@fl/utils'
+import { Helmet } from 'react-helmet'
 import './FormatIntro.css'
 
 export const FormatIntro = () => {
@@ -42,79 +43,78 @@ export const FormatIntro = () => {
     if (!format.id) return <div />
   
     return (
-      <div className="body">
-        {/* <Helmet>
-            {
-                <>
-                    <meta property="og:title" content={`${format.name} Format`}/>
-                    <meta property="og:description" content={format.description}/>
-                    <meta property="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
-                </>
-            }
-        </Helmet> */}
-        <div className="format-icon-flexbox">
-          <div className="format-text">
-            <h1>{format.name} Format</h1>
-            <h2>{format.event}</h2>
-            {
-              format.description ? (
-                <div className="desktop-only">
-                  <p className="format-desc">{format.description}</p>
-                </div>
-              ) : <br/>
-            }
-            {
-              deckCount ? (
-                <>
+        <>
+            <Helmet>
+                <title>{`Yu-Gi-Oh! ${format?.name} Format - Yu-Gi-Oh! Format Library`}</title>
+                <meta name="description" content={format.description || format.event + `\nDeck Gallery • Tournaments • Legal Cards • Rulings • Banlist`}/>
+                <meta name="image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
+            </Helmet>
+            <div className="body">
+            <div className="format-icon-flexbox">
+            <div className="format-text">
+                <h1>{format.name} Format</h1>
+                <h2>{format.event}</h2>
+                {
+                format.description ? (
+                    <div className="desktop-only">
+                    <p className="format-desc">{format.description}</p>
+                    </div>
+                ) : <br/>
+                }
+                {
+                deckCount ? (
+                    <>
+                        <li>
+                            <a href={`/deck-gallery/${underscorize(format.name)}`}>Deck Gallery</a>
+                        </li>
+                        <li>
+                            <a href={`/formats/${underscorize(format.name)}#popular-decks`}>Popular Decks</a>
+                        </li>
+                    </>
+                ) : ''
+                }
+                {
+                eventCount ? (
+                    <>
+                        <li>
+                            <a href={`/event-gallery/${underscorize(format.name)}`}>Event Gallery</a>
+                        </li>
+                        <li>
+                            <a href={`/formats/${underscorize(format.name)}#recent-events`}>Recent Events</a>
+                        </li>
+                    </>
+                ) : ''
+                }
+                {
+                statsCount ? (
                     <li>
-                        <a href={`/deck-gallery/${underscorize(format.name)}`}>Deck Gallery</a>
+                    <a href={`/leaderboards/${underscorize(format.name)}`}>Leaderboard</a>
                     </li>
-                    <li>
-                        <a href={`/formats/${underscorize(format.name)}#popular-decks`}>Popular Decks</a>
-                    </li>
-                </>
-              ) : ''
-            }
-            {
-              eventCount ? (
-                <>
-                    <li>
-                        <a href={`/event-gallery/${underscorize(format.name)}`}>Event Gallery</a>
-                    </li>
-                    <li>
-                        <a href={`/formats/${underscorize(format.name)}#recent-events`}>Recent Events</a>
-                    </li>
-                </>
-              ) : ''
-            }
-            {
-              statsCount ? (
+                ) : ''
+                }
                 <li>
-                  <a href={`/leaderboards/${underscorize(format.name)}`}>Leaderboard</a>
+                <a href={`/cards?format=${underscorize(format.name)}`}>Card Pool</a>
                 </li>
-              ) : ''
-            }
-            <li>
-              <a href={`/cards?format=${underscorize(format.name)}`}>Card Pool</a>
-            </li>
-            <li>
-              <a href={`/formats/${underscorize(format.name)}#banlist`}>Ban List</a>
-            </li>
-          </div>
-          <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} alt={format.icon}/>
-        </div>
-        {
-          format.description ? (
-            <div className="mobile-only">
-              <p className="format-desc">{format.description}</p>
+                <li>
+                <a href={`/formats/${underscorize(format.name)}#banlist`}>Ban List</a>
+                </li>
             </div>
-          ) : ''
-        }
-        <PopularDecks id="popular-decks" format={format}/>
-        <RecentEvents id="recent-events" format={format}/>
-        <MiniBoard limit={10} format={format}/>
-        <div className="divider"/>
-        <BanList id="banlist" format={format}/>
-      </div>
+            <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} alt={format.icon}/>
+            </div>
+            {
+            format.description ? (
+                <div className="mobile-only">
+                <p className="format-desc">{format.description}</p>
+                </div>
+            ) : ''
+            }
+            <PopularDecks id="popular-decks" format={format}/>
+            <RecentEvents id="recent-events" format={format}/>
+            <MiniBoard limit={10} format={format}/>
+            <div className="divider"/>
+            <BanList id="banlist" format={format}/>
+        </div>
+        </>
+
     )
 }

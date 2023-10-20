@@ -72,6 +72,8 @@ export const cardsId = async (req, res, next) => {
         .replaceAll('%23', '#')
         .replaceAll('%25', '%')
         .replaceAll('%26', '&')
+        .replaceAll('-', ' ')
+        .replaceAll('   ', ' - ')
 
     try {
         const card = await Card.findOne({

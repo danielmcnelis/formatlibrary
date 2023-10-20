@@ -6,6 +6,7 @@ import { Placement } from './Placement'
 import { DeckThumbnail } from '../Decks/DeckThumbnail'
 import { NotFound } from '../General/NotFound'
 import { useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 import './PlayerProfile.css'
 
 export const PlayerProfile = () => {
@@ -85,113 +86,120 @@ export const PlayerProfile = () => {
   const regionNames = new Intl.DisplayNames(['en'], {type: 'region'})
 
   return (
-    <div className="body">
-      <div className="player-profile-flexbox">
-        <div className="player-info">
-          <div className="player-profile-title">{player.name}</div>
-            <img
-                className="player-pfp"
-                src={`https://cdn.formatlibrary.com/images/pfps/${player.discordId || player.name}.png`}
-                alt={player.name}
-                onError={(e) => {
-                e.target.onerror = null
-                e.target.src = 'https://cdn.discordapp.com/embed/avatars/1.png'
-                }}
-            />
-            <div className="profile-info"> 
-                {
-                    player.firstName && player.lastName ? (
-                        <div className="profile-line"><b>Name:</b> {player.firstName} {player.lastName}</div>
-                    ) : ''
-                }
-                <div className="profile-line"><b>DuelingBook:</b> {player.duelingBook || 'N/A'}</div>   
-                <div className="profile-line"><b>Discord:</b> {player.globalName || player.discordName && player.discriminator && player.discriminator !== '0' ? (<><span>{player.discordName}</span><span style={{ color: 'gray' }}>#{player.discriminator}</span></>) : player.discordName || 'N/A'}</div>
-                {
-                    player.country ? (
-                        <div className="profile-line"><b>Country:</b> {regionNames.of(player.country)} <img className="country" src={`https://www.worldometers.info/img/flags/${player.country.toLowerCase()}-flag.gif`} alt={player.country + '-flag'}/></div>
-                    ) : ''
-                }
-                {
-                    player.timeZone ? (
-                        <div className="profile-line"><b>Time Zone:</b> {player.timeZone}</div>
-                    ) : ''
-                }
+    <>
+        <Helmet>
+            <title>{`${player?.name} Player Profile - Yu-Gi-Oh! Format Library`}</title>
+            <meta name="description" content={`The public profile page for ${player?.name}. View the selected player's public contact info, best tournament finishes, favorite decks to play, etc.\nBest Formats • Top Finishes • Favorite Decks`}/>
+        </Helmet>
+        <div className="body">
+            <div className="player-profile-flexbox">
+                <div className="player-info">
+                <div className="player-profile-title">{player.name}</div>
+                    <img
+                        className="player-pfp"
+                        src={`https://cdn.formatlibrary.com/images/pfps/${player.discordId || player.name}.png`}
+                        alt={player.name}
+                        onError={(e) => {
+                        e.target.onerror = null
+                        e.target.src = 'https://cdn.discordapp.com/embed/avatars/1.png'
+                        }}
+                    />
+                    <div className="profile-info"> 
+                        {
+                            player.firstName && player.lastName ? (
+                                <div className="profile-line"><b>Name:</b> {player.firstName} {player.lastName}</div>
+                            ) : ''
+                        }
+                        <div className="profile-line"><b>DuelingBook:</b> {player.duelingBook || 'N/A'}</div>   
+                        <div className="profile-line"><b>Discord:</b> {player.globalName || player.discordName && player.discriminator && player.discriminator !== '0' ? (<><span>{player.discordName}</span><span style={{ color: 'gray' }}>#{player.discriminator}</span></>) : player.discordName || 'N/A'}</div>
+                        {
+                            player.country ? (
+                                <div className="profile-line"><b>Country:</b> {regionNames.of(player.country)} <img className="country" src={`https://www.worldometers.info/img/flags/${player.country.toLowerCase()}-flag.gif`} alt={player.country + '-flag'}/></div>
+                            ) : ''
+                        }
+                        {
+                            player.timeZone ? (
+                                <div className="profile-line"><b>Time Zone:</b> {player.timeZone}</div>
+                            ) : ''
+                        }
+                    </div>
+                    <div className="social-links">
+                        {
+                            player.youtube ? (
+                                <a 
+                                    href={player.youtube}
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                >
+                                    <img className="social-icon" src="https://cdn.formatlibrary.com/images/logos/YouTube.png" alt="youtube"/>
+                                </a>
+                            ) : ''
+                        }
+                        {
+                            player.twitch ? (
+                                <a 
+                                    href={"https://twitch.tv/" + player.twitch}
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                >
+                                    <img className="social-icon" src="https://cdn.formatlibrary.com/images/logos/Twitch.png" alt="twitch"/>
+                                </a>
+                            ) : ''
+                        }
+                        {
+                            player.twitter ? (
+                                <a 
+                                    href={"https://twitter.com/" + player.twitter}
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                >
+                                    <img className="social-icon" src="https://cdn.formatlibrary.com/images/logos/Twitter.png" alt="twitter"/>
+                                </a>
+                            ) : ''
+                        }
+                    </div>
+                </div>
+                <div className="player-awards">
+                {stats.length ? (
+                    <div>
+                    <div className="badges-title">Best Formats:</div>
+                    <div className="badges-flexbox">
+                        {stats.map((s) => (
+                        <Badge key={s.format} stats={s} />
+                        ))}
+                    </div>
+                    </div>
+                ) : (
+                    ''
+                )}
+                {decks.length ? (
+                    <div>
+                    <div className="badges-title">Top Finishes:</div>
+                    <div className="badges-flexbox">
+                        {decks.map((d) => (
+                        <Placement key={d.tournamentId} deck={d} />
+                        ))}
+                    </div>
+                    </div>
+                ) : (
+                    ''
+                )}
+                </div>
             </div>
-            <div className="social-links">
-                {
-                    player.youtube ? (
-                        <a 
-                            href={player.youtube}
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                        >
-                            <img className="social-icon" src="https://cdn.formatlibrary.com/images/logos/YouTube.png" alt="youtube"/>
-                        </a>
-                    ) : ''
-                }
-                {
-                    player.twitch ? (
-                        <a 
-                            href={"https://twitch.tv/" + player.twitch}
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                        >
-                            <img className="social-icon" src="https://cdn.formatlibrary.com/images/logos/Twitch.png" alt="twitch"/>
-                        </a>
-                    ) : ''
-                }
-                {
-                    player.twitter ? (
-                        <a 
-                            href={"https://twitter.com/" + player.twitter}
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                        >
-                            <img className="social-icon" src="https://cdn.formatlibrary.com/images/logos/Twitter.png" alt="twitter"/>
-                        </a>
-                    ) : ''
-                }
+            {deckTypes.length ? (
+                <div id="popular-decks" className="popular-decks">
+                <h2>Favorite Decks:</h2>
+                <div className="popular-decks-flexbox">
+                    {deckTypes.map((dt) => (
+                    <DeckThumbnail deck={dt} key={dt.id} />
+                    ))}
+                </div>
+                </div>
+            ) : (
+                ''
+            )}
             </div>
-        </div>
-        <div className="player-awards">
-          {stats.length ? (
-            <div>
-              <div className="badges-title">Best Formats:</div>
-              <div className="badges-flexbox">
-                {stats.map((s) => (
-                  <Badge key={s.format} stats={s} />
-                ))}
-              </div>
-            </div>
-          ) : (
-            ''
-          )}
-          {decks.length ? (
-            <div>
-              <div className="badges-title">Top Finishes:</div>
-              <div className="badges-flexbox">
-                {decks.map((d) => (
-                  <Placement key={d.tournamentId} deck={d} />
-                ))}
-              </div>
-            </div>
-          ) : (
-            ''
-          )}
-        </div>
-      </div>
-      {deckTypes.length ? (
-        <div id="popular-decks" className="popular-decks">
-          <h2>Favorite Decks:</h2>
-          <div className="popular-decks-flexbox">
-            {deckTypes.map((dt) => (
-              <DeckThumbnail deck={dt} key={dt.id} />
-            ))}
-          </div>
-        </div>
-      ) : (
-        ''
-      )}
-    </div>
+    </>
+    
   )
 }

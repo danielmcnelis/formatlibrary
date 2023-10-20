@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { getCookie } from '@fl/utils'
+import { Helmet } from 'react-helmet'
 import './CubeLauncher.css' 
 
 export const CubeLauncher = () => {
@@ -54,96 +55,102 @@ export const CubeLauncher = () => {
     }, [])
 
     return (
-        <div className="cube-portal">
-            <div className="card-database-flexbox">
-                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
-                <div>
-                    <h1>Start Cube Draft!</h1>
+        <>
+            <Helmet>
+                <title>{`Yu-Gi-Oh! Cube Draft - Yu-Gi-Oh! Format Library`}</title>
+                <meta name="description" content={`Draft and play some of the most popular cubes with your friends.\n${cubes?.slice(0, 3)?.map((c) => `${c.name} by ${c.builder}`).join('•')}`}/>
+            </Helmet>
+            <div className="cube-portal">
+                <div className="card-database-flexbox">
+                    <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
+                    <div>
+                        <h1>Start Cube Draft!</h1>
+                    </div>
+                    <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
                 </div>
-                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
-            </div>
-            <br/>
+                <br/>
 
-            <div className="slideshow">
-                <div className="mover"></div>
-            </div>
+                <div className="slideshow">
+                    <div className="mover"></div>
+                </div>
 
-            <br/>
-            <label>Cube:
-                <select
-                    id="cube"
-                    onChange={(e) => fetchCube(e.target.value)}
-                >
-                <option value="">Select Cube:</option>
+                <br/>
+                <label>Cube:
+                    <select
+                        id="cube"
+                        onChange={(e) => fetchCube(e.target.value)}
+                    >
+                    <option value="">Select Cube:</option>
+                    {
+                        cubes.map((c) => <option value={c.id}>{c.name} by {c.builder}</option>)
+                    }
+                    </select>
+                </label>
+
+                <label>Pack Size:
+                    <select
+                        id="pack-size"
+                        defaultValue="12"
+                        onChange={(e) => {setPackSize(e.target.value)}}
+                    >
+                    {
+                        packSizeOptions.map((size) => <option value={size}>{size} Cards / Pack</option>)
+                    }
+                    </select>
+                </label>
+
+                <label>Pack Number:
+                    <select
+                        id="pack-number"
+                        defaultValue="4"
+                        onChange={(e) => {setPacksPerPlayer(e.target.value)}}
+                    >
+                        <option value="6">6 Packs / Player</option>)
+                        <option value="5">5 Packs / Player</option>)
+                        <option value="4">4 Packs / Player</option>)
+                        <option value="3">3 Packs / Player</option>)
+                        <option value="2">2 Packs / Player</option>)
+                    </select>
+                </label>
+
+                <label>Timer:
+                    <select
+                        id="pack-number"
+                        defaultValue="60"
+                        onChange={(e) => {setTimer(e.target.value)}}
+                    >
+                        <option value="90">90 Seconds / Pick</option>)
+                        <option value="75">75 Seconds / Pick</option>)
+                        <option value="60">60 Seconds / Pick</option>)
+                        <option value="45">45 Seconds / Pick</option>)
+                        <option value="30">30 Seconds / Pick</option>)
+                    </select>
+                </label>
+
                 {
-                    cubes.map((c) => <option value={c.id}>{c.name} by {c.builder}</option>)
+                    cube.id ? (
+                        <div className="settings-note">
+                            <i>These settings support up to {Math.floor(cube.cardPool?.length / (packsPerPlayer * packSize))} players.</i>
+                        </div>
+                    ) : ''
                 }
-                </select>
-            </label>
 
-            <label>Pack Size:
-                <select
-                    id="pack-size"
-                    defaultValue="12"
-                    onChange={(e) => {setPackSize(e.target.value)}}
+                <div
+                    className="cube-button"
+                    type="submit"
+                    onClick={() => launch()}
                 >
+                    Launch
+                </div>
+
                 {
-                    packSizeOptions.map((size) => <option value={size}>{size} Cards / Pack</option>)
+                    cubeLink ? (
+                        <div className="lobby-link">
+                            Draft Lobby: <a href={cubeLink}>{cubeLink}</a>
+                        </div>
+                    ) : ''
                 }
-                </select>
-            </label>
-
-            <label>Pack Number:
-                <select
-                    id="pack-number"
-                    defaultValue="4"
-                    onChange={(e) => {setPacksPerPlayer(e.target.value)}}
-                >
-                    <option value="6">6 Packs / Player</option>)
-                    <option value="5">5 Packs / Player</option>)
-                    <option value="4">4 Packs / Player</option>)
-                    <option value="3">3 Packs / Player</option>)
-                    <option value="2">2 Packs / Player</option>)
-                </select>
-            </label>
-
-            <label>Timer:
-                <select
-                    id="pack-number"
-                    defaultValue="60"
-                    onChange={(e) => {setTimer(e.target.value)}}
-                >
-                    <option value="90">90 Seconds / Pick</option>)
-                    <option value="75">75 Seconds / Pick</option>)
-                    <option value="60">60 Seconds / Pick</option>)
-                    <option value="45">45 Seconds / Pick</option>)
-                    <option value="30">30 Seconds / Pick</option>)
-                </select>
-            </label>
-
-            {
-                cube.id ? (
-                    <div className="settings-note">
-                        <i>These settings support up to {Math.floor(cube.cardPool?.length / (packsPerPlayer * packSize))} players.</i>
-                    </div>
-                ) : ''
-            }
-
-            <div
-                className="cube-button"
-                type="submit"
-                onClick={() => launch()}
-            >
-                Launch
             </div>
-
-            {
-                cubeLink ? (
-                    <div className="lobby-link">
-                        Draft Lobby: <a href={cubeLink}>{cubeLink}</a>
-                    </div>
-                ) : ''
-            }
-        </div>
+        </>
     )
 }

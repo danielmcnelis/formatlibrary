@@ -4,6 +4,7 @@ import axios from 'axios'
 import { StatsRow } from './StatsRow'
 import { capitalize } from '@fl/utils'
 import { useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 import './LeaderBoard.css'
 
 export const LeaderBoard = () => {
@@ -46,36 +47,43 @@ export const LeaderBoard = () => {
     if (!leaderboard.length) return <div></div>
   
     return (
-      <div className="body">
-        <div id="leaderboard" className="leaderboard">
-          <div className="subcategory-title-flexbox">
-            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
-            <h1 className="leaderboard-title">{capitalize(format.name, true)} Leaderboard</h1>
-            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
-          </div>
-          <table id="leaderboard-table">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Player</th>
-                <th>Elo</th>
-                <th>Medal</th>
-                <th>Wins</th>
-                <th>Losses</th>
-                <th>Win Rate</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                  leaderboard.length ? (
-                      leaderboard.map((stats, index) => {
-                          return <StatsRow stats={stats} index={index} key={stats.playerId}/>
-                      })
-                  ) : <tr />
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
+        <>
+            <Helmet>
+                <title>{`${format?.name} Format Leaderboard - Yu-Gi-Oh! Format Library`}</title>
+                <meta name="description" content={`Live updated rankings of the best online ${format?.name} Format players.`}/>
+            </Helmet>
+            <div className="body">
+                <div id="leaderboard" className="leaderboard">
+                <div className="subcategory-title-flexbox">
+                    <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                    <h1 className="leaderboard-title">{capitalize(format.name, true)} Leaderboard</h1>
+                    <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                </div>
+                <table id="leaderboard-table">
+                    <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Elo</th>
+                        <th>Medal</th>
+                        <th>Wins</th>
+                        <th>Losses</th>
+                        <th>Win Rate</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {
+                        leaderboard.length ? (
+                            leaderboard.map((stats, index) => {
+                                return <StatsRow stats={stats} index={index} key={stats.playerId}/>
+                            })
+                        ) : <tr />
+                    }
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </>
+      
     )
 }

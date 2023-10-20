@@ -3,6 +3,7 @@ import { useState, useEffect, useLayoutEffect } from 'react'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { EventThumbnail } from './EventThumbnail'
+import { Helmet } from 'react-helmet'
 import './EventGallery.css'
 
 export const EventGallery = () => {
@@ -10,7 +11,7 @@ export const EventGallery = () => {
     const [winners, setWinners] = useState([])
     const [format, setFormat] = useState({})
     const { id } = useParams()
-    
+
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0))
     
@@ -33,19 +34,25 @@ export const EventGallery = () => {
     if (!events?.length || !format?.id) return <div/>
 
     return (
-        <div className="body">
-            <div id="recent-events" className="recent-events">
-                <div className="subcategory-title-flexbox">
-                    <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
-                    <h1 className="leaderboard-title">{format.name} Event Gallery</h1>
-                    <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
-                </div>
-                <div className="recent-events-flexbox">
-                {
-                    events.map((event, index) => <EventThumbnail key={event.id} event={event} winner={winners[index]} format={format}/>)
-                }
+        <>
+            <Helmet>
+                <title>{`${format?.name} Format Tournaments - Yu-Gi-Oh! Format Library`}</title>
+                <meta name="description" content={`Comprehensive tournament coverage of recent and historic ${format?.name} Format events, both online and in-person.`}/>
+            </Helmet>
+            <div className="body">
+                <div id="recent-events" className="recent-events">
+                    <div className="subcategory-title-flexbox">
+                        <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                        <h1 className="leaderboard-title">{format.name} Event Gallery</h1>
+                        <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                    </div>
+                    <div className="recent-events-flexbox">
+                    {
+                        events.map((event, index) => <EventThumbnail key={event.id} event={event} winner={winners[index]} format={format}/>)
+                    }
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
