@@ -48,14 +48,7 @@ export const CardRow = (props) => {
         <tr className={`${evenOrOdd}-search-results-row`}>
           <td className="no-padding-2" style={{verticalAlign: 'top'}}>
               <Link className="search-results-link" to={`/cards/${
-                  card.name.replaceAll('%', '%25')
-                  .replaceAll('/', '%2F')
-                  .replaceAll(' ', '_')
-                  .replaceAll('#', '%23')
-                  .replaceAll('?', '%3F')
-                  .replaceAll('&', '%26')
-                  .replaceAll('★', '_')
-                  }`}
+                  card.cleanName.replaceAll(' ', '-')}`}
                   target="_blank" 
                   rel="noopener noreferrer"
               >
@@ -80,14 +73,7 @@ export const CardRow = (props) => {
           </td>
           <td className="no-padding-2" style={{verticalAlign: 'top'}}>
               <Link className="search-results-link" to={`/cards/${
-                  card.name.replaceAll('%', '%25')
-                  .replaceAll('/', '%2F')
-                  .replaceAll(' ', '_')
-                  .replaceAll('#', '%23')
-                  .replaceAll('?', '%3F')
-                  .replaceAll('&', '%26')
-                  .replaceAll('★', '_')
-                  }`}
+                  card.cleanName.replaceAll(' ', '-')}`}
                   target="_blank" 
                   rel="noopener noreferrer"
               >

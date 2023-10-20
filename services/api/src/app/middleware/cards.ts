@@ -8,7 +8,7 @@ export const cardsQuery = async (req, res, next) => {
       where: {
         name: { [Op.substring]: req.params.query }
       },
-      attributes: ['name', 'ypdId'],
+      attributes: ['name', 'cleanName', 'ypdId'],
       order: [['name', 'ASC']]
     })
 

@@ -26,13 +26,17 @@ export const CardImage = (props) => {
          return (
             <div className="CardImage-box">
                 <Link to={`/cards/${
-                card.name.toLowerCase().replaceAll('%', '%25')
-                    .replaceAll('/', '%2F')
-                    .replaceAll(' ', '-')
-                    .replaceAll('#', '%23')
-                    .replaceAll('?', '%3F')
-                    .replaceAll('&', '%26')
+                card.name.toLowerCase().replaceAll(' ', '-')
+                    .replaceAll(`"`, '')
+                    .replaceAll(`'`, '')
+                    .replaceAll('#', '')
+                    .replaceAll('/', '')
+                    .replaceAll('!', '')
+                    .replaceAll('?', '')
                     .replaceAll('★', '-')
+                    .replaceAll('&', 'and')
+                    .replaceAll('%', '-percent')
+                    .replaceAll('--', '-')
                 }`}
                 target="_blank" 
                 rel="noopener noreferrer"
@@ -99,13 +103,17 @@ export const CardImage = (props) => {
                   />
                 ) : (
                   <Link to={`/cards/${
-                    card.name.toLowerCase().replaceAll('%', '%25')
-                      .replaceAll('/', '%2F')
-                      .replaceAll(' ', '-')
-                      .replaceAll('#', '%23')
-                      .replaceAll('?', '%3F')
-                      .replaceAll('&', '%26')
-                      .replaceAll('★', '-')
+                    card.name.toLowerCase().replaceAll(' ', '-')
+                        .replaceAll(`"`, '')
+                        .replaceAll(`'`, '')
+                        .replaceAll('#', '')
+                        .replaceAll('/', '')
+                        .replaceAll('!', '')
+                        .replaceAll('?', '')
+                        .replaceAll('★', '-')
+                        .replaceAll('&', 'and')
+                        .replaceAll('%', '-percent')
+                        .replaceAll('--', '-')
                     }`}
                     target="_blank" 
                     rel="noopener noreferrer"

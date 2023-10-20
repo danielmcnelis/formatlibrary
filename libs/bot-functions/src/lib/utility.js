@@ -216,17 +216,7 @@ export const getCard = async (query, fuzzyCards, format) => {
             `${labels.join('')}` + 
             `\n\n${card.description}` +
             `${stats ? `\n\n${stats}` : ''}` +
-            `\n\nhttps://formatlibrary.com/cards/${
-                card.name.replaceAll(' ', '_')
-                    .replaceAll('★', '_')
-                    .replaceAll('%', '%25')
-                    .replaceAll(`"`, '%22')
-                    .replaceAll('#', '%23')
-                    .replaceAll('&', '%26')
-                    .replaceAll(`'`, '%27')
-                    .replaceAll('/', '%2F')
-                    .replaceAll('?', '%3F')
-            }`
+            `\n\nhttps://formatlibrary.com/cards/${card.cleanName.replaceAll(' ', '-')}`
         )
 	return { cardEmbed, attachment }
 }

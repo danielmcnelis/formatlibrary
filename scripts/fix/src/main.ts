@@ -738,73 +738,104 @@ import { S3 } from 'aws-sdk'
 //     }
 // })()
 
-;(async () => {
-    const sets = await Set.findAll({
-        where: {
-            booster: true,
-            game: 'YGO'
-        }
-    })
+// ;(async () => {
+//     const sets = await Set.findAll({
+//         where: {
+//             booster: true,
+//             game: 'YGO'
+//         }
+//     })
 
-    for (let i = 0; i < sets.length; i++) {
-        const set = sets[i]
-        const prints = await Print.findAll({
-            where: {
-                setId: set.id,
-                region: {[Op.or]: ['NA', null]}
-            },
-            order: [['cardCode', 'ASC']],
-            include: Card
-        })
+//     for (let i = 0; i < sets.length; i++) {
+//         const set = sets[i]
+//         const prints = await Print.findAll({
+//             where: {
+//                 setId: set.id,
+//                 region: {[Op.or]: ['NA', null]}
+//             },
+//             order: [['cardCode', 'ASC']],
+//             include: Card
+//         })
 
-        const main = []
+//         const main = []
         
-        for (let i = 0; i < prints.length; i++) {
-            let konamiCode = prints[i].card.konamiCode
-            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-            const card = await Card.findOne({ where: { konamiCode: konamiCode }})
-            if (!card) continue
-            const filtered = main.filter((c) => c.id === card.id)
-            if (!filtered.length) main.push(card)
-        }
+//         for (let i = 0; i < prints.length; i++) {
+//             let konamiCode = prints[i].card.konamiCode
+//             while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+//             const card = await Card.findOne({ where: { konamiCode: konamiCode }})
+//             if (!card) continue
+//             const filtered = main.filter((c) => c.id === card.id)
+//             if (!filtered.length) main.push(card)
+//         }
     
-        const sortFn = (a: any, b: any) => {
-            if (a.sortPriority > b.sortPriority) {
-                return 1
-            } else if (b.sortPriority > a.sortPriority) {
-                return -1
-            } else if (a.name > b.name) {
-                return 1
-            } else if (b.name > a.name) {
-                return -1
-            } else {
-                return 0
-            }
-        }
+//         const sortFn = (a: any, b: any) => {
+//             if (a.sortPriority > b.sortPriority) {
+//                 return 1
+//             } else if (b.sortPriority > a.sortPriority) {
+//                 return -1
+//             } else if (a.name > b.name) {
+//                 return 1
+//             } else if (b.name > a.name) {
+//                 return -1
+//             } else {
+//                 return 0
+//             }
+//         }
 
-        main.sort(sortFn)
+//         main.sort(sortFn)
     
-        const card_width = 72
-        const card_height = 105
-        const canvas = Canvas.createCanvas(card_width * main.length, card_height)
-        const context = canvas.getContext('2d')
+//         const card_width = 72
+//         const card_height = 105
+//         const canvas = Canvas.createCanvas(card_width * main.length, card_height)
+//         const context = canvas.getContext('2d')
     
-        for (let i = 0; i < main.length; i++) {
-            const card = main[i]
-            const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`) 
-            context.drawImage(image, card_width * i, 0, card_width, card_height)
-        }
+//         for (let i = 0; i < main.length; i++) {
+//             const card = main[i]
+//             const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`) 
+//             context.drawImage(image, card_width * i, 0, card_width, card_height)
+//         }
     
-        const buffer = canvas.toBuffer('image/png')
-        const s3 = new S3({
-            region: config.s3.region,
-            credentials: {
-                accessKeyId: config.s3.credentials.accessKeyId,
-                secretAccessKey: config.s3.credentials.secretAccessKey
-            }
-        })
+//         const buffer = canvas.toBuffer('image/png')
+//         const s3 = new S3({
+//             region: config.s3.region,
+//             credentials: {
+//                 accessKeyId: config.s3.credentials.accessKeyId,
+//                 secretAccessKey: config.s3.credentials.secretAccessKey
+//             }
+//         })
     
-        const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/sets/slideshows/${set.setCode}.png`, Body: buffer, ContentType: `image/png` }).promise()
-        console.log('uri', uri)
+//         const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/sets/slideshows/${set.setCode}.png`, Body: buffer, ContentType: `image/png` }).promise()
+//         console.log('uri', uri)
+//     }
+// })()
+
+
+
+
+;(async () => {
+    const cards = await Card.findAll()
+    for (let i = 0; i < cards.length; i++) {
+        const card = cards[i]
+        const cleanName = card.name.replaceAll(`"`, '')
+            .replaceAll(`'`, '')
+            .replaceAll('#', '')
+            .replaceAll('@', '')
+            .replaceAll('/', '')
+            .replaceAll('(', '')
+            .replaceAll(')', '')
+            .replaceAll(':', '')
+            .replaceAll(',', '')
+            .replaceAll('.', '')
+            .replaceAll('!', '')
+            .replaceAll('?', '')
+            .replaceAll('★', ' ')
+            .replaceAll('=', 'Equals')
+            .replaceAll('&', 'and')
+            .replaceAll('%', ' percent')
+            .replaceAll(' - ', ' ')
+            .replaceAll('-', ' ')
+            .replaceAll('  ', ' ')
+
+        await card.update({ cleanName: cleanName })
     }
 })()

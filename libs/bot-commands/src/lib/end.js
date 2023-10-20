@@ -6,7 +6,6 @@ import { capitalize, createDecks, isMod, hasPartnerAccess, getMatches, getPartic
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { emojis } from '@fl/bot-emojis'
-import e from 'express'
 
 export default {
 	data: new SlashCommandBuilder()
