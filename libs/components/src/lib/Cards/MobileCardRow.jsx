@@ -75,7 +75,7 @@ export const MobileCardRow = (props) => {
                   <td className="no-padding-2" style={{verticalAlign: 'top'}}>
                       <Link 
                         className="search-results-link" 
-                        to={`/cards/${card.cleanName.replaceAll(' ', '-')}`}
+                        to={`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
                         target="_blank" 
                         rel="noopener noreferrer"
                       >
@@ -100,7 +100,7 @@ export const MobileCardRow = (props) => {
                   </td>
                   <td className="no-padding-2" style={{verticalAlign: 'top'}}>
                         <Link className="search-results-link" 
-                            to={`/cards/${card.cleanName.replaceAll(' ', '-')}`}
+                            to={`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
                             target="_blank" 
                             rel="noopener noreferrer"
                         >

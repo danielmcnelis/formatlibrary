@@ -48,7 +48,7 @@ export const CardRow = (props) => {
         <tr className={`${evenOrOdd}-search-results-row`}>
           <td className="no-padding-2" style={{verticalAlign: 'top'}}>
               <Link className="search-results-link" to={`/cards/${
-                  card.cleanName.replaceAll(' ', '-')}`}
+                  card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
                   target="_blank" 
                   rel="noopener noreferrer"
               >
@@ -73,7 +73,7 @@ export const CardRow = (props) => {
           </td>
           <td className="no-padding-2" style={{verticalAlign: 'top'}}>
               <Link className="search-results-link" to={`/cards/${
-                  card.cleanName.replaceAll(' ', '-')}`}
+                  card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
                   target="_blank" 
                   rel="noopener noreferrer"
               >

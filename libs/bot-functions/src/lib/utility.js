@@ -216,7 +216,7 @@ export const getCard = async (query, fuzzyCards, format) => {
             `${labels.join('')}` + 
             `\n\n${card.description}` +
             `${stats ? `\n\n${stats}` : ''}` +
-            `\n\nhttps://formatlibrary.com/cards/${card.cleanName.replaceAll(' ', '-')}`
+            `\n\nhttps://formatlibrary.com/cards/${card.cleanName.replaceAll(' ', '-').toLowerCase()}`
         )
 	return { cardEmbed, attachment }
 }
