@@ -177,45 +177,25 @@ export const CardRow = (props) => {
                                   className="cardrow-description"
                                   style={{fontSize: '16px', borderTop: '2px solid #CFDCE5'}}
                               >
-                                  {
-                                  card.description?.includes('[ Pendulum Effect ]') ? 
-                                  card.description?.slice(20, card.description.indexOf('----')) :
-                                  ''
-                                  }
+                                  {card.pendulumEffect || ''}
                               </td>
                               </tr>
                           ) : (
                               <tr></tr>
                           )}
-                          {card.pendulum ? (
-                              <tr>
-                              <td
-                                  colSpan="6"
-                                  className="cardrow-description"
-                                  style={{padding: '10px 20px 20px 10px', fontSize: '16px', borderTop: '2px solid #CFDCE5'}}
-                              >
-                                  {
-                                  card.description?.includes('[ Monster Effect ]') ? 
-                                  card.description?.slice(card.description.indexOf('[ Monster Effect ]') + 19) :
-                                  card.description?.includes('[ Flavor Text ]') ?
-                                  <i>{card.description?.slice(card.description.indexOf('[ Flavor Text ]') + 16)}</i> :
-                                  card.description
-                                  }
-                              </td>
-                              </tr>
-                          ) : (
-                              <tr>
-                              <td
-                                  colSpan="6"
-                                  className="cardrow-description"
-                                  style={{padding: '10px 20px 20px 10px', fontSize: '16px', borderTop: '2px solid #CFDCE5'}}
-                              >
-                                  {
-                                    card.normal ? <i>{card.description}</i> : card.description
-                                  }
-                              </td>
-                              </tr>
-                          )}
+                          {
+                            <tr>
+                            <td
+                                colSpan="6"
+                                className="cardrow-description"
+                                style={{padding: '10px 20px 20px 10px', fontSize: '16px', borderTop: '2px solid #CFDCE5'}}
+                            >
+                                {
+                                card.normal ? <i>{card.description}</i> : card.description
+                                }
+                            </td>
+                            </tr>
+                          }
                       </tbody>
                   </table>
               </Link>

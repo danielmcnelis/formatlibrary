@@ -207,7 +207,7 @@ export const SingleCard = () => {
                 {card.id ? (
                 <div>
                     <div className="flexy">
-                    <img className="single-card-image" src={imagePath} />
+                    <img className="single-card-image" src={imagePath} alt={card.name}/>
                     <table className="single-card-table">
                         <thead>
                             <tr>
@@ -239,20 +239,10 @@ export const SingleCard = () => {
                                     <tr style={{alignContent: 'left', fontSize: '18px'}}>
                                         <td colSpan="5" className="single-card-description-box">
                                         {
-                                            card.pendulum ? 
-                                            `${
-                                                card.description.includes('[ Pendulum Effect ]') ?
-                                                card.description.slice(20, card.description.indexOf('----')) + '\n\n' :
-                                            ''
-                                        }${
-                                            card.description.includes('[ Monster Effect ]') ? 
-                                            card.description.slice(card.description.indexOf('[ Monster Effect ]') + 19) :
-                                            card.description.includes('[ Flavor Text ]') ? 
-                                            <i>{card.description.slice(card.description.indexOf('[ Flavor Text ]') + 16)}</i> :
+                                            card.pendulumEffect && card.normal ? 'Pendulum Effect:\n' + card.pendulumEffect + '\n\nFlavor Text:\n' + <i>card.description</i> :
+                                            card.pendulumEffect && !card.normal ? 'Pendulum Effect:\n' + card.pendulumEffect + '\n\nMonster Effect:\n' + card.description :
+                                            card.normal ? <i>card.description</i> :
                                             card.description
-                                        }` :
-                                        card.normal ? <i>{card.description}</i> :
-                                        card.description
                                         }
                                     </td>
                                     </tr>
@@ -263,7 +253,7 @@ export const SingleCard = () => {
                                     </tr>
                                     <tr className="single-card-bottom-row">
                                     <td id="star-td" className="single-card-symbol-td">
-                                        <img src={starType} className="single-card-symbol" />
+                                        <img src={starType} className="single-card-symbol" alt={starType}/>
                                     </td>
                                     <td id="level-td" colSpan="2" className="single-card-label-inner-td">
                                         {starWord} {card.level || card.rating}
@@ -286,13 +276,13 @@ export const SingleCard = () => {
                         <tbody>
                             <tr className="single-card-standard-row">
                             <td className="single-card-symbol-td">
-                                <img src={template} className="single-card-cardType" />
+                                <img src={template} className="single-card-cardType" alt="card type"/>
                             </td>
                             <td className="single-card-label-inner-td">
                                 {card.category}
                             </td>
                             <td className="single-card-symbol-td">
-                                <img src={symbol} className="single-card-symbol" />
+                                <img src={symbol} className="single-card-symbol" alt="card symbol"/>
                             </td>
                             <td colSpan="2" className="single-card-label-td">
                                 {card.icon}
@@ -311,7 +301,12 @@ export const SingleCard = () => {
                             </tr>
                             <tr style={{alignContent: 'left', fontSize: '18px'}}>
                             <td colSpan="5" className="single-card-description-box">
-                                {card.description}
+                            {
+                                card.pendulumEffect && card.normal ? card.pendulumEffect + '\n\n' + <i>card.description</i> :
+                                card.pendulumEffect && !card.normal ? card.pendulumEffect + '\n\n' + card.description :
+                                card.normal ? <i>card.description</i> :
+                                card.description
+                            }
                             </td>
                             </tr>
                             <tr className="blank-row">
@@ -390,12 +385,12 @@ export const SingleCard = () => {
                     <div>
                         {
                             isAdmin ? (
-                                <a
+                                <div
                                     className="downloadButton"
                                     onClick={()=> downloadCardImage()}
                                 >
                                     Update Image
-                                </a>
+                                </div>
                             ) : ''
                         }
                     </div>
