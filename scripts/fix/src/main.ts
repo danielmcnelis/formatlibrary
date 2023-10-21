@@ -815,21 +815,12 @@ import { S3 } from 'aws-sdk'
 ;(async () => {
     const cards = await Card.findAll({
         where: {
-            pendulum: true
+            pendulumEffect: {[Op.not]: null}
         }
     })
 
     for (let i = 0; i < cards.length; i++) {
         const card = cards[i]
-        const description = card.description.replaceAll(' ----------------------------------------', '')
-        
-        const pendulumEffectIndex = description.indexOf('[ Pendulum Effect ] ') + '[ Pendulum Effect ] '.length
-        const monsterDescriptionIndex = description.includes(' [ Monster Effect ]') ? description.indexOf(' [ Monster Effect ]') + ' [ Monster Effect ]'.length :
-            description.includes(' [ Flavor Text ]') ? description.indexOf(' [ Flavor Text ]') + ' [ Flavor Text ]'.length :
-            0
-
-        const pendulumEffect = description.includes('[ Pendulum Effect ] ') ? description.slice(pendulumEffectIndex, monsterDescriptionIndex) : null
-        const monsterDescription = description.slice(monsterDescriptionIndex)
-        await card.update({ description: monsterDescription?.trim(), pendulumEffect: pendulumEffect?.trim() })
+        await card.update({ pendulumEffect: card.pendulumEffect.replaceAll(' [ Monster Effect ]', '')})
     }
 })()
