@@ -230,7 +230,7 @@ export const DraftLobby = () => {
                 draft.state === 'pending' ? (
                     <>
                         <Helmet>
-                            <title>{`Yu-Gi-Oh! Draft Lobby - Yu-Gi-Oh! Format Library`}</title>
+                            <title>{`Yu-Gi-Oh! Draft Lobby - Format Library`}</title>
                             <meta name="description" content={`Click here to join the next draft for ${draft.cubeName}.`}/>
                         </Helmet>
                         <div className="card-database-flexbox">
@@ -294,7 +294,7 @@ export const DraftLobby = () => {
                 ) : (
                     <>
                         <Helmet>
-                            <title>{`Yu-Gi-Oh! Draft Lobby - Yu-Gi-Oh! Format Library`}</title>
+                            <title>{`Yu-Gi-Oh! Draft Lobby - Format Library`}</title>
                             <meta name="description" content={`Live draft for ${draft.cubeName}.`}/>
                         </Helmet>
                         <div className="space-between">

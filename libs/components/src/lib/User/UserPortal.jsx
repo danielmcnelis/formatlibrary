@@ -8,7 +8,7 @@ export const UserPortal = () => {
     return (
         <>
             <Helmet>
-                <title>{`Yu-Gi-Oh! Apps - Yu-Gi-Oh! Format Library`}</title>
+                <title>{`Yu-Gi-Oh! Apps - Format Library`}</title>
                 <meta name="description" content={`Featuring the best browser-based apps for Yu-Gi-Oh! players of all kinds.\nDeck Builder • Cube Draft • Pack Simulator • Text-YDK Converter`}/>
             </Helmet>
             <div className="body">

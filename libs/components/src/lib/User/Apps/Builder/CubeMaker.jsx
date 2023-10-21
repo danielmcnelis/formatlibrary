@@ -283,7 +283,7 @@ export const CubeMaker = () => {
   return (
     <>
         <Helmet>
-            <title>{`Yu-Gi-Oh! Cube Maker - Yu-Gi-Oh! Format Library`}</title>
+            <title>{`Yu-Gi-Oh! Cube Maker - Format Library`}</title>
             <meta name="description" content={`Create your own Yu-Gi-Oh! cube. Use this app to edit the cards in your cube. Make your cube public for your friends and others to play!`}/>
         </Helmet>
         <DndContext onDragEnd={handleDragEnd}>

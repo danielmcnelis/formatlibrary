@@ -513,8 +513,8 @@ export const CardTable = () => {
     return (
         <>
             <Helmet>
-                <title>{`Yu-Gi-Oh! Card Database - Yu-Gi-Oh! Format Library`}</title>
-                <meta name="og:title" content={`Yu-Gi-Oh! Card Database - Yu-Gi-Oh! Format Library`}/>
+                <title>{`Yu-Gi-Oh! Card Database - Format Library`}</title>
+                <meta name="og:title" content={`Yu-Gi-Oh! Card Database - Format Library`}/>
                 <meta name="description" content={`Find any Yu-Gi-Oh! card from the TCG, OCG, or Speed Duels in this incredible Yu-Gi-Oh! Card Database. Includes info on release dates, prints, prices, rulings, etc.`}/>
                 <meta name="og:description" content={`Find any Yu-Gi-Oh! card from the TCG, OCG, or Speed Duels in this incredible Yu-Gi-Oh! Card Database. Includes info on release dates, prints, prices, rulings, etc.`}/>
             </Helmet>

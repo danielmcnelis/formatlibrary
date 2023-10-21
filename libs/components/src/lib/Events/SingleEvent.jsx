@@ -199,8 +199,8 @@ export const SingleEvent = () => {
   return (
     <>
         <Helmet>
-            <title>{`${event?.name} Tournament Coverage - Yu-Gi-Oh! Format Library`}</title>
-            <meta name="description" content={`Detailed coverage of ${event?.name} - ${event?.formatName} Format, including deck lists, deck stats, and featured match replays when available.`}/>
+            <title>{`${event?.name} Yu-Gi-Oh! Tournament Coverage - Format Library`}</title>
+            <meta name="description" content={`Detailed coverage of ${event?.name} - ${event?.formatName} Format hosted by ${event?.community}, including deck lists, deck stats, and featured match replays when available.`}/>
         </Helmet>
         <div className="body">
             <div className="event-title-flexbox">

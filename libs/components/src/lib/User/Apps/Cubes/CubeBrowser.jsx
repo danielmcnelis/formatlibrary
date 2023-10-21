@@ -485,7 +485,7 @@ export const CubeBrowser = () => {
     return (
         <>
             <Helmet>
-                <title>{`${cube?.name} by ${cube?.builder} - Yu-Gi-Oh! Format Library`}</title>
+                <title>{`${cube?.name} by ${cube?.builder} - Yu-Gi-Oh! Cube - Format Library`}</title>
                 <meta name="description" content={`Search the card pool for the cube, ${cube.name} by ${cube.builder}. Filter and sort by Category, Attribute, Type, ATK, DEF, Level/Rank, etc.`}/>
             </Helmet>
             <div className="body">

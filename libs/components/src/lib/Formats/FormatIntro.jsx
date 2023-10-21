@@ -45,7 +45,7 @@ export const FormatIntro = () => {
     return (
         <>
             <Helmet>
-                <title>{`Yu-Gi-Oh! ${format?.name} Format - Yu-Gi-Oh! Format Library`}</title>
+                <title>{`Yu-Gi-Oh! ${format?.name} Format - Format Library`}</title>
                 <meta name="description" content={format.description || format.event + `\nDeck Gallery • Tournaments • Legal Cards • Rulings • Banlist`}/>
                 <meta name="image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
             </Helmet>

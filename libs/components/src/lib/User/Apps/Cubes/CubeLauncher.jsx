@@ -57,7 +57,7 @@ export const CubeLauncher = () => {
     return (
         <>
             <Helmet>
-                <title>{`Yu-Gi-Oh! Cube Draft - Yu-Gi-Oh! Format Library`}</title>
+                <title>{`New Yu-Gi-Oh! Cube Draft - Format Library`}</title>
                 <meta name="description" content={`Draft and play some of the most popular cubes with your friends.\n${cubes?.slice(0, 3)?.map((c) => `${c.name} by ${c.builder}`).join('•')}`}/>
             </Helmet>
             <div className="cube-portal">

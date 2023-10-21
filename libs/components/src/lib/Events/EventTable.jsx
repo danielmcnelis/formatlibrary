@@ -135,8 +135,8 @@ export const EventTable = (props) => {
     if (isTabletOrMobile) return (
         <>
             <Helmet>
-                <title>{`Yu-Gi-Oh! Tournament Database - Yu-Gi-Oh! Format Library`}</title>
-                <meta name="description" content={`Search through an interactive database of recent and historic Yu-Gi-Oh! events, linking into detailed tournament coverage that includes deck lists, stats, and match replays.`}/>
+                <title>{`Yu-Gi-Oh! Tournament Database - Format Library`}</title>
+                <meta name="description" content={`Search through an interactive database of recent and historic Yu-Gi-Oh! events, linking to detailed tournament coverage including deck lists, metagame stats, and match replays.`}/>
             </Helmet>
             <div className="body">
                 <div className="event-database-flexbox">
@@ -259,8 +259,8 @@ export const EventTable = (props) => {
     return (
         <>
             <Helmet>
-                <title>{`Yu-Gi-Oh! Tournament Database - Yu-Gi-Oh! Format Library`}</title>
-                <meta name="description" content={`Search through an interactive database of recent and historic Yu-Gi-Oh! tournaments, linking to detailed coverage that includes deck lists, stats, and match replays.`}/>
+                <title>{`Yu-Gi-Oh! Tournament Database - Format Library`}</title>
+                <meta name="description" content={`Search through an interactive database of recent and historic Yu-Gi-Oh! tournaments, linking to detailed coverage including deck lists, metagame stats, and match replays.`}/>
             </Helmet>
             <div className="body">
                 <div className="event-database-flexbox">

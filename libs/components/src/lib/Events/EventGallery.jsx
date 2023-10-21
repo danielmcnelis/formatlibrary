@@ -36,7 +36,7 @@ export const EventGallery = () => {
     return (
         <>
             <Helmet>
-                <title>{`${format?.name} Format Tournaments - Yu-Gi-Oh! Format Library`}</title>
+                <title>{`${format?.name} Format Tournaments - Format Library`}</title>
                 <meta name="description" content={`Comprehensive tournament coverage of recent and historic ${format?.name} Format events, both online and in-person.`}/>
             </Helmet>
             <div className="body">

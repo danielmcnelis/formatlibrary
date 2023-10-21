@@ -540,7 +540,7 @@ export const Builder = () => {
   return (
     <>
         <Helmet>
-            <title>{`Yu-Gi-Oh! Deck Builder - Yu-Gi-Oh! Format Library`}</title>
+            <title>{`Yu-Gi-Oh! Deck Builder - Format Library`}</title>
             <meta name="description" content={`Build decks for any Yu-Gi-Oh! format. Use this app to search for legal cards from your favorite formats while constructing your decks.\nOpen • Save • Edit • Share • Publish`}/>
         </Helmet>
         <DndContext onDragEnd={handleDragEnd}>

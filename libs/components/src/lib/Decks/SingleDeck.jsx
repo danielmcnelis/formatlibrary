@@ -147,12 +147,12 @@ export const SingleDeck = () => {
   return (
     <>
         <Helmet>
-            <title>{`${deck?.type} ${deck?.formatName} Deck by ${deck?.builder} - Yu-Gi-Oh! Format Library`}</title>
+            <title>{`${deck?.type} ${deck?.formatName} Deck by ${deck?.builder} - Format Library`}</title>
             <meta 
                 name="description" 
                 content={
-                    deck?.placement ? `${ordinalize(deck?.placement)} Place ${deck?.formatName} Format ${deck?.type} Deck by ${deck?.builder}. This deck was played in ${deck.eventName} on ${dateToVerbose(deck.publishDate)}.` :
-                        `${deck?.formatName} Format ${deck?.type} Deck by ${deck?.builder}. This deck was published by the user on ${dateToVerbose(deck.publishDate)}.`
+                    deck?.placement ? `${ordinalize(deck?.placement)} Place ${deck?.formatName} Format ${deck?.type} Deck by ${deck?.builder}. This deck was used in ${deck.eventName} on ${dateToVerbose(deck.publishDate)}.` :
+                        `${deck?.formatName} Format ${deck?.type} Deck by ${deck?.builder}. This deck was shared by ${deck?.builder} on ${dateToVerbose(deck.publishDate)}.`
                 }
             />
         </Helmet>

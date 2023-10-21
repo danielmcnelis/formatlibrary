@@ -100,6 +100,9 @@ export const Card = db.define('cards', {
   def: {
     type: Sequelize.STRING
   },
+  pendulumEffect: {
+    type: Sequelize.TEXT
+  },
   description: {
     type: Sequelize.TEXT
   },

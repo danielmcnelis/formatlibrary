@@ -4,9 +4,9 @@ import { S3 } from 'aws-sdk'
 import { config } from '@fl/config'
 import * as bcrypt from 'bcrypt'
 
-export const playersAdmin = async (req, res, next) => {
+export const isAdmin = async (req, res, next) => {
     try {
-        const player = await Player.findOne({
+        const player = await Player.count({
           where: {
             id: req.params.id,
             admin: true
@@ -25,7 +25,7 @@ export const playersAdmin = async (req, res, next) => {
 
 export const playersSubscriber = async (req, res, next) => {
     try {
-        const player = await Player.findOne({
+        const player = await Player.count({
           where: {
             id: req.params.id,
             subscriber: true

@@ -88,8 +88,8 @@ export const PlayerProfile = () => {
   return (
     <>
         <Helmet>
-            <title>{`${player?.name} Player Profile - Yu-Gi-Oh! Format Library`}</title>
-            <meta name="description" content={`The public profile page for ${player?.name}. View the selected player's public contact info, best tournament finishes, favorite decks to play, etc.\nBest Formats • Top Finishes • Favorite Decks`}/>
+            <title>{`${player?.name} Player Profile - Format Library`}</title>
+            <meta name="description" content={`The public profile page for ${player?.name}. View  ${player?.name}'s public contact info, best tournament finishes, favorite decks to play, etc.\nBest Formats • Top Finishes • Favorite Decks`}/>
         </Helmet>
         <div className="body">
             <div className="player-profile-flexbox">

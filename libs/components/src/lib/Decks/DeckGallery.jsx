@@ -34,10 +34,10 @@ export const DeckGallery = () => {
     return (
         <>
             <Helmet>
-                <title>{`${format?.name} Format Deck Gallery - Yu-Gi-Oh! Format Library`}</title>
-                <meta name="og:title" content={`${format?.name} Format Deck Gallery - Yu-Gi-Oh! Format Library`}/>
-                <meta name="description" content={`A gallery of both popular and rogue Yu-Gi-Oh! deck types played in ${format?.name} Format. Sorted by popularity. Linking to detailed statistical breakdowns of each deck type.`}/>
-                <meta name="og:description" content={`A gallery of both popular and rogue Yu-Gi-Oh! deck types played in ${format?.name} Format. Sorted by popularity. Linking to detailed statistical breakdowns of each deck type.`}/>
+                <title>{`${format?.name} Format Yu-Gi-Oh! Deck Gallery - Format Library`}</title>
+                <meta name="og:title" content={`${format?.name} Format Deck Gallery - Format Library`}/>
+                <meta name="description" content={`A gallery of popular and rogue Yu-Gi-Oh! decks played in ${format?.name} Format. Sorted by popularity. Links to detailed breakdowns of each deck type.`}/>
+                <meta name="og:description" content={`A gallery of popular and rogue Yu-Gi-Oh! decks played in ${format?.name} Format. Sorted by popularity. Links to detailed breakdowns of each deck type.`}/>
             </Helmet>
             <div className="body">
                 <div id="popular-decks" className="popular-decks">

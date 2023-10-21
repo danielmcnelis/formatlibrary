@@ -154,10 +154,10 @@ export const DeckType = () => {
     return (
         <>
             <Helmet>
-                <title>{`${summary.deckType} Deck Stats - Yu-Gi-Oh! Format Library`}</title>
-                <meta name="og:title" content={`${summary.deckType} Deck Stats - Yu-Gi-Oh! Format Library.`}/>
-                <meta name="description" content={`Detailed breakdown and statistics of cards used in ${summary.deckType} decks for ${format?.name} Format.`}/>
-                <meta name="og:description" content={`Detailed breakdown and statistics of cards used in ${summary.deckType} decks for ${format?.name} Format.`}/>
+                <title>{`${summary.deckType} Yu-Gi-Oh! Deck Stats - Format Library`}</title>
+                <meta name="og:title" content={`${summary.deckType} Deck Stats - Format Library.`}/>
+                <meta name="description" content={`Detailed breakdown and statistics of cards used in ${summary.deckType} decks for Yu-Gi-Oh!'s ${format?.name} Format.`}/>
+                <meta name="og:description" content={`Detailed breakdown and statistics of cards used in ${summary.deckType} decks for Yu-Gi-Oh!'s ${format?.name} Format.`}/>
             </Helmet>
             <div className="body">
                 <div className="single-deck-title-flexbox">

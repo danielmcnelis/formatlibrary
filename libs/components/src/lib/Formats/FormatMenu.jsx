@@ -28,7 +28,7 @@ export const FormatMenu = () => {
         
         <>
             <Helmet>
-                <title>{`Yu-Gi-Oh! Formats - Yu-Gi-Oh! Format Library`}</title>
+                <title>{`Yu-Gi-Oh! Formats - Format Library`}</title>
                 <meta name="description" content={`Information on all Yu-Gi-Oh! formats from 2002 to the present.\nPopular Formats • Spotlight Formats • All Formats • Speed Duel Formats • OCG Formats • Custom Formats`}/>
             </Helmet>
             <div className="body">

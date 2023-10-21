@@ -167,7 +167,7 @@ export const ReplayTable = () => {
         return (
             <>
                 <Helmet>
-                    <title>{`Yu-Gi-Oh! Replay Database - Yu-Gi-Oh! Format Library`}</title>
+                    <title>{`Yu-Gi-Oh! Replay Database - Format Library`}</title>
                     <meta name="description" content={`Search through an interactive database of recorded Yu-Gi-Oh! matches in the form of DuelingBook.com replays.`}/>
                 </Helmet>
                 <div className="body">
@@ -295,7 +295,7 @@ export const ReplayTable = () => {
         return (
             <>
                 <Helmet>
-                    <title>{`Yu-Gi-Oh! Replay Database - Yu-Gi-Oh! Format Library`}</title>
+                    <title>{`Yu-Gi-Oh! Replay Database - Format Library`}</title>
                     <meta name="description" content={`Search through an interactive database of recorded Yu-Gi-Oh! matches in the form of DuelingBook.com replays.`}/>
                 </Helmet>
                 <div className="body">

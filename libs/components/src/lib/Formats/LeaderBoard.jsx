@@ -49,7 +49,7 @@ export const LeaderBoard = () => {
     return (
         <>
             <Helmet>
-                <title>{`${format?.name} Format Leaderboard - Yu-Gi-Oh! Format Library`}</title>
+                <title>{`${format?.name} Format Yu-Gi-Oh! Leaderboard - Format Library`}</title>
                 <meta name="description" content={`Live updated rankings of the best online ${format?.name} Format players.`}/>
             </Helmet>
             <div className="body">

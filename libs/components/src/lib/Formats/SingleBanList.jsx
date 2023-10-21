@@ -11,7 +11,7 @@ export const SingleBanList = (props) => {
     return (
         <>
             <Helmet>
-                <title>{`${props?.format?.name} Format Banlist - Yu-Gi-Oh! Format Library`}</title>
+                <title>{`${props?.format?.name} Format Yu-Gi-Oh! Banlist - Format Library`}</title>
                 <meta name="description" content={`An interactive list of cards with images showing the Forbidden, Limited, and Semi-Limited cards in ${props?.format?.name} Format.`}/>
             </Helmet>
             <div className="body">
