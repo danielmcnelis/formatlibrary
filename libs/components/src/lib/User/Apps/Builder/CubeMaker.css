@@ -14,7 +14,16 @@
   margin: 40px 2px 2px;
 }
 
-  
+.focal-card-flexbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 20%;
+    position: sticky; 
+    top: 0;
+}
+
 .control-panel-button {
     position: relative;
     margin: 5px 2px;
