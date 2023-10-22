@@ -14,6 +14,12 @@
   margin: 40px 2px 2px;
 }
 
+.cube-maker-interface {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .focal-card-flexbox {
     display: flex;
     flex-direction: column;

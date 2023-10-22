@@ -262,7 +262,7 @@ export const CubeMaker = () => {
     // GET CUBES
     const getCubes = async () => {
         try {
-            const accessToken = getCookie('access')
+            const accessToken = getCookie('access') || true
             if (accessToken) {
                 const {data} = await axios.get(`/api/cubes/my-cubes`, {
                     headers: {
@@ -285,278 +285,270 @@ export const CubeMaker = () => {
         <Helmet>
             <title>{`Yu-Gi-Oh! Cube Maker - Format Library`}</title>
             <meta name="description" content={`Create your own Yu-Gi-Oh! cube. Use this app to edit the cards in your cube. Make your cube public for your friends and others to play!`}/>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossOrigin="anonymous"/>
+            {/* <link rel="stylesheet" href="/style.css" /> */}
         </Helmet>
-        <DndContext onDragEnd={handleDragEnd}>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossOrigin="anonymous"/>
-        <link rel="stylesheet" href="/style.css" />
-        <div className="body" id="cube-maker" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Modal show={showOpenModal} onHide={() => {setShowOpenModal(false)}}>
-                <Modal.Header closeButton>
-                <Modal.Title>Open Cube:</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Cube:</Form.Label>
-                            <Form.Select id="cube-selector" style={{width: '200px'}} aria-label="Cube:" onChange={(e) => {updateCube(e.target.value)}}>
-                            {
-                                cubes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)
-                            }
-                            </Form.Select>
-                        </Form.Group>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="primary" onClick={() => {updateCube(document.getElementById('cube-selector')?.value); setShowOpenModal(false)}}>Open</Button>
-                    <Button variant="secondary" onClick={() => {setShowOpenModal(false)}}>Cancel</Button>
-                </Modal.Footer>
-            </Modal>
-            
-            <Modal show={showUploadModal} onHide={() => setShowUploadModal(false)}>
-                <Modal.Header closeButton> 
-                    <Modal.Title>Import YDK:</Modal.Title> 
-                </Modal.Header>
-                <Modal.Body>
-                    <label>YDK:
-                        <input
-                            id="ydk"
-                            className="login"
-                            type="file"
-                            accept=".ydk"
-                            onChange={(e) => readYDK(e.target.files[0])}
-                        />
-                    </label>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="primary" onClick={() => readYDK(document.getElementById('ydk').files[0])}>Upload</Button>
-                    <Button variant="secondary" onClick={() => setShowUploadModal(false)}>Cancel</Button>
-                </Modal.Footer>
-            </Modal>
 
-            <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-                <Modal.Header closeButton> 
-                    <Modal.Title>Delete Deck:</Modal.Title> 
-                </Modal.Header>
-                <Modal.Body>Are you sure you want to delete {cube.name}?</Modal.Body>
-                <Modal.Footer>
-                    <Button variant="primary" onClick={() => deleteCube()}> Delete </Button>
-                    <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
-                </Modal.Footer>
-            </Modal>
-
-            <Modal show={showPublishModal} onHide={() => setShowPublishModal(false)}>
-                <Modal.Header closeButton> 
-                    <Modal.Title>{cube.display ? 'Unpublish Cube' : 'Publish Cube'}</Modal.Title> 
-                </Modal.Header>
-                <Modal.Body>Are you sure you want make {cube.name} {cube.display ? 'private' : 'public'}?</Modal.Body>
-                <Modal.Footer>
-                    <Button variant="primary" onClick={() => cube.display ? unpublishCube() : publishCube()}>{cube.display ? 'Unpublish' : 'Publish'}</Button>
-                    <Button variant="secondary" onClick={() => setShowPublishModal(false)}>Cancel</Button>
-                </Modal.Footer>
-            </Modal>
-
-            <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
-                <Modal.Header closeButton style={{width: '560px'}}>
-                <Modal.Title>{cube?.id ? 'Edit Name:' : 'Save Cube:'}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body style={{width: '560px'}}>
-                    <Form style={{width: '560px'}}>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Name:</Form.Label>
-                            <Form.Control
-                                type="name"
-                                id="save-as-name"
-                                defaultValue={cube?.name}
-                                autoFocus
-                            />
-                        </Form.Group>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer style={{width: '560px'}}>
-                <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
-                    Cancel
-                </Button>
-                <Button variant="primary" onClick={() => saveCube()}>
-                    Save
-                </Button>
-                </Modal.Footer>
-            </Modal>        
-
-        <div style={{display: 'flex', justifyContent: 'center', margin: '0px 5px 0px 15px'}}>
-            <div className="builder-control-panel">
-                <div 
-                    className={"show-cursor control-panel-button"}
-                    onClick={() => newCube()}
-                >                                    
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/new-file.png`} alt="new file"/></div> 
-                    <div className="control-panel-text"><b>New Cube</b></div> 
-                </div>
-                
-                <div 
-                    className={"show-cursor control-panel-button"}
-                    onClick={() => setShowOpenModal(true)}
-                >                                    
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`} alt="open file"/></div> 
-                    <div className="control-panel-text"><b>Open Cube</b></div> 
-                </div> 
-
-                <div 
-                    className={"show-cursor control-panel-button"}
-                    onClick={() => setShowUploadModal(true)}
-                >                                    
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/upload.png`} alt="upload"/></div> 
-                    <div className="control-panel-text"><b>Upload Cube</b></div> 
-                </div>
-
-                <div 
-                    className={"show-cursor control-panel-button"}
-                    onClick={() => clearCube()}
-                >                                    
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/erase.png`} alt="clear"/></div> 
-                    <div className="control-panel-text"><b>Clear Cube</b></div>
-                </div> 
-
-                <div 
-                    className={"show-cursor control-panel-button"}
-                    onClick={() => copyCube()}
-                >                  
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/copy.png`} alt="copy"/></div> 
-                    <div className="control-panel-text"><b>Copy Cube</b></div> 
-                </div> 
-
-                <div 
-                    className={"show-cursor control-panel-button"}
-                    onClick={() => updateCube(cube?.id)}
-                >                  
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/revert.png`} alt="revert"/></div> 
-                    <div className="control-panel-text"><b>Revert Cube</b></div> 
-                </div> 
-
-                <div 
-                    className={"show-cursor control-panel-button"}
-                    onClick={() => sortCube()}
-                >                         
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/sort.png`} alt="sort"/></div> 
-                    <div className="control-panel-text"><b>Sort Cube</b></div> 
-                </div>
-
-                <div 
-                    className={"show-cursor control-panel-button"}
-                    onClick={() => cube?.id ? saveCube() : setShowSaveModal(true)}
-                >                  
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/save.png`} alt="save"/></div> 
-                    <div className="control-panel-text"><b>Save Cube</b></div> 
-                </div> 
-            </div>
-
-            <div>
-                <div className="single-cube-title-flexbox">
-                    <div style={{width: '80px'}}/>
-                    <div className="single-cube-title">{cube?.name || 'New Cube'} <img style={{width:'32px', margin: '10px 20px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube?.icon || 'master'}.png`} alt={cube?.icon || 'millennium-puzzle'}/></div>
-                    <div style={{width: '80px', color: '#CBC5C3', margin: '0px', alignSelf: 'center'}}>{edited ? <i>Edited</i> : ''}</div>
-                </div>
-
-                <Droppable locale="main">
-                    <div id="main" className="cube-bubble">
-                        <div id="main" className="cube-flexbox">
+        <Modal show={showOpenModal} onHide={() => {setShowOpenModal(false)}}>
+            <Modal.Header closeButton>
+            <Modal.Title>Open Cube:</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Cube:</Form.Label>
+                        <Form.Select id="cube-selector" style={{width: '200px'}} aria-label="Cube:" onChange={(e) => {updateCube(e.target.value)}}>
                         {
-                            cube?.cardPool.map((card, index) => {
-                                if (!card) {
-                                    return (
-                                        <Droppable locale="main" index={index}>
-                                            <EmptySlot 
-                                                className="card-image" 
-                                                width='72px' 
-                                                height='107px' 
-                                                padding='1px' 
-                                                margin='0px' 
-                                                key={`main-${index}`}
-                                            />
-                                        </Droppable>
-                                    )
-                                } else {
-                                    return (
-                                        <Droppable locale="main" index={index}>
-                                            <Draggable>
-                                                <CardImage 
-                                                    removeCard={removeCard} 
-                                                    setCard={setCard}
-                                                    locale="main" 
-                                                    index={index} 
+                            cubes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)
+                        }
+                        </Form.Select>
+                    </Form.Group>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={() => {updateCube(document.getElementById('cube-selector')?.value); setShowOpenModal(false)}}>Open</Button>
+                <Button variant="secondary" onClick={() => {setShowOpenModal(false)}}>Cancel</Button>
+            </Modal.Footer>
+        </Modal>
+        
+        <Modal show={showUploadModal} onHide={() => setShowUploadModal(false)}>
+            <Modal.Header closeButton> 
+                <Modal.Title>Import YDK:</Modal.Title> 
+            </Modal.Header>
+            <Modal.Body>
+                <label>YDK:
+                    <input
+                        id="ydk"
+                        className="login"
+                        type="file"
+                        accept=".ydk"
+                        onChange={(e) => readYDK(e.target.files[0])}
+                    />
+                </label>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={() => readYDK(document.getElementById('ydk').files[0])}>Upload</Button>
+                <Button variant="secondary" onClick={() => setShowUploadModal(false)}>Cancel</Button>
+            </Modal.Footer>
+        </Modal>
+
+        <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+            <Modal.Header closeButton> 
+                <Modal.Title>Delete Deck:</Modal.Title> 
+            </Modal.Header>
+            <Modal.Body>Are you sure you want to delete {cube.name}?</Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={() => deleteCube()}> Delete </Button>
+                <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
+            </Modal.Footer>
+        </Modal>
+
+        <Modal show={showPublishModal} onHide={() => setShowPublishModal(false)}>
+            <Modal.Header closeButton> 
+                <Modal.Title>{cube.display ? 'Unpublish Cube' : 'Publish Cube'}</Modal.Title> 
+            </Modal.Header>
+            <Modal.Body>Are you sure you want make {cube.name} {cube.display ? 'private' : 'public'}?</Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={() => cube.display ? unpublishCube() : publishCube()}>{cube.display ? 'Unpublish' : 'Publish'}</Button>
+                <Button variant="secondary" onClick={() => setShowPublishModal(false)}>Cancel</Button>
+            </Modal.Footer>
+        </Modal>
+
+        <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
+            <Modal.Header closeButton style={{width: '560px'}}>
+            <Modal.Title>{cube?.id ? 'Edit Name:' : 'Save Cube:'}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body style={{width: '560px'}}>
+                <Form style={{width: '560px'}}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Name:</Form.Label>
+                        <Form.Control
+                            type="name"
+                            id="save-as-name"
+                            defaultValue={cube?.name}
+                            autoFocus
+                        />
+                    </Form.Group>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer style={{width: '560px'}}>
+            <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
+                Cancel
+            </Button>
+            <Button variant="primary" onClick={() => saveCube()}>
+                Save
+            </Button>
+            </Modal.Footer>
+        </Modal>   
+        
+        <div className="body"> 
+            <DndContext onDragEnd={handleDragEnd}>
+                <div className="cube-maker-interface">
+                    <div className="builder-control-panel" style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', margin: '0px 5px 0px 15px'}}>
+                        <div 
+                            className={"show-cursor control-panel-button"}
+                            onClick={() => newCube()}
+                        >                                    
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/new-file.png`} alt="new file"/></div> 
+                            <div className="control-panel-text"><b>New Cube</b></div> 
+                        </div>
+                        
+                        <div 
+                            className={"show-cursor control-panel-button"}
+                            onClick={() => setShowOpenModal(true)}
+                        >                                    
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`} alt="open file"/></div> 
+                            <div className="control-panel-text"><b>Open Cube</b></div> 
+                        </div> 
+
+                        <div 
+                            className={"show-cursor control-panel-button"}
+                            onClick={() => setShowUploadModal(true)}
+                        >                                    
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/upload.png`} alt="upload"/></div> 
+                            <div className="control-panel-text"><b>Upload Cube</b></div> 
+                        </div>
+
+                        <div 
+                            className={"show-cursor control-panel-button"}
+                            onClick={() => clearCube()}
+                        >                                    
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/erase.png`} alt="clear"/></div> 
+                            <div className="control-panel-text"><b>Clear Cube</b></div>
+                        </div> 
+
+                        <div 
+                            className={"show-cursor control-panel-button"}
+                            onClick={() => copyCube()}
+                        >                  
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/copy.png`} alt="copy"/></div> 
+                            <div className="control-panel-text"><b>Copy Cube</b></div> 
+                        </div> 
+
+                        <div 
+                            className={"show-cursor control-panel-button"}
+                            onClick={() => updateCube(cube?.id)}
+                        >                  
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/revert.png`} alt="revert"/></div> 
+                            <div className="control-panel-text"><b>Revert Cube</b></div> 
+                        </div> 
+
+                        <div 
+                            className={"show-cursor control-panel-button"}
+                            onClick={() => sortCube()}
+                        >                         
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/sort.png`} alt="sort"/></div> 
+                            <div className="control-panel-text"><b>Sort Cube</b></div> 
+                        </div>
+
+                        <div 
+                            className={"show-cursor control-panel-button"}
+                            onClick={() => cube?.id ? saveCube() : setShowSaveModal(true)}
+                        >                  
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/save.png`} alt="save"/></div> 
+                            <div className="control-panel-text"><b>Save Cube</b></div> 
+                        </div> 
+                    </div>
+
+                    <Droppable locale="main">
+                        <div id="main" className="cube-bubble">
+                            <div id="main" className="cube-flexbox">
+                            {
+                                cube?.cardPool.map((card, index) => {
+                                    if (!card) {
+                                        return (
+                                            <Droppable locale="main" index={index}>
+                                                <EmptySlot 
+                                                    className="card-image" 
                                                     width='72px' 
                                                     height='107px' 
                                                     padding='1px' 
                                                     margin='0px' 
-                                                    key={`main-${index}`} 
-                                                    card={card}
-                                                    disableLink={true}
+                                                    key={`main-${index}`}
                                                 />
-                                            </Draggable>
-                                        </Droppable>
-                                    )
-                                }
-                            })
-                        }
-                        {
-                            cube?.cardPool.length < 40 ? [...Array(40 - cube?.cardPool.length)].map((x, i) => <Droppable local="main"><EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/></Droppable>) :
-                            cube?.cardPool.length % 10 ? [...Array(10 -  cube?.cardPool.length % 10)].map((x, i) => <Droppable local="main"><EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/></Droppable>) :
-                            ''
-                        }
-                        </div>
-                    </div>
-                </Droppable>
-                
-                    {
-                        cube?.id ? (
-                            <div className="builder-bottom-panel">                     
-                                <div 
-                                    className="show-cursor deck-button" 
-                                    onClick={() => setShowDeleteModal(true)}
-                                >
-                                    <b style={{padding: '0px 6px'}}>Delete</b>
-                                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/delete.png`} alt="delete"/>
-                                </div>                     
-                                <div className="show-cursor cube-button">
-                                    <a
-                                        className="link"
-                                        href={`/api/formats/download/${cube?.id}`} 
-                                        download={`${cube?.name}-cardpool.ydk`}
-                                    >                                    
-                                        <div className="cube-button">
-                                            <b style={{padding: '0px 6px'}}>Download</b>
-                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`} alt="download"/>
-                                        </div> 
-                                    </a>
-                                </div>  
-                                
-                                <div 
-                                    className="show-cursor cube-button"
-                                    onClick={() => setShowPublishModal(true)}
-                                >
-                                    {
-                                        cube.display ? (
-                                            <div className="cube-button">
-                                                <b style={{padding: '0px 6px'}}>Unpublish</b>
-                                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/hide.png`} alt="disguised"/>
-                                            </div> 
-                                        ) : (
-                                            <div className="cube-button">
-                                                <b style={{padding: '0px 6px'}}>Publish</b>
-                                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/globe.png`} alt="globe"/>
-                                            </div> 
+                                            </Droppable>
+                                        )
+                                    } else {
+                                        return (
+                                            <Droppable locale="main" index={index}>
+                                                <Draggable>
+                                                    <CardImage 
+                                                        removeCard={removeCard} 
+                                                        setCard={setCard}
+                                                        locale="main" 
+                                                        index={index} 
+                                                        width='72px' 
+                                                        height='107px' 
+                                                        padding='1px' 
+                                                        margin='0px' 
+                                                        key={`main-${index}`} 
+                                                        card={card}
+                                                        disableLink={true}
+                                                    />
+                                                </Draggable>
+                                            </Droppable>
                                         )
                                     }
-                                </div> 
+                                })
+                            }
+                            {
+                                cube?.cardPool.length < 40 ? [...Array(40 - cube?.cardPool.length)].map((x, i) => <Droppable local="main"><EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/></Droppable>) :
+                                cube?.cardPool.length % 10 ? [...Array(10 -  cube?.cardPool.length % 10)].map((x, i) => <Droppable local="main"><EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/></Droppable>) :
+                                ''
+                            }
                             </div>
-                            
-                        ) : ''
-                    }
+                        </div>
+                    </Droppable>   
+                    <FocalCard card={card}/>
+                    <SearchPanel addCard={addCard} setCard={setCard} />
                 </div>
-            </div>
-            <FocalCard card={card}/>
-            <SearchPanel addCard={addCard} setCard={setCard} />
+                {
+                    cube?.id ? (
+                        <div className="builder-bottom-panel">                     
+                            <div 
+                                className="show-cursor deck-button" 
+                                onClick={() => setShowDeleteModal(true)}
+                            >
+                                <b style={{padding: '0px 6px'}}>Delete</b>
+                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/delete.png`} alt="delete"/>
+                            </div>                     
+                            <div className="show-cursor cube-button">
+                                <a
+                                    className="link"
+                                    href={`/api/formats/download/${cube?.id}`} 
+                                    download={`${cube?.name}-cardpool.ydk`}
+                                >                                    
+                                    <div className="cube-button">
+                                        <b style={{padding: '0px 6px'}}>Download</b>
+                                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`} alt="download"/>
+                                    </div> 
+                                </a>
+                            </div>  
+                            
+                            <div 
+                                className="show-cursor cube-button"
+                                onClick={() => setShowPublishModal(true)}
+                            >
+                                {
+                                    cube.display ? (
+                                        <div className="cube-button">
+                                            <b style={{padding: '0px 6px'}}>Unpublish</b>
+                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/hide.png`} alt="disguised"/>
+                                        </div> 
+                                    ) : (
+                                        <div className="cube-button">
+                                            <b style={{padding: '0px 6px'}}>Publish</b>
+                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/globe.png`} alt="globe"/>
+                                        </div> 
+                                    )
+                                }
+                            </div> 
+                        </div>
+                        
+                    ) : ''
+                }
+            </DndContext>
         </div>
-        </DndContext>
     </>
   )
 }

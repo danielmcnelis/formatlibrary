@@ -815,12 +815,12 @@ import { S3 } from 'aws-sdk'
 ;(async () => {
     const cards = await Card.findAll({
         where: {
-            pendulumEffect: {[Op.not]: null}
+            pendulumEffect: {[Op.substring]: ' [ Flavor Text ]'}
         }
     })
 
     for (let i = 0; i < cards.length; i++) {
         const card = cards[i]
-        await card.update({ pendulumEffect: card.pendulumEffect.replaceAll(' [ Monster Effect ]', '')})
+        await card.update({ pendulumEffect: card.pendulumEffect.replaceAll(' [ Flavor Text ]', '')})
     }
 })()
