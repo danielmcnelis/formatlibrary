@@ -29,8 +29,7 @@ export default {
         ),
     async execute(interaction) {
         await interaction.deferReply()
-        console.log('interaction', interaction)
-        console.log(`interaction.options.getUser('olduser')`, interaction.options.getUser('olduser'))
+        console.log('interaction.options._hoistedOptions', interaction.options._hoistedOptions)
         const oldDiscordId = interaction.options.getUser('olduser')?.id
         const newDiscordId = interaction.options.getUser('newuser')?.id
         
