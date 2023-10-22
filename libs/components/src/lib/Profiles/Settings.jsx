@@ -303,7 +303,6 @@ export const Settings = () => {
                     />
                     <div className="profile-info"> 
                         <div className="profile-line"><b>Name:</b> {firstName && lastName ? `${firstName} ${lastName}` : ''}</div>
-                        <div className="profile-line"><b>Email:</b> {email || ''}</div>
                         <div className="profile-line"><b>DuelingBook:</b> {duelingBook || ''}</div>
                         <div className="profile-line"><b>Discord:</b> {discordName && discriminator ? (<><span>{discordName}</span><span style={{ color: 'gray' }}>{discriminator ? `#${discriminator}` : ''}</span></>): 'N/A'}</div>
                         <div className="profile-line"><b>Country:</b> {country ? regionNames.of(country) : ''} {country ? <img className="country" src={`https://www.worldometers.info/img/flags/${country.toLowerCase()}-flag.gif`} alt={country + '-flag'}/> : ''}</div>

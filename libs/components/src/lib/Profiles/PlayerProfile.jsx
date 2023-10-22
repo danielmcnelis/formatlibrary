@@ -23,11 +23,8 @@ export const PlayerProfile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('id', id)
-        console.log('discriminator', discriminator)
         let route = `/api/players/${id}`
         if (discriminator) route += `?discriminator=${discriminator}`
-        console.log('route', route)
         const { data } = await axios.get(route)
         setPlayer(data)
       } catch (err) {

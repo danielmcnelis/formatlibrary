@@ -97,7 +97,7 @@ export const playersId = async (req, res, next) => {
             ],
             hidden: false            
         },
-        attributes: ['id', 'email', 'name', 'discordId', 'discordPfp', 'discordName', 'discriminator', 'firstName', 'lastName', 'googleId', 'googlePfp', 'duelingBook', 'duelingBookPfp', 'country', 'timeZone', 'youtube', 'twitch', 'twitter']
+        attributes: ['id', 'name', 'discordId', 'discordPfp', 'discordName', 'discriminator', 'firstName', 'lastName', 'googlePfp', 'duelingBook', 'duelingBookPfp', 'country', 'timeZone', 'youtube', 'twitch', 'twitter']
     })
 
     const hasPassword = await Player.count({
