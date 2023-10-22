@@ -29,8 +29,7 @@ export default {
         ),
     async execute(interaction) {
         await interaction.deferReply()
-        console.log('interaction.options._hoistedOptions', interaction.options._hoistedOptions)
-        const oldDiscordId = interaction.options.getUser('olduser')?.id
+        const oldDiscordId = interaction.options.getUser('olduser')?.id || interaction.options._hoistedOptions[0].user?.id || interaction.options._hoistedOptions[0].value
         const newDiscordId = interaction.options.getUser('newuser')?.id
         
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
