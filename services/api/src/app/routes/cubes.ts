@@ -7,7 +7,7 @@ router.put('/api/cubes/read-ydk', cubesReadYdk)
 
 router.put('/api/cubes/update/:id', cubesUpdateId)
 
-router.get('/api/cubes/my-cubes', getMyCubes)
+router.get('/api/cubes/my-cubes', [authenticate, getMyCubes])
 
 router.get('/api/cubes/:id', cubesId)
 
