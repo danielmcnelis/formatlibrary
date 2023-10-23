@@ -126,8 +126,7 @@ export const cubesReadYdk = async (req, res, next) => {
 
 // GET MY CUBES
 export const getMyCubes = async (req, res, next) => {
-    const playerId = req.user?.playerId || 'ruStGFXbGiM7mwog5Jd4Jt'
-    console.log('playerId', playerId)
+    const playerId = req.user?.playerId
 
     try {
         const player = await Player.findOne({
