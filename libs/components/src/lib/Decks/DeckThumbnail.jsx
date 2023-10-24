@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom'
-import { capitalize, underscorize } from '@fl/utils'
+import { capitalize, urlize } from '@fl/utils'
 import './DeckThumbnail.css'
 
 export const DeckThumbnail = (props) => {
@@ -8,7 +8,7 @@ export const DeckThumbnail = (props) => {
     if (!deck) return <div/>
   
     return (
-      <Link className='link' to={underscorize(`/decktypes/${deck.name}${props.format ? `?format=${props.format}` : ''}`)}>
+      <Link className='link' to={urlize(`/decktypes/${deck.name}${props.format ? `?format=${props.format}` : ''}`)}>
         <div className="deckThumbnail">
           <h3>{capitalize(deck.name, true)}</h3>
           <div className="deckThumbnail-flexbox">

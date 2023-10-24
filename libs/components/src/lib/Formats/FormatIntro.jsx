@@ -7,7 +7,7 @@ import { NotFound } from '../General/NotFound'
 import { PopularDecks } from './PopularDecks'
 import { RecentEvents } from '../Events/RecentEvents'
 import { useParams } from 'react-router-dom'
-import { underscorize } from '@fl/utils'
+import { urlize } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import './FormatIntro.css'
 
@@ -68,10 +68,10 @@ export const FormatIntro = () => {
                 deckCount ? (
                     <>
                         <li>
-                            <a href={`/deck-gallery/${underscorize(format.name)}`}>Deck Gallery</a>
+                            <a href={`/deck-gallery/${urlize(format.name)}`}>Deck Gallery</a>
                         </li>
                         <li>
-                            <a href={`/formats/${underscorize(format.name)}#popular-decks`}>Popular Decks</a>
+                            <a href={`/formats/${urlize(format.name)}#popular-decks`}>Popular Decks</a>
                         </li>
                     </>
                 ) : ''
@@ -80,10 +80,10 @@ export const FormatIntro = () => {
                 eventCount ? (
                     <>
                         <li>
-                            <a href={`/event-gallery/${underscorize(format.name)}`}>Event Gallery</a>
+                            <a href={`/event-gallery/${urlize(format.name)}`}>Event Gallery</a>
                         </li>
                         <li>
-                            <a href={`/formats/${underscorize(format.name)}#recent-events`}>Recent Events</a>
+                            <a href={`/formats/${urlize(format.name)}#recent-events`}>Recent Events</a>
                         </li>
                     </>
                 ) : ''
@@ -91,15 +91,15 @@ export const FormatIntro = () => {
                 {
                 statsCount ? (
                     <li>
-                    <a href={`/leaderboards/${underscorize(format.name)}`}>Leaderboard</a>
+                    <a href={`/leaderboards/${urlize(format.name)}`}>Leaderboard</a>
                     </li>
                 ) : ''
                 }
                 <li>
-                <a href={`/cards?format=${underscorize(format.name)}`}>Card Pool</a>
+                <a href={`/cards?format=${urlize(format.name)}`}>Card Pool</a>
                 </li>
                 <li>
-                <a href={`/formats/${underscorize(format.name)}#banlist`}>Ban List</a>
+                <a href={`/formats/${urlize(format.name)}#banlist`}>Ban List</a>
                 </li>
             </div>
             <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} alt={format.icon}/>

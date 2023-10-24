@@ -4,6 +4,7 @@ import axios from 'axios'
 import { config } from '@fl/config' 
 import Canvas = require('canvas')
 import { S3 } from 'aws-sdk'
+import { capitalize } from '@fl/utils'
 
 // ;(async () => {
 //     const decks = await Deck.findAll({ include: [DeckType, Event, Format, Player] })
@@ -809,54 +810,11 @@ import { S3 } from 'aws-sdk'
 //     }
 // })()
 
-
 ;(async () => {
-    const statuses = await Status.findAll()
-
-    for (let i = 0; i < statuses.length; i++) {
-        const status = statuses[i]
-        status.banlist = status.banlist.replace('jan', 'January 20')
-            .replace('feb', 'February 20')
-            .replace('mar', 'March 20')
-            .replace('apr', 'April 20')
-            .replace('may', 'May 20')
-            .replace('jun', 'June 20')
-            .replace('jul', 'July 20')
-            .replace('aug', 'August 20')
-            .replace('sep', 'September 20')
-            .replace('oct', 'October 20')
-            .replace('nov', 'November 20')
-            .replace('dec', 'December 20')
-
-        await status.save()
-    }
-
     const formats = await Format.findAll()
 
     for (let i = 0; i < formats.length; i++) {
         const format = formats[i]
-        format.banlist = format.banlist?.replace('jan', 'January 20')
-            .replace('feb', 'February 20')
-            .replace('mar', 'March 20')
-            .replace('apr', 'April 20')
-            .replace('may', 'May 20')
-            .replace('jun', 'June 20')
-            .replace('jul', 'July 20')
-            .replace('aug', 'August 20')
-            .replace('sep', 'September 20')
-            .replace('oct', 'October 20')
-            .replace('nov', 'November 20')
-            .replace('dec', 'December 20')
-
-        await format.save()
-    }
-})()
-
-;(async () => {
-    const deckTypes = await DeckType.findAll()
-
-    for (let i = 0; i < deckTypes.length; i++) {
-        const deckType = deckTypes[i]
-        await deckType.update({ cleanName: deckType.name.replaceAll('-', ' ')})
+        await format.update({ cleanName: capitalize(format.cleanName, true) })
     }
 })()

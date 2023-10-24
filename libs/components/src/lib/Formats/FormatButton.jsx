@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom'
-import { capitalize, underscorize } from '@fl/utils'
+import { capitalize, urlize } from '@fl/utils'
 import './FormatButton.css'
 
 //FORMAT BUTTONS
@@ -13,7 +13,7 @@ export const FormatButton = (props) => {
   
     return (
       <Link 
-        to={underscorize(`/formats/${format.name}`)} 
+        to={urlize(`/formats/${format.name}`)} 
         className="format-link" 
         style={{ backgroundImage: `url(https://cdn.formatlibrary.com/images/emojis/${format.icon}.png)`}}
       >

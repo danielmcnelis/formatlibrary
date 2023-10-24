@@ -1,5 +1,5 @@
 
-import { capitalize, underscorize } from '@fl/utils'
+import { capitalize, urlize } from '@fl/utils'
 import { Link } from 'react-router-dom'
 import './Badge.css'
 
@@ -26,7 +26,7 @@ export const Badge = (props) => {
   const medal = getMedal(stats.elo)
 
   return (
-    <Link to={underscorize(`/formats/${stats.format}`)}>
+    <Link to={urlize(`/formats/${stats.format}`)}>
         <div className="badge">
             <img src={medal} alt="medal"/>
             <div className="badge-label">{capitalize(stats.format.replace('_', ' '), true)}</div>

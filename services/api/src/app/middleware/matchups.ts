@@ -1,23 +1,41 @@
 
-import { Matchup } from '@fl/models'
+import { DeckType, Format, Matchup } from '@fl/models'
 import { Op } from 'sequelize'
 
 export const getMatchupH2H = async (req, res, next) => {
   try {
     if (req.query.isSubscriber === 'true' || req.query.isAdmin === 'true') {
+        const deckType1 = await DeckType.findOne({
+            where: {
+                cleanName: {[Op.iLike]: req.params.id.replaceAll('-', '_')}
+            }
+        })
+
+        const deckType2 = await DeckType.findOne({
+            where: {
+                cleanName: {[Op.iLike]: req.query.versus.replaceAll('-', '_')}
+            }
+        })
+
+        const format = await Format.findOne({
+            where: {
+                cleanName: {[Op.iLike]: req.query.format.replaceAll('-', '_')}
+            }
+        })
+
         const wins = await Matchup.count({
             where: {
-                winningDeckType: {[Op.iLike]: req.params.id},
-                losingDeckType: {[Op.iLike]: req.query.versus},
-                formatName: {[Op.iLike]: req.query.format}
+                winningDeckTypeId: deckType1.id,
+                losingDeckTypeId: deckType2.id,
+                formatId: format.id
             }
         })
     
         const losses = await Matchup.count({
             where: {
-                winningDeckType: {[Op.iLike]: req.query.versus},
-                losingDeckType: {[Op.iLike]: req.params.id},
-                formatName: {[Op.iLike]: req.query.format}
+                winningDeckTypeId: deckType2.id,
+                losingDeckTypeId: deckType1.id,
+                formatId: format.id
             }
         })
     
@@ -34,22 +52,30 @@ export const getMatchupH2H = async (req, res, next) => {
 
 export const getMatchupMatrix = async (req, res, next) => {
     try {
-        console.log('req.params.isAdmin', req.params.isAdmin)
-        console.log('req.params.isSubscriber', req.params.isSubscriber)
         if (req.query.isSubscriber === 'true' || req.query.isAdmin === 'true') {
-            console.log('req.params.id', req.params.id)
-            console.log('req.query.format', req.query.format)
+            const deckType = await DeckType.findOne({
+                where: {
+                    cleanName: {[Op.iLike]: req.params.id}
+                }
+            })
+
+            const format = await Format.findOne({
+                where: {
+                    cleanName: {[Op.iLike]: req.query.format.replaceAll('-', '_')}
+                }
+            })
+
             const wins = await Matchup.findAll({
                 where: {
-                    winningDeckType: {[Op.iLike]: req.params.id},
-                    formatName: {[Op.iLike]: req.query.format}
+                    winningDeckTypeId: deckType.id,
+                    formatId: format.id
                 }
             })
         
             const losses = await Matchup.findAll({
                 where: {
-                    losingDeckType: {[Op.iLike]: req.params.id},
-                    formatName: {[Op.iLike]: req.query.format}
+                    losingDeckTypeId: deckType.id,
+                    formatId: format.id
                 }
             })
 
@@ -81,7 +107,6 @@ export const getMatchupMatrix = async (req, res, next) => {
                 }
             })
         
-            console.log('matrix', matrix)
             res.json(matrix)
         } else {
             res.json(false)
