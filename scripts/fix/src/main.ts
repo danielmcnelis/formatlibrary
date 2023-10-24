@@ -815,7 +815,7 @@ import { S3 } from 'aws-sdk'
 
     for (let i = 0; i < statuses.length; i++) {
         const status = statuses[i]
-        status.banlist.replace('jan', 'January 20')
+        status.banlist = status.banlist.replace('jan', 'January 20')
             .replace('feb', 'February 20')
             .replace('mar', 'March 20')
             .replace('apr', 'April 20')
@@ -835,7 +835,7 @@ import { S3 } from 'aws-sdk'
 
     for (let i = 0; i < formats.length; i++) {
         const format = formats[i]
-        format.banlist.replace('jan', 'January 20')
+        format.banlist = format.banlist?.replace('jan', 'January 20')
             .replace('feb', 'February 20')
             .replace('mar', 'March 20')
             .replace('apr', 'April 20')
@@ -850,7 +850,13 @@ import { S3 } from 'aws-sdk'
 
         await format.save()
     }
+})()
 
-    
+;(async () => {
+    const deckTypes = await DeckType.findAll()
 
+    for (let i = 0; i < deckTypes.length; i++) {
+        const deckType = deckTypes[i]
+        await deckType.update({ cleanName: deckType.name.replaceAll('-', ' ')})
+    }
 })()

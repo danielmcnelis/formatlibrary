@@ -7,6 +7,12 @@ export const Format = db.define('formats', {
     unique: true,
     allowNull: false
   },
+  cleanName: {
+    type: Sequelize.STRING
+  },
+  abbreviation: {
+    type: Sequelize.STRING
+  },
   date: {
     type: Sequelize.STRING
   },
@@ -20,6 +26,9 @@ export const Format = db.define('formats', {
     type: Sequelize.STRING
   },
   description: {
+    type: Sequelize.TEXT
+  },
+  blurb: {
     type: Sequelize.TEXT
   },
   channel: {

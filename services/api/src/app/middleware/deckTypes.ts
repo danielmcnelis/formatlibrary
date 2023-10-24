@@ -19,7 +19,9 @@ export const deckTypes = async (req, res, next) => {
 export const deckTypesName = async (req, res, next) => {
     try {
         const deckType = await DeckType.findOne({
-            where: { name: req.params.name },
+            where: { 
+                cleanName: {[Op.iLike]: req.params.name?.replaceAll(' ', '_').replaceAll('-', '_') }
+            },
             attributes: ['id', 'name', 'category'],
             order: [['name', 'ASC']]
         })
@@ -34,15 +36,21 @@ export const deckTypesDownload = async (req, res, next) => {
     try {
       const format = await Format.findOne({
         where: {
-          name: { [Op.iLike]: req.query.format }
+          cleanName: { [Op.iLike]: req.query.format.replaceAll(' ', '_').replaceAll('-', '_') }
         },
         attributes: ['id', 'name', 'banlist', 'date', 'icon']
+      })
+
+      const deckType = await DeckType.findOne({
+        where: {
+            cleanName: { [Op.iLike]: req.query.id.replaceAll(' ', '_').replaceAll('-', '_') },
+        }
       })
 
       const decks =
         (await Deck.findAll({
           where: {
-            type: { [Op.iLike]: req.query.id },
+            deckTypeId: deckType.id,
             formatId: format.id
           },
           attributes: ['id', 'ydk']
@@ -261,11 +269,9 @@ export const deckTypesSummary = async (req, res, next) => {
   try {
     const deckType = await DeckType.findOne({
         where: {
-            name: { [Op.iLike]: req.query.id }
+            cleanName: { [Op.iLike]: req.query.id.replaceAll('-', ' ') }
         }
     })
-
-    console.log('req.query.id', req.query.id)
 
     let format
 
@@ -506,6 +512,7 @@ export const deckTypesCreate = async (req, res, next) => {
       })) ||
       (await DeckType.create({
         name: req.body.name,
+        cleanName: req.body.name.replaceAll('-', ' '),
         category: req.body.category
       }))
 

@@ -387,7 +387,7 @@ export const updateDeckTypes = async (client) => {
         const deck = decks[i]
         const deckType = await DeckType.findOne({
             where: {
-                name: {[Op.iLike]: deck.suggestedType }
+                cleanName: {[Op.iLike]: deck.suggestedType.replaceAll(' ', '_').replaceAll('-', '_') }
             }
         })
 

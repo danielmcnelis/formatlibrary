@@ -270,9 +270,14 @@ export const decksMyDecks = async (req, res, next) => {
 
 export const decksPopular = async (req, res, next) => {
   try {
+    const format = await Format.findOne({
+        where: {
+            cleanName: {[Op.iLike]: req.params.format.replaceAll(' ', '_').replaceAll('-', '_')}
+        }
+    })
     const decks = await Deck.findAll({
       where: {
-        formatName: { [Op.iLike]: req.params.format },
+        formatId: format.id,
         type: { [Op.not]: 'Other' }
       },
       attributes: ['id', 'type']
@@ -281,15 +286,15 @@ export const decksPopular = async (req, res, next) => {
     if (!decks.length) return false
 
     const freqs = decks.reduce((acc, curr) => (acc[curr.type] ? acc[curr.type]++ : (acc[curr.type] = 1), acc), {})
-    const arr = Object.entries(freqs)
+    const names = Object.entries(freqs)
       .sort((a: never, b: never) => b[1] - a[1])
       .map((e) => e[0])
       .slice(0, 6)
     const data = []
 
-    for (let i = 0; i < arr.length; i++) {
+    for (let i = 0; i < names.length; i++) {
       try {
-        const name = arr[i]
+        const name = names[i]
         const deckType = await DeckType.findOne({
           where: {
             name: name
@@ -300,8 +305,8 @@ export const decksPopular = async (req, res, next) => {
         const deckThumb =
           (await DeckThumb.findOne({
             where: {
-              format: { [Op.iLike]: req.params.format },
-              deckTypeId: deckType.id
+                formatId: format.id,
+                deckTypeId: deckType.id
             },
             attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
           })) ||
@@ -335,14 +340,14 @@ export const decksGallery = async (req, res, next) => {
   try {
     const format = await Format.findOne({
       where: {
-        name: { [Op.iLike]: req.params.format }
+        cleanName: { [Op.iLike]: req.params.format.replaceAll(' ', '_').replaceAll('-', '_') }
       },
       attributes: ['id', 'name', 'icon']
     })
 
     const decks = await Deck.findAll({
       where: {
-        formatName: { [Op.iLike]: req.params.format },
+        formatId: format.id,
         type: { [Op.not]: 'Other' },
         origin: 'event'
       },
@@ -352,15 +357,15 @@ export const decksGallery = async (req, res, next) => {
     if (!decks.length) return false
 
     const freqs = decks.reduce((acc, curr) => (acc[curr.type] ? acc[curr.type]++ : (acc[curr.type] = 1), acc), {})
-    const arr = Object.entries(freqs)
+    const names = Object.entries(freqs)
       .sort((a: never, b: never) => b[1] - a[1])
       .filter((e, index) => e[1] >= 3 || index <= 5)
       .map((e) => e[0])
     const data = []
 
-    for (let i = 0; i < arr.length; i++) {
+    for (let i = 0; i < names.length; i++) {
       try {
-        const name = arr[i]
+        const name = names[i]
         const deckType = await DeckType.findOne({
           where: {
             name: name
