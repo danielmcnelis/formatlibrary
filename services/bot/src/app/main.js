@@ -183,6 +183,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         } else if (command.data.name === 'deck') {
             if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const entryId = interaction.values[0]
+            console.log('entryId', entryId)
             await sendDeck(interaction, entryId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'drop') {

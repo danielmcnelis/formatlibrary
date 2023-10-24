@@ -306,7 +306,7 @@ export const sendDeck = async (interaction, entryId) => {
     const deckAttachments = entry.tournament.formatName === 'One Piece' ? await drawOPDeck(entry.ydk) || [] : await drawDeck(entry.ydk) || []
     const ydkFile = new AttachmentBuilder(Buffer.from(entry.ydk), { name: `${entry.player.globalName || entry.player.discordName}#${entry.player.discriminator}_${entry.tournament.abbreviation || entry.tournament.name}.ydk` })
     const isAuthor = interaction.user.id === entry.player.discordId
-    return await interaction.member.send({ content: `${isAuthor ? `${entry.player.globalName || entry.player.discordName}'s` : 'Your'} deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ...ydkFile]}).catch((err) => console.log(err))
+    return await interaction.member.send({ content: `${isAuthor ? `${entry.player.globalName || entry.player.discordName}'s` : 'Your'} deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
 }
 
 // SELECT TOURNAMENT FOR DECK CHECK
