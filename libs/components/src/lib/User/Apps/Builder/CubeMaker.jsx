@@ -284,9 +284,10 @@ export const CubeMaker = () => {
     <>
         <Helmet>
             <title>{`Yu-Gi-Oh! Cube Maker - Format Library`}</title>
-            <meta name="description" content={`Create your own Yu-Gi-Oh! cube. Use this app to edit the cards in your cube. Make your cube public for your friends and others to play!`}/>
+            <meta name="og:title" content={`Yu-Gi-Oh! Cube Maker - Format Library`}/>
+            <meta name="description" content={`Create your own Yu-Gi-Oh! cube. Use this app to add cards to your cube, then make it public for your friends and others to play!`}/>
+            <meta name="og:description" content={`Create your own Yu-Gi-Oh! cube. Use this app to add cards to your cube, then make it public for your friends and others to play!`}/>
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossOrigin="anonymous"/>
-            {/* <link rel="stylesheet" href="/style.css" /> */}
         </Helmet>
 
         <Modal show={showOpenModal} onHide={() => {setShowOpenModal(false)}}>

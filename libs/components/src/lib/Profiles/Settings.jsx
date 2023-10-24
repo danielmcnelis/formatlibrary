@@ -128,7 +128,9 @@ export const Settings = () => {
     <>
         <Helmet>
             <title>{`Settings - Format Library`}</title>
+            <meta name="og:title" content={`Settings - Format Library`}/>    
             <meta name="description" content={`View and edit your account settings for FormatLibrary.com.`}/>    
+            <meta name="og:description" content={`View and edit your account settings for FormatLibrary.com.`}/>    
         </Helmet>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossOrigin="anonymous"/>
         <link rel="stylesheet" href="/styles.css" />

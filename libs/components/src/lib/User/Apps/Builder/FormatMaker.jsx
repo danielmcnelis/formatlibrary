@@ -202,7 +202,9 @@ export const FormatMaker = () => {
     <>
         <Helmet>
             <title>{`Yu-Gi-Oh! Format Maker - Format Library`}</title>
-            <meta name="description" content={`Create your own Yu-Gi-Oh! format. Use this app to edit the card pool, limited list, and custom rules of your format. Make your format public for your friends and others to play!`}/>
+            <meta name="og:title" content={`Yu-Gi-Oh! Format Maker - Format Library`}/>
+            <meta name="description" content={`Create your own Yu-Gi-Oh! format. Use this app to edit your card pool, banlist, and custom rules, then make it public for your friends and others to play!`}/>
+            <meta name="og:description" content={`Create your own Yu-Gi-Oh! format. Use this app to edit your card pool, banlist, and custom rules, then make it public for your friends and others to play!`}/>
         </Helmet>
         <DndContext onDragEnd={handleDragEnd}>
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossOrigin="anonymous"/>

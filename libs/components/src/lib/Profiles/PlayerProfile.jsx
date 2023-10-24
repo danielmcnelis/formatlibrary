@@ -86,7 +86,9 @@ export const PlayerProfile = () => {
     <>
         <Helmet>
             <title>{`${player?.name} Player Profile - Format Library`}</title>
-            <meta name="description" content={`The public profile page for ${player?.name}. View  ${player?.name}'s public contact info, best tournament finishes, favorite decks to play, etc.\nBest Formats • Top Finishes • Favorite Decks`}/>
+            <meta name="og:title" content={`${player?.name} Player Profile`}/>
+            <meta name="description" content={`Profile page for ${player?.name}. View public info, tournament achievements, favorite decks, etc.`}/>
+            <meta name="og:description" content={`Profile page for ${player?.name}. View public info, tournament achievements, favorite decks, etc.`}/>
         </Helmet>
         <div className="body">
             <div className="player-profile-flexbox">

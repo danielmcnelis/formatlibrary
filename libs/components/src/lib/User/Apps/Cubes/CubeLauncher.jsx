@@ -57,8 +57,10 @@ export const CubeLauncher = () => {
     return (
         <>
             <Helmet>
-                <title>{`New Yu-Gi-Oh! Cube Draft - Format Library`}</title>
-                <meta name="description" content={`Draft and play some of the most popular cubes with your friends.\n${cubes?.slice(0, 3)?.map((c) => `${c.name} by ${c.builder}`).join('•')}`}/>
+                <title>{`Start a Yu-Gi-Oh! Cube Draft - Format Library`}</title>
+                <meta name="og:title" content={`Start a Yu-Gi-Oh! Cube Draft - Format Library`}/>
+                <meta name="description" content={`Draft cards from any public cube with your friends. ${cubes?.slice(0, 3)?.map((c) => `${c.name} by ${c.builder}`).join('•')}`}/>
+                <meta name="og:description" content={`Draft cards from any public cube with your friends. ${cubes?.slice(0, 3)?.map((c) => `${c.name} by ${c.builder}`).join('•')}`}/>
             </Helmet>
             <div className="cube-portal">
                 <div className="card-database-flexbox">

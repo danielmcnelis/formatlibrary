@@ -46,8 +46,11 @@ export const FormatIntro = () => {
         <>
             <Helmet>
                 <title>{`Yu-Gi-Oh! ${format?.name} Format - Format Library`}</title>
-                <meta name="description" content={format.description || format.event + `\nDeck Gallery • Tournaments • Legal Cards • Rulings • Banlist`}/>
+                <meta name="og:title" content={`Yu-Gi-Oh! ${format?.name} Format - Format Library`}/>
+                <meta name="description" content={format.blurb || (format.event + `\nDecks • Tournaments • Cardpool • Rulings • Banlist`)}/>
+                <meta name="og:description" content={format.blurb || (format.event + `\nDecks • Tournaments • Cardpool • Rulings • Banlist`)}/>
                 <meta name="image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
+                <meta name="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
             </Helmet>
             <div className="body">
             <div className="format-icon-flexbox">

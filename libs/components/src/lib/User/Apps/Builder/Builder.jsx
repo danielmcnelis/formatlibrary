@@ -541,7 +541,9 @@ export const Builder = () => {
     <>
         <Helmet>
             <title>{`Yu-Gi-Oh! Deck Builder - Format Library`}</title>
-            <meta name="description" content={`Build decks for any Yu-Gi-Oh! format. Use this app to search for legal cards from your favorite formats while constructing your decks.\nOpen • Save • Edit • Share • Publish`}/>
+            <meta name="og:title" content={`Yu-Gi-Oh! Deck Builder - Format Library`}/>
+            <meta name="description" content={`Build decks for any Yu-Gi-Oh! format. Use this app to search for legal cards in your favorite formats while building your decks.`}/>
+            <meta name="og:description" content={`Build decks for any Yu-Gi-Oh! format. Use this app to search for legal cards in your favorite formats while building your decks.`}/>
         </Helmet>
         <DndContext onDragEnd={handleDragEnd}>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossOrigin="anonymous"/>

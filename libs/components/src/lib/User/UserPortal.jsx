@@ -1,5 +1,4 @@
 
-import { Link } from 'react-router-dom'
 import { PortalButton } from './PortalButton'
 import { Helmet } from 'react-helmet'
 import './UserPortal.css'
@@ -9,7 +8,9 @@ export const UserPortal = () => {
         <>
             <Helmet>
                 <title>{`Yu-Gi-Oh! Apps - Format Library`}</title>
-                <meta name="description" content={`Featuring the best browser-based apps for Yu-Gi-Oh! players of all kinds.\nDeck Builder • Cube Draft • Pack Simulator • Text-YDK Converter`}/>
+                <meta name="og:title" content={`Yu-Gi-Oh! Apps - Format Library`}/>
+                <meta name="description" content={`Featuring a variety of useful web apps for Yu-Gi-Oh! players. Deck Builder • Cube Draft • Pack Simulator • Text-YDK Converter`}/>
+                <meta name="og:description" content={`Featuring a variety of useful web apps for Yu-Gi-Oh! players. Deck Builder • Cube Draft • Pack Simulator • Text-YDK Converter`}/>
             </Helmet>
             <div className="body">
                 <h1>Applications</h1>

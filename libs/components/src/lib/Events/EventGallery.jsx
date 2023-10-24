@@ -36,8 +36,10 @@ export const EventGallery = () => {
     return (
         <>
             <Helmet>
-                <title>{`${format?.name} Format Tournaments - Format Library`}</title>
-                <meta name="description" content={`Comprehensive tournament coverage of recent and historic ${format?.name} Format events, both online and in-person.`}/>
+                <title>{`Yu-Gi-Oh! ${format?.name} Format Tournaments - Format Library`}</title>
+                <meta name="og:title:" content={`Yu-Gi-Oh! ${format?.name} Format Tournaments - Format Library`}/>
+                <meta name="description" content={`A complete list of recent and historic ${format?.name} Format Yu-Gi-Oh! tournaments, both online and in-person. Includes detailed tournament coverage.`}/>
+                <meta name="og:description" content={`A complete list of recent and historic ${format?.name} Format Yu-Gi-Oh! tournaments, both online and in-person. Includes detailed tournament coverage.`}/>
             </Helmet>
             <div className="body">
                 <div id="recent-events" className="recent-events">

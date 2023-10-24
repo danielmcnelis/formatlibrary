@@ -49,8 +49,10 @@ export const LeaderBoard = () => {
     return (
         <>
             <Helmet>
-                <title>{`${format?.name} Format Yu-Gi-Oh! Leaderboard - Format Library`}</title>
-                <meta name="description" content={`Live updated rankings of the best online ${format?.name} Format players.`}/>
+                <title>{`Yu-Gi-Oh! ${format?.name} Format Leaderboard - Format Library`}</title>
+                <meta name="og:title" content={`Live rankings of online ${format?.name} Format Yu-Gi-Oh! players.`}/>
+                <meta name="description" content={`Live rankings of online ${format?.name} Format Yu-Gi-Oh! players.`}/>
+                <meta name="og:description" content={`Live rankings of online ${format?.name} Format Yu-Gi-Oh! players.`}/>
             </Helmet>
             <div className="body">
                 <div id="leaderboard" className="leaderboard">

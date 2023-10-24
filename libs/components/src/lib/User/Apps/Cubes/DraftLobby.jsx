@@ -231,7 +231,9 @@ export const DraftLobby = () => {
                     <>
                         <Helmet>
                             <title>{`Yu-Gi-Oh! Draft Lobby - Format Library`}</title>
+                            <meta name="og:title" content={`Yu-Gi-Oh! Draft Lobby - Format Library`}/>
                             <meta name="description" content={`Click here to join the next draft for ${draft.cubeName}.`}/>
+                            <meta name="og:description" content={`Click here to join the next draft for ${draft.cubeName}.`}/>
                         </Helmet>
                         <div className="card-database-flexbox">
                             <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
@@ -295,7 +297,9 @@ export const DraftLobby = () => {
                     <>
                         <Helmet>
                             <title>{`Yu-Gi-Oh! Draft Lobby - Format Library`}</title>
-                            <meta name="description" content={`Live draft for ${draft.cubeName}.`}/>
+                            <meta name="og:title" content={`Yu-Gi-Oh! Draft Lobby - Format Library`}/>
+                            <meta name="description" content={`Click here to join the next draft for ${draft.cubeName}.`}/>
+                            <meta name="og:description" content={`Click here to join the next draft for ${draft.cubeName}.`}/>
                         </Helmet>
                         <div className="space-between">
                             {

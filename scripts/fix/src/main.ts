@@ -810,17 +810,47 @@ import { S3 } from 'aws-sdk'
 // })()
 
 
-
-
 ;(async () => {
-    const cards = await Card.findAll({
-        where: {
-            pendulumEffect: {[Op.substring]: ' [ Flavor Text ]'}
-        }
-    })
+    const statuses = await Status.findAll()
 
-    for (let i = 0; i < cards.length; i++) {
-        const card = cards[i]
-        await card.update({ pendulumEffect: card.pendulumEffect.replaceAll(' [ Flavor Text ]', '')})
+    for (let i = 0; i < statuses.length; i++) {
+        const status = statuses[i]
+        status.banlist.replace('jan', 'January 20')
+            .replace('feb', 'February 20')
+            .replace('mar', 'March 20')
+            .replace('apr', 'April 20')
+            .replace('may', 'May 20')
+            .replace('jun', 'June 20')
+            .replace('jul', 'July 20')
+            .replace('aug', 'August 20')
+            .replace('sep', 'September 20')
+            .replace('oct', 'October 20')
+            .replace('nov', 'November 20')
+            .replace('dec', 'December 20')
+
+        await status.save()
     }
+
+    const formats = await Format.findAll()
+
+    for (let i = 0; i < formats.length; i++) {
+        const format = formats[i]
+        format.banlist.replace('jan', 'January 20')
+            .replace('feb', 'February 20')
+            .replace('mar', 'March 20')
+            .replace('apr', 'April 20')
+            .replace('may', 'May 20')
+            .replace('jun', 'June 20')
+            .replace('jul', 'July 20')
+            .replace('aug', 'August 20')
+            .replace('sep', 'September 20')
+            .replace('oct', 'October 20')
+            .replace('nov', 'November 20')
+            .replace('dec', 'December 20')
+
+        await format.save()
+    }
+
+    
+
 })()

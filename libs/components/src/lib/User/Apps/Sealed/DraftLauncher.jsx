@@ -51,8 +51,10 @@ export const DraftLauncher = () => {
     return (
         <>
             <Helmet>
-                <title>{`New Yu-Gi-Oh! Booster Draft - Format Library`}</title>
-                <meta name="description" content={`Open free, virtual packs (or a box) of your favorite Yu-Gi-Oh! booster sets. Enjoy realistic pull rates and rarities for maximum nostalgia. ;)`}/>
+                <title>{`Start a Yu-Gi-Oh! Booster Draft - Format Library`}</title>
+                <meta name="description" content={`Start a Yu-Gi-Oh! Booster Draft - Format Library`}/>
+                <meta name="description" content={`Open free, virtual packs of your favorite Yu-Gi-Oh! booster sets. Enjoy realistic pull ratios and rarities for maximum nostalgia.`}/>
+                <meta name="description" content={`Open free, virtual packs of your favorite Yu-Gi-Oh! booster sets. Enjoy realistic pull ratios and rarities for maximum nostalgia.`}/>
             </Helmet>
             <div className="draft-portal">
                 <div className="card-database-flexbox">

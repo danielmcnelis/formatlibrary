@@ -136,7 +136,9 @@ export const EventTable = (props) => {
         <>
             <Helmet>
                 <title>{`Yu-Gi-Oh! Tournament Database - Format Library`}</title>
-                <meta name="description" content={`Search through an interactive database of recent and historic Yu-Gi-Oh! events, linking to detailed tournament coverage including deck lists, metagame stats, and match replays.`}/>
+                <meta name="og:title" content={`Yu-Gi-Oh! Tournament Database - Format Library`}/>
+                <meta name="description" content={`Search a complete database of recent and historic Yu-Gi-Oh! tournaments. Includes detailed coverage of decklists, metagame charts, and match replays.`}/>
+                <meta name="og:description" content={`Search a complete database of recent and historic Yu-Gi-Oh! tournaments. Includes detailed coverage of decklists, metagame charts, and match replays.`}/>
             </Helmet>
             <div className="body">
                 <div className="event-database-flexbox">
@@ -260,8 +262,10 @@ export const EventTable = (props) => {
         <>
             <Helmet>
                 <title>{`Yu-Gi-Oh! Tournament Database - Format Library`}</title>
-                <meta name="description" content={`Search through an interactive database of recent and historic Yu-Gi-Oh! tournaments, linking to detailed coverage including deck lists, metagame stats, and match replays.`}/>
-            </Helmet>
+                <meta name="og:title" content={`Yu-Gi-Oh! Tournament Database - Format Library`}/>
+                <meta name="description" content={`Search a complete database of recent and historic Yu-Gi-Oh! tournaments. Includes detailed coverage of decklists, metagame charts, and match replays.`}/>
+                <meta name="og:description" content={`Search a complete database of recent and historic Yu-Gi-Oh! tournaments. Includes detailed coverage of decklists, metagame charts, and match replays.`}/>
+           </Helmet>
             <div className="body">
                 <div className="event-database-flexbox">
                 <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/event.png'} alt="trophy"/>

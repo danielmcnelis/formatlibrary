@@ -31,7 +31,7 @@ export default {
 
 		if (!entryCount) {
             return await interaction.editReply({ content: `Error: No entrants found.`})
-        } else if (entryCount < 2) {
+        } else if (entryCount < 2) {https://www.google.com/url?sa=i&url=https%3A%2F%2Ftwitter.com%2Fujiidow%2Fstatus%2F1597390575460061185&psig=AOvVaw2MlEcQzdKXfc_N5Ox08hse&ust=1698244410622000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCKjTu8jzjoIDFQAAAAAdAAAAABAE
             return await interaction.editReply({ content: `At least 2 players are required to start a tournament.`})
         }
 

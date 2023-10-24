@@ -165,8 +165,8 @@ export const DeckTable = () => {
             <Helmet>
                 <title>{`Yu-Gi-Oh! Deck Database - Format Library`}</title>
                 <meta name="og:title" content={`Yu-Gi-Oh! Deck Database - Format Library`}/>
-                <meta name="description" content={`Search through an interactive database of thousands of Yu-Gi-Oh! deck lists from recent and historic tournaments, as well as deck lists shared by Format Library community members.`}/>
-                <meta name="og:description" content={`Search through an interactive database of thousands of Yu-Gi-Oh! deck lists from recent and historic tournaments, as well as deck lists shared by Format Library community members.`}/>
+                <meta name="description" content={`Search through an interactive database of thousands of Yu-Gi-Oh! decklists from recent and historic tournaments, as well as community members.`}/>
+                <meta name="og:description" content={`Search through an interactive database of thousands of Yu-Gi-Oh! decklists from recent and historic tournaments, as well as community members.`}/>
             </Helmet>
             <div className="body">
                 <div className="event-database-flexbox">

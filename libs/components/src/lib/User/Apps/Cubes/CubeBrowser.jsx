@@ -486,7 +486,9 @@ export const CubeBrowser = () => {
         <>
             <Helmet>
                 <title>{`${cube?.name} by ${cube?.builder} - Yu-Gi-Oh! Cube - Format Library`}</title>
-                <meta name="description" content={`Search the card pool for the cube, ${cube.name} by ${cube.builder}. Filter and sort by Category, Attribute, Type, ATK, DEF, Level/Rank, etc.`}/>
+                <meta name="og:title" content={`${cube?.name} by ${cube?.builder} - Yu-Gi-Oh! Cube - Format Library`}/>
+                <meta name="description" content={`Search the card pool for ${cube.name} by ${cube.builder}. Filter and sort by Category, Attribute, Type, ATK, DEF, Level/Rank, etc.`}/>
+                <meta name="og:description" content={`Search the card pool for ${cube.name} by ${cube.builder}. Filter and sort by Category, Attribute, Type, ATK, DEF, Level/Rank, etc.`}/>
             </Helmet>
             <div className="body">
                 <div className="card-database-flexbox">

@@ -167,8 +167,10 @@ export const ReplayTable = () => {
         return (
             <>
                 <Helmet>
-                    <title>{`Yu-Gi-Oh! Replay Database - Format Library`}</title>
-                    <meta name="description" content={`Search through an interactive database of recorded Yu-Gi-Oh! matches in the form of DuelingBook.com replays.`}/>
+                    <title>{`Yu-Gi-Oh! Match Replay Database - Format Library`}</title>
+                    <meta name="og:title" content={`Yu-Gi-Oh! Match Replay Database - Format Library`}/>
+                    <meta name="description" content={`Search an interactive database of recorded Yu-Gi-Oh! matches in the form of DuelingBook replays.`}/>
+                    <meta name="og:description" content={`Search an interactive database of recorded Yu-Gi-Oh! matches in the form of DuelingBook replays.`}/>
                 </Helmet>
                 <div className="body">
                     <div className="replay-database-flexbox">
@@ -295,8 +297,10 @@ export const ReplayTable = () => {
         return (
             <>
                 <Helmet>
-                    <title>{`Yu-Gi-Oh! Replay Database - Format Library`}</title>
-                    <meta name="description" content={`Search through an interactive database of recorded Yu-Gi-Oh! matches in the form of DuelingBook.com replays.`}/>
+                    <title>{`Yu-Gi-Oh! Match Replay Database - Format Library`}</title>
+                    <meta name="og:title" content={`Yu-Gi-Oh! Match Replay Database - Format Library`}/>
+                    <meta name="description" content={`Search through an interactive database of recorded Yu-Gi-Oh! matches in the form of DuelingBook replays.`}/>
+                    <meta name="og:description" content={`Search through an interactive database of recorded Yu-Gi-Oh! matches in the form of DuelingBook replays.`}/>
                 </Helmet>
                 <div className="body">
                     <div className="replay-database-flexbox">

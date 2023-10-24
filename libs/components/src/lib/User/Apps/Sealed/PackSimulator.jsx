@@ -44,7 +44,9 @@ export const PackSimulator = () => {
         <>
             <Helmet>
                 <title>{`Yu-Gi-Oh! Pack Simulator - Format Library`}</title>
-                <meta name="description" content={`Open free, virtual packs (or a box) of your favorite Yu-Gi-Oh! booster sets. Enjoy original pull rates and rarities for maximum nostalgia. ;)`}/>
+                <meta name="og:title" content={`Yu-Gi-Oh! Pack Simulator - Format Library`}/>
+                <meta name="description" content={`Open free, virtual packs of your favorite Yu-Gi-Oh! booster sets. Enjoy realistic pull ratios and rarities for maximum nostalgia.`}/>
+                <meta name="og:description" content={`Open free, virtual packs of your favorite Yu-Gi-Oh! booster sets. Enjoy realistic pull ratios and rarities for maximum nostalgia.`}/>
             </Helmet>
             <div className="pack-portal">
                 <div className="pack-opener-title-flexbox">
