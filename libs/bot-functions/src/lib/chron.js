@@ -485,7 +485,7 @@ export const updatePrints = async (set, groupId) => {
     let e = 0
     const size = set.size
 
-    for (let offset = 0; offset < size; offset += 100) {
+    for (let offset = 0; offset < (size + 100); offset += 100) {
         try {
             const endpoint = `https://api.tcgplayer.com/catalog/products?groupId=${groupId}&getExtendedFields=true&offset=${offset}&limit=100`
             const { data } = await axios.get(endpoint, {
@@ -505,7 +505,11 @@ export const updatePrints = async (set, groupId) => {
     
                 if (!count) {
                     let name = result.name.replace(/ *\[^]*\) */g, '')
-                    if (name.includes(' (Super Rare)')) name = name.replace(' (Super Rare)', '')
+                    if (name.includes('Token:')) name = name.replace('Token:', '') + ' Token'
+
+                    name = name.replace(' (Super Rare)', '')
+                        .replace(' (Quarter Century Secret Rare)', '')
+                        .replace(' (B. Dragon', 'Black Dragon')
 
                     if (
                         name.includes('Yu-Gi-Oh!') ||
@@ -556,6 +560,7 @@ export const updatePrints = async (set, groupId) => {
                         name.includes('Master\'s Guide') || 
                         name.includes('Advance Edition') || 
                         name.includes('Special Edition') || 
+                        name.includes('Secret Edition') || 
                         name.includes('Domination Display') || 
                         name.includes('Deluxe Edition') ||  
                         name.includes('Master Collection') || 
@@ -565,10 +570,14 @@ export const updatePrints = async (set, groupId) => {
                         name.includes('Collector Set') || 
                         name.includes('God Deck') || 
                         name.includes('Mega-Tin') || 
+                        name.includes('Zexal Tin') || 
+                        name.includes('Collection Tin') || 
                         name.includes('[1st Edition]') ||
                         name.includes('[Limited Edition]') ||
                         name.includes('[Unlimited Edition]') ||
                         name.includes('Art Token') ||
+                        name.includes('Rise of the True Dragons Display') ||
+                        name.includes('Overload Box') ||
                         name.includes('Field Center Token')
                     ) continue
 
