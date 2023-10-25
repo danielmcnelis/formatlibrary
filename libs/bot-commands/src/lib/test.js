@@ -14,23 +14,8 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
-            const tournament = await Tournament.findOne()
-                
-            const row = new ActionRowBuilder()
-                .addComponents(new ButtonBuilder()
-                    .setCustomId(`Y-${interaction.user?.id}-${tournament.id}`)
-                    .setLabel('Yes')
-                    .setStyle(ButtonStyle.Primary)
-                )
-
-                .addComponents(new ButtonBuilder()
-                    .setCustomId(`N-${interaction.user?.id}-${tournament.id}`)
-                    .setLabel('No')
-                    .setStyle(ButtonStyle.Primary)
-                )
-
-            return await interaction.editReply({ content: `Do you wish to create a top cut for this tournament?`, components: [row] })
-            // await interaction.editReply(emojis.yellow)
+            updateMarketPrices()
+            await interaction.editReply(emojis.yellow)
         } else {
             await interaction.editReply('🧪')
         }

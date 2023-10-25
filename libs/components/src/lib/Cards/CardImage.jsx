@@ -36,7 +36,7 @@ export const CardImage = (props) => {
                     .replaceAll('★', '-')
                     .replaceAll('&', 'and')
                     .replaceAll('%', '-percent')
-                    .replaceAll('--', '-')
+                    .replaceAll('---', '-')
                 }`}
                 target="_blank" 
                 rel="noopener noreferrer"
@@ -113,7 +113,7 @@ export const CardImage = (props) => {
                         .replaceAll('★', '-')
                         .replaceAll('&', 'and')
                         .replaceAll('%', '-percent')
-                        .replaceAll('--', '-')
+                        .replaceAll('---', '-')
                     }`}
                     target="_blank" 
                     rel="noopener noreferrer"

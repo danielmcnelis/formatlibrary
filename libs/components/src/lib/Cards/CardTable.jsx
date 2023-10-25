@@ -156,7 +156,7 @@ export const CardTable = () => {
 
       if (cutoff !== `${now.getFullYear()}-12-31`) {
         queryParams.region?.toLowerCase() === 'speed' ? filter += `,speedDate:lte:${cutoff}`: 
-        queryParams.region?.toLowerCase().includes('ocg') ? filter += `,ocgDate:lte:${cutoff}` : 
+        queryParams.region?.toLowerCase()?.includes('ocg') ? filter += `,ocgDate:lte:${cutoff}` : 
         filter += `,tcgDate:lte:${cutoff}`
       }
   
@@ -213,7 +213,7 @@ export const CardTable = () => {
       
       if (cutoff !== `${now.getFullYear()}-12-31`) {
         queryParams.region?.toLowerCase() === 'speed' ? filter += `,speedDate:lte:${cutoff}`: 
-        queryParams.region?.toLowerCase().includes('ocg') ? filter += `,ocgDate:lte:${cutoff}` : 
+        queryParams.region?.toLowerCase()?.includes('ocg') ? filter += `,ocgDate:lte:${cutoff}` : 
         filter += `,tcgDate:lte:${cutoff}`
       }
   
@@ -255,6 +255,7 @@ export const CardTable = () => {
       })
       
       setPage(1)
+      
       if (!formatName) {
         document.getElementById('format').value = ""
         setCutoff(`${now.getFullYear()}-12-31`)
@@ -269,7 +270,7 @@ export const CardTable = () => {
         name: null,
         description: null,
         category: null,
-        region: null
+        region: 'tcg'
       })
     
       setIconParams({
@@ -906,13 +907,13 @@ export const CardTable = () => {
                             <option value="name:asc">Name: A ⮕ Z</option>
                             <option value="name:desc">Name: Z ⮕ A</option>
                             <option value={
-                                queryParams.region.includes('ocg') ? "ocgDate:asc" : 
-                                queryParams.region.includes('speed') ? "speedDate:asc" : 
+                                queryParams.region?.includes('ocg') ? "ocgDate:asc" : 
+                                queryParams.region?.includes('speed') ? "speedDate:asc" : 
                                 "tcgDate:asc"
                             }>Date: Old ⮕ New</option>
                             <option value={
-                                queryParams.region.includes('ocg') ? "ocgDate:desc" : 
-                                queryParams.region.includes('speed') ? "speedDate:desc" : 
+                                queryParams.region?.includes('ocg') ? "ocgDate:desc" : 
+                                queryParams.region?.includes('speed') ? "speedDate:desc" : 
                                 "tcgDate:desc"
                             }>Date: New ⮕ Old</option>
                             <option value="atk:desc nulls last">ATK: Desc. ⬇</option>
