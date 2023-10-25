@@ -14,8 +14,10 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
-            updateMarketPrices()
             await interaction.editReply(emojis.yellow)
+            await updateSets()
+            await updateMarketPrices()
+            return
         } else {
             await interaction.editReply('🧪')
         }
