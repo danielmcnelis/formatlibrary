@@ -354,6 +354,19 @@ export const publishDecks = async (interaction, event) => {
     return await interaction.channel.send(`Published ${decks.length} new deck lists for ${event.name}.`)
 }
 
+
+
+let b = 0
+let e = 0
+
+const replays = await Replay.findAll({
+    where: {
+        eventId: {[Op.not]: null}
+    },
+    include: Event
+})
+
+
 // DISPLAY DECKS
 export const displayReplays = async (interaction, event) => {    
     if (event.primaryTournamentId) {
@@ -365,10 +378,34 @@ export const displayReplays = async (interaction, event) => {
      
         for (let i = 0; i < primaryReplays.length; i++) {
             const replay = primaryReplays[i]
-            await replay.update({ 
+
+            const winningDeck = await Deck.findOne({
+                where: {
+                    playerId: replay.winnerId,
+                    eventId: replay.eventId
+                },
+                include: DeckType
+            })
+
+            const losingDeck = await Deck.findOne({
+                where: {
+                    playerId: replay.loserId,
+                    eventId: replay.eventId
+                },
+                include: DeckType
+            })
+
+            await replay.update({
+                winningDeckType: winningDeck.deckType.name,
+                winningDeckId: winningDeck.id,
+                winningDeckTypeId: winningDeck.deckTypeId,
+                losingDeckType: losingDeck.deckType.name,
+                losingDeckId: losingDeck.id,
+                losingDeckTypeId: losingDeck.deckTypeId,
                 eventName: event.abbreviation,
-                eventId: event.id
-             })
+                eventId: event.id,
+                publishDate: replay.event.endDate
+            })
         }
 
         await interaction.channel.send(`Published ${primaryReplays.length} new primary tournament replays for ${event.name}.`)
@@ -386,10 +423,37 @@ export const displayReplays = async (interaction, event) => {
     
         for (let i = 0; i < topCutReplays.length; i++) {
             const replay = topCutReplays[i]
-            await replay.update({ 
+
+            const winningDeck = await Deck.findOne({
+                where: {
+                    playerId: replay.winnerId,
+                    eventId: replay.eventId
+                },
+                include: DeckType
+            })
+
+            const losingDeck = await Deck.findOne({
+                where: {
+                    playerId: replay.loserId,
+                    eventId: replay.eventId
+                },
+                include: DeckType
+            })
+
+            await replay.update({
+                winningDeckType: winningDeck.deckType.name,
+                winningDeckId: winningDeck.id,
+                winningDeckTypeId: winningDeck.deckTypeId,
+                losingDeckType: losingDeck.deckType.name,
+                losingDeckId: losingDeck.id,
+                losingDeckTypeId: losingDeck.deckTypeId,
                 eventName: event.abbreviation,
                 eventId: event.id,
+                publishDate: replay.event.endDate,
                 display: true
+            })
+
+            await replay.update({ 
              })
         }
     
@@ -433,7 +497,6 @@ export const generateMatchupData = async (interaction, server, event, tournament
             deckMap[participant.id] = deck
         } else {
             const [discordName,] = participant.name.split('#')
-            console.log('discordName', discordName)
             const players = [...await Player.findAll({
                 where: {
                     [Op.or]: {
