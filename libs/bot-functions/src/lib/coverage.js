@@ -354,19 +354,6 @@ export const publishDecks = async (interaction, event) => {
     return await interaction.channel.send(`Published ${decks.length} new deck lists for ${event.name}.`)
 }
 
-
-
-let b = 0
-let e = 0
-
-const replays = await Replay.findAll({
-    where: {
-        eventId: {[Op.not]: null}
-    },
-    include: Event
-})
-
-
 // DISPLAY DECKS
 export const displayReplays = async (interaction, event) => {    
     if (event.primaryTournamentId) {
