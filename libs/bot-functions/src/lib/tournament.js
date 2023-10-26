@@ -124,10 +124,9 @@ export const getDeckList = async (member, player, format, override = false) => {
                 return { url, ydk }
             }
         } else {
-            console.log('collected', collected)
-            console.log('collected.first().attachments', collected.first().attachments)
-            console.log('collected.first().attachments.first()', collected.first().attachments.first())
-            console.log('collected.first().attachments.first().value', collected.first().attachments.first().value)
+            console.log('collected.first().attachments.first()', collected.first().attachments.first().url)
+            const data = await axios.get(collected.first().attachments.first().url)
+            console.log('data', data)
             member.send({ content: "Sorry, I only accept duelingbook.com/deck links."}).catch((err) => console.log(err))    
             return false  
         }
