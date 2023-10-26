@@ -384,15 +384,15 @@ export const displayReplays = async (interaction, event) => {
                 })
     
                 await replay.update({
-                    winningDeckType: winningDeck.deckType.name,
-                    winningDeckId: winningDeck.id,
-                    winningDeckTypeId: winningDeck.deckTypeId,
-                    losingDeckType: losingDeck.deckType.name,
-                    losingDeckId: losingDeck.id,
-                    losingDeckTypeId: losingDeck.deckTypeId,
+                    winningDeckType: winningDeck?.deckType.name,
+                    winningDeckId: winningDeck?.id,
+                    winningDeckTypeId: winningDeck?.deckTypeId,
+                    losingDeckType: losingDeck?.deckType?.name,
+                    losingDeckId: losingDeck?.id,
+                    losingDeckTypeId: losingDeck?.deckTypeId,
                     eventName: event.abbreviation,
                     eventId: event.id,
-                    publishDate: replay.event.endDate
+                    publishDate: event.endDate
                 })
             } catch (err) {
                 console.log(err)
@@ -433,15 +433,15 @@ export const displayReplays = async (interaction, event) => {
                 })
     
                 await replay.update({
-                    winningDeckType: winningDeck.deckType.name,
-                    winningDeckId: winningDeck.id,
-                    winningDeckTypeId: winningDeck.deckTypeId,
-                    losingDeckType: losingDeck.deckType.name,
-                    losingDeckId: losingDeck.id,
-                    losingDeckTypeId: losingDeck.deckTypeId,
+                    winningDeckType: winningDeck?.deckType?.name,
+                    winningDeckId: winningDeck?.id,
+                    winningDeckTypeId: winningDeck?.deckTypeId,
+                    losingDeckType: losingDeck?.deckType?.name,
+                    losingDeckId: losingDeck?.id,
+                    losingDeckTypeId: losingDeck?.deckTypeId,
                     eventName: event.abbreviation,
                     eventId: event.id,
-                    publishDate: replay.event.endDate,
+                    publishDate: event.endDate,
                     display: true
                 })
             } catch (err) {
