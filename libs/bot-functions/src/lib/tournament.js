@@ -57,79 +57,74 @@ export const askForSimName = async (member, player, simulator, override = false,
 export const getDeckList = async (member, player, format, override = false) => {            
     const filter = m => m.author.id === member.user.id
     const pronoun = override ? `${player.globalName || player.discordName}'s` : 'your'
-    const message = await member.send({ content: `Please provide a YDK File for ${pronoun} tournament deck.`}).catch((err) => console.log(err))
+    const message = await member.send({ content: `Please upload a **__YDK File__** for ${pronoun} tournament deck.`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     return await message.channel.awaitMessages({
         filter,
         max: 1,
         time: 180000
     }).then(async (collected) => {
-        const url = collected.first().content
-        if (url.includes('duelingbook.com/deck?id=')) {		
-            member.send({ content: 'Thanks. Please wait while I download the .YDK file.'})
-            const id = url.slice(url.indexOf('?id=') + 4)
-            const {data} = await axios.get(`https://www.duelingbook.com/php-scripts/load-deck.php/deck?id=${id}`)
-            if (!data || !data?.main) return false
-            const main = data.main?.map((e) => e.serial_number)
-            const minimum = format.category === 'Speed' ? 20 : 40
-
-            if (main?.length < minimum) {
-                member.send(`I'm sorry, your deck must contain at least ${minimum} cards.`).catch((err) => console.log(err))    
-                return false 
-            }
-
-            const side = data.side?.map((e) => e.serial_number) || []
-            const extra = data.extra?.map((e) => e.serial_number) || []
-            const ydk = ['created by...', '#main', ...main, '#extra', ...extra, '!side', ...side, ''].join('\n')
-            if (format.category !== 'TCG') {
-                member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck has been saved. ${emojis.legend}\n\nPlease note: Decks for ${format.category} Formats cannot be verified at this time. Be sure your deck is legal for this tournament!`}).catch((err) => console.log(err))
-                return { url, ydk }
-            }
-            
-            const deckArr = [...main, ...extra, ...side,]
-            const issues = await getIssues(deckArr, format)
-            if (!issues) return false
-
-            const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards } = issues
-            if (!illegalCards || !forbiddenCards || !limitedCards || !semiLimitedCards || !unrecognizedCards) return false
-                
-            if (override) {
-                member.send({ content: `Thanks, ${member.user.username}, I saved a copy of ${pronoun} deck. ${emojis.legend}`}).catch((err) => console.log(err))
-                return { url, ydk }
-            } else if (illegalCards.length || forbiddenCards.length || limitedCards.length || semiLimitedCards.length) {
-                let response = [`I'm sorry, ${member.user.username}, your deck is not legal. ${emojis.mad}`]
-                if (illegalCards.length) response = [...response, `\nThe following cards are not included in this format:`, ...illegalCards]
-                if (forbiddenCards.length) response = [...response, `\nThe following cards are forbidden:`, ...forbiddenCards]
-                if (limitedCards.length) response = [...response, `\nThe following cards are limited:`, ...limitedCards]
-                if (semiLimitedCards.length) response = [...response, `\nThe following cards are semi-limited:`, ...semiLimitedCards]
-            
-                for (let i = 0; i < response.length; i += 50) {
-                    if (response[i+50] && response[i+50].startsWith("\n")) {
-                        member.send({ content: response.slice(i, i+51).join('\n').toString()}).catch((err) => console.log(err))
-                        i++
-                    } else {
-                        member.send({ content: response.slice(i, i+50).join('\n').toString()}).catch((err) => console.log(err))
-                    }
+            const url = collected.first()?.attachments?.first()?.url
+            if (url) {
+                const {data: ydk} = await axios.get(url)
+                const main = ydk.split('#main')[1].split('#extra')[0].split('\n')
+                console.log('main', main)
+                const extra = ydk.split('#extra')[1].split('!side')[0]
+                console.log('extra', extra)
+                const side = ydk.split('!side')[1]
+                console.log('side', side)
+    
+                const minimum = format.category === 'Speed' ? 20 : 40
+    
+                if (main?.length < minimum) {
+                    member.send(`I'm sorry, your deck must contain at least ${minimum} cards.`).catch((err) => console.log(err))    
+                    return false 
                 }
-            
-                return false
-            } else if (unrecognizedCards.length) {
-                let response = `I'm sorry, ${member.user.username}, the following card IDs were not found in our database:\n${unrecognizedCards.join('\n')}`
-                response += `\n\nThese cards are either alternate artwork, new to the TCG, OCG only, or incorrect in our database. Please contact the Tournament Organizer or the Admin if you can't resolve this.`
+    
+                const deckArr = [...main, ...extra, ...side,]
+                const issues = await getIssues(deckArr, format)
+                if (!issues) return false
+    
+                const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards } = issues
+                if (!illegalCards || !forbiddenCards || !limitedCards || !semiLimitedCards || !unrecognizedCards) return false
                 
-                member.send({ content: response.toString() }).catch((err) => console.log(err))
-                return false
-             } else {
-                member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck is perfectly legal. ${emojis.legend}`}).catch((err) => console.log(err))
-                return { url, ydk }
+                if (override) {
+                    member.send({ content: `Thanks, ${member.user.username}, I saved a copy of ${pronoun} deck. ${emojis.legend}`}).catch((err) => console.log(err))
+                    return { url, ydk }
+                } else if (format.category !== 'TCG' && format.category !== 'Speed') {
+                    member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck has been saved. ${emojis.legend}\n\nPlease note: Decks for ${format.category} Formats cannot be verified at this time. Be sure your deck is legal for this tournament!`}).catch((err) => console.log(err))
+                    return { url, ydk }
+                } else if (illegalCards.length || forbiddenCards.length || limitedCards.length || semiLimitedCards.length) {
+                    let response = [`I'm sorry, ${member.user.username}, your deck is not legal. ${emojis.mad}`]
+                    if (illegalCards.length) response = [...response, `\nThe following cards are not included in this format:`, ...illegalCards]
+                    if (forbiddenCards.length) response = [...response, `\nThe following cards are forbidden:`, ...forbiddenCards]
+                    if (limitedCards.length) response = [...response, `\nThe following cards are limited:`, ...limitedCards]
+                    if (semiLimitedCards.length) response = [...response, `\nThe following cards are semi-limited:`, ...semiLimitedCards]
+                
+                    for (let i = 0; i < response.length; i += 50) {
+                        if (response[i+50] && response[i+50].startsWith("\n")) {
+                            member.send({ content: response.slice(i, i+51).join('\n').toString()}).catch((err) => console.log(err))
+                            i++
+                        } else {
+                            member.send({ content: response.slice(i, i+50).join('\n').toString()}).catch((err) => console.log(err))
+                        }
+                    }
+                
+                    return false
+                } else if (unrecognizedCards.length) {
+                    let response = `I'm sorry, ${member.user.username}, the following card IDs were not found in our database:\n${unrecognizedCards.join('\n')}`
+                    response += `\n\nThese cards are either alternate artwork, new to the TCG, OCG only, or incorrect in our database. Please contact the Tournament Organizer or the Admin if you can't resolve this.`
+                    
+                    member.send({ content: response.toString() }).catch((err) => console.log(err))
+                    return false
+                 } else {
+                    member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck is perfectly legal. ${emojis.legend}`}).catch((err) => console.log(err))
+                    return { url, ydk }
+                }
+            } else {
+                member.send({ content: "Sorry, I only accept YDK Files."}).catch((err) => console.log(err))    
+                return false  
             }
-        } else {
-            console.log('collected.first().attachments.first()', collected.first().attachments.first().url)
-            const data = await axios.get(collected.first().attachments.first().url)
-            console.log('data', data)
-            member.send({ content: "Sorry, I only accept duelingbook.com/deck links."}).catch((err) => console.log(err))    
-            return false  
-        }
     }).catch((err) => {
         console.log(err)
         member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))

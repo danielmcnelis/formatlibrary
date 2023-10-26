@@ -277,7 +277,7 @@ export const purgeRatedDecks = async () => {
 
         const dbDeckId = rd.url.slice(rd.url.indexOf('https://duelingbook.com/deck?id=') + 32)
         const {data} = await axios.get(`https://www.duelingbook.com/php-scripts/load-deck.php/deck?id=${dbDeckId}`)
-        if (data.message === 'Deck does not exist') {
+        if (data?.message === 'Deck does not exist') {
             console.log(`deleting ratedDeck: ${rd.id}, DuelingBookId: ${dbDeckId}`)
             await rd.destroy()
             d++
