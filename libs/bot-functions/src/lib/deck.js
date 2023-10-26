@@ -152,35 +152,40 @@ export const getIssues = async (deckArr, format) => {
 //CHECK DECK LIST
 export const checkDeckList = async (member, format) => {  
     const filter = m => m.author.id === member.user.id
-    const message = await member.send({ content: `Please provide a duelingbook.com/deck link for the ${format.name} Format ${format.emoji} deck you would like to check.`}).catch((err) => console.log(err))
+    const message = await member.send({ content: `Please provide a **__YDK File__** for the ${format.name} Format ${format.emoji} deck you would like to check.`}).catch((err) => console.log(err))
     if (!message || !message.channel) return {}
     return await message.channel.awaitMessages({
         filter,
         max: 1,
         time: 30000
     }).then(async collected => {
-        const response = collected.first().content
-        if (response.includes('duelingbook.com/deck?id=')) {		
-            const id = response.slice(response.indexOf('?id=') + 4)
-            const {data} = await axios.get(`https://www.duelingbook.com/php-scripts/load-deck.php/deck?id=${id}`)
-            if (!data) return member.send(`Error: Unable to load duelingbook.com/deck link.`).catch((err) => console.log(err))    
-
-            const main = data.main.map((e) => e.serial_number)
+        const url = collected.first()?.attachments?.first()?.url
+        if (url) {
+            const {data: ydk} = await axios.get(url)
+            const main = ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length)
+            const extra = ydk.split('#extra')[1].split('!side')[0].split('\n').filter((e) => e.length)
+            const side = ydk.split('!side')[1].split('\n').filter((e) => e.length)    
             const minimum = format.category === 'Speed' ? 20 : 40
-            if (main.length < minimum) return member.send(`I'm sorry, your deck must contain at least ${minimum} cards.`).catch((err) => console.log(err))    
 
-            const side = data.side.map((e) => e.serial_number)
-            const extra = data.extra.map((e) => e.serial_number)
-            const deckArr = [...main, ...side, ...extra]
-            const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards } = await getIssues(deckArr, format)
+            if (main?.length < minimum) {
+                member.send(`I'm sorry, your deck must contain at least ${minimum} cards.`).catch((err) => console.log(err))    
+                return false 
+            }
 
-            if (illegalCards.length || forbiddenCards.length || limitedCards.length || semiLimitedCards.length) {      
+            const deckArr = [...main, ...extra, ...side,]
+            const issues = await getIssues(deckArr, format)
+            if (!issues) return false
+
+            const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards } = issues
+            if (!illegalCards || !forbiddenCards || !limitedCards || !semiLimitedCards || !unrecognizedCards) return false
+            
+            if (illegalCards.length || forbiddenCards.length || limitedCards.length || semiLimitedCards.length) {
                 let response = [`I'm sorry, ${member.user.username}, your deck is not legal for ${format.name} Format. ${format.emoji}`]
                 if (illegalCards.length) response = [...response, `\nThe following cards are not included in this format:`, ...illegalCards]
                 if (forbiddenCards.length) response = [...response, `\nThe following cards are forbidden:`, ...forbiddenCards]
                 if (limitedCards.length) response = [...response, `\nThe following cards are limited:`, ...limitedCards]
                 if (semiLimitedCards.length) response = [...response, `\nThe following cards are semi-limited:`, ...semiLimitedCards]
-                
+            
                 for (let i = 0; i < response.length; i += 50) {
                     if (response[i+50] && response[i+50].startsWith("\n")) {
                         member.send({ content: response.slice(i, i+51).join('\n').toString()}).catch((err) => console.log(err))
@@ -189,15 +194,20 @@ export const checkDeckList = async (member, format) => {
                         member.send({ content: response.slice(i, i+50).join('\n').toString()}).catch((err) => console.log(err))
                     }
                 }
+            
+                return false
             } else if (unrecognizedCards.length) {
                 let response = `I'm sorry, ${member.user.username}, the following card IDs were not found in our database:\n${unrecognizedCards.join('\n')}`
-                response += `\n\nThese cards are either alternate artwork, new to the TCG, OCG only, or incorrect in our database. Please contact an admin to resolve this.`
-                return await member.send({ content: response }).catch((err) => console.log(err))
-            } else {
+                response += `\n\nThese cards are either alternate artwork, new to the TCG, OCG only, or incorrect in our database. Please contact the Tournament Organizer or the Admin if you can't resolve this.`
+                
+                member.send({ content: response.toString() }).catch((err) => console.log(err))
+                return false
+             } else {
                 return await member.send({ content: `Congrats, your ${format.name} Format deck is perfectly legal! ${format.emoji}`}).catch((err) => console.log(err))
             }
         } else {
-            return member.send({ content: "Sorry, I only accept duelingbook.com/deck links."}).catch((err) => console.log(err))    
+            member.send({ content: "Sorry, I only accept YDK Files."}).catch((err) => console.log(err))    
+            return false  
         }
     }).catch(err => {
         console.log(err)
@@ -209,28 +219,30 @@ export const checkDeckList = async (member, format) => {
 //CHECK SPEED DECK LIST
 export const checkSpeedDeckList = async (member, format, skillCard) => {  
     const filter = m => m.author.id === member.user.id
-    const message = await member.send({ content: `Please provide a duelingbook.com/deck link for the ${format.name} Format ${format.emoji} deck you would like to check.`}).catch((err) => console.log(err))
+    const message = await member.send({ content: `Please provide a **__YDK File__** for the ${format.name} Format ${format.emoji} deck you would like to check.`}).catch((err) => console.log(err))
     if (!message || !message.channel) return {}
     return await message.channel.awaitMessages({
         filter,
         max: 1,
         time: 30000
     }).then(async collected => {
-        const response = collected.first().content
-        if (response.includes('duelingbook.com/deck?id=')) {		
-            const id = response.slice(response.indexOf('?id=') + 4)
-            const {data} = await axios.get(`https://www.duelingbook.com/php-scripts/load-deck.php/deck?id=${id}`)
-            if (!data) return member.send(`Error: Unable to load duelingbook.com/deck link.`).catch((err) => console.log(err))    
-
-            const main = data.main.map((e) => e.serial_number)
+        const url = collected.first()?.attachments?.first()?.url
+        if (url) {
+            const {data: ydk} = await axios.get(url)
+            const main = ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length)
+            const extra = ydk.split('#extra')[1].split('!side')[0].split('\n').filter((e) => e.length)
+            const side = ydk.split('!side')[1].split('\n').filter((e) => e.length)    
             const minimum = format.category === 'Speed' ? 20 : 40
-            if (main.length < minimum) return member.send(`I'm sorry, your deck must contain at least ${minimum} cards.`).catch((err) => console.log(err))    
 
-            const side = data.side.map((e) => e.serial_number)
-            const extra = data.extra.map((e) => e.serial_number)
+            if (main?.length < minimum) {
+                member.send(`I'm sorry, your deck must contain at least ${minimum} cards.`).catch((err) => console.log(err))    
+                return false 
+            }
+
             const deckArr = [...main, ...side, ...extra, skillCard.konamiCode]
             const { illegalCards, forbiddenCards, limited1Cards, limited2Cards, limited3Cards, unrecognizedCards } = await getIssues(deckArr, format)
-
+            if (!illegalCards || !forbiddenCards || !limited1Cards || !limited2Cards || !limited3Cards || !unrecognizedCards) return false
+           
             if (illegalCards.length || forbiddenCards.length || limited1Cards.length || limited2Cards.length || limited3Cards.length) {      
                 let response = [`I'm sorry, ${member.user.username}, your deck is not legal for ${format.name} Format. ${format.emoji}`]
                 if (illegalCards.length) response = [...response, `\nThe following cards are not included in this format:`, ...illegalCards]
@@ -238,7 +250,7 @@ export const checkSpeedDeckList = async (member, format, skillCard) => {
                 if (limited1Cards.length) response = [...response, `\nThe following cards are limited to 1 slot per deck:`, ...limited1Cards]
                 if (limited2Cards.length) response = [...response, `\nThe following cards are limited to 2 slots per deck:`, ...limited2Cards]
                 if (limited3Cards.length) response = [...response, `\nThe following cards are limited to 3 slots per deck:`, ...limited3Cards]
-                
+    
                 for (let i = 0; i < response.length; i += 50) {
                     if (response[i+50] && response[i+50].startsWith("\n")) {
                         member.send({ content: response.slice(i, i+51).join('\n').toString()}).catch((err) => console.log(err))
@@ -247,15 +259,20 @@ export const checkSpeedDeckList = async (member, format, skillCard) => {
                         member.send({ content: response.slice(i, i+50).join('\n').toString()}).catch((err) => console.log(err))
                     }
                 }
+            
+                return false
             } else if (unrecognizedCards.length) {
                 let response = `I'm sorry, ${member.user.username}, the following card IDs were not found in our database:\n${unrecognizedCards.join('\n')}`
-                response += `\n\nThese cards are either alternate artwork or incorrect in our database. Please contact an admin to resolve this.`
-                return await member.send({ content: response }).catch((err) => console.log(err))
-            } else {
+                response += `\n\nThese cards are either alternate artwork, new to the TCG, OCG only, or incorrect in our database. Please contact the Tournament Organizer or the Admin if you can't resolve this.`
+                
+                member.send({ content: response.toString() }).catch((err) => console.log(err))
+                return false
+             } else {
                 return await member.send({ content: `Congrats, your ${format.name} Format deck is perfectly legal! ${format.emoji}`}).catch((err) => console.log(err))
             }
         } else {
-            return member.send({ content: "Sorry, I only accept duelingbook.com/deck links."}).catch((err) => console.log(err))    
+            member.send({ content: "Sorry, I only accept YDK Files."}).catch((err) => console.log(err))    
+            return false  
         }
     }).catch(err => {
         console.log(err)

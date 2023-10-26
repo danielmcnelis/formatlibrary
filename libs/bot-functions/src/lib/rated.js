@@ -224,30 +224,33 @@ export const getPreviousRatedDeck = async (user, yourRatedDecks, format) => {
 //GET NEW RATED DECK
 export const getNewRatedDeck = async (user, player, format) => {   
     const filter = m => m.author.id === user.id
-    const message = await user.send({ content: `Please provide a duelingbook.com/deck link for your Rated Deck.`}).catch((err) => console.log(err))
+    const message = await user.send({ content: `Please provide a **__YDK File__** for your Rated Deck.`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     return await message.channel.awaitMessages({
         filter,
         max: 1,
         time: 180000
     }).then(async (collected) => {
-        const url = collected.first().content
-        if (url.includes('duelingbook.com/deck?id=')) {		
-            user.send({ content: 'Thanks. Please wait while I download the .YDK file.'})
-            const id = url.slice(url.indexOf('?id=') + 4)
-            const {data} = await axios.get(`https://www.duelingbook.com/php-scripts/load-deck.php/deck?id=${id}`)
-            if (!data) return false
-            const main = data.main.map((e) => e.serial_number)
-            const side = data.side.map((e) => e.serial_number)
-            const extra = data.extra.map((e) => e.serial_number)
-            const ydk = ['created by...', '#main', ...main, '#extra', ...extra, '!side', ...side, ''].join('\n')
+        const url = collected.first()?.attachments?.first()?.url
+        if (url) {
+            const {data: ydk} = await axios.get(url)
+            const main = ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length)
+            const extra = ydk.split('#extra')[1].split('!side')[0].split('\n').filter((e) => e.length)
+            const side = ydk.split('!side')[1].split('\n').filter((e) => e.length)    
+            const minimum = format.category === 'Speed' ? 20 : 40
+
+            if (main?.length < minimum) {
+                user.send(`I'm sorry, your deck must contain at least ${minimum} cards.`).catch((err) => console.log(err))    
+                return false 
+            }
+
             const deckArr = [...main, ...extra, ...side,]
             const issues = await getIssues(deckArr, format)
             if (!issues) return false
 
             const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards } = issues
             if (!illegalCards || !forbiddenCards || !limitedCards || !semiLimitedCards || !unrecognizedCards) return false
-                
+            
             if (illegalCards.length || forbiddenCards.length || limitedCards.length || semiLimitedCards.length) {
                 let response = [`I'm sorry, ${user.username}, your deck is not legal. ${emojis.mad}`]
                 if (illegalCards.length) response = [...response, `\nThe following cards are not included in this format:`, ...illegalCards]
@@ -267,7 +270,7 @@ export const getNewRatedDeck = async (user, player, format) => {
                 return false
             } else if (unrecognizedCards.length) {
                 let response = `I'm sorry, ${user.username}, the following card IDs were not found in our database:\n${unrecognizedCards.join('\n')}`
-                response += `\n\nThese cards are either alternate artwork, new to the TCG, OCG only, or incorrect in our database. Please contact a Moderator or an Admin if you can't resolve this.`
+                response += `\n\nThese cards are either alternate artwork, new to the TCG, OCG only, or incorrect in our database. Please contact the Tournament Organizer or the Admin if you can't resolve this.`
                 
                 user.send({ content: response.toString() }).catch((err) => console.log(err))
                 return false
@@ -279,7 +282,7 @@ export const getNewRatedDeck = async (user, player, format) => {
                     formatName: format.name,
                     formatId: format.id,
                     name: deckName,
-                    url: `https://duelingbook.com/deck?id=${id}`,
+                    url: url,
                     ydk: ydk,
                     origin: 'user',
                     playerId: player.id
@@ -288,7 +291,7 @@ export const getNewRatedDeck = async (user, player, format) => {
                 return newRatedDeck
             }
         } else {
-            user.send({ content: "Sorry, I only accept duelingbook.com/deck links."}).catch((err) => console.log(err))    
+            user.send({ content: "Sorry, I only accept YDK Files."}).catch((err) => console.log(err))    
             return false  
         }
     }).catch((err) => {

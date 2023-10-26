@@ -17,7 +17,7 @@ RetroBot makes it easy to run large, real-time Yu-Gi-Oh! tournaments from your D
 
 • RetroBot connects to Challonge.com via your Challonge API Key to manage tournament brackets.<br/>
 • Hosts create new tournament brackets on their Challonge accounts with **!create**.<br/>
-• Players register for tournaments with **!join** and submit a deck (via duelingbook.com/deck link).<br/>
+• Players register for tournaments with **!join** and submit a deck (via YDK File).<br/>
 • Hosts can register players for tournaments with **!signup @player**.<br/>
 • RetroBot saves players's decks as .YDKs and checks their legality when they register.<br/>
 • RetroBot adds players to brackets on Challonge and removes them if they **!drop**.<br/>
@@ -43,7 +43,7 @@ RetroBot allows your Discord users to participate in a matchmaking system for on
 
 • Players can anonymously join rated pools by DM'ing **!rated** to RetroBot.<br/>
 • Players indicate which FormatLibrary.com supported Yu-Gi-Oh! format they wish to play.<br/>
-• Players submit a deck (via duelingbook.com/deck link) or select a previously submitted deck for Rated Play.<br/>
+• Players submit a deck (via YDK File) or select a previously submitted deck for Rated Play.<br/>
 • RetroBot saves players's decks as .YDKs and checks their legality when they join pools.<br/>
 • RetroBot creates a Node Canvas drawing of a player's deck to show them what they selected.<br/>
 
@@ -80,7 +80,7 @@ RetroBot grants your server access to FormatLibrary.com Rated Play for one (1) f
 RetroBot provides useful information about various Yu-Gi-Oh! formats, decks, and players.
 
 • Players can view the Forbidden and Limited lists governing any format with **!banlist**.<br/>
-• Players can check deck legality with **!legal** and they DM their deck to RetroBot (via duelingbook.com/deck link).<br/>
+• Players can check deck legality with **!legal** and they DM their deck to RetroBot (via YDK File).<br/>
 • Players can check their FormatLibrary.com profile or another player's with **!profile** or **!profile @player**.<br/>
 
 ![Legality Check](/public/Legality-Check.png)
