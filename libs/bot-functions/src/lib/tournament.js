@@ -125,7 +125,7 @@ export const getDeckList = async (member, player, format, override = false) => {
             }
         } else {
             console.log('collected', collected)
-            console.log('collected.attachments.values().next().value', collected.attachments?.values()?.next()?.value)
+            console.log('collected.attachments', collected.attachments)
             member.send({ content: "Sorry, I only accept duelingbook.com/deck links."}).catch((err) => console.log(err))    
             return false  
         }
