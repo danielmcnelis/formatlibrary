@@ -67,11 +67,11 @@ export const getDeckList = async (member, player, format, override = false) => {
             const url = collected.first()?.attachments?.first()?.url
             if (url) {
                 const {data: ydk} = await axios.get(url)
-                const main = ydk.split('#main')[1].split('#extra')[0].split('\n')
+                const main = ydk.split('#main')[1].split('#extra')[0].split('\n').map((e) => !!e.length)
                 console.log('main', main)
-                const extra = ydk.split('#extra')[1].split('!side')[0]
+                const extra = ydk.split('#extra')[1].split('!side')[0].split('\n').map((e) => !!e.length)
                 console.log('extra', extra)
-                const side = ydk.split('!side')[1]
+                const side = ydk.split('!side')[1].split('\n').map((e) => !!e.length)
                 console.log('side', side)
     
                 const minimum = format.category === 'Speed' ? 20 : 40
