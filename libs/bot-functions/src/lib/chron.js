@@ -37,7 +37,7 @@ export const updateAvatars = async (client) => {
                     if (!player) continue
                     const isActive = player.email || await Deck.count({ where: { playerId: player.id }}) || await Stats.count({ where: { playerId: player.id }})
 
-                    if (player && isActive && player.discordPfp !== avatar) {
+                    if (player && isActive && player.discordPfp) {
                         await player.update({ discordPfp: avatar })
 
                         const {data} = await axios.get(
@@ -133,7 +133,7 @@ export const conductCensus = async (client) => {
                             })
                         }
                     } catch (err) {
-                        console.log(`err.response.headers['retry-after']`, err.response.headers['retry-after'])
+                        console.log(`err`, err.response.headers['retry-after'])
                         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
                         await sleep(err.response.headers['retry-after'] * 1000)
                         i--
