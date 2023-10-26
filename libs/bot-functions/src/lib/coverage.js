@@ -370,7 +370,7 @@ export const displayReplays = async (interaction, event) => {
                 const winningDeck = await Deck.findOne({
                     where: {
                         playerId: replay.winnerId,
-                        eventId: replay.event.id
+                        eventId: event.id
                     },
                     include: DeckType
                 })
@@ -378,7 +378,7 @@ export const displayReplays = async (interaction, event) => {
                 const losingDeck = await Deck.findOne({
                     where: {
                         playerId: replay.loserId,
-                        eventId: replay.event.id
+                        eventId: event.id
                     },
                     include: DeckType
                 })

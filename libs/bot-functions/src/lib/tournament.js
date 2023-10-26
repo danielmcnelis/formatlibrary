@@ -69,17 +69,17 @@ export const getDeckList = async (member, player, format, override = false) => {
             member.send({ content: 'Thanks. Please wait while I download the .YDK file.'})
             const id = url.slice(url.indexOf('?id=') + 4)
             const {data} = await axios.get(`https://www.duelingbook.com/php-scripts/load-deck.php/deck?id=${id}`)
-            if (!data) return false
-            const main = data.main.map((e) => e.serial_number)
+            if (!data || !data?.main) return false
+            const main = data.main?.map((e) => e.serial_number)
             const minimum = format.category === 'Speed' ? 20 : 40
 
-            if (main.length < minimum) {
+            if (main?.length < minimum) {
                 member.send(`I'm sorry, your deck must contain at least ${minimum} cards.`).catch((err) => console.log(err))    
                 return false 
             }
 
-            const side = data.side.map((e) => e.serial_number)
-            const extra = data.extra.map((e) => e.serial_number)
+            const side = data.side?.map((e) => e.serial_number) || []
+            const extra = data.extra?.map((e) => e.serial_number) || []
             const ydk = ['created by...', '#main', ...main, '#extra', ...extra, '!side', ...side, ''].join('\n')
             if (format.category !== 'TCG') {
                 member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck has been saved. ${emojis.legend}\n\nPlease note: Decks for ${format.category} Formats cannot be verified at this time. Be sure your deck is legal for this tournament!`}).catch((err) => console.log(err))

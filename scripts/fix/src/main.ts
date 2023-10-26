@@ -443,9 +443,6 @@ import { capitalize } from '@fl/utils'
     let e = 0
     
     const replays = await Replay.findAll({
-        where: {
-            eventId: {[Op.not]: null}
-        },
         include: [Event, Tournament]
     })
 
