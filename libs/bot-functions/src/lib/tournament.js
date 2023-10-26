@@ -57,7 +57,7 @@ export const askForSimName = async (member, player, simulator, override = false,
 export const getDeckList = async (member, player, format, override = false) => {            
     const filter = m => m.author.id === member.user.id
     const pronoun = override ? `${player.globalName || player.discordName}'s` : 'your'
-    const message = await member.send({ content: `Please provide a duelingbook.com/deck link for ${pronoun} tournament deck.`}).catch((err) => console.log(err))
+    const message = await member.send({ content: `Please provide a YDK File for ${pronoun} tournament deck.`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     return await message.channel.awaitMessages({
         filter,
@@ -124,6 +124,7 @@ export const getDeckList = async (member, player, format, override = false) => {
                 return { url, ydk }
             }
         } else {
+            console.log('collected', collected)
             member.send({ content: "Sorry, I only accept duelingbook.com/deck links."}).catch((err) => console.log(err))    
             return false  
         }
