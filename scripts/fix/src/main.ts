@@ -6,106 +6,106 @@ import Canvas = require('canvas')
 import { S3 } from 'aws-sdk'
 import { capitalize } from '@fl/utils'
 
-;(async () => {
-    const decks = await Deck.findAll({ include: [DeckType, Event, Format, Player] })
-    let a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0, h = 0, k = 0, l = 0
+// ;(async () => {
+//     const decks = await Deck.findAll({ include: [DeckType, Event, Format, Player] })
+//     let a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0, h = 0, k = 0, l = 0
 
-    for (let i = 0; i < decks.length; i++) {
-        const deck = decks[i]
+//     for (let i = 0; i < decks.length; i++) {
+//         const deck = decks[i]
 
-        // change Deck origin from 'event' to 'user' if no associated Event is found
-        if (!deck.eventId && deck.origin === 'event') {
-            await deck.update({ origin: 'user' })
-            a++
-        }
+//         // change Deck origin from 'event' to 'user' if no associated Event is found
+//         if (!deck.eventId && deck.origin === 'event') {
+//             await deck.update({ origin: 'user' })
+//             a++
+//         }
 
-        // synchronize Deck types with DeckType names
-        if (deck.deckType?.name && deck.deckType.name !== deck.type) {
-            await deck.update({ type: deck.deckType.name })
-            b++
-        }
+//         // synchronize Deck types with DeckType names
+//         if (deck.deckType?.name && deck.deckType.name !== deck.type) {
+//             await deck.update({ type: deck.deckType.name })
+//             b++
+//         }
 
-        // synchronize Deck categories with DeckType categories
-        if (deck.deckType?.category && deck.deckType.category !== deck.category) {
-            await deck.update({ category: deck.deckType.category })
-            c++
-        }
+//         // synchronize Deck categories with DeckType categories
+//         if (deck.deckType?.category && deck.deckType.category !== deck.category) {
+//             await deck.update({ category: deck.deckType.category })
+//             c++
+//         }
 
-        // synchronize Deck event-names with Event abbreviations
-        if (deck.event?.abbreviation && deck.event.abbreviation !== deck.eventName) {
-            await deck.update({ eventName: deck.event.abbreviation })
-            d++
-        }
+//         // synchronize Deck event-names with Event abbreviations
+//         if (deck.event?.abbreviation && deck.event.abbreviation !== deck.eventName) {
+//             await deck.update({ eventName: deck.event.abbreviation })
+//             d++
+//         }
 
-        // synchronize Deck communities with Event communities
-        if (deck.event?.community && deck.event.community !== deck.community) {
-            await deck.update({ community: deck.event.community })
-            k++
-        }
+//         // synchronize Deck communities with Event communities
+//         if (deck.event?.community && deck.event.community !== deck.community) {
+//             await deck.update({ community: deck.event.community })
+//             k++
+//         }
 
-        // synchronize Deck publish-dates with Event end-dates
-        if (deck.event?.endDate && deck.event.endDate !== deck.publishDate) {
-            await deck.update({ publishDate: deck.event.endDate })
-            e++
-        }
+//         // synchronize Deck publish-dates with Event end-dates
+//         if (deck.event?.endDate && deck.event.endDate !== deck.publishDate) {
+//             await deck.update({ publishDate: deck.event.endDate })
+//             e++
+//         }
 
-        // synchronize Deck format-names with Format names
-        if (deck.format?.name && deck.format.name !== deck.formatName) {
-            await deck.update({ formatName: deck.format.name })
-            f++
-        }
+//         // synchronize Deck format-names with Format names
+//         if (deck.format?.name && deck.format.name !== deck.formatName) {
+//             await deck.update({ formatName: deck.format.name })
+//             f++
+//         }
 
-        // synchronize Deck builders with Player names
-        if (deck.player?.name && deck.player.name !== deck.builder) {
-            await deck.update({ builder: deck.player.name })
-            g++
-        }
-    }
+//         // synchronize Deck builders with Player names
+//         if (deck.player?.name && deck.player.name !== deck.builder) {
+//             await deck.update({ builder: deck.player.name })
+//             g++
+//         }
+//     }
 
-    console.log(`changed ${a} deck origins from 'event' to 'user'`)
-    console.log(`synchronized ${b} Deck types with DeckType names`)
-    console.log(`synchronized ${c} Deck categories with DeckType categories`)
-    console.log(`synchronized ${d} Deck eventNames with Event abbreviations`)
-    console.log(`synchronized ${k} Deck communities with Event communities`)
-    console.log(`synchronized ${e} Deck publishDates with Event endDates`)
-    console.log(`synchronized ${f} Deck formatNames with Format names`)
-    console.log(`synchronized ${g} Deck builders with Player names`)
+//     console.log(`changed ${a} deck origins from 'event' to 'user'`)
+//     console.log(`synchronized ${b} Deck types with DeckType names`)
+//     console.log(`synchronized ${c} Deck categories with DeckType categories`)
+//     console.log(`synchronized ${d} Deck eventNames with Event abbreviations`)
+//     console.log(`synchronized ${k} Deck communities with Event communities`)
+//     console.log(`synchronized ${e} Deck publishDates with Event endDates`)
+//     console.log(`synchronized ${f} Deck formatNames with Format names`)
+//     console.log(`synchronized ${g} Deck builders with Player names`)
 
-    const deckThumbs = await DeckThumb.findAll({ include: DeckType })
+//     const deckThumbs = await DeckThumb.findAll({ include: DeckType })
 
-    for (let i = 0; i < deckThumbs.length; i++) {
-        const deckThumb = deckThumbs[i]
+//     for (let i = 0; i < deckThumbs.length; i++) {
+//         const deckThumb = deckThumbs[i]
 
-        // synchronize DeckThumb names with DeckType names
-        if (deckThumb.deckType?.name && deckThumb.name !== deckThumb.deckType.name) {
-            await deckThumb.update({ name: deckThumb.deckType.name })
-            h++
-        }
-    }
+//         // synchronize DeckThumb names with DeckType names
+//         if (deckThumb.deckType?.name && deckThumb.name !== deckThumb.deckType.name) {
+//             await deckThumb.update({ name: deckThumb.deckType.name })
+//             h++
+//         }
+//     }
 
-    console.log(`synchronized ${h} DeckThumb names with DeckType names`)
+//     console.log(`synchronized ${h} DeckThumb names with DeckType names`)
 
-    const deckTypes = await DeckType.findAll()
+//     const deckTypes = await DeckType.findAll()
 
-    for (let i = 0; i < deckTypes.length; i++) {
-        const deckType = deckTypes[i]
+//     for (let i = 0; i < deckTypes.length; i++) {
+//         const deckType = deckTypes[i]
 
-        const count = await Deck.count({
-            where: {
-                deckTypeId: deckType.id,
-                origin: 'event' 
-            }
-        })
+//         const count = await Deck.count({
+//             where: {
+//                 deckTypeId: deckType.id,
+//                 origin: 'event' 
+//             }
+//         })
 
-        if (!count) {
-            console.log(`deleting DeckType: ${deckType.name}`)
-            await deckType.destroy()
-            l++
-        }
-    }
+//         if (!count) {
+//             console.log(`deleting DeckType: ${deckType.name}`)
+//             await deckType.destroy()
+//             l++
+//         }
+//     }
 
-    console.log(`deleted ${l} DeckTypes without a corresponding Deck`)
-})()
+//     console.log(`deleted ${l} DeckTypes without a corresponding Deck`)
+// })()
     
 // ;(async () => {
 //     const statuses = await Status.findAll()
@@ -227,71 +227,46 @@ import { capitalize } from '@fl/utils'
 //     return console.log(`fixed ${b} players and encountered ${e} errors`)
 // })()
 
-// ;(async () => {
-//     let b = 0
-//     let e = 0
-//     const tournaments = await Tournament.findAll({
-//         where: {
-//             abbreviation: {
-//                 [Op.or]: {
-//                     [Op.substring]: 'top',
-//                     [Op.substring]: 'Top', 
-//                 }
-//             }
-//         }
-//     })
+;(async () => {
+    let b = 0
+    let e = 0
+    const tournaments = await Tournament.findAll()
 
-//     for (let i = 0; i < tournaments.length; i++) {
-//         const tournament = tournaments[i]
-//         await tournament.update({ isTopCut: true })
-//     }
+    for (let i = 0; i < tournaments.length; i++) {
+        try {
+            const tournament = tournaments[i]
+            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${config.challonge['Format Library']}`)
+            
+            if (tournament.type?.toLowerCase() === 'swiss') {
+                const swiss_rounds = data?.tournament?.swiss_rounds
+                if (tournament.rounds !== swiss_rounds) {
+                    await tournament.update({ rounds: swiss_rounds })
+                    b++
+                }
+            } else if (tournament.type?.toLowerCase() === 'double elimination') {
+                const count = data?.tournament?.participants_count
+                const rounds = Math.ceil(Math.log(count) / Math.log(2)) + 1
+                if (tournament.rounds !== rounds) {
+                    await tournament.update({ rounds })
+                    b++
+                }
+            } else if (tournament.type?.toLowerCase() === 'single elimination') {
+                const count = data?.tournament?.participants_count
+                const rounds = Math.ceil(Math.log(count) / Math.log(2))
+                if (tournament.rounds !== rounds) {
+                    await tournament.update({ rounds })
+                    b++
+                }
+            }
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
 
-//     const events = await Event.findAll()
-
-//     for (let i = 0; i < events.length; i++) {
-//         try {
-//             const event = events[i]
-//             const tournament = await Tournament.findOne({
-//                 where: {
-//                     [Op.or]: {
-//                         name: {[Op.iLike]: event.name },
-//                         abbreviation: {[Op.iLike]: event.abbreviation },
-//                         url: {[Op.iLike]: event.abbreviation }
-//                     }
-//                 }
-//             })
-
-//             await event.update({ topCutTournamentId: tournament.assocTournamentId })
-//             b++
-//         } catch (err) {
-//             console.log(err)
-//             e++
-//         }
-//     }
-
-//     for (let i = 0; i < events.length; i++) {
-//         try {
-//             const event = events[i]
-//             const tournament = await Tournament.findOne({
-//                 where: {
-//                     [Op.or]: {
-//                         name: {[Op.iLike]: event.name },
-//                         abbreviation: {[Op.iLike]: event.abbreviation },
-//                         url: {[Op.iLike]: event.abbreviation }
-//                     }
-//                 }
-//             })
-
-//             await event.update({ topCutTournamentId: tournament.assocTournamentId })
-//             b++
-//         } catch (err) {
-//             console.log(err)
-//             e++
-//         }
-//     }
-
-//     return console.log(`fixed ${b} players and encountered ${e} errors`)
-// })()
+    
+    return console.log(`fixed ${b} tournaments and encountered ${e} errors`)
+})()
 
 
 // ;(async () => {
@@ -418,29 +393,29 @@ import { capitalize } from '@fl/utils'
 //             const {data} = await axios.get(`https://api.challonge.com/v1/tournaments/${replay.tournamentId}/matches/${replay.match.challongeMatchId}.json?api_key=${config.challonge['Format Library']}`)
 //             let roundName 
 
-//             if (replay.tournament.type === 'swiss' ||replay. tournament.type === 'round robin') {
+//             if (replay.tournament?.type === 'swiss' ||replay. tournament.type === 'round robin') {
 //                 roundName = `Round ${data.match.round}`
-//             } else if (replay.tournament.type === 'single elimination') {
-//                 roundName = replay.tournament.rounds - data.match.round === 0 ? 'Finals' :
-//                     replay.tournament.rounds - data.match.round === 1 ? 'Semi Finals' :
-//                     replay.tournament.rounds - data.match.round === 2 ? 'Quarter Finals' :
-//                     replay.tournament.rounds - data.match.round === 3 ? 'Round of 16' :
-//                     replay.tournament.rounds - data.match.round === 4 ? 'Round of 32' :
-//                     replay.tournament.rounds - data.match.round === 5 ? 'Round of 64' :
-//                     replay.tournament.rounds - data.match.round === 6 ? 'Round of 128' :
-//                     replay.tournament.rounds - data.match.round === 7 ? 'Round of 256' :
+//             } else if (replay.tournament?.type === 'single elimination') {
+//                 roundName = replay.tournament?.rounds - data.match.round === 0 ? 'Finals' :
+//                     replay.tournament?.rounds - data.match.round === 1 ? 'Semi Finals' :
+//                     replay.tournament?.rounds - data.match.round === 2 ? 'Quarter Finals' :
+//                     replay.tournament?.rounds - data.match.round === 3 ? 'Round of 16' :
+//                     replay.tournament?.rounds - data.match.round === 4 ? 'Round of 32' :
+//                     replay.tournament?.rounds - data.match.round === 5 ? 'Round of 64' :
+//                     replay.tournament?.rounds - data.match.round === 6 ? 'Round of 128' :
+//                     replay.tournament?.rounds - data.match.round === 7 ? 'Round of 256' :
 //                     null
-//             } else if (replay.tournament.type === 'double elimination') {
+//             } else if (replay.tournament?.type === 'double elimination') {
 //                 if (data.match.round > 0) {
-//                     roundName = replay.tournament.rounds - data.match.round === 0 ? 'Grand Finals' :
-//                         replay.tournament.rounds - data.match.round === 1 ? `Winner's Finals` :
-//                         replay.tournament.rounds - data.match.round === 2 ? `Winner's Semis` :
-//                         replay.tournament.rounds - data.match.round === 3 ? `Winner's Quarters` :
+//                     roundName = replay.tournament?.rounds - data.match.round === 0 ? 'Grand Finals' :
+//                         replay.tournament?.rounds - data.match.round === 1 ? `Winner's Finals` :
+//                         replay.tournament?.rounds - data.match.round === 2 ? `Winner's Semis` :
+//                         replay.tournament?.rounds - data.match.round === 3 ? `Winner's Quarters` :
 //                         `Winner's Round ${data.match.round}`
 //                 } else {
-//                     roundName = replay.tournament.rounds - Math.abs(data.match.round) === -1 ? `Loser's Finals` :
-//                         replay.tournament.rounds - Math.abs(data.match.round) === 0 ? `Loser's Semis` :
-//                         replay.tournament.rounds - Math.abs(data.match.round) === 1 ? `Loser's Quarters` :
+//                     roundName = replay.tournament?.rounds - Math.abs(data.match.round) === -1 ? `Loser's Finals` :
+//                         replay.tournament?.rounds - Math.abs(data.match.round) === 0 ? `Loser's Semis` :
+//                         replay.tournament?.rounds - Math.abs(data.match.round) === 1 ? `Loser's Quarters` :
 //                         `Loser's Round ${Math.abs(data.match.round)}`
 //                 }
 //             } else {
@@ -471,7 +446,7 @@ import { capitalize } from '@fl/utils'
         where: {
             eventId: {[Op.not]: null}
         },
-        include: Event
+        include: [Event, Tournament]
     })
 
     for (let i = 0; i < replays.length; i++) {
@@ -493,14 +468,46 @@ import { capitalize } from '@fl/utils'
                 include: DeckType
             })
 
+            let roundName
+
+            if (replay?.tournament?.type === 'swiss' || replay?.tournament?.type === 'round robin') {
+                roundName = `Round ${replay.roundInt}`
+            } else if (replay?.tournament.type === 'single elimination') {
+                roundName = replay?.tournament.rounds - replay.roundInt === 0 ? 'Finals' :
+                    replay.tournament?.rounds - replay.roundInt === 1 ? 'Semi Finals' :
+                    replay.tournament?.rounds - replay.roundInt === 2 ? 'Quarter Finals' :
+                    replay.tournament?.rounds - replay.roundInt === 3 ? 'Round of 16' :
+                    replay.tournament?.rounds - replay.roundInt === 4 ? 'Round of 32' :
+                    replay.tournament?.rounds - replay.roundInt === 5 ? 'Round of 64' :
+                    replay.tournament?.rounds - replay.roundInt === 6 ? 'Round of 128' :
+                    replay.tournament?.rounds - replay.roundInt === 7 ? 'Round of 256' :
+                    null
+            } else if (replay?.tournament.type === 'double elimination') {
+                if (replay.roundInt > 0) {
+                    roundName = replay?.tournament.rounds - replay.roundInt === 0 ? 'Grand Finals' :
+                        replay?.tournament.rounds - replay.roundInt === 1 ? `Winner's Finals` :
+                        replay?.tournament.rounds - replay.roundInt === 2 ? `Winner's Semis` :
+                        replay?.tournament.rounds - replay.roundInt === 3 ? `Winner's Quarters` :
+                        `Winner's Round ${replay.roundInt}`
+                } else {
+                    roundName = replay?.tournament.rounds - Math.abs(replay.roundInt) === -1 ? `Loser's Finals` :
+                        replay.tournament?.rounds - Math.abs(replay.roundInt) === 0 ? `Loser's Semis` :
+                        replay.tournament?.rounds - Math.abs(replay.roundInt) === 1 ? `Loser's Quarters` :
+                        `Loser's Round ${Math.abs(replay.roundInt)}`
+                }
+            } else {
+                roundName = replay.roundName
+            }
+
             await replay.update({
-                winningDeckType: winningDeck.deckType.name,
-                winningDeckId: winningDeck.id,
-                winningDeckTypeId: winningDeck.deckTypeId,
-                losingDeckType: losingDeck.deckType.name,
-                losingDeckId: losingDeck.id,
-                losingDeckTypeId: losingDeck.deckTypeId,
-                publishDate: replay.event.endDate 
+                winningDeckType: winningDeck?.deckType?.name,
+                winningDeckId: winningDeck?.id,
+                winningDeckTypeId: winningDeck?.deckTypeId,
+                losingDeckType: losingDeck?.deckType?.name,
+                losingDeckId: losingDeck?.id,
+                losingDeckTypeId: losingDeck?.deckTypeId,
+                publishDate: replay?.event?.endDate,
+                roundName: roundName
             })
             b++
         } catch (err) {

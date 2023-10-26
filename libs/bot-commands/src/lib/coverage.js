@@ -38,7 +38,6 @@ export default {
         await publishDecks(interaction, event)
         await displayReplays(interaction, event)
         await composeThumbnails(interaction, event)
-        await publishDecks(interaction, event)
 
         if (event.tournament) {
             await generateMatchupData(interaction, server, event, event.tournament)

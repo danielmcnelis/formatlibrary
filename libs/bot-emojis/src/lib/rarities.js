@@ -1,7 +1,7 @@
 export const rarities = {
     '10000 Secret Rare': "<:10000SecretRare:971130260361994262>",
     "Collector's Rare": "<:collectorsRare:971130260219367485>",
-    Common: "<:common:971130260697542656>",
+    'Common': "<:common:971130260697542656>",
     'DT Normal Parallel Rare': "<:dTNormalParallelRare:971130260257136682>",
     'DT Rare Parallel Rare': "<:dTRareParallelRare:971130260374577253>",
     'DT Super Parallel Rare': "<:dTSuperParallelRare:971130260852719706>",
@@ -15,7 +15,8 @@ export const rarities = {
     'Platinum Secret Rare': "<:platinumSecretRare:971130260634611712>",
     'Premium Gold Rare': "<:premiumGoldRare:971130259917406239>",
     'Prismatic Secret Rare': "<:prismaticSecretRare:971130260726902874>",
-    Rare: "<:rare:971130259791544320>",
+    'Rare': "<:rare:971130259791544320>",
+    'Quarter Century Secret Rare': '<:quarterCenturySecretRare:1166852923247038464>',
     'Secret Rare': "<:secretRare:971130260949200986>",
     'Shatterfoil Rare': "<:shatterfoilRare:971130260651388938>",
     'Short Print': "<:shortPrint:971130260605255740>",

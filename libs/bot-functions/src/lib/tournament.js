@@ -2199,7 +2199,6 @@ export const createTournament = async (interaction, formatName, name, abbreviati
         server.logo || emojis.legend
 
     try {
-        console.log('server.challongeSubdomain', server.challongeSubdomain)
         const tournament = server.challongeSubdomain ? {
             name: name,
             url: abbreviation || name,
@@ -2216,8 +2215,6 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             game_name: game_name,
             pts_for_match_tie: "0.0"
         }
-
-        console.log('tournament', tournament)
         
         const { status, data } = await axios({
             method: 'post',
@@ -2256,7 +2253,6 @@ export const createTournament = async (interaction, formatName, name, abbreviati
     } catch (err) {
         console.log(err)
         try {
-
             const tournament = server.challongeSubdomain ? {
                 name: name,
                 url: str,
@@ -2273,8 +2269,6 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 game_name: game_name,
                 pts_for_match_tie: "0.0"
             }
-
-            console.log('2276 tournament', tournament)
             
             const { status, data } = await axios({
                 method: 'post',
@@ -2500,6 +2494,12 @@ export const startTournament = async (interaction, tournamentId) => {
             console.log(err)
             return await interaction.channel.send({ content: `Error connecting to Challonge.`})
         }
+    } else if (tournament?.type?.toLowerCase() === 'double elimination') {
+        const rounds = Math.ceil(Math.log(entryCount) / Math.log(2)) + 1
+        await tournament.update({ rounds })
+    } else if (tournament?.type?.toLowerCase() === 'single elimination') {
+        const rounds = Math.ceil(Math.log(entryCount) / Math.log(2))
+        await tournament.update({ rounds })
     }
 
     try {

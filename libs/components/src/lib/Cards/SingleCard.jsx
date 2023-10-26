@@ -241,7 +241,7 @@ export const SingleCard = () => {
                                         {
                                             card.pendulumEffect && card.normal ? 'Pendulum Effect:\n' + card.pendulumEffect + '\n\nFlavor Text:\n' + <i>card.description</i> :
                                             card.pendulumEffect && !card.normal ? 'Pendulum Effect:\n' + card.pendulumEffect + '\n\nMonster Effect:\n' + card.description :
-                                            card.normal ? <i>card.description</i> :
+                                            card.normal ? <i>{card.description}</i> :
                                             card.description
                                         }
                                     </td>
@@ -304,7 +304,7 @@ export const SingleCard = () => {
                             {
                                 card.pendulumEffect && card.normal ? card.pendulumEffect + '\n\n' + <i>card.description</i> :
                                 card.pendulumEffect && !card.normal ? card.pendulumEffect + '\n\n' + card.description :
-                                card.normal ? <i>card.description</i> :
+                                card.normal ? <i>{card.description}</i> :
                                 card.description
                             }
                             </td>

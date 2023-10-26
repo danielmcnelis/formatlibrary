@@ -364,36 +364,40 @@ export const displayReplays = async (interaction, event) => {
         })
      
         for (let i = 0; i < primaryReplays.length; i++) {
-            const replay = primaryReplays[i]
+            try {
+                const replay = primaryReplays[i]
 
-            const winningDeck = await Deck.findOne({
-                where: {
-                    playerId: replay.winnerId,
-                    eventId: replay.eventId
-                },
-                include: DeckType
-            })
-
-            const losingDeck = await Deck.findOne({
-                where: {
-                    playerId: replay.loserId,
-                    eventId: replay.eventId
-                },
-                include: DeckType
-            })
-
-            await replay.update({
-                winningDeckType: winningDeck.deckType.name,
-                winningDeckId: winningDeck.id,
-                winningDeckTypeId: winningDeck.deckTypeId,
-                losingDeckType: losingDeck.deckType.name,
-                losingDeckId: losingDeck.id,
-                losingDeckTypeId: losingDeck.deckTypeId,
-                eventName: event.abbreviation,
-                eventId: event.id,
-                publishDate: replay.event.endDate
-            })
-        }
+                const winningDeck = await Deck.findOne({
+                    where: {
+                        playerId: replay.winnerId,
+                        eventId: replay.event.id
+                    },
+                    include: DeckType
+                })
+    
+                const losingDeck = await Deck.findOne({
+                    where: {
+                        playerId: replay.loserId,
+                        eventId: replay.event.id
+                    },
+                    include: DeckType
+                })
+    
+                await replay.update({
+                    winningDeckType: winningDeck.deckType.name,
+                    winningDeckId: winningDeck.id,
+                    winningDeckTypeId: winningDeck.deckTypeId,
+                    losingDeckType: losingDeck.deckType.name,
+                    losingDeckId: losingDeck.id,
+                    losingDeckTypeId: losingDeck.deckTypeId,
+                    eventName: event.abbreviation,
+                    eventId: event.id,
+                    publishDate: replay.event.endDate
+                })
+            } catch (err) {
+                console.log(err)
+            }
+        } 
 
         await interaction.channel.send(`Published ${primaryReplays.length} new primary tournament replays for ${event.name}.`)
     } else {
@@ -409,39 +413,40 @@ export const displayReplays = async (interaction, event) => {
         })
     
         for (let i = 0; i < topCutReplays.length; i++) {
-            const replay = topCutReplays[i]
+            try {
+                const replay = topCutReplays[i]
 
-            const winningDeck = await Deck.findOne({
-                where: {
-                    playerId: replay.winnerId,
-                    eventId: replay.eventId
-                },
-                include: DeckType
-            })
-
-            const losingDeck = await Deck.findOne({
-                where: {
-                    playerId: replay.loserId,
-                    eventId: replay.eventId
-                },
-                include: DeckType
-            })
-
-            await replay.update({
-                winningDeckType: winningDeck.deckType.name,
-                winningDeckId: winningDeck.id,
-                winningDeckTypeId: winningDeck.deckTypeId,
-                losingDeckType: losingDeck.deckType.name,
-                losingDeckId: losingDeck.id,
-                losingDeckTypeId: losingDeck.deckTypeId,
-                eventName: event.abbreviation,
-                eventId: event.id,
-                publishDate: replay.event.endDate,
-                display: true
-            })
-
-            await replay.update({ 
-             })
+                const winningDeck = await Deck.findOne({
+                    where: {
+                        playerId: replay.winnerId,
+                        eventId: replay.eventId
+                    },
+                    include: DeckType
+                })
+    
+                const losingDeck = await Deck.findOne({
+                    where: {
+                        playerId: replay.loserId,
+                        eventId: replay.eventId
+                    },
+                    include: DeckType
+                })
+    
+                await replay.update({
+                    winningDeckType: winningDeck.deckType.name,
+                    winningDeckId: winningDeck.id,
+                    winningDeckTypeId: winningDeck.deckTypeId,
+                    losingDeckType: losingDeck.deckType.name,
+                    losingDeckId: losingDeck.id,
+                    losingDeckTypeId: losingDeck.deckTypeId,
+                    eventName: event.abbreviation,
+                    eventId: event.id,
+                    publishDate: replay.event.endDate,
+                    display: true
+                })
+            } catch (err) {
+                console.log(err)
+            }
         }
     
         if (topCutReplays.length) {
