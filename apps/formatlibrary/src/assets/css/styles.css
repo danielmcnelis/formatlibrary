@@ -2115,6 +2115,10 @@
   #ultraRare {
     background-image: url('https://cdn.formatlibrary.com/images/rarities/ultraRare.png');
   }
+
+  #quarterCenturySecretRare {
+    background-image: url('https://cdn.formatlibrary.com/images/rarities/quarterCenturySecretRare.png');
+  }
   
   .attributeMiniButton:hover,
   .attributeButton:hover,

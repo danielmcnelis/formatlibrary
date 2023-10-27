@@ -5,8 +5,7 @@ import './PrintRow.css'
 export const PrintRow = (props) => {
   const { index, print } = props
   const evenOrOdd = index % 2 ? 'even' : 'odd'
-  const tcgPlayerUrl = print.tcgPlayerUrl + '?utm_campaign=affiliate&utm_medium=FormatLibrary&utm_source=FormatLibrary' || 
-    `https://store.tcgplayer.com/yugioh/${urlize(print.setName)}/${urlize(print.cardName)}?utm_campaign=affiliate&utm_medium=FormatLibrary&utm_source=FormatLibrary`
+  const tcgPlayerUrl = `https://tcgplayer.pxf.io/XYZQm5?u=${encodeURIComponent(print.tcgPlayerUrl || `https://store.tcgplayer.com/yugioh/${urlize(print.setName)}/${urlize(print.cardName)}`)}`
   const openNewTab = () => window.open(tcgPlayerUrl, "_blank")
   const id = print.rarity === '10000 Secret Rare' ? 'tenThousandSecretRare' : camelize(print.rarity)
   const prices = [print.unlimPrice, print.firstPrice, print.limPrice].filter((e) => !!e)

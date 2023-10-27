@@ -394,8 +394,8 @@ export const EventTable = (props) => {
                     <option value="startDate:asc">Sort Date: Old ⮕ New</option>
                     <option value="name:asc">Sort Event: A ⮕ Z</option>
                     <option value="name:desc">Sort Event: Z ⮕ A</option>
-                    <option value="size:asc">Sort Size: Large ⮕ Small </option>
-                    <option value="size:desc">Sort Size: Small ⮕ Large </option>
+                    <option value="size:desc">Sort Size: Large ⮕ Small </option>
+                    <option value="size:asc">Sort Size: Small ⮕ Large </option>
                     </select>
         
                     <div
