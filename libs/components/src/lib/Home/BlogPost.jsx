@@ -40,20 +40,6 @@ export const BlogPost = (props) => {
                                 </div>
                                 </a>
                                 <a 
-                                    href="https://twitter.com/formatlibrary"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    id="twitter"
-                                    className="black-text hover-green"
-                                    style={{margin: "16px 0px"}}
-                                >
-                                    <img 
-                                        src="https://cdn.formatlibrary.com/images/logos/Twitter.png" 
-                                        alt="Twitter" 
-                                    />
-                                    <p className="ad-desc">Follow us for Event Announcements!</p>
-                                </a>
-                                <a 
                                     href="https://www.buymeacoffee.com/danielmcnelis" 
                                     target="_blank"
                                     rel="noreferrer"
@@ -67,7 +53,7 @@ export const BlogPost = (props) => {
                                 <p className="ad-desc">Small donations support our work!</p>
                                 </a>
                                 <a 
-                                    href="https://www.tcgplayer.com/search/yugioh/product?productLineName=yugioh&view=grid&utm_campaign=affiliate&utm_medium=FormatLibrary&utm_source=FormatLibrary" 
+                                    href="https://tcgplayer.pxf.io/XYZQm5" 
                                     target="_blank"
                                     rel="noreferrer"
                                     id="tcgplayer"

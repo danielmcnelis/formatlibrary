@@ -60,7 +60,7 @@ export const Footer = () => (
       </Link>
       <br />
       <a
-        href="https://www.tcgplayer.com/search/yugioh/product?productLineName=yugioh&view=grid&utm_campaign=affiliate&utm_medium=FormatLibrary&utm_source=FormatLibrary"
+        href="https://tcgplayer.pxf.io/XYZQm5"
         target="_blank"
         rel="noreferrer"
         className="desktop-only"

@@ -153,7 +153,7 @@
     margin: 8px 0px 16px;
 }
 
-#twitter, #buymeacoffee {
+#buymeacoffee {
     margin: 16px 0px;
 }
 
@@ -161,7 +161,7 @@
     margin: 16px 0px 8px;
 }
 
-#discord img, #twitter img {
+#discord img {
     width: 30%;
     height: 30%;
 }
