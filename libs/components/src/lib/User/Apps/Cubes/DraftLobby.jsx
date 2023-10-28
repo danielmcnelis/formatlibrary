@@ -18,7 +18,7 @@ const useAudio = (url) => {
   useEffect(() => {
       playing ? audio.play() : audio.pause()
     },
-    [playing]
+    [playing, audio]
   )
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const useAudio = (url) => {
     return () => {
       audio.removeEventListener('ended', () => setPlaying(false))
     }
-  }, [])
+  })
 
   return [toggle]
 }
@@ -60,6 +60,7 @@ export const DraftLobby = () => {
     const [onTheClock, setOnTheClock] = useState(false)
     const [time, setTime] = useState(Date.now())
     const [intervalId, setIntervalId] = useState(null)
+    const [toggleDraw] = useAudio('/assets/sounds/draw.mp3')
     const [toggleChime] = useAudio('/assets/sounds/chime.mp3')
     const [toggleHorn] = useAudio('/assets/sounds/horn.mp3')
 
@@ -128,6 +129,7 @@ export const DraftLobby = () => {
             setOnTheClock(false)
             setSelection(data.name)
             setInventory([...inventory, data])
+            toggleDraw()
         } catch (err) {
             console.log(err)
         }
@@ -153,20 +155,19 @@ export const DraftLobby = () => {
         } else {
             setSelection(null)
         }
-    }, [draft.pick, draft.state])
+    }, [draft.pick, draft.state, toggleHorn, toggleChime])
 
     // USE EFFECT GET INVENTORY
     useEffect(() => {
         const fetchData = async () => {
             if (entry.id) {
                 const {data} = await axios.get(`/api/drafts/inventory?entryId=${entry.id}`)
-                if (inventory.length !== data.length) setInventory(data)
-                if (data.length >= draft.pick) setOnTheClock(false)
+                setInventory(data)
             }
         }
 
         fetchData()
-    }, [entry, draft.pick])
+    }, [entry.id])
 
     // USE EFFECT GET PACK
     useEffect(() => {
@@ -178,7 +179,7 @@ export const DraftLobby = () => {
         }
 
         fetchData()
-    }, [draft, entry])
+    }, [draft.state, draft.pick, entry.id])
 
     // USE EFFECT
     useEffect(() => {
@@ -190,7 +191,7 @@ export const DraftLobby = () => {
         }
         
         fetchData()
-    }, [draft])
+    }, [draft.id])
 
     // USE EFFECT
     useEffect(() => {
@@ -201,11 +202,11 @@ export const DraftLobby = () => {
         const nowTimeStamp = today.getTime()
         const timeRemaining = timeExpiresAt - nowTimeStamp
         
-        if (timeRemaining > 0) {
+        if (timeRemaining > 0 && draft.pick > inventory.length) {
             setOnTheClock(true)
             setTimer(timeRemaining / 1000)
         }
-    }, [draft.updatedAt])
+    }, [draft.pick, draft.updatedAt, inventory.length])
 
     // USE EFFECT CLEAR INTERVAL
     useEffect(() => {
@@ -222,7 +223,7 @@ export const DraftLobby = () => {
         }
         
         fetchData()
-    }, [time])
+    }, [id, time])
 
     return (
         <div className="cube-portal">

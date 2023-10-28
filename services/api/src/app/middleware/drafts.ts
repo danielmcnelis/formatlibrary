@@ -1,4 +1,5 @@
 import { Card, Cube, CubeDraft, CubeDraftEntry, CubeDraftInventory, CubePackContent, Player } from '@fl/models'
+import { error } from 'console'
 
 //GET RANDOM ELEMENT
 const getRandomElement = (arr) => {
@@ -84,7 +85,7 @@ const setInternalTimer = async (draftId, currentPick, timer = 60) => {
                 return setInternalTimer(draft.id, nextPick, draft.timer)
             }
         }
-    }, (timer + 2) * 1000)
+    }, (timer + 3) * 1000)
 
 }
 
@@ -298,18 +299,29 @@ export const joinDraft = async (req, res, next) => {
             }
         })
 
-        const entry = await CubeDraftEntry.create({
-            cubeDraftId: req.params.id,
-            playerName: player.name,
-            playerId: player.id
+        const count = await CubeDraftEntry.count({
+            where: {
+                cubeDraftId: req.params.id,
+                playerId: player.id
+            }    
         })
 
-        const data = {
-            ...entry.dataValues,
-            player
+        if (!count) {
+            const entry = await CubeDraftEntry.create({
+                cubeDraftId: req.params.id,
+                playerName: player.name,
+                playerId: player.id
+            })
+    
+            const data = {
+                ...entry.dataValues,
+                player
+            }
+    
+            res.json(data)
+        } else {
+            throw error('Player has already joined this draft.')
         }
-
-        res.json(data)
     } catch (err) {
       next(err)
     }
