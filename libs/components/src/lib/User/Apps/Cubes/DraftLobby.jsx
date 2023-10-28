@@ -155,7 +155,7 @@ export const DraftLobby = () => {
         } else {
             setSelection(null)
         }
-    }, [draft.pick, draft.state, toggleHorn, toggleChime])
+    }, [draft.pick, draft.state])
 
     // USE EFFECT GET INVENTORY
     useEffect(() => {
