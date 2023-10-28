@@ -129,7 +129,7 @@ export const DraftLobby = () => {
             setOnTheClock(false)
             setSelection(data.name)
             setInventory([...inventory, data])
-            toggleDraw()
+            // toggleDraw()
         } catch (err) {
             console.log(err)
         }
@@ -167,7 +167,7 @@ export const DraftLobby = () => {
         }
 
         fetchData()
-    }, [entry.id])
+    }, [entry.id, draft.pick])
 
     // USE EFFECT GET PACK
     useEffect(() => {
