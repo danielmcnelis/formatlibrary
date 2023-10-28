@@ -23,7 +23,7 @@ export default {
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` + 
                 `\nBracket: <https://${subdomain}challonge.com/${tournament.url}>` +
                 `\nType: ${capitalize(tournament.type, true)}` +
-                `${tournament.rounds ? `\nDetails: ${tournament.rounds} Rounds - ${tournament.topCut ? `Top ${tournament.topCut}` : `No Playoff` }` : ''}` +
+                `${tournament.type === 'swiss' ? `\nDetails: ${tournament.rounds} Rounds - ${tournament.topCut ? `Top ${tournament.topCut}` : `No Playoff` }` : ''}` +
                 `\nStatus: ${capitalize(tournament.state, true)}`
             )
         }

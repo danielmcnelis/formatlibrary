@@ -20,7 +20,7 @@ export const deckTypesName = async (req, res, next) => {
     try {
         const deckType = await DeckType.findOne({
             where: { 
-                cleanName: {[Op.iLike]: req.params.name?.replaceAll(' ', '_').replaceAll('-', '_') }
+                cleanName: {[Op.iLike]: req.params.name?.replaceAll('-', '_') }
             },
             attributes: ['id', 'name', 'category'],
             order: [['name', 'ASC']]
@@ -269,7 +269,7 @@ export const deckTypesSummary = async (req, res, next) => {
   try {
     const deckType = await DeckType.findOne({
         where: {
-            cleanName: { [Op.iLike]: req.query.id.replaceAll('-', ' ') }
+            cleanName: { [Op.iLike]: req.query.id.replaceAll('-', '_') }
         }
     })
 
@@ -278,7 +278,7 @@ export const deckTypesSummary = async (req, res, next) => {
     if (req.query.format) {
         format = await Format.findOne({
             where: {
-                name: { [Op.iLike]: req.query.format }
+                name: { [Op.iLike]: req.query.format.replaceAll('-', '_') }
             },
             attributes: ['id', 'name', 'banlist', 'date', 'icon']
         })
