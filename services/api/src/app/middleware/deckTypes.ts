@@ -36,14 +36,14 @@ export const deckTypesDownload = async (req, res, next) => {
     try {
       const format = await Format.findOne({
         where: {
-          cleanName: { [Op.iLike]: req.query.format.replaceAll(' ', '_').replaceAll('-', '_') }
+          cleanName: { [Op.iLike]: req.query.format?.replaceAll('-', '_') }
         },
         attributes: ['id', 'name', 'banlist', 'date', 'icon']
       })
 
       const deckType = await DeckType.findOne({
         where: {
-            cleanName: { [Op.iLike]: req.query.id.replaceAll(' ', '_').replaceAll('-', '_') },
+            cleanName: { [Op.iLike]: req.query.id?.replaceAll('-', '_') },
         }
       })
 

@@ -55,7 +55,7 @@ export const getMatchupMatrix = async (req, res, next) => {
         if (req.query.isSubscriber === 'true' || req.query.isAdmin === 'true') {
             const deckType = await DeckType.findOne({
                 where: {
-                    cleanName: {[Op.iLike]: req.params.id}
+                    cleanName: {[Op.iLike]: req.params.id?.replaceAll('-', '_')}
                 }
             })
 

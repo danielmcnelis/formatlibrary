@@ -2413,8 +2413,6 @@ export const dropFromTournament = async (interaction, tournamentId) => {
 
 // START CHALLONGE BRACKET
 export const startChallongeBracket = async (interaction, tournamentId) => {
-    console.log('interaction', interaction)
-    console.log('tournamentId', tournamentId)
     const server = await Server.findOne({ where: { id: interaction.guild?.id }})
     const tournament = await Tournament.findOne({ where: { id: tournamentId }, include: Format })
     if (!tournament) return await interaction.channel.send({ content: `Tournament not found.`})
