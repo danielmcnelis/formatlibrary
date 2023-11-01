@@ -185,7 +185,7 @@ export const composeBlogPost = async (interaction, event) => {
                 `<div className="blogpost-images-flexbox">` +
                     `<div className="blogpost-pfp-community-flexbox">` +
                         `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${event.player.discordId || event.player.globalName || event.player.discordName}.png" />` +
-                        `<img className="blogpost-community"  src="https://cdn.formatlibrary.com/images/logos/${event.community}.png" />` +
+                        `<img className="blogpost-community"  src="https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png" />` +
                     `</div>` +
                     `<div className="blogpost-deck-box">` + 
                         `<a className="blogpost-deck-link" href="/decks/${deck.id}">` +
@@ -419,7 +419,7 @@ export const displayReplays = async (interaction, event) => {
                 const winningDeck = await Deck.findOne({
                     where: {
                         playerId: replay.winnerId,
-                        eventId: replay.eventId
+                        eventId: event.id
                     },
                     include: DeckType
                 })
@@ -427,7 +427,7 @@ export const displayReplays = async (interaction, event) => {
                 const losingDeck = await Deck.findOne({
                     where: {
                         playerId: replay.loserId,
-                        eventId: replay.eventId
+                        eventId: event.id
                     },
                     include: DeckType
                 })

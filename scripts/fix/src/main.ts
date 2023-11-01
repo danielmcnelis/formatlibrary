@@ -227,46 +227,46 @@ import { capitalize } from '@fl/utils'
 //     return console.log(`fixed ${b} players and encountered ${e} errors`)
 // })()
 
-;(async () => {
-    let b = 0
-    let e = 0
-    const tournaments = await Tournament.findAll()
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+//     const tournaments = await Tournament.findAll()
 
-    for (let i = 0; i < tournaments.length; i++) {
-        try {
-            const tournament = tournaments[i]
-            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${config.challonge['Format Library']}`)
+//     for (let i = 0; i < tournaments.length; i++) {
+//         try {
+//             const tournament = tournaments[i]
+//             const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${config.challonge['Format Library']}`)
             
-            if (tournament.type?.toLowerCase() === 'swiss') {
-                const swiss_rounds = data?.tournament?.swiss_rounds
-                if (tournament.rounds !== swiss_rounds) {
-                    await tournament.update({ rounds: swiss_rounds })
-                    b++
-                }
-            } else if (tournament.type?.toLowerCase() === 'double elimination') {
-                const count = data?.tournament?.participants_count
-                const rounds = Math.ceil(Math.log(count) / Math.log(2)) + 1
-                if (tournament.rounds !== rounds) {
-                    await tournament.update({ rounds })
-                    b++
-                }
-            } else if (tournament.type?.toLowerCase() === 'single elimination') {
-                const count = data?.tournament?.participants_count
-                const rounds = Math.ceil(Math.log(count) / Math.log(2))
-                if (tournament.rounds !== rounds) {
-                    await tournament.update({ rounds })
-                    b++
-                }
-            }
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
+//             if (tournament.type?.toLowerCase() === 'swiss') {
+//                 const swiss_rounds = data?.tournament?.swiss_rounds
+//                 if (tournament.rounds !== swiss_rounds) {
+//                     await tournament.update({ rounds: swiss_rounds })
+//                     b++
+//                 }
+//             } else if (tournament.type?.toLowerCase() === 'double elimination') {
+//                 const count = data?.tournament?.participants_count
+//                 const rounds = Math.ceil(Math.log(count) / Math.log(2)) + 1
+//                 if (tournament.rounds !== rounds) {
+//                     await tournament.update({ rounds })
+//                     b++
+//                 }
+//             } else if (tournament.type?.toLowerCase() === 'single elimination') {
+//                 const count = data?.tournament?.participants_count
+//                 const rounds = Math.ceil(Math.log(count) / Math.log(2))
+//                 if (tournament.rounds !== rounds) {
+//                     await tournament.update({ rounds })
+//                     b++
+//                 }
+//             }
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
 
     
-    return console.log(`fixed ${b} tournaments and encountered ${e} errors`)
-})()
+//     return console.log(`fixed ${b} tournaments and encountered ${e} errors`)
+// })()
 
 
 // ;(async () => {
@@ -443,6 +443,10 @@ import { capitalize } from '@fl/utils'
     let e = 0
     
     const replays = await Replay.findAll({
+        where: {
+            eventId: {[Op.not]: null},
+            tournamentId: {[Op.not]: null}
+        },
         include: [Event, Tournament]
     })
 
@@ -484,12 +488,10 @@ import { capitalize } from '@fl/utils'
                     roundName = replay?.tournament.rounds - replay.roundInt === 0 ? 'Grand Finals' :
                         replay?.tournament.rounds - replay.roundInt === 1 ? `Winner's Finals` :
                         replay?.tournament.rounds - replay.roundInt === 2 ? `Winner's Semis` :
-                        replay?.tournament.rounds - replay.roundInt === 3 ? `Winner's Quarters` :
                         `Winner's Round ${replay.roundInt}`
                 } else {
                     roundName = replay?.tournament.rounds - Math.abs(replay.roundInt) === -1 ? `Loser's Finals` :
                         replay.tournament?.rounds - Math.abs(replay.roundInt) === 0 ? `Loser's Semis` :
-                        replay.tournament?.rounds - Math.abs(replay.roundInt) === 1 ? `Loser's Quarters` :
                         `Loser's Round ${Math.abs(replay.roundInt)}`
                 }
             } else {
@@ -817,11 +819,11 @@ import { capitalize } from '@fl/utils'
 //     }
 // })()
 
-;(async () => {
-    const formats = await Format.findAll()
+// ;(async () => {
+//     const formats = await Format.findAll()
 
-    for (let i = 0; i < formats.length; i++) {
-        const format = formats[i]
-        await format.update({ cleanName: capitalize(format.cleanName, true) })
-    }
-})()
+//     for (let i = 0; i < formats.length; i++) {
+//         const format = formats[i]
+//         await format.update({ cleanName: capitalize(format.cleanName, true) })
+//     }
+// })()

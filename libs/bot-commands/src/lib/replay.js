@@ -1,7 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { hasAffiliateAccess, isMod, selectMatch } from '@fl/bot-functions'
-import { emojis } from '@fl/bot-emojis'
+import { isProgrammer, isMod, selectMatch } from '@fl/bot-functions'
 import { Format, Match, Player, Replay, Server, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
@@ -37,14 +36,27 @@ export default {
         const focusedValue = interaction.options.getFocused()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        
-        const tournaments = await Tournament.findAll({
+        const memberIsProgrammer = await isProgrammer(server, interaction.member)
+
+        const tournaments = memberIsProgrammer ? await Tournament.findAll({
             where: {
                 [Op.or]: {
                     name: {[Op.substring]: focusedValue},
                     abbreviation: {[Op.substring]: focusedValue}
                 },
                 state: {[Op.not]: 'pending'},
+                formatId: format.id,
+                serverId: server.id
+            },
+            limit: 5,
+            order: [["createdAt", "DESC"]]
+        }) : await Tournament.findAll({
+            where: {
+                [Op.or]: {
+                    name: {[Op.substring]: focusedValue},
+                    abbreviation: {[Op.substring]: focusedValue}
+                },
+                state: 'underway',
                 formatId: format.id,
                 serverId: server.id
             },
@@ -139,6 +151,33 @@ export default {
                 }
             } else {
                 roundName = `${challongeMatch?.match?.round}`
+            }
+            
+            if (replay?.tournament?.type === 'swiss' || replay?.tournament?.type === 'round robin') {
+                roundName = `Round ${replay.roundInt}`
+            } else if (replay?.tournament.type === 'single elimination') {
+                roundName = replay?.tournament.rounds - replay.roundInt === 0 ? 'Finals' :
+                    replay.tournament?.rounds - replay.roundInt === 1 ? 'Semi Finals' :
+                    replay.tournament?.rounds - replay.roundInt === 2 ? 'Quarter Finals' :
+                    replay.tournament?.rounds - replay.roundInt === 3 ? 'Round of 16' :
+                    replay.tournament?.rounds - replay.roundInt === 4 ? 'Round of 32' :
+                    replay.tournament?.rounds - replay.roundInt === 5 ? 'Round of 64' :
+                    replay.tournament?.rounds - replay.roundInt === 6 ? 'Round of 128' :
+                    replay.tournament?.rounds - replay.roundInt === 7 ? 'Round of 256' :
+                    null
+            } else if (replay?.tournament.type === 'double elimination') {
+                if (replay.roundInt > 0) {
+                    roundName = replay?.tournament.rounds - replay.roundInt === 0 ? 'Grand Finals' :
+                        replay?.tournament.rounds - replay.roundInt === 1 ? `Winner's Finals` :
+                        replay?.tournament.rounds - replay.roundInt === 2 ? `Winner's Semis` :
+                        `Winner's Round ${replay.roundInt}`
+                } else {
+                    roundName = replay?.tournament.rounds - Math.abs(replay.roundInt) === -1 ? `Loser's Finals` :
+                        replay.tournament?.rounds - Math.abs(replay.roundInt) === 0 ? `Loser's Semis` :
+                        `Loser's Round ${Math.abs(replay.roundInt)}`
+                }
+            } else {
+                roundName = replay.roundName
             }
             
             try {
