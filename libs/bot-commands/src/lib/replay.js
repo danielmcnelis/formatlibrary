@@ -118,9 +118,9 @@ export default {
         if (replay && await isMod(server, interaction.member)) {
             await replay.update({ url })
             return await interaction.editReply({ content: `Replay updated for Round ${challongeMatch?.match?.round} of ${tournament.name} ${tournament.logo}:\nMatch: ${replay.winnerName} vs ${replay.loserName}\nURL: <${url}>`})	
-        } if (replay) {
+        } else if (replay) {
             return await interaction.editReply({ content: `The replay from this match was already saved:\n<${replay.url}>\n\nIf this link is incorrect, please get a Moderator to help you.`})	
-        } else {
+        } else if (!replay) {
             const round = challongeMatch?.match?.round || ''
             let roundName 
 
@@ -153,31 +153,29 @@ export default {
                 roundName = `${challongeMatch?.match?.round}`
             }
             
-            if (replay?.tournament?.type === 'swiss' || replay?.tournament?.type === 'round robin') {
-                roundName = `Round ${replay.roundInt}`
-            } else if (replay?.tournament.type === 'single elimination') {
-                roundName = replay?.tournament.rounds - replay.roundInt === 0 ? 'Finals' :
-                    replay.tournament?.rounds - replay.roundInt === 1 ? 'Semi Finals' :
-                    replay.tournament?.rounds - replay.roundInt === 2 ? 'Quarter Finals' :
-                    replay.tournament?.rounds - replay.roundInt === 3 ? 'Round of 16' :
-                    replay.tournament?.rounds - replay.roundInt === 4 ? 'Round of 32' :
-                    replay.tournament?.rounds - replay.roundInt === 5 ? 'Round of 64' :
-                    replay.tournament?.rounds - replay.roundInt === 6 ? 'Round of 128' :
-                    replay.tournament?.rounds - replay.roundInt === 7 ? 'Round of 256' :
+            if (tournament?.type === 'swiss' || tournament?.type === 'round robin') {
+                roundName = `Round ${round}`
+            } else if (tournament.type === 'single elimination') {
+                roundName = tournament.rounds - round === 0 ? 'Finals' :
+                    tournament.rounds - round === 1 ? 'Semi Finals' :
+                    tournament.rounds - round === 2 ? 'Quarter Finals' :
+                    tournament.rounds - round === 3 ? 'Round of 16' :
+                    tournament.rounds - round === 4 ? 'Round of 32' :
+                    tournament.rounds - round === 5 ? 'Round of 64' :
+                    tournament.rounds - round === 6 ? 'Round of 128' :
+                    tournament.rounds - round === 7 ? 'Round of 256' :
                     null
-            } else if (replay?.tournament.type === 'double elimination') {
-                if (replay.roundInt > 0) {
-                    roundName = replay?.tournament.rounds - replay.roundInt === 0 ? 'Grand Finals' :
-                        replay?.tournament.rounds - replay.roundInt === 1 ? `Winner's Finals` :
-                        replay?.tournament.rounds - replay.roundInt === 2 ? `Winner's Semis` :
-                        `Winner's Round ${replay.roundInt}`
+            } else if (tournament.type === 'double elimination') {
+                if (round > 0) {
+                    roundName = tournament.rounds - round === 0 ? 'Grand Finals' :
+                        tournament.rounds - round === 1 ? `Winner's Finals` :
+                        tournament.rounds - round === 2 ? `Winner's Semis` :
+                        `Winner's Round ${round}`
                 } else {
-                    roundName = replay?.tournament.rounds - Math.abs(replay.roundInt) === -1 ? `Loser's Finals` :
-                        replay.tournament?.rounds - Math.abs(replay.roundInt) === 0 ? `Loser's Semis` :
-                        `Loser's Round ${Math.abs(replay.roundInt)}`
+                    roundName = tournament.rounds - Math.abs(round) === -1 ? `Loser's Finals` :
+                        tournament.rounds - Math.abs(round) === 0 ? `Loser's Semis` :
+                        `Loser's Round ${Math.abs(round)}`
                 }
-            } else {
-                roundName = replay.roundName
             }
             
             try {
