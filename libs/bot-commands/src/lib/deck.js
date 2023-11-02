@@ -88,7 +88,15 @@ export default {
 
         interaction.editReply({ content: `Please check your DMs.` })
         const deckAttachments = format.category === 'OP' ? await drawOPDeck(deck.ydk) || [] : await drawDeck(deck.ydk) || []
-        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${player.discordName}#${player.discriminator}_${deck.tournamentAbbreviation || deck.tournamentName}.ydk` })
-        return await interaction.member.send({ content: `${player.globalName || player.discordName}'s deck for ${deck.tournamentName}:`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
+        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${player.globale || player.discordName}_${deck.tournamentAbbreviation || deck.tournamentName}.ydk` })
+        deckAttachments.forEach((attachment, index) => {
+            if (index === 0) {
+                interaction.member.send({ content: `${player.globalName || player.discordName}'s deck for ${deck.tournamentName}:`, files: [attachment] }).catch((err) => console.log(err))
+            } else {
+                interaction.member.send({ files: [attachment] }).catch((err) => console.log(err))
+            }
+        })
+
+        return await interaction.member.send({ files: [ydkFile]}).catch((err) => console.log(err))
     }
 }

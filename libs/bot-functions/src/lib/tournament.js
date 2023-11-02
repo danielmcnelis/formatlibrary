@@ -298,16 +298,33 @@ export const sendDeck = async (interaction, id) => {
         const deck = await Deck.findOne({ where: { id: id.slice(1) }, include: [Player, Event, Format] })
         interaction.editReply({ content: `Please check your DMs.` })
         const deckAttachments = deck.format?.category === 'OP' ? await drawOPDeck(deck.ydk) || [] : await drawDeck(deck.ydk) || []
-        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${deck.player.globalName || deck.player.discordName}#${deck.player.discriminator}_${deck.tournament.abbreviation || deck.tournament.name}.ydk` })
+        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${deck.player.globalName || deck.player.discordName}_${deck.tournament.abbreviation || deck.tournament.name}.ydk` })
         const isAuthor = interaction.user.id === deck.player.discordId
-        return await interaction.member.send({ content: `${isAuthor ? `${deck.player.globalName || deck.player.discordName}'s` : 'Your'} deck for ${deck.tournament.name} is:`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
+        deckAttachments.forEach((attachment, index) => {
+            if (index === 0) {
+                interaction.member.send({ content: `${isAuthor ? `${deck.player.globalName || deck.player.discordName}'s` : 'Your'} deck for ${deck.tournament.name} is:`, files: [attachment] }).catch((err) => console.log(err))
+            } else {
+                interaction.member.send({ files: [attachment] }).catch((err) => console.log(err))
+            }
+        })
+
+        return await interaction.member.send({ files: [ydkFile]}).catch((err) => console.log(err))
     } else {
         const entry = await Entry.findOne({ where: { id: id.slice(1) }, include: [Player, Tournament] })
         interaction.editReply({ content: `Please check your DMs.` })
         const deckAttachments = entry.tournament.formatName === 'One Piece' ? await drawOPDeck(entry.ydk) || [] : await drawDeck(entry.ydk) || []
-        const ydkFile = new AttachmentBuilder(Buffer.from(entry.ydk), { name: `${entry.player.globalName || entry.player.discordName}#${entry.player.discriminator}_${entry.tournament.abbreviation || entry.tournament.name}.ydk` })
+        const ydkFile = new AttachmentBuilder(Buffer.from(entry.ydk), { name: `${entry.player.globalName || entry.player.discordName}_${entry.tournament.abbreviation || entry.tournament.name}.ydk` })
         const isAuthor = interaction.user.id === entry.player.discordId
-        return await interaction.member.send({ content: `${isAuthor ? `${entry.player.globalName || entry.player.discordName}'s` : 'Your'} deck for ${entry.tournament.name} is:`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
+
+        deckAttachments.forEach((attachment, index) => {
+            if (index === 0) {
+                interaction.member.send({ content: `${isAuthor ? `${entry.player.globalName || entry.player.discordName}'s` : 'Your'} deck for ${entry.tournament.name} is:`, files: [attachment] }).catch((err) => console.log(err))
+            } else {
+                interaction.member.send({ files: [attachment] }).catch((err) => console.log(err))
+            }
+        })
+
+        return await interaction.member.send({ files: [ydkFile]}).catch((err) => console.log(err))
     }
 }
 
