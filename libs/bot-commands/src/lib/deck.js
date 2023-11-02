@@ -1,6 +1,6 @@
 
 import { AttachmentBuilder, SlashCommandBuilder } from 'discord.js'
-import { Deck, Entry, Format, Player, Server, Tournament } from '@fl/models'
+import { Deck, Entry, Event, Format, Player, Server, Tournament } from '@fl/models'
 import { hasPartnerAccess, selectTournamentForDeckCheck } from '@fl/bot-functions'
 import { drawDeck, drawOPDeck, isMod } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
