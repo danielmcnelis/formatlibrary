@@ -72,25 +72,34 @@ export const Tournament = db.define('tournaments', {
   }
 })
 
-Tournament.findActiveByFormatAndServerId = async (format, serverId) => await Tournament.findAll({ 
+Tournament.findRecent = async (format, serverId) => await Tournament.findAll({ 
+    where: {
+        formatId: format?.id || {[Op.not]: null},
+        serverId
+    },
+    limit: 5,
+    order: [['createdAt', 'DESC']]
+})
+
+Tournament.findActive = async (format, serverId) => await Tournament.findAll({ 
     where: {
         state: { [Op.not]: 'complete'},
         formatId: format?.id || {[Op.not]: null},
         serverId
     },
-    order: [['createdAt', 'ASC']]
+    order: [['createdAt', 'DESC']]
 })
 
-Tournament.findByStateAndFormatAndServerId = async (state, format, serverId) => await Tournament.findAll({ 
+Tournament.findByState = async (state, format, serverId) => await Tournament.findAll({ 
     where: {
-        state, 
+        state,
         serverId,
         formatId: format?.id || {[Op.not]: null}
     },
-    order: [['createdAt', 'ASC']]
+    order: [['createdAt', 'DESC']]
 })
 
-Tournament.findByQueryAndServerId = async (query, serverId) => await Tournament.findOne({ 
+Tournament.findByQuery = async (query, serverId) => await Tournament.findOne({ 
     where: { 
         [Op.or]: {
             name: { [Op.iLike]: query },

@@ -15,7 +15,7 @@ export default {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         let format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const tournaments = await Tournament.findByStateAndFormatAndServerId('pending', format, interaction.guildId)
+        const tournaments = await Tournament.findByState('pending', format, interaction.guildId)
         const player = await Player.findOne({ where: { discordId: interaction.user?.id }})    
         if (!player) return
 

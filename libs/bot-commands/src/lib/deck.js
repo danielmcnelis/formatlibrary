@@ -1,9 +1,10 @@
 
 import { AttachmentBuilder, SlashCommandBuilder } from 'discord.js'
-import { Entry, Format, Player, Server, Tournament } from '@fl/models'
+import { Deck, Entry, Format, Player, Server, Tournament } from '@fl/models'
 import { hasPartnerAccess, selectTournamentForDeckCheck } from '@fl/bot-functions'
 import { drawDeck, drawOPDeck, isMod } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
+import { Op } from 'sequelize'
 
 export default {
     data: new SlashCommandBuilder()
@@ -18,17 +19,20 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         const discordId = interaction.options.getUser('user')?.id || interaction.user.id
+        const inspectingOtherUser = discordId !== interaction.user.id
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (discordId !== interaction.user.id && !isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.` })
+        const userIsMod = isMod(server, interaction.member)
+        if (!userIsMod && inspectingOtherUser) return await interaction.editReply({ content: `You do not have permission to do that.` })
     
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const tournaments = await Tournament.findActiveByFormatAndServerId(format, interaction.guildId)
-       
+        const tournaments = userIsMod && inspectingOtherUser ? await Tournament.findRecent(format, interaction.guildId) :
+            await Tournament.findActive(format, interaction.guildId)
+
         const player = await Player.findOne({ where: { discordId: discordId } })
         if (!player) return
 
-        const entries = []
+        const decks = []
 
         for (let i = 0; i < tournaments.length; i++) {
             try {
@@ -37,22 +41,54 @@ export default {
                     where: {
                         playerId: player.id,
                         tournamentId: tournament.id
-                    },
-                    include: Tournament
+                    }
                 })
 
-                if (entry) entries.push(entry)
+                if (entry) {
+                    decks.push({ 
+                        id: 'E' + entry.id,
+                        ydk: entry.ydk,
+                        tournamentName: tournament.name,
+                        tournamentAbbreviation: tournament.abbreviation
+                    })
+                } else {
+                    const event = await Event.findOne({
+                        where: {
+                            [Op.or]: {
+                                tournamentId: tournament.id,
+                                primaryTournamentId: tournament.id,
+                                topCutTournamentId: tournament.id
+                            }
+                        }
+                    })
+
+                    if (event) {
+                        const deck = await Deck.findOne({
+                            where: {
+                                playerId: player.id,
+                                eventId: event.id
+                            }
+                        })
+        
+                        if (deck) decks.push({
+                            id: 'D' + deck.id,
+                            ydk: deck.ydk,
+                            tournamentName: tournament.name,
+                            tournamentAbbreviation: tournament.abbreviation
+                        })
+                    }
+                }
             } catch (err) {
                 console.log(err)
             }
         }
 
-        const entry = await selectTournamentForDeckCheck(interaction, entries, format)
-        if (!entry) return
+        const deck = await selectTournamentForDeckCheck(interaction, decks, format)
+        if (!deck) return
 
         interaction.editReply({ content: `Please check your DMs.` })
-        const deckAttachments = format.category === 'OP' ? await drawOPDeck(entry.ydk) || [] : await drawDeck(entry.ydk) || []
-        const ydkFile = new AttachmentBuilder(Buffer.from(entry.ydk), { name: `${player.discordName}#${player.discriminator}_${entry.tournament.abbreviation || entry.tournament.name}.ydk` })
-        return await interaction.member.send({ content: `${player.globalName || player.discordName}'s deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
+        const deckAttachments = format.category === 'OP' ? await drawOPDeck(deck.ydk) || [] : await drawDeck(deck.ydk) || []
+        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${player.discordName}#${player.discriminator}_${deck.tournamentAbbreviation || deck.tournamentName}.ydk` })
+        return await interaction.member.send({ content: `${player.globalName || player.discordName}'s deck for ${deck.tournamentName}:`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
     }
 }

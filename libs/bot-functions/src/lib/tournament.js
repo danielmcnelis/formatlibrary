@@ -293,27 +293,36 @@ export const getOPDeckList = async (member, player, override = false) => {
 }
 
 // SEND DECK
-export const sendDeck = async (interaction, entryId) => {
-    const entry = await Entry.findOne({ where: { id: entryId }, include: [Player, Tournament] })
-    interaction.editReply({ content: `Please check your DMs.` })
-    const deckAttachments = entry.tournament.formatName === 'One Piece' ? await drawOPDeck(entry.ydk) || [] : await drawDeck(entry.ydk) || []
-    const ydkFile = new AttachmentBuilder(Buffer.from(entry.ydk), { name: `${entry.player.globalName || entry.player.discordName}#${entry.player.discriminator}_${entry.tournament.abbreviation || entry.tournament.name}.ydk` })
-    const isAuthor = interaction.user.id === entry.player.discordId
-    return await interaction.member.send({ content: `${isAuthor ? `${entry.player.globalName || entry.player.discordName}'s` : 'Your'} deck for ${entry.tournament.name} is:\n<${entry.url}>`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
+export const sendDeck = async (interaction, id) => {
+    if (id.startsWith('D')) {
+        const deck = await Deck.findOne({ where: { id: id.slice(1) }, include: [Player, Event, Format] })
+        interaction.editReply({ content: `Please check your DMs.` })
+        const deckAttachments = deck.format?.category === 'OP' ? await drawOPDeck(deck.ydk) || [] : await drawDeck(deck.ydk) || []
+        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${deck.player.globalName || deck.player.discordName}#${deck.player.discriminator}_${deck.tournament.abbreviation || deck.tournament.name}.ydk` })
+        const isAuthor = interaction.user.id === deck.player.discordId
+        return await interaction.member.send({ content: `${isAuthor ? `${deck.player.globalName || deck.player.discordName}'s` : 'Your'} deck for ${deck.tournament.name} is:`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
+    } else {
+        const entry = await Entry.findOne({ where: { id: id.slice(1) }, include: [Player, Tournament] })
+        interaction.editReply({ content: `Please check your DMs.` })
+        const deckAttachments = entry.tournament.formatName === 'One Piece' ? await drawOPDeck(entry.ydk) || [] : await drawDeck(entry.ydk) || []
+        const ydkFile = new AttachmentBuilder(Buffer.from(entry.ydk), { name: `${entry.player.globalName || entry.player.discordName}#${entry.player.discriminator}_${entry.tournament.abbreviation || entry.tournament.name}.ydk` })
+        const isAuthor = interaction.user.id === entry.player.discordId
+        return await interaction.member.send({ content: `${isAuthor ? `${entry.player.globalName || entry.player.discordName}'s` : 'Your'} deck for ${entry.tournament.name} is:`, files: [...deckAttachments, ydkFile]}).catch((err) => console.log(err))
+    }
 }
 
 // SELECT TOURNAMENT FOR DECK CHECK
-export const selectTournamentForDeckCheck = async (interaction, entries, format) => {
-    if (entries.length === 0) {
-        interaction.editReply(`That player is not registered for any ${format.name}${format.category !== 'OP' ? ' format' : ''} ${format.emoji} tournaments in this server.`)
+export const selectTournamentForDeckCheck = async (interaction, decks, format) => {
+    if (!decks.length) {
+        interaction.editReply(`That player has not submitted a deck for any ${format.name}${format.category !== 'OP' ? ' format' : ''} ${format.emoji} tournaments in this server.`)
         return false
-    } else if (entries.length === 1) {
-        return entries[0]
+    } else if (decks.length === 1) {
+        return decks[0]
     } else {
-        const options = entries.map((entry, index) => {
+        const options = decks.map((deck, index) => {
             return {
-                label: `(${index + 1}) ${entry.tournament.name}`,
-                value: `${entry.id}`,
+                label: `(${index + 1}) ${deck.tournamentName}`,
+                value: `${deck.id}`,
             }
         })
     

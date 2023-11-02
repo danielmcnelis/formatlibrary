@@ -12,7 +12,7 @@ export default {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const tournaments = await Tournament.findActiveByFormatAndServerId(format, interaction.guildId)
+        const tournaments = await Tournament.findActive(format, interaction.guildId)
         if (!tournaments.length) return await interaction.reply({ content: `There are no active tournaments.`})
         
         const results = []
