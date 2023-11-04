@@ -516,8 +516,8 @@ export const CardTable = () => {
             <Helmet>
                 <title>{`Yu-Gi-Oh! Card Database - Format Library`}</title>
                 <meta name="og:title" content={`Yu-Gi-Oh! Card Database - Format Library`}/>
-                <meta name="description" content={`Find any Yu-Gi-Oh! card from the TCG, OCG, or Speed Duels. Includes info on release dates, rulings, card prints & prices, banlist history, etc.`}/>
-                <meta name="og:description" content={`Find any Yu-Gi-Oh! card from the TCG, OCG, or Speed Duels. Includes info on release dates, rulings, card prints & prices, banlist history, etc.`}/>
+                <meta name="description" content={`Find any Yu-Gi-Oh! card from the TCG, OCG, or Speed Duels. View release dates, rulings, prints, prices, banlist history, etc.`}/>
+                <meta name="og:description" content={`Find any Yu-Gi-Oh! card from the TCG, OCG, or Speed Duels. View release dates, rulings, prints, prices, banlist history, etc.`}/>
             </Helmet>
             <div className="body">
                 <div className="card-database-flexbox">

@@ -8,6 +8,7 @@ import { existsSync, readFileSync } from 'fs'
 import * as morgan from 'morgan'
 import * as chalk from 'chalk'
 import { api, auth } from './proxies'
+import { Server } from 'socket.io'
 
 import { error } from './middleware'
 import { config } from '@fl/config'
@@ -57,6 +58,12 @@ if (config.services.site.https === '1' || config.services.site.https === 'true')
   const server = httpsServer.listen(port, () =>
     console.log(chalk.cyan(`Listening on https://${config.services.site.host ? config.services.site.host : '0.0.0.0'}:${port}`))
   )
+
+  const io = new Server(server)
+  io.on('connection', (socket) => {
+    console.log('a user connected')
+  })
+
   server.on('error', console.error)
 } else {
   // Wrap(proxy) express with http server
@@ -64,5 +71,11 @@ if (config.services.site.https === '1' || config.services.site.https === 'true')
   const server = httpServer.listen(port, () =>
     console.log(chalk.cyan(`Listening on http://${config.services.site.host ? config.services.site.host : '0.0.0.0'}:${port}`))
   )
+
+  const io = new Server(server)
+    io.on('connection', (socket) => {
+      console.log('a user connected')
+    })
+    
   server.on('error', console.error)
 }

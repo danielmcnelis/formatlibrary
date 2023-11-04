@@ -60,7 +60,7 @@ export const DraftLobby = () => {
     const [onTheClock, setOnTheClock] = useState(false)
     const [time, setTime] = useState(Date.now())
     const [intervalId, setIntervalId] = useState(null)
-    const [toggleDraw] = useAudio('/assets/sounds/draw.mp3')
+    // const [toggleDraw] = useAudio('/assets/sounds/draw.mp3')
     const [toggleChime] = useAudio('/assets/sounds/chime.mp3')
     const [toggleHorn] = useAudio('/assets/sounds/horn.mp3')
 
