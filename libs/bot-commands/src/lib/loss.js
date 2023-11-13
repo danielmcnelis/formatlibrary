@@ -113,7 +113,7 @@ export default {
                         if (tournament.state === 'pending') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
                         if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
                         challongeMatch = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament, format) :
-                            await processMatchResult(server, interaction, winner, winningPlayer, interaction.member, losingPlayer, tournament, format)
+                            await processMatchResult(server, interaction, winner.user, winningPlayer, interaction.member.user, losingPlayer, tournament, format)
                         if (!challongeMatch) return
                     } else {
                         return

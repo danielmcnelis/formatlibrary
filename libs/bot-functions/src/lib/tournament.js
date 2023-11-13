@@ -1351,7 +1351,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                 return await interaction.channel.send({ content: `${losingPlayer.globalName || losingPlayer.discordName}, You are eliminated from the tournament. Better luck next time!`})
             } else if (loserNextOpponent) {
                 try {
-                    loser.user.send(`New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${loserNextOpponent.player.globalName || loserNextOpponent.player.discordName + '#' + loserNextOpponent.player.discriminator}\nDuelingBook: ${loserNextOpponent.player.duelingBook}`)
+                    loser.send(`New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${loserNextOpponent.player.globalName || loserNextOpponent.player.discordName + '#' + loserNextOpponent.player.discriminator}\nDuelingBook: ${loserNextOpponent.player.duelingBook}`)
                 } catch (err) {
                     console.log(err)
                 }
@@ -1386,7 +1386,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                         const name = winnerNextOpponent.player.globalName || `${winnerNextOpponent.player.discordName}#${winnerNextOpponent.player.discriminator}`
                         const content = format?.category === 'OP' ? `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${name}\nOPTCGSim: ${winnerNextOpponent.player.opTcgSim}` :
                             `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord: ${name}\nDuelingBook: ${winnerNextOpponent.player.duelingBook}`
-                        winner.user.send({ content: content })
+                        winner.send({ content: content })
                     } catch (err) {
                         console.log(err)
                     }
