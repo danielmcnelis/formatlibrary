@@ -25,7 +25,6 @@ export default {
         const winner = interaction.options.getUser('winner')
         const winningMember = await interaction.guild?.members.fetch(winner.id)
         
-        
         const loser = interaction.options.getUser('loser')
         const losingMember = await interaction.guild?.members.fetch(loser.id).catch((err) => console.log(err))
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
@@ -69,9 +68,9 @@ export default {
         let isIronMatch
 
         if (activeTournament) {
-            const loserTournamentIds = await Entry.findByPlayerIdAndFormatId(losingPlayer.id, format.id).map((e) => e.tournamentId)
-            const winnerTournamentIds = await Entry.findByPlayerIdAndFormatId(winningPlayer.id, format.id)
-            const commonTournamentIds = loserTournamentIds.filter((e) => winnerTournamentIds.includes(e))
+            const loserTournamentIds = [...await Entry.findByPlayerIdAndFormatId(losingPlayer.id, format.id)].map((e) => e.tournamentId)
+            const winnerTournamentIds = [...await Entry.findByPlayerIdAndFormatId(winningPlayer.id, format.id)].map((e) => e.tournamentId)
+            const commonTournamentIds = loserTournamentIds.filter((id) => winnerTournamentIds.includes(id))
             const tournaments = []
                
             if (commonTournamentIds.length) {
