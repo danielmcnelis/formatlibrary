@@ -514,6 +514,9 @@ export const joinTournament = async (interaction, tournamentId) => {
         include: Format
     })
 
+    console.log(`interaction.member?._roles`, interaction.member?._roles)
+    console.log(`interaction.member?._roles?.includes(tournament?.requiredRoleId)`, interaction.member?._roles?.includes(tournament?.requiredRoleId))
+    
     const server = await Server.findOne({
         where: {
             name: interaction.guild.name
@@ -582,6 +585,8 @@ export const joinTournament = async (interaction, tournamentId) => {
     } else if (!entry && !tournament.isTeamTournament) {
         if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
             return interaction.member.send({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
+        } else if (tournament.requiredRoleId && !interaction.member?._roles?.includes(tournament?.requiredRoleId)) {
+            return interaction.member.send({ content: `Sorry you must have the <@&${tournament?.requiredRoleId}> role to join this tournament.`})
         } else if (tournament.isPremiumTournament && player.subTier === 'Premium') {
             const alreadyEntered = await Entry.count({
                 where: {

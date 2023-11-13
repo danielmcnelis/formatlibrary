@@ -121,7 +121,7 @@ export default {
             if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
                 return interaction.member.send({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
             } else if (tournament.requiredRoleId && (!interaction.member?._roles.includes(server?.modRole))) {
-                return interaction.member.send({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
+                return interaction.member.send({ content: `Sorry you must have the <@&${tournament?.requiredRoleId}> role to join this tournament.`})
             } else if (tournament.isPremiumTournament && player.subTier === 'Premium') {
                 const alreadyEntered = await Entry.count({
                     where: {
