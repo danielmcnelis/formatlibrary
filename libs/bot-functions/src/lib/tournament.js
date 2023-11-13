@@ -520,13 +520,10 @@ export const joinTournament = async (interaction, tournamentId) => {
         }
     })
 
-    console.log(`interaction.member?._roles`, interaction.member?._roles)
-    console.log(`interaction.member?._roles?.includes(tournament?.requiredRoleId)`, interaction.member?._roles?.includes(tournament?.requiredRoleId))
-    
     if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
         return interaction.editReply({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
     } else if (tournament.requiredRoleId && !interaction.member?._roles.includes(server?.requiredRoleId)) {
-        return interaction.editReply({ content: `Sorry you must have the <@&${tournament?.requiredRoleId}> role to join this tournament.`})
+        return interaction.editReply({ content: `Sorry you must have the <@&${tournament?.requiredRoleId}> role to join ${tournament.name}.`})
     }
 
     const team = tournament.isTeamTournament ? await Team.findOne({

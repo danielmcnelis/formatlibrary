@@ -93,13 +93,13 @@ Tournament.findActive = async (format, serverId) => await Tournament.findAll({
     order: [['createdAt', 'DESC']]
 })
 
-Tournament.findByState = async (state, format, serverId) => await Tournament.findAll({ 
+Tournament.findByState = async (state, format, serverId, orderDirection = 'DESC') => await Tournament.findAll({ 
     where: {
         state,
         serverId,
         formatId: format?.id || {[Op.not]: null}
     },
-    order: [['createdAt', 'DESC']]
+    order: [['createdAt', orderDirection]]
 })
 
 Tournament.findByQuery = async (query, serverId) => await Tournament.findOne({ 

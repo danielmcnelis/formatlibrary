@@ -15,20 +15,17 @@ export default {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         let format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const tournaments = await Tournament.findByState('pending', format, interaction.guildId)
+        const tournaments = await Tournament.findByState('pending', format, interaction.guildId, 'ASC')
         const player = await Player.findOne({ where: { discordId: interaction.user?.id }})    
         if (!player) return
 
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
 
-        console.log(`interaction.member?._roles`, interaction.member?._roles)
-        console.log(`interaction.member?._roles?.includes(tournament?.requiredRoleId)`, interaction.member?._roles?.includes(tournament?.requiredRoleId))
-        
         if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
             return interaction.editReply({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
         } else if (tournament.requiredRoleId && !interaction.member?._roles.includes(server?.requiredRoleId)) {
-            return interaction.editReply({ content: `Sorry you must have the <@&${tournament?.requiredRoleId}> role to join this tournament.`})
+            return interaction.editReply({ content: `Sorry you must have the <@&${tournament?.requiredRoleId}> role to join ${tournament.name}.`})
         }
 
         let entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournament.id }})
