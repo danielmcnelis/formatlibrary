@@ -22,11 +22,19 @@ export const Home = () => {
     // USE EFFECT
     useEffect(() => {
         const fetchData = async () => {
-          const {data} = await axios.get(`/api/blogposts/count`)
-          setCount(data)
+            console.log('fetchData()')
+            const {data} = await axios.get(`/api/blogposts/count`)
+            setCount(data)
         } 
+        
+        const fetchData2 = async () => {
+            console.log('fetchData2()')
+            const {data} = await axios.get(`/api/drafts/socket`)
+            console.log('data', data)
+        }
   
         fetchData()
+        fetchData2()
     }, [])
 
     // USE EFFECT

@@ -1,5 +1,7 @@
+
 import { Card, Cube, CubeDraft, CubeDraftEntry, CubeDraftInventory, CubePackContent, Player } from '@fl/models'
-import { error } from 'console'
+import { useIo } from '../../../../site/src/main'
+console.log('useIo', useIo)
 
 //GET RANDOM ELEMENT
 const getRandomElement = (arr) => {
@@ -104,6 +106,17 @@ const shuffleArray = (arr) => {
 
     return arr
 }
+
+
+//SOCKET TEST
+export const socketTest = async (req, res, next) => {
+    console.log('SOCKET TEST')
+    const io = useIo()
+    console.log('useIo() io.sockets.emit', io.sockets.emit)
+    io.sockets.emit('api', 'hello from api')
+    res.json({'msg': 'thumbs up'})
+}
+
 
 // DRAFTS ID
 export const draftsId = async (req, res, next) => {
@@ -320,7 +333,7 @@ export const joinDraft = async (req, res, next) => {
     
             res.json(data)
         } else {
-            throw error('Player has already joined this draft.')
+            throw new Error('Player has already joined this draft.')
         }
     } catch (err) {
       next(err)

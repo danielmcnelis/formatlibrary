@@ -24,6 +24,8 @@ export default {
         await interaction.deferReply()
         const winner = interaction.options.getUser('winner')
         const winningMember = await interaction.guild?.members.fetch(winner.id)
+        console.log(`interaction.options.getUser('loser')`, interaction.options.getUser('loser'))
+        console.log(`interaction.options.getString('loser')`, interaction.options.getString('loser'))
         const loser = interaction.options.getUser('loser')
         const losingMember = await interaction.guild?.members.fetch(loser.id)
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)

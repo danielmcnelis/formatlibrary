@@ -3,7 +3,14 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
-import { useDetectAdBlock } from "adblock-detect-react"
+import { useDetectAdBlock } from 'adblock-detect-react'
+import {io} from 'socket.io-client'
+const socket = io('http://localhost:3000/')
+console.log('socket', socket)
+
+socket.on('api', (data) => {
+    console.log('DATA FROM API', data)
+});
 
 const playerId = getCookie('playerId')
 
@@ -28,9 +35,43 @@ const App = () => {
     
             checkIfSubscriber()
         }
-
-
     }, [])
+
+    // useEffect(() => {
+
+    //     socket.on("connection", () => {
+    //         console.log('WE HAVE CONNECTED');
+    //     })
+
+    //     socket.on("hello", () => {
+    //         console.log('HELLO WORLD');
+    //     })
+
+    //     socket.on("fromApi", (data) => {
+    //       console.log('from API data', data);
+    //     })
+
+    //     return () => {
+    //         socket.disconnect()
+    //     }
+    //   }, []);
+
+    // const joinRoom = () => {
+    //     if (room !== "") {
+    //     socket.emit("join_room", room);
+    //     }
+    // };
+
+    // const sendMessage = () => {
+    //     socket.emit("send_message", { message, room });
+    // };
+
+    // useEffect(() => {
+    //     socket.on('api', (data) => {
+    //         console.log('DATA FROM API', data)
+    //     });
+    // }, [socket])
+
   return (
     <div>
         <Helmet>

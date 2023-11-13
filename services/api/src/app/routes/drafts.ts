@@ -1,9 +1,11 @@
 import { Router } from 'express'
-import { draftsId, getDraftParticipants, downloadInventory, selectCard, getInventory, getPack, joinDraft, leaveDraft, startDraft } from '../middleware'
+import { socketTest, draftsId, getDraftParticipants, downloadInventory, selectCard, getInventory, getPack, joinDraft, leaveDraft, startDraft } from '../middleware'
 
 const router = Router()
 
 router.get('/api/drafts/participants/:id', getDraftParticipants)
+
+router.get('/api/drafts/socket', socketTest)
 
 router.get('/api/drafts/pack', getPack)
 

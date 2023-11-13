@@ -20,6 +20,7 @@ import {
   stats,
   statuses
 } from './routes'
+import { Server } from 'socket.io'
 import { error } from '@fl/middleware'
 import { config } from '@fl/config'
 
@@ -66,7 +67,24 @@ Object.values(routes).forEach((route) => {
 app.use(error)
 
 const port = config.services.api.port
-const server = app.listen(port, () => {
+export const server = app.listen(port, () => {
   console.log(chalk.cyan(`Listening at http://localhost:${port}`))
 })
+
+export const io = new Server(server)
+
+// io.on('connection', (socket) => {
+//     socket.emit('hello', 'WORLD')
+//     console.log('an https usor connected')
+// })
+
+// io.on('disconnect', (socket) => {
+//     console.log('a user Disconnected')
+//     socket.removeAllListeners()
+// })
+
+// app.set('socketio', io)
+
+// export const useIo = () => app.get('socketio')
+
 server.on('error', console.error)
