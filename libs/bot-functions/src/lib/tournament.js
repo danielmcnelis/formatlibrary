@@ -517,6 +517,12 @@ export const joinTournament = async (interaction, tournamentId) => {
     console.log(`interaction.member?._roles`, interaction.member?._roles)
     console.log(`interaction.member?._roles?.includes(tournament?.requiredRoleId)`, interaction.member?._roles?.includes(tournament?.requiredRoleId))
     
+    if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
+        return interaction.editReply({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
+    } else if (tournament.requiredRoleId && (!interaction.member?._roles.includes(server?.modRole))) {
+        return interaction.editReply({ content: `Sorry you must have the <@&${tournament?.requiredRoleId}> role to join this tournament.`})
+    }
+
     const server = await Server.findOne({
         where: {
             name: interaction.guild.name
@@ -583,11 +589,7 @@ export const joinTournament = async (interaction, tournamentId) => {
         
         return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (${team.name}) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else if (!entry && !tournament.isTeamTournament) {
-        if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
-            return interaction.member.send({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
-        } else if (tournament.requiredRoleId && !interaction.member?._roles?.includes(tournament?.requiredRoleId)) {
-            return interaction.member.send({ content: `Sorry you must have the <@&${tournament?.requiredRoleId}> role to join this tournament.`})
-        } else if (tournament.isPremiumTournament && player.subTier === 'Premium') {
+        if (tournament.isPremiumTournament && player.subTier === 'Premium') {
             const alreadyEntered = await Entry.count({
                 where: {
                     playerId: player.id,

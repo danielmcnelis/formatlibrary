@@ -25,6 +25,12 @@ export default {
         console.log(`interaction.member?._roles`, interaction.member?._roles)
         console.log(`interaction.member?._roles?.includes(tournament?.requiredRoleId)`, interaction.member?._roles?.includes(tournament?.requiredRoleId))
         
+        if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
+            return interaction.editReply({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
+        } else if (tournament.requiredRoleId && (!interaction.member?._roles.includes(server?.modRole))) {
+            return interaction.editReply({ content: `Sorry you must have the <@&${tournament?.requiredRoleId}> role to join this tournament.`})
+        }
+
         let entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournament.id }})
         if (!format) format = await Format.findOne({ where: { id: tournament.formatId }})
         if (!format) return
@@ -118,11 +124,7 @@ export default {
             
             return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (Free Agent) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         } else if (!entry && !tournament.isTeamTournament) {
-            if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
-                return interaction.member.send({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
-            } else if (tournament.requiredRoleId && (!interaction.member?._roles.includes(server?.modRole))) {
-                return interaction.member.send({ content: `Sorry you must have the <@&${tournament?.requiredRoleId}> role to join this tournament.`})
-            } else if (tournament.isPremiumTournament && player.subTier === 'Premium') {
+            if (tournament.isPremiumTournament && player.subTier === 'Premium') {
                 const alreadyEntered = await Entry.count({
                     where: {
                         playerId: player.id,
