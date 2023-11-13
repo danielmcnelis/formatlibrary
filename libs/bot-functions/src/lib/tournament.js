@@ -514,20 +514,20 @@ export const joinTournament = async (interaction, tournamentId) => {
         include: Format
     })
 
-    console.log(`interaction.member?._roles`, interaction.member?._roles)
-    console.log(`interaction.member?._roles?.includes(tournament?.requiredRoleId)`, interaction.member?._roles?.includes(tournament?.requiredRoleId))
-    
-    if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
-        return interaction.editReply({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
-    } else if (tournament.requiredRoleId && (!interaction.member?._roles.includes(server?.modRole))) {
-        return interaction.editReply({ content: `Sorry you must have the <@&${tournament?.requiredRoleId}> role to join this tournament.`})
-    }
-
     const server = await Server.findOne({
         where: {
             name: interaction.guild.name
         }
     })
+
+    console.log(`interaction.member?._roles`, interaction.member?._roles)
+    console.log(`interaction.member?._roles?.includes(tournament?.requiredRoleId)`, interaction.member?._roles?.includes(tournament?.requiredRoleId))
+    
+    if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
+        return interaction.editReply({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
+    } else if (tournament.requiredRoleId && !interaction.member?._roles.includes(server?.requiredRoleId)) {
+        return interaction.editReply({ content: `Sorry you must have the <@&${tournament?.requiredRoleId}> role to join this tournament.`})
+    }
 
     const team = tournament.isTeamTournament ? await Team.findOne({
         where: {
