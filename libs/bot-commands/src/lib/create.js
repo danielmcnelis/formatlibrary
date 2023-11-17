@@ -51,26 +51,26 @@ export default {
         modal.addComponents(nameRow, abbreviationRow)
         
         if (type === 'SW') {
-            const pointsPerMatchWin = new TextInputBuilder()
-                .setCustomId('ppwin')
-                .setLabel('Points per match win?')
-                .setStyle(TextInputStyle.Short)
-                .setPlaceholder('1.0')
-                .setRequired(true)
+            // const pointsPerMatchWin = new TextInputBuilder()
+            //     .setCustomId('ppwin')
+            //     .setLabel('Points per match win?')
+            //     .setStyle(TextInputStyle.Short)
+            //     .setPlaceholder('1.0')
+            //     .setRequired(true)
 
-            const pointsPerMatchTie = new TextInputBuilder()
-                .setCustomId('pptie')
-                .setLabel('Points per match tie?')
-                .setStyle(TextInputStyle.Short)
-                .setPlaceholder('0.0')
-                .setRequired(true)
+            // const pointsPerMatchTie = new TextInputBuilder()
+            //     .setCustomId('pptie')
+            //     .setLabel('Points per match tie?')
+            //     .setStyle(TextInputStyle.Short)
+            //     .setPlaceholder('0.0')
+            //     .setRequired(true)
             
-            const pointsPerBye = new TextInputBuilder()
-                .setCustomId('ppbye')
-                .setLabel('Points per bye?')
-                .setStyle(TextInputStyle.Short)
-                .setPlaceholder('1.0')
-                .setRequired(true)
+            // const pointsPerBye = new TextInputBuilder()
+            //     .setCustomId('ppbye')
+            //     .setLabel('Points per bye?')
+            //     .setStyle(TextInputStyle.Short)
+            //     .setPlaceholder('1.0')
+            //     .setRequired(true)
 
             const tieBreakerOne = new TextInputBuilder()
                 .setCustomId('tb1')
@@ -92,7 +92,7 @@ export default {
             //     .setStyle(TextInputStyle.Short)
             //     .setRequired(false)
             
-            modal.addComponents(pointsPerMatchWin, pointsPerMatchTie, pointsPerBye, tieBreakerOne, tieBreakerTwo/*, tieBreakerThree*/)
+            modal.addComponents(tieBreakerOne, tieBreakerTwo)
         }
 
         if (!format) {
