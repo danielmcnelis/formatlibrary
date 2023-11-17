@@ -77,14 +77,14 @@ export default {
                 .setLabel('Tie breaker #1? (MB, WVT, PD, OWP, OOWP)')
                 .setStyle(TextInputStyle.Short)
                 .setPlaceholder('Median-Buchholz (MB)')
-                .setRequired(true)
+                .setRequired(false)
 
             const tieBreakerTwo = new TextInputBuilder()
                 .setCustomId('tb2')
                 .setLabel('Tie breaker #2? (MB, WVT, PD, OWP, OOWP)')
                 .setStyle(TextInputStyle.Short)
                 .setPlaceholder('Wins vs Tied Participants (WVT)')
-                .setRequired(true)
+                .setRequired(false)
 
             // const tieBreakerThree = new TextInputBuilder()
             //     .setCustomId('tb3')
