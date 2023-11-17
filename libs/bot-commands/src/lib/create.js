@@ -72,7 +72,6 @@ export default {
                 .setLabel('Points per bye?')
                 .setStyle(TextInputStyle.Short)
                 .setPlaceholder('1.0')
-                .setDefault('1.0')
                 .setRequired(true)
 
             const tieBreakerOne = new TextInputBuilder()
@@ -80,7 +79,6 @@ export default {
                 .setLabel('Tie breaker #1? (MB, WVT, PD, OWP, OOWP)')
                 .setStyle(TextInputStyle.Short)
                 .setPlaceholder('Median-Buchholz (MB)')
-                .setDefault('MB')
                 .setRequired(true)
 
             const tieBreakerTwo = new TextInputBuilder()
@@ -88,7 +86,6 @@ export default {
                 .setLabel('Tie breaker #2? (MB, WVT, PD, OWP, OOWP)')
                 .setStyle(TextInputStyle.Short)
                 .setPlaceholder('Wins vs Tied Participants (WVT)')
-                .setDefault('WVT')
                 .setRequired(true)
 
             const tieBreakerThree = new TextInputBuilder()
