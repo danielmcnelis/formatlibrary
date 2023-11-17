@@ -56,7 +56,6 @@ export default {
                 .setLabel('Points per match win?')
                 .setStyle(TextInputStyle.Short)
                 .setPlaceholder('1.0')
-                .setDefault('1.0')
                 .setRequired(true)
 
             const pointsPerMatchTie = new TextInputBuilder()
@@ -64,7 +63,6 @@ export default {
                 .setLabel('Points per match tie?')
                 .setStyle(TextInputStyle.Short)
                 .setPlaceholder('0.0')
-                .setDefault('0.0')
                 .setRequired(true)
             
             const pointsPerBye = new TextInputBuilder()
