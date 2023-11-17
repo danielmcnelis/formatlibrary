@@ -72,6 +72,24 @@ export const Tournament = db.define('tournaments', {
   },
   assocTournamentId: {
     type: Sequelize.STRING
+  },
+  pointsPerMatchWin: {
+    type: Sequelize.STRING
+  },
+  pointsPerMatchTie: {
+    type: Sequelize.STRING
+  },
+  pointsPerBye: {
+    type: Sequelize.STRING
+  },
+  tieBreaker1: {
+    type: Sequelize.STRING
+  },
+  tieBreaker2: {
+    type: Sequelize.STRING
+  },
+  tieBreaker3: {
+    type: Sequelize.STRING
   }
 })
 
@@ -84,16 +102,16 @@ Tournament.findRecent = async (format, serverId) => await Tournament.findAll({
     order: [['createdAt', 'DESC']]
 })
 
-Tournament.findActive = async (format, serverId) => await Tournament.findAll({ 
+Tournament.findActive = async (format, serverId, orderDirection = 'ASC') => await Tournament.findAll({ 
     where: {
         state: { [Op.not]: 'complete'},
         formatId: format?.id || {[Op.not]: null},
         serverId
     },
-    order: [['createdAt', 'DESC']]
+    order: [['createdAt', orderDirection]]
 })
 
-Tournament.findByState = async (state, format, serverId, orderDirection = 'DESC') => await Tournament.findAll({ 
+Tournament.findByState = async (state, format, serverId, orderDirection = 'ASC') => await Tournament.findAll({ 
     where: {
         state,
         serverId,

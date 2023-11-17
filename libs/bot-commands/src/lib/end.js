@@ -15,7 +15,7 @@ export default {
             str
                 .setName('tournament')
                 .setDescription('Enter the tournament name or abbreviation.')
-                .setRequired(true)
+                .setRequired(false)
         ),
 	async execute(interaction) {
         await interaction.deferReply()
@@ -24,7 +24,7 @@ export default {
         if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that. Please type **/join** instead.`})   
         const name = interaction.options.getString('tournament')        
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const tournaments = await Tournament.findByState('underway', format, interaction.guildId) 
+        const tournaments = await Tournament.findByState('underway', format, interaction.guildId, 'DESC') 
 
         const tournament = await Tournament.findOne({ 
             where: { 

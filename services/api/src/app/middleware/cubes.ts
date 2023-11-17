@@ -1,5 +1,4 @@
-import { Card, Cube, CubeDraft, Player } from '@fl/models'
-import { Op } from 'sequelize'
+import { Card, Cube, Draft, Player } from '@fl/models'
 const Canvas = require('canvas')
 import { S3 } from 'aws-sdk'
 import { config } from '@fl/config'
@@ -315,9 +314,9 @@ export const cubesLaunch = async (req, res, next) => {
         }
       })
 
-      const shareLink = await CubeDraft.generateShareLink()
+      const shareLink = await Draft.generateShareLink()
 
-      const cubeDraft = await CubeDraft.create({
+      const draft = await Draft.create({
         cubeId: cube.id,
         cubeName: `${cube.name} by ${cube.builder}`,
         hostName: player.name,
@@ -328,7 +327,7 @@ export const cubesLaunch = async (req, res, next) => {
         shareLink: shareLink
       })
 
-      res.json(`https://formatlibrary.com/drafts/${cubeDraft.shareLink}`)
+      res.json(`https://formatlibrary.com/drafts/${draft.shareLink}`)
     } catch (err) {
       next(err)
     }

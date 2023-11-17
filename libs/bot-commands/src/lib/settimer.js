@@ -28,7 +28,7 @@ export default {
         if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
 
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const tournaments = await Tournament.findByState('underway', format, interaction.guildId)
+        const tournaments = await Tournament.findByState('underway', format, interaction.guildId, 'ASC')
 
         if (!tournaments.length && format) return await interaction.editReply({ content: `There are no active ${format.name} ${server.emoji || format.emoji} tournaments.`})
         if (!tournaments.length && !format) return await interaction.editReply({ content: `There are no active tournaments.`})

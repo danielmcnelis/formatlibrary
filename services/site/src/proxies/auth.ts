@@ -1,6 +1,6 @@
 import {config} from '@fl/config'
 
-const secure = config.services.api.https === '1' || config.services.api.https === 'true'
+const secure = config.services.auth.https === '1' || config.services.auth.https === 'true'
 
 export const auth = {
   path: '/auth',

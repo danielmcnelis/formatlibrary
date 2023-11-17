@@ -12,5 +12,5 @@ export default {
     '^.+\\.[tj]s$': 'ts-jest'
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/api'
+  coverageDirectory: '../../coverage/services/api'
 }

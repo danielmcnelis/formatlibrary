@@ -2,11 +2,21 @@
 import { Sequelize } from 'sequelize'
 import { db } from './db'
 
-export const CubeDraft = db.define('cubeDrafts', {
+export const Draft = db.define('drafts', {
+    type: {
+        type: Sequelize.STRING,
+        defaultValue: 'cube'
+    },
     cubeName: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
     },
     cubeId: {
+        type: Sequelize.INTEGER
+    },
+    setName: {
+        type: Sequelize.STRING
+    },
+    setId: {
         type: Sequelize.INTEGER
     },
     hostName: {
@@ -31,7 +41,8 @@ export const CubeDraft = db.define('cubeDrafts', {
         defaultValue: 1
     },
     timer: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        defaultValue: 60
     },
     packsPerPlayer: {
         type: Sequelize.INTEGER
@@ -44,7 +55,7 @@ export const CubeDraft = db.define('cubeDrafts', {
     }
 })
 
-CubeDraft.generateShareLink = async () => {
+Draft.generateShareLink = async () => {
     const base52 = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
     return import('nanoid').then(({ customAlphabet }) => customAlphabet(base52, 8)())
 }

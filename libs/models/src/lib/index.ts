@@ -6,18 +6,17 @@ import { BlogPost } from './BlogPost'
 import { CardDeckType } from './CardDeckType'
 import { Card } from './Card'
 import { Cube } from './Cube'
-import { CubeDraft } from './CubeDraft'
-import { CubeDraftEntry } from './CubeDraftEntry'
-import { CubeDraftInventory } from './CubeDraftInventory'
-import { CubePackContent } from './CubePackContent'
 import { Deck } from './Deck'
 import { DeckTypeArchetype } from './DeckTypeArchetype'
 import { DeckThumb } from './DeckThumb'
 import { DeckType } from './DeckType'
+import { Draft } from './Draft'
+import { DraftEntry } from './DraftEntry'
 import { Entry } from './Entry'
 import { Errata } from './Errata'
 import { Event } from './Event'
 import { Format } from './Format'
+import { Inventory } from './Inventory'
 import { Iron } from './Iron'
 import { LikedArticle } from './LikedArticle'
 import { LikedCube } from './LikedCube'
@@ -29,6 +28,7 @@ import { Matchup } from './Matchup'
 import { Membership } from './Membership'
 import { OPCard } from './OPCard'
 import { OPDeck } from './OPDeck'
+import { PackContent } from './PackContent'
 import { Pairing } from './Pairing'
 import { Player } from './Player'
 import { Price } from './Price'
@@ -79,29 +79,29 @@ DeckType.hasMany(DeckThumb)
 DeckThumb.belongsTo(DeckType)
 
 //CUBE
-CubeDraft.belongsTo(Cube)
-Cube.hasMany(CubeDraft)
+Draft.belongsTo(Cube)
+Cube.hasMany(Draft)
 
-CubeDraftEntry.belongsTo(Player)
-Player.hasMany(CubeDraftEntry)
+DraftEntry.belongsTo(Player)
+Player.hasMany(DraftEntry)
 
-CubeDraftEntry.belongsTo(CubeDraft)
-CubeDraft.hasMany(CubeDraftEntry)
+DraftEntry.belongsTo(Draft)
+Draft.hasMany(DraftEntry)
 
-CubePackContent.belongsTo(CubeDraft)
-CubeDraft.hasMany(CubePackContent)
+PackContent.belongsTo(Draft)
+Draft.hasMany(PackContent)
 
-CubeDraftInventory.belongsTo(CubeDraft)
-CubeDraft.hasMany(CubeDraftInventory)
+Inventory.belongsTo(Draft)
+Draft.hasMany(Inventory)
 
-CubeDraftInventory.belongsTo(CubeDraftEntry)
-CubeDraftEntry.hasMany(CubeDraftInventory)
+Inventory.belongsTo(DraftEntry)
+DraftEntry.hasMany(Inventory)
 
-CubeDraftInventory.belongsTo(Card)
-Card.hasMany(CubeDraftInventory)
+Inventory.belongsTo(Card)
+Card.hasMany(Inventory)
 
-CubePackContent.belongsTo(Card)
-Card.hasMany(CubePackContent)
+PackContent.belongsTo(Card)
+Card.hasMany(PackContent)
 
 
 //ENTRY
@@ -315,24 +315,24 @@ export {
   Card,
   CardDeckType,
   Cube,
-  CubeDraft,
-  CubeDraftEntry,
-  CubeDraftInventory,
-  CubePackContent,
   Deck,
   DeckTypeArchetype,
   DeckThumb,
   DeckType,
+  Draft,
+  DraftEntry,
   Entry,
   Errata,
   Event,
   Format,
+  Inventory,
   Iron,
   Match,
   Matchup,
   Membership,
   OPCard,
   OPDeck,
+  PackContent,
   Pairing,
   Player,
   Pool,

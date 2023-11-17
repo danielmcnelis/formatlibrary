@@ -36,9 +36,9 @@ export const CardRow = (props) => {
       ''
   
     const line2 = card.link ? `Link ${rating}` :
-    card.xyz ? `Rank ${level}` :
-    category === 'Monster' ? `Level ${level}` :
-    card.icon
+        card.xyz ? `Rank ${level}` :
+        category === 'Monster' ? `Level ${level}` :
+        card.icon
   
     const symbol3 = category === 'Monster' && card.type ? `https://cdn.formatlibrary.com/images/symbols/${card.type.toLowerCase().replaceAll(' ', '-')}.png` : null
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
@@ -54,10 +54,10 @@ export const CardRow = (props) => {
               >
                   <div className='card-image-cell'>
                       <img
-                      className="card-image"
-                      src={filePath}
-                      style={{width: '96px'}}
-                      alt={card.name}
+                        className="card-image"
+                        src={filePath}
+                        style={{width: '96px'}}
+                        alt={card.name}
                       />
                       {
                       status ? (
@@ -110,12 +110,12 @@ export const CardRow = (props) => {
                           <tr>
                           <td height="25px" width="90px" style={{borderRight: '2px solid #CFDCE5'}}>
                               <img
-                              src={symbol}
-                              height="24px"
-                              style={{verticalAlign: 'middle'}}
-                              alt="symbol"
+                                src={symbol}
+                                height="24px"
+                                style={{verticalAlign: 'middle'}}
+                                alt={attribute || category?.toUpperCase()}
                               />
-                              {' ' + (attribute || category.toUpperCase())}
+                              {' ' + (attribute || category?.toUpperCase())}
                           </td>
                           {symbol2 ? (
                               <td height="25px" width="120px" style={{borderRight: '2px solid #CFDCE5'}}>
@@ -124,7 +124,7 @@ export const CardRow = (props) => {
                                   margin="0px"
                                   height="24px"
                                   style={{verticalAlign: 'middle'}}
-                                  alt="level/category"
+                                  alt={line2}
                               />
                               {' ' + line2}
                               </td>
@@ -191,7 +191,7 @@ export const CardRow = (props) => {
                                 style={{padding: '10px 20px 20px 10px', fontSize: '16px', borderTop: '2px solid #CFDCE5'}}
                             >
                                 {
-                                card.normal ? <i>{card.description}</i> : card.description
+                                    card.normal ? <i>{card.description}</i> : card.description
                                 }
                             </td>
                             </tr>

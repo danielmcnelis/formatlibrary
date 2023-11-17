@@ -23,6 +23,11 @@ export const config = {
             host: process.env.AUTH_HOST,
             port: process.env.AUTH_PORT || 4332
         },
+        hub: {
+            https: process.env.HUB_HTTPS,
+            host: process.env.HUB_HOST,
+            port: process.env.HUB_PORT || 4333
+        },
         site: {
             https: process.env.SITE_HTTPS,
             host: process.env.SITE_HOST,

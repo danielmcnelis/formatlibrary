@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { CardImage } from '../../../Cards/CardImage'
-import { FocalCard } from '../Builder/FocalCard'
+import { FocalCard } from '../Builders/FocalCard'
 import { Helmet } from 'react-helmet'
 import './PackSimulator.css' 
 

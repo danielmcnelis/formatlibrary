@@ -3,11 +3,14 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import { CardImage } from '../../../Cards/CardImage'
-import { FocalCard } from '../Builder/FocalCard'
+import { FocalCard } from '../Builders/FocalCard'
 import { getCookie } from '@fl/utils'
 import ReactCountdownClock from 'react-countdown-clock'
 import { Helmet } from 'react-helmet'
+import {useSocket} from '@fl/hooks'
 import './DraftLobby.css' 
+
+const playerId = getCookie('playerId')
 
 // USE AUDIO
 const useAudio = (url) => {
@@ -15,16 +18,25 @@ const useAudio = (url) => {
   const [playing, setPlaying] = useState(false)
   const toggle = () => setPlaying(!playing)
 
+  // HOOK - PLAY AUDIO
   useEffect(() => {
-      playing ? audio.play() : audio.pause()
-    },
-    [playing, audio]
-  )
+        try {
+            playing ? audio.play().catch((err) => console.log(err)) : 
+                audio.pause().catch((err) => console.log(err))
+        } catch (err) {
+            console.log(err)
+        }
+    }, [playing, audio])
 
+  // HOOK - AUDIO EVENT LISTENERS
   useEffect(() => {
-    audio.addEventListener('ended', () => setPlaying(false))
-    return () => {
-      audio.removeEventListener('ended', () => setPlaying(false))
+    try {
+        audio.addEventListener('ended', () => setPlaying(false))
+        return () => {
+            audio.removeEventListener('ended', () => setPlaying(false))
+        }
+    } catch (err) {
+        console.log(err)
     }
   })
 
@@ -46,8 +58,7 @@ const sortFn = (a, b) => {
     }
 }
 
-const playerId = getCookie('playerId')
-
+// DRAFT LOBBY
 export const DraftLobby = () => {
     const [draft, setDraft] = useState({})
     const [participants, setParticipants] = useState([])
@@ -58,84 +69,77 @@ export const DraftLobby = () => {
     const [selection, setSelection] = useState(null)
     const [timer, setTimer] = useState(null)
     const [onTheClock, setOnTheClock] = useState(false)
-    const [time, setTime] = useState(Date.now())
-    const [intervalId, setIntervalId] = useState(null)
     // const [toggleDraw] = useAudio('/assets/sounds/draw.mp3')
     const [toggleChime] = useAudio('/assets/sounds/chime.mp3')
     const [toggleHorn] = useAudio('/assets/sounds/horn.mp3')
-
-    // USE EFFECT SET INTERVAL
-    useEffect(() => {
-        const interval = setInterval(() => setTime(Date.now()), 1000)
-        setIntervalId(interval)
-
-        return () => {
-            clearInterval(interval)
-        }
-    }, [])
-
-    const timerColor = JSON.parse(localStorage.getItem('theme')) === 'dark' ? '#00bca6' : '#334569'
+    const socket = useSocket()
     const { id } = useParams()
+    const timerColor = JSON.parse(localStorage.getItem('theme')) === 'dark' ? '#00bca6' : '#334569'
+
+    // FETCH PARTICIPANTS
+    const fetchParticipants = async (draftId) => {
+        try {
+            const {data} = await axios.get(`/api/drafts/participants/${draftId}`)
+            setParticipants(data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     // JOIN
-    const join = async () => {        
+    const join = () => {        
         try {
-            if (!playerId) alert('Please Log-in to Join a Cube Draft.')
-            const { data } = await axios.post(`/api/drafts/join/${draft.id}`, {
-                playerId: playerId
-            })
-
-            setEntry(data)
-            setParticipants([ ...participants, data ])
+            const data = { playerId, draftId: draft.id }
+            socket.emit('join draft', data, setEntry)            
         } catch (err) {
             console.log(err)
         }
     }
 
     // LEAVE
-    const leave = async () => {        
+    const leave = async () => {    
         try {
-            const { status } = await axios.post(`/api/drafts/leave/${draft.id}`, {
-                playerId: playerId
-            })
-
-            if (status === 200) {
-                setEntry({})
-                setParticipants([...participants.filter((p) => p.playerId !== playerId)])
-            }
+            const data = { playerId, draftId: draft.id }
+            socket.emit('leave draft', data, setEntry)            
         } catch (err) {
             console.log(err)
         }
     }
 
     // START
-    const start = async () => {        
+    const start = async () => {          
         try {
-            const { data } = await axios.post(`/api/drafts/start/${draft.id}`)
-            setDraft(data)
+            const data = { draftId: draft.id }
+            socket.emit('start draft', data)            
         } catch (err) {
             console.log(err)
         }
     }
 
-    // ADD CARD
-    const addCard = async (card) => {        
+    // PROCESS SELCTION
+    const processSelection = async (card) => {
         try {
-            const { data } = await axios.put(`/api/drafts/select/${draft.id}?cardId=${card.id}`, {
-                playerId: playerId
-            })
-
-            setPack(pack.filter((p) => p.cardId !== data.id))
+            setPack(pack.filter((p) => p.cardId !== card.id))
             setOnTheClock(false)
-            setSelection(data.name)
-            setInventory([...inventory, data])
+            setSelection(card.name)
+            setInventory([...inventory, card])
             // toggleDraw()
         } catch (err) {
             console.log(err)
         }
     }
+    
+    // SELECT CARD
+    const selectCard = async (card) => {    
+        try {
+            const data = { draftId: draft.id, playerId: playerId, cardId: card.id }            
+            socket.emit('select card', data, processSelection)            
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
-    // USE EFFECT CHECK IF PARTICIPANT
+    // HOOK - CHECK IF PARTICIPANT
     useEffect(() => {
         for (let i = 0; i < participants.length; i++) {
             if (participants[i].playerId === playerId) {
@@ -144,20 +148,7 @@ export const DraftLobby = () => {
         }
     }, [participants])
 
-    // USE EFFECT CLEAR SELECTION
-    useEffect(() => {
-        if (draft.pick === 1 && draft.state === 'underway') {
-            alert('The Draft is Starting Now!')
-            toggleHorn()
-        } else if (draft.pick > 1 && draft.state === 'underway') {
-            setSelection(null)
-            toggleChime()
-        } else {
-            setSelection(null)
-        }
-    }, [draft.pick, draft.state])
-
-    // USE EFFECT GET INVENTORY
+    // HOOK - GET INVENTORY
     useEffect(() => {
         const fetchData = async () => {
             if (entry.id) {
@@ -169,7 +160,7 @@ export const DraftLobby = () => {
         fetchData()
     }, [entry.id, draft.pick])
 
-    // USE EFFECT GET PACK
+    // HOOK - GET PACK
     useEffect(() => {
         const fetchData = async () => {
             if (entry.id && draft.state === 'underway') {
@@ -181,23 +172,16 @@ export const DraftLobby = () => {
         fetchData()
     }, [draft.state, draft.pick, entry.id])
 
-    // USE EFFECT
+    // HOOK - FETCH PARTICIPANTS
     useEffect(() => {
-        const fetchData = async () => {
-            if (draft.id) {
-                const {data} = await axios.get(`/api/drafts/participants/${draft.id}`)
-                setParticipants(data)
-            }
-        }
-        
-        fetchData()
+        fetchParticipants(draft.id)
     }, [draft.id])
 
-    // USE EFFECT
+    // HOOK - SET CLOCK AND TIMER
     useEffect(() => {
         const lastUpdated = new Date(draft.updatedAt)
         const lastUpdatedTimeStamp = lastUpdated.getTime()
-        const timeExpiresAt = lastUpdatedTimeStamp + 60 * 1000
+        const timeExpiresAt = lastUpdatedTimeStamp + ((draft.timer || 60) * 1000)
         const today = new Date()
         const nowTimeStamp = today.getTime()
         const timeRemaining = timeExpiresAt - nowTimeStamp
@@ -208,14 +192,40 @@ export const DraftLobby = () => {
         }
     }, [draft.pick, draft.updatedAt, inventory.length])
 
-    // USE EFFECT CLEAR INTERVAL
+    // HOOK - SOCKET.IO
     useEffect(() => {
-        if (draft.state === 'complete') {
-            return clearInterval(intervalId)
-        }
-    }, [draft.state, intervalId])
+        socket.on('new entry', (data) => {
+            console.log(`${data.playerName} joined Draft Lobby.`)
+            fetchParticipants(data.draftId)
+        });
 
-    // USE EFFECT FETCH DATA DRAFT
+        socket.on('removed entry', (data) => {
+            console.log(`${data.playerName} exited Draft Lobby.`)
+            fetchParticipants(data.draftId)
+        });
+
+        socket.on('draft begins', (data) => {
+            console.log(`Draft has begun!`)
+            setDraft(data)
+            alert('The Draft is Starting Now!')
+            toggleHorn()
+        });
+
+        socket.on('next pick', (data) => {
+            console.log(`Next pick!`)
+            setSelection(null)
+            setDraft(data)
+            toggleChime()
+        });
+
+        socket.on('draft complete', (data) => {
+            console.log(`Draft complete!`)
+            setSelection(null)
+            setDraft(data)
+        });
+    }, [])
+
+    // HOOK - FETCH INITIAL DRAFT DATA
     useEffect(() => {
         const fetchData = async () => {
             const {data} = await axios.get(`/api/drafts/${id}`)
@@ -223,7 +233,7 @@ export const DraftLobby = () => {
         }
         
         fetchData()
-    }, [id, time])
+    }, [])
 
     return (
         <div className="cube-portal">
@@ -339,7 +349,7 @@ export const DraftLobby = () => {
                                                             key={p.card.id} 
                                                             card={p.card} 
                                                             disableLink={!onTheClock} 
-                                                            addCard={addCard}
+                                                            selectCard={selectCard}
                                                             setCard={setCard}
                                                             isDraft={true}
                                                             width="72px"

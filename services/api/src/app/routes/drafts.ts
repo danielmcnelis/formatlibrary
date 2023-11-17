@@ -1,26 +1,16 @@
 import { Router } from 'express'
-import { socketTest, draftsId, getDraftParticipants, downloadInventory, selectCard, getInventory, getPack, joinDraft, leaveDraft, startDraft } from '../middleware'
+import { getDraft, getParticipants, downloadInventory, getInventory, getPack } from '../middleware'
 
 const router = Router()
-
-router.get('/api/drafts/participants/:id', getDraftParticipants)
-
-router.get('/api/drafts/socket', socketTest)
-
-router.get('/api/drafts/pack', getPack)
 
 router.get('/api/drafts/download', downloadInventory)
 
 router.get('/api/drafts/inventory', getInventory)
 
-router.get('/api/drafts/:id', draftsId)
+router.get('/api/drafts/pack', getPack)
 
-router.put('/api/drafts/select/:id', selectCard)
+router.get('/api/drafts/participants/:id', getParticipants)
 
-router.post('/api/drafts/join/:id', joinDraft)
-
-router.post('/api/drafts/leave/:id', leaveDraft)
-
-router.post('/api/drafts/start/:id', startDraft)
+router.get('/api/drafts/:id', getDraft)
 
 export default router

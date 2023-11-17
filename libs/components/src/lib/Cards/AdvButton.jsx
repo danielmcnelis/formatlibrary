@@ -7,23 +7,23 @@ export const AdvButton = (props) => {
      
     return (
       clicked ? (
-        <a
+        <div
           className={"clicked" + capitalize(buttonClass) + "Button"}
           id={camelize(id)}
           type="submit"
           onClick={() => removeFilter(buttonClass, id)}
         >
           {display}
-        </a>
+        </div>
       ) : (
-        <a
+        <div
           className={buttonClass + "Button"}
           id={camelize(id)}
           type="submit"
           onClick={() => applyFilter(buttonClass, id)}
         >
           {display}
-        </a>
+        </div>
       )
     )
 } 

@@ -19,7 +19,7 @@ export default {
         const player = await Player.findOne({ where: { discordId: interaction.user?.id }})    
         if (!player) return
 
-        const tournament = await selectTournament(interaction, tournaments)
+        const tournament = await selectTournament(interaction, tournaments, 'ASC')
         if (!tournament) return
 
         if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {

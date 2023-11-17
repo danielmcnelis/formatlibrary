@@ -2182,7 +2182,7 @@ export const autoRegisterTopCut = async (server, tournament, topCutTournament, s
 }
 
 // CREATE TOURNAMENT
-export const createTournament = async (interaction, formatName, name, abbreviation, tournament_type, channelName) => {
+export const createTournament = async (interaction, formatName, name, abbreviation, tournament_type, channelName, pointsPerMatchWin, pointsPerMatchTie, pointsPerBye, tieBreaker1, tieBreaker2, tieBreaker3) => {
     const server = !interaction.guildId ? {} : 
         await Server.findOne({ where: { id: interaction.guildId }}) || 
         await Server.create({ id: interaction.guildId, name: interaction.guild.name })
@@ -2229,14 +2229,28 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             tournament_type: tournament_type,
             description: description,
             game_name: game_name,
-            pts_for_match_tie: "0.0"
+            pts_for_match_win: pointsPerMatchWin || "1.0",
+            pts_for_match_tie: pointsPerMatchTie || "0.0",
+            pts_for_bye: pointsPerMatchTie || "0.0",
+            tie_breaks: [
+                tieBreaker1 || 'median buchholz',
+                tieBreaker2 || 'match wins vs tied',
+                tieBreaker3 || 'points scored'
+            ]
         } : {
             name: name,
             url: abbreviation || name,
             tournament_type: tournament_type,
             description: description,
             game_name: game_name,
-            pts_for_match_tie: "0.0"
+            pts_for_match_win: pointsPerMatchWin || "1.0",
+            pts_for_match_tie: pointsPerMatchTie || "0.0",
+            pts_for_bye: pointsPerBye || "0.0",
+            tie_breaks: [
+                tieBreaker1 || 'median buchholz',
+                tieBreaker2 || 'match wins vs tied',
+                tieBreaker3 || 'points scored'
+            ]
         }
         
         const { status, data } = await axios({
@@ -2261,7 +2275,13 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 url: data.tournament.url,
                 channelId: channelId,
                 serverId: interaction.guildId,
-                community: server.name
+                community: server.name,
+                pointsPerMatchWin: pointsPerMatchWin,
+                pointsPerMatchTie: pointsPerMatchTie,
+                pointsPerBye: pointsPerBye,
+                tieBreaker1: tieBreaker1,
+                tieBreaker2: tieBreaker2,
+                tieBreaker3: tieBreaker3
             })
 
             const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
@@ -2314,7 +2334,13 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     url: data.tournament.url,
                     channelId: channelId,
                     serverId: interaction.guildId,
-                    community: server.name
+                    community: server.name,
+                    pointsPerMatchWin: pointsPerMatchWin,
+                    pointsPerMatchTie: pointsPerMatchTie,
+                    pointsPerBye: pointsPerBye,
+                    tieBreaker1: tieBreaker1,
+                    tieBreaker2: tieBreaker2,
+                    tieBreaker3: tieBreaker3
                 })
 
                 const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''

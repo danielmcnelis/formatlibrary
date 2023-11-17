@@ -4,15 +4,11 @@ import axios from 'axios'
 import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import { useDetectAdBlock } from 'adblock-detect-react'
-import {io} from 'socket.io-client'
-const socket = io('http://localhost:3000/')
-console.log('socket', socket)
-
-socket.on('api', (data) => {
-    console.log('DATA FROM API', data)
-});
+import { SocketProvider } from '@fl/context'
+import io from 'socket.io-client'
 
 const playerId = getCookie('playerId')
+const socket = io('http://localhost:4333/')
 
 const App = () => {
     const [isSubscriber, setIsSubscriber] = useState(false)
@@ -37,41 +33,6 @@ const App = () => {
         }
     }, [])
 
-    // useEffect(() => {
-
-    //     socket.on("connection", () => {
-    //         console.log('WE HAVE CONNECTED');
-    //     })
-
-    //     socket.on("hello", () => {
-    //         console.log('HELLO WORLD');
-    //     })
-
-    //     socket.on("fromApi", (data) => {
-    //       console.log('from API data', data);
-    //     })
-
-    //     return () => {
-    //         socket.disconnect()
-    //     }
-    //   }, []);
-
-    // const joinRoom = () => {
-    //     if (room !== "") {
-    //     socket.emit("join_room", room);
-    //     }
-    // };
-
-    // const sendMessage = () => {
-    //     socket.emit("send_message", { message, room });
-    // };
-
-    // useEffect(() => {
-    //     socket.on('api', (data) => {
-    //         console.log('DATA FROM API', data)
-    //     });
-    // }, [socket])
-
   return (
     <div>
         <Helmet>
@@ -84,7 +45,7 @@ const App = () => {
         </Helmet>
         <div className="app">
             {
-                playerId && !checkedSubscription ? <Router/> :
+                playerId && !checkedSubscription ? (<SocketProvider value={socket}> <Router/> </SocketProvider>) :
                     adBlockDetected && !isSubscriber ? (
                         <div className="ad-block-detected">
                             <h2>Please disable your ad-blocker to view this website.</h2>
@@ -92,7 +53,7 @@ const App = () => {
                             <a href="/auth/login/">
                                 <h1 className="login">LOGIN</h1>
                             </a>
-                        </div>) : <Router />
+                        </div>) : (<SocketProvider value={socket}> <Router/> </SocketProvider>)
             }
         </div>
     </div>

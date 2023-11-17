@@ -2,6 +2,9 @@ import * as express from 'express'
 import * as compression from 'compression'
 import * as morgan from 'morgan'
 import * as chalk from 'chalk'
+import * as http from 'http'
+import * as https from 'https'
+import { readFileSync } from 'fs'
 import {
   banlists,
   blogposts,
@@ -20,7 +23,6 @@ import {
   stats,
   statuses
 } from './routes'
-import { Server } from 'socket.io'
 import { error } from '@fl/middleware'
 import { config } from '@fl/config'
 
@@ -67,24 +69,15 @@ Object.values(routes).forEach((route) => {
 app.use(error)
 
 const port = config.services.api.port
-export const server = app.listen(port, () => {
-  console.log(chalk.cyan(`Listening at http://localhost:${port}`))
-})
+const useHttps = config.services.api.https === '1' || config.services.api.https === 'true'
+const privateKey = useHttps ? readFileSync('../../../certs/privkey.pem', 'utf8') || '' : ''
+const certificate = useHttps ? readFileSync('../../../certs/fullchain.pem', 'utf8') || '' : ''
+const credentials = { key: privateKey, cert: certificate }
 
-export const io = new Server(server)
-
-// io.on('connection', (socket) => {
-//     socket.emit('hello', 'WORLD')
-//     console.log('an https usor connected')
-// })
-
-// io.on('disconnect', (socket) => {
-//     console.log('a user Disconnected')
-//     socket.removeAllListeners()
-// })
-
-// app.set('socketio', io)
-
-// export const useIo = () => app.get('socketio')
+const server = useHttps ? https.createServer(credentials, app).listen(port, () =>
+    console.log(chalk.cyan(`Listening on https://${config.services.api.host ? config.services.api.host : '0.0.0.0'}:${port}`))
+) : http.createServer(app).listen(port, () =>
+    console.log(chalk.cyan(`Listening on http://${config.services.api.host ? config.services.api.host : '0.0.0.0'}:${port}`))
+)
 
 server.on('error', console.error)

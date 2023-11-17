@@ -2,7 +2,7 @@
 import { Sequelize } from 'sequelize'
 import { db } from './db'
 
-export const CubeDraftEntry = db.define('cubeDraftEntries', {
+export const DraftEntry = db.define('draftEntries', {
     playerName: {
         type: Sequelize.STRING
     },
@@ -12,7 +12,7 @@ export const CubeDraftEntry = db.define('cubeDraftEntries', {
     slot: {
         type: Sequelize.INTEGER
     },
-    cubeDraftId: {
+    draftId: {
         type: Sequelize.STRING
     }
 })

@@ -1,127 +1,10 @@
 
-import { Card, Cube, CubeDraft, CubeDraftEntry, CubeDraftInventory, CubePackContent, Player } from '@fl/models'
-import { useIo } from '../../../../site/src/main'
-console.log('useIo', useIo)
+import { Card, Cube, Draft, DraftEntry, Inventory, PackContent, Player } from '@fl/models'
 
-//GET RANDOM ELEMENT
-const getRandomElement = (arr) => {
-    const index = Math.floor((arr.length) * Math.random())
-    return arr[index]
-}
-
-const setInternalTimer = async (draftId, currentPick, timer = 60) => {
-    setTimeout(async () => {
-        const draft = await CubeDraft.findOne({
-            where: {
-                id: draftId
-            }
-        })
-        
-        if (draft.pick === currentPick) {
-            const entries = await CubeDraftEntry.findAll({
-                where: {
-                    cubeDraftId: draftId
-                }
-            })
-            
-            const nextPick = draft.pick + 1
-            const { round, pick, packsPerPlayer, playerCount} = draft
-            const arr = []
-            const nums = Array.from(Array(packsPerPlayer * playerCount).keys()).map((e) => e + 1)
-            for (let i = 0; i < packsPerPlayer; i++) { arr[i] = [...nums.slice(i * playerCount, i * playerCount + playerCount)] }
-            
-            for (let i = 0; i < entries.length; i++) {
-                const entry = entries[i]
-                const count = await CubeDraftInventory.count({ 
-                    where: {
-                        cubeDraftEntryId: entry.id
-                    }
-                })
-            
-                if (count < currentPick) {
-                    const packNumber = arr[round - 1][(pick + entry.slot - 2) % playerCount]
-                    const contents = await CubePackContent.findAll({
-                        where: {
-                            packNumber: packNumber,
-                            cubeDraftId: entry.cubeDraftId,
-                        },
-                        include: Card,
-                        order: [[Card, 'sortPriority', 'ASC'], [Card, 'name', 'ASC']]
-                    })
-            
-                    const packContent = getRandomElement(contents)
-
-                    const count2 = await CubeDraftInventory.count({ 
-                        where: {
-                            cubeDraftEntryId: entry.id
-                        }
-                    })
-            
-                    if (count2 < currentPick) {
-                        await CubeDraftInventory.create({
-                            cardId: packContent.cardId,
-                            cardName: packContent.cardName,
-                            cubeDraftId: draftId,
-                            cubeDraftEntryId: entry.id
-                        })
-    
-                        await packContent.destroy()
-                    }
-                }
-            }
-
-            if (nextPick > draft.packsPerPlayer * draft.packSize) {
-                await draft.update({ state: 'complete' })
-            } else if (nextPick % draft.packSize === 1) {
-                await draft.update({
-                    pick: nextPick,
-                    round: draft.round + 1
-                })
-
-                return setInternalTimer(draft.id, nextPick, draft.timer)
-            } else {
-                await draft.update({
-                    pick: draft.pick + 1
-                })
-                
-                return setInternalTimer(draft.id, nextPick, draft.timer)
-            }
-        }
-    }, (timer + 3) * 1000)
-
-}
-
-//SHUFFLE ARRAY
-const shuffleArray = (arr) => {
-    let i = arr.length
-    let temp
-    let index
-
-    while (i--) {
-        index = Math.floor((i + 1) * Math.random())
-        temp = arr[index]
-        arr[index] = arr[i]
-        arr[i] = temp
-    }
-
-    return arr
-}
-
-
-//SOCKET TEST
-export const socketTest = async (req, res, next) => {
-    console.log('SOCKET TEST')
-    const io = useIo()
-    console.log('useIo() io.sockets.emit', io.sockets.emit)
-    io.sockets.emit('api', 'hello from api')
-    res.json({'msg': 'thumbs up'})
-}
-
-
-// DRAFTS ID
-export const draftsId = async (req, res, next) => {
+// GET DRAFT
+export const getDraft = async (req, res, next) => {
     try {
-        const draft = await CubeDraft.findOne({
+        const draft = await Draft.findOne({
             where: {
                 shareLink: req.params.id
             },
@@ -132,21 +15,20 @@ export const draftsId = async (req, res, next) => {
     } catch (err) {
       next(err)
     }
-  }
-
+}
 
 // GET PACK
 export const getPack = async (req, res, next) => {
     try {
-        const entry = await CubeDraftEntry.findOne({
+        const entry = await DraftEntry.findOne({
             where: {
                 id: req.query.entryId
             }
         })
 
-        const { round, pick, packsPerPlayer, playerCount} = await CubeDraft.findOne({
+        const { round, pick, packsPerPlayer, playerCount} = await Draft.findOne({
             where: {
-                id: entry.cubeDraftId
+                id: entry.draftId
             }
         })
 
@@ -156,10 +38,10 @@ export const getPack = async (req, res, next) => {
         
         const packNumber = arr[round - 1][(pick + entry.slot - 2) % playerCount]
 
-        const contents = await CubePackContent.findAll({
+        const contents = await PackContent.findAll({
             where: {
                 packNumber: packNumber,
-                cubeDraftId: entry.cubeDraftId,
+                draftId: entry.draftId,
             },
             include: Card,
             order: [[Card, 'sortPriority', 'ASC'], [Card, 'name', 'ASC']]
@@ -169,14 +51,14 @@ export const getPack = async (req, res, next) => {
     } catch (err) {
       next(err)
     }
-  }
+}
 
 // GET INVENTORY
 export const getInventory = async (req, res, next) => {
     try {
-        const inventory = [...await CubeDraftInventory.findAll({
+        const inventory = [...await Inventory.findAll({
             where: {
-                cubeDraftEntryId: req.query.entryId
+                draftEntryId: req.query.entryId
             },
             order: [["createdAt", "ASC"]],
             include: Card
@@ -186,14 +68,14 @@ export const getInventory = async (req, res, next) => {
     } catch (err) {
       next(err)
     }
-  }
+}
 
 // DOWNLOAD INVENTORY
 export const downloadInventory = async (req, res, next) => {
     try {
-        const inventoryCodes = [...await CubeDraftInventory.findAll({
+        const inventoryCodes = [...await Inventory.findAll({
             where: {
-                cubeDraftEntryId: req.query.entryId
+                draftEntryId: req.query.entryId
             },
             order: [["createdAt", "ASC"]],
             include: Card
@@ -204,16 +86,17 @@ export const downloadInventory = async (req, res, next) => {
     } catch (err) {
       next(err)
     }
-  }
+}
 
 // GET DRAFT PARTICIPANTS
-export const getDraftParticipants = async (req, res, next) => {
+export const getParticipants = async (req, res, next) => {
     try {
-        const participants = await CubeDraftEntry.findAll({
+        const participants = await DraftEntry.findAll({
             where: {
-                cubeDraftId: req.params.id
+                draftId: req.params.id
             },
-            include: Player
+            include: Player,
+            order: [['createdAt', 'ASC']]
         })
 
         res.json(participants)
@@ -222,206 +105,3 @@ export const getDraftParticipants = async (req, res, next) => {
     }
   }
 
-// SELECT CARD
-export const selectCard = async (req, res, next) => {
-    try {
-        const draft = await CubeDraft.findOne({
-            where: {
-                id: req.params.id
-            }
-        })
-        
-        const entry = await CubeDraftEntry.findOne({
-            where: {
-                cubeDraftId: req.params.id,
-                playerId: req.body.playerId
-            }
-        })
-
-        const packContent = await CubePackContent.findOne({
-            where: {
-                cubeDraftId: req.params.id,
-                cardId: req.query.cardId
-            }
-        })
-
-        const card = await Card.findOne({
-            where: {
-                id: req.query.cardId
-            }
-        })
-
-        const count = await CubeDraftInventory.count({
-            where: {
-                cubeDraftEntryId: entry.id
-            }
-        })
-
-        if (count < draft.pick) {
-            const inventory = await CubeDraftInventory.create({
-                cubeDraftId: req.params.id,
-                cubeDraftEntryId: entry.id,
-                cardId: packContent.cardId,
-                cardName: packContent.cardName
-            })
-    
-            if (inventory) {
-                await packContent.destroy()
-                res.json(card)
-    
-                const cardsPulled = await CubeDraftInventory.count({
-                    where: {
-                        cubeDraftId: req.params.id
-                    }
-                })
-    
-                if (cardsPulled === (draft.playerCount * draft.pick)) {
-                    const nextPick = draft.pick + 1
-                    if (nextPick > draft.packsPerPlayer * draft.packSize) {
-                        await draft.update({ state: 'complete' })
-                    } else if (nextPick > (draft.round * draft.packSize)) {
-                        await draft.update({
-                            pick: nextPick,
-                            round: draft.round + 1
-                        })
-    
-                        return setInternalTimer(draft.id, nextPick, draft.timer)
-                    } else {
-                        await draft.update({
-                            pick: nextPick
-                        })
-    
-                        return setInternalTimer(draft.id, nextPick, draft.timer)
-                    }
-                }
-            }    
-        } else {
-            res.sendStatus(400)
-        }
-    } catch (err) {
-      next(err)
-    }
-  }
-
-// JOIN DRAFT
-export const joinDraft = async (req, res, next) => {
-    try {
-        const player = await Player.findOne({
-            where: {
-                id: req.body.playerId
-            }
-        })
-
-        const count = await CubeDraftEntry.count({
-            where: {
-                cubeDraftId: req.params.id,
-                playerId: player.id
-            }    
-        })
-
-        if (!count) {
-            const entry = await CubeDraftEntry.create({
-                cubeDraftId: req.params.id,
-                playerName: player.name,
-                playerId: player.id
-            })
-    
-            const data = {
-                ...entry.dataValues,
-                player
-            }
-    
-            res.json(data)
-        } else {
-            throw new Error('Player has already joined this draft.')
-        }
-    } catch (err) {
-      next(err)
-    }
-  }
-
-
-// LEAVE DRAFT
-export const leaveDraft = async (req, res, next) => {
-    try {
-        const entry = await CubeDraftEntry.findOne({
-            where: {
-                cubeDraftId: req.params.id,
-                playerId: req.body.playerId
-            }
-        })
-
-        await entry.destroy()
-        res.sendStatus(200)
-    } catch (err) {
-      next(err)
-    }
-  }
-
-  
-
-// START DRAFTS
-export const startDraft = async (req, res, next) => {
-    try {
-        const draft = await CubeDraft.findOne({
-            where: {
-                id: req.params.id,
-                state: 'pending'
-            },
-            include: Cube
-        })
-
-        const playerCount = await CubeDraftEntry.count({
-            where: {
-                cubeDraftId: draft.id
-            }
-        })
-
-        await draft.update({ playerCount, pick: 1, round: 1 })
-
-        const entries = await CubeDraftEntry.findAll({ where: { cubeDraftId: draft.id }})
-        const shuffledEntries = shuffleArray(entries)
-
-        for (let i = 0; i < shuffledEntries.length; i++) {
-            const entry = shuffledEntries[i]
-            await entry.update({ slot: i + 1 })
-        }
-    
-        if (!draft.cube) return res.sendStatus(404)
-        const konamiCodes = draft.cube.ydk.split('#main')[1].split('\n').filter((e) => e.length) || []
-        const cards = []
-        
-        for (let i = 0; i < konamiCodes.length; i++) {
-            let konamiCode = konamiCodes[i]
-            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-            const card = await Card.findOne({ where: { konamiCode: konamiCode }})
-            if (!card) continue
-            cards.push(card)
-        }
-
-        const shuffledCards = shuffleArray(cards)
-        let index = 0
-
-        for (let i = 0; i < playerCount; i++) {
-            for (let j = 0; j < draft.packsPerPlayer; j++) {
-                for (let k = 0; k < draft.packSize; k++) {
-                    const card = shuffledCards[index]
-                    await CubePackContent.create({
-                        cardId: card.id,
-                        cardName: card.name,
-                        packNumber: i * draft.packsPerPlayer + j + 1,
-                        cubeDraftId: draft.id
-                    })
-
-                    index++
-                }
-            }
-        }
-
-        await draft.update({ state: 'underway' })
-        res.json(draft)
-        return setInternalTimer(draft.id, draft.pick, draft.timer)
-    } catch (err) {
-      next(err)
-    }
-  }

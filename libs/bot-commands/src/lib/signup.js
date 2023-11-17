@@ -22,7 +22,7 @@ export default {
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that. Please type **/join** instead.'})           
         let format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const tournaments = await Tournament.findByState({[Op.or]: ['pending', 'standby']}, format, interaction.guildId)
+        const tournaments = await Tournament.findByState({[Op.or]: ['pending', 'standby']}, format, interaction.guildId, 'ASC')
         const user = interaction.options.getUser('player')
         const member = await interaction.guild?.members.fetch(user.id)
         const player = await Player.findOne({ where: { discordId: user.id }})

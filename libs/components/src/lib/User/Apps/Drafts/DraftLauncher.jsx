@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
-import './CubeLauncher.css' 
+import './DraftLauncher.css' 
 
-export const CubeLauncher = () => {
+export const DraftLauncher = () => {
+    const [type, setType] = useState('cube')
     const [cubes, setCubes] = useState([])
     const [cube, setCube] = useState({})
     const [packSize, setPackSize] = useState(12)

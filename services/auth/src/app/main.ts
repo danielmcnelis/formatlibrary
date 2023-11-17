@@ -4,7 +4,9 @@ import * as compression from 'compression'
 import * as session from 'cookie-session'
 import * as morgan from 'morgan'
 import * as chalk from 'chalk'
-import * as path from 'path'
+import * as http from 'http'
+import * as https from 'https'
+import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import { auth } from './routes'
 import { error } from '@fl/middleware'
@@ -73,7 +75,15 @@ Object.values(routes).forEach((route) => {
 app.use(error)
 
 const port = config.services.auth.port
-const server = app.listen(port, () => {
-  console.log(chalk.cyan(`Listening at http://localhost:${port}`))
-})
+const useHttps = config.services.auth.https === '1' || config.services.auth.https === 'true'
+const privateKey = useHttps ? readFileSync('../../../certs/privkey.pem', 'utf8') || '' : ''
+const certificate = useHttps ? readFileSync('../../../certs/fullchain.pem', 'utf8') || '' : ''
+const credentials = { key: privateKey, cert: certificate }
+
+const server = useHttps ? https.createServer(credentials, app).listen(port, () =>
+    console.log(chalk.cyan(`Listening on https://${config.services.auth.host ? config.services.auth.host : '0.0.0.0'}:${port}`))
+) : http.createServer(app).listen(port, () =>
+    console.log(chalk.cyan(`Listening on http://${config.services.auth.host ? config.services.auth.host : '0.0.0.0'}:${port}`))
+)
+
 server.on('error', console.error)

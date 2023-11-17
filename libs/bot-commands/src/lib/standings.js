@@ -14,13 +14,13 @@ export default {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const tournaments = [...await Tournament.findByState('underway', format, interaction.guildId)].filter((t) => t.type === 'swiss')
+        const tournaments = [...await Tournament.findByState('underway', format, interaction.guildId, 'ASC')].filter((t) => t.type === 'swiss')
         if (!tournaments.length && format) return await interaction.editReply({ content: `There are no active ${format.name} ${server.emoji || format.emoji} Swiss tournaments.`})
         if (!tournaments.length && !format) return await interaction.editReply({ content: `There are no active Swiss tournaments.`})
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
 
-        interaction.editReply(`Calculating standings, please wait.`)
+        await interaction.editReply(`Calculating standings, please wait.`)
         const matches = await getMatches(server, tournament.id)
         const participants = await getParticipants(server, tournament.id)
         const standings = await calculateStandings(matches, participants)
@@ -31,8 +31,11 @@ export default {
             results.push(`${s.rank}.  ${s.name}  -  ${s.score.toFixed(1)}  (${s.wins}-${s.losses}-${s.ties})${s.byes ? ` +BYE` : ''}  [${s.medianBuchholz.toFixed(1)} / ${s.winsVsTied}]`)
         }
 
+        const channel = interaction.guild?.channels?.cache?.get(server.botSpamChannel) || interaction.channel
+        if (server.botSpamChannel === interaction.channel?.id) await interaction.editReply(`Please visit <#${channel.id}> to view the ${tournament.name} standings. ${tournament.logo}`)
+        
         for (let i = 0; i < results.length; i += 30) {
-            interaction.channel.send(results.slice(i, i + 30).join('\n'))
+            channel.send(results.slice(i, i + 30).join('\n'))
         }
 
         return

@@ -2,17 +2,23 @@
 import { Sequelize } from 'sequelize'
 import { db } from './db'
 
-export const CubeDraftInventory = db.define('cubeDraftInventories', {
+export const Inventory = db.define('inventories', {
     cardName: {
         type: Sequelize.STRING
     },
     cardId: {
         type: Sequelize.INTEGER
     },
-    cubeDraftId: {
+    draftId: {
         type: Sequelize.INTEGER
     },
-    cubeDraftEntryId: {
+    draftEntryId: {
+        type: Sequelize.INTEGER
+    },
+    round: {
+        type: Sequelize.INTEGER
+    },
+    pick: {
         type: Sequelize.INTEGER
     }
 })

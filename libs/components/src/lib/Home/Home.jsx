@@ -22,19 +22,11 @@ export const Home = () => {
     // USE EFFECT
     useEffect(() => {
         const fetchData = async () => {
-            console.log('fetchData()')
             const {data} = await axios.get(`/api/blogposts/count`)
             setCount(data)
         } 
         
-        const fetchData2 = async () => {
-            console.log('fetchData2()')
-            const {data} = await axios.get(`/api/drafts/socket`)
-            console.log('data', data)
-        }
-  
         fetchData()
-        fetchData2()
     }, [])
 
     // USE EFFECT
@@ -60,7 +52,7 @@ export const Home = () => {
                 blogPosts.map((bp, index) => {
                 return (
                     <BlogPost 
-                        key={bp.title} 
+                        key={`blog-${index}`} 
                         index={index}
                         id={bp.id} 
                         title={bp.title} 

@@ -42,8 +42,6 @@ export default {
         if (!losingPlayer || !loserStats) return await interaction.editReply({ content: `You are not in the database.`})
         if (!winningPlayer || !winnerStats) return await interaction.editReply({ content: `That user is not in the database.`})
 
-        const loserHasTourRole = isTourPlayer(server, member)
-        const winnerHasTourRole = isTourPlayer(server, winner)
         const activeTournament = await Tournament.count({ where: { state: 'underway', serverId: interaction.guildId, formatName: format.name } }) 
         let isTournament
         let winningEntry
@@ -57,67 +55,45 @@ export default {
         const activeIron = await Iron.count({ where: { format: format.name, status: 'active' }})
         let isIronMatch
 
-        if (loserHasTourRole && winnerHasTourRole && activeTournament) {
-            const loserEntries = await Entry.findByPlayerIdAndFormatId(losingPlayer.id, format.id)
-            const winnerEntries = await Entry.findByPlayerIdAndFormatId(winningPlayer.id, format.id)
+        if (activeTournament) {
+            const loserTournamentIds = [...await Entry.findByPlayerIdAndFormatId(losingPlayer.id, format.id)].map((e) => e.tournamentId)
+            const winnerTournamentIds = [...await Entry.findByPlayerIdAndFormatId(winningPlayer.id, format.id)].map((e) => e.tournamentId)
+            const commonTournamentIds = loserTournamentIds.filter((id) => winnerTournamentIds.includes(id))
+            const tournaments = []
 
-            if (loserEntries.length && winnerEntries.length) {
-                const loserTournamentIds = []
-                const winnerTournamentIds = []
-                const commonTournamentIds = []
-                const tournaments = []
-
-                for (let i = 0; i < loserEntries.length; i++) {
-                    const entry = loserEntries[i]
-                    loserTournamentIds.push(entry.tournament.id)
-                }
-
-                for (let i = 0; i < winnerEntries.length; i++) {
-                    const entry = winnerEntries[i]
-                    winnerTournamentIds.push(entry.tournament.id)
-                }
-
-                for (let i = 0; i < loserTournamentIds.length; i++) {
-                    const tournament_id = loserTournamentIds[i]
-                    if (winnerTournamentIds.includes(tournament_id)) {
-                        commonTournamentIds.push(tournament_id)
-                    }
-                }
-
-                if (commonTournamentIds.length) {
-                    for (let i = 0; i < commonTournamentIds.length; i++) {
-                        const id = commonTournamentIds[i]
-                        tournament = await Tournament.findOne({ where: { id: id, serverId: interaction.guildId }})
-                        if (!tournament) continue
-                        losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id } })
-                        winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id } })
-                        if (!losingEntry || !winningEntry) continue
-                        const matches = await getMatches(server, tournament.id)
-                        if (!matches) continue
-                        for (let i = 0; i < matches.length; i++) {
-                            const match = matches[i].match
-                            if (match.state !== 'open') continue
-                            if (checkPairing(match, losingEntry.participantId, winningEntry.participantId)) {
-                                tournaments.push(tournament)
-                                break
-                            }
+            if (commonTournamentIds.length) {
+                for (let i = 0; i < commonTournamentIds.length; i++) {
+                    const id = commonTournamentIds[i]
+                    tournament = await Tournament.findOne({ where: { id: id, serverId: interaction.guildId }})
+                    if (!tournament) continue
+                    losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id } })
+                    winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id } })
+                    if (!losingEntry || !winningEntry) continue
+                    const matches = await getMatches(server, tournament.id)
+                    if (!matches) continue
+                    for (let i = 0; i < matches.length; i++) {
+                        const match = matches[i].match
+                        if (match.state !== 'open') continue
+                        if (checkPairing(match, losingEntry.participantId, winningEntry.participantId)) {
+                            tournaments.push(tournament)
+                            break
                         }
                     }
                 }
+            }
 
-                if (tournaments.length) {
-                    const tournament = await selectTournament(interaction, tournaments, interaction.member.user.id)
-                    if (tournament) {
-                        isTournament = true
-                        tournamentId = tournament.id
-                        if (tournament.state === 'pending') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
-                        if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
-                        challongeMatch = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament, format) :
-                            await processMatchResult(server, interaction, winner.user, winningPlayer, interaction.member.user, losingPlayer, tournament, format)
-                        if (!challongeMatch) return
-                    } else {
-                        return
-                    }
+            if (tournaments.length) {
+                const tournament = await selectTournament(interaction, tournaments, interaction.member.user.id)
+                if (tournament) {
+                    isTournament = true
+                    tournamentId = tournament.id
+                    if (tournament.state === 'pending') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
+                    if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
+                    challongeMatch = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament, format) :
+                        await processMatchResult(server, interaction, winner.user, winningPlayer, interaction.member.user, losingPlayer, tournament, format)
+                    if (!challongeMatch) return
+                } else {
+                    return
                 }
             }
         } else if (loserHasIronRole && winnerHasIronRole && activeIron) {

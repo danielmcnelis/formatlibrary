@@ -3,7 +3,7 @@ import { camelize } from '@fl/utils'
 import './CardImage.css'
 
 export const CardImage = (props) => {
-    let {addCard, removeCard, card, previous, status, rarity, width, margin, padding, index, locale, disableLink, setCard, isDraft, isPackSimulator} = props
+    let {addCard, selectCard, removeCard, card, previous, status, rarity, width, margin, padding, index, locale, disableLink, setCard, isDraft, isPackSimulator} = props
     if (rarity?.includes('Short Print')) rarity = 'Common' 
     
     if (isDraft) {
@@ -14,7 +14,7 @@ export const CardImage = (props) => {
                     src={`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`}
                     card={card}
                     onMouseOver={() => setCard(card)}
-                    onClick={()=> disableLink ? '' : addCard(card)}
+                    onClick={()=> disableLink ? '' : selectCard(card)}
                     style={{width, margin, padding}}
                     className="CardImages"
                     alt={card.name}
@@ -26,22 +26,22 @@ export const CardImage = (props) => {
          return (
             <div className="CardImage-box">
                 <Link to={`/cards/${
-                card.name.toLowerCase().replaceAll(' ', '-')
-                    .replaceAll(`"`, '')
-                    .replaceAll(`'`, '')
-                    .replaceAll('#', '')
-                    .replaceAll('/', '')
-                    .replaceAll('!', '')
-                    .replaceAll('?', '')
-                    .replaceAll(':', '')
-                    .replaceAll('★', '-')
-                    .replaceAll('&', 'and')
-                    .replaceAll('%', '-percent')
-                    .replaceAll('---', '-')
-                    .replaceAll('--', '-')
-                }`}
-                target="_blank" 
-                rel="noopener noreferrer"
+                    card.name.toLowerCase().replaceAll(' ', '-')
+                        .replaceAll(`"`, '')
+                        .replaceAll(`'`, '')
+                        .replaceAll('#', '')
+                        .replaceAll('/', '')
+                        .replaceAll('!', '')
+                        .replaceAll('?', '')
+                        .replaceAll(':', '')
+                        .replaceAll('★', '-')
+                        .replaceAll('&', 'and')
+                        .replaceAll('%', '-percent')
+                        .replaceAll('---', '-')
+                        .replaceAll('--', '-')
+                    }`}
+                    target="_blank" 
+                    rel="noopener noreferrer"
                 >
                     <div className="card-image-cell"  >
                     {

@@ -147,17 +147,42 @@ client.on(Events.InteractionCreate, async (interaction) => {
     await interaction.deferReply()
 
 	const name = interaction.fields.getTextInputValue('name')
-	let tournament_type = interaction.fields.getTextInputValue('tournament_type')
-    if (tournament_type.toLowerCase().includes('de') || tournament_type.toLowerCase().includes('double')) tournament_type = 'double elimination'
-    if (tournament_type.toLowerCase().includes('se') || tournament_type.toLowerCase().includes('single')) tournament_type = 'single elimination'
-    if (tournament_type.toLowerCase().includes('sw') || tournament_type.toLowerCase().includes('swiss')) tournament_type = 'swiss'
-    if (tournament_type.toLowerCase().includes('rr') || tournament_type.toLowerCase().includes('rob')) tournament_type = 'round robin'
+	const tournamentTypeInput = interaction.fields.getTextInputValue('tournament_type')
+    const tournament_type = (tournamentTypeInput.toLowerCase().includes('de') || tournamentTypeInput.toLowerCase().includes('double')) ? 'double elimination'
+        : (tournamentTypeInput.toLowerCase().includes('se') || tournamentTypeInput.toLowerCase().includes('single')) ? 'single elimination'
+        : (tournamentTypeInput.toLowerCase().includes('sw') || tournamentTypeInput.toLowerCase().includes('swiss')) ? 'swiss'
+        : (tournamentTypeInput.toLowerCase().includes('rr') || tournamentTypeInput.toLowerCase().includes('rob')) ? 'round robin'
+        : 'swiss'
 
     const abbreviation = interaction.fields.getTextInputValue('abbreviation')
-	const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
-	const channelName = interaction.fields.fields.get('channelName') ? interaction.fields.getTextInputValue('channelName') : null
-    
-    return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName)
+	const formatName = interaction.fields.getTextInputValue('formatName') || null
+	const channelName = interaction.fields.getTextInputValue('channelName') || null
+
+    const pointsPerMatchWin = tournament_type === 'swiss' ? interaction.fields.getTextInputValue('ppwin') || '1.0' : null
+    const pointsPerMatchTie = tournament_type === 'swiss' ? interaction.fields.getTextInputValue('pptie') || '0.0' : null
+    const pointsPerBye = tournament_type === 'swiss' ? interaction.fields.getTextInputValue('ppbye') || '1.0' : null
+
+    const decipherTieBreakerInput = (input) => {
+        if (input.includes('mb') || input.includes('med')) {
+            return 'Median-Buchholz'
+        } else if (input.includes('wvt') || input.includes('wins vs')) {
+            return 'Wins vs Tied Participants'
+        } else if (input.includes('pd') || input.includes('point')) {
+            return 'Point Differential'
+        } else if (input.includes('oowp') || input.includes('s opp')) {
+            return `Opponents' Opponent Win Percentage`
+        } else if (input.includes('owp') || input.includes('opp')) {
+            return `Opponent Win Percentage`
+        } else {
+            return null
+        }
+    }
+
+    const tieBreaker1 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase())
+    const tieBreaker2 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase())
+    const tieBreaker3 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase())
+
+    return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, pointsPerMatchWin, pointsPerMatchTie, pointsPerBye, tieBreaker1, tieBreaker2, tieBreaker3)
 })
 
 // SELECT MENUS
