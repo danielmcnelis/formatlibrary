@@ -8,7 +8,7 @@ import { SocketProvider } from '@fl/context'
 import io from 'socket.io-client'
 
 const playerId = getCookie('playerId')
-const socket = io('http://localhost:4333/')
+const socket = io('https://formatlibrary.com')
 
 const App = () => {
     const [isSubscriber, setIsSubscriber] = useState(false)
