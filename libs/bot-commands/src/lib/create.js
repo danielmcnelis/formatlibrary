@@ -86,13 +86,13 @@ export default {
                 .setPlaceholder('Wins vs Tied Participants (WVT)')
                 .setRequired(true)
 
-            const tieBreakerThree = new TextInputBuilder()
-                .setCustomId('tb3')
-                .setLabel('Tie breaker #3? (MB, WVT, PD, OWP, OOWP)')
-                .setStyle(TextInputStyle.Short)
-                .setRequired(false)
+            // const tieBreakerThree = new TextInputBuilder()
+            //     .setCustomId('tb3')
+            //     .setLabel('Tie breaker #3? (MB, WVT, PD, OWP, OOWP)')
+            //     .setStyle(TextInputStyle.Short)
+            //     .setRequired(false)
             
-            modal.addComponents(pointsPerMatchWin, pointsPerMatchTie, pointsPerBye, tieBreakerOne, tieBreakerTwo, tieBreakerThree)
+            modal.addComponents(pointsPerMatchWin, pointsPerMatchTie, pointsPerBye, tieBreakerOne, tieBreakerTwo/*, tieBreakerThree*/)
         }
 
         if (!format) {
