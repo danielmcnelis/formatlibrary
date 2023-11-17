@@ -147,7 +147,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
     await interaction.deferReply()
 
 	const name = interaction.fields.getTextInputValue('name')
-    console.log('interaction.message.components[0]', interaction.message.components[0])
+    console.log('interaction', interaction)
+    console.log('interaction.components', interaction.components)
     const tournament_type = interaction.message.components[0].data.custom_id
     console.log('tournament_type', tournament_type)
 
