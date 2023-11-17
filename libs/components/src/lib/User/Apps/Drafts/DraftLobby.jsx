@@ -61,7 +61,6 @@ const sortFn = (a, b) => {
 // DRAFT LOBBY
 export const DraftLobby = () => {
     const [draft, setDraft] = useState({})
-    console.log('draft', draft)
     const [participants, setParticipants] = useState([])
     const [entry, setEntry] = useState({})
     const [inventory, setInventory] = useState([])
@@ -175,7 +174,7 @@ export const DraftLobby = () => {
 
     // HOOK - FETCH PARTICIPANTS
     useEffect(() => {
-        if (draft.id) fetchParticipants(draft.id)
+        fetchParticipants(draft.id)
     }, [draft.id])
 
     // HOOK - SET CLOCK AND TIMER
