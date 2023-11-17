@@ -92,7 +92,9 @@ export default {
             //     .setStyle(TextInputStyle.Short)
             //     .setRequired(false)
             
-            modal.addComponents(tieBreakerOne, tieBreakerTwo)
+            const tb1Row = new ActionRowBuilder().addComponents(tieBreakerOne)
+            const tb2Row = new ActionRowBuilder().addComponents(tieBreakerTwo)
+            modal.addComponents(tb1Row, tb2Row)
         }
 
         if (!format) {
