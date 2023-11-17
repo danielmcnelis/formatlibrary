@@ -175,15 +175,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
     const decipherTieBreakerInput = (input) => {
         if (input.includes('mb') || input.includes('med')) {
-            return 'Median-Buchholz'
+            return 'median buchholz'
         } else if (input.includes('wvt') || input.includes('wins vs')) {
-            return 'Wins vs Tied Participants'
+            return 'wins vs tied participants'
         } else if (input.includes('pd') || input.includes('point')) {
-            return 'Point Differential'
+            return 'point differential'
         } else if (input.includes('oowp') || input.includes('s opp')) {
-            return `Opponents' Opponent Win Percentage`
+            return `opponents opponent win percentage`
         } else if (input.includes('owp') || input.includes('opp')) {
-            return `Opponent Win Percentage`
+            return `opponent win percentage`
         } else {
             return null
         }

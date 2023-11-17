@@ -2229,13 +2229,13 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             tournament_type: tournament_type,
             description: description,
             game_name: game_name,
-            pts_for_match_win: pointsPerMatchWin || "1.0",
+            pts_for_match_win:  pointsPerMatchWin || "1.0",
             pts_for_match_tie: pointsPerMatchTie || "0.0",
             pts_for_bye: pointsPerMatchTie || "0.0",
             tie_breaks: [
-                tieBreaker1 || 'median buchholz',
-                tieBreaker2 || 'match wins vs tied',
-                tieBreaker3 || 'points scored'
+                !tieBreaker1?.includes('opponent') ? tieBreaker1 : 'median buchholz',
+                !tieBreaker2?.includes('opponent') ? tieBreaker2 : 'match wins vs tied',
+                !tieBreaker3?.includes('opponent') ? tieBreaker3 : 'points scored'
             ]
         } : {
             name: name,
@@ -2243,13 +2243,13 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             tournament_type: tournament_type,
             description: description,
             game_name: game_name,
-            pts_for_match_win: pointsPerMatchWin || "1.0",
+            pts_for_match_win:  pointsPerMatchWin || "1.0",
             pts_for_match_tie: pointsPerMatchTie || "0.0",
-            pts_for_bye: pointsPerBye || "0.0",
+            pts_for_bye: pointsPerMatchTie || "0.0",
             tie_breaks: [
-                tieBreaker1 || 'median buchholz',
-                tieBreaker2 || 'match wins vs tied',
-                tieBreaker3 || 'points scored'
+                !tieBreaker1?.includes('opponent') ? tieBreaker1 : 'median buchholz',
+                !tieBreaker2?.includes('opponent') ? tieBreaker2 : 'match wins vs tied',
+                !tieBreaker3?.includes('opponent') ? tieBreaker3 : 'points scored'
             ]
         }
         
