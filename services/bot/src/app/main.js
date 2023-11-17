@@ -156,12 +156,19 @@ client.on(Events.InteractionCreate, async (interaction) => {
     console.log('tournament_type', tournament_type)
 
     const abbreviation = interaction.fields.getTextInputValue('abbreviation')
-	const formatName = interaction.fields.getTextInputValue('formatName').catch((err) => console.log(err)) || null
-	const channelName = interaction.fields.getTextInputValue('channelName').catch((err) => console.log(err)) || null
+	const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
+	const channelName = interaction.fields.fields.get('channelName') ? interaction.fields.getTextInputValue('channelName') : null
 
-    const pointsPerMatchWin = tournament_type === 'swiss' ? interaction.fields.getTextInputValue('ppwin').catch((err) => console.log(err)) || '1.0' : null
-    const pointsPerMatchTie = tournament_type === 'swiss' ? interaction.fields.getTextInputValue('pptie').catch((err) => console.log(err)) || '0.0' : null
-    const pointsPerBye = tournament_type === 'swiss' ? interaction.fields.getTextInputValue('ppbye').catch((err) => console.log(err)) || '1.0' : null
+    let pointsPerMatchWin
+    let pointsPerMatchTie
+    let pointsPerBye
+
+    if (tournament_type === 'swiss') {
+        pointsPerMatchWin = interaction.fields.fields.get('ppwin') ? interaction.fields.getTextInputValue('ppwin') : '1.0'
+        pointsPerMatchTie = interaction.fields.fields.get('pptie') ? interaction.fields.getTextInputValue('pptie') : '0.0'
+        pointsPerBye = interaction.fields.fields.get('ppbye') ? interaction.fields.getTextInputValue('ppbye') : '1.0'
+    }
+    
     console.log('pointsPerMatchWin', pointsPerMatchWin)
     console.log('pointsPerMatchTie', pointsPerMatchTie)
     console.log('pointsPerBye', pointsPerBye)
@@ -182,9 +189,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
     }
 
-    const tieBreaker1 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase())
-    const tieBreaker2 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase())
-    const tieBreaker3 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase())
+    const tieBreaker1 = interaction.fields.fields.get('tb1') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase()) : null
+    const tieBreaker2 = interaction.fields.fields.get('tb2') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) : null
+    const tieBreaker3 = interaction.fields.fields.get('tb3') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase()) : null
     console.log('tieBreaker1', tieBreaker1)
     console.log('tieBreaker2', tieBreaker2)
     console.log('tieBreaker3', tieBreaker3)
