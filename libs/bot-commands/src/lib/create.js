@@ -45,7 +45,6 @@ export default {
             .setStyle(TextInputStyle.Short)
             .setRequired(true)
 
-
         const nameRow = new ActionRowBuilder().addComponents(name)
         const abbreviationRow = new ActionRowBuilder().addComponents(abbreviation)
         modal.addComponents(nameRow, abbreviationRow)

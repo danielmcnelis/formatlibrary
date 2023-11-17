@@ -147,10 +147,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
     await interaction.deferReply()
 
 	const name = interaction.fields.getTextInputValue('name')
-    console.log('interaction.custom_id', interaction.custom_id)
-    const tournament_type = interaction.custom_id === 'SW' ? 'swiss' :
-        interaction.custom_id === 'SE' ? 'single elimination' :
-        interaction.custom_id === 'DE' ? 'double elimination' :
+    console.log('interaction.customId', interaction.customId)
+    const tournament_type = interaction.customId === 'SW' ? 'swiss' :
+        interaction.customId === 'SE' ? 'single elimination' :
+        interaction.customId === 'DE' ? 'double elimination' :
         'round robin'
 
     console.log('tournament_type', tournament_type)
