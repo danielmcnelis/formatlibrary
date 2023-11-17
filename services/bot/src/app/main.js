@@ -147,9 +147,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
     await interaction.deferReply()
 
 	const name = interaction.fields.getTextInputValue('name')
-    console.log('interaction', interaction)
-    console.log('interaction.components', interaction.components)
-    const tournament_type = interaction.message.components[0].data.custom_id
+    const tournament_type = interaction.custom_id === 'SW' ? 'swiss' :
+        interaction.custom_id === 'SE' ? 'single elimination' :
+        interaction.custom_id === 'DE' ? 'double elimination' :
+        'round robin'
+
     console.log('tournament_type', tournament_type)
 
     const abbreviation = interaction.fields.getTextInputValue('abbreviation')
@@ -159,6 +161,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
     const pointsPerMatchWin = tournament_type === 'swiss' ? interaction.fields.getTextInputValue('ppwin') || '1.0' : null
     const pointsPerMatchTie = tournament_type === 'swiss' ? interaction.fields.getTextInputValue('pptie') || '0.0' : null
     const pointsPerBye = tournament_type === 'swiss' ? interaction.fields.getTextInputValue('ppbye') || '1.0' : null
+    console.log('pointsPerMatchWin', pointsPerMatchWin)
+    console.log('pointsPerMatchTie', pointsPerMatchTie)
+    console.log('pointsPerBye', pointsPerBye)
 
     const decipherTieBreakerInput = (input) => {
         if (input.includes('mb') || input.includes('med')) {
@@ -179,6 +184,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
     const tieBreaker1 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase())
     const tieBreaker2 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase())
     const tieBreaker3 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase())
+    console.log('tieBreaker1', tieBreaker1)
+    console.log('tieBreaker2', tieBreaker2)
+    console.log('tieBreaker3', tieBreaker3)
 
     return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, pointsPerMatchWin, pointsPerMatchTie, pointsPerBye, tieBreaker1, tieBreaker2, tieBreaker3)
 })
