@@ -30,7 +30,7 @@ export default {
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
 
 		const modal = new ModalBuilder()
-            .setCustomId('createTournament')
+            .setCustomId(`${type}`)
             .setTitle('Create a New Tournament')
 
         const name = new TextInputBuilder()

@@ -147,12 +147,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
     await interaction.deferReply()
 
 	const name = interaction.fields.getTextInputValue('name')
-	const tournamentTypeInput = interaction.fields.getTextInputValue('type')
-    const tournament_type = (tournamentTypeInput.toLowerCase().includes('de') || tournamentTypeInput.toLowerCase().includes('double')) ? 'double elimination'
-        : (tournamentTypeInput.toLowerCase().includes('se') || tournamentTypeInput.toLowerCase().includes('single')) ? 'single elimination'
-        : (tournamentTypeInput.toLowerCase().includes('sw') || tournamentTypeInput.toLowerCase().includes('swiss')) ? 'swiss'
-        : (tournamentTypeInput.toLowerCase().includes('rr') || tournamentTypeInput.toLowerCase().includes('rob')) ? 'round robin'
-        : 'swiss'
+    console.log('interaction.message.components[0]', interaction.message.components[0])
+    const tournament_type = interaction.message.components[0].data.custom_id
+    console.log('tournament_type', tournament_type)
 
     const abbreviation = interaction.fields.getTextInputValue('abbreviation')
 	const formatName = interaction.fields.getTextInputValue('formatName') || null
