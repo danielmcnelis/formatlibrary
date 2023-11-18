@@ -507,9 +507,9 @@ export const updatePrints = async (set, groupId) => {
                     let name = result.name.replace(/ *\[^]*\) */g, '')
                     if (name.includes('Token:')) name = name.replace('Token:', '') + ' Token'
 
-                    name = name.replace(' (Super Rare)', '')
-                        .replace(' (Quarter Century Secret Rare)', '')
-                        .replace(' (B. Dragon', 'Black Dragon')
+                    // name = name.replace(' (Super Rare)', '')
+                    //     .replace(' (Quarter Century Secret Rare)', '')
+                    //     .replace(' (B. Dragon', 'Black Dragon')
 
                     if (
                         name.includes('Yu-Gi-Oh!') ||
@@ -582,7 +582,11 @@ export const updatePrints = async (set, groupId) => {
                     ) continue
 
                     if (name.startsWith('Token: ')) name = name.slice(7) + ' Token'
-                        
+                     
+                    if (name.includes('(') && name.includes(')')) {
+                        name = name.slice(name.indexOf('('), name.indexOf(')'))
+                    }
+                       
                     const card = await Card.findOne({
                         where: {
                             [Op.or]: {

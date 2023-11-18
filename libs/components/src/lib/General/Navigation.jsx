@@ -119,6 +119,9 @@ export const Navigation = (props) => {
                 <Link to="/formats/">
                     <h3 className="hamburger-header">Formats</h3>
                 </Link>
+                <Link to="/apps/">
+                    <h3 className="hamburger-header">Apps</h3>
+                </Link>
                 {
                     isAdmin ? (
                         <Link to="/admin-portal/">
