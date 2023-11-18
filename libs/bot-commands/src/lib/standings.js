@@ -32,7 +32,7 @@ export default {
         }
 
         const channel = interaction.guild?.channels?.cache?.get(server.botSpamChannel) || interaction.channel
-        if (interaction.channel !== channel.id && server.botSpamChannel === channel.id) await channel.send(`Please visit <#${channel.id}> to view the ${tournament.name} standings. ${tournament.logo}`)
+        if (interaction.channel !== channel.id && server.botSpamChannel === channel.id) await interaction.channel.send(`Please visit <#${channel.id}> to view the ${tournament.name} standings. ${tournament.logo}`)
         
         for (let i = 0; i < results.length; i += 30) {
             channel.send(results.slice(i, i + 30).join('\n'))
