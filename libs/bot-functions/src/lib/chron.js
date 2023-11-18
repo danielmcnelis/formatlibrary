@@ -582,12 +582,7 @@ export const updatePrints = async (set, groupId) => {
                     ) continue
 
                     if (name.startsWith('Token: ')) name = name.slice(7) + ' Token'
-                     
-                    if (name.includes('(') && name.includes(')')) {
-                        name = name.slice(name.indexOf('('), name.indexOf(')'))
-                    }
-
-                    console.log('name', name)
+                    if (name.includes(' (')) name = name.slice(0, name.indexOf(' ('))
 
                     const card = await Card.findOne({
                         where: {
