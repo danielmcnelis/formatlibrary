@@ -586,7 +586,9 @@ export const updatePrints = async (set, groupId) => {
                     if (name.includes('(') && name.includes(')')) {
                         name = name.slice(name.indexOf('('), name.indexOf(')'))
                     }
-                       
+
+                    console.log('name', name)
+
                     const card = await Card.findOne({
                         where: {
                             [Op.or]: {
