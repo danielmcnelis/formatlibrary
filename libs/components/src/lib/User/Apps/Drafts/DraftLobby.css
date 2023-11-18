@@ -151,3 +151,16 @@
       transform: translateX(-66.6666%);  
     }
   }
+
+
+
+  /* MEDIUM AND LARGE CELL PHONES */
+  @media only screen and (max-width: 600px) {
+    .desktop-only {
+        display: none;
+    }
+    
+    .draft-interface {
+        width: 98vw;
+    }
+  }

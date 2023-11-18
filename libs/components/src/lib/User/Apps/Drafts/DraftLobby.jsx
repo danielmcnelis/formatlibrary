@@ -61,7 +61,6 @@ const sortFn = (a, b) => {
 // DRAFT LOBBY
 export const DraftLobby = () => {
     const [draft, setDraft] = useState({})
-    console.log('draft', draft)
     const [participants, setParticipants] = useState([])
     const [entry, setEntry] = useState({})
     const [inventory, setInventory] = useState([])
@@ -326,7 +325,7 @@ export const DraftLobby = () => {
                                 ) : <div className="empty-clock"/>
                             }
                             <div className="card-database-flexbox">
-                                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
+                                <img className="desktop-only" style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
                                 <div>
                                     <h1>{draft.state === 'underway' ? 'Live Draft!' : draft.state === 'complete' ? 'Draft Complete!' : ''}</h1>
                                     <h2>{draft.state === 'underway' ? `Round ${draft.round} • Pick ${draft.pick}` : ''}</h2>
@@ -337,7 +336,7 @@ export const DraftLobby = () => {
                         </div>
                         <div className="last-selection"><i>{selection ? `You selected: ${selection}!` : ''}</i></div>
                         <div className="space-between-aligned">
-                            <FocalCard card={card}/>
+                            <FocalCard className="desktop-only" card={card}/>
                             <div className="draft-interface">
                                 {
                                     draft.state === 'underway' && pack?.length ? (
