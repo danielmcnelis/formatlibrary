@@ -4,7 +4,7 @@ import * as morgan from 'morgan'
 import * as chalk from 'chalk'
 import * as http from 'http'
 import * as https from 'https'
-import { readFileSync } from 'fs'
+import { existsSync, readFileSync } from 'fs'
 import {
   banlists,
   blogposts,
@@ -70,6 +70,10 @@ app.use(error)
 
 const port = config.services.api.port
 const useHttps = config.services.api.https === '1' || config.services.api.https === 'true'
+console.log(`existsSync('API ../../../certs/privkey.pem'`, existsSync('../../../certs/privkey.pem'))
+console.log(`existsSync('API ../../../certs/fullchain.pem'`, existsSync('../../../certs/fullchain.pem'))
+console.log(`existsSync('API ../../../../certs/privkey.pem'`, existsSync('../../../../certs/privkey.pem'))
+console.log(`existsSync('API ../../../../certs/fullchain.pem'`, existsSync('../../../../certs/fullchain.pem'))
 const privateKey = useHttps ? readFileSync('../../../../certs/privkey.pem', 'utf8') || '' : ''
 const certificate = useHttps ? readFileSync('../../../../certs/fullchain.pem', 'utf8') || '' : ''
 const credentials = { key: privateKey, cert: certificate }
