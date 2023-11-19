@@ -16,8 +16,9 @@ app.use(morgan('dev'))
 
 const port = config.services.hub.port
 const useHttps = config.services.hub.https === '1' || config.services.hub.https === 'true'
-const privateKey = useHttps ? readFileSync('../../../../certs/privkey.pem', 'utf8') || '' : ''
-const certificate = useHttps ? readFileSync('../../../../certs/fullchain.pem', 'utf8') || '' : ''
+const privateKey = useHttps ? readFileSync('./certs/privkey.pem', 'utf8') || '' : ''
+console.log('HUB privateKey?.length', privateKey?.length)
+const certificate = useHttps ? readFileSync('./certs/fullchain.pem', 'utf8') || '' : ''
 const credentials = { key: privateKey, cert: certificate }
 
 const server = useHttps ? https.createServer(credentials, app).listen(port, () =>

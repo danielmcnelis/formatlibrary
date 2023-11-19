@@ -44,6 +44,7 @@ app.use(error)
 const port = config.services.site.port
 const useHttps = config.services.site.https === '1' || config.services.site.https === 'true'
 const privateKey = useHttps ? readFileSync('../../../certs/privkey.pem', 'utf8') || '' : ''
+console.log('SITE privateKey?.length', privateKey?.length)
 const certificate = useHttps ? readFileSync('../../../certs/fullchain.pem', 'utf8') || '' : ''
 const credentials = { key: privateKey, cert: certificate }
 
