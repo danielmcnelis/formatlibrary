@@ -70,8 +70,8 @@ app.use(error)
 
 const port = config.services.api.port
 const useHttps = config.services.api.https === '1' || config.services.api.https === 'true'
-const privateKey = useHttps ? readFileSync('../../../certs/privkey.pem', 'utf8') || '' : ''
-const certificate = useHttps ? readFileSync('../../../certs/fullchain.pem', 'utf8') || '' : ''
+const privateKey = useHttps ? readFileSync('../../../../certs/privkey.pem', 'utf8') || '' : ''
+const certificate = useHttps ? readFileSync('../../../../certs/fullchain.pem', 'utf8') || '' : ''
 const credentials = { key: privateKey, cert: certificate }
 
 const server = useHttps ? https.createServer(credentials, app).listen(port, () =>
