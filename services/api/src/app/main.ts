@@ -74,6 +74,8 @@ console.log(`existsSync('API ../../../certs/privkey.pem'`, existsSync('../../../
 console.log(`existsSync('API ../../../certs/fullchain.pem'`, existsSync('../../../certs/fullchain.pem'))
 console.log(`existsSync('API ../../../../certs/privkey.pem'`, existsSync('../../../../certs/privkey.pem'))
 console.log(`existsSync('API ../../../../certs/fullchain.pem'`, existsSync('../../../../certs/fullchain.pem'))
+console.log(`existsSync('API ../../../../../certs/privkey.pem'`, existsSync('../../../../../certs/privkey.pem'))
+console.log(`existsSync('API ../../../../../certs/fullchain.pem'`, existsSync('../../../../../certs/fullchain.pem'))
 const privateKey = useHttps ? readFileSync('../../../../certs/privkey.pem', 'utf8') || '' : ''
 const certificate = useHttps ? readFileSync('../../../../certs/fullchain.pem', 'utf8') || '' : ''
 const credentials = { key: privateKey, cert: certificate }
