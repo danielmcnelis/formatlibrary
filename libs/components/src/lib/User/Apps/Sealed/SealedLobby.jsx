@@ -132,7 +132,7 @@ export const DraftLobby = () => {
     // SELECT CARD
     const selectCard = async (card) => {    
         try {
-            const data = { draftId: draft.id, playerId: playerId, cardId: card.id }            
+            const data = { draftId: draft.id, round: draft.round, pick: draft.pick, playerId: playerId, cardId: card.id }            
             socket.emit('select card', data, processSelection)            
         } catch (err) {
             console.log(err)

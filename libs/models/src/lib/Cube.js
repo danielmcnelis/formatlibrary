@@ -19,6 +19,9 @@ export const Cube = db.define('cubes', {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
+  size: {
+    type: Sequelize.INTEGER
+  },
   rating: {
     type: Sequelize.INTEGER,
     defaultValue: 0

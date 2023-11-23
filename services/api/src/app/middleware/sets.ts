@@ -41,6 +41,42 @@ export const getSet = async (req, res, next) => {
     }
   }
 
+// GET DRAFTABLE
+export const getDraftable = async (req, res, next) => {
+    try {
+      const sets = await Set.findAll({
+        where: {
+          draftable: true,
+          game: 'YGO'
+        },
+        attributes: ['id', 'setName', 'setCode', 'tcgDate', 'packSize'],
+        order: [['tcgDate', 'ASC']]
+      })
+  
+      res.json(sets)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+// GET CORE
+export const getCore = async (req, res, next) => {
+    try {
+      const sets = await Set.findAll({
+        where: {
+          core: true,
+          game: 'YGO'
+        },
+        attributes: ['id', 'setName', 'setCode', 'tcgDate', 'packSize'],
+        order: [['tcgDate', 'ASC']]
+      })
+  
+      res.json(sets)
+    } catch (err) {
+      next(err)
+    }
+  }
+
 // GET BOOSTERS
 export const getBoosters = async (req, res, next) => {
   try {
@@ -49,7 +85,7 @@ export const getBoosters = async (req, res, next) => {
         booster: true,
         game: 'YGO'
       },
-      attributes: ['id', 'setName', 'setCode', 'tcgDate'],
+      attributes: ['id', 'setName', 'setCode', 'tcgDate', 'packSize'],
       order: [['tcgDate', 'ASC']]
     })
 
@@ -68,7 +104,7 @@ export const generatePacks = async (req, res, next) => {
                 setId: set.id, 
                 region: {[Op.or]: ['NA', null]}
             }, 
-            include: Card 
+            include: Card
         })
         
         const commons = prints.filter((p) => p.rarity === 'Common' || p.rarity === 'Short Print')
@@ -82,8 +118,8 @@ export const generatePacks = async (req, res, next) => {
         const coreV1 = ['LOB', 'MRD', 'MRL', 'PSV', 'LON', 'LOD', 'PGD', 'MFC', 'DCR', 'IOC', 'AST']
         const coreV2 = ['SOD', 'RDS', 'FET', 'TLM', 'CRV', 'EEN', 'SOI', 'EOJ', 'POTD', 'CDIP']
         const coreV3 = ['STON', 'FOTB']
-        const coreV4 = ['TAEV', 'GLAS', 'PTDN', 'LODT', 'TGDS', 'CSOC', 'CRMS', 'RGBT', 'ANPR', 'SOVR', 'ABPF']
-        const coreV5 = ['TSHD', 'DREV', 'STBL', 'STOR', 'EXVR', 'GENF', 'PHSW', 'ORCS', 'GAOV', 'REDU', 'ABYR', 'CBLZ', 'LTGY', 'JOTL', 'SHSP', 'LVAL', 'PRIO', 'DUEA', 'NECH', 'SECE', 'CROS', 'CORE', 'DOCS']
+        const coreV4 = ['TAEV', 'GLAS', 'PTDN', 'LODT', 'TDGS', 'CSOC', 'CRMS', 'RGBT', 'ANPR', 'SOVR', 'ABPF']
+        const coreV5 = ['TSHD', 'DREV', 'STBL', 'STOR', 'EXVC', 'GENF', 'PHSW', 'ORCS', 'GAOV', 'REDU', 'ABYR', 'CBLZ', 'LTGY', 'JOTL', 'SHSP', 'LVAL', 'PRIO', 'DUEA', 'NECH', 'SECE', 'CROS', 'CORE', 'DOCS']
         const coreV6 = ['BOSH', 'SHVI', 'TDIL', 'INOV', 'RATE', 'MACR', 'COTD', 'CIBR', 'EXFO', 'FLOD', 'CYHO', 'SOFU', 'SAST', 'DANE', 'RIRA', 'CHIM', 'IGAS', 'ETCO', 'ROTD', 'PHRA', 'BLVO', 'LIOV', 'DAMA', 'BODE', 'BACH', 'DIFO', 'POTE', 'DABL', 'PHHY', 'CYAC', 'DUNE', 'AGOV', 'PHNI']
         const reprintV1 = ['DB1', 'DB2', 'DR1', 'DR2', 'DR3']
         const duelistV1 = ['DP01', 'DP02', 'DP03', 'DP04', 'DP05', 'DP06', 'DP07']

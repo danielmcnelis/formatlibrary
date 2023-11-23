@@ -24,8 +24,8 @@ export default {
 
         if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
             return interaction.editReply({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
-        } else if (tournament.requiredRoleId && !interaction.member?._roles.includes(server?.requiredRoleId)) {
-            return interaction.editReply({ content: `Sorry you must have the <@&${tournament?.requiredRoleId}> role to join ${tournament.name}.`})
+        } else if (tournament.requiredRoleId && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
+            return interaction.editReply({ content: `Sorry you must have the <@&${tournament.requiredRoleId}> role to join ${tournament.name}.`})
         }
 
         let entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournament.id }})

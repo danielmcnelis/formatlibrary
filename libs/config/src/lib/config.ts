@@ -1,8 +1,8 @@
 export const config = { 
     siteUrl: process.env.SITE_URL,
     siteProxy: process.env.SITE_PROXY,
-    siteJWKS: JSON.parse(process.env.SITE_JWKS),
-    siteIKS: JSON.parse(process.env.SITE_IKS),
+    siteJWKS: process.env.SITE_JWKS,
+    siteIKS: process.env.SITE_IKS,
     siteAudience: 'urn:formatlibrary:api',
     siteIssuer: 'urn:formatlibrary:auth',
     accessExpires: '30d',

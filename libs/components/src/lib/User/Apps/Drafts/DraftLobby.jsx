@@ -7,7 +7,7 @@ import { FocalCard } from '../Builders/FocalCard'
 import { getCookie } from '@fl/utils'
 import ReactCountdownClock from 'react-countdown-clock'
 import { Helmet } from 'react-helmet'
-import {useSocket} from '@fl/hooks'
+import { useSocket } from '@fl/hooks'
 import './DraftLobby.css' 
 
 const playerId = getCookie('playerId')
@@ -21,8 +21,8 @@ const useAudio = (url) => {
   // HOOK - PLAY AUDIO
   useEffect(() => {
         try {
-            playing ? audio.play().catch((err) => console.log(err)) : 
-                audio.pause().catch((err) => console.log(err))
+            playing ? audio.play()?.catch((err) => console.log(err)) : 
+                audio.pause()?.catch((err) => console.log(err))
         } catch (err) {
             console.log(err)
         }
@@ -45,13 +45,13 @@ const useAudio = (url) => {
 
 // SORT FUNCTION
 const sortFn = (a, b) => {
-    if (a.sortPriority > b.sortPriority) {
+    if (a.card.sortPriority > b.card.sortPriority) {
         return 1
-    } else if (b.sortPriority > a.sortPriority) {
+    } else if (b.card.sortPriority > a.card.sortPriority) {
         return -1
-    } else if (a.name > b.name) {
+    } else if (a.card.name > b.card.name) {
         return 1
-    } else if (b.name > a.name) {
+    } else if (b.card.name > a.card.name) {
         return -1
     } else {
         return false
@@ -75,6 +75,9 @@ export const DraftLobby = () => {
     const socket = useSocket()
     const { id } = useParams()
     const timerColor = JSON.parse(localStorage.getItem('theme')) === 'dark' ? '#00bca6' : '#334569'
+    const logoUrl = draft?.type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}` :
+        `https://cdn.formatlibrary.com/images/artworks/${draft.set?.setCode || 'back'}.jpg`
+    const logoWidth = draft?.type === 'cube' ? '128px' : '100px'
 
     // FETCH PARTICIPANTS
     const fetchParticipants = async (draftId) => {
@@ -117,12 +120,12 @@ export const DraftLobby = () => {
     }
 
     // PROCESS SELCTION
-    const processSelection = async (card) => {
+    const processSelection = async (inv) => {
         try {
-            setPack(pack.filter((p) => p.cardId !== card.id))
+            setPack(pack.filter((p) => p.cardId !== inv.cardId))
             setOnTheClock(false)
-            setSelection(card.name)
-            setInventory([...inventory, card])
+            setSelection(inv.cardName)
+            setInventory([...inventory, inv])
             // toggleDraw()
         } catch (err) {
             console.log(err)
@@ -132,7 +135,7 @@ export const DraftLobby = () => {
     // SELECT CARD
     const selectCard = async (card) => {    
         try {
-            const data = { draftId: draft.id, playerId: playerId, cardId: card.id }            
+            const data = { draftId: draft.id, round: draft.round, pick: draft.pick, playerId: playerId, cardId: card.id }            
             socket.emit('select card', data, processSelection)            
         } catch (err) {
             console.log(err)
@@ -243,16 +246,16 @@ export const DraftLobby = () => {
                         <Helmet>
                             <title>{`Yu-Gi-Oh! Draft Lobby - Format Library`}</title>
                             <meta name="og:title" content={`Yu-Gi-Oh! Draft Lobby - Format Library`}/>
-                            <meta name="description" content={`Click here to join the next draft for ${draft.cubeName}.`}/>
-                            <meta name="og:description" content={`Click here to join the next draft for ${draft.cubeName}.`}/>
+                            <meta name="description" content={`Click here to join the next draft for ${draft.cubeName || draft.setName}.`}/>
+                            <meta name="og:description" content={`Click here to join the next draft for ${draft.cubeName || draft.setName}.`}/>
                         </Helmet>
                         <div className="card-database-flexbox">
-                            <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
+                            <img className="desktop-only" style={{ width:logoWidth}} src={logoUrl} alt="draft-logo"/>
                             <div>
                                 <h1>Upcoming Draft!</h1>
-                                <h2>{draft.cubeName}</h2>
+                                <h2>{draft.cubeName || draft.setName}</h2>
                             </div>
-                            <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
+                            <img className="desktop-only" style={{ width:logoWidth}} src={logoUrl} alt="draft-logo"/>
                         </div>
                         <br/>
                         <div className="slideshow">
@@ -279,7 +282,7 @@ export const DraftLobby = () => {
                         {
                             !entry.id ? (
                                 <div
-                                    className="cube-button"
+                                    className="draft-button"
                                     type="submit"
                                     onClick={() => join()}
                                 >
@@ -287,7 +290,7 @@ export const DraftLobby = () => {
                                 </div>
                             ) : entry.id && playerId !== draft.hostId ? (
                                 <div
-                                    className="cube-button"
+                                    className="draft-button"
                                     type="submit"
                                     onClick={() => leave()}
                                 >
@@ -295,7 +298,7 @@ export const DraftLobby = () => {
                                 </div>
                             ) : entry.id && playerId === draft.hostId ? (
                                 <div
-                                    className="cube-button"
+                                    className="draft-button"
                                     type="submit"
                                     onClick={() => start()}
                                 >
@@ -309,8 +312,8 @@ export const DraftLobby = () => {
                         <Helmet>
                             <title>{`Yu-Gi-Oh! Draft Lobby - Format Library`}</title>
                             <meta name="og:title" content={`Yu-Gi-Oh! Draft Lobby - Format Library`}/>
-                            <meta name="description" content={`Click here to join the next draft for ${draft.cubeName}.`}/>
-                            <meta name="og:description" content={`Click here to join the next draft for ${draft.cubeName}.`}/>
+                            <meta name="description" content={`Click here to join the next draft for ${draft.cubeName || draft.setName}.`}/>
+                            <meta name="og:description" content={`Click here to join the next draft for ${draft.cubeName || draft.setName}.`}/>
                         </Helmet>
                         <div className="space-between">
                             {
@@ -324,13 +327,14 @@ export const DraftLobby = () => {
                                     />
                                 ) : <div className="empty-clock"/>
                             }
+                            
                             <div className="card-database-flexbox">
-                                <img className="desktop-only" style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
+                                <img className="desktop-only" style={{ width:logoWidth}} src={logoUrl} alt="draft-logo"/>
                                 <div>
                                     <h1>{draft.state === 'underway' ? 'Live Draft!' : draft.state === 'complete' ? 'Draft Complete!' : ''}</h1>
                                     <h2>{draft.state === 'underway' ? `Round ${draft.round} • Pick ${draft.pick}` : ''}</h2>
                                 </div>
-                                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
+                                <img className="desktop-only" style={{ width:logoWidth}} src={logoUrl} alt="draft-logo"/>
                             </div>
                             <div className="empty-clock"/>
                         </div>
@@ -370,10 +374,10 @@ export const DraftLobby = () => {
                                             <h3 className="draft-info">Inventory:</h3>  
                                             <div className="pack-flexbox">
                                                 {
-                                                    inventory.map((card) => (   
+                                                    inventory.map((inv) => (   
                                                         <CardImage  
-                                                            key={card.id} 
-                                                            card={card}
+                                                            key={inv.id} 
+                                                            card={inv.card}
                                                             disableLink={true} 
                                                             setCard={setCard}
                                                             width="72px"

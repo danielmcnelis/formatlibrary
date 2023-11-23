@@ -5,10 +5,11 @@ import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import { useDetectAdBlock } from 'adblock-detect-react'
 import { SocketProvider } from '@fl/context'
+import {config} from '@fl/config'
 import io from 'socket.io-client'
 
 const playerId = getCookie('playerId')
-const socket = io('https://formatlibrary.com')
+const socket = io(config.siteUrl)
 
 const App = () => {
     const [isSubscriber, setIsSubscriber] = useState(false)

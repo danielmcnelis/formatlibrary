@@ -12,9 +12,25 @@ export const Set = db.define('sets', {
     type: Sequelize.STRING
   },
   booster: {
-    type: Sequelize.BOOLEAN
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+  core: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+  mini: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+  draftable: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
   },
   size: {
+    type: Sequelize.INTEGER
+  },
+  packSize: {
     type: Sequelize.INTEGER
   },
   originals: {

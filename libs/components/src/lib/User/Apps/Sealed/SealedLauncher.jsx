@@ -60,7 +60,7 @@ export const DraftLauncher = () => {
                 <div className="card-database-flexbox">
                     <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${pack.logo || 'pack.png'}`} alt="draft-logo"/>
                     <div>
-                        <h1>Start Draft Draft!</h1>
+                        <h1>Start a New Sealed!</h1>
                     </div>
                     <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${pack.logo || 'pack.png'}`} alt="draft-logo"/>
                 </div>

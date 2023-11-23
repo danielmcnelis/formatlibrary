@@ -80,7 +80,7 @@ export const Router = () => {
 					<Route path="/formats/:id" element=<Page element= <FormatIntro /> /> />
 					<Route path="/leaderboards/:id" element=<Page element= <LeaderBoard /> /> />
 					<Route path="/replays/" element=<Page element= <ReplayTable /> /> />
-					<Route path="/start-cube/" element=<Page element= <DraftLauncher /> /> />
+					<Route path="/start-draft/" element=<Page element= <DraftLauncher /> /> />
 					<Route path="/banlists/:id" element=<Page element= <SingleBanList /> /> />
 					<Route path="/players/:id" element=<Page element= <PlayerProfile /> /> />
 					<Route path="/admin-portal" element=<Page  element= <AdminPortal /> /> />

@@ -420,7 +420,7 @@ export const CardTable = () => {
             const {data: formatData} = await axios.get(`/api/formats`)
             setFormats(formatData)
 
-            const {data: boosterData} = await axios.get(`/api/sets/boosters`)
+            const {data: boosterData} = await axios.get(`/api/sets/core`)
             setBoosters(boosterData)       
             isMounted.current = true
         }

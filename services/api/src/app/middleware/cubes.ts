@@ -299,36 +299,3 @@ export const unpublishCube = async (req, res, next) => {
     }
   }
 
-
-export const cubesLaunch = async (req, res, next) => {
-    try {  
-      const cube = await Cube.findOne({
-        where: {
-            id: req.body.cubeId
-        }
-      })
-
-      const player = await Player.findOne({
-        where: {
-            id: req.body.hostId
-        }
-      })
-
-      const shareLink = await Draft.generateShareLink()
-
-      const draft = await Draft.create({
-        cubeId: cube.id,
-        cubeName: `${cube.name} by ${cube.builder}`,
-        hostName: player.name,
-        hostId: player.id,
-        packSize: req.body.packSize,
-        packsPerPlayer: req.body.packsPerPlayer,
-        timer: req.body.timer,
-        shareLink: shareLink
-      })
-
-      res.json(`https://formatlibrary.com/drafts/${draft.shareLink}`)
-    } catch (err) {
-      next(err)
-    }
-  }

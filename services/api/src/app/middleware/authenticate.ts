@@ -9,7 +9,7 @@ export const authenticate = async (req, res, next) => {
         algorithm: 'RS256',
         issuer: config.siteIssuer,
         audience: config.siteAudience,
-        jwks: config.siteJWKS,
+        jwks: JSON.parse(config.siteJWKS),
         expires: config.accessExpires
     })
 

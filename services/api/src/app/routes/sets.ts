@@ -1,9 +1,13 @@
 import { Router } from 'express'
-import { getBoosters, generatePacks, generateBox, getSet  } from '../middleware'
+import { getBoosters, getCore, getDraftable, generatePacks, generateBox, getSet  } from '../middleware'
 
 const router = Router()
 
 router.get('/api/sets/boosters', getBoosters)
+
+router.get('/api/sets/core', getCore)
+
+router.get('/api/sets/draftable', getDraftable)
 
 router.get('/api/sets/open-packs/:set_code', generatePacks)
 

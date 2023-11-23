@@ -82,6 +82,9 @@ DeckThumb.belongsTo(DeckType)
 Draft.belongsTo(Cube)
 Cube.hasMany(Draft)
 
+Draft.belongsTo(Set)
+Set.hasMany(Draft)
+
 DraftEntry.belongsTo(Player)
 Player.hasMany(DraftEntry)
 

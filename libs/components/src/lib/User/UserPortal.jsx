@@ -17,7 +17,7 @@ export const UserPortal = () => {
                 <div className="user-menu">
                     <PortalButton label="Deck Builder" to="/deck-builder" icon="/emojis/deckbox.png" />
                     <PortalButton label="Pack Simulator" to="/pack-simulator" icon="/artworks/LOB.jpg" />
-                    <PortalButton label="Start Cube" to="/start-cube" icon="/emojis/cube.png" />
+                    <PortalButton label="Start Draft" to="/start-draft" icon="/emojis/cube.png" />
                     <PortalButton label="Text to YDK" to="/text-to-ydk" icon="/emojis/ydk.png" />
                 </div>
             </div>

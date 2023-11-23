@@ -438,85 +438,85 @@ import { capitalize } from '@fl/utils'
 //     return console.log(`updated ${b} replays and encountered ${e} errors`)
 // })()
 
-;(async () => {
-    let b = 0
-    let e = 0
+// ;(async () => {
+//     let b = 0
+//     let e = 0
     
-    const replays = await Replay.findAll({
-        where: {
-            eventId: {[Op.not]: null},
-            tournamentId: {[Op.not]: null}
-        },
-        include: [Event, Tournament]
-    })
+//     const replays = await Replay.findAll({
+//         where: {
+//             eventId: {[Op.not]: null},
+//             tournamentId: {[Op.not]: null}
+//         },
+//         include: [Event, Tournament]
+//     })
 
-    for (let i = 0; i < replays.length; i++) {
-        try {
-            const replay = replays[i]
-            const winningDeck = await Deck.findOne({
-                where: {
-                    playerId: replay.winnerId,
-                    eventId: replay.eventId
-                },
-                include: DeckType
-            })
+//     for (let i = 0; i < replays.length; i++) {
+//         try {
+//             const replay = replays[i]
+//             const winningDeck = await Deck.findOne({
+//                 where: {
+//                     playerId: replay.winnerId,
+//                     eventId: replay.eventId
+//                 },
+//                 include: DeckType
+//             })
 
-            const losingDeck = await Deck.findOne({
-                where: {
-                    playerId: replay.loserId,
-                    eventId: replay.eventId
-                },
-                include: DeckType
-            })
+//             const losingDeck = await Deck.findOne({
+//                 where: {
+//                     playerId: replay.loserId,
+//                     eventId: replay.eventId
+//                 },
+//                 include: DeckType
+//             })
 
-            let roundName
+//             let roundName
 
-            if (replay?.tournament?.type === 'swiss' || replay?.tournament?.type === 'round robin') {
-                roundName = `Round ${replay.roundInt}`
-            } else if (replay?.tournament.type === 'single elimination') {
-                roundName = replay?.tournament.rounds - replay.roundInt === 0 ? 'Finals' :
-                    replay.tournament?.rounds - replay.roundInt === 1 ? 'Semi Finals' :
-                    replay.tournament?.rounds - replay.roundInt === 2 ? 'Quarter Finals' :
-                    replay.tournament?.rounds - replay.roundInt === 3 ? 'Round of 16' :
-                    replay.tournament?.rounds - replay.roundInt === 4 ? 'Round of 32' :
-                    replay.tournament?.rounds - replay.roundInt === 5 ? 'Round of 64' :
-                    replay.tournament?.rounds - replay.roundInt === 6 ? 'Round of 128' :
-                    replay.tournament?.rounds - replay.roundInt === 7 ? 'Round of 256' :
-                    null
-            } else if (replay?.tournament.type === 'double elimination') {
-                if (replay.roundInt > 0) {
-                    roundName = replay?.tournament.rounds - replay.roundInt === 0 ? 'Grand Finals' :
-                        replay?.tournament.rounds - replay.roundInt === 1 ? `Winner's Finals` :
-                        replay?.tournament.rounds - replay.roundInt === 2 ? `Winner's Semis` :
-                        `Winner's Round ${replay.roundInt}`
-                } else {
-                    roundName = replay?.tournament.rounds - Math.abs(replay.roundInt) === -1 ? `Loser's Finals` :
-                        replay.tournament?.rounds - Math.abs(replay.roundInt) === 0 ? `Loser's Semis` :
-                        `Loser's Round ${Math.abs(replay.roundInt)}`
-                }
-            } else {
-                roundName = replay.roundName
-            }
+//             if (replay?.tournament?.type === 'swiss' || replay?.tournament?.type === 'round robin') {
+//                 roundName = `Round ${replay.roundInt}`
+//             } else if (replay?.tournament.type === 'single elimination') {
+//                 roundName = replay?.tournament.rounds - replay.roundInt === 0 ? 'Finals' :
+//                     replay.tournament?.rounds - replay.roundInt === 1 ? 'Semi Finals' :
+//                     replay.tournament?.rounds - replay.roundInt === 2 ? 'Quarter Finals' :
+//                     replay.tournament?.rounds - replay.roundInt === 3 ? 'Round of 16' :
+//                     replay.tournament?.rounds - replay.roundInt === 4 ? 'Round of 32' :
+//                     replay.tournament?.rounds - replay.roundInt === 5 ? 'Round of 64' :
+//                     replay.tournament?.rounds - replay.roundInt === 6 ? 'Round of 128' :
+//                     replay.tournament?.rounds - replay.roundInt === 7 ? 'Round of 256' :
+//                     null
+//             } else if (replay?.tournament.type === 'double elimination') {
+//                 if (replay.roundInt > 0) {
+//                     roundName = replay?.tournament.rounds - replay.roundInt === 0 ? 'Grand Finals' :
+//                         replay?.tournament.rounds - replay.roundInt === 1 ? `Winner's Finals` :
+//                         replay?.tournament.rounds - replay.roundInt === 2 ? `Winner's Semis` :
+//                         `Winner's Round ${replay.roundInt}`
+//                 } else {
+//                     roundName = replay?.tournament.rounds - Math.abs(replay.roundInt) === -1 ? `Loser's Finals` :
+//                         replay.tournament?.rounds - Math.abs(replay.roundInt) === 0 ? `Loser's Semis` :
+//                         `Loser's Round ${Math.abs(replay.roundInt)}`
+//                 }
+//             } else {
+//                 roundName = replay.roundName
+//             }
 
-            await replay.update({
-                winningDeckType: winningDeck?.deckType?.name,
-                winningDeckId: winningDeck?.id,
-                winningDeckTypeId: winningDeck?.deckTypeId,
-                losingDeckType: losingDeck?.deckType?.name,
-                losingDeckId: losingDeck?.id,
-                losingDeckTypeId: losingDeck?.deckTypeId,
-                publishDate: replay?.event?.endDate,
-                roundName: roundName
-            })
-            b++
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
+//             await replay.update({
+//                 winningDeckType: winningDeck?.deckType?.name,
+//                 winningDeckId: winningDeck?.id,
+//                 winningDeckTypeId: winningDeck?.deckTypeId,
+//                 losingDeckType: losingDeck?.deckType?.name,
+//                 losingDeckId: losingDeck?.id,
+//                 losingDeckTypeId: losingDeck?.deckTypeId,
+//                 publishDate: replay?.event?.endDate,
+//                 roundName: roundName
+//             })
+//             b++
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
 
-    return console.log(`updated ${b} replays and encountered ${e} errors`)
-})()
+//     return console.log(`updated ${b} replays and encountered ${e} errors`)
+// })()
 
 
 // ;(async () => {
@@ -827,3 +827,81 @@ import { capitalize } from '@fl/utils'
 //         await format.update({ cleanName: capitalize(format.cleanName, true) })
 //     }
 // })()
+
+;(async () => {
+    const cubes = await Cube.findAll()
+
+    for (let i = 0; i < cubes.length; i++) {
+        const cube = cubes[i]
+
+        const konamiCodes = cube.ydk
+            .split('#main')[1]
+            .split('#extra')[0]
+            .split('\n')
+            .filter((e) => e.length)
+
+        await cube.update({ size: konamiCodes.length })
+    }
+})()
+
+;(async () => {
+    const boosters = await Set.findAll()
+
+    const core = [
+        'LOB', 'MRD', 'MRL', 'PSV', 'LON', 'LOD', 'PGD', 'MFC', 'DCR', 'IOC', 'AST', 'SOD', 'RDS', 'FET', 'TLM', 'CRV', 'EEN', 'SOI', 'EOJ', 
+        'POTD', 'CDIP', 'STON', 'FOTB', 'TAEV', 'GLAS', 'PTDN', 'LODT', 'TDGS', 'CSOC', 'CRMS', 'RGBT', 'ANPR', 'SOVR', 'ABPF', 'TSHD', 'DREV', 
+        'STBL', 'STOR', 'EXVC', 'GENF', 'PHSW', 'ORCS', 'GAOV', 'REDU', 'ABYR', 'CBLZ', 'LTGY', 'JOTL', 'SHSP', 'LVAL', 'PRIO', 'DUEA', 'NECH', 
+        'SECE', 'CROS', 'CORE', 'DOCS', 'BOSH', 'SHVI', 'TDIL', 'INOV', 'RATE', 'MACR', 'COTD', 'CIBR', 'EXFO', 'FLOD', 'CYHO', 'SOFU', 'SAST', 
+        'DANE', 'RIRA', 'CHIM', 'IGAS', 'ETCO', 'ROTD', 'PHRA', 'BLVO', 'LIOV', 'DAMA', 'BODE', 'BACH', 'DIFO', 'POTE', 'DABL', 'PHHY', 'CYAC', 
+        'DUNE', 'AGOV', 'PHNI', 'LEDE'
+    ]
+
+    const mini = [
+        'DP12', 'DP13', 'DP14', 'DP15', 'DPBC', 'DPRP', 'DPDG',
+        'HA01', 'HA02', 'HA03', 'HA04', 'HA05', 'HA06', 'HA07', 'HAC1',
+        'THSF', 'HSRD', 'WIRA', 'DESO', 'FUEN', 'SPWA', 'DASA', 'HISU', 'INCH', 'MYFI', 'SESL', 'GEIM', 'ANGU', 'GRCR', 'TAMA', 'AMDE', 'WISU', 'VASM',
+        'PEVO', 'SHVA', 'FIGA', 'TOCH', 'KICO', 'MAZE', 'MZMI',
+        'NUMH', 'DRLG', 'DRL2', 'DRL3', 'BLLR', 'BLRR', 'BLHR', 'BLAR', 'BROL', 'BLCR', 'BLMR',
+        'DUSA', 'DUPO', 'DUOV', 'GFTP', 'GFP2', 'MAMA',
+        'WSUP', 'MIL1', 'RA01',
+        'PP01', 'PP02', 
+        'GLD1', 'GLD2', 'GLD3', 'GLD4', 'GLD5', 'PGLD', 'PGL2', 'PGL3', 'MGED',
+        'LEDU', 'LED2', 'LED3', 'LED4', 'LED5', 'LED6', 'LED7', 'LED8', 'LED9', 'LD10',
+        'SBLS', 'SBAD', 'SBSC', 'SBTK',
+        'SP13', 'SP14', 'SP15', 'SP17', 'SP18'
+    ]
+
+    const reprint = ['DB1', 'DB2', 'DR1', 'DR2', 'DR3']
+    
+    const reprint2 = [
+        'RYMP', 'LGCX', 'LCYW', 'LCJW', 'LC5D', 'LCKC', 'MP14', 'MP15', 'MP16', 'MP17', 'MP18', 'MP19', 'MP23',
+        'RP01', 'RP02', 'DLG1'
+    ]
+
+    const duelist = ['DP1', 'DP2', 'DP03', 'DP04', 'DP05', 'DP06', 'DP07', 'DP08', 'DP09', 'DP10', 'DP11', 'DPYG']
+    const bpWave1 = ['BP01', 'BP02', 'BP03']
+
+    for (let i = 0; i < boosters.length; i++) {
+        const booster = boosters[i]
+        await booster.update({ booster: false, draftable: false, core: false, mini: false, packSize: null })
+
+        if (booster.setName?.toLowerCase().includes('promotion') || 
+            booster.setName?.toLowerCase().includes('edition') || 
+            booster.setName?.toLowerCase().includes('participation')
+        ) {
+            await booster.update({ booster: false, core: false, mini: false, draftable: false, packSize: null, })
+        } else if (mini.includes(booster.setCode)) {
+            await booster.update({ booster: true, mini: true })
+        } else if (reprint.includes(booster.setCode)) {
+            await booster.update({ booster: true, packSize: 12, draftable: true })
+        } else if (reprint2.includes(booster.setCode)) {
+            await booster.update({ booster: true })
+        } else if (duelist.includes(booster.setCode) || bpWave1.includes(booster.setCode)) {
+            await booster.update({booster: true, mini: true, packSize: 5, draftable: true })
+        } else if (booster.setCode === 'BPW2') {
+            await booster.update({ booster: true, packSize: 16, draftable: true })
+        } else if (core.includes(booster.setCode)) {
+            await booster.update({ booster: true, core: true, packSize: 9, draftable: true })
+        }
+    }
+})()

@@ -1,5 +1,6 @@
 
 import { Sequelize } from 'sequelize'
+import { Card } from './Card'
 import { db } from './db'
 
 export const Inventory = db.define('inventories', {

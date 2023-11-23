@@ -5,51 +5,75 @@ import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import './DraftLauncher.css' 
 
+// DRAFT LAUNCHER
 export const DraftLauncher = () => {
     const [type, setType] = useState('cube')
+    const [boosters, setBoosters] = useState([])
+    const [booster, setBooster] = useState({})
     const [cubes, setCubes] = useState([])
     const [cube, setCube] = useState({})
     const [packSize, setPackSize] = useState(12)
     const [packsPerPlayer, setPacksPerPlayer] = useState(4)
     const [timer, setTimer] = useState(60)
-    const [cubeLink, setCubeLink] = useState(null)
+    const [draftLink, setDraftLink] = useState(null)
     const playerId = getCookie('playerId')
+    const logoUrl = type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${cube?.logo || 'cube.png'}` :
+        `https://cdn.formatlibrary.com/images/artworks/${booster?.setCode || 'back'}.jpg`
+    const logoWidth = type === 'cube' ? '128px' : '100px'
+
+    if (type === 'cube') {
+        console.log('banner url:', `https://cdn.formatlibrary.com/images/cubes/slideshows/${cube.id?.toString() || '1'}.png`)
+     } else {
+        console.log('banner url:', `https://cdn.formatlibrary.com/images/sets/slideshows/${booster?.setCode || 'BP01'}.png`)
+     }
 
     const packSizeOptions = []
-    let upperLimit = (cube.cardPool?.length / packsPerPlayer) < 20 ? cube.cardPool?.length / packsPerPlayer : 20
-    for (let i = upperLimit; i >= 4; i--) packSizeOptions.push(i) 
+    if (type === 'cube') {
+        let upperLimit = (cube.size / packsPerPlayer) < 20 ? cube.size / packsPerPlayer : 20
+        for (let i = upperLimit; i >= 4; i--) packSizeOptions.push(i) 
+    } else {
+        if (booster.id) {
+            packSizeOptions.push(booster.packSize)
+        } else {
+            packSizeOptions.push(packSize)
+        }
+    }
 
     // LAUNCH
     const launch = async () => {
-        if (!cube.id) return alert('Please Select a Cube.')
-        if (!playerId) return alert('Please Log-in to Start a Cube Draft.')
+        if (!cube.id && !booster.id) return alert(`Please Select a ${type === 'cube' ? 'Cube' : 'Booster'}.`)
+        if (!playerId) return alert('Please Log-in to Start a Draft.')
         
         try {
-            const { data } = await axios.post('/api/cubes/launch', {
+            const { data } = await axios.post('/api/drafts/launch', {
+                type: type,
                 cubeId: cube.id,
+                boosterId: booster.id,
                 hostId: playerId,
                 packSize: packSize,
                 packsPerPlayer: packsPerPlayer,
                 timer: timer
             })
             
-            setCubeLink(data)
+            setDraftLink(data)
         } catch (err) {
             console.log(err)
         }
     }
 
-    // FETCH CUBE
-    const fetchCube = async (cubeId) => {
-        const {data} = await axios.get(`/api/cubes/${cubeId}`)
-        setCube(data)
-    }
+    // USE EFFECT
+    useEffect(() => {
+        if (booster.id) setPackSize(booster.packSize)
+    }, [booster])
 
     // USE EFFECT
     useEffect(() => {
         const fetchData = async () => {
-            const {data} = await axios.get(`/api/cubes`)
-            setCubes(data)
+            const {data: cubeData} = await axios.get(`/api/cubes`)
+            setCubes(cubeData)
+
+            const {data: boosterData} = await axios.get(`/api/sets/draftable`)
+            setBoosters(boosterData)
         }
         
         fetchData()
@@ -58,34 +82,63 @@ export const DraftLauncher = () => {
     return (
         <>
             <Helmet>
-                <title>{`Start a Yu-Gi-Oh! Cube Draft - Format Library`}</title>
-                <meta name="og:title" content={`Start a Yu-Gi-Oh! Cube Draft - Format Library`}/>
-                <meta name="description" content={`Draft cards from any public cube with your friends. ${cubes?.slice(0, 3)?.map((c) => `${c.name} by ${c.builder}`).join('•')}`}/>
-                <meta name="og:description" content={`Draft cards from any public cube with your friends. ${cubes?.slice(0, 3)?.map((c) => `${c.name} by ${c.builder}`).join('•')}`}/>
+                <title>{`Start a Yu-Gi-Oh! Draft - Format Library`}</title>
+                <meta name="og:title" content={`Start a Yu-Gi-Oh! Draft - Format Library`}/>
+                <meta name="description" content={`Draft cards from any cube or booster set with your friends. ${cubes?.slice(0, 3)?.map((c) => `${c.name} by ${c.builder}`).join('•')}`}/>
+                <meta name="og:description" content={`Draft cards from any cube or booster set with your friends. ${cubes?.slice(0, 3)?.map((c) => `${c.name} by ${c.builder}`).join('•')}`}/>
             </Helmet>
-            <div className="cube-portal">
+            <div className="draft-portal">
                 <div className="card-database-flexbox">
-                    <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
-                    <div>
-                        <h1>Start Cube Draft!</h1>
+                    <img style={{ width:logoWidth }} src={logoUrl} alt="draft-logo"/>
+                <div>
+                        <h1>Start a New Draft!</h1>
                     </div>
-                    <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
+                    <img style={{ width:logoWidth }} src={logoUrl} alt="draft-logo"/>
                 </div>
+
                 <br/>
 
                 <div className="slideshow">
-                    <div className="mover"></div>
+                {
+                    type === 'cube' ? (
+                        <div className="mover" style={{background: `url(https://cdn.formatlibrary.com/images/cubes/slideshows/${cube.id?.toString() || '1'}.png)`}}></div>
+                    ) : (
+                        <div className="mover" style={{background: `url(https://cdn.formatlibrary.com/images/sets/slideshows/${booster?.setCode || 'LODT'}.png)`}}></div>
+                    )
+                }
                 </div>
 
                 <br/>
-                <label>Cube:
+
+                <label>Draft Type:
+                    <select
+                        id="pack-number"
+                        defaultValue="cube"
+                        onChange={(e) => {setType(e.target.value)}}
+                    >
+                        <option value="cube">Cube</option>)
+                        <option value="booster">Booster</option>)
+                    </select>
+                </label>
+
+                <label>{type === 'cube' ? 'Cube' : 'Booster'}:
                     <select
                         id="cube"
-                        onChange={(e) => fetchCube(e.target.value)}
+                        onChange={(e) => {
+                            if (type === 'cube') {
+                                setCube(cubes[e.target.value])
+                            } else {
+                                setBooster(boosters[e.target.value])
+                            }
+                        }}
                     >
-                    <option value="">Select Cube:</option>
+                    <option value="">{`Select ${type === 'cube' ? 'Cube': 'Booster'}:`}</option>
                     {
-                        cubes.map((c) => <option value={c.id}>{c.name} by {c.builder}</option>)
+                        type === 'cube' ? (
+                            cubes.map((c, index) => <option value={index}>{c.name} by {c.builder}</option>)
+                        ) : (
+                            boosters.map((b, index) => <option value={index}>{b.setName}</option>)
+                        )
                     }
                     </select>
                 </label>
@@ -131,15 +184,15 @@ export const DraftLauncher = () => {
                 </label>
 
                 {
-                    cube.id ? (
+                    type === 'cube' && cube.id ? (
                         <div className="settings-note">
-                            <i>These settings support up to {Math.floor(cube.cardPool?.length / (packsPerPlayer * packSize))} players.</i>
+                            <i>These settings support up to {Math.floor(cube.size / (packsPerPlayer * packSize))} players.</i>
                         </div>
                     ) : ''
                 }
 
                 <div
-                    className="cube-button"
+                    className="draft-button"
                     type="submit"
                     onClick={() => launch()}
                 >
@@ -147,9 +200,9 @@ export const DraftLauncher = () => {
                 </div>
 
                 {
-                    cubeLink ? (
+                    draftLink ? (
                         <div className="lobby-link">
-                            Draft Lobby: <a href={cubeLink}>{cubeLink}</a>
+                            Draft Lobby: <a href={draftLink}>{draftLink}</a>
                         </div>
                     ) : ''
                 }

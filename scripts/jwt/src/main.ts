@@ -35,7 +35,7 @@ import { JWT } from '@fl/tokens'
   const issuer = 'urn:formatlibrary:auth'
   const audience = 'urn:formatlibrary:api'
 
-  const privateJwks = config.siteJWKS || []
+  const privateJwks = JSON.parse(config.siteJWKS) || []
   verbose && console.log('jwks (private): ', privateJwks)
   const algorithm = privateJwks[0].alg || 'RS256'
 
@@ -44,7 +44,7 @@ import { JWT } from '@fl/tokens'
         algorithm,
         issuer,
         audience,
-        jwks: config.siteJWKS,
+        jwks: JSON.parse(config.siteJWKS),
         expires
      })
 
@@ -62,7 +62,7 @@ import { JWT } from '@fl/tokens'
         algorithm,
         issuer,
         audience,
-        jwks: config.siteJWKS,
+        jwks: JSON.parse(config.siteJWKS),
         expires
     })
 

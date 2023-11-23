@@ -33,7 +33,7 @@ export const PackSimulator = () => {
     // USE EFFECT
     useEffect(() => {
         const fetchData = async () => {
-            const {data} = await axios.get(`/api/sets/boosters`)
+            const {data} = await axios.get(`/api/sets/draftable`)
             setBoosters(data)
         }
         

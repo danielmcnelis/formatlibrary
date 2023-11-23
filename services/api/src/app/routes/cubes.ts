@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { authenticate, cubesAll, cubesId, cubesLaunch, drawCube, getMyCubes, publishCube, unpublishCube, cubesReadYdk, cubesUpdateId, cubesCreate } from '../middleware'
+import { authenticate, cubesAll, cubesId, drawCube, getMyCubes, publishCube, unpublishCube, cubesReadYdk, cubesUpdateId, cubesCreate } from '../middleware'
 
 const router = Router()
 
@@ -18,8 +18,6 @@ router.put('/api/cubes/publish/:id', publishCube)
 router.put('/api/cubes/unpublish/:id', unpublishCube)
 
 router.post('/api/cubes/draw/:id', drawCube)
-
-router.post('/api/cubes/launch', cubesLaunch)
 
 router.post('/api/cubes/create', cubesCreate)
 

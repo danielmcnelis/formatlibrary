@@ -60,6 +60,9 @@ export const Tournament = db.define('tournaments', {
   requiredRoleId: {
     type: Sequelize.STRING
   },
+  alternateRoleId: {
+    type: Sequelize.STRING
+  },
   rounds: {
     type: Sequelize.INTEGER
   },

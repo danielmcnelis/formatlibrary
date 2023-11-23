@@ -1,5 +1,7 @@
 
-import { Card, Cube, Draft, DraftEntry, Inventory, PackContent, Player } from '@fl/models'
+import { Card, Cube, Draft, DraftEntry, Inventory, PackContent, Player, Set } from '@fl/models'
+import axios from 'axios'
+import { config } from '@fl/config'
 
 //GET RANDOM ELEMENT
 const getRandomElement = (arr) => {
@@ -206,8 +208,14 @@ export const startDraft = async (draftId, socket) => {
                 id: draftId,
                 state: 'pending'
             },
-            include: Cube
+            include: [Cube]
         })
+
+        const set = draft.setId ? await Set.findOne({
+            where: {
+                id: draft.setId
+            }
+        }) : {}
 
         const playerCount = await DraftEntry.count({
             where: {
@@ -222,38 +230,70 @@ export const startDraft = async (draftId, socket) => {
             const entry = shuffledEntries[i]
             await entry.update({ slot: i + 1 })
         }
+
+        if (draft.type === 'cube') {
+            const konamiCodes = draft.cube.ydk.split('#main')[1].split('\n').filter((e) => e.length) || []
+            const cards = []
+            
+            for (let i = 0; i < konamiCodes.length; i++) {
+                let konamiCode = konamiCodes[i]
+                while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+                const card = await Card.findOne({ where: { konamiCode: konamiCode }})
+                if (!card) continue
+                cards.push(card)
+            }
     
-        const konamiCodes = draft.cube.ydk.split('#main')[1].split('\n').filter((e) => e.length) || []
-        const cards = []
-        
-        for (let i = 0; i < konamiCodes.length; i++) {
-            let konamiCode = konamiCodes[i]
-            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-            const card = await Card.findOne({ where: { konamiCode: konamiCode }})
-            if (!card) continue
-            cards.push(card)
-        }
+            const shuffledCards = shuffleArray(cards)
+            let index = 0
 
-        const shuffledCards = shuffleArray(cards)
-        let index = 0
+            const count = await PackContent.count({
+                where: {
+                    draftId: draftId
+                }
+            })
+    
+            if (count) return
 
-        for (let i = 0; i < playerCount; i++) {
-            for (let j = 0; j < draft.packsPerPlayer; j++) {
-                for (let k = 0; k < draft.packSize; k++) {
-                    const card = shuffledCards[index]
+            for (let i = 0; i < playerCount; i++) {
+                for (let j = 0; j < draft.packsPerPlayer; j++) {
+                    for (let k = 0; k < draft.packSize; k++) {
+                        const card = shuffledCards[index]
+                        await PackContent.create({
+                            cardId: card.id,
+                            cardName: card.name,
+                            packNumber: i * draft.packsPerPlayer + j + 1,
+                            draftId: draft.id
+                        })
+    
+                        index++
+                    }
+                }
+            }
+        } else {
+            const {data: packs} = await axios.get(`${config.siteUrl}/api/sets/open-packs/${set.setCode}?count=${playerCount * draft.packsPerPlayer}`)
+
+            const count = await PackContent.count({
+                where: {
+                    draftId: draftId
+                }
+            })
+    
+            if (count) return
+            
+            for (let i = 0; i < packs.length; i++) {
+                const pack = packs[i]
+                for (let j = 0; j < draft.packSize; j++) {
                     await PackContent.create({
-                        cardId: card.id,
-                        cardName: card.name,
-                        packNumber: i * draft.packsPerPlayer + j + 1,
+                        cardId: pack[j].card.id,
+                        cardName: pack[j].card.name,
+                        packNumber: i + 1,
                         draftId: draft.id
                     })
-
-                    index++
                 }
             }
         }
 
-        await draft.update({ playerCount, round: 1, pick: 1, state: 'underway' })
+        await draft.update({ playerCount: playerCount, round: 1, pick: 1, state: 'underway' })
         socket.emit('draft begins', draft)
         socket.broadcast.emit('draft begins', draft)
         return setInternalTimer(draft.id, 1, 1, draft.timer, socket)
@@ -264,7 +304,7 @@ export const startDraft = async (draftId, socket) => {
 
 
 // SELECT CARD
-export const selectCard = async (cardId, playerId, draftId, socket, handleSelection) => {
+export const selectCard = async (cardId, playerId, draftId, round, pick, socket, handleSelection) => {
     try {
         const entry = await DraftEntry.findOne({
             where: {
@@ -275,15 +315,24 @@ export const selectCard = async (cardId, playerId, draftId, socket, handleSelect
         })
 
         const draft = entry.draft
-        const { round, pick, packsPerPlayer, packSize, playerCount } = draft
+        if (round !== draft.round || pick !== draft.pick) return console.log(`round or pick does not match updated draft`)
+        const { packsPerPlayer, packSize, playerCount } = draft
+
+        const arr = []
+        const nums = Array.from(Array(packsPerPlayer * playerCount).keys()).map((e) => e + 1)
+        for (let i = 0; i < packsPerPlayer; i++) { arr[i] = [...nums.slice(i * playerCount, i * playerCount + playerCount)] }
+        const packNumber = arr[round - 1][(pick + entry.slot - 2) % playerCount]
 
         const packContent = await PackContent.findOne({
             where: {
                 draftId: draftId,
-                cardId: cardId
+                cardId: cardId,
+                packNumber: packNumber
             },
             include: Card
         })
+
+        if (!packContent) return console.log(`No pack content found.`)
 
         const card = packContent.card
 
@@ -307,7 +356,12 @@ export const selectCard = async (cardId, playerId, draftId, socket, handleSelect
             })
     
             if (inventory) {
-                handleSelection(card)
+                const data = {
+                    ...inventory.dataValues,
+                    card
+                }
+                
+                handleSelection(data)
                 await packContent.destroy()
     
                 const cardsPulled = await Inventory.count({

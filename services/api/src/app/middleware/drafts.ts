@@ -1,5 +1,5 @@
 
-import { Card, Cube, Draft, DraftEntry, Inventory, PackContent, Player } from '@fl/models'
+import { Card, Cube, Draft, DraftEntry, Inventory, PackContent, Player, Set } from '@fl/models'
 
 // GET DRAFT
 export const getDraft = async (req, res, next) => {
@@ -8,7 +8,7 @@ export const getDraft = async (req, res, next) => {
             where: {
                 shareLink: req.params.id
             },
-            include: Cube
+            include: [Cube, Set]
         })
 
         res.json(draft)
@@ -56,13 +56,13 @@ export const getPack = async (req, res, next) => {
 // GET INVENTORY
 export const getInventory = async (req, res, next) => {
     try {
-        const inventory = [...await Inventory.findAll({
+        const inventory = await Inventory.findAll({
             where: {
                 draftEntryId: req.query.entryId
             },
             order: [["createdAt", "ASC"]],
             include: Card
-        })].map((c) => c.card)
+        })
 
         res.json(inventory)
     } catch (err) {
@@ -105,3 +105,47 @@ export const getParticipants = async (req, res, next) => {
     }
   }
 
+  // LAUNCH DRAFT
+  export const launchDraft = async (req, res, next) => {
+    try {  
+      const cube = req.body.type === 'cube' ? await Cube.findOne({
+        where: {
+            id: req.body.cubeId
+        }
+      }) : {}
+
+      const cubeName = cube?.id ? `${cube.name} by ${cube.builder}` : null
+
+      const set = req.body.type === 'booster' ? await Set.findOne({
+        where: {
+            id: req.body.boosterId
+        }
+      }) : {}
+
+      const player = await Player.findOne({
+        where: {
+            id: req.body.hostId
+        }
+      })
+
+      const shareLink = await Draft.generateShareLink()
+
+      const draft = await Draft.create({
+        type: req.body.type,
+        cubeId: cube?.id,
+        cubeName: cubeName,
+        setName: set?.setName,
+        setId: set?.id,
+        hostName: player.name,
+        hostId: player.id,
+        packSize: req.body.packSize,
+        packsPerPlayer: req.body.packsPerPlayer,
+        timer: req.body.timer,
+        shareLink: shareLink
+      })
+
+      res.json(`https://formatlibrary.com/drafts/${draft.shareLink}`)
+    } catch (err) {
+      next(err)
+    }
+  }
