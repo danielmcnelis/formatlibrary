@@ -2221,6 +2221,12 @@ export const createTournament = async (interaction, formatName, name, abbreviati
         name.toLowerCase().includes('blazing cheaters') ? emojis.speeder :
         server.logo || emojis.legend
 
+    const tie_breaks = [
+        !tieBreaker1?.includes('opponent') ? tieBreaker1 : 'median buchholz',
+        !tieBreaker2?.includes('opponent') ? tieBreaker2 : 'match wins vs tied',
+        !tieBreaker3?.includes('opponent') ? tieBreaker3 : 'points scored'
+    ]
+    
     try {
         const tournament = server.challongeSubdomain ? {
             name: name,
@@ -2232,11 +2238,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             pts_for_match_win:  pointsPerMatchWin || "1.0",
             pts_for_match_tie: pointsPerMatchTie || "0.0",
             pts_for_bye: pointsPerMatchTie || "0.0",
-            tie_breaks: [
-                !tieBreaker1?.includes('opponent') ? tieBreaker1 : 'median buchholz',
-                !tieBreaker2?.includes('opponent') ? tieBreaker2 : 'match wins vs tied',
-                !tieBreaker3?.includes('opponent') ? tieBreaker3 : 'points scored'
-            ]
+            tie_breaks: tie_breaks
         } : {
             name: name,
             url: abbreviation || name,
@@ -2246,11 +2248,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             pts_for_match_win:  pointsPerMatchWin || "1.0",
             pts_for_match_tie: pointsPerMatchTie || "0.0",
             pts_for_bye: pointsPerMatchTie || "0.0",
-            tie_breaks: [
-                !tieBreaker1?.includes('opponent') ? tieBreaker1 : 'median buchholz',
-                !tieBreaker2?.includes('opponent') ? tieBreaker2 : 'match wins vs tied',
-                !tieBreaker3?.includes('opponent') ? tieBreaker3 : 'points scored'
-            ]
+            tie_breaks: tie_breaks
         }
         
         const { status, data } = await axios({
@@ -2303,14 +2301,20 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 tournament_type: tournament_type,
                 description: description,
                 game_name: game_name,
-                pts_for_match_tie: "0.0"
+                pts_for_match_win:  pointsPerMatchWin || "1.0",
+                pts_for_match_tie: pointsPerMatchTie || "0.0",
+                pts_for_bye: pointsPerMatchTie || "0.0",
+                tie_breaks: tie_breaks
             } : {
                 name: name,
                 url: str,
                 tournament_type: tournament_type,
                 description: description,
                 game_name: game_name,
-                pts_for_match_tie: "0.0"
+                pts_for_match_win:  pointsPerMatchWin || "1.0",
+                pts_for_match_tie: pointsPerMatchTie || "0.0",
+                pts_for_bye: pointsPerMatchTie || "0.0",
+                tie_breaks: tie_breaks
             }
             
             const { status, data } = await axios({
@@ -2324,6 +2328,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             if (status === 200 && data) {
                 await Tournament.create({ 
                     id: data.tournament.id,
+                    abbreviation: abbreviation,
                     name: data.tournament.name,
                     state: data.tournament.state,
                     type: data.tournament.tournament_type,
