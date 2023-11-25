@@ -31,8 +31,8 @@ export default {
                         abbreviation: {[Op.substring]: focusedValue}
                     },
                     state: {[Op.not]: 'complete'},
-                    formatId: format?.id,
-                    serverId: server?.id
+                    formatId: format?.id || null,
+                    serverId: server?.id || null
                 },
                 limit: 5,
                 order: [["createdAt", "DESC"]]
