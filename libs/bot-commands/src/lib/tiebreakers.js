@@ -47,8 +47,8 @@ export default {
         console.log('tournamentId', tournamentId)
         const tournament = await Tournament.findOne({ where: { id: tournamentId }})
         console.log('!!tournament', !!tournament)
-        if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
-        if (tournament.type !== 'swiss') return await interaction.editReply({ content: `Tie-breakers can only be edited for Swiss tournaments.`})	
+        if (!tournament) return await interaction.reply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
+        if (tournament.type !== 'swiss') return await interaction.reply({ content: `Tie-breakers can only be edited for Swiss tournaments.`})	
 
         const placeholder1 = tournament.tieBreakerOne === 'median buchholz' ? 'Median-Buchholz (MB)' :
             tournament.tieBreakerOne === 'wins vs tied participants' ? 'Wins vs Tied Participants (WVT)' :
