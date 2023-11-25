@@ -189,9 +189,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
     }
 
-    const tieBreaker1 = interaction.fields.fields.get('tb1') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase()) : 'median buchholz'
-    const tieBreaker2 = interaction.fields.fields.get('tb2') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) : 'match wins vs tied'
-    const tieBreaker3 = interaction.fields.fields.get('tb3') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase()) : 'points difference'
+    const tieBreaker1 = interaction.fields.fields.get('tb1') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase()) || 'median buchholz' : 'median buchholz'
+    const tieBreaker2 = interaction.fields.fields.get('tb2') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) || 'match wins vs tied' : 'match wins vs tied'
+    const tieBreaker3 = interaction.fields.fields.get('tb3') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase()) || 'points difference' : 'points difference'
     console.log('tieBreaker1', tieBreaker1)
     console.log('tieBreaker2', tieBreaker2)
     console.log('tieBreaker3', tieBreaker3)
