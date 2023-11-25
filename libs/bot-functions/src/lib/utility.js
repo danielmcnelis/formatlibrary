@@ -622,7 +622,7 @@ export const hasAffiliateAccess = (server) => server?.access === 'affiliate' || 
 export const hasPartnerAccess = (server) => server?.access === 'partner' || server?.access === 'full'
 
 //IS PROGRAMMER?
-export const isProgrammer = (member) => member?.user?.id === '194147938786738176'
+export const isProgrammer = (member) => member?.userId === '194147938786738176'
 
 //IS ADMIN?
 export const isAdmin = (server, member) => member?._roles.includes(server?.adminRole) || member?.user?.id === '194147938786738176'

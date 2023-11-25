@@ -36,10 +36,8 @@ export default {
         const focusedValue = interaction.options.getFocused()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const memberIsProgrammer = isProgrammer(server, interaction.member)
+        const memberIsProgrammer = isProgrammer(interaction.member)
         const memberIsMod = isMod(server, interaction.member)
-        console.log('memberIsProgrammer', memberIsProgrammer)
-        console.log('memberIsMod', memberIsMod)
 
         const tournaments = memberIsProgrammer ? await Tournament.findAll({
             where: {
