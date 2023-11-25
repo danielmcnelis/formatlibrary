@@ -43,7 +43,6 @@ export default {
 		)
     },      
     async execute(interaction) {
-        await interaction.deferReply()
         const tournamentId = interaction.options.getString('tournament')
         const tournament = await Tournament.findOne({ where: { id: tournamentId }})
         if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
