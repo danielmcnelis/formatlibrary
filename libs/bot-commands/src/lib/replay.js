@@ -36,7 +36,10 @@ export default {
         const focusedValue = interaction.options.getFocused()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const memberIsProgrammer = await isProgrammer(server, interaction.member)
+        const memberIsProgrammer = isProgrammer(server, interaction.member)
+        const memberIsMod = isMod(server, interaction.member)
+        console.log('memberIsProgrammer', memberIsProgrammer)
+        console.log('memberIsMod', memberIsMod)
 
         const tournaments = memberIsProgrammer ? await Tournament.findAll({
             where: {
@@ -45,12 +48,25 @@ export default {
                     abbreviation: {[Op.substring]: focusedValue}
                 },
                 state: {[Op.not]: 'pending'},
-                formatId: format.id,
-                serverId: server.id
+                formatId: format.id
             },
             limit: 5,
             order: [["createdAt", "DESC"]]
-        }) : await Tournament.findAll({
+        }) : memberIsMod ? 
+            await Tournament.findAll({
+                where: {
+                    [Op.or]: {
+                        name: {[Op.substring]: focusedValue},
+                        abbreviation: {[Op.substring]: focusedValue}
+                    },
+                    state: {[Op.not]: 'pending'},
+                    formatId: format.id,
+                    serverId: server.id
+                },
+                limit: 5,
+                order: [["createdAt", "DESC"]]
+            })
+        : await Tournament.findAll({
             where: {
                 [Op.or]: {
                     name: {[Op.substring]: focusedValue},
