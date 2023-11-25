@@ -18,7 +18,7 @@ import { assignTourRoles, conductCensus, createTopCut, downloadNewCards, getMidn
     seed, sendDeck, setTimerForTournament, signupForTournament, startChallongeBracket, startTournament, 
     endTournament, saveReplay, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, 
     fetchOPCardNames, hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, 
-    isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation
+    isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, editPointsSystem
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
