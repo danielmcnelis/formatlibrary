@@ -2367,9 +2367,11 @@ export const createTournament = async (interaction, formatName, name, abbreviati
 // EDIT TIE-BREAKERS 
 export const editTieBreakers = async (interaction, tournamentId, tieBreaker1, tieBreaker2, tieBreaker3) => {
     console.log('editTieBreakers()')
+    console.log('interaction.guildId', interaction.guildId)
+    console.log('tournamentId', tournamentId)
     const server = !interaction.guildId ? {} : 
         await Server.findOne({ where: { id: interaction.guildId }}) || 
-        await Server.create({ id: interaction.guildId, name: interaction.guild.name })
+        await Server.create({ id: interaction.guildId, name: interaction.guild?.name })
 
     const tournament = await Tournament.findOne({
         where: {
