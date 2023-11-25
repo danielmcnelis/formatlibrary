@@ -46,6 +46,7 @@ export default {
         const tournamentId = interaction.options.getString('tournament')
         console.log('tournamentId', tournamentId)
         const tournament = await Tournament.findOne({ where: { id: tournamentId }})
+        console.log('!!tournament', !!tournament)
         if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
         if (tournament.type !== 'swiss') return await interaction.editReply({ content: `Tie-breakers can only be edited for Swiss tournaments.`})	
 
