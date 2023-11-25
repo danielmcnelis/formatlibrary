@@ -146,6 +146,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isModalSubmit()) return
     await interaction.deferReply()
+    console.log('interaction.customId', interaction.customId)
 
     if (interaction.customId?.includes('create')) {
         const name = interaction.fields.getTextInputValue('name')
