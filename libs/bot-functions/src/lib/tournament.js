@@ -2379,7 +2379,7 @@ export const editTieBreakers = async (interaction, tournamentId, tieBreaker1, ti
     try {
         const { status } = await axios({
             method: 'put',
-            url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
+            url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`,
             data: {
                 tournament: {
                     tie_breaks: [tieBreaker1, tieBreaker2, tieBreaker3]
@@ -2422,7 +2422,7 @@ export const editPointsSystem = async (interaction, tournamentId, pointsPerMatch
     try {
         const { status } = await axios({
             method: 'put',
-            url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
+            url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`,
             data: {
                 tournament: {
                     pts_for_match_win: pointsPerMatchWin,
