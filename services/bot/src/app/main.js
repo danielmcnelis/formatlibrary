@@ -177,21 +177,21 @@ client.on(Events.InteractionCreate, async (interaction) => {
         if (input.includes('mb') || input.includes('med')) {
             return 'median buchholz'
         } else if (input.includes('wvt') || input.includes('wins vs')) {
-            return 'wins vs tied participants'
+            return 'match wins vs tied'
         } else if (input.includes('pd') || input.includes('point')) {
-            return 'point differential'
+            return 'points difference'
         } else if (input.includes('oowp') || input.includes('s opp')) {
             return `opponents opponent win percentage`
         } else if (input.includes('owp') || input.includes('opp')) {
-            return `opponent win percentage`
+            return `opponents win percentage`
         } else {
             return null
         }
     }
 
-    const tieBreaker1 = interaction.fields.fields.get('tb1') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase()) : null
-    const tieBreaker2 = interaction.fields.fields.get('tb2') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) : null
-    const tieBreaker3 = interaction.fields.fields.get('tb3') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase()) : null
+    const tieBreaker1 = interaction.fields.fields.get('tb1') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase()) : 'median buchholz'
+    const tieBreaker2 = interaction.fields.fields.get('tb2') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) : 'match wins vs tied'
+    const tieBreaker3 = interaction.fields.fields.get('tb3') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase()) : 'points difference'
     console.log('tieBreaker1', tieBreaker1)
     console.log('tieBreaker2', tieBreaker2)
     console.log('tieBreaker3', tieBreaker3)

@@ -2224,10 +2224,8 @@ export const createTournament = async (interaction, formatName, name, abbreviati
     const tie_breaks = [
         !tieBreaker1?.includes('opponent') ? tieBreaker1 : 'median buchholz',
         !tieBreaker2?.includes('opponent') ? tieBreaker2 : 'match wins vs tied',
-        !tieBreaker3?.includes('opponent') ? tieBreaker3 : 'points scored'
+        !tieBreaker3?.includes('opponent') ? tieBreaker3 : 'points difference'
     ]
-
-    console.log('tie_breaks', tie_breaks)
     
     try {
         const tournament = server.challongeSubdomain ? {
