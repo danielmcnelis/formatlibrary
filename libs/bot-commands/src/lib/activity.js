@@ -7,7 +7,8 @@ const QuickChart = require('quickchart-js')
 export default {
     data: new SlashCommandBuilder()
         .setName('activity')
-        .setDescription('Post format activity chart. 🏃'),
+        .setDescription('Post format activity chart. 🏃')
+        .setDMPermission(false),
     async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)

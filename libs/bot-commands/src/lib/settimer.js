@@ -20,7 +20,8 @@ export default {
                 .setName('minutes')
                 .setDescription('The minutes remaining.')
                 .setRequired(true)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)

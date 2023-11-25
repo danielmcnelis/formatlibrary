@@ -16,8 +16,9 @@ export default {
             option
                 .setName('format')
                 .setDescription('Format to recalculate.')
-                .setRequired(false))
-        ,
+                .setRequired(false)
+        )
+        .setDMPermission(false),
     async execute(interaction) {
         const formatName = interaction.options.getString('format')
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)

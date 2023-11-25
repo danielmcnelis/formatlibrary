@@ -9,7 +9,8 @@ import { emojis } from '@fl/bot-emojis'
 export default {
 	data: new SlashCommandBuilder()
 		.setName('drop')
-		.setDescription('Drop from a tournament. 💧'),
+		.setDescription('Drop from a tournament. 💧')
+        .setDMPermission(false),
 	async execute(interaction) {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)

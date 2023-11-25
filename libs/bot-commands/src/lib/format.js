@@ -14,7 +14,8 @@ export default {
 				.setDescription('Enter format name')
 				.setAutocomplete(true)
                 .setRequired(true)
-        ),    
+        )
+        .setDMPermission(false),    
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused()
         const formats = await Format.findAll({ 

@@ -14,7 +14,8 @@ export default {
                 .setName('player')
                 .setDescription('The player you want to check.')
                 .setRequired(false)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})

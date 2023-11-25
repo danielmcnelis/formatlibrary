@@ -20,7 +20,8 @@ export default {
 					{ name: 'Double Elimination', value: 'DE' },	
 					{ name: 'Round Robin', value: 'RR' },	
 			)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction) {
         const type = interaction.options.getString('type')
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
@@ -50,27 +51,6 @@ export default {
         modal.addComponents(nameRow, abbreviationRow)
         
         if (type === 'SW') {
-            // const pointsPerMatchWin = new TextInputBuilder()
-            //     .setCustomId('ppwin')
-            //     .setLabel('Points per match win?')
-            //     .setStyle(TextInputStyle.Short)
-            //     .setPlaceholder('1.0')
-            //     .setRequired(true)
-
-            // const pointsPerMatchTie = new TextInputBuilder()
-            //     .setCustomId('pptie')
-            //     .setLabel('Points per match tie?')
-            //     .setStyle(TextInputStyle.Short)
-            //     .setPlaceholder('0.0')
-            //     .setRequired(true)
-            
-            // const pointsPerBye = new TextInputBuilder()
-            //     .setCustomId('ppbye')
-            //     .setLabel('Points per bye?')
-            //     .setStyle(TextInputStyle.Short)
-            //     .setPlaceholder('1.0')
-            //     .setRequired(true)
-
             const tieBreakerOne = new TextInputBuilder()
                 .setCustomId('tb1')
                 .setLabel('Tie breaker #1? (MB, WVT, PD, OWP, OOWP)')
@@ -84,12 +64,6 @@ export default {
                 .setStyle(TextInputStyle.Short)
                 .setPlaceholder('Wins vs Tied Participants (WVT)')
                 .setRequired(false)
-
-            // const tieBreakerThree = new TextInputBuilder()
-            //     .setCustomId('tb3')
-            //     .setLabel('Tie breaker #3? (MB, WVT, PD, OWP, OOWP)')
-            //     .setStyle(TextInputStyle.Short)
-            //     .setRequired(false)
             
             const tb1Row = new ActionRowBuilder().addComponents(tieBreakerOne)
             const tb2Row = new ActionRowBuilder().addComponents(tieBreakerTwo)

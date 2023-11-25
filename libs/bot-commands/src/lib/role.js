@@ -8,7 +8,8 @@ import { hasPartnerAccess } from '../../../bot-functions/src'
 export default {
     data: new SlashCommandBuilder()
         .setName('role')
-        .setDescription(`Add or remove a format role. 🧙`),
+        .setDescription(`Add or remove a format role. 🧙`)
+        .setDMPermission(false),
     async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})

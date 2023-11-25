@@ -18,7 +18,8 @@ export default {
                 .setName('user2')
                 .setDescription('Tag the second user.')
                 .setRequired(false)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction) {
         const user1 = interaction.options.getUser('user1')
         const user2 = interaction.options.getUser('user2') || interaction.user

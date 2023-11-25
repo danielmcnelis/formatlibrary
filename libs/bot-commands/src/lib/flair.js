@@ -38,7 +38,8 @@ export default {
                     { name: 'X-Saber Airbellum', value: '1105203082909986866' },
                     { name: 'XX-Saber Darksoul', value: '1105206904352952450' }
 				)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction) {
         const roleId = interaction.options.getString('emoji')
         const currentRoles = [...(await interaction.member.roles.cache.filter((r) => r.name.includes('(Sub)'))).values()]

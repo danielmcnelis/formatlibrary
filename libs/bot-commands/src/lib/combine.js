@@ -26,7 +26,8 @@ export default {
                 .setName('new-user')
                 .setDescription('Tag the new user.')
                 .setRequired(true)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
         const oldDiscordId = interaction.options.getUser('olduser')?.id || interaction.options._hoistedOptions[0].user?.id || interaction.options._hoistedOptions[0].value

@@ -6,7 +6,8 @@ import { initiateTrivia } from '@fl/bot-functions'
 export default {
     data: new SlashCommandBuilder()
         .setName('trivia')
-        .setDescription('Join or leave the trivia queue. 📚 🐛'),
+        .setDescription('Join or leave the trivia queue. 📚 🐛')
+        .setDMPermission(false),
     async execute(interaction) {
         if (interaction.channel.id !== '1085316454053838981') return await interaction.reply({ content: `Try using **/trivia** in the <#1085316454053838981> channel. 📚 🐛`})
         const player = await Player.findOne({ where: { discordId: interaction.user.id }})

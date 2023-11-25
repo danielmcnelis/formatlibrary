@@ -31,7 +31,8 @@ export default {
                 .setName('loser')
                 .setDescription('Tag the loser.')
                 .setRequired(true)
-        ),    
+        )
+        .setDMPermission(false),    
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)

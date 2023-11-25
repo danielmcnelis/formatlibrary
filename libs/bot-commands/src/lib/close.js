@@ -8,7 +8,8 @@ import { emojis } from '@fl/bot-emojis'
 export default {
 	data: new SlashCommandBuilder()
 		.setName('close')
-		.setDescription('Mod Only - Close tournament registration. 🔐'),
+		.setDescription('Mod Only - Close tournament registration. 🔐')
+        .setDMPermission(false),
 	async execute(interaction) {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)

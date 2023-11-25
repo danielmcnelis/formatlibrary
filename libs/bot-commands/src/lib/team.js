@@ -25,7 +25,8 @@ export default {
                 .setName('teammate2')
                 .setDescription('Your other teammate.')
                 .setRequired(true)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
         const teamName = interaction.options.getString('name')  

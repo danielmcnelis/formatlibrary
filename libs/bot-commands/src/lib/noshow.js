@@ -13,7 +13,8 @@ export default {
                 .setName('player')
                 .setDescription('Tag the user who did not play.')
                 .setRequired(true)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)

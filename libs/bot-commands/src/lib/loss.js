@@ -14,7 +14,8 @@ export default {
                 .setName('opponent')
                 .setDescription('Tag the user that you lost against.')
                 .setRequired(true)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
         const opponent = interaction.options.getUser('opponent')

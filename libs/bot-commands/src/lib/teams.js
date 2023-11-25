@@ -7,7 +7,8 @@ import { hasPartnerAccess, shuffleArray } from '@fl/bot-functions'
 export default {
     data: new SlashCommandBuilder()
         .setName('teams')
-        .setDescription('View list of teams. 📋'),
+        .setDescription('View list of teams. 📋')
+        .setDMPermission(false),
     async execute(interaction) {
         // return interaction.reply(emojis.yellow)
         await interaction.deferReply()

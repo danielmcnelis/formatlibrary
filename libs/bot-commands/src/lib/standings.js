@@ -8,7 +8,8 @@ import { calculateStandings, getMatches, getParticipants, selectTournament } fro
 export default {
     data: new SlashCommandBuilder()
         .setName('standings')
-        .setDescription('Post Swiss tournament standings. ⏰'),
+        .setDescription('Post Swiss tournament standings. ⏰')
+        .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)

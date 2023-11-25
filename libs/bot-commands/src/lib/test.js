@@ -10,7 +10,8 @@ import axios from 'axios'
 export default {
     data: new SlashCommandBuilder()
         .setName('test')
-        .setDescription('Admin Only - Performs a test. 🧪'),
+        .setDescription('Admin Only - Performs a test. 🧪')
+        .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {

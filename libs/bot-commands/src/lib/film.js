@@ -14,7 +14,8 @@ export default {
                 .setName('player')
                 .setDescription('The player you want to check.')
                 .setRequired(true)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)

@@ -24,6 +24,7 @@ import { assignTourRoles, conductCensus, createTopCut, downloadNewCards, getMidn
 // STATIC IMPORTS
 import { emojis } from '@fl/bot-emojis'
 import commands from '@fl/bot-commands'
+import { editTieBreakers } from '../../../../libs/bot-functions/src'
 client.commands = new Collection()
 Object.values(commands.formatLibraryCommands).forEach((command) => client.commands.set(command.data.name, command))
 Object.values(commands.globalCommands).forEach((command) => client.commands.set(command.data.name, command))
@@ -145,58 +146,71 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isModalSubmit()) return
     await interaction.deferReply()
+    console.log('interaction', interaction)
 
-	const name = interaction.fields.getTextInputValue('name')
-    console.log('interaction.customId', interaction.customId)
-    const tournament_type = interaction.customId === 'SW' ? 'swiss' :
-        interaction.customId === 'SE' ? 'single elimination' :
-        interaction.customId === 'DE' ? 'double elimination' :
-        'round robin'
+    if (interaction.data?.name === 'create') {
+        const name = interaction.fields.getTextInputValue('name')
 
-    console.log('tournament_type', tournament_type)
-
-    const abbreviation = interaction.fields.getTextInputValue('abbreviation')
-	const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
-	const channelName = interaction.fields.fields.get('channelName') ? interaction.fields.getTextInputValue('channelName') : null
-
-    let pointsPerMatchWin
-    let pointsPerMatchTie
-    let pointsPerBye
-
-    if (tournament_type === 'swiss') {
-        pointsPerMatchWin = interaction.fields.fields.get('ppwin') ? interaction.fields.getTextInputValue('ppwin') : '1.0'
-        pointsPerMatchTie = interaction.fields.fields.get('pptie') ? interaction.fields.getTextInputValue('pptie') : '0.0'
-        pointsPerBye = interaction.fields.fields.get('ppbye') ? interaction.fields.getTextInputValue('ppbye') : '1.0'
-    }
+        const tournament_type = interaction.customId === 'SW' ? 'swiss' :
+            interaction.customId === 'SE' ? 'single elimination' :
+            interaction.customId === 'DE' ? 'double elimination' :
+            'round robin'
     
-    console.log('pointsPerMatchWin', pointsPerMatchWin)
-    console.log('pointsPerMatchTie', pointsPerMatchTie)
-    console.log('pointsPerBye', pointsPerBye)
-
-    const decipherTieBreakerInput = (input) => {
-        if (input.includes('mb') || input.includes('med')) {
-            return 'median buchholz'
-        } else if (input.includes('wvt') || input.includes('wins vs')) {
-            return 'match wins vs tied'
-        } else if (input.includes('pd') || input.includes('point')) {
-            return 'points difference'
-        } else if (input.includes('oowp') || input.includes('s opp')) {
-            return `opponents opponent win percentage`
-        } else if (input.includes('owp') || input.includes('opp')) {
-            return `opponents win percentage`
-        } else {
-            return null
+        const abbreviation = interaction.fields.getTextInputValue('abbreviation')
+        const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
+        const channelName = interaction.fields.fields.get('channelName') ? interaction.fields.getTextInputValue('channelName') : null
+    
+        const decipherTieBreakerInput = (input) => {
+            if (input.includes('mb') || input.includes('med')) {
+                return 'median buchholz'
+            } else if (input.includes('wvt') || input.includes('wins vs')) {
+                return 'match wins vs tied'
+            } else if (input.includes('pd') || input.includes('point')) {
+                return 'points difference'
+            } else if (input.includes('oowp') || input.includes('s opp')) {
+                return `opponents opponent win percentage`
+            } else if (input.includes('owp') || input.includes('opp')) {
+                return `opponents win percentage`
+            } else {
+                return null
+            }
         }
+    
+        const tieBreaker1 = interaction.fields.fields.get('tb1') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase()) || 'median buchholz' : 'median buchholz'
+        const tieBreaker2 = interaction.fields.fields.get('tb2') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) || 'match wins vs tied' : 'match wins vs tied'
+    
+        return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, tieBreaker1, tieBreaker2)
+    } else if (interaction.data?.name === 'tiebreakers') {
+        const decipherTieBreakerInput = (input) => {
+            if (input.includes('mb') || input.includes('med')) {
+                return 'median buchholz'
+            } else if (input.includes('wvt') || input.includes('wins vs')) {
+                return 'match wins vs tied'
+            } else if (input.includes('pd') || input.includes('point')) {
+                return 'points difference'
+            } else if (input.includes('oowp') || input.includes('s opp')) {
+                return `opponents opponent win percentage`
+            } else if (input.includes('owp') || input.includes('opp')) {
+                return `opponents win percentage`
+            } else {
+                return null
+            }
+        }
+    
+        const tieBreaker1 = interaction.fields.fields.get('tb1') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase()) || 'median buchholz' : 'median buchholz'
+        const tieBreaker2 = interaction.fields.fields.get('tb2') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) || 'match wins vs tied' : 'match wins vs tied'
+        const tieBreaker3 = interaction.fields.fields.get('tb3') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase()) || 'points difference' : 'points difference'
+        const tournamentId = interaction.message.components[0].components[0].data.custom_id
+
+        return editTieBreakers(interaction, tournamentId, tieBreaker1, tieBreaker2, tieBreaker3)
+    } else if (interaction.data?.name === 'points') {    
+        const pointsPerMatchWin = interaction.fields.fields.get('ppwin') ? interaction.fields.getTextInputValue('ppwin') : '1.0'
+        const pointsPerMatchTie = interaction.fields.fields.get('pptie') ? interaction.fields.getTextInputValue('pptie') : '0.0'
+        const pointsPerBye = interaction.fields.fields.get('ppbye') ? interaction.fields.getTextInputValue('ppbye') : '1.0'
+        const tournamentId = interaction.message.components[0].components[0].data.custom_id
+
+        return editPointsSystem(interaction, tournamentId, pointsPerMatchWin, pointsPerMatchTie, pointsPerBye)
     }
-
-    const tieBreaker1 = interaction.fields.fields.get('tb1') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase()) || 'median buchholz' : 'median buchholz'
-    const tieBreaker2 = interaction.fields.fields.get('tb2') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) || 'match wins vs tied' : 'match wins vs tied'
-    const tieBreaker3 = interaction.fields.fields.get('tb3') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase()) || 'points difference' : 'points difference'
-    console.log('tieBreaker1', tieBreaker1)
-    console.log('tieBreaker2', tieBreaker2)
-    console.log('tieBreaker3', tieBreaker3)
-
-    return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, pointsPerMatchWin, pointsPerMatchTie, pointsPerBye, tieBreaker1, tieBreaker2, tieBreaker3)
 })
 
 // SELECT MENUS

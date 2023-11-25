@@ -19,7 +19,8 @@ export default {
                 .setName('loser')
                 .setDescription('Tag the user who lost.')
                 .setRequired(true)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
         const winner = interaction.options.getUser('winner')

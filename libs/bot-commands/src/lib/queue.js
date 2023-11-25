@@ -6,7 +6,8 @@ import { emojis } from '@fl/bot-emojis'
 export default {
     data: new SlashCommandBuilder()
         .setName('queue')
-        .setDescription('Post the iron queue. 🇬🇧'),
+        .setDescription('Post the iron queue. 🇬🇧')
+        .setDMPermission(false),
     async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)

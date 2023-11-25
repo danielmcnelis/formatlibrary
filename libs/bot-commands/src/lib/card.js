@@ -12,7 +12,8 @@ export default {
                 .setName('name')
                 .setDescription('Enter search query.')
                 .setRequired(true)
-        ),
+        )
+        .setDMPermission(false),
 	async execute(interaction, fuzzyCards, fuzzyOPCards) {
         const query = interaction.options.getString('name')
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)

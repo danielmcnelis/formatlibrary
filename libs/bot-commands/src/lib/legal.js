@@ -6,7 +6,8 @@ import { checkDeckList, checkHighlanderList, checkOPDeckList, getSkillCard } fro
 export default {
     data: new SlashCommandBuilder()
         .setName('legal')
-        .setDescription('Check deck legality. 👍'),
+        .setDescription('Check deck legality. 👍')
+        .setDMPermission(false),
     async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)

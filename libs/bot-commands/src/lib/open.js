@@ -7,7 +7,8 @@ import { isMod, hasPartnerAccess } from '@fl/bot-functions'
 export default {
 	data: new SlashCommandBuilder()
 		.setName('open')
-		.setDescription('Mod Only - Open tournament registration. 🔓'),
+		.setDescription('Mod Only - Open tournament registration. 🔓')
+        .setDMPermission(false),
 	async execute(interaction) {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)

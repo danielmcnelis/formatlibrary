@@ -6,7 +6,8 @@ import { urlize } from '@fl/bot-functions'
 export default {
     data: new SlashCommandBuilder()
         .setName('info')
-        .setDescription('Post format overview. 📚'),
+        .setDescription('Post format overview. 📚')
+        .setDMPermission(false),
     async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)

@@ -45,32 +45,10 @@ export const BanList = (props) => {
         )
     ) return <div />
   
-  /* eslint-disable */
-  const convertToTitle = (param = '') => {
-      const abbrev = param.slice(0, 3)
-      const month = abbrev === 'jan' ? 'January' :
-      abbrev === 'feb' ? 'February' :
-      abbrev === 'mar' ? 'March' :
-      abbrev === 'apr' ? 'April' :
-      abbrev === 'may' ? 'May' :
-      abbrev === 'jun' ? 'June' :
-      abbrev === 'jul' ? 'July' :
-      abbrev === 'aug' ? 'August' :
-      abbrev === 'sep' ? 'September' :
-      abbrev === 'oct' ? 'October' :
-      abbrev === 'nov' ? 'November' :
-      'December'
-  
-      const year = `20${param.slice(-2)}`
-      return `${month} ${year}`
-    }
-  
-    const date = convertToTitle(BL)
-  
     return (
       <div id="banlist" className="banlist">
         <h2 className="subheading">{forbidden.length ? 'Forbidden & Limited List' : 'Limited List'}</h2>
-        <h3 className="banlist-date">Effective - {date}</h3>
+        <h3 className="banlist-date">Effective - {BL}</h3>
         {
           forbidden.length ? (
             <div>

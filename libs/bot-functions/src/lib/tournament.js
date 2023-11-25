@@ -2182,7 +2182,7 @@ export const autoRegisterTopCut = async (server, tournament, topCutTournament, s
 }
 
 // CREATE TOURNAMENT
-export const createTournament = async (interaction, formatName, name, abbreviation, tournament_type, channelName, pointsPerMatchWin, pointsPerMatchTie, pointsPerBye, tieBreaker1, tieBreaker2, tieBreaker3) => {
+export const createTournament = async (interaction, formatName, name, abbreviation, tournament_type, channelName, tieBreaker1, tieBreaker2) => {
     const server = !interaction.guildId ? {} : 
         await Server.findOne({ where: { id: interaction.guildId }}) || 
         await Server.create({ id: interaction.guildId, name: interaction.guild.name })
@@ -2224,10 +2224,8 @@ export const createTournament = async (interaction, formatName, name, abbreviati
     const tie_breaks = [
         !tieBreaker1?.includes('opponent') ? tieBreaker1 : 'median buchholz',
         !tieBreaker2?.includes('opponent') ? tieBreaker2 : 'match wins vs tied',
-        !tieBreaker3?.includes('opponent') ? tieBreaker3 : 'points difference'
+        'points difference'
     ]
-
-    console.log('tie_breaks', tie_breaks)
     
     try {
         const tournament = server.challongeSubdomain ? {
@@ -2237,9 +2235,9 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             tournament_type: tournament_type,
             description: description,
             game_name: game_name,
-            pts_for_match_win:  pointsPerMatchWin || "1.0",
-            pts_for_match_tie: pointsPerMatchTie || "0.0",
-            pts_for_bye: pointsPerMatchTie || "0.0",
+            pts_for_match_win: "1.0",
+            pts_for_match_tie: "0.0",
+            pts_for_bye: "0.0",
             tie_breaks: tie_breaks
         } : {
             name: name,
@@ -2247,9 +2245,9 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             tournament_type: tournament_type,
             description: description,
             game_name: game_name,
-            pts_for_match_win:  pointsPerMatchWin || "1.0",
-            pts_for_match_tie: pointsPerMatchTie || "0.0",
-            pts_for_bye: pointsPerMatchTie || "0.0",
+            pts_for_match_win: "1.0",
+            pts_for_match_tie: "0.0",
+            pts_for_bye: "0.0",
             tie_breaks: tie_breaks
         }
         
@@ -2276,12 +2274,12 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 channelId: channelId,
                 serverId: interaction.guildId,
                 community: server.name,
-                pointsPerMatchWin: pointsPerMatchWin,
-                pointsPerMatchTie: pointsPerMatchTie,
-                pointsPerBye: pointsPerBye,
+                pointsPerMatchWin: '1.0',
+                pointsPerMatchTie: '0.0',
+                pointsPerBye: '1.0',
                 tieBreaker1: tieBreaker1,
                 tieBreaker2: tieBreaker2,
-                tieBreaker3: tieBreaker3
+                tieBreaker3: 'points difference'
             })
 
             const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
@@ -2303,9 +2301,9 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 tournament_type: tournament_type,
                 description: description,
                 game_name: game_name,
-                pts_for_match_win:  pointsPerMatchWin || "1.0",
-                pts_for_match_tie: pointsPerMatchTie || "0.0",
-                pts_for_bye: pointsPerMatchTie || "0.0",
+                pts_for_match_win: "1.0",
+                pts_for_match_tie: "0.0",
+                pts_for_bye: "0.0",
                 tie_breaks: tie_breaks
             } : {
                 name: name,
@@ -2313,9 +2311,9 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 tournament_type: tournament_type,
                 description: description,
                 game_name: game_name,
-                pts_for_match_win:  pointsPerMatchWin || "1.0",
-                pts_for_match_tie: pointsPerMatchTie || "0.0",
-                pts_for_bye: pointsPerMatchTie || "0.0",
+                pts_for_match_win: "1.0",
+                pts_for_match_tie: "0.0",
+                pts_for_bye: "0.0",
                 tie_breaks: tie_breaks
             }
             
@@ -2342,12 +2340,12 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     channelId: channelId,
                     serverId: interaction.guildId,
                     community: server.name,
-                    pointsPerMatchWin: pointsPerMatchWin,
-                    pointsPerMatchTie: pointsPerMatchTie,
-                    pointsPerBye: pointsPerBye,
+                    pointsPerMatchWin: '1.0',
+                    pointsPerMatchTie: '0.0',
+                    pointsPerBye: '1.0',
                     tieBreaker1: tieBreaker1,
                     tieBreaker2: tieBreaker2,
-                    tieBreaker3: tieBreaker3
+                    tieBreaker3: 'points difference'
                 })
 
                 const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
@@ -2363,6 +2361,94 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             console.log(err)
             return await interaction.editReply({ content: `Unable to connect to Challonge account.`})
         }
+    }
+}
+
+// EDIT TIE-BREAKERS 
+export const editTieBreakers = async (interaction, tournamentId, tieBreaker1, tieBreaker2, tieBreaker3) => {
+    const server = !interaction.guildId ? {} : 
+        await Server.findOne({ where: { id: interaction.guildId }}) || 
+        await Server.create({ id: interaction.guildId, name: interaction.guild.name })
+
+    const tournament = await Tournament.findOne({
+        where: {
+            id: tournamentId
+        }
+    })
+
+    try {
+        const { status } = await axios({
+            method: 'put',
+            url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
+            data: {
+                tournament: {
+                    tie_breaks: [tieBreaker1, tieBreaker2, tieBreaker3]
+                }
+            }
+        })
+        
+        if (status === 200) {
+            await tournament.update({ 
+                tieBreaker1: tieBreaker1,
+                tieBreaker2: tieBreaker2,
+                tieBreaker3: tieBreaker3
+            })
+
+            return await interaction.editReply({ content: 
+                `Tie-breakers updated for ${tournament.name} ${tournament.logo}:` + 
+                `\nTB1: ${capitalize(tieBreaker1, true)}` + 
+                `\nTB2: ${capitalize(tieBreaker2, true)}` + 
+                `\nTB3: ${capitalize(tieBreaker3, true)}`
+            })
+        } 
+    } catch (err) {
+        console.log(err)
+        return await interaction.editReply({ content: `Unable to connect to Challonge account.`})
+    }
+}
+
+// EDIT POINTS SYSTEM
+export const editPointsSystem = async (interaction, tournamentId, pointsPerMatchWin, pointsPerMatchTie, pointsPerBye) => {
+    const server = !interaction.guildId ? {} : 
+        await Server.findOne({ where: { id: interaction.guildId }}) || 
+        await Server.create({ id: interaction.guildId, name: interaction.guild.name })
+
+    const tournament = await Tournament.findOne({
+        where: {
+            id: tournamentId
+        }
+    })
+
+    try {
+        const { status } = await axios({
+            method: 'put',
+            url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
+            data: {
+                tournament: {
+                    pts_for_match_win: pointsPerMatchWin,
+                    pts_for_match_tie: pointsPerMatchTie,
+                    pts_for_bye: pointsPerBye    
+                }
+            }
+        })
+        
+        if (status === 200) {
+            await tournament.update({ 
+                pointsPerMatchWin,
+                pointsPerMatchTie,
+                pointsPerBye
+            })
+
+            return await interaction.editReply({ content: 
+                `Points System updated for ${tournament.name} ${tournament.logo}:` + 
+                `\nMatch Wins: ${pointsPerMatchWin}` + 
+                `\nMatch Ties: ${pointsPerMatchTie}` + 
+                `\nByes: ${pointsPerBye}`
+            })
+        } 
+    } catch (err) {
+        console.log(err)
+        return await interaction.editReply({ content: `Unable to connect to Challonge account.`})
     }
 }
 

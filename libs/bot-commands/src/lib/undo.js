@@ -8,7 +8,8 @@ import axios from 'axios'
 export default {
     data: new SlashCommandBuilder()
         .setName('undo')
-        .setDescription(`Undo a match result. ⏪`),                
+        .setDescription(`Undo a match result. ⏪`)
+        .setDMPermission(false),                
     async execute(interaction) {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)

@@ -8,7 +8,8 @@ import { selectTournament } from '@fl/bot-functions'
 export default {
     data: new SlashCommandBuilder()
         .setName('timer')
-        .setDescription('Post time remaining in the round. ⏰'),
+        .setDescription('Post time remaining in the round. ⏰')
+        .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)

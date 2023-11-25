@@ -16,7 +16,8 @@ export default {
                 .setName('tournament')
                 .setDescription('Enter the tournament name or abbreviation.')
                 .setRequired(false)
-        ),
+        )
+        .setDMPermission(false),
 	async execute(interaction) {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)

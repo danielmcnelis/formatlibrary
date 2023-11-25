@@ -33,6 +33,7 @@ import mod from './lib/mod'
 import noshow from './lib/noshow'
 import open from './lib/open'
 import ping from './lib/ping'
+import points from './lib/points'
 import pools from './lib/pools'
 import profile from './lib/profile'
 import queue from './lib/queue'
@@ -49,6 +50,7 @@ import signup from './lib/signup'
 import standings from './lib/standings'
 import start from './lib/start'
 import stats from './lib/stats'
+import tiebreakers from './lib/tiebreakers'
 import timer from './lib/timer'
 import team from './lib/team'
 import teams from './lib/teams'
@@ -100,6 +102,7 @@ export default {
         noshow,
         open,
         ping,
+        points,
         pools,
         profile,
         rated,
@@ -114,6 +117,7 @@ export default {
         standings,
         start,
         stats,
+        tiebreakers,
         timer,
         undo,
         username

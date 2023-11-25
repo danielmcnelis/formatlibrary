@@ -8,7 +8,8 @@ import { Op } from 'sequelize'
 export default {
     data: new SlashCommandBuilder()
         .setName('leaderboard')
-        .setDescription(`Post the leaderboard. 🪜`),
+        .setDescription(`Post the leaderboard. 🪜`)
+        .setDMPermission(false),
     async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})

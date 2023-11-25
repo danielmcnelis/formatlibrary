@@ -15,7 +15,8 @@ export default {
                 .setName('user')
                 .setDescription('Tag the user to check.')
                 .setRequired(false)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
         const discordId = interaction.options.getUser('user')?.id || interaction.user.id
