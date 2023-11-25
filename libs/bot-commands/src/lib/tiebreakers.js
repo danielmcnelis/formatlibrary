@@ -71,7 +71,7 @@ export default {
             'Points Difference (PD)'
 
 		const modal = new ModalBuilder()
-            .setCustomId(tournamentId)
+            .setCustomId(`tiebreakers-${tournamentId}`)
             .setTitle('Edit Tie-Breakers')
 
             const tieBreakerOne = new TextInputBuilder()

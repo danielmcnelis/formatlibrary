@@ -146,14 +146,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isModalSubmit()) return
     await interaction.deferReply()
-    console.log('interaction', interaction)
 
-    if (interaction.data?.name === 'create') {
+    if (interaction.customId?.includes('create')) {
         const name = interaction.fields.getTextInputValue('name')
 
-        const tournament_type = interaction.customId === 'SW' ? 'swiss' :
-            interaction.customId === 'SE' ? 'single elimination' :
-            interaction.customId === 'DE' ? 'double elimination' :
+        const tournament_type = interaction.customId?.includes('SW') ? 'swiss' :
+            interaction.customId?.includes('SE') ? 'single elimination' :
+            interaction.customId?.includes('DE') ? 'double elimination' :
             'round robin'
     
         const abbreviation = interaction.fields.getTextInputValue('abbreviation')
@@ -180,7 +179,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         const tieBreaker2 = interaction.fields.fields.get('tb2') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) || 'match wins vs tied' : 'match wins vs tied'
     
         return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, tieBreaker1, tieBreaker2)
-    } else if (interaction.data?.name === 'tiebreakers') {
+    } else if (interaction.customId?.includes('tiebreakers')) {
         const decipherTieBreakerInput = (input) => {
             if (input.includes('mb') || input.includes('med')) {
                 return 'median buchholz'
@@ -200,14 +199,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
         const tieBreaker1 = interaction.fields.fields.get('tb1') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase()) || 'median buchholz' : 'median buchholz'
         const tieBreaker2 = interaction.fields.fields.get('tb2') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) || 'match wins vs tied' : 'match wins vs tied'
         const tieBreaker3 = interaction.fields.fields.get('tb3') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase()) || 'points difference' : 'points difference'
-        const tournamentId = interaction.message.components[0].components[0].data.custom_id
+        const tournamentId = interaction.custom_id?.split('-')[1]
 
         return editTieBreakers(interaction, tournamentId, tieBreaker1, tieBreaker2, tieBreaker3)
-    } else if (interaction.data?.name === 'points') {    
+    } else if (interaction.customId.includes('points')) {    
         const pointsPerMatchWin = interaction.fields.fields.get('ppwin') ? interaction.fields.getTextInputValue('ppwin') : '1.0'
         const pointsPerMatchTie = interaction.fields.fields.get('pptie') ? interaction.fields.getTextInputValue('pptie') : '0.0'
         const pointsPerBye = interaction.fields.fields.get('ppbye') ? interaction.fields.getTextInputValue('ppbye') : '1.0'
-        const tournamentId = interaction.message.components[0].components[0].data.custom_id
+        const tournamentId = interaction.custom_id?.split('-')[1]
 
         return editPointsSystem(interaction, tournamentId, pointsPerMatchWin, pointsPerMatchTie, pointsPerBye)
     }

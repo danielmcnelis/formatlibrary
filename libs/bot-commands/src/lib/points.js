@@ -54,7 +54,7 @@ export default {
         const placeholder3 = tournament.pointsPerBye || '1.0'
 
 		const modal = new ModalBuilder()
-            .setCustomId(tournamentId)
+            .setCustomId(`points-${tournamentId}`)
             .setTitle('Edit Points System')
 
             const pointsPerMatchWin = new TextInputBuilder()
