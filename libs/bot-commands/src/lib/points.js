@@ -8,7 +8,7 @@ import { isMod, hasPartnerAccess } from '@fl/bot-functions'
 
 export default {
     data: new SlashCommandBuilder()
-        .setName('tiebreakers')
+        .setName('points')
         .setDescription('Mod Only - Edit tournament points system. 👔')
 		.addStringOption(option =>
 			option.setName('tournament')
