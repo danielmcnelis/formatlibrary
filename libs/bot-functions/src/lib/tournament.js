@@ -1946,9 +1946,22 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
 }
 
 // CALCULATE STANDINGS 
-export const calculateStandings = async (matches, participants) => {
+export const calculateStandings = async (tournament, matches, participants) => {
     const data = {}
     let currentRound = 1
+
+    const camelizeTieBreaker = (str) => {
+        return str === 'median buccholz' ? 'medianBuchholz' :
+            str === 'wins vs tied participants' ? 'winsVsTied' :
+            str === 'points difference' ? 'pointsDifference' :
+            str === 'opponents win percentage' ? 'opponentsWinPercentage' :
+            str === 'opponents opponent win percentage' ? 'opponentsOpponentWinPercentage' :
+            ''
+    }
+
+    const tieBreaker1 = camelizeTieBreaker(tournament.tieBreaker1)
+    const tieBreaker2 = camelizeTieBreaker(tournament.tieBreaker2)
+    const tieBreaker3 = camelizeTieBreaker(tournament.tieBreaker3)
 
     for (let i = 0; i < participants.length; i++) {
         const p = participants[i]
@@ -1975,10 +1988,15 @@ export const calculateStandings = async (matches, participants) => {
                 roundsWithoutBye: [],
                 opponents: [],
                 opponentScores: [],
+                opponentWins: [],
+                opponentLosses: [],
                 defeated: [],
                 winsVsTied: 0,
                 rawBuchholz: 0,
-                medianBuchholz: 0
+                medianBuchholz: 0,
+                pointsDifference: 0,
+                opponentsWinPercentage: 0,
+                opponentsOpponentWinPercentage: 0
             }
         } else {
             data[p.participant.id] = {
@@ -1995,10 +2013,20 @@ export const calculateStandings = async (matches, participants) => {
                 roundsWithoutBye: [],
                 opponents: [],
                 opponentScores: [],
+                opponentWins: [],
+                opponentLosses: [],
                 defeated: [],
                 winsVsTied: 0,
                 rawBuchholz: 0,
-                medianBuchholz: 0
+                medianBuchholz: 0,
+                pointsDifference: 0,
+                opponentsWinTotal: 0,
+                opponentsLossTotal: 0,
+                opponentsOpponentWinTotal: 0,
+                opponentsOpponentLossTotal: 0,
+                opponentsWinPercentage: 0,
+                opponentsOpponentWinPercentage: 0
+
             }
         }
 
@@ -2020,9 +2048,11 @@ export const calculateStandings = async (matches, participants) => {
             data[match.winner_id].defeated.push(match.loser_id)
             data[match.winner_id].opponents.push(match.loser_id)
             data[match.winner_id].roundsWithoutBye.push(round)
+            data[match.loser_id].pointsDifference++
             data[match.loser_id].losses++
             data[match.loser_id].opponents.push(match.winner_id)
             data[match.loser_id].roundsWithoutBye.push(round)
+            data[match.loser_id].pointsDifference-=1
         } else if (match.state === 'complete') {
             if (round > currentRound) currentRound = round
             data[match.player1_id].ties++
@@ -2053,13 +2083,16 @@ export const calculateStandings = async (matches, participants) => {
     })
 
     keys.forEach((k) => {
-        data[k].score = data[k].wins + data[k].byes
+        data[k].score = (data[k].wins * tournament.pointsPerMatchWin) + (data[k].ties * tournament.pointsPerMatchTie) + (data[k].byes * tournament.pointsPerBye)
     })
 
     keys.forEach((k) => {
         for (let i = 0; i < data[k].opponents.length; i++) {
             const opponentId = data[k].opponents[i]
             data[k].opponentScores.push(data[opponentId].score)
+            data[k].opponentWins.push(data[opponentId].wins)
+            data[k].opponentLosses.push(data[opponentId].losses)
+            data[k].opponentTies.push(data[opponentId].ties)
         }
 
         for (let i = 0; i < data[k].defeated.length; i++) {
@@ -2072,20 +2105,39 @@ export const calculateStandings = async (matches, participants) => {
         arr.pop()
         data[k].rawBuchholz = data[k].opponentScores.reduce((accum, val) => accum + val, 0)
         data[k].medianBuchholz = arr.reduce((accum, val) => accum + val, 0)
+        data[k].opponentsWinTotal = data[k].opponentWins.reduce((accum, val) => accum + val, 0)
+        data[k].opponentsLossTotal = data[k].opponentLosses.reduce((accum, val) => accum + val, 0)
+        data[k].opponentsWinPercentage = data[k].opponentsWinTotal / (data[k].opponentsWinTotal + data[k].opponentsLossTotal)
     })
+
+    keys.forEach((k) => {
+        for (let i = 0; i < data[k].opponents.length; i++) {
+            const opponentId = data[k].opponents[i]
+            data[k].opponentsOpponentWinTotal += data[opponentId].opponentsWinTotal
+            data[k].opponentsOpponentLossTotal += data[opponentId].opponentsLossTotal
+        }
+
+        data[k].opponentsOpponentWinPercentage = data[k].opponentsOpponentWinTotal / (data[k].opponentsOpponentWinTotal + data[k].opponentsOpponentLossTotal)
+    })
+
+    console.log('data', data)
 
     const standings = shuffleArray(Object.values(data)).sort((a, b) => {
         if (a.score > b.score) {
             return -1
         } else if (a.score < b.score) {
             return 1
-        } else if (a.medianBuchholz > b.medianBuchholz) {
+        } else if (a[tieBreaker1] > b[tieBreaker1]) {
             return -1
-        } else if (a.medianBuchholz < b.medianBuchholz) {
+        } else if (a[tieBreaker1] < b[tieBreaker1]) {
             return 1
-        } else if (a.winsVsTied > b.winsVsTied) {
+        } else if (a[tieBreaker2] > b[tieBreaker2]) {
             return -1
-        } else if (a.winsVsTied < b.winsVsTied) {
+        } else if (a[tieBreaker2] < b[tieBreaker2]) {
+            return 1
+        } else if (a[tieBreaker3] > b[tieBreaker3]) {
+            return -1
+        } else if (a[tieBreaker3] < b[tieBreaker3]) {
             return 1
         } else {
             return 0
@@ -2100,15 +2152,17 @@ export const calculateStandings = async (matches, participants) => {
                 // if at the end or has a better score/tie-breakers than the next player
                 index + 1 === standings.length || (
                     s.score > standings[index + 1].score || 
-                    s.score === standings[index + 1].score && s.medianBuchholz > standings[index + 1].medianBuchholz || 
-                    s.score === standings[index + 1].score && s.medianBuchholz === standings[index + 1].medianBuchholz && s.winsVsTied > standings[index + 1].winsVsTied
+                    s.score === standings[index + 1].score && s[tieBreaker1] > standings[index + 1][tieBreaker1] || 
+                    s.score === standings[index + 1].score && s[tieBreaker1] === standings[index + 1][tieBreaker1] && s[tieBreaker2] > standings[index + 1][tieBreaker2] || 
+                    s.score === standings[index + 1].score && s[tieBreaker1] === standings[index + 1][tieBreaker1] && s[tieBreaker2] === standings[index + 1][tieBreaker2] && s[tieBreaker3] > standings[index + 1][tieBreaker3]
                 )
             ) && (
                 // and at the beginning or not tied with the previous player
                 index === 0 || (
                     s.score !== standings[index - 1].score ||
-                    s.medianBuchholz !== standings[index - 1].medianBuchholz || 
-                    s.winsVsTied !== standings[index - 1].winsVsTied
+                    s[tieBreaker1] !== standings[index - 1][tieBreaker1] || 
+                    s[tieBreaker2] !== standings[index - 1][tieBreaker2] || 
+                    s[tieBreaker3] !== standings[index - 1][tieBreaker3]
                 )
             )
         ) {
@@ -2120,8 +2174,9 @@ export const calculateStandings = async (matches, participants) => {
         } else if (
             // else if tied with previous player
             s.score === standings[index - 1].score && 
-            s.medianBuchholz === standings[index - 1].medianBuchholz && 
-            s.winsVsTied === standings[index - 1].winsVsTied
+            s[tieBreaker1] === standings[index - 1][tieBreaker1] && 
+            s[tieBreaker2] === standings[index - 1][tieBreaker2] && 
+            s[tieBreaker3] === standings[index - 1][tieBreaker3]
         ) {
             // then assign the same ranking as the previous player
             s.rank = standings[index - 1].rank
@@ -2131,6 +2186,7 @@ export const calculateStandings = async (matches, participants) => {
         }
     }
 
+    console.log('standings', standings)
     return standings
 }
 
@@ -2808,7 +2864,7 @@ export const createTopCut = async(interaction, tournamentId) => {
     try {
         const matches = await getMatches(server, primaryTournament.id)
         const participants = await getParticipants(server, primaryTournament.id)
-        const standings = await calculateStandings(matches, participants)
+        const standings = await calculateStandings(primaryTournament, matches, participants)
         const {errors, size} = await autoRegisterTopCut(server, primaryTournament, topCutTournament, standings)
         if (errors.length > 1) {
             return interaction.channel.send({ content: errors })
@@ -3207,7 +3263,7 @@ export const postStandings = async (interaction, tournamentId) => {
 
     const matches = await getMatches(server, tournamentId)
     const participants = await getParticipants(server, tournamentId)
-    const standings = await calculateStandings(matches, participants)
+    const standings = await calculateStandings(tournament, matches, participants)
     const results = [ `${tournament.logo} - ${tournament.name} Standings - ${tournament.emoji}` , `__Rk.  Name  -  Score  (W-L-T)  [Med-Buch / WvT]__`]
 
     for (let index = 0; index < standings.length; index++) {

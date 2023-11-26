@@ -24,7 +24,7 @@ export default {
         await interaction.editReply(`Calculating standings, please wait.`)
         const matches = await getMatches(server, tournament.id)
         const participants = await getParticipants(server, tournament.id)
-        const standings = await calculateStandings(matches, participants)
+        const standings = await calculateStandings(tournament, matches, participants)
         const results = [ `${tournament.logo} - ${tournament.name} Standings - ${tournament.emoji}` , `__Rk.  Name  -  Score  (W-L-T)  [Med-Buch / WvT]__`]
 
         for (let index = 0; index < standings.length; index++) {
