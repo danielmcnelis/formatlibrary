@@ -8,7 +8,7 @@ import { getCookie } from '@fl/utils'
 import ReactCountdownClock from 'react-countdown-clock'
 import { Helmet } from 'react-helmet'
 import { useSocket } from '@fl/hooks'
-import './DraftLobby.css' 
+import './DraftLobby.css'
 
 const playerId = getCookie('playerId')
 
@@ -193,7 +193,7 @@ export const DraftLobby = () => {
             setOnTheClock(true)
             setTimer(timeRemaining / 1000)
         }
-    }, [draft.pick, draft.updatedAt, inventory.length])
+    }, [draft.id])
 
     // HOOK - SOCKET.IO
     useEffect(() => {
@@ -217,6 +217,8 @@ export const DraftLobby = () => {
         socket.on('next pick', (data) => {
             console.log(`Next pick!`)
             setSelection(null)
+            setOnTheClock(true)
+            setTimer(data?.timer || 60)
             setDraft(data)
             toggleChime()
         });
