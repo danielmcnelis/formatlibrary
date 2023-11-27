@@ -210,6 +210,8 @@ export const DraftLobby = () => {
         socket.on('draft begins', (data) => {
             console.log(`Draft has begun!`)
             setDraft(data)
+            setOnTheClock(true)
+            setTimer(data?.timer || 60)
             alert('The Draft is Starting Now!')
             toggleHorn()
         });
@@ -225,6 +227,7 @@ export const DraftLobby = () => {
 
         socket.on('draft complete', (data) => {
             console.log(`Draft complete!`)
+            setOnTheClock(false)
             setSelection(null)
             setDraft(data)
         });
