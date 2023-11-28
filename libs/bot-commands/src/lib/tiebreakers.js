@@ -48,25 +48,25 @@ export default {
         if (!tournament) return await interaction.reply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
         if (tournament.type !== 'swiss') return await interaction.reply({ content: `Tie-breakers can only be edited for Swiss tournaments.`})	
 
-        const placeholder1 = tournament.tieBreakerOne === 'median buchholz' ? 'Median-Buchholz (MB)' :
-            tournament.tieBreakerOne === 'match wins vs tied' ? 'Wins vs Tied Participants (WVT)' :
-            tournament.tieBreakerOne === 'points difference' ? 'Points Difference (PD)' :
-            tournament.tieBreakerOne === 'opponents win percentage' ? `Opponent's Win Percentage (OWP)` :
-            tournament.tieBreakerOne === 'opponents opponent win percentage' ? `Opponent's Opponent Win Percentage (OOWP)` :
+        const placeholder1 = tournament.tieBreaker1 === 'median buchholz' ? 'Median-Buchholz (MB)' :
+            tournament.tieBreaker1 === 'match wins vs tied' ? 'Wins vs Tied Participants (WVT)' :
+            tournament.tieBreaker1 === 'points difference' ? 'Points Difference (PD)' :
+            tournament.tieBreaker1 === 'opponents win percentage' ? `Opponent's Win Percentage (OWP)` :
+            tournament.tieBreaker1 === 'opponents opponent win percentage' ? `Opponent's Opponent Win Percentage (OOWP)` :
             'Median-Buchholz (MB)'
 
-        const placeholder2 = tournament.tieBreakerTwo === 'median buchholz' ? 'Median-Buchholz (MB)' :
-            tournament.tieBreakerTwo === 'match wins vs tied' ? 'Wins vs Tied Participants (WVT)' :
-            tournament.tieBreakerTwo === 'points difference' ? 'Points Difference (PD)' :
-            tournament.tieBreakerTwo === 'opponents win percentage' ? `Opponent's Win Percentage (OWP)` :
-            tournament.tieBreakerTwo === 'opponents opponent win percentage' ? `Opponent's Opponent Win Percentage (OOWP)` :
+        const placeholder2 = tournament.tieBreaker2 === 'median buchholz' ? 'Median-Buchholz (MB)' :
+            tournament.tieBreaker2 === 'match wins vs tied' ? 'Wins vs Tied Participants (WVT)' :
+            tournament.tieBreaker2 === 'points difference' ? 'Points Difference (PD)' :
+            tournament.tieBreaker2 === 'opponents win percentage' ? `Opponent's Win Percentage (OWP)` :
+            tournament.tieBreaker2 === 'opponents opponent win percentage' ? `Opponent's Opponent Win Percentage (OOWP)` :
             'Wins vs Tied Participants (WVT)'
 
-        const placeholder3 = tournament.tieBreakerThree === 'median buchholz' ? 'Median-Buchholz (MB)' :
-            tournament.tieBreakerThree === 'match wins vs tied' ? 'Wins vs Tied Participants (WVT)' :
-            tournament.tieBreakerThree === 'points difference' ? 'Points Difference (PD)' :
-            tournament.tieBreakerThree === 'opponents win percentage' ? `Opponent's Win Percentage (OWP)` :
-            tournament.tieBreakerThree === 'opponents opponent win percentage' ? `Opponent's Opponent Win Percentage (OOWP)` :
+        const placeholder3 = tournament.tieBreaker3 === 'median buchholz' ? 'Median-Buchholz (MB)' :
+            tournament.tieBreaker3 === 'match wins vs tied' ? 'Wins vs Tied Participants (WVT)' :
+            tournament.tieBreaker3 === 'points difference' ? 'Points Difference (PD)' :
+            tournament.tieBreaker3 === 'opponents win percentage' ? `Opponent's Win Percentage (OWP)` :
+            tournament.tieBreaker3 === 'opponents opponent win percentage' ? `Opponent's Opponent Win Percentage (OOWP)` :
             'None (N/A)'
 
 		const modal = new ModalBuilder()
