@@ -771,7 +771,7 @@ import { capitalize } from '@fl/utils'
         
         for (let i = 0; i < prints.length; i++) {
             const card = prints[i].card
-            if (!card || !card.konamiCode || !card.ypdId) continue
+            if (!card || !card.ypdId) continue
             const filtered = main.filter((c) => c.id === card.id)
             if (!filtered.length) main.push(card)
         }
@@ -905,32 +905,32 @@ import { capitalize } from '@fl/utils'
 // })()
 
 
-;(async () => {
-    const tournaments = await Tournament.findAll({
-        where: {
-            state: {[Op.not]: 'complete'}
-        }
-    })
+// ;(async () => {
+//     const tournaments = await Tournament.findAll({
+//         where: {
+//             state: {[Op.not]: 'complete'}
+//         }
+//     })
 
-    for (let i = 0; i < tournaments.length; i++) {
-        try {
-            const tournament = tournaments[i]
-            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${config.challonge['Format Library']}`)
-            const tieBreaker1 = data.tournament.tie_breaks ? data.tournament.tie_breaks[0] : 'median buchholz'
-            const tieBreaker2 = data.tournament.tie_breaks ? data.tournament.tie_breaks[1] : 'wins vs tied participants'
-            const tieBreaker3 = data.tournament.tie_breaks ? data.tournament.tie_breaks[2] : 'points difference'
+//     for (let i = 0; i < tournaments.length; i++) {
+//         try {
+//             const tournament = tournaments[i]
+//             const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${config.challonge['Format Library']}`)
+//             const tieBreaker1 = data.tournament.tie_breaks ? data.tournament.tie_breaks[0] : 'median buchholz'
+//             const tieBreaker2 = data.tournament.tie_breaks ? data.tournament.tie_breaks[1] : 'wins vs tied participants'
+//             const tieBreaker3 = data.tournament.tie_breaks ? data.tournament.tie_breaks[2] : 'points difference'
 
-            await tournament.update({
-                pointsPerMatchWin: data.tournament.pts_for_match_win,
-                pointsPerMatchTie: data.tournament.pts_for_match_tie,
-                pointsPerBye: data.tournament.pts_for_bye,
-                tieBreaker1,
-                tieBreaker2,
-                tieBreaker3
-            })
+//             await tournament.update({
+//                 pointsPerMatchWin: data.tournament.pts_for_match_win,
+//                 pointsPerMatchTie: data.tournament.pts_for_match_tie,
+//                 pointsPerBye: data.tournament.pts_for_bye,
+//                 tieBreaker1,
+//                 tieBreaker2,
+//                 tieBreaker3
+//             })
 
-        } catch (err) {
-            console.log(err)
-        }
-    }
-})()
+//         } catch (err) {
+//             console.log(err)
+//         }
+//     }
+// })()
