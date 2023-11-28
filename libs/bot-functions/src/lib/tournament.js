@@ -2281,9 +2281,9 @@ export const createTournament = async (interaction, formatName, name, abbreviati
         server.logo || emojis.legend
 
     const tie_breaks = [
-        !tieBreaker1?.includes('opponent') ? tieBreaker1 : 'median buchholz',
-        !tieBreaker2?.includes('opponent') ? tieBreaker2 : 'match wins vs tied',
-        'points difference'
+        !tieBreaker1?.includes('opponent') ? tieBreaker1 : null,
+        !tieBreaker2?.includes('opponent') ? tieBreaker2 : null,
+        null
     ]
     
     try {
@@ -2338,7 +2338,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 pointsPerBye: '1.0',
                 tieBreaker1: tieBreaker1,
                 tieBreaker2: tieBreaker2,
-                tieBreaker3: 'points difference'
+                tieBreaker3: null
             })
 
             const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''

@@ -49,21 +49,21 @@ export default {
         if (tournament.type !== 'swiss') return await interaction.reply({ content: `Tie-breakers can only be edited for Swiss tournaments.`})	
 
         const placeholder1 = tournament.tieBreakerOne === 'median buchholz' ? 'Median-Buchholz (MB)' :
-            tournament.tieBreakerOne === 'wins vs tied participants' ? 'Wins vs Tied Participants (WVT)' :
+            tournament.tieBreakerOne === 'match wins vs tied' ? 'Wins vs Tied Participants (WVT)' :
             tournament.tieBreakerOne === 'points difference' ? 'Points Difference (PD)' :
             tournament.tieBreakerOne === 'opponents win percentage' ? `Opponent's Win Percentage (OWP)` :
             tournament.tieBreakerOne === 'opponents opponent win percentage' ? `Opponent's Opponent Win Percentage (OOWP)` :
             'Median-Buchholz (MB)'
 
         const placeholder2 = tournament.tieBreakerTwo === 'median buchholz' ? 'Median-Buchholz (MB)' :
-            tournament.tieBreakerTwo === 'wins vs tied participants' ? 'Wins vs Tied Participants (WVT)' :
+            tournament.tieBreakerTwo === 'match wins vs tied' ? 'Wins vs Tied Participants (WVT)' :
             tournament.tieBreakerTwo === 'points difference' ? 'Points Difference (PD)' :
             tournament.tieBreakerTwo === 'opponents win percentage' ? `Opponent's Win Percentage (OWP)` :
             tournament.tieBreakerTwo === 'opponents opponent win percentage' ? `Opponent's Opponent Win Percentage (OOWP)` :
             'Wins vs Tied Participants (WVT)'
 
         const placeholder3 = tournament.tieBreakerThree === 'median buchholz' ? 'Median-Buchholz (MB)' :
-            tournament.tieBreakerThree === 'wins vs tied participants' ? 'Wins vs Tied Participants (WVT)' :
+            tournament.tieBreakerThree === 'match wins vs tied' ? 'Wins vs Tied Participants (WVT)' :
             tournament.tieBreakerThree === 'points difference' ? 'Points Difference (PD)' :
             tournament.tieBreakerThree === 'opponents win percentage' ? `Opponent's Win Percentage (OWP)` :
             tournament.tieBreakerThree === 'opponents opponent win percentage' ? `Opponent's Opponent Win Percentage (OOWP)` :
