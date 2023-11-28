@@ -2123,6 +2123,9 @@ export const calculateStandings = async (tournament, matches, participants) => {
     })
 
     console.log('data', data)
+    console.log('tieBreaker1', data.map((d) => `${d.name} - ${d[tieBreaker1]}`))
+    console.log('tieBreaker2', data.map((d) => `${d.name} - ${d[tieBreaker2]}`))
+    console.log('tieBreaker3', data.map((d) => `${d.name} - ${d[tieBreaker3]}`))
 
     const standings = shuffleArray(Object.values(data)).sort((a, b) => {
         if (a.score > b.score) {
