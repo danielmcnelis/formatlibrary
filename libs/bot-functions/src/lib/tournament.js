@@ -1951,8 +1951,8 @@ export const calculateStandings = async (tournament, matches, participants) => {
     let currentRound = 1
 
     const camelizeTieBreaker = (str) => {
-        return str === 'median buccholz' ? 'medianBuchholz' :
-            str === 'wins vs tied participants' ? 'winsVsTied' :
+        return str === 'median buchholz' ? 'medianBuchholz' :
+            str === 'match wins vs tied' ? 'winsVsTied' :
             str === 'points difference' ? 'pointsDifference' :
             str === 'opponents win percentage' ? 'opponentsWinPercentage' :
             str === 'opponents opponent win percentage' ? 'opponentsOpponentWinPercentage' :
@@ -1962,6 +1962,9 @@ export const calculateStandings = async (tournament, matches, participants) => {
     const tieBreaker1 = camelizeTieBreaker(tournament.tieBreaker1)
     const tieBreaker2 = camelizeTieBreaker(tournament.tieBreaker2)
     const tieBreaker3 = camelizeTieBreaker(tournament.tieBreaker3)
+    console.log('tieBreaker1', tieBreaker1)
+    console.log('tieBreaker2', tieBreaker2)
+    console.log('tieBreaker3', tieBreaker3)
 
     for (let i = 0; i < participants.length; i++) {
         const p = participants[i]
