@@ -59,7 +59,7 @@ export default {
             const getAndStylizeTBVal = (obj, tb) => {
                 return tb === 'median buchholz' ? obj[camelizeTieBreaker(tb)].toFixed(1) :
                     tb === 'match wins vs tied' || tb === 'points difference' ?  obj[camelizeTieBreaker(tb)] : 
-                    tb === 'opponents win percentage' || tb === 'opponents opponent win percentage' ? (obj[camelizeTieBreaker(tb)] * 100).toFixed(2) + '%' :
+                    tb === 'opponents win percentage' || tb === 'opponents opponent win percentage' ? obj[camelizeTieBreaker(tb)].toFixed(3) :
                     obj[camelizeTieBreaker(tb)]
             }
             
