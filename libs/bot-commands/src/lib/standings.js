@@ -36,6 +36,8 @@ export default {
                 return 'OWP'
             } else if (tb === 'opponents opponent win percentage') {
                 return 'OOWP'
+            } else {
+                return ''
             }
         }
 
@@ -52,7 +54,7 @@ export default {
         const tb2 = tournament.tieBreaker2
         const tb3 = tournament.tieBreaker3
 
-        const results = [ `${tournament.logo} - ${tournament.name} Standings - ${tournament.emoji}` , `__Rk.  Name  -  Score  (W-L-T)  [${abbreviateTieBreakers(tb1)} / ${abbreviateTieBreakers(tb2)} / ${abbreviateTieBreakers(tb3)}]__`]
+        const results = [ `${tournament.logo} - ${tournament.name} Standings - ${tournament.emoji}` , `__Rk.  Name  -  Score  (W-L-T)  [${abbreviateTieBreakers(tb1)} / ${abbreviateTieBreakers(tb2)}${tb3 ? '/ ' + abbreviateTieBreakers(tb3) : ''}]__`]
 
         for (let index = 0; index < standings.length; index++) {
             const s = standings[index]
@@ -63,7 +65,7 @@ export default {
                     obj[camelizeTieBreaker(tb)]
             }
             
-            results.push(`${s.rank}.  ${s.name}  -  ${s.score.toFixed(1)}  (${s.wins}-${s.losses}-${s.ties})${s.byes ? ` +BYE` : ''}  [${getAndStylizeTBVal(s, tb1)} / ${getAndStylizeTBVal(s, tb2)} / ${getAndStylizeTBVal(s, tb3)}]`)
+            results.push(`${s.rank}.  ${s.name}  -  ${s.score.toFixed(1)}  (${s.wins}-${s.losses}-${s.ties})${s.byes ? ` +BYE` : ''}  [${getAndStylizeTBVal(s, tb1)} / ${getAndStylizeTBVal(s, tb2)}${tb3 ? '/ ' + getAndStylizeTBVal(s, tb3) : ''}]`)
         }
 
         const channel = interaction.guild?.channels?.cache?.get(server.botSpamChannel) || interaction.channel

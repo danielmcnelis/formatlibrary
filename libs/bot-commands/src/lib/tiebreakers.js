@@ -44,9 +44,7 @@ export default {
     },      
     async execute(interaction) {
         const tournamentId = interaction.options.getString('tournament')
-        console.log('tournamentId', tournamentId)
         const tournament = await Tournament.findOne({ where: { id: tournamentId }})
-        console.log('!!tournament', !!tournament)
         if (!tournament) return await interaction.reply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
         if (tournament.type !== 'swiss') return await interaction.reply({ content: `Tie-breakers can only be edited for Swiss tournaments.`})	
 
@@ -69,7 +67,7 @@ export default {
             tournament.tieBreakerThree === 'points difference' ? 'Points Difference (PD)' :
             tournament.tieBreakerThree === 'opponents win percentage' ? `Opponent's Win Percentage (OWP)` :
             tournament.tieBreakerThree === 'opponents opponent win percentage' ? `Opponent's Opponent Win Percentage (OOWP)` :
-            'Points Difference (PD)'
+            'None (NONE)'
 
 		const modal = new ModalBuilder()
             .setCustomId(`tiebreakers-${tournamentId}`)
@@ -91,7 +89,7 @@ export default {
 
             const tieBreakerThree = new TextInputBuilder()
                 .setCustomId('tb3')
-                .setLabel('Tie breaker #3? (MB, WVT, PD, OWP, OOWP)')
+                .setLabel('Tie breaker #3? (MB, WVT, NONE, PD, OWP, OOWP)')
                 .setStyle(TextInputStyle.Short)
                 .setPlaceholder(placeholder3)
                 .setRequired(false)

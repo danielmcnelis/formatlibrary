@@ -2432,7 +2432,7 @@ export const editTieBreakers = async (interaction, tournamentId, tieBreaker1, ti
         const tie_breaks = [tieBreaker1, tieBreaker2, tieBreaker3]
         
         tie_breaks.forEach((tb, index) => {
-            if (tb.includes('win percentage')) tie_breaks[index] = null
+            if (tb?.includes('win percentage')) tie_breaks[index] = null
         })
 
         const tournament = await Tournament.findOne({
@@ -2463,7 +2463,7 @@ export const editTieBreakers = async (interaction, tournamentId, tieBreaker1, ti
                 `Tie-breakers updated for ${tournament.name} ${tournament.logo}:` + 
                 `\nTB1: ${capitalize(tieBreaker1, true)}` + 
                 `\nTB2: ${capitalize(tieBreaker2, true)}` + 
-                `\nTB3: ${capitalize(tieBreaker3, true)}`
+                `\nTB3: ${capitalize(tieBreaker3 || 'None', true)}`
             })
         } 
     } catch (err) {

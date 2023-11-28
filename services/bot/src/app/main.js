@@ -199,7 +199,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     
         const tieBreaker1 = interaction.fields.fields.get('tb1') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase()) || 'median buchholz' : 'median buchholz'
         const tieBreaker2 = interaction.fields.fields.get('tb2') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) || 'match wins vs tied' : 'match wins vs tied'
-        const tieBreaker3 = interaction.fields.fields.get('tb3') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase()) || 'points difference' : 'points difference'
+        const tieBreaker3 = interaction.fields.fields.get('tb3') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase()) || null : null
         const tournamentId = interaction.customId?.split('-')[1]
 
         return editTieBreakers(interaction, tournamentId, tieBreaker1, tieBreaker2, tieBreaker3)
