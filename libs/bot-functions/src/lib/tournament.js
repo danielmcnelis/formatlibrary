@@ -1962,9 +1962,6 @@ export const calculateStandings = async (tournament, matches, participants) => {
     const tieBreaker1 = camelizeTieBreaker(tournament.tieBreaker1)
     const tieBreaker2 = camelizeTieBreaker(tournament.tieBreaker2)
     const tieBreaker3 = camelizeTieBreaker(tournament.tieBreaker3)
-    console.log('tieBreaker1', tieBreaker1)
-    console.log('tieBreaker2', tieBreaker2)
-    console.log('tieBreaker3', tieBreaker3)
 
     for (let i = 0; i < participants.length; i++) {
         const p = participants[i]
@@ -2125,7 +2122,6 @@ export const calculateStandings = async (tournament, matches, participants) => {
         data[k].opponentsOpponentWinPercentage = data[k].opponentsOpponentWinTotal / (data[k].opponentsOpponentWinTotal + data[k].opponentsOpponentLossTotal)
     })
 
-    console.log('data', data)
     console.log('tieBreaker1', Object.values(data).map((d) => `${d.name} - ${d[tieBreaker1]}`))
     console.log('tieBreaker2', Object.values(data).map((d) => `${d.name} - ${d[tieBreaker2]}`))
     console.log('tieBreaker3', Object.values(data).map((d) => `${d.name} - ${d[tieBreaker3]}`))
@@ -2194,7 +2190,6 @@ export const calculateStandings = async (tournament, matches, participants) => {
         }
     }
 
-    console.log('standings', standings)
     return standings
 }
 

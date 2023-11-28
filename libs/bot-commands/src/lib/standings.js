@@ -25,11 +25,45 @@ export default {
         const matches = await getMatches(server, tournament.id)
         const participants = await getParticipants(server, tournament.id)
         const standings = await calculateStandings(tournament, matches, participants)
-        const results = [ `${tournament.logo} - ${tournament.name} Standings - ${tournament.emoji}` , `__Rk.  Name  -  Score  (W-L-T)  [Med-Buch / WvT]__`]
+        const abbreviateTieBreakers = (tb) => {
+            if (tb === 'median buchholz') {
+                return 'MB'
+            } else if (tb === 'match wins vs tied') {
+                return 'WvT'
+            } else if (tb === 'points difference') {
+                return 'PD'
+            } else if (tb === 'opponents win percentage') {
+                return 'OWP'
+            } else if (tb === 'opponents opponent win percentage') {
+                return 'OOWP'
+            }
+        }
+
+        const camelizeTieBreaker = (str) => {
+            return str === 'median buchholz' ? 'medianBuchholz' :
+                str === 'match wins vs tied' ? 'winsVsTied' :
+                str === 'points difference' ? 'pointsDifference' :
+                str === 'opponents win percentage' ? 'opponentsWinPercentage' :
+                str === 'opponents opponent win percentage' ? 'opponentsOpponentWinPercentage' :
+                ''
+        }
+        
+        const tb1 = tournament.tieBreaker1 
+        const tb2 = tournament.tieBreaker2
+        const tb3 = tournament.tieBreaker3
+
+        const results = [ `${tournament.logo} - ${tournament.name} Standings - ${tournament.emoji}` , `__Rk.  Name  -  Score  (W-L-T)  [${abbreviateTieBreakers(tb1)} / ${abbreviateTieBreakers(tb2)} / ${abbreviateTieBreakers(tb3)}]__`]
 
         for (let index = 0; index < standings.length; index++) {
             const s = standings[index]
-            results.push(`${s.rank}.  ${s.name}  -  ${s.score.toFixed(1)}  (${s.wins}-${s.losses}-${s.ties})${s.byes ? ` +BYE` : ''}  [${s.medianBuchholz.toFixed(1)} / ${s.winsVsTied}]`)
+            const getAndStylizeTBVal = (obj, tb) => {
+                return tb === 'median buchholz' ? obj[camelizeTieBreaker(tb)].toFixed(1) :
+                    tb === 'match wins vs tied' || tb === 'points difference' ?  obj[camelizeTieBreaker(tb)] : 
+                    tb === 'opponents win percentage' || tb === 'opponents opponent win percentage' ? (obj[camelizeTieBreaker(tb)] * 100).toFixed(2) + '%' :
+                    obj[camelizeTieBreaker(tb)]
+            }
+            
+            results.push(`${s.rank}.  ${s.name}  -  ${s.score.toFixed(1)}  (${s.wins}-${s.losses}-${s.ties})${s.byes ? ` +BYE` : ''}  [${getAndStylizeTBVal(s, tb1)} / ${getAndStylizeTBVal(s, tb2)} / ${getAndStylizeTBVal(s, tb3)}]`)
         }
 
         const channel = interaction.guild?.channels?.cache?.get(server.botSpamChannel) || interaction.channel
