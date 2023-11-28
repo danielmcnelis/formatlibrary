@@ -2429,11 +2429,17 @@ export const editTieBreakers = async (interaction, tournamentId, tieBreaker1, ti
         await Server.findOne({ where: { id: interaction.guildId }}) || 
         await Server.create({ id: interaction.guildId, name: interaction.guild?.name })
 
-    const tournament = await Tournament.findOne({
-        where: {
-            id: tournamentId
-        }
-    })
+        const tie_breaks = [tieBreaker1, tieBreaker2, tieBreaker3]
+        
+        tie_breaks.forEach((tb, index) => {
+            if (tb.includes('win percentage')) tie_breaks[index] = null
+        })
+
+        const tournament = await Tournament.findOne({
+            where: {
+                id: tournamentId
+            }
+        })
 
     try {
         const { status } = await axios({
@@ -2441,7 +2447,7 @@ export const editTieBreakers = async (interaction, tournamentId, tieBreaker1, ti
             url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`,
             data: {
                 tournament: {
-                    tie_breaks: [tieBreaker1, tieBreaker2, tieBreaker3]
+                    tie_breaks: tie_breaks
                 }
             }
         })
