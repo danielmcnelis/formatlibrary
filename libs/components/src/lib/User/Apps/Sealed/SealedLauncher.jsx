@@ -3,27 +3,25 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
-import './DraftLauncher.css' 
+import './SealedLauncher.css' 
 
-export const DraftLauncher = () => {
+export const SealedLauncher = () => {
     const [packs, setPacks] = useState([])
     const [pack, setPack] = useState({})
     const [packsPerPlayer, setPacksPerPlayer] = useState(4)
-    const [timer, setTimer] = useState(60)
     const [draftLink, setDraftLink] = useState(null)
     const playerId = getCookie('playerId')
 
     // LAUNCH
     const launch = async () => {
         if (!pack.id) return alert('Please Select a Pack.')
-        if (!playerId) return alert('Please Log-in to Start a Draft.')
+        if (!playerId) return alert('Please Log-in to play Sealed.')
         
         try {
-            const { data } = await axios.post('/api/drafts/launch', {
+            const { data } = await axios.post('/api/sealed/launch', {
                 setId: pack.id,
                 hostId: playerId,
-                packsPerPlayer: packsPerPlayer,
-                timer: timer
+                packsPerPlayer: packsPerPlayer
             })
             
             setDraftLink(data)
@@ -106,20 +104,6 @@ export const DraftLauncher = () => {
                         <option value="4">4 Packs / Player</option>)
                         <option value="3">3 Packs / Player</option>)
                         <option value="2">2 Packs / Player</option>)
-                    </select>
-                </label>
-
-                <label>Timer:
-                    <select
-                        id="pack-number"
-                        defaultValue="60"
-                        onChange={(e) => {setTimer(e.target.value)}}
-                    >
-                        <option value="90">90 Seconds / Pick</option>)
-                        <option value="75">75 Seconds / Pick</option>)
-                        <option value="60">60 Seconds / Pick</option>)
-                        <option value="45">45 Seconds / Pick</option>)
-                        <option value="30">30 Seconds / Pick</option>)
                     </select>
                 </label>
 

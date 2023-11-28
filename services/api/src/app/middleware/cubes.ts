@@ -256,20 +256,22 @@ export const unpublishCube = async (req, res, next) => {
             if (!card) continue
             main.push(card)
         }
+
+        const sortFn = (a, b) => {
+            if (a.sortPriority > b.sortPriority) {
+                return 1
+            } else if (b.sortPriority > a.sortPriority) {
+                return -1
+            } else if (a.name > b.name) {
+                return 1
+            } else if (b.name > a.name) {
+                return -1
+            } else {
+                return 0
+            }
+        }
     
-        // main.sort((a: never, b: never) => {
-        //     if (a.sortPriority > b.sortPriority) {
-        //         return 1
-        //     } else if (b.sortPriority > a.sortPriority) {
-        //         return -1
-        //     } else if (a.name > b.name) {
-        //         return 1
-        //     } else if (b.name > a.name) {
-        //         return -1
-        //     } else {
-        //         return false
-        //     }
-        // })
+        main.sort(sortFn)
     
         const card_width = 72
         const card_height = 105

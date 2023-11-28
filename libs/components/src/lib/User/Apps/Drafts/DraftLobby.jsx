@@ -61,7 +61,6 @@ const sortFn = (a, b) => {
 // DRAFT LOBBY
 export const DraftLobby = () => {
     const [draft, setDraft] = useState({})
-    console.log('draft', draft)
     const [participants, setParticipants] = useState([])
     const [entry, setEntry] = useState({})
     const [inventory, setInventory] = useState([])
@@ -69,7 +68,6 @@ export const DraftLobby = () => {
     const [card, setCard] = useState({})
     const [selection, setSelection] = useState(null)
     const [timer, setTimer] = useState(null)
-    console.log('timer', timer)
     const [onTheClock, setOnTheClock] = useState(false)
     // const [toggleDraw] = useAudio('/assets/sounds/draw.mp3')
     const [toggleChime] = useAudio('/assets/sounds/chime.mp3')
@@ -190,7 +188,6 @@ export const DraftLobby = () => {
         const today = new Date()
         const nowTimeStamp = today.getTime()
         const timeRemaining = timeExpiresAt - nowTimeStamp
-        console.log('timeRemaining', timeRemaining)
         
         if (timeRemaining > 0 && draft.pick > inventory.length) {
             setOnTheClock(true)
@@ -212,7 +209,6 @@ export const DraftLobby = () => {
 
         socket.on('draft begins', (data) => {
             console.log(`Draft has begun!`)
-            console.log('draft begins data.timer', data.timer)
             setTimer(data.timer)
             setOnTheClock(true)
             setDraft(data)
@@ -225,8 +221,6 @@ export const DraftLobby = () => {
             setSelection(null)
             setDraft(data)
             setOnTheClock(true)
-            console.log('next pick data.timer', data.timer)
-            console.log('//next pick draft.timer', draft.timer)
             setTimer(draft.timer)
             toggleChime()
         });
