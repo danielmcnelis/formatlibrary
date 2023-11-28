@@ -67,7 +67,7 @@ export default {
             tournament.tieBreakerThree === 'points difference' ? 'Points Difference (PD)' :
             tournament.tieBreakerThree === 'opponents win percentage' ? `Opponent's Win Percentage (OWP)` :
             tournament.tieBreakerThree === 'opponents opponent win percentage' ? `Opponent's Opponent Win Percentage (OOWP)` :
-            'None (NONE)'
+            'None (N/A)'
 
 		const modal = new ModalBuilder()
             .setCustomId(`tiebreakers-${tournamentId}`)
@@ -89,7 +89,7 @@ export default {
 
             const tieBreakerThree = new TextInputBuilder()
                 .setCustomId('tb3')
-                .setLabel('Tie breaker #3? (MB, WVT, NONE, PD, OWP, OOWP)')
+                .setLabel('Tie breaker #3? (MB, WVT, N/A, PD, OWP, OOWP)')
                 .setStyle(TextInputStyle.Short)
                 .setPlaceholder(placeholder3)
                 .setRequired(false)
