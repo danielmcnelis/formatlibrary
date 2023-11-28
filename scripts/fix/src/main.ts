@@ -758,62 +758,67 @@ import { capitalize } from '@fl/utils'
 
     for (let i = 0; i < sets.length; i++) {
         const set = sets[i]
-        const prints = await Print.findAll({
-            where: {
-                setId: set.id,
-                region: {[Op.or]: ['NA', null]}
-            },
-            order: [['cardCode', 'ASC']],
-            include: Card
-        })
-
-        const main = []
+        try {
+            const prints = await Print.findAll({
+                where: {
+                    setId: set.id,
+                    region: {[Op.or]: ['NA', null]}
+                },
+                order: [['cardCode', 'ASC']],
+                include: Card
+            })
+    
+            const main = []
+            
+            for (let i = 0; i < prints.length; i++) {
+                const card = prints[i].card
+                if (!card || !card.ypdId) continue
+                const filtered = main.filter((c) => c.id === card.id)
+                if (!filtered.length) main.push(card)
+            }
         
-        for (let i = 0; i < prints.length; i++) {
-            const card = prints[i].card
-            if (!card || !card.ypdId) continue
-            const filtered = main.filter((c) => c.id === card.id)
-            if (!filtered.length) main.push(card)
-        }
-    
-        const sortFn = (a, b) => {
-            if (a.sortPriority > b.sortPriority) {
-                return 1
-            } else if (b.sortPriority > a.sortPriority) {
-                return -1
-            } else if (a.name > b.name) {
-                return 1
-            } else if (b.name > a.name) {
-                return -1
-            } else {
-                return 0
+            const sortFn = (a, b) => {
+                if (a.sortPriority > b.sortPriority) {
+                    return 1
+                } else if (b.sortPriority > a.sortPriority) {
+                    return -1
+                } else if (a.name > b.name) {
+                    return 1
+                } else if (b.name > a.name) {
+                    return -1
+                } else {
+                    return 0
+                }
             }
-        }
-
-        main.sort(sortFn)
     
-        const card_width = 72
-        const card_height = 105
-        const canvas = Canvas.createCanvas(card_width * main.length, card_height)
-        const context = canvas.getContext('2d')
-    
-        for (let i = 0; i < main.length; i++) {
-            const card = main[i]
-            const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`) 
-            context.drawImage(image, card_width * i, 0, card_width, card_height)
-        }
-    
-        const buffer = canvas.toBuffer('image/png')
-        const s3 = new S3({
-            region: config.s3.region,
-            credentials: {
-                accessKeyId: config.s3.credentials.accessKeyId,
-                secretAccessKey: config.s3.credentials.secretAccessKey
+            main.sort(sortFn)
+        
+            const card_width = 72
+            const card_height = 105
+            const canvas = Canvas.createCanvas(card_width * main.length, card_height)
+            const context = canvas.getContext('2d')
+        
+            for (let i = 0; i < main.length; i++) {
+                const card = main[i]
+                const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`) 
+                context.drawImage(image, card_width * i, 0, card_width, card_height)
             }
-        })
-    
-        const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/sets/slideshows/${set.setCode}.png`, Body: buffer, ContentType: `image/png` }).promise()
-        console.log('uri', uri)
+        
+            const buffer = canvas.toBuffer('image/png')
+            const s3 = new S3({
+                region: config.s3.region,
+                credentials: {
+                    accessKeyId: config.s3.credentials.accessKeyId,
+                    secretAccessKey: config.s3.credentials.secretAccessKey
+                }
+            })
+        
+            const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/sets/slideshows/${set.setCode}.png`, Body: buffer, ContentType: `image/png` }).promise()
+            console.log('uri', uri)
+        } catch (err) {
+            console.log(err)
+            console.log(`error creating banner canvas of ${set.name}`)
+        }
     }
 })()
 
