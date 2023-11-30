@@ -54,7 +54,7 @@ label {
   }
 
 
-.draft-portal {
+.sealed-portal {
     display: flex;
     padding: 10px;
     width: 90%;
@@ -66,19 +66,19 @@ label {
     flex-direction: column;
 }
   
-.draft-portal input {
+.sealed-portal input {
     margin-left: 5px;
     line-height: 1.3;
     font-size: 15px;
 }
   
-.draft-portal label {
+.sealed-portal label {
     margin-bottom: 12px;
     line-height: 1.3;
     font-size: 15px;
 }
 
-.draft-button, .clicked-draft-button {
+.sealed-button, .clicked-sealed-button {
     display: flex;
     padding: 10px;
     border: 1px solid #000000;
@@ -97,13 +97,13 @@ label {
     transition: all 0.15s;
   }
   
-  .clicked-draft-button {
+  .clicked-sealed-button {
     color: white;
     font-weight: 600;
     background-color: #41474f;
   }
 
-  .draft-button:hover {
+  .sealed-button:hover {
     cursor: pointer;
     color: white;
     background-color: #41474f;
@@ -120,12 +120,17 @@ label {
   .slideshow > div {
     height: 105px;
     width: 31176px;
-    background: url(https://cdn.formatlibrary.com/images/drafts/slideshows/1.png);
     transform: translate3d(0, 0, 0);
   }
 
   .slideshow .mover {
     animation: moveSlideshow 180s linear infinite;
+  }
+
+  .flex-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
   }
 
   @keyframes moveSlideshow {

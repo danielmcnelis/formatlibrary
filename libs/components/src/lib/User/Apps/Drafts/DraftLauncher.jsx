@@ -19,6 +19,7 @@ export const DraftLauncher = () => {
     const playerId = getCookie('playerId')
     const logoUrl = type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${cube?.logo || 'cube.png'}` :
         `https://cdn.formatlibrary.com/images/artworks/${booster?.setCode || 'back'}.jpg`
+        
     const logoWidth = type === 'cube' ? '128px' : '100px'
 
     if (type === 'cube') {
@@ -103,7 +104,7 @@ export const DraftLauncher = () => {
                     type === 'cube' ? (
                         <div className="mover" style={{background: `url(https://cdn.formatlibrary.com/images/cubes/slideshows/${cube.id?.toString() || '1'}.png)`}}></div>
                     ) : (
-                        <div className="mover" style={{background: `url(https://cdn.formatlibrary.com/images/sets/slideshows/${booster?.setCode || 'LODT'}.png)`}}></div>
+                        <div className="mover" style={{background: `url(https://cdn.formatlibrary.com/images/sets/slideshows/${booster?.setCode || 'MRD'}.png)`}}></div>
                     )
                 }
                 </div>

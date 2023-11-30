@@ -2296,7 +2296,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             game_name: game_name,
             pts_for_match_win: "1.0",
             pts_for_match_tie: "0.0",
-            pts_for_bye: "0.0",
+            pts_for_bye: "1.0",
             tie_breaks: tie_breaks
         } : {
             name: name,
@@ -2306,7 +2306,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             game_name: game_name,
             pts_for_match_win: "1.0",
             pts_for_match_tie: "0.0",
-            pts_for_bye: "0.0",
+            pts_for_bye: "1.0",
             tie_breaks: tie_breaks
         }
         
@@ -2362,7 +2362,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 game_name: game_name,
                 pts_for_match_win: "1.0",
                 pts_for_match_tie: "0.0",
-                pts_for_bye: "0.0",
+                pts_for_bye: "1.0",
                 tie_breaks: tie_breaks
             } : {
                 name: name,
@@ -2372,7 +2372,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 game_name: game_name,
                 pts_for_match_win: "1.0",
                 pts_for_match_tie: "0.0",
-                pts_for_bye: "0.0",
+                pts_for_bye: "1.0",
                 tie_breaks: tie_breaks
             }
             

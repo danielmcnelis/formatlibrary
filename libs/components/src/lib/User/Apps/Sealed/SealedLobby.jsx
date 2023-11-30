@@ -5,10 +5,9 @@ import axios from 'axios'
 import { CardImage } from '../../../Cards/CardImage'
 import { FocalCard } from '../Builders/FocalCard'
 import { getCookie } from '@fl/utils'
-import ReactCountdownClock from 'react-countdown-clock'
 import { Helmet } from 'react-helmet'
 import {useSocket} from '@fl/hooks'
-import './DraftLobby.css' 
+import './SealedLobby.css' 
 
 const playerId = getCookie('playerId')
 
@@ -58,23 +57,16 @@ const sortFn = (a, b) => {
     }
 }
 
-// DRAFT LOBBY
-export const DraftLobby = () => {
+// SEALED LOBBY
+export const SealedLobby = () => {
     const [draft, setDraft] = useState({})
     const [participants, setParticipants] = useState([])
     const [entry, setEntry] = useState({})
-    const [inventory, setInventory] = useState([])
-    const [pack, setPack] = useState({})
-    const [card, setCard] = useState({})
-    const [selection, setSelection] = useState(null)
-    const [timer, setTimer] = useState(null)
-    const [onTheClock, setOnTheClock] = useState(false)
-    // const [toggleDraw] = useAudio('/assets/sounds/draw.mp3')
-    const [toggleChime] = useAudio('/assets/sounds/chime.mp3')
+    const [packs, setPacks] = useState([])
+    const [card, setCard] = useState(null)
     const [toggleHorn] = useAudio('/assets/sounds/horn.mp3')
     const socket = useSocket()
     const { id } = useParams()
-    const timerColor = JSON.parse(localStorage.getItem('theme')) === 'dark' ? '#00bca6' : '#334569'
 
     // FETCH PARTICIPANTS
     const fetchParticipants = async (draftId) => {
@@ -110,30 +102,7 @@ export const DraftLobby = () => {
     const start = async () => {          
         try {
             const data = { draftId: draft.id }
-            socket.emit('start draft', data)            
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    // PROCESS SELCTION
-    const processSelection = async (card) => {
-        try {
-            setPack(pack.filter((p) => p.cardId !== card.id))
-            setOnTheClock(false)
-            setSelection(card.name)
-            setInventory([...inventory, card])
-            // toggleDraw()
-        } catch (err) {
-            console.log(err)
-        }
-    }
-    
-    // SELECT CARD
-    const selectCard = async (card) => {    
-        try {
-            const data = { draftId: draft.id, round: draft.round, pick: draft.pick, playerId: playerId, cardId: card.id }            
-            socket.emit('select card', data, processSelection)            
+            socket.emit('start sealed', data)            
         } catch (err) {
             console.log(err)
         }
@@ -148,80 +117,40 @@ export const DraftLobby = () => {
         }
     }, [participants])
 
-    // HOOK - GET INVENTORY
+    // HOOK - GET PACKS
     useEffect(() => {
         const fetchData = async () => {
-            if (entry.id) {
-                const {data} = await axios.get(`/api/drafts/inventory?entryId=${entry.id}`)
-                if (data.length > inventory.length) setInventory(data)
+            if (entry.id && (draft.state === 'underway' || draft.state === 'complete')) {
+                const {data} = await axios.get(`/api/sealed/packs?entryId=${entry.id}`)
+                setPacks(data)
             }
         }
 
         fetchData()
-    }, [entry.id, draft.pick])
-
-    // HOOK - GET PACK
-    useEffect(() => {
-        const fetchData = async () => {
-            if (entry.id && draft.state === 'underway') {
-                const {data} = await axios.get(`/api/drafts/pack?entryId=${entry.id}`)
-                setPack(data)
-            }
-        }
-
-        fetchData()
-    }, [draft.state, draft.pick, entry.id])
+    }, [draft.state, entry.id])
 
     // HOOK - FETCH PARTICIPANTS
     useEffect(() => {
         fetchParticipants(draft.id)
     }, [draft.id])
 
-    // HOOK - SET CLOCK AND TIMER
-    useEffect(() => {
-        const lastUpdated = new Date(draft.updatedAt)
-        const lastUpdatedTimeStamp = lastUpdated.getTime()
-        const timeExpiresAt = lastUpdatedTimeStamp + ((draft.timer || 60) * 1000)
-        const today = new Date()
-        const nowTimeStamp = today.getTime()
-        const timeRemaining = timeExpiresAt - nowTimeStamp
-        
-        if (timeRemaining > 0 && draft.pick > inventory.length) {
-            setOnTheClock(true)
-            setTimer(timeRemaining / 1000)
-        }
-    }, [draft.pick, draft.updatedAt, inventory.length])
-
     // HOOK - SOCKET.IO
     useEffect(() => {
         socket.on('new entry', (data) => {
-            console.log(`${data.playerName} joined Draft Lobby.`)
+            console.log(`${data.playerName} joined Sealed Lobby.`)
             fetchParticipants(data.draftId)
         });
 
         socket.on('removed entry', (data) => {
-            console.log(`${data.playerName} exited Draft Lobby.`)
+            console.log(`${data.playerName} exited Sealed Lobby.`)
             fetchParticipants(data.draftId)
         });
 
-        socket.on('draft begins', (data) => {
-            console.log(`Draft has begun!`)
+        socket.on('sealed begins', (data) => {
+            console.log(`Sealed has begun!`)
             setDraft(data)
-            alert('The Draft is Starting Now!')
+            alert('Sealed is Starting Now!')
             toggleHorn()
-        });
-
-        socket.on('next pick', (data) => {
-            console.log(`Next pick!`)
-            setSelection(null)
-            setDraft(data)
-            toggleChime()
-        });
-
-        socket.on('draft complete', (data) => {
-            console.log(`Draft complete!`)
-            setSelection(null)
-            setDraft(data)
         });
     }, [])
 
@@ -236,23 +165,22 @@ export const DraftLobby = () => {
     }, [])
 
     return (
-        <div className="cube-portal">
+        <div className="sealed-portal">
             {
                 draft.state === 'pending' ? (
                     <>
                         <Helmet>
-                            <title>{`Yu-Gi-Oh! Draft Lobby - Format Library`}</title>
-                            <meta name="og:title" content={`Yu-Gi-Oh! Draft Lobby - Format Library`}/>
-                            <meta name="description" content={`Click here to join the next draft for ${draft.cubeName}.`}/>
-                            <meta name="og:description" content={`Click here to join the next draft for ${draft.cubeName}.`}/>
+                            <title>{`Yu-Gi-Oh! Sealed Lobby - Format Library`}</title>
+                            <meta name="og:title" content={`Yu-Gi-Oh! Sealed Lobby - Format Library`}/>
+                            <meta name="description" content={`Click here to play Sealed Yu-Gi-Oh!`}/>
+                            <meta name="og:description" content={`Click here to play Sealed Yu-Gi-Oh!`}/>
                         </Helmet>
                         <div className="card-database-flexbox">
-                            <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
+                            <img style={{ width:'100px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="sealed-logo"/>
                             <div>
-                                <h1>Upcoming Draft!</h1>
-                                <h2>{draft.cubeName}</h2>
+                                <h1>Upcoming Sealed!</h1>
                             </div>
-                            <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
+                            <img style={{ width:'100px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="sealed-logo"/>
                         </div>
                         <br/>
                         <div className="slideshow">
@@ -264,7 +192,7 @@ export const DraftLobby = () => {
                             {
                                 participants.map((p) => (
                                     <img 
-                                        className="draft-participant-pfp" 
+                                        className="sealed-participant-pfp" 
                                         src={`https://cdn.formatlibrary.com/images/pfps/${p.player?.discordId || p.player?.name}.png`}
                                         onError={(e) => {
                                                 e.target.onerror = null
@@ -279,7 +207,7 @@ export const DraftLobby = () => {
                         {
                             !entry.id ? (
                                 <div
-                                    className="cube-button"
+                                    className="sealed-button"
                                     type="submit"
                                     onClick={() => join()}
                                 >
@@ -287,7 +215,7 @@ export const DraftLobby = () => {
                                 </div>
                             ) : entry.id && playerId !== draft.hostId ? (
                                 <div
-                                    className="cube-button"
+                                    className="sealed-button"
                                     type="submit"
                                     onClick={() => leave()}
                                 >
@@ -295,7 +223,7 @@ export const DraftLobby = () => {
                                 </div>
                             ) : entry.id && playerId === draft.hostId ? (
                                 <div
-                                    className="cube-button"
+                                    className="sealed-button"
                                     type="submit"
                                     onClick={() => start()}
                                 >
@@ -307,80 +235,38 @@ export const DraftLobby = () => {
                 ) : (
                     <>
                         <Helmet>
-                            <title>{`Yu-Gi-Oh! Draft Lobby - Format Library`}</title>
-                            <meta name="og:title" content={`Yu-Gi-Oh! Draft Lobby - Format Library`}/>
-                            <meta name="description" content={`Click here to join the next draft for ${draft.cubeName}.`}/>
-                            <meta name="og:description" content={`Click here to join the next draft for ${draft.cubeName}.`}/>
+                            <title>{`Yu-Gi-Oh! Sealed Lobby - Format Library`}</title>
+                            <meta name="og:title" content={`Yu-Gi-Oh! Sealed Lobby - Format Library`}/>
+                            <meta name="description" content={`Click here to play Sealed Yu-Gi-Oh!`}/>
+                            <meta name="og:description" content={`Click here to play Sealed Yu-Gi-Oh!`}/>
                         </Helmet>
-                        <div className="space-between">
-                            {
-                                draft?.state === 'underway' && timer >= 0 && timer <= draft.timer ? (
-                                    <ReactCountdownClock 
-                                        color={timerColor}
-                                        seconds={timer}
-                                        alpha={0.9}
-                                        size={96}
-                                        onComplete={() => setOnTheClock(false)}
-                                    />
-                                ) : <div className="empty-clock"/>
-                            }
-                            <div className="card-database-flexbox">
-                                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
-                                <div>
-                                    <h1>{draft.state === 'underway' ? 'Live Draft!' : draft.state === 'complete' ? 'Draft Complete!' : ''}</h1>
-                                    <h2>{draft.state === 'underway' ? `Round ${draft.round} • Pick ${draft.pick}` : ''}</h2>
-                                </div>
-                                <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="cube-logo"/>
+                        <div className="card-database-flexbox">
+                            <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="sealed-logo"/>
+                            <div>
+                                <h1>{draft.state === 'complete' ? 'Sealed Complete!' : ''}</h1>
                             </div>
-                            <div className="empty-clock"/>
+                            <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="sealed-logo"/>
                         </div>
-                        <div className="last-selection"><i>{selection ? `You selected: ${selection}!` : ''}</i></div>
                         <div className="space-between-aligned">
                             <FocalCard card={card}/>
-                            <div className="draft-interface">
+                            <div className="sealed-interface">
                                 {
-                                    draft.state === 'underway' && pack?.length ? (
+                                    packs?.length ? (
                                         <>
-                                            <h3 className="draft-info">Pack:</h3>
+                                            <h3 className="sealed-info">Inventory:</h3>  
                                             <div className="pack-flexbox">
                                                 {
-                                                    pack.map((p) => (   
+                                                    packs.map((pack, index) => (pack.map((print) => (   
                                                         <CardImage  
-                                                            key={p.card.id} 
-                                                            card={p.card} 
-                                                            disableLink={!onTheClock} 
-                                                            selectCard={selectCard}
-                                                            setCard={setCard}
-                                                            isDraft={true}
-                                                            width="72px"
-                                                            margin="0.5px"
-                                                            padding="0.5px"
-                                                        />
-                                                    ))
-                                                }
-                                            </div>
-                                            <br/>
-                                        </>
-                                    ) : ''
-                                }
-                                
-                                {
-                                    inventory?.length ? (
-                                        <>
-                                            <h3 className="draft-info">Inventory:</h3>  
-                                            <div className="pack-flexbox">
-                                                {
-                                                    inventory.map((card) => (   
-                                                        <CardImage  
-                                                            key={card.id} 
-                                                            card={card}
-                                                            disableLink={true} 
+                                                            key={`${index}-${print.id}`} 
+                                                            card={print.card}
+                                                            rarity={print.rarity}
                                                             setCard={setCard}
                                                             width="72px"
                                                             margin="0.5px"
                                                             padding="0.5px"
                                                         />
-                                                    ))
+                                                    ))))
                                                 }
                                             </div> 
                                             <br/>
@@ -388,8 +274,8 @@ export const DraftLobby = () => {
                                     ) : '' 
                                 }
 
-                                {
-                                    inventory?.length ? (
+                                {/* {
+                                    packs?.length ? (
                                         <div className="space-evenly">
                                             <div
                                                 className="show-cursor"
@@ -426,14 +312,13 @@ export const DraftLobby = () => {
                                             </a>
                                         </div>
                                     ) : ''
-                                }
+                                } */}
                             </div>
                         </div>
                         <br/>
                     </>
                 )
             }
-
         </div>
     )
 }

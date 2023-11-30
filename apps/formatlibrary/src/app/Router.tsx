@@ -22,6 +22,7 @@ import {
   Page,
   PlayerProfile,
   ReplayTable,
+  SealedLauncher,
   Settings,
   SingleBanList,
   SingleCard,
@@ -81,6 +82,7 @@ export const Router = () => {
 					<Route path="/leaderboards/:id" element=<Page element= <LeaderBoard /> /> />
 					<Route path="/replays/" element=<Page element= <ReplayTable /> /> />
 					<Route path="/start-draft/" element=<Page element= <DraftLauncher /> /> />
+					<Route path="/start-sealed/" element=<Page element= <SealedLauncher /> /> />
 					<Route path="/banlists/:id" element=<Page element= <SingleBanList /> /> />
 					<Route path="/players/:id" element=<Page element= <PlayerProfile /> /> />
 					<Route path="/admin-portal" element=<Page  element= <AdminPortal /> /> />

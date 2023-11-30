@@ -5,42 +5,59 @@ import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import './SealedLauncher.css' 
 
+// SEALED LAUNCHER
 export const SealedLauncher = () => {
-    const [packs, setPacks] = useState([])
-    const [pack, setPack] = useState({})
-    const [packsPerPlayer, setPacksPerPlayer] = useState(4)
-    const [draftLink, setDraftLink] = useState(null)
+    const [boosters, setBoosters] = useState([])
+    const [booster, setBooster] = useState({})
+    const [selectedPacks, setSelectedPacks] = useState([])
+    const [packQuants, setPackQuants] = useState([])
+    const [quantity, setQuantity] = useState(10)
+    const [sealedLink, setSealedLink] = useState(null)
+    const packIds = selectedPacks.map((p) => p.id)
     const playerId = getCookie('playerId')
 
     // LAUNCH
     const launch = async () => {
-        if (!pack.id) return alert('Please Select a Pack.')
+        if (!selectedPacks.length) return alert('Please Select Pack(s).')
         if (!playerId) return alert('Please Log-in to play Sealed.')
         
         try {
             const { data } = await axios.post('/api/sealed/launch', {
-                setId: pack.id,
-                hostId: playerId,
-                packsPerPlayer: packsPerPlayer
+                packIds: packIds,
+                packQuants: packQuants,
+                hostId: playerId
             })
             
-            setDraftLink(data)
+            setSealedLink(data)
         } catch (err) {
             console.log(err)
         }
     }
 
-    // FETCH DRAFT
-    const fetchDraft = async (draftId) => {
-        const {data} = await axios.get(`/api/drafts/${draftId}`)
-        setDraft(data)
+    // RESET
+    const reset = () => {
+        setSelectedPacks([])
+        setPackQuants([])
+        setBooster({})
+        setQuantity(10)
+        document.getElementById('booster-selector').value = ''
+        document.getElementById('quantity-selector').value = '10'
+    }
+
+    // ADD PACKS
+    const addPacks = () => {
+        if (!booster.id) return alert('Please Select Booster.')
+        setSelectedPacks([...selectedPacks, booster])
+        setPackQuants([...packQuants, quantity])
+        setBooster({})
+        document.getElementById('booster-selector').value = ''
     }
 
     // USE EFFECT
     useEffect(() => {
         const fetchData = async () => {
-            const {data} = await axios.get(`/api/drafts`)
-            setDrafts(data)
+            const {data: boosterData} = await axios.get(`/api/sets/draftable`)
+            setBoosters(boosterData)
         }
         
         fetchData()
@@ -49,84 +66,87 @@ export const SealedLauncher = () => {
     return (
         <>
             <Helmet>
-                <title>{`Start a Yu-Gi-Oh! Booster Draft - Format Library`}</title>
-                <meta name="description" content={`Start a Yu-Gi-Oh! Booster Draft - Format Library`}/>
-                <meta name="description" content={`Open free, virtual packs of your favorite Yu-Gi-Oh! booster sets. Enjoy realistic pull ratios and rarities for maximum nostalgia.`}/>
-                <meta name="description" content={`Open free, virtual packs of your favorite Yu-Gi-Oh! booster sets. Enjoy realistic pull ratios and rarities for maximum nostalgia.`}/>
+                <title>{`Play Sealed Yu-Gi-Oh! - Format Library`}</title>
+                <meta name="og:title" content={`Play Sealed Yu-Gi-Oh! - Format Library`}/>
+                <meta name="description" content={`Click here to play Sealed Yu-Gi-Oh!`}/>
+                <meta name="og:description" content={`Click here to play Sealed Yu-Gi-Oh!`}/>
             </Helmet>
-            <div className="draft-portal">
+            <div className="sealed-portal">
                 <div className="card-database-flexbox">
-                    <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${pack.logo || 'pack.png'}`} alt="draft-logo"/>
+                    <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/artworks/${booster.setCode || selectedPacks[selectedPacks.length-1]?.setCode || 'back'}.jpg`} alt="sealed-logo"/>
                     <div>
-                        <h1>Start a New Sealed!</h1>
+                        <h1>Sealed App</h1>
                     </div>
-                    <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${pack.logo || 'pack.png'}`} alt="draft-logo"/>
+                    <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/artworks/${booster.setCode || selectedPacks[selectedPacks.length-1]?.setCode || 'back'}.jpg`} alt="sealed-logo"/>
                 </div>
                 <br/>
 
                 <div className="slideshow">
-                    <div className="mover"></div>
+                    <div className="mover" style={{background: `url(https://cdn.formatlibrary.com/images/sets/slideshows/${booster?.setCode || selectedPacks[0]?.setCode}.png)`}}></div>
                 </div>
-
                 <br/>
-                <label>Draft:
+
+                <label>Booster:
                     <select
-                        id="draft"
-                        onChange={(e) => fetchDraft(e.target.value)}
+                        id="booster-selector"
+                        defaultValue=""
+                        onChange={(e) => setBooster(boosters.filter((b) => !packIds.includes(b.id))[e.target.value])}
                     >
-                    <option value="">Select Draft:</option>
+                    <option value="">Select Booster:</option>
                     {
-                        drafts.map((c) => <option value={c.id}>{c.name} by {c.builder}</option>)
+                        boosters.filter((b) => !packIds.includes(b.id)).map((b, index) => <option value={index}>{b.setName}</option>)
                     }
                     </select>
                 </label>
 
-                <label>Pack Size:
+                <label>Quantity:
                     <select
-                        id="pack-size"
-                        defaultValue="12"
-                        onChange={(e) => {setPackSize(e.target.value)}}
+                        id="quantity-selector"
+                        defaultValue="10"
+                        onChange={(e) => {setQuantity(e.target.value)}}
                     >
-                    {
-                        packSizeOptions.map((size) => <option value={size}>{size} Cards / Pack</option>)
-                    }
-                    </select>
-                </label>
-
-                <label>Pack Number:
-                    <select
-                        id="pack-number"
-                        defaultValue="4"
-                        onChange={(e) => {setPacksPerPlayer(e.target.value)}}
-                    >
-                        <option value="6">6 Packs / Player</option>)
-                        <option value="5">5 Packs / Player</option>)
-                        <option value="4">4 Packs / Player</option>)
-                        <option value="3">3 Packs / Player</option>)
-                        <option value="2">2 Packs / Player</option>)
+                        {
+                            Array.from({length: 24}, (_, i) => i + 1).map((num) => <option value={num}>{num}</option>)
+                        }
                     </select>
                 </label>
 
                 {
-                    pack.id ? (
-                        <div className="settings-note">
-                            <i>These settings support up to {Math.floor(pack.cardPool?.length / (packsPerPlayer * packSize))} players.</i>
-                        </div>
-                    ) : ''
+                    selectedPacks.map((p, index) => {
+                       return <li className="selected-packs">{packQuants[index]} Packs of {p.setName}</li>
+                    })
                 }
 
-                <div
-                    className="draft-button"
-                    type="submit"
-                    onClick={() => launch()}
-                >
-                    Launch
+                <div className="flex-buttons">
+                    <div
+                        className="sealed-button"
+                        type="submit"
+                        onClick={() => addPacks()}
+                    >
+                        Add Packs
+                    </div>
+
+                    <div
+                        className="sealed-button"
+                        type="submit"
+                        onClick={() => reset()}
+                    >
+                        Reset
+                    </div>
+
+                    <div
+                        className="sealed-button"
+                        type="submit"
+                        onClick={() => launch()}
+                    >
+                        Launch
+                    </div>
                 </div>
 
                 {
-                    draftLink ? (
+                    sealedLink ? (
                         <div className="lobby-link">
-                            Draft Lobby: <a href={draftLink}>{draftLink}</a>
+                            Sealed Lobby: <a href={sealedLink}>{sealedLink}</a>
                         </div>
                     ) : ''
                 }

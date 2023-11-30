@@ -10,13 +10,13 @@
     padding: 20px 10px;
 }
 
-.draft-interface {
+.sealed-interface {
     display: flex;
     width: 76%;
     flex-direction: column;
 }
 
-.draft-info {
+.sealed-info {
     padding: 5px 10px;
     text-align: left;
 }
@@ -119,7 +119,7 @@
     color: var(--countdown) !important;
 }
 
-  .draft-participant-pfp {
+  .sealed-participant-pfp {
     border: 5px solid black;
     border-radius: 100%;
     background-color: #000000;
