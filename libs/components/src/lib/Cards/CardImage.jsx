@@ -10,6 +10,9 @@ export const CardImage = (props) => {
         return (
             <div className="CardImage-box">
                 <div className="card-image-cell"  >
+                {
+                    rarity ? <img src={`https://cdn.formatlibrary.com/images/rarities/${camelize(rarity)}.png`} alt={rarity} className="rarity-icon"/> : null
+                }
                 <img
                     src={`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`}
                     card={card}

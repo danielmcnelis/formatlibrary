@@ -3,6 +3,22 @@ import { Card, Cube, Draft, DraftEntry, Inventory, PackContent, Player, Set } fr
 import axios from 'axios'
 import { config } from '@fl/config'
 
+//SHUFFLE ARRAY
+const shuffleArray = (arr) => {
+    let i = arr.length
+    let temp
+    let index
+
+    while (i--) {
+        index = Math.floor((i + 1) * Math.random())
+        temp = arr[index]
+        arr[index] = arr[i]
+        arr[i] = temp
+    }
+
+    return arr
+}
+
 // START DRAFT
 export const startSealed = async (draftId, socket) => {
     try {
@@ -19,11 +35,19 @@ export const startSealed = async (draftId, socket) => {
             }
         })
 
+        const entries = await DraftEntry.findAll({ where: { draftId: draft.id }})
+        const shuffledEntries = shuffleArray(entries)
+
+        for (let i = 0; i < shuffledEntries.length; i++) {
+            const entry = shuffledEntries[i]
+            await entry.update({ slot: i + 1 })
+        }
+
         const sealedStructure = JSON.parse(draft.sealedStructure)
-        const instructions = Object.entries(sealedStructure)
+        const instructions:Array<any> = Object.entries(sealedStructure)
 
         for (let i = 0; i < instructions.length; i++) {
-            const [setId, packsPerPlayer] = instructions[i]
+            const [setId, packsPerPlayer]:[number, number] =  instructions[i]
             console.log('setId', setId)
             console.log('packsPerPlayer', packsPerPlayer)
             const set = await Set.findOne({
@@ -40,7 +64,7 @@ export const startSealed = async (draftId, socket) => {
                     await PackContent.create({
                         cardId: pack[k].card.id,
                         cardName: pack[k].card.name,
-                        packNumber: i + 1,
+                        packNumber: j + 1,
                         draftId: draft.id,
                         rarity: pack[k].rarity,
                         setId: setId

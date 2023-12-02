@@ -16,4 +16,4 @@ import sets from './sets'
 import stats from './stats'
 import statuses from './statuses'
 
-export { banlists, blogposts, cards, cubes, decks, deckTypes, drafts, events, formats, images, matchups, players, replays, sets, stats, statuses }
+export { banlists, blogposts, cards, cubes, decks, deckTypes, drafts, events, formats, images, matchups, players, replays, sealed, sets, stats, statuses }

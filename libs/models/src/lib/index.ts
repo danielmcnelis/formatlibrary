@@ -94,6 +94,9 @@ Draft.hasMany(DraftEntry)
 PackContent.belongsTo(Draft)
 Draft.hasMany(PackContent)
 
+PackContent.belongsTo(Set)
+Set.hasMany(PackContent)
+
 Inventory.belongsTo(Draft)
 Draft.hasMany(Inventory)
 

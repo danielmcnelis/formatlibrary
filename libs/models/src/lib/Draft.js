@@ -52,6 +52,9 @@ export const Draft = db.define('drafts', {
     },
     shareLink: {
         type: Sequelize.STRING
+    },
+    sealedStructure: {
+        type: Sequelize.TEXT
     }
 })
 

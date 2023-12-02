@@ -21,7 +21,7 @@ export const launchSealed = async (req, res, next) => {
         const shareLink = await Draft.generateShareLink()
   
         const draft = await Draft.create({
-          type: req.body.type,
+          type: 'sealed',
           sealedStructure: JSON.stringify(sealedStructure),
           hostName: player.name,
           hostId: player.id,
@@ -50,9 +50,11 @@ export const getSealedPacks = async (req, res, next) => {
         const packs = []
 
         for (let i = 0; i < instructions.length; i++) {
-            const [setId, packsPerPlayer] = instructions[i]                
-            const packNumbers = Array.from(Array(packsPerPlayer).keys()).map((e) => e + 1 + (packsPerPlayer * entry.slot - 1))
-            console.log(packNumbers)
+            const instruction:Array<any> = instructions[i]
+            const [setId, packsPerPlayer] = instruction
+            console.log('setId', setId, 'packsPerPlayer', packsPerPlayer)              
+            const packNumbers = Array.from(Array(packsPerPlayer).keys()).map((e) => e + 1 + (packsPerPlayer * (entry.slot - 1)))
+            console.log('packNumbers sealed.ts ln55', packNumbers)
 
             for (let j = 0; j < packNumbers.length; j++) {
                 const packNumber = packNumbers[j]

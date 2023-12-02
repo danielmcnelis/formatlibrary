@@ -17,5 +17,8 @@ export const PackContent = db.define('packContents', {
     },
     draftId: {
         type: Sequelize.STRING,
+    },
+    setId: {
+        type: Sequelize.INTEGER,
     }
 })

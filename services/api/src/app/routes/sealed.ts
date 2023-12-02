@@ -3,8 +3,8 @@ import { getSealedPacks, launchSealed } from '../middleware'
 
 const router = Router()
 
-router.post('/api/sealed/launch', launchSealed)
+router.get('/api/sealed/packs', getSealedPacks)
 
-router.post('/api/sealed/packs', getSealedPacks)
+router.post('/api/sealed/launch', launchSealed)
 
 export default router

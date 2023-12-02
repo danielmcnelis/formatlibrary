@@ -7,7 +7,7 @@ import * as https from 'https'
 import { readFileSync } from 'fs'
 import { Server } from 'socket.io'
 import { config } from '@fl/config'
-import { joinDraft, leaveDraft, selectCard, startDraft } from './events'
+import { joinDraft, leaveDraft, selectCard, startDraft, startSealed } from './events'
 
 const app = express()
   
@@ -40,6 +40,7 @@ io.on('connection', (socket) => {
     socket.on('join draft', (data, setEntry) => joinDraft(data.playerId, data.draftId, socket, setEntry))
     socket.on('leave draft', (data, setEntry) => leaveDraft(data.playerId, data.draftId, socket, setEntry))
     socket.on('start draft', (data) => startDraft(data.draftId, socket))
+    socket.on('start sealed', (data) => startSealed(data.draftId, socket))
     socket.on('select card', (data, handleSelection) => selectCard(data.cardId, data.playerId, data.draftId, data.round, data.pick, socket, handleSelection))
 })
 
