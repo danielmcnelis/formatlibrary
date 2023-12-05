@@ -100,7 +100,7 @@ export default {
                 + `\nMedal: ${medal}`
                 + `\nRanking: ${rank}`
                 + `\nElo Rating: ${elo}`
-                + `${stats?.tournamentPoints ? `\nTournament Points: ${stats.tournamentPoints}` : ''}`
+                + `${stats?.tournamentPoints ? `\nTournament Points: ${stats?.tournamentPoints}` : ''}`
                 + `\nWins: ${wins}, Losses: ${losses}`
                 + `\nWin Rate: ${winrate}`
             })
