@@ -136,8 +136,8 @@ export default {
         } else if (replay) {
             return await interaction.editReply({ content: `The replay from this match was already saved:\n<${replay.url}>\n\nIf this link is incorrect, please get a Moderator to help you.`})	
         } else if (!replay) {
-            const round = challongeMatch?.match?.round || ''
-            let roundName 
+            const round = challongeMatch?.match?.round
+            let roundName
 
             if (tournament.type === 'swiss' || tournament.type === 'round robin') {
                 roundName = `Round ${challongeMatch?.match?.round}`

@@ -23,8 +23,7 @@ export const Builder = () => {
         extra: []
     })
 
-    const myFormats = [...new Set(decks.map((d) => d.formatName))]
-    const myDeckTypes = [...new Set(decks.map((d) => d.type))]
+    const [cuts, setCuts] = useState([])
     const [card, setCard] = useState({})
     const [format, setFormat] = useState({})
     const [controlPanelDeckType, setControlPanelDeckType] = useState(null)
@@ -39,6 +38,9 @@ export const Builder = () => {
     const [showSaveModal, setShowSaveModal] = useState(false)
     const [showShareModal, setShowShareModal] = useState(false)
     const [showUploadModal, setShowUploadModal] = useState(false)
+    
+    const myFormats = [...new Set(decks.map((d) => d.formatName))]
+    const myDeckTypes = [...new Set(decks.map((d) => d.type))]
     const location = useLocation()
 
     // HANDLE DRAG END

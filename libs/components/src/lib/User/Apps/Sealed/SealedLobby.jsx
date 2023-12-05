@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { CardImage } from '../../../Cards/CardImage'
 import { FocalCard } from '../Builders/FocalCard'
@@ -257,10 +257,38 @@ export const SealedLobby = () => {
                         <div className="card-database-flexbox">
                             <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="sealed-logo"/>
                             <div>
-                                <h1>{draft.state === 'complete' ? 'Sealed Complete!' : ''}</h1>
+                                <h1>{'Sealed Complete!'}</h1>
                             </div>
                             <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="sealed-logo"/>
                         </div>
+                        
+            <div className="single-deck-title-flexbox">
+                <a
+                    className="show-cursor"
+                    href={`/api/sealed/download?entryId=${entry.id}`} 
+                    download={`${entry.playerName}_Sealed_Inventory_${(new Date()).toISOString().slice(0, 10)}.ydk`}
+                >                                    
+                    <div className="deck-button">
+                        <b style={{padding: '0px 6px'}}>Download</b>
+                        <img 
+                            style={{width:'28px'}} 
+                            src={`https://cdn.formatlibrary.com/images/emojis/download.png`}
+                            alt="download"
+                        />
+                    </div>
+                </a>
+                <Link to="/sealed-builder" state={{ packs: packs }} className="desktop-only">                                    
+                    <div className="deck-button">
+                        <b style={{padding: '0px 6px'}}>Deck Builder</b>
+                        <img 
+                            style={{width:'28px'}} 
+                            src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`}
+                            alt="open"
+                        />
+                    </div>
+                </Link>
+            </div>
+
                         <div className="space-between-aligned">
                             <FocalCard card={card}/>
                             <div className="sealed-interface">
@@ -288,12 +316,12 @@ export const SealedLobby = () => {
                                     ) : '' 
                                 }
 
-                                {/* {
+                                {
                                     packs?.length ? (
                                         <div className="space-evenly">
                                             <div
                                                 className="show-cursor"
-                                                onClick={() => setInventory([...inventory.sort(sortFn)])}
+                                                onClick={() => sortInventory()}
                                             >                                                                 
                                                 <div 
                                                     className="inventory-button"
@@ -309,8 +337,8 @@ export const SealedLobby = () => {
                                             </div>
                                             <a
                                                 className="show-cursor"
-                                                href={`/api/drafts/download?entryId=${entry.id}`} 
-                                                download={`${entry.playerName}_Draft_Inventory_${(new Date()).toISOString().slice(0, 10)}.ydk`}
+                                                href={`/api/sealed/download?entryId=${entry.id}`} 
+                                                download={`${entry.playerName}_Sealed_Inventory_${(new Date()).toISOString().slice(0, 10)}.ydk`}
                                             >                                    
                                                 <div
                                                     className="inventory-button"
@@ -326,7 +354,7 @@ export const SealedLobby = () => {
                                             </a>
                                         </div>
                                     ) : ''
-                                } */}
+                                }
                             </div>
                         </div>
                         <br/>
