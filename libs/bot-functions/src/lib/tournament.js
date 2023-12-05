@@ -1250,6 +1250,26 @@ export const postParticipant = async (server, tournament, player) => {
     }   
 }
 
+//RESTORE PARTICIPANT
+export const restoreParticipant = async (server, tournament, entry) => {
+    try {
+        // RESTORE PARTICIPANT IN CHALLONGE BRACKET 
+        await axios({
+            method: 'delete',
+            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${entry.participantId}.json?api_key=${server.challongeAPIKey}`
+        })
+
+        const { data } = await axios({
+            method: 'put',
+            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${entry.participantId}.json?api_key=${server.challongeAPIKey}`
+        })
+
+        return data
+    } catch (err) {
+        console.log(err)
+    }   
+}
+
 //PROCESS MATCH RESULT
 export const processMatchResult = async (server, interaction, winner, winningPlayer, loser, losingPlayer, tournament, format, noshow = false) => {
     const losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id }, include: Player })
@@ -2420,6 +2440,59 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             console.log(err)
             return await interaction.editReply({ content: `Unable to connect to Challonge account.`})
         }
+    }
+}
+
+// UPDATE TOURNAMENT
+export const updateTournament = async (interaction, tournamentId, name, abbreviation, tournament_type, url) => {
+    console.log('tournamentId, name, abbreviation, tournament_type, url', tournamentId, name, abbreviation, tournament_type, url)
+    const server = !interaction.guildId ? {} : 
+        await Server.findOne({ where: { id: interaction.guildId }}) || 
+        await Server.create({ id: interaction.guildId, name: interaction.guild.name })
+    
+    const tournament = await Tournament.findOne({
+        where: {
+            id: tournamentId
+        }
+    })
+
+    try {
+        const { status, data } = await axios({
+            method: 'put',
+            url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
+            data: {
+                tournament: {
+                    name: name || tournament.name,
+                    url: url || tournament.url,
+                    tournament_type: tournament_type || tournament.type,
+                }
+            }
+        })
+
+        console.log('data', data)
+        
+        if (status === 200 && data) {
+            await tournament.update({ 
+                name: data.tournament.name,
+                abbreviation: abbreviation,
+                url: data.tournament.url,
+                tournament_type: data.tournament.tournament_type,
+            })
+
+            const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
+            return await interaction.editReply({ content: 
+                `Updated tournament settings:` + 
+                `\nName: ${data.tournament.name} ${tournament.logo}` + 
+                `\nAbbreviation: ${tournament.abbreviation} ${server.emoji || tournament.emoji}` + 
+                `\nType: ${capitalize(data.tournament.tournament_type, true)}` +
+                `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
+            })
+        } else {
+            return await interaction.editReply({ content: `Unable to update tournament on Challonge.com.`})
+        }
+    } catch (err) {
+        console.log(err)
+        return await interaction.editReply({ content: `Unable to connect to Challonge.com.`})
     }
 }
 

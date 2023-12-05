@@ -11,13 +11,13 @@ import { client } from './client'
 import { Match, Membership, Player, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
-import { assignTourRoles, conductCensus, createTopCut, downloadNewCards, getMidnightCountdown, markInactives, purgeEntries, 
-    purgeRatedDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices ,updateSets, 
-    updateServers, fixDeckFolder, postStandings, checkTimer, closeTournament, createTournament, 
-    dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, processNoShow, removeFromTournament, 
-    seed, sendDeck, setTimerForTournament, signupForTournament, startChallongeBracket, startTournament, 
-    endTournament, saveReplay, undoMatch, assignRoles, createMembership, createPlayer, fetchCardNames, 
-    fetchOPCardNames, hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, 
+import { assignTourRoles, conductCensus, createTopCut, downloadNewCards, getMidnightCountdown, markInactives, 
+    purgeEntries, purgeRatedDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices,
+    updateSets, updateServers, fixDeckFolder, postStandings, checkTimer, closeTournament, createTournament, 
+    dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
+    processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
+    startChallongeBracket, startTournament, endTournament, saveReplay, undoMatch, assignRoles, createMembership,
+    createPlayer, fetchCardNames, fetchOPCardNames, hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, 
     isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, editPointsSystem
 } from '@fl/bot-functions'
 
@@ -146,7 +146,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isModalSubmit()) return
     await interaction.deferReply()
-    console.log('interaction.customId', interaction.customId)
 
     if (interaction.customId?.includes('create')) {
         const name = interaction.fields.getTextInputValue('name')
@@ -180,6 +179,29 @@ client.on(Events.InteractionCreate, async (interaction) => {
         const tieBreaker2 = interaction.fields.fields.get('tb2') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) || 'match wins vs tied' : 'match wins vs tied'
     
         return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, tieBreaker1, tieBreaker2)
+    } else if (interaction.customId?.includes('edit')) {
+        const name = interaction.fields.getTextInputValue('name')
+
+        const decipherTournamentTypeInput = (input) => {
+            if (input.includes('sw')) {
+                return 'swiss'
+            } else if (input.includes('de') || input.includes('double')) {
+                return 'double elimination'
+            } else if (input.includes('se') || input.includes('single')) {
+                return 'single elimination'
+            } else if (input.includes('rr') || input.includes('rob')) {
+                return `round robin`
+            } else {
+                return null
+            }
+        }
+
+        const tournament_type = interaction.fields.fields.get('tournamentType') ? decipherTournamentTypeInput(interaction.fields.getTextInputValue('tournamentType')) : null
+        const abbreviation = interaction.fields.fields.get('abbreviation') ? interaction.fields.getTextInputValue('abbreviation') : null
+        const url = interaction.fields.fields.get('url') ? interaction.fields.getTextInputValue('url') : null
+        const tournamentId = interaction.customId?.split('-')[1]
+
+        return updateTournament(interaction, tournamentId, name, abbreviation, tournament_type, url)
     } else if (interaction.customId?.includes('tiebreakers')) {
         const decipherTieBreakerInput = (input) => {
             if (input.includes('mb') || input.includes('med')) {
