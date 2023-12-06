@@ -1254,14 +1254,14 @@ export const postParticipant = async (server, tournament, player) => {
 export const restoreParticipant = async (server, tournament, entry) => {
     try {
         // RESTORE PARTICIPANT IN CHALLONGE BRACKET 
-        await axios({
-            method: 'delete',
-            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${entry.participantId}.json?api_key=${server.challongeAPIKey}`
-        })
-
         const { data } = await axios({
             method: 'put',
-            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${entry.participantId}.json?api_key=${server.challongeAPIKey}`
+            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${entry.participantId}.json?api_key=${server.challongeAPIKey}`,
+            data: {
+                participant: {
+                    active: true
+                }
+            }
         })
 
         return data
@@ -2445,7 +2445,6 @@ export const createTournament = async (interaction, formatName, name, abbreviati
 
 // UPDATE TOURNAMENT
 export const updateTournament = async (interaction, tournamentId, name, abbreviation, tournament_type, url) => {
-    console.log('tournamentId, name, abbreviation, tournament_type, url', tournamentId, name, abbreviation, tournament_type, url)
     const server = !interaction.guildId ? {} : 
         await Server.findOne({ where: { id: interaction.guildId }}) || 
         await Server.create({ id: interaction.guildId, name: interaction.guild.name })
@@ -2468,8 +2467,6 @@ export const updateTournament = async (interaction, tournamentId, name, abbrevia
                 }
             }
         })
-
-        console.log('data', data)
         
         if (status === 200 && data) {
             await tournament.update({ 

@@ -38,7 +38,7 @@ export default {
         if (!format) return await interaction.editReply(`Unable to determine what format is being played in ${tournament?.name}. Please contact an administrator.`)
                                        
         const data = await restoreParticipant(server, tournament, entry)
-        if (!data || !data?.participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register ${player.globalName || player.discordName} on Challonge for ${tournament?.name}. ${tournament.logo}`})
+        if (!data || !data?.participant) return await interaction.editReply({ content: `${emojis.high_alert} Error: Unable to restore ${player.globalName || player.discordName} on Challonge for ${tournament?.name}. ${tournament.logo}`})
         await entry.update({ active: true })
 
         member.roles.add(server.tourRole).catch((err) => console.log(err))
