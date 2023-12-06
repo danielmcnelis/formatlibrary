@@ -43,9 +43,11 @@ import records from './lib/records'
 import remove from './lib/remove'
 import replay from './lib/replay'
 import reset from './lib/reset'
+import restore from './lib/restore'
 import rng from './lib/rng'
 import role from './lib/role'
 import settimer from './lib/settimer'
+import settings from './lib/settings'
 import signup from './lib/signup'
 import standings from './lib/standings'
 import start from './lib/start'
@@ -110,9 +112,11 @@ export default {
         remove,
         replay,
         reset,
+        restore,
         rng,
         role,
         settimer,
+        settings,
         signup,
         standings,
         start,
