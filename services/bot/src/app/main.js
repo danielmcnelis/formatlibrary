@@ -196,7 +196,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             }
         }
 
-        const tournament_type = interaction.fields.fields.get('type') ? decipherTournamentTypeInput(interaction.fields.getTextInputValue('tournamentType')) : null
+        const tournament_type = interaction.fields.fields.get('type') ? decipherTournamentTypeInput(interaction.fields.getTextInputValue('type')) : null
         const abbreviation = interaction.fields.fields.get('abbreviation') ? interaction.fields.getTextInputValue('abbreviation') : null
         const url = interaction.fields.fields.get('url') ? interaction.fields.getTextInputValue('url') : null
         const tournamentId = interaction.customId?.split('-')[1]
