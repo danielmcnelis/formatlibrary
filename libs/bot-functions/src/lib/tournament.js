@@ -1258,9 +1258,7 @@ export const restoreParticipant = async (server, tournament, entry) => {
             method: 'put',
             url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${entry.participantId}.json?api_key=${server.challongeAPIKey}`,
             data: {
-                participant: {
-                    active: true
-                }
+                active: true
             }
         })
 
