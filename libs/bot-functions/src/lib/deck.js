@@ -57,9 +57,7 @@ export const getDeckFormat = async (server, message, interaction) => {
 
 // GET ISSUES
 export const getIssues = async (deckArr, format) => {
-    console.log('deckArr', deckArr)
     const deck = convertArrayToObject(deckArr)   
-    console.log('deck', deck)
     const [dateType, legalType] = format.category === 'TCG' ? ['tcgDate', 'tcgLegal'] :    
         format.category === 'OCG' ? ['ocgDate', 'ocgLegal'] :
         format.category === 'Speed' ? ['speedDate', 'speedLegal'] :
@@ -164,9 +162,9 @@ export const checkDeckList = async (member, format) => {
         const url = collected.first()?.attachments?.first()?.url
         if (url) {
             const {data: ydk} = await axios.get(url)
-            const main = ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length)
-            const extra = ydk.split('#extra')[1].split('!side')[0].split('\n').filter((e) => e.length)
-            const side = ydk.split('!side')[1].split('\n').filter((e) => e.length)    
+            const main = ydk.split('#main')[1].split('#extra')[0].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
+            const extra = ydk.split('#extra')[1].split('!side')[0].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
+            const side = ydk.split('!side')[1].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)    
             const minimum = format.category === 'Speed' ? 20 : 40
 
             if (main?.length < minimum) {
@@ -231,9 +229,9 @@ export const checkSpeedDeckList = async (member, format, skillCard) => {
         const url = collected.first()?.attachments?.first()?.url
         if (url) {
             const {data: ydk} = await axios.get(url)
-            const main = ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length)
-            const extra = ydk.split('#extra')[1].split('!side')[0].split('\n').filter((e) => e.length)
-            const side = ydk.split('!side')[1].split('\n').filter((e) => e.length)    
+            const main = ydk.split('#main')[1].split('#extra')[0].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
+            const extra = ydk.split('#extra')[1].split('!side')[0].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
+            const side = ydk.split('!side')[1].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)    
             const minimum = format.category === 'Speed' ? 20 : 40
 
             if (main?.length < minimum) {
