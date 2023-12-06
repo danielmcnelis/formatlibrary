@@ -182,7 +182,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
     } else if (interaction.customId?.includes('edit')) {
         const name = interaction.fields.getTextInputValue('name')
 
-        const decipherTournamentTypeInput = (input) => {
+        const decipherTournamentTypeInput = (input = '') => {
+            input = input.toLowerCase()
             if (input.includes('sw')) {
                 return 'swiss'
             } else if (input.includes('de') || input.includes('double')) {
