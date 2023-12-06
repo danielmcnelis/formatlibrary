@@ -45,8 +45,7 @@ export default {
     async execute(interaction) {
         const tournamentId = interaction.options.getString('tournament')
         const tournament = await Tournament.findOne({ where: { id: tournamentId }})
-        if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
-        if (tournament.type !== 'swiss') return await interaction.editReply({ content: `The points system can only be edited for Swiss tournaments.`})	
+        if (!tournament) return await interaction.reply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
 
 		const modal = new ModalBuilder()
             .setCustomId(`edit-${tournamentId}`)
