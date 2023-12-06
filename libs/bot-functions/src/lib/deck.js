@@ -57,7 +57,9 @@ export const getDeckFormat = async (server, message, interaction) => {
 
 // GET ISSUES
 export const getIssues = async (deckArr, format) => {
+    console.log('deckArr', deckArr)
     const deck = convertArrayToObject(deckArr)   
+    console.log('deck', deck)
     const [dateType, legalType] = format.category === 'TCG' ? ['tcgDate', 'tcgLegal'] :    
         format.category === 'OCG' ? ['ocgDate', 'ocgLegal'] :
         format.category === 'Speed' ? ['speedDate', 'speedLegal'] :

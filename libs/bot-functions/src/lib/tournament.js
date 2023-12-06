@@ -1250,24 +1250,6 @@ export const postParticipant = async (server, tournament, player) => {
     }   
 }
 
-//RESTORE PARTICIPANT
-export const restoreParticipant = async (server, tournament, entry) => {
-    try {
-        // RESTORE PARTICIPANT IN CHALLONGE BRACKET 
-        const { data } = await axios({
-            method: 'put',
-            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${entry.participantId}.json?api_key=${server.challongeAPIKey}`,
-            data: {
-                active: true
-            }
-        })
-
-        return data
-    } catch (err) {
-        console.log(err)
-    }   
-}
-
 //PROCESS MATCH RESULT
 export const processMatchResult = async (server, interaction, winner, winningPlayer, loser, losingPlayer, tournament, format, noshow = false) => {
     const losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id }, include: Player })
