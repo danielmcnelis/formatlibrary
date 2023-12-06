@@ -2478,7 +2478,7 @@ export const updateTournament = async (interaction, tournamentId, name, abbrevia
                 name: data.tournament.name,
                 abbreviation: abbreviation,
                 url: data.tournament.url,
-                tournament_type: data.tournament.tournament_type,
+                type: data.tournament.tournament_type,
             })
 
             const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
