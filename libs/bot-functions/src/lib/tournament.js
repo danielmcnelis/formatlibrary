@@ -2456,8 +2456,6 @@ export const updateTournament = async (interaction, tournamentId, name, abbrevia
         }
     })
 
-    console.log('!!tournament', !!tournament)
-
     try {
         const { status, data } = await axios({
             method: 'put',
@@ -2476,7 +2474,7 @@ export const updateTournament = async (interaction, tournamentId, name, abbrevia
         if (status === 200 && data) {
             await tournament.update({ 
                 name: data.tournament.name,
-                abbreviation: abbreviation,
+                abbreviation: abbreviation || tournament.abbreviation,
                 url: data.tournament.url,
                 type: data.tournament.tournament_type,
             })
