@@ -2456,10 +2456,12 @@ export const updateTournament = async (interaction, tournamentId, name, abbrevia
         }
     })
 
+    console.log('!!tournament', !!tournament)
+
     try {
         const { status, data } = await axios({
             method: 'put',
-            url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
+            url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`,
             data: {
                 tournament: {
                     name: name || tournament.name,

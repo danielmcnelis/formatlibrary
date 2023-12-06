@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Server, Tournament } from '@fl/models'
-import { askForSimName, getDeckList, getOPDeckList, postParticipant, selectTournament } from '@fl/bot-functions'
+import { restoreParticipant, selectTournament } from '@fl/bot-functions'
 import { isMod, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
@@ -37,9 +37,8 @@ export default {
         if (!format) format = await Format.findOne({ where: { name: {[Op.iLike]: tournament.formatName } }})
         if (!format) return await interaction.editReply(`Unable to determine what format is being played in ${tournament?.name}. Please contact an administrator.`)
                                        
-        const { participant } = await postParticipant(server, tournament, entry)
-        console.log('participant', participant)
-        if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register ${player.globalName || player.discordName} on Challonge for ${tournament?.name}. ${tournament.logo}`})
+        const data = await restoreParticipant(server, tournament, entry)
+        if (!data || !data?.participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register ${player.globalName || player.discordName} on Challonge for ${tournament?.name}. ${tournament.logo}`})
         await entry.update({ active: true })
 
         member.roles.add(server.tourRole).catch((err) => console.log(err))
