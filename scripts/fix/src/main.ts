@@ -997,6 +997,12 @@ import { capitalize } from '@fl/utils'
         try {
             const card = cards[i]
 
+            const {data} = await axios({
+                method: 'GET',
+                url: `https://images.ygoprodeck.com/images/cards/${card.ypdId}.jpg`,
+                responseType: 'stream'
+            })
+        
             const s3 = new S3({
                 region: config.s3.region,
                 credentials: {
@@ -1004,14 +1010,9 @@ import { capitalize } from '@fl/utils'
                     secretAccessKey: config.s3.credentials.secretAccessKey
                 }
             })
-
-            const data = await s3.copyObject({ 
-                Bucket: 'formatlibrary', 
-                CopySource: `images/cards/${card.ypdId}.jpg`, 
-                Key: `${parseInt(card.konamiCode)}.jpg`
-            }).promise()
-
-            console.log('data', data)
+        
+            const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${card.konamiCode}.jpg`, Body: data, ContentType: `image/jpg` }).promise()
+            console.log('uri', uri)
             b++
         } catch (err) {
             console.log(err)
