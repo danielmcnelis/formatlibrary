@@ -87,10 +87,13 @@ export const SealedLobby = () => {
 
     // JOIN
     const join = () => {   
-        console.log('join()')     
-        try {
-            const data = { playerId, draftId: draft.id }
-            socket.emit('join draft', data, setEntry)            
+        try {    
+            if (!playerId) {
+                alert('Must be logged in to play Sealed.')
+            } else {
+                const data = { playerId, draftId: draft.id }
+                socket.emit('join draft', data, setEntry)  
+            }          
         } catch (err) {
             console.log(err)
         }

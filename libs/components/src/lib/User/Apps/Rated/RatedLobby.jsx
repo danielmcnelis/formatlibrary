@@ -22,14 +22,14 @@ export const RatedLobby = () => {
     const [decks, setDecks] = useState([])
     const [format, setFormat] = useState({})
     const [formats, setFormats] = useState([])
-    const [newDeckName, setNewDeckName] = useState(null)
+    const [newDeckName, setNewDeckName] = useState('Unnamed Deck')
     const [pairings, setPairings] = useState([])
     const [pools, setPools] = useState([])
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showJoinModal, setShowJoinModal] = useState(false)
     const [showNewDeckModal, setShowNewDeckModal] = useState(false)
     const [showUploadModal, setShowUploadModal] = useState(false)
-    const socket = useSocket()
+    // const socket = useSocket()
 
     // JOIN
     const join = async () => {
@@ -495,7 +495,13 @@ export const RatedLobby = () => {
                     <div
                         className="draft-button"
                         type="submit"
-                        onClick={() => setShowJoinModal(true)}
+                        onClick={() => {
+                            if (!playerId) {
+                                alert('Must be logged in to join Rated Pool.')
+                            } else {
+                                setShowJoinModal(true)
+                            }
+                        }}
                     >
                         Join
                     </div>

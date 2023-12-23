@@ -90,10 +90,14 @@ export const DraftLobby = () => {
     }
 
     // JOIN
-    const join = () => {        
-        try {
-            const data = { playerId, draftId: draft.id }
-            socket.emit('join draft', data, setEntry)            
+    const join = () => {     
+        try {            
+            if (!playerId) {
+                alert('Must be logged in to join a Draft.')
+            } else {
+                const data = { playerId, draftId: draft.id }
+                socket.emit('join draft', data, setEntry)   
+            }
         } catch (err) {
             console.log(err)
         }
