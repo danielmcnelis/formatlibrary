@@ -7,27 +7,45 @@ import { Op } from 'sequelize'
 import { Deck, Format, OPCard, Pairing, Player, Pool, Stats, Server } from '@fl/models'
 import { emojis } from '@fl/bot-emojis'
 import { getIssues } from './deck'
+import { drawDeck } from './utility'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 
 // GET RATED CONFIRMATION
-export const getRatedConfirmation = async (client, format, yourPool, opponentsPool, commonGuildId) => {
-    const guild = client.guilds.cache.get(commonGuildId)
-    const member = await guild.members.fetch(yourPool.player.discordId)
+export const getRatedConfirmation = async (client, player, opponent, format) => {
+    const guild = client.guilds.cache.get('414551319031054346')
+    const member = await guild.members.fetch(player.discordId)
     if (!member) return
+
+    const yourPool = await Pool.findOne({
+        where: {
+            playerId: player.id,
+            formatId: format.id,
+            status: 'pending'
+        }
+    })
+
+    const opponentsPool = await Pool.findOne({
+        where: {
+            playerId: opponent.id,
+            formatId: format.id,
+            status: 'pending'
+        }
+    })
+
     await yourPool.update({ status: 'confirming' })
  
     const row = new ActionRowBuilder()
-    .addComponents(new ButtonBuilder()
-        .setCustomId(`Y-${yourPool.id}-${opponentsPool.id}-${commonGuildId}`)
-        .setLabel('Yes')
-        .setStyle(ButtonStyle.Primary)
-    )
+        .addComponents(new ButtonBuilder()
+            .setCustomId(`Y-${yourPool.id}-${opponentsPool.id}-414551319031054346`)
+            .setLabel('Yes')
+            .setStyle(ButtonStyle.Primary)
+        )
 
-    .addComponents(new ButtonBuilder()
-        .setCustomId(`N-${yourPool.id}-${opponentsPool.id}-${commonGuildId}`)
-        .setLabel('No')
-        .setStyle(ButtonStyle.Primary)
-    )
+        .addComponents(new ButtonBuilder()
+            .setCustomId(`N-${yourPool.id}-${opponentsPool.id}-414551319031054346`)
+            .setLabel('No')
+            .setStyle(ButtonStyle.Primary)
+        )
 
     const message = await member.user.send({ content: `I've found a Rated ${format.name}${format.category !== 'OP' ? ' Format' : ''} ${format.emoji} opponent for you. Do you still wish to play?`, components: [row] })
 
@@ -48,95 +66,100 @@ export const getRatedConfirmation = async (client, format, yourPool, opponentsPo
 
 }
 
+// HANDLE RATED CONFIRMATION
 export const handleRatedConfirmation = async (client, interaction, confirmed, yourPoolId, opponentsPoolId, serverId) => {
-    const yourPool = await Pool.findOne({ where: { id: yourPoolId }, include: [Format, Player] })
-    const format = yourPool.format
-    const opponentsPool = await Pool.findOne({ where: { id: opponentsPoolId }, include: Player })
+    try {
 
-    if (confirmed) {
-        if (!opponentsPool) {
-            await yourPool.update({ status: 'pending' })
-            return interaction.user.send(`Sorry, your potential opponent found a match while waiting for you to confirm. I'll put you back in the Rated ${format.name} Format ${format.emoji} Pool.`)
-        }
-
-        const commonServer = await Server.findOne({ where: { id: serverId }})
-        const channelId = commonServer.ratedChannel || format.channel
-        const guild = client.guilds.cache.get(serverId)
-        const channel = guild.channels.cache.get(channelId)
-        const player = yourPool.player
-        const opponent = opponentsPool.player
-        const opposingMember = await guild.members.fetch(opponent.discordId)
-
-        opposingMember.user.send(
-            `New pairing for Rated ${format.name}${format.category !== 'OP' ? ` Format` : ''} ${format.emoji}!` +
-            `\nServer: ${commonServer.name} ${commonServer.logo}` +
-            `\nChannel: <#${channelId}>` +
-            `\nDiscord: ${player.globalName || player.discordName}${player.discriminator !== '0' ? `#${player.discriminator}` : ''}` +
-            `\n${format.category !== 'OP' ? `DuelingBook: ${player.duelingBook}` : `OPTCGSim: ${player.opTcgSim}`}`
-        ).catch((err) => console.log(err))
+        const yourPool = await Pool.findOne({ where: { id: yourPoolId }, include: [Format, Player] })
+        const format = yourPool.format
+        const opponentsPool = await Pool.findOne({ where: { id: opponentsPoolId }, include: Player })
         
-        interaction.user.send(
-            `New pairing for Rated ${format.name}${format.category !== 'OP' ? ` Format` : ''} ${format.emoji}!` +
-            `\nServer: ${commonServer.name} ${commonServer.logo}` +
-            `\nChannel: <#${channelId}>` +
-            `\nDiscord: ${opponent.globalName || opponent.discordName}${opponent.discriminator !== '0' ? `#${opponent.discriminator}` : ''}` +
-            `\n${format.category !== 'OP' ? `DuelingBook: ${opponent.duelingBook}` : `OPTCGSim: ${opponent.opTcgSim}`}`
-        ).catch((err) => console.log(err))
-        
-        await Pairing.create({
-            formatId: format.id,
-            formatName: format.name,
-            serverId: commonServer.id,
-            serverName: commonServer.name,
-            playerA: yourPool.name,
-            playerAId: yourPool.playerId,
-            deckFileA: yourPool.deckFile,
-            playerB: opponentsPool.name,
-            playerBId: opponentsPool.playerId,
-            deckFileB: opponentsPool.deckFile
-        })
-
-        await yourPool.destroy()
-        await opponentsPool.destroy()
-
-        const poolsToDeactivate = await Pool.findAll({
-            where: {
-                playerId: {[Op.or]: [player.id, opponent.id]}
+        if (confirmed) {
+            if (!opponentsPool) {
+                await yourPool.update({ status: 'pending' })
+                return interaction.user.send(`Sorry, your potential opponent found a match while waiting for you to confirm. I'll put you back in the Rated ${format.name} Format ${format.emoji} Pool.`)
             }
-        }) || []
-
-        for (let d = 0; d < poolsToDeactivate.length; d++) {
-            const rPTD = poolsToDeactivate[d]
-            await rPTD.update({ status: 'inactive' })
+    
+            const server = await Server.findOne({ where: { id: '414551319031054346' }})
+            const channelId = format.channel
+            const guild = client.guilds.cache.get(serverId)
+            const channel = guild.channels.cache.get(channelId)
+            const player = yourPool.player
+            const opponent = opponentsPool.player
+            const opposingMember = await guild.members.fetch(opponent.discordId)
+            
+            opposingMember.user.send(
+                `New pairing for Rated ${format.name}${format.category !== 'OP' ? ` Format` : ''} ${format.emoji}!` +
+                `\nServer: ${server.name} ${server.logo}` +
+                `\nChannel: <#${channelId}>` +
+                `\nDiscord: ${player.globalName || player.discordName}${player.discriminator !== '0' ? `#${player.discriminator}` : ''}` +
+                `\n${format.category !== 'OP' ? `DuelingBook: ${player.duelingBook}` : `OPTCGSim: ${player.opTcgSim}`}`
+            ).catch((err) => console.log(err))
+            
+            interaction.user.send(
+                `New pairing for Rated ${format.name}${format.category !== 'OP' ? ` Format` : ''} ${format.emoji}!` +
+                `\nServer: ${server.name} ${server.logo}` +
+                `\nChannel: <#${channelId}>` +
+                `\nDiscord: ${opponent.globalName || opponent.discordName}${opponent.discriminator !== '0' ? `#${opponent.discriminator}` : ''}` +
+                `\n${format.category !== 'OP' ? `DuelingBook: ${opponent.duelingBook}` : `OPTCGSim: ${opponent.opTcgSim}`}`
+            ).catch((err) => console.log(err))
+     
+            await Pairing.create({
+                formatId: format.id,
+                formatName: format.name,
+                serverId: server.id,
+                serverName: server.name,
+                playerAName: yourPool.name,
+                playerAId: yourPool.playerId,
+                deckFileA: yourPool.deckFile,
+                playerBName: opponentsPool.name,
+                playerBId: opponentsPool.playerId,
+                deckFileB: opponentsPool.deckFile
+            })   
+    
+            await yourPool.destroy()
+            await opponentsPool.destroy()
+    
+            const poolsToDeactivate = await Pool.findAll({
+                where: {
+                    playerId: {[Op.or]: [player.id, opponent.id]}
+                }
+            }) || []
+    
+            for (let d = 0; d < poolsToDeactivate.length; d++) {
+                const rPTD = poolsToDeactivate[d]
+                await rPTD.update({ status: 'inactive' })
+            }
+    
+            const allStats = await Stats.findAll({ 
+                where: {
+                    format: { [Op.iLike]: format.name }, 
+                    games: { [Op.gte]: 3 },
+                    serverId: '414551319031054346',
+                    inactive: false,
+                    '$player.hidden$': false
+                },
+                include: [Player],
+                order: [['elo', 'DESC']] 
+            }) || []
+    
+            const p1Index = allStats.findIndex((s) => s.playerId === player.id)
+            const p1Rank = p1Index >= 0 ? `#${p1Index + 1} ` : ''
+            const p2Index = allStats.findIndex((s) => s.playerId === opponent.id)
+            const p2Rank = p2Index >= 0 ? `#${p2Index + 1} ` : ''
+    
+            const content = format.category === 'OP' ? `New Rated ${format.name} ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (OPTCGSim: ${opponent.opTcgSim}) vs. ${p1Rank}<@${player.discordId}> (OPTCGSim: ${player.opTcgSim}). Good luck to both players.` :
+                `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBook}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBook}). Good luck to both duelists.`
+    
+            return channel.send({ content: content })
+        } else {
+            await yourPool.destroy()
+            return interaction.user.send(`Not a problem. I've removed you from the Rated ${format.name} Format ${format.emoji} player pool.`)
         }
-
-        const allStats = await Stats.findAll({ 
-            where: {
-                format: { [Op.iLike]: format.name }, 
-                games: { [Op.gte]: 3 },
-                serverId: '414551319031054346',
-                inactive: false,
-                '$player.hidden$': false
-            },
-            include: [Player],
-            order: [['elo', 'DESC']] 
-        }) || []
-
-        const p1Index = allStats.findIndex((s) => s.playerId === player.id)
-        const p1Rank = p1Index >= 0 ? `#${p1Index + 1} ` : ''
-        const p2Index = allStats.findIndex((s) => s.playerId === opponent.id)
-        const p2Rank = p2Index >= 0 ? `#${p2Index + 1} ` : ''
-
-        const content = format.category === 'OP' ? `New Rated ${format.name} ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (OPTCGSim: ${opponent.opTcgSim}) vs. ${p1Rank}<@${player.discordId}> (OPTCGSim: ${player.opTcgSim}). Good luck to both players.` :
-            `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBook}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBook}). Good luck to both duelists.`
-
-        return channel.send({ content: content })
-    } else {
-        await yourPool.destroy()
-        return interaction.user.send(`Not a problem. I've removed you from the Rated ${format.name} Format ${format.emoji} player pool.`)
+    } catch (err) {
+        console.log(err)
     }
 }
-
 
 // GET DROP FORMATS
 export const getDropFormats = async (interaction, pools) => {
@@ -398,4 +421,92 @@ export const askForDeckName = async (member, player, override = false) => {
         member.send({ content: `Okay, I'll save this as an "Unnamed Deck". You can always change it later.`}).catch((err) => console.log(err))
         return 'Unnamed Deck'
     })
+}
+
+// SEND RATED JOIN NOTIFICATIONS
+export const sendRatedJoinNotifications = async (client, player, format, deck, isResubmission) => {
+    try {
+        if (!isResubmission) {
+            const guild = client.guilds.cache.get('414551319031054346')
+            const channel = guild.channels.cache.get(format.channel)
+            if (channel) await channel.send(`Somebody joined the ${format.name} ${format.emoji} Rated Pool! ${emojis.megaphone}`)
+        }
+
+        const user = await client.users.fetch(player.discordId)
+        const deckAttachments = await drawDeck(deck.ydk) || []
+
+        for (let i = 0; i < deckAttachments.length; i++) {
+            const attachment = deckAttachments[i]
+            if (i === 0) {
+                if (!isResubmission) {
+                    await user.send({ content: `You've joined the ${format.name} Rated Pool. ${format.emoji} You'll receive a DM when you're paired. FYI, this is the deck you submitted:`, files: [attachment] }).catch((err) => console.log(err))
+                } else {
+                    await user.send({ content: `You've resubmitted your deck for the ${format.name} Rated Pool. ${format.emoji} FYI, this is the deck you resubmitted:`, files: [attachment] }).catch((err) => console.log(err))
+                }
+            } else {
+                await user.send({ files: [attachment] }).catch((err) => console.log(err))
+            }
+        }
+
+        return
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+// SEND RATED PAIRING ANNOUNCEMENT
+export const sendRatedPairingAnnouncement = async (client, player, opponent, format) => {
+    try {
+        const guild = client.guilds.cache.get('414551319031054346')
+        const {user: user1} = await guild.members.fetch(player.discordId)
+        const {user: user2} = await guild.members.fetch(opponent.discordId)
+    
+        user1.send(
+            `New pairing for Rated ${format.name} Format! ${format.emoji}` + 
+            `\nServer: Format Library ${emojis.FL}` + 
+            `\nChannel: <#${format.channel}}>` +
+            `\nDiscord: ${opponent.globalName || opponent.discordName}${opponent.discriminator !== '0' ? `#${opponent.discriminator}` : ''}` +
+            `\nDuelingBook: ${opponent.duelingBook}`
+        ).catch((err) => console.log(err))
+    
+        user2.send(
+            `New pairing for Rated ${format.name} Format! ${format.emoji}` +
+            `\nServer: Format Library ${emojis.FL}` +
+            `\nChannel: <#${format.channel}>` +
+            `\nDiscord: ${player.globalName || player.discordName}${player.discriminator !== '0' ? `#${player.discriminator}` : ''}` +
+            `\nDuelingBook: ${player.duelingBook}`
+        ).catch((err) => console.log(err))  
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+// SEND RATED PAIRING NOTIFICATIONS
+export const sendRatedPairingNotifications = async (client, player, opponent, format) => {
+    try {
+        const guild = client.guilds.cache.get('414551319031054346')
+        const channel = guild.channels.cache.get(format.channel)
+    
+        const allStats = await Stats.findAll({ 
+            where: {
+                format: { [Op.iLike]: format.name }, 
+                games: { [Op.gte]: 3 },
+                serverId: '414551319031054346',
+                inactive: false,
+                '$player.hidden$': false
+            },
+            include: [Player],
+            order: [['elo', 'DESC']] 
+        }) || []
+    
+        const p1Index = allStats.findIndex((s) => s.playerId === player.id)
+        const p1Rank = p1Index >= 0 ? `#${p1Index + 1} ` : ''
+        const p2Index = allStats.findIndex((s) => s.playerId === opponent.id)
+        const p2Rank = p2Index >= 0 ? `#${p2Index + 1} ` : ''
+        const content = `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBook}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBook}). Good luck to both duelists.`
+        
+        return channel.send({ content: content })   
+    } catch (err) {
+        console.log(err)
+    }
 }

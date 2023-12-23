@@ -21,6 +21,7 @@ import {
   PackSimulator,
   Page,
   PlayerProfile,
+  RatedLobby,
   ReplayTable,
   SealedLauncher,
   SealedLobby,
@@ -47,6 +48,7 @@ export const Router = () => {
 					<Route path="/text-to-ydk" element=<Page element=<YDKCreator /> /> />
 					<Route path="/settings" element=<Page element=<Settings /> /> />
 					<Route path="/cube-maker" element=<Page element=<CubeMaker /> /> />
+					<Route path="/rated-lobby" element=<Page element=<RatedLobby /> /> />
 					<Route path="/cubes/:id" element=<Page element=<CubeBrowser /> /> />
 					<Route path="/drafts/:id" element=<Page element=<DraftLobby /> /> />
 					<Route path="/sealed/:id" element=<Page element=<SealedLobby /> /> />

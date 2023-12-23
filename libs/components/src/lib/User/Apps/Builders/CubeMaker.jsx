@@ -320,7 +320,7 @@ export const CubeMaker = () => {
                 <label>YDK:
                     <input
                         id="ydk"
-                        className="login"
+                        className="filter"
                         type="file"
                         accept=".ydk"
                         onChange={(e) => readYDK(e.target.files[0])}

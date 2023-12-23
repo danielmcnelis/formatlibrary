@@ -23,20 +23,23 @@ export const config = {
             host: process.env.AUTH_HOST,
             port: process.env.AUTH_PORT || 4332
         },
+        bot: {
+            token: process.env.DISCORD_BOT_TOKEN,
+            clientId: process.env.DISCORD_BOT_CLIENT_ID,
+            https: process.env.BOT_HTTPS,
+            host: process.env.BOT_HOST,
+            port: process.env.BOT_PORT || 4333
+        },
         hub: {
             https: process.env.HUB_HTTPS,
             host: process.env.HUB_HOST,
-            port: process.env.HUB_PORT || 4333
+            port: process.env.HUB_PORT || 4334
         },
         site: {
             https: process.env.SITE_HTTPS,
             host: process.env.SITE_HOST,
             port: process.env.SITE_PORT || 4330,
             proxy: process.env.SITE_PROXY
-        },
-        bot: {
-            token: process.env.DISCORD_BOT_TOKEN,
-            clientId: process.env.DISCORD_BOT_CLIENT_ID
         }
     },
     database: {

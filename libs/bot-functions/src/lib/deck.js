@@ -336,7 +336,6 @@ export const checkOPDeckList = async (member, format) => {
     }).then(async collected => {
         const opdk = collected.first().content
         const opdkArr = opdk.trim().split('\n')
-        console.log('opdkArr', opdkArr)
         const cards = []
         const wrongColorCards = []
         const unrecognizedCards = []
@@ -366,9 +365,7 @@ export const checkOPDeckList = async (member, format) => {
         if (moreThanFour) return member.send(`You cannot use more than 4 copies of a card in your deck.`)
 
         const leader = cards[0][1]
-        console.log('leader', leader)
         const allowedColors = leader.color.split('-')
-        console.log('allowedColors', allowedColors)
 
         for (let i = 1; i < cards.length; i++) {
             const card = cards[i][1]

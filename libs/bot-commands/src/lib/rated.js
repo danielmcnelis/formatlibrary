@@ -13,8 +13,8 @@ import { emojis } from '@fl/bot-emojis'
 const getRatedInformation = async (interaction, player) => {
     const format = await getRatedFormat(interaction)
     if (!format) return await interaction.user.send({ content: `Please specify a valid format.`})
-    const access = format.channel ? {[Op.or]: ['full', 'partner']} : 'partner'
-    
+    const access = format.channel ? 'full' : 'partner'
+
     const yourServers = [...await Membership.findAll({ 
         where: { 
             playerId: player.id,
@@ -39,66 +39,26 @@ const getRatedInformation = async (interaction, player) => {
         where: {
             formatName: format.name,
             playerId: player.id,
-            url: {[Op.not]: null}
+            origin: 'user'
         },
         order: [['updatedAt', 'DESC']],
         limit: 20
     }) || []
 
     let ratedDeck
-    // ratedDeck = await getPreviousRatedDeck(interaction.user, yourRatedDecks, format)
-    // if (ratedDeck && format.category !== 'OP') {
-    //     try {
-    //         const id = ratedDeck.url.slice(ratedDeck.url.indexOf('?id=') + 4)
-    //         const {data} = await axios.get(`https://www.duelingbook.com/php-scripts/load-deck.php/deck?id=${id}`)
-    //         if (data) {
-    //             const main = data.main.map((e) => e.serial_number)
-    //             const side = data.side.map((e) => e.serial_number)
-    //             const extra = data.extra.map((e) => e.serial_number)
-    //             const deckArr = [...main, ...side, ...extra]
-    //             const issues = await getIssues(deckArr, format)
-    //             const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards } = issues
-    //             if (illegalCards.length || forbiddenCards.length || limitedCards.length || semiLimitedCards.length) {      
-    //                 let response = [`I'm sorry, ${interaction.user.username}, your deck is not legal for ${format.name} Format. ${format.emoji}`]
-    //                 if (illegalCards.length) response = [...response, `\nThe following cards are not included in this format:`, ...illegalCards]
-    //                 if (forbiddenCards.length) response = [...response, `\nThe following cards are forbidden:`, ...forbiddenCards]
-    //                 if (limitedCards.length) response = [...response, `\nThe following cards are limited:`, ...limitedCards]
-    //                 if (semiLimitedCards.length) response = [...response, `\nThe following cards are semi-limited:`, ...semiLimitedCards]
-                    
-    //                 for (let i = 0; i < response.length; i += 50) {
-    //                     if (response[i+50] && response[i+50].startsWith("\n")) {
-    //                         interaction.user.send({ content: response.slice(i, i+51).join('\n').toString()}).catch((err) => console.log(err))
-    //                         i++
-    //                     } else {
-    //                         interaction.user.send({ content: response.slice(i, i+50).join('\n').toString()}).catch((err) => console.log(err))
-    //                     }
-    //                 }
-
-    //                 return
-    //             } else if (unrecognizedCards.length) {
-    //                 let response = `I'm sorry, ${interaction.user.username}, the following card IDs were not found in our database:\n${unrecognizedCards.join('\n')}`
-    //                 response += `\n\nThese cards are either alternate artwork, new to the TCG, OCG only, or incorrect in our database. Please contact the Tournament Organizer or the Admin if you can't resolve this.`
-    //                 return await interaction.user.send({ content: response.toString() }).catch((err) => console.log(err))
-    //             } else {
-    //                 const ydk = ['created by...', '#main', ...main, '#extra', ...extra, '!side', ...side, ''].join('\n')
-    //                 ratedDeck.ydk = ydk
-    //                 await ratedDeck.save()
-    //             }
-    //         }
-    //     } catch (err) {
-    //         console.log(err)
-    //         return await interaction.user.send(`Unable to process deck list. Please try again.`)
-    //     }
-    // } else 
+    ratedDeck = await getPreviousRatedDeck(interaction.user, yourRatedDecks, format)
     
-    if (format.category !== 'OP') {
-        ratedDeck = await getNewRatedDeck(interaction.user, player, format)
-    } else {
-        ratedDeck = await getNewOPRatedDeck(interaction.user, player, format)
+    if (!ratedDeck) {
+        if (format.category !== 'OP') {
+            ratedDeck = await getNewRatedDeck(interaction.user, player, format)
+        } else {
+            ratedDeck = await getNewOPRatedDeck(interaction.user, player, format)
+        }
     }
     
     if (!ratedDeck || (!ratedDeck.ydk && !ratedDeck.opdk)) return
     const deckAttachments = format.category === 'OP' ? await drawOPDeck(ratedDeck.opdk) || [] : await drawDeck(ratedDeck.ydk) || []
+
     deckAttachments.forEach((attachment, index) => {
         if (index === 0) {
             interaction.user.send({ content: `Okay, ${interaction.user.username}, you will be using this deck if you are paired:`, files: [attachment] }).catch((err) => console.log(err))
@@ -161,7 +121,7 @@ const getRatedInformation = async (interaction, player) => {
         for (let i = 0; i < potentialPairs.length; i++) {
             const potentialPair = potentialPairs[i]
             const ppid = potentialPair.playerId
-            const access = format.channel ? {[Op.or]: ['full', 'partner']} : 'partner'
+            const access = format.channel ? 'full' : 'partner'
             const opponentsGuildIds = [...await Membership.findAll({ 
                 where: { 
                     playerId: ppid,
@@ -208,7 +168,7 @@ const getRatedInformation = async (interaction, player) => {
             if (yourRecentOpponents.includes(potentialPair.playerId)) {
                 continue
             } else if (potentialPair.updatedAt < twoMinutesAgo) {
-                getRatedConfirmation(client, format, potentialPair, pool, commonGuildId)
+                getRatedConfirmation(client, potentialPair.player, player, format)
                 continue
             } else {
                 const commonServer = await Server.findOne({ where: { id: commonGuildId }})
@@ -239,10 +199,10 @@ const getRatedInformation = async (interaction, player) => {
                     formatName: format.name,
                     serverId: commonServer.id,
                     serverName: commonServer.name,
-                    playerA: pool.name,
+                    playerAName: pool.name,
                     playerAId: pool.playerId,
                     deckFileA: pool.deckFile,
-                    playerB: potentialPair.name,
+                    playerBName: potentialPair.name,
                     playerBId: potentialPair.playerId,
                     deckFileB: potentialPair.deckFile
                 })

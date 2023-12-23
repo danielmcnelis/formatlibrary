@@ -21,19 +21,18 @@ export default {
         const tournaments = await Tournament.findByState({[Op.or]: ['pending', 'standby']}, format, interaction.guildId, 'ASC')
 		const tournament = await selectTournament(interaction, tournaments)
 		if (!tournament) return
-        const { id: tournamentId, url } = tournament
-		const unregistered = await Entry.findAll({ where: { participantId: null, tournamentId } })
-		const entryCount = await Entry.count({ where: { tournamentId } })
 
+		const unregistered = await Entry.findAll({ where: { participantId: null, tournamentId: tournament.id } })
         if (unregistered.length) {
             const names = unregistered.map((e) => e.playerName)
-            return await interaction.editReply({ content: `Error: The following player(s) are not properly registered with the bot:\n${names.join('\n')}`})
+            return await interaction.editReply({ content: `Error: The following player(s) are not properly registered with RetroBot:\n${names.join('\n')}`})
         }
 
+		const entryCount = await Entry.count({ where: { tournamentId: tournament.id } })
 		if (!entryCount) {
-            return await interaction.editReply({ content: `Error: No entrants found.`})
+            return await interaction.editReply({ content: `Error: No tournament entrants found.`})
         } else if (entryCount < 2) {
-            return await interaction.editReply({ content: `At least 2 players are required to start a tournament.`})
+            return await interaction.editReply({ content: `Error: At least 2 players are required to start a tournament.`})
         }
 
         if (tournament?.type?.toLowerCase() === 'swiss') {
@@ -73,7 +72,7 @@ export default {
         
             if (data?.tournament?.state === 'underway') {
                 await tournament.update({ state: 'underway' })
-                interaction.editReply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${url} ${tournament.emoji}`})
+                interaction.editReply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${tournament.url} ${tournament.emoji}`})
                 
                 if (tournament.isTeamTournament) {
                     return sendTeamPairings(interaction.guild, server, tournament, format, false)
@@ -83,19 +82,19 @@ export default {
             } else {
                 const row = new ActionRowBuilder()
                     .addComponents(new ButtonBuilder()
-                        .setCustomId(`Y-${interaction.user?.id}-${tournamentId}`)
+                        .setCustomId(`Y-${interaction.user?.id}-${tournament.id}`)
                         .setLabel('Yes')
                         .setStyle(ButtonStyle.Primary)
                     )
     
                     .addComponents(new ButtonBuilder()
-                        .setCustomId(`N-${interaction.user?.id}-${tournamentId}`)
+                        .setCustomId(`N-${interaction.user?.id}-${tournament.id}`)
                         .setLabel('No')
                         .setStyle(ButtonStyle.Primary)
                     )
     
                     .addComponents(new ButtonBuilder()
-                        .setCustomId(`S-${interaction.user?.id}-${tournamentId}`)
+                        .setCustomId(`S-${interaction.user?.id}-${tournament.id}`)
                         .setLabel('Shuffle')
                         .setStyle(ButtonStyle.Primary)
                     )

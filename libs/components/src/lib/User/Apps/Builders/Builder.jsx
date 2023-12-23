@@ -13,6 +13,7 @@ import {Draggable} from '../../../General/Draggable'
 import {Droppable} from '../../../General/Droppable'
 import { Helmet } from 'react-helmet'
 import './Builder.css'
+const playerId = getCookie('playerId')
 
 export const Builder = () => {
     const [decks, setDecks] = useState([])
@@ -179,7 +180,6 @@ export const Builder = () => {
         const side = deck.side.map((card) => card.konamiCode)
         const extra = deck.extra.map((card) => card.konamiCode)
         const ydk = ['created by...', '#main', ...main, '#extra', ...extra, '!side', ...side, ''].join('\n')
-        const playerId = getCookie('playerId')
 
         if (!playerId) {
             alert('Must be logged in to save Deck.')
@@ -493,21 +493,24 @@ export const Builder = () => {
 
     const fetchData4 = async () => {
         try {
-            const { builder, ydk, name, type } = location.state.deck
+            const { deck, format, origin } = location.state
+            const id = deck?.playerId === playerId && origin === 'user' ? deck.id : null
 
             const { data } = await axios.put(`/api/decks/read-ydk`, {
-                name: name,
-                ydk: ydk
+                name: deck?.name,
+                ydk: deck?.ydk
             })
+
+            const name = deck?.playerId === playerId && origin === 'user' ? deck.name : `${deck?.builder}-${deck?.type || deck?.name}`
             
             setDeck({
                 ...data,
-                id: null,
-                name: `${builder}-${type || name}`,
-                format: format
+                id: id,
+                name: name,
+                format: deck?.format || format || {}
             })
 
-            setFormat(location.state.deck.format)
+            setFormat(deck?.format || format || {})
         } catch (err) {
             console.log(err)
         }
@@ -616,7 +619,7 @@ export const Builder = () => {
                     <label>YDK:
                         <input
                             id="ydk"
-                            className="login"
+                            className="filter"
                             type="file"
                             accept=".ydk"
                             onChange={(e) => readYDK(e.target.files[0])}

@@ -910,33 +910,114 @@ import { capitalize } from '@fl/utils'
 // })()
 
 
+// ;(async () => {
+//     const tournaments = await Tournament.findAll({
+//         where: {
+//             state: {[Op.not]: 'complete'},
+//             type: 'swiss'
+//         }
+//     })
+
+//     for (let i = 0; i < tournaments.length; i++) {
+//         try {
+//             const tournament = tournaments[i]
+//             const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${config.challonge['Format Library']}`)
+//             const tieBreaker1 = data.tournament.tie_breaks ? data.tournament.tie_breaks[0] : 'median buchholz'
+//             const tieBreaker2 = data.tournament.tie_breaks ? data.tournament.tie_breaks[1] : 'match wins vs tied'
+//             const tieBreaker3 = null
+
+//             await tournament.update({
+//                 pointsPerMatchWin: data.tournament.pts_for_match_win,
+//                 pointsPerMatchTie: data.tournament.pts_for_match_tie,
+//                 pointsPerBye: data.tournament.pts_for_bye,
+//                 tieBreaker1,
+//                 tieBreaker2,
+//                 tieBreaker3
+//             })
+
+//         } catch (err) {
+//             console.log(err)
+//         }
+//     }
+// })()
+
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+//     const decks = await Deck.findAll({
+//         where: {
+//             name: null,
+//             origin: 'user'
+//         },
+//         order: [['createdAt', 'ASC']]
+//     })
+
+//     for (let i = 0; i < decks.length; i++) {
+//         try {
+//             const deck = decks[i]
+//             const baseName = deck.type || 'Unnamed Deck'
+//             let name = baseName
+//             let attempt = 0
+//             let confirmed = false
+
+//             while (!confirmed) {
+//                 const nameInUse = await Deck.count({
+//                     where: {
+//                         name: name,
+//                         formatId: deck.formatId,
+//                         playerId: deck.playerId
+//                     }
+//                 })
+
+//                 if (!nameInUse) {
+//                     await deck.update({ name })
+//                     confirmed = true
+//                     b++
+//                 } else {
+//                     attempt++
+//                     name = baseName + ` (${attempt})`
+//                 }
+//             }
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     return console.log(`fixed ${b} out of ${decks.length} decks, encountered ${e} errors`)
+// })()
+
+
 ;(async () => {
-    const tournaments = await Tournament.findAll({
-        where: {
-            state: {[Op.not]: 'complete'},
-            type: 'swiss'
-        }
-    })
+    let b = 0
+    let e = 0
+    const cards = [...await Card.findAll()].filter((c) => parseInt(c.konamiCode).toString() !== c.ypdId)
 
-    for (let i = 0; i < tournaments.length; i++) {
+    for (let i = 0; i < cards.length; i++) {
         try {
-            const tournament = tournaments[i]
-            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${config.challonge['Format Library']}`)
-            const tieBreaker1 = data.tournament.tie_breaks ? data.tournament.tie_breaks[0] : 'median buchholz'
-            const tieBreaker2 = data.tournament.tie_breaks ? data.tournament.tie_breaks[1] : 'match wins vs tied'
-            const tieBreaker3 = null
+            const card = cards[i]
 
-            await tournament.update({
-                pointsPerMatchWin: data.tournament.pts_for_match_win,
-                pointsPerMatchTie: data.tournament.pts_for_match_tie,
-                pointsPerBye: data.tournament.pts_for_bye,
-                tieBreaker1,
-                tieBreaker2,
-                tieBreaker3
+            const s3 = new S3({
+                region: config.s3.region,
+                credentials: {
+                    accessKeyId: config.s3.credentials.accessKeyId,
+                    secretAccessKey: config.s3.credentials.secretAccessKey
+                }
             })
 
+            const data = await s3.copyObject({ 
+                Bucket: 'formatlibrary', 
+                CopySource: `images/cards/${card.ypdId}.jpg`, 
+                Key: `${parseInt(card.konamiCode)}.jpg`
+            }).promise()
+
+            console.log('data', data)
+            b++
         } catch (err) {
             console.log(err)
+            e++
         }
     }
+
+    return console.log(`saved ${b} out of ${cards.length} images, encountered ${e} errors`)
 })()

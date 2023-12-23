@@ -8,7 +8,7 @@ import * as path from 'path'
 import { readFileSync } from 'fs'
 import * as morgan from 'morgan'
 import * as chalk from 'chalk'
-import { api, auth, socketio } from './proxies'
+import { api, auth, bot, socketio } from './proxies'
 import { error } from './middleware'
 import { config } from '@fl/config'
 
@@ -22,8 +22,7 @@ app.use(compression())
 
 // proxies
 if (config.services.site.proxy) {
-  const proxies = { api, auth, socketio }
-  console.log('socketio', socketio)
+  const proxies = { api, auth, bot, socketio }
   Object.entries(proxies).forEach(([, prxy]) => {
     app.use(proxy(prxy.path, { target: prxy.target, secure: prxy.secure }))
     console.log(chalk.cyan(`Proxy ${prxy.path} to ${prxy.target}`))

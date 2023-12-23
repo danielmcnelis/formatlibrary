@@ -1005,7 +1005,6 @@ export const seed = async (interaction, tournamentId, shuffle = false) => {
         for (let i = 0; i < entries.length; i++) {
             const entry = entries[i]
             const playerId = entry.playerId
-            console.log('entry.name', entry.name)
             const stats = await Stats.findOne({ where: { format: tournament.formatName, playerId, serverId }})
             
             if (stats) {
@@ -2078,7 +2077,6 @@ export const calculateStandings = async (tournament, matches, participants) => {
     keys.forEach((k) => {
         for (let j = 1; j <= currentRound; j++) {
             if (!data[k].roundsWithoutBye.includes(j) && (data[k].active || data[k].roundDropped > j)) {
-                console.log(`round ${j} BYE found for ${data[k].name}`)
                 data[k].byes++
             }
         }
@@ -2121,10 +2119,6 @@ export const calculateStandings = async (tournament, matches, participants) => {
 
         data[k].opponentsOpponentWinPercentage = data[k].opponentsOpponentWinTotal / (data[k].opponentsOpponentWinTotal + data[k].opponentsOpponentLossTotal)
     })
-
-    console.log('tieBreaker1', Object.values(data).map((d) => `${d.name} - ${d[tieBreaker1]}`))
-    console.log('tieBreaker2', Object.values(data).map((d) => `${d.name} - ${d[tieBreaker2]}`))
-    console.log('tieBreaker3', Object.values(data).map((d) => `${d.name} - ${d[tieBreaker3]}`))
 
     const standings = shuffleArray(Object.values(data)).sort((a, b) => {
         if (a.score > b.score) {
@@ -2199,11 +2193,8 @@ export const autoRegisterTopCut = async (server, tournament, topCutTournament, s
         const rawRankValue = parseInt(s.rank.replace(/^\D+/g, ''))
         if (rawRankValue <= tournament.topCut) return s
     })
-    console.log('topCut', topCut)
-
 
     const size = topCut.length
-    console.log('size', size)
     let errors = [`Unable to register the following players on Challonge for ${topCutTournament.name}:`]
 
     for (let i = 0; i < topCut.length; i++) {
@@ -2217,7 +2208,6 @@ export const autoRegisterTopCut = async (server, tournament, topCutTournament, s
                 },
                 include: Player
             })
-            console.log('!!entry', !!entry)
 
             const topCutEntry = await Entry.create({
                 name: entry.name,
@@ -2228,7 +2218,6 @@ export const autoRegisterTopCut = async (server, tournament, topCutTournament, s
                 ydk: entry.ydk
             })
             
-            console.log('!!topCutEntry', !!topCutEntry)
             const { participant } = await postParticipant(server, topCutTournament, entry.player)
             if (!participant) errors.push(`- ${entry.name} (${i + 1} seed`)        
             await topCutEntry.update({ participantId: participant.id })

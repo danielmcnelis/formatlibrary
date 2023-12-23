@@ -229,6 +229,16 @@ Set.hasMany(Print)
 Pairing.belongsTo(Format)
 Format.hasMany(Pairing)
 
+Pairing.belongsTo(Player, {
+    as: 'playerA',
+    id: 'playerAId'
+})
+
+Pairing.belongsTo(Player, {
+    as: 'playerB',
+    id: 'playerBId'
+})
+
 //POOL
 Pool.belongsTo(Format)
 Format.hasMany(Pool)

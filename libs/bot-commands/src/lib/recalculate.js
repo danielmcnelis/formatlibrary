@@ -77,7 +77,7 @@ export default {
             const delta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
             
             winnerStats.elo = origEloWinner + delta
-            if (origEloWinner + delta > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + delta
+            if ((origEloWinner + delta) > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + delta
             winnerStats.backupElo = origEloWinner
             winnerStats.wins++
             winnerStats.games++

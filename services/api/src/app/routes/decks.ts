@@ -19,12 +19,15 @@ import {
   countDecks,
   decksId,
   decksCreate,
-  convertTextToYDK
+  convertTextToYDK,
+  convertYDKeToYDK
 } from '../middleware'
 
 const router = Router()
 
 router.put('/api/decks/read-ydk', decksReadYdk)
+
+router.put('/api/decks/convert-ydke-to-ydk', convertYDKeToYDK)
 
 router.delete('/api/decks/delete/:id', decksDeleteId)
 

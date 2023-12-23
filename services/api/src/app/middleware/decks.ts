@@ -83,6 +83,7 @@ export const decksDeleteId = async (req, res, next) => {
 
 export const decksUpdateId = async (req, res, next) => {
     try {
+        console.log('req.body.ydk', req.body.ydk)
         const deck = await Deck.findOne({ 
             where: {
                 id: req.params.id
@@ -860,14 +861,51 @@ export const decksId = async (req, res, next) => {
   }
 }
 
+export const convertYDKeToYDK = async (req, res, next) => {
+    try {
+        const ydke = req.body.ydke
+        const [mainEncoded, extraEncoded, sideEncoded] = ydke.slice(7).split('!')
+        
+        const decodeBase64 = (encoded = '') => {
+            const data = Buffer.from(encoded, 'base64')
+            const dataArr = Object.values(data)
+            const decodedArr = []
+        
+            for (let i = 0; i < dataArr.length; i += 4) {
+              decodedArr.push(
+                    (dataArr[i] <<  0) | 
+                    (dataArr[i+1] <<  8) | 
+                    (dataArr[i+2] <<  16) | 
+                    (dataArr[i+3] <<  24)
+                )
+            }
+        
+            return decodedArr.join('\n')
+        }
+    
+        const main = decodeBase64(mainEncoded)
+        const side = decodeBase64(sideEncoded)
+        const extra = decodeBase64(extraEncoded)
+        const ydk = 'created by...\n#main\n' + main + '\n#extra\n' + extra + '\n!side\n' + side + '\n'
+
+        res.send(ydk)
+    } catch (err) {
+        next(err)
+    }
+} 
+
 export const decksCreate = async (req, res, next) => {
   try {
+    console.log('req.body', req.body)
     const format = await Format.findOne({ where: { name: { [Op.iLike]: req.body.format || req.body.formatName } } })
     const player = await Player.findOne({ where: { id: req.body.playerId } })
+    console.log('format', format)
+    console.log('player', player)
 
     const deck = await Deck.create({
       builder: player.name,
       playerId: player.id,
+      name: req.body.name,
       type: req.body.type,
       suggestedType: req.body.suggestedType,
       deckTypeId: req.body.deckTypeId,
@@ -886,6 +924,7 @@ export const decksCreate = async (req, res, next) => {
 
     res.json(deck)
   } catch (err) {
+    console.log('err', err)
     next(err)
   }
 }

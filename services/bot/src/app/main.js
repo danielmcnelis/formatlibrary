@@ -7,6 +7,16 @@ import { Collection, Events, TeamMember } from 'discord.js'
 const FuzzySet = require('fuzzyset')
 import { client } from './client'
 
+import * as express from 'express'
+import * as compression from 'compression'
+import * as morgan from 'morgan'
+import * as chalk from 'chalk'
+import * as http from 'http'
+import * as https from 'https'
+
+import { error } from '@fl/middleware'
+import { config } from '@fl/config'
+
 // DATABASE IMPORTS 
 import { Match, Membership, Player, Server, Tournament } from '@fl/models'
 
@@ -24,6 +34,7 @@ import { assignTourRoles, conductCensus, createTopCut, downloadNewCards, getMidn
 // STATIC IMPORTS
 import { emojis } from '@fl/bot-emojis'
 import commands from '@fl/bot-commands'
+import { rated } from './routes'
 import { editTieBreakers } from '../../../../libs/bot-functions/src'
 client.commands = new Collection()
 Object.values(commands.formatLibraryCommands).forEach((command) => client.commands.set(command.data.name, command))
@@ -32,6 +43,59 @@ Object.values(commands.globalCommands).forEach((command) => client.commands.set(
 // GLOBAL VARIABLES
 const fuzzyCards = FuzzySet([], false)
 const fuzzyOPCards = FuzzySet([], false)
+
+const app = express()
+  
+// rewrite
+app.use('/bot', (req, _res, next) => {
+    const from = req.url
+    const to = from.replace(/\/bot\//g, '/')
+    req.url = to
+    next()
+})
+
+// logging
+app.use(morgan('dev'))
+
+// compression
+app.use(compression())
+
+// body parsing
+app.use(express.json({ limit: '1mb' }))
+app.use(express.urlencoded({ extended: true, limit: '1mb' }))
+
+// routes
+const routes = { rated }
+Object.values(routes).forEach((route) => {
+  route.stack.forEach((route) => {
+    const path = route.route.path
+    const methods = Object.entries(route.route.methods).reduce((reduced, [key, value]) => {
+      if (value) {
+        reduced.push(key.toUpperCase())
+      }
+      return reduced
+    }, [])
+    methods.forEach((method) => {
+      console.log(`Route ${chalk.yellow(method)} ${chalk.green(path)}`)
+    })
+  })
+
+  app.use(route)
+})
+
+const port = config.services.bot.port
+const useHttps = config.services.bot.https === '1' || config.services.bot.https === 'true'
+const privateKey = useHttps ? readFileSync('./certs/privkey.pem', 'utf8') || '' : ''
+const certificate = useHttps ? readFileSync('./certs/fullchain.pem', 'utf8') || '' : ''
+const credentials = { key: privateKey, cert: certificate }
+
+const server = useHttps ? https.createServer(credentials, app).listen(port, () =>
+    console.log(chalk.cyan(`Listening on https://${config.services.bot.host ? config.services.bot.host : '0.0.0.0'}:${port}`))
+) : http.createServer(app).listen(port, () =>
+    console.log(chalk.cyan(`Listening on http://${config.services.bot.host ? config.services.bot.host : '0.0.0.0'}:${port}`))
+)
+
+server.on('error', console.error)
 
 // READY
 client.on('ready', async() => {

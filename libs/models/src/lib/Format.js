@@ -59,7 +59,6 @@ export const Format = db.define('formats', {
   }
 })
 
-
 Format.findById = async (id) => await Format.findOne({ where: { id }})
 
 Format.findByServerOrChannelId = async (server, channelId) => await Format.findOne({

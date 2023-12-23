@@ -100,6 +100,8 @@ export const Player = db.define('players', {
   }
 })
 
+Player.findById = (id) => Player.findOne({ where: { id: id }})
+  
 Player.generateId = async () => {
     const base58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
     const id = customAlphabet(base58, 22)()

@@ -19,15 +19,15 @@ const toggle = () => {
 
 // NAVIGATION
 export const Navigation = (props) => {
-    const [isAdmin, setIsAdmin] = useState(false)
+    const [isContentManager, setIsContentManager] = useState(false)
     const { switchTheme, theme } = props
 
     // USE EFFECT
     useEffect(() => {
         const checkIfAdmin = async () => {
             try {
-                const { status } = await axios.get(`/api/players/admin/${playerId}`)
-                if (status === 200) setIsAdmin(true)
+                const { status } = await axios.get(`/api/players/content-manager/${playerId}`)
+                if (status === 200) setIsContentManager(true)
             } catch (err) {
                 console.log(err)
             }
@@ -64,7 +64,7 @@ export const Navigation = (props) => {
                     <h2 className="nav-header">APPS</h2>
                 </Link>
                 {
-                    isAdmin ? (
+                    isContentManager ? (
                         <Link to="/admin-portal/">
                             <h2 className="nav-header">ADMIN</h2>
                         </Link>
@@ -123,7 +123,7 @@ export const Navigation = (props) => {
                     <h3 className="hamburger-header">Apps</h3>
                 </Link>
                 {
-                    isAdmin ? (
+                    isContentManager ? (
                         <Link to="/admin-portal/">
                             <h3 className="hamburger-header">Admin</h3>
                         </Link>

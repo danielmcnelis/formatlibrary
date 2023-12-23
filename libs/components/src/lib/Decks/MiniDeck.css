@@ -1,0 +1,10 @@
+
+.mini-deck-flexbox {
+    width: 360px;
+    margin: 1px auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }

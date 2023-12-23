@@ -83,6 +83,8 @@ export const Deck = db.define('decks', {
   }
 })
 
+Deck.findById = async (id) => await Deck.findOne({ where: { id }})
+
 Deck.countResults = async (filter = {}) => {
     filter = Object.entries(filter).reduce((reduced, [key, by]) => {
         let value = by.value

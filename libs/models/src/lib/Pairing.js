@@ -13,7 +13,7 @@ export const Pairing = db.define('pairings', {
         type: Sequelize.STRING,      
         defaultValue: 'active'
     },
-    playerA: {
+    playerAName: {
         type: Sequelize.STRING
     },
     playerAId: {
@@ -22,7 +22,7 @@ export const Pairing = db.define('pairings', {
     deckFileA: {
         type: Sequelize.TEXT
     },
-    playerB: {
+    playerBName: {
         type: Sequelize.STRING
     },
     playerBId: {
