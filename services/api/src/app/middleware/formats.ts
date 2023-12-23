@@ -55,6 +55,7 @@ export const formatsAll = async (req, res, next) => {
       attributes: ['id', 'name', 'icon', 'date', 'banlist', 'category', 'event', 'description', 'popular', 'spotlight'],
       order: [
         ['popular', 'DESC'],
+        ['spotlight', 'DESC'],
         ['date', 'ASC']
       ]
     })
