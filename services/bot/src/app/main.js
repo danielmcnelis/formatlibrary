@@ -7,7 +7,6 @@ import { Collection, Events, TeamMember } from 'discord.js'
 const FuzzySet = require('fuzzyset')
 import { client } from './client'
 import { readFileSync } from 'fs'
-
 import * as express from 'express'
 import * as compression from 'compression'
 import * as morgan from 'morgan'

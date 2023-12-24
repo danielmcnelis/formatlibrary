@@ -7,8 +7,12 @@
     "target": "http://localhost:4332",
     "secure": false
   },
-  "/socket.io": {
+  "/bot": {
     "target": "http://localhost:4333",
+    "secure": false
+  },
+  "/socket.io": {
+    "target": "http://localhost:4334",
     "secure": false
   }
 }
