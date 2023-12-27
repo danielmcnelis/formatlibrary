@@ -171,6 +171,83 @@ export const FormatMaker = () => {
         setFormat(data.format)
     }
 
+    // SACE FORMAT
+    const saveFormat = async () => {
+        const name = document.getElementById('save-as-name') ? document.getElementById('save-as-name').value : deck.name
+        const main = format.main.map((card) => card.konamiCode)
+        const ydk = ['created by...', '#main', ...main, '#extra', ...extra, '!side', ...side, ''].join('\n')
+
+        if (!playerId) {
+            alert('Must be logged in to save Deck.')
+        } else if (deck.id) {
+            try {
+                await axios.put(`/api/decks/update/${deck.id}`, {
+                    name: name,
+                    type: deck.type,
+                    deckTypeId: deck.deckTypeId,
+                    category: deck.category,
+                    suggestedType: deck.suggestedType,
+                    formatName: format.name,
+                    formatDate: format.date,
+                    formatCategory: format.category,
+                    formatBanlist: format.banlist,
+                    formatId: format.id,
+                    ydk: ydk
+                })
+
+                setEdited(false)
+                alert('Saved Deck!')
+            } catch (err) {
+                console.log(err)
+                if (err.response.status === 409) {
+                    alert(`Deck is not legal for ${format.name} Format.`)
+                } else if (err.response.status === 400) {
+                    alert('Name is already in use.')
+                } else {
+                    alert('Error Saving Deck.')
+                }
+            }
+        } else {
+            try {
+                const { data } = await axios.post(`/api/decks/create`, {
+                    name: name,
+                    playerId: playerId,
+                    type: deck.type,
+                    deckTypeId: deck.deckTypeId,
+                    category: deck.category,
+                    suggestedType: deck.suggestedType,
+                    formatName: format.name,
+                    formatDate: format.date,
+                    formatBanlist: format.banlist,
+                    formatId: format.id,
+                    origin: 'user',
+                    ydk: ydk,
+                    display: false
+                })
+
+                setDeck({
+                    ...deck,
+                    name: name,
+                    formatName: format.name,
+                    formatId: format.id,
+                    id: data.id
+                })
+
+                setEdited(false)
+                alert('Saved Deck!')
+                getDecks()
+            } catch (err) {
+                console.log(err)
+                if (err.response.status === 409) {
+                    alert(`Deck is not legal for ${format.name} Format.`)
+                } else {
+                    alert('Error Saving Deck.')
+                }
+            }
+        }
+
+        setShowSaveModal(false)
+    }
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0), [])
 
@@ -251,26 +328,29 @@ export const FormatMaker = () => {
 
                     <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
                         <Modal.Header closeButton style={{width: '560px'}}>
-                        <Modal.Title>{format.id ? 'Select Format:' : 'Save Deck:'}</Modal.Title>
+                        <Modal.Title>{format.id ? 'Edit Labels:' : 'Save Format:'}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body style={{width: '560px'}}>
                             <Form style={{width: '560px'}}>
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Format:</Form.Label>
-                                    <Form.Select 
-                                        aria-label="Format:" 
-                                        style={{width: '180px'}}
-                                        defaultValue={format.name || ''}
-                                        onChange={(e) => updateFormat(e.target.value)}
-                                    >
-                                    <option key={format.name} value={format.name}>{format.name}</option>
-                                    {
-                                        formats.filter((f) => !!f.banlist).map((f) => <option key={f.name} value={f.name}>{f.name}</option>)
-                                    }
-                                    </Form.Select>
+                                    <Form.Label>Name:</Form.Label>
+                                    <Form.Control
+                                        type="name"
+                                        id="save-as-name"
+                                        defaultValue={deck.name}
+                                        autoFocus
+                                    />
                                 </Form.Group>
                             </Form>
                         </Modal.Body>
+                        <Modal.Footer style={{width: '560px'}}>
+                        <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
+                            Cancel
+                        </Button>
+                        <Button variant="primary" onClick={() => saveFormat()}>
+                            Save
+                        </Button>
+                        </Modal.Footer>
                     </Modal>        
 
                 <div style={{display: 'flex', justifyContent: 'center', margin: '0px 5px 0px 15px'}}>
