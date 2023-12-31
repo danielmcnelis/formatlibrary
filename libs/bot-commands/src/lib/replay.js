@@ -91,6 +91,8 @@ export default {
         const loser = interaction.options.getUser('loser')
         const tournament = await Tournament.findOne({ where: { id: tournamentId }})
         if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
+        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         const {data: tournamentData} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
 
         const winningPlayer = await Player.findOne({
@@ -108,9 +110,6 @@ export default {
         })
 
         if (!losingPlayer) return await interaction.editReply({ content: `Error: Loser (${loser.username}) not found.`})	
-
-        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
 
         const matches = await Match.findAll({
             where: {
