@@ -1,7 +1,7 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Server, Tournament } from '@fl/models'
-import { selectTournament, sendPairings, sendTeamPairings } from '@fl/bot-functions'
+import { initiateEndTournament, selectTournament, sendPairings, sendTeamPairings } from '@fl/bot-functions'
 import { isMod, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
@@ -65,6 +65,10 @@ export default {
                 console.log(err)
                 return await interaction.channel.send({ content: `Error connecting to Challonge.`})
             }
+        }
+
+        if (tournament.isTopCutTournament) {
+            await initiateEndTournament(interaction, tournament.id)
         }
 
         try {

@@ -26,7 +26,7 @@ import { assignTourRoles, conductCensus, createTopCut, downloadNewCards, getMidn
     updateSets, updateServers, fixDeckFolder, postStandings, checkTimer, closeTournament, createTournament, 
     dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
-    startChallongeBracket, startTournament, endTournament, saveReplay, undoMatch, assignRoles, createMembership,
+    startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, assignRoles, createMembership,
     createPlayer, fetchCardNames, fetchOPCardNames, hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, 
     isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, editPointsSystem
 } from '@fl/bot-functions'
@@ -201,7 +201,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
         if (answer === 'Y') {
             return await createTopCut(interaction, tournamentId)
         } else {
-            return await endTournament(interaction, tournamentId)
+            // If user does not wish to create a top cut for their Swiss event, then end the tournament:
+            return await endSwissTournamentWithoutPlayoff(interaction, tournamentId)
         }
     }
 })

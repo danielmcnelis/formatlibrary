@@ -10,16 +10,16 @@ import { config } from '@fl/config'
 import { checkExpiryDate, uploadDeckFolder } from './drive'
 
 // CREATE DECKS
-export const createDecks = async (event, data) => {
+export const createDecks = async (event, participants, standings = []) => {
     let b = 0
     let c = 0
     let e = 0
-    
-    for (let i = 0; i < data.length; i++) {
-        try {
-            const participant = data[i].participant
 
-            const entries = await Entry.findAll({
+    for (let i = 0; i < participants.length; i++) {
+        try {
+            const {participant} = participants[i]
+
+            const entry = await Entry.findOne({
                 where: {
                     participantId: participant.id,
                     tournamentId: event.primaryTournamentId
@@ -27,49 +27,48 @@ export const createDecks = async (event, data) => {
                 include: Player
             })
 
-            if (!event.isTeamEvent && !entries.length) {
+            if (!entry) {
                 console.log(`missing entry for participant ${participant.id}`)
-            } else if (event.isTeamEvent && entries.length !== 3) {
-                console.log(`missing ${(3 - entries.length) || 3} team entries for participant ${participant.id}`)
-            } 
+            }
 
-            for (let i = 0; i < entries.length; i++) {
-                const entry = entries[i]
-                const count = await Deck.count({
-                    where: {
-                        playerId: entry.playerId,
-                        eventId: event.id
-                    }
+            const count = await Deck.count({
+                where: {
+                    playerId: entry.playerId,
+                    eventId: event.id
+                }
+            })
+
+            if (!count) {
+                const standing = standings.find((s) => s.participantId === participant.id)
+                const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
+                    participant.final_rank ? parseInt(participant.final_rank) :
+                    null
+
+                const deckType = await getDeckType(entry.ydk, event.formatName)
+
+                await Deck.create({
+                    type: deckType.name,
+                    category: deckType.category,
+                    builder: entry.playerName,
+                    formatName: event.formatName,
+                    formatId: event.formatId,
+                    ydk: entry.ydk,
+                    placement: placement,
+                    eventName: event.abbreviation || event.name,
+                    origin: 'event',
+                    display: false,
+                    community: event.community,
+                    playerId: entry.playerId,
+                    eventId: event.id,
+                    deckTypeId: deckType.id,
+                    eventDate: event.startDate
                 })
 
-                if (count !== 3) {
-                    const placement = participant.final_rank ? parseInt(participant.final_rank, 10) : null
-                    const deckType = await getDeckType(entry.ydk, event.formatName)
-
-                    await Deck.create({
-                        type: deckType.name,
-                        category: deckType.category,
-                        builder: entry.playerName,
-                        formatName: event.formatName,
-                        formatId: event.formatId,
-                        ydk: entry.ydk,
-                        placement: placement,
-                        eventName: event.abbreviation || event.name,
-                        origin: 'event',
-                        display: false,
-                        community: event.community,
-                        playerId: entry.playerId,
-                        eventId: event.id,
-                        deckTypeId: deckType.id,
-                        eventDate: event.startDate
-                    })
-
-                    b++
-                    console.log(`uploaded ${event.abbreviation || event.name} #${placement} ${deckType.name} deck built by ${entry.playerName}`)
-                } else {
-                    c++
-                    console.log(`already have ${entry.playerName}'s deck for ${event.name}`)
-                }
+                b++
+                console.log(`uploaded ${event.abbreviation || event.name} #${placement} ${deckType.name} deck built by ${entry.playerName}`)
+            } else {
+                c++
+                console.log(`already have ${entry.playerName}'s deck for ${event.name}`)
             }
         } catch (err) {
             e++
@@ -78,7 +77,7 @@ export const createDecks = async (event, data) => {
     }
     
     console.log(`Uploaded ${b} decks for ${event.name}. Encountered ${e} errors. ${b + c} out of ${event.size} decks saved thus far.`)
-    return b + c === event.size || b + c === event.size * 3
+    return (b + c === event.size) || (b + c === (event.size * 3))
 } 
 
 // COMPOSE BLOG POST

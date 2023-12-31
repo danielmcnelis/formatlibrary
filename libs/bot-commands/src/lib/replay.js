@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
 import { isProgrammer, isMod, selectMatch } from '@fl/bot-functions'
-import { Format, Match, Player, Replay, Server, Tournament } from '@fl/models'
+import { Entry, Format, Match, Player, Replay, Server, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
 
@@ -51,7 +51,7 @@ export default {
             },
             limit: 5,
             order: [["createdAt", "DESC"]]
-        }) : memberIsMod ? 
+        }) : memberIsMod ?
             await Tournament.findAll({
                 where: {
                     [Op.or]: {
@@ -91,6 +91,7 @@ export default {
         const loser = interaction.options.getUser('loser')
         const tournament = await Tournament.findOne({ where: { id: tournamentId }})
         if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
+        const {data: tournamentData} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
 
         const winningPlayer = await Player.findOne({
             where: {
@@ -142,55 +143,33 @@ export default {
             if (tournament.type === 'swiss' || tournament.type === 'round robin') {
                 roundName = `Round ${challongeMatch?.match?.round}`
             } else if (tournament.type === 'single elimination') {
-                roundName = tournament.rounds - round === 0 ? 'Finals' :
-                    tournament.rounds - round === 1 ? 'Semi Finals' :
-                    tournament.rounds - round === 2 ? 'Quarter Finals' :
-                    tournament.rounds - round === 3 ? 'Round of 16' :
-                    tournament.rounds - round === 4 ? 'Round of 32' :
-                    tournament.rounds - round === 5 ? 'Round of 64' :
-                    tournament.rounds - round === 6 ? 'Round of 128' :
-                    tournament.rounds - round === 7 ? 'Round of 256' :
+                const rounds = Math.ceil(Math.log2(tournamentData.participants_count))
+                roundName = rounds - round === 0 ? 'Finals' :
+                    rounds - round === 1 ? 'Semi Finals' :
+                    rounds - round === 2 ? 'Quarter Finals' :
+                    rounds - round === 3 ? 'Round of 16' :
+                    rounds - round === 4 ? 'Round of 32' :
+                    rounds - round === 5 ? 'Round of 64' :
+                    rounds - round === 6 ? 'Round of 128' :
+                    rounds - round === 7 ? 'Round of 256' :
                     null
             } else if (tournament.type === 'double elimination') {
+                const rounds = Math.ceil(Math.log2(tournamentData.participants_count))
                 if (round > 0) {
-                    roundName = tournament.rounds - round === 0 ? 'Grand Finals' :
-                        tournament.rounds - round === 1 ? `Winner's Finals` :
-                        tournament.rounds - round === 2 ? `Winner's Semis` :
-                        tournament.rounds - round === 3 ? `Winner's Quarters` :
+                    roundName = rounds - round < 0 ? 'Grand Finals' :
+                        rounds - round === 0 ? 'Grand Finals' :
+                        rounds - round === 1 ? `Winner's Finals` :
+                        rounds - round === 2 ? `Winner's Semis` :
+                        rounds - round === 3 ? `Winner's Quarters` :
                         `Winner's Round ${round}`
                 } else {
-                    roundName = tournament.rounds - Math.abs(round) === -1 ? `Loser's Finals` :
-                        tournament.rounds - Math.abs(round) === 0 ? `Loser's Semis` :
-                        tournament.rounds - Math.abs(round) === 1 ? `Loser's Quarters` :
+                    roundName = rounds - Math.abs(round) === -1 ? `Loser's Finals` :
+                        rounds - Math.abs(round) === 0 ? `Loser's Semi Finals` :
+                        rounds - Math.abs(round) === 1 ? `Loser's Quarter Finals` :
                         `Loser's Round ${Math.abs(round)}`
                 }
             } else {
                 roundName = `${challongeMatch?.match?.round}`
-            }
-            
-            if (tournament?.type === 'swiss' || tournament?.type === 'round robin') {
-                roundName = `Round ${round}`
-            } else if (tournament.type === 'single elimination') {
-                roundName = tournament.rounds - round === 0 ? 'Finals' :
-                    tournament.rounds - round === 1 ? 'Semi Finals' :
-                    tournament.rounds - round === 2 ? 'Quarter Finals' :
-                    tournament.rounds - round === 3 ? 'Round of 16' :
-                    tournament.rounds - round === 4 ? 'Round of 32' :
-                    tournament.rounds - round === 5 ? 'Round of 64' :
-                    tournament.rounds - round === 6 ? 'Round of 128' :
-                    tournament.rounds - round === 7 ? 'Round of 256' :
-                    null
-            } else if (tournament.type === 'double elimination') {
-                if (round > 0) {
-                    roundName = tournament.rounds - round === 0 ? 'Grand Finals' :
-                        tournament.rounds - round === 1 ? `Winner's Finals` :
-                        tournament.rounds - round === 2 ? `Winner's Semis` :
-                        `Winner's Round ${round}`
-                } else {
-                    roundName = tournament.rounds - Math.abs(round) === -1 ? `Loser's Finals` :
-                        tournament.rounds - Math.abs(round) === 0 ? `Loser's Semis` :
-                        `Loser's Round ${Math.abs(round)}`
-                }
             }
             
             try {

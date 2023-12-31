@@ -128,6 +128,7 @@ Tournament.findByQuery = async (query, serverId) => await Tournament.findOne({
         [Op.or]: {
             name: { [Op.iLike]: query },
             abbreviation: { [Op.iLike]: query },
+            url: { [Op.iLike]: query },
         },
         serverId: serverId 
     }
