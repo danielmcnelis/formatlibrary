@@ -240,7 +240,7 @@ export const SingleEvent = () => {
                             <div style={{paddingRight:'7px'}}><b>Community:</b> {event.community}</div> 
                             <img 
                                 style={{width:'32px'}} 
-                                src={`https://cdn.formatlibrary.com/images/logos/${event.community}.png`}
+                                src={`https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png`}
                                 alt={event.community}
                             />
                         </div>   

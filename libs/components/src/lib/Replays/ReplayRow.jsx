@@ -20,7 +20,7 @@ export const ReplayRow = (props) => {
               <div className="replay-event-cell">
                 {replay.eventName}
               </div>
-              <img src={`https://cdn.formatlibrary.com/images/logos/${replay.event?.community}.png`} alt={replay.event?.community}/>
+              <img src={`https://cdn.formatlibrary.com/images/logos/${replay.event?.community?.replaceAll('+', '%2B')}.png`} alt={replay.event?.community}/>
         </td>
 
           <td className="no-padding">

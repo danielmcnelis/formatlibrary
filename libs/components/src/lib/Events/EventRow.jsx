@@ -44,7 +44,7 @@ export const EventRow = (props) => {
           <td className="no-padding">
             <Link className="search-results-link" to={`/events/${event.abbreviation}`}>
               <div className="community-cell-flexbox">
-                <img src={`https://cdn.formatlibrary.com/images/logos/${event.community}.png`}/>
+                <img src={`https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png`}/>
                 <div>{event.community}</div>
               </div>
             </Link>

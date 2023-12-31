@@ -250,7 +250,7 @@ export const SingleDeck = () => {
                             <div className="single-deck-event-link" style={{paddingRight:'7px'}}><b>Event:</b> {deck.eventName}</div> 
                             <img 
                                 style={{width:'28px'}} 
-                                src={`https://cdn.formatlibrary.com/images/logos/${deck.community}.png`}
+                                src={`https://cdn.formatlibrary.com/images/logos/${deck.community?.replaceAll('+', '%2B')}.png`}
                                 alt={deck.community}
                             />
                         </div>   

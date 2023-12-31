@@ -29,7 +29,7 @@ export const EventThumbnail = (props = {}) => {
                   />
                   <img 
                     className="eventThumbnail-image" 
-                    src={`https://cdn.formatlibrary.com/images/logos/${event.community}.png`} 
+                    src={`https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png`} 
                     alt={event.community}
                   />
               </div>

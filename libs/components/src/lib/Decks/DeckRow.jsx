@@ -72,7 +72,7 @@ export const DeckRow = (props) => {
               >
                 <div className="community-cell-flexbox">
                   {
-                    deck.eventName ? <img src={`https://cdn.formatlibrary.com/images/logos/${deck.community}.png`} alt={deck.community}/> : <img/>
+                    deck.eventName ? <img src={`https://cdn.formatlibrary.com/images/logos/${deck.community?.replaceAll('+', '%2B')}.png`} alt={deck.community}/> : <img/>
                   }
                   <div>{deck.eventName || '-'}</div>
                 </div>
