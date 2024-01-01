@@ -99,6 +99,7 @@ export const conductCensus = async (client) => {
             
             const membersMap = await guild.members.fetch()
             const members = [...membersMap.values()]
+            console.log(`${server.name} members:`, members)
             const rolesMap = guild.roles.cache
             const roles = [...rolesMap.values()].reduce((a, v) => ({ ...a, [v.id]: v.name}), {})     
             let updateCount = 0
