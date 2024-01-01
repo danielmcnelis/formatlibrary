@@ -124,10 +124,7 @@ export const fixPlacements = async (event, participants, standings = []) => {
                     null
 
                 console.log('placement', placement)
-
-                await Deck.update({
-                    placement: placement
-                })
+                await deck.update({ placement: placement })
 
                 b++
                 console.log(`updated ${event.abbreviation || event.name} #${placement} deck built by ${participant.name}`)
