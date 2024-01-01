@@ -98,7 +98,7 @@ export const StatsRow = (props) => {
                         <div>{displayName}</div>
                     </div>
                 </td>
-                <td className="leaderboard-cell-3">{Math.round(100 * elo)/100}</td>
+                <td className="leaderboard-cell-3">{(Math.round(100 * elo) / 100).toFixed(2)}</td>
                 <td className="leaderboard-cell-4">
                     <div className="medal-cell">
                         <div className="medal-title">{getTitle(elo)}</div>
