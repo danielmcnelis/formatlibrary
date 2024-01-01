@@ -434,17 +434,21 @@ export const SingleEvent = () => {
                         options={barOptions}
                         />
                     </div>
-                    <div className="bargraph-container">
-                        <h2>Top Side Deck Cards</h2>
-                        <br/>
-                        <Bar 
-                        className="bargraph"
-                        height="400px"
-                        width="500px"
-                        data={topSideDeckCardsData}
-                        options={barOptions}
-                        />
-                    </div>
+                    {
+                        metagame.topSideDeckCards.length ? (
+                            <div className="bargraph-container">
+                                <h2>Top Side Deck Cards</h2>
+                                <br/>
+                                <Bar 
+                                    className="bargraph"
+                                    height="400px"
+                                    width="500px"
+                                    data={topSideDeckCardsData}
+                                    options={barOptions}
+                                />
+                            </div>
+                        ) : ''
+                    }
                     </div>
                 </div>
                 ) : ''
