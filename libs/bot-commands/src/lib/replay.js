@@ -143,6 +143,7 @@ export default {
                 roundName = `Round ${challongeMatch?.match?.round}`
             } else if (tournament.type === 'single elimination') {
                 const rounds = Math.ceil(Math.log2(tournamentData.participants_count))
+                console.log('rounds', rounds, 'round', round)
                 roundName = rounds - round === 0 ? 'Finals' :
                     rounds - round === 1 ? 'Semi Finals' :
                     rounds - round === 2 ? 'Quarter Finals' :
@@ -154,12 +155,13 @@ export default {
                     null
             } else if (tournament.type === 'double elimination') {
                 const rounds = Math.ceil(Math.log2(tournamentData.participants_count))
+                console.log('rounds', rounds, 'round', round)
                 if (round > 0) {
                     roundName = rounds - round < 0 ? 'Grand Finals' :
                         rounds - round === 0 ? 'Grand Finals' :
                         rounds - round === 1 ? `Winner's Finals` :
-                        rounds - round === 2 ? `Winner's Semis` :
-                        rounds - round === 3 ? `Winner's Quarters` :
+                        rounds - round === 2 ? `Winner's Semi Finals` :
+                        rounds - round === 3 ? `Winner's Quarter Finals` :
                         `Winner's Round ${round}`
                 } else {
                     roundName = rounds - Math.abs(round) === -1 ? `Loser's Finals` :

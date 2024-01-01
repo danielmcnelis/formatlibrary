@@ -420,8 +420,10 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
     const winningPlayer = await Player.findOne({ where: { id: match.winnerId }})
     const losingPlayer = await Player.findOne({ where: { id: match.loserId }})
 
+    const {data: tournamentData} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
+    if (!tournamentData) return await interaction.channel.send({ content: `Error: Challonge tournament data not found.`})	
     const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
-    if (!challongeMatch) return await interaction.channel.send({ content: `Error: Challonge match not found.`})	
+    if (!challongeMatch) return await interaction.channel.send({ content: `Error: Challonge match data not found.`})	
     const replay = await Replay.findOne({ where: { matchId: match.id }})
     if (replay && await isMod(server, interaction.member)) {
         await replay.update({ url })
@@ -435,26 +437,30 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
         if (tournament.type === 'swiss' || tournament.type === 'round robin') {
             roundName = `Round ${challongeMatch?.match?.round}`
         } else if (tournament.type === 'single elimination') {
-            roundName = tournament.rounds - round === 0 ? 'Finals' :
-                tournament.rounds - round === 1 ? 'Semi Finals' :
-                tournament.rounds - round === 2 ? 'Quarter Finals' :
-                tournament.rounds - round === 3 ? 'Round of 16' :
-                tournament.rounds - round === 4 ? 'Round of 32' :
-                tournament.rounds - round === 5 ? 'Round of 64' :
-                tournament.rounds - round === 6 ? 'Round of 128' :
-                tournament.rounds - round === 7 ? 'Round of 256' :
+            const rounds = Math.ceil(Math.log2(tournamentData.participants_count))
+            console.log('rounds', rounds, 'round', round)
+            roundName = rounds - round === 0 ? 'Finals' :
+                rounds - round === 1 ? 'Semi Finals' :
+                rounds - round === 2 ? 'Quarter Finals' :
+                rounds - round === 3 ? 'Round of 16' :
+                rounds - round === 4 ? 'Round of 32' :
+                rounds - round === 5 ? 'Round of 64' :
+                rounds - round === 6 ? 'Round of 128' :
+                rounds - round === 7 ? 'Round of 256' :
                 null
         } else if (tournament.type === 'double elimination') {
+            const rounds = Math.ceil(Math.log2(tournamentData.participants_count))
+            console.log('rounds', rounds, 'round', round)
             if (round > 0) {
-                roundName = tournament.rounds - round === 0 ? 'Grand Finals' :
-                    tournament.rounds - round === 1 ? `Winner's Finals` :
-                    tournament.rounds - round === 2 ? `Winner's Semis` :
-                    tournament.rounds - round === 3 ? `Winner's Quarters` :
+                roundName = rounds - round === 0 ? 'Grand Finals' :
+                    rounds - round === 1 ? `Winner's Finals` :
+                    rounds - round === 2 ? `Winner's Semi Finals` :
+                    rounds - round === 3 ? `Winner's Quarter Finals` :
                     `Winner's Round ${round}`
             } else {
-                roundName = tournament.rounds - Math.abs(round) === -1 ? `Loser's Finals` :
-                    tournament.rounds - Math.abs(round) === 0 ? `Loser's Semis` :
-                    tournament.rounds - Math.abs(round) === 1 ? `Loser's Quarters` :
+                roundName = rounds - Math.abs(round) === -1 ? `Loser's Finals` :
+                    rounds - Math.abs(round) === 0 ? `Loser's Semi Finals` :
+                    rounds - Math.abs(round) === 1 ? `Loser's Quarter Finals` :
                     `Loser's Round ${Math.abs(round)}`
             }
         } else {
