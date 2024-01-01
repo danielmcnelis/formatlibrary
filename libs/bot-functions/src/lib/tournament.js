@@ -2210,7 +2210,7 @@ export const autoRegisterTopCut = async (server, tournament, topCutTournament, s
             })
 
             const topCutEntry = await Entry.create({
-                name: entry.name,
+                playerName: entry.playerName,
                 playerId: entry.playerId,
                 tournamentId: topCutTournament.id,
                 compositeKey: `${entry.playerId}${topCutTournament.id}`,

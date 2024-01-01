@@ -84,7 +84,6 @@ export const createDecks = async (event, participants, standings = []) => {
     return (b + c === event.size) || (b + c === (event.size * 3))
 } 
 
-
 // FIX PLACEMENTS
 export const fixPlacements = async (event, participants, standings = []) => {
     console.log('standings', standings)
@@ -96,7 +95,6 @@ export const fixPlacements = async (event, participants, standings = []) => {
     for (let i = 0; i < participants.length; i++) {
         try {
             const {participant} = participants[i]
-            console.log('participant', participant)
 
             const player = await Player.findOne({
                 where: {
@@ -116,14 +114,11 @@ export const fixPlacements = async (event, participants, standings = []) => {
             })
 
             if (deck && deck.display === false) {
-                console.log(`found deck for ${participant.name}`)
                 const standing = standings.find((s) => s.participantId === participant.id)
-                console.log('standing', standing)
                 const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
                     participant.final_rank ? parseInt(participant.final_rank) :
                     null
 
-                console.log('placement', placement)
                 await deck.update({ placement: placement })
 
                 b++
@@ -363,7 +358,8 @@ export const composeThumbnails = async (interaction, event) => {
             
 // DISPLAY DECKS
 export const displayDecks = async (interaction, event) => {
-    const minPlacement = event.size <= 8 ? 1 :
+    const minPlacement = event.tournament.topCut ? event.tournament.topCut :
+        event.size <= 8 ? 1 :
         event.size > 8 && event.size <= 16 ? 2 :
         event.size > 16 && event.size <= 24 ? 3 :
         event.size > 24 && event.size <= 32 ? 4 :
