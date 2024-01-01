@@ -11,6 +11,7 @@ import { checkExpiryDate, uploadDeckFolder } from './drive'
 
 // CREATE DECKS
 export const createDecks = async (event, participants, standings = []) => {
+    console.log('standings', standings)
     let b = 0
     let c = 0
     let e = 0
@@ -18,6 +19,7 @@ export const createDecks = async (event, participants, standings = []) => {
     for (let i = 0; i < participants.length; i++) {
         try {
             const {participant} = participants[i]
+            console.log('participant', participant)
 
             const entry = await Entry.findOne({
                 where: {
@@ -40,10 +42,12 @@ export const createDecks = async (event, participants, standings = []) => {
 
             if (!count) {
                 const standing = standings.find((s) => s.participantId === participant.id)
+                console.log('standing', standing)
                 const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
                     participant.final_rank ? parseInt(participant.final_rank) :
                     null
 
+                console.log('placement', placement)
                 const deckType = await getDeckType(entry.ydk, event.formatName)
 
                 await Deck.create({
@@ -79,6 +83,70 @@ export const createDecks = async (event, participants, standings = []) => {
     console.log(`Uploaded ${b} decks for ${event.name}. Encountered ${e} errors. ${b + c} out of ${event.size} decks saved thus far.`)
     return (b + c === event.size) || (b + c === (event.size * 3))
 } 
+
+
+// FIX PLACEMENTS
+export const fixPlacements = async (event, participants, standings = []) => {
+    console.log('standings', standings)
+    let b = 0
+    let c = 0
+    let d = 0
+    let e = 0
+
+    for (let i = 0; i < participants.length; i++) {
+        try {
+            const {participant} = participants[i]
+            console.log('participant', participant)
+
+            const player = await Player.findOne({
+                where: {
+                    discordName: participant.name,
+                }
+            })
+
+            if (!player) {
+                console.log(`missing player for participant ${participant.id}`)
+            }
+
+            const deck = await Deck.findOne({
+                where: {
+                    playerId: player.id,
+                    eventId: event.id
+                }
+            })
+
+            if (deck && deck.display === false) {
+                console.log(`found deck for ${participant.name}`)
+                const standing = standings.find((s) => s.participantId === participant.id)
+                console.log('standing', standing)
+                const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
+                    participant.final_rank ? parseInt(participant.final_rank) :
+                    null
+
+                console.log('placement', placement)
+
+                await Deck.update({
+                    placement: placement
+                })
+
+                b++
+                console.log(`updated ${event.abbreviation || event.name} #${placement} deck built by ${participant.name}`)
+            } else if (deck && deck.display === true) {
+                d++
+                console.log(`skipping placement update for ${participant.name}'s deck since they made the top cut`)
+            } else {
+                c++
+                console.log(`count not find ${participant.name}'s deck for for ${event.name}`)
+            }
+        } catch (err) {
+            e++
+            console.log(err)
+        }
+    }
+    
+    return console.log(`Updated standings for ${b} decks for ${event.name}. Skipped ${d} decks. Encountered ${e} errors. ${b + c + d} out of ${event.size} decks corrected thus far.`)
+}
+
 
 // COMPOSE BLOG POST
 export const composeBlogPost = async (interaction, event) => {

@@ -2,8 +2,9 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { isProgrammer } from '@fl/bot-functions'
 import { Deck, DeckType, Event, Format, Match, Matchup, Player, Server, Tournament } from '@fl/models'
-import { generateMatchupData } from '@fl/bot-functions'
+import { calculateStandings, generateMatchupData, fixPlacements } from '@fl/bot-functions'
 import { Op } from 'sequelize'
+import axios from 'axios'
 
 export default {
     data: new SlashCommandBuilder()
@@ -33,17 +34,10 @@ export default {
 
             if (!event) return await interaction.editReply({ content: `No event found.` })
 
-            const tournament = topCut ? await Tournament.findOne({
-                where: {
-                    [Op.or]: {
-                        name: input + '_' + topCut,
-                        abbreviation: input + '_' + topCut
-                    }
-                }
-            }) : event?.tournament
-
-            if (!tournament) return await interaction.editReply({ content: `No tournament found.` })
-            await generateMatchupData(interaction, server, event, tournament)
+            const {data: participants} = await axios.get(`https://api.challonge.com/v1/tournaments/${event?.tournament?.id}/participants.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
+            const {data: matches} = await axios.get(`https://api.challonge.com/v1/tournaments/${event?.tournament?.id}/matches.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
+            const standings = await calculateStandings(event?.tournament, matches, participants)
+            await fixPlacements(event, participants, standings)
         } else {
             return await interaction.editReply('🛠️')
         }
