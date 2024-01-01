@@ -100,7 +100,6 @@ export const conductCensus = async (client) => {
             const membersMap = await guild.members.fetch()
             const members = [...membersMap.values()]
             console.log(`${server.name} members:`, members)
-            continue
             const rolesMap = guild.roles.cache
             const roles = [...rolesMap.values()].reduce((a, v) => ({ ...a, [v.id]: v.name}), {})     
             let updateCount = 0
@@ -113,7 +112,9 @@ export const conductCensus = async (client) => {
             for (let i = 0; i < members.length; i++) {
                 const member = members[i]
                 if (member.user.bot) continue
+                console.log('member.user.id', member.user.id)
                 const player = await Player.findOne({ where: { discordId: member.user.id } })
+                console.log(`player && player.duelingBook && (member.user.discriminator === '0' || !player.name)`, player && player.duelingBook && (member.user.discriminator === '0' || !player.name))
                 
                 if (player && player.duelingBook && (member.user.discriminator === '0' || !player.name)) {
                     try {
