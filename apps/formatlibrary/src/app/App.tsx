@@ -29,7 +29,7 @@ const App = () => {
     // USE EFFECT
     useEffect(() => {
         if (playerId) {
-            const checkIfSubscriber = async () => {
+            const checkIfTracking = async () => {
                 try {
                     const { status } = await axios.get(`/api/cookies/track`)
                     if (status === 200) setIsTracking(true)
@@ -40,7 +40,7 @@ const App = () => {
                 setCheckedTracking(true)
             }
     
-            checkIfSubscriber()
+            checkIfTracking()
         }
     }, [])
 
