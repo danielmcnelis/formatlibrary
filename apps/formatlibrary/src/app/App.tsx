@@ -45,7 +45,7 @@ const App = () => {
     
             checkIfTracking()
         }
-    }, [])
+    }, [adBlockDetected, visited])
 
     // USE EFFECT
     useEffect(() => {
