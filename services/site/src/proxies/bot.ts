@@ -4,6 +4,6 @@ const secure = config.services.bot.https === '1' || config.services.bot.https ==
 
 export const bot = {
   path: '/bot',
-  target: `${secure ? 'https' : 'http'}://${config.services.bot.host}:${config.services.bot.port}/bot`,
+  target: `${secure ? 'https' : 'http'}://${config.services.bot.host}:${config.services.bot.port}`,
   secure
 }
