@@ -7,14 +7,13 @@ import { useDetectAdBlock } from 'adblock-detect-react'
 import { SocketProvider } from '@fl/context'
 import {config} from '@fl/config'
 import io from 'socket.io-client'
-
-const playerId = getCookie('playerId')
-console.log('playerId', playerId)
-const visited = getCookie('visited')
-console.log('visited', visited)
 const socket = io(config.siteUrl)
 
 const App = () => {
+    const playerId = getCookie('playerId')
+    console.log('playerId', playerId)
+    const visited = getCookie('visited')
+    console.log('visited', visited)
     const [isSubscriber, setIsSubscriber] = useState(false)
     console.log('isSubscriber', isSubscriber)
     const [isTracking, setIsTracking] = useState(false)  
@@ -28,20 +27,18 @@ const App = () => {
 
     // USE EFFECT
     useEffect(() => {
-        if (playerId) {
-            const checkIfTracking = async () => {
-                try {
-                    const { status } = await axios.get(`/api/cookies/track`)
-                    if (status === 200) setIsTracking(true)
-                } catch (err) {
-                    console.log(err)
-                }
-    
-                setCheckedTracking(true)
+        const checkIfTracking = async () => {
+            try {
+                const { status } = await axios.get(`/api/cookies/track`)
+                if (status === 200) setIsTracking(true)
+            } catch (err) {
+                console.log(err)
             }
-    
-            checkIfTracking()
+
+            setCheckedTracking(true)
         }
+
+        checkIfTracking()
     }, [])
 
     // USE EFFECT
