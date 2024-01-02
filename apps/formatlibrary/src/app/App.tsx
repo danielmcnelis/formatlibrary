@@ -11,21 +11,13 @@ const socket = io(config.siteUrl)
 
 const App = () => {
     const playerId = getCookie('playerId')
-    console.log('playerId', playerId)
     const visited = getCookie('visited')
-    console.log('visited', visited)
     const [isSubscriber, setIsSubscriber] = useState(false)
-    console.log('isSubscriber', isSubscriber)
     const [isTracking, setIsTracking] = useState(false)  
-    console.log('isTracking', isTracking)
     const [checkedTracking, setCheckedTracking] = useState(false)  
-    console.log('checkedTracking', checkedTracking)
     const [checkedSubscription, setCheckedSubscription] = useState(false)  
-    console.log('checkedSubscription', checkedSubscription)
     const adBlockDetected = useDetectAdBlock()
-    console.log('adBlockDetected', adBlockDetected)
     const [showReminder, setShowReminder] = useState(false) 
-    console.log('showReminder', showReminder)
 
     // USE EFFECT
     useEffect(() => {
@@ -82,11 +74,13 @@ const App = () => {
                         <div className="ad-block-detected">
                             <h2>Reminder: Please allow cookies and disable your ad-blocker to view this website.</h2>
                             <p>Format Library depends on modest ad revenue to operate and produce content. If you do not wish to see ads, you can also subscribe to the <a style={{color: 'blue'}} href="https://discord.com/invite/formatlibrary">Format Library Discord server</a> for $3.99/month and log-in below:</p>
-                            <a href="/auth/login/">
-                                <h1 className="login">LOGIN</h1>
-                            </a>
-                            <div onClick={() => window.location.reload()}>
-                                <h1 className="login">CONTINUE</h1>
+                            <div className="horizontal-centered-flexbox">
+                                <a href="/auth/login/">
+                                    <h1 className="login">LOGIN</h1>
+                                </a>
+                                <div className="show-cursor" onClick={() => window.location.reload()}>
+                                    <h1 className="login">CONTINUE</h1>
+                                </div>
                             </div>
                         </div>
                     ) : (<SocketProvider value={socket}> <Router/> </SocketProvider>)

@@ -275,7 +275,13 @@
     width: 640px;
     padding-bottom: 10px;
   }
-  
+
+  .horizontal-centered-flexbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
   
   .subcategory-title-flexbox {
     width: 800px;
