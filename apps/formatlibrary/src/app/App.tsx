@@ -11,39 +11,26 @@ const socket = io(config.siteUrl)
 
 const App = () => {
     const playerId = getCookie('playerId')
-    console.log('playerId', playerId)
     const visited = getCookie('visited')
-    console.log('visited', visited)
     const [isSubscriber, setIsSubscriber] = useState(false)
-    console.log('isSubscriber', isSubscriber)
-    const [isTracking, setIsTracking] = useState(false)  
-    console.log('isTracking', isTracking)
-    const [checkedTracking, setCheckedTracking] = useState(false)  
-    console.log('checkedTracking', checkedTracking)
     const [checkedSubscription, setCheckedSubscription] = useState(false)  
-    console.log('checkedSubscription', checkedSubscription)
     const adBlockDetected = useDetectAdBlock()
-    console.log('adBlockDetected', adBlockDetected)
     const [showReminder, setShowReminder] = useState(false) 
-    console.log('showReminder', showReminder)
 
     // USE EFFECT
     useEffect(() => {
         if (adBlockDetected && !visited) {
             setShowReminder(true)
             
-            const checkIfTracking = async () => {
+            const track = async () => {
                 try {
-                    const { status } = await axios.get(`/api/cookies/track`)
-                    if (status === 200) setIsTracking(true)
+                    await axios.get(`/api/cookies/track`)
                 } catch (err) {
                     console.log(err)
                 }
-
-                setCheckedTracking(true)
             }
     
-            checkIfTracking()
+            track()
         }
     }, [adBlockDetected, visited])
 
