@@ -57,7 +57,7 @@ export default {
                 },
                 offset: 1 + i,
                 limit: 100,
-                order: [["createdAt", "ASC"]]
+                order: [["id", "ASC"]]
             })
 
             console.log('i', i, 'codyStats.length', codyStats.length)
@@ -99,7 +99,9 @@ export default {
                 const winnerId = match.winnerId
                 const loserId = match.loserId
                 const winnerStats = allStats.find((s) => s.playerId === winnerId)
+                console.log('!!winnerStats', !!winnerStats)
                 const loserStats = allStats.find((s) => s.playerId === loserId)
+                console.log('!!loserStats', !!loserStats)
 
                 if (!winnerStats) {
                     const stats = await Stats.create({
