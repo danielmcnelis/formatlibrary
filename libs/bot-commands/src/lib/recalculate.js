@@ -38,7 +38,7 @@ export default {
 
         const allStats = await Stats.findAll({ 
             where: { format: format.name, serverId: serverId }, 
-            attributes: [['id', 'format', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 'streak', 'bestStreak', 'vanquished', 'playerId', 'serverId'], { model: Player, attributes: ['id', 'name']}], 
+            attributes: ['id', 'format', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 'streak', 'bestStreak', 'vanquished', 'playerId', 'serverId', { model: Player, attributes: ['id', 'name']}], 
             include: Player 
         })
 
