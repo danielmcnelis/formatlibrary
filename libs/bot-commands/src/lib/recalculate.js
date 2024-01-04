@@ -48,14 +48,14 @@ export default {
             
         console.log('codyCount', codyCount)
 
-        for (let i = 0; i < codyCount; i += 100) {
+        for (let i = 0; i < (codyCount / 100); i++) {
             const codyStats = await Stats.findAll({
                 where: {            
                     format: format.name, 
                     serverId: serverId,
                     playerId: 'h99QWsXtzkCCWSCivuQVv2'
                 },
-                offset: 1 + i,
+                offset: 1 + (i * 100),
                 limit: 100,
                 order: [["id", "ASC"]]
             })
@@ -99,9 +99,7 @@ export default {
                 const winnerId = match.winnerId
                 const loserId = match.loserId
                 const winnerStats = allStats.find((s) => s.playerId === winnerId)
-                console.log('!!winnerStats', !!winnerStats)
                 const loserStats = allStats.find((s) => s.playerId === loserId)
-                console.log('!!loserStats', !!loserStats)
 
                 if (!winnerStats) {
                     const stats = await Stats.create({
