@@ -32,11 +32,15 @@ export default {
         
         const allMatches = await Match.findAll({ 
             where: { formatId: format.id, serverId: serverId }, 
-            attributes: ['id', 'formatName', 'winnerId', 'loserId', 'delta', 'createdAt'], 
+            attributes: ['id', 'formatId', 'winnerId', 'loserId', 'delta', 'createdAt'], 
             order: [["createdAt", "ASC"]]
         })
 
-        const allStats = await Stats.findAll({ where: { format: format.name, serverId: serverId }, include: Player })
+        const allStats = await Stats.findAll({ 
+            where: { format: format.name, serverId: serverId }, 
+            attributes: [['id', 'formatId', 'winnerId', 'loserId', 'delta', 'createdAt'], { model: Player, attributes: ['id', 'name']}], 
+            include: Player 
+        })
 
         for (let i = 0; i < allStats.length; i++) {
             const stats = allStats[i]
