@@ -18,11 +18,9 @@ export default {
         .setDMPermission(false),
     async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        console.log('server', server)
         if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         const user = interaction.options.getUser('player') || interaction.user
         const player = await Player.findOne({ where: { discordId: user?.id } })
-        console.log('player', player)
         if (!player) return await interaction.reply({ content: `That user is not in the database.`})
         const serverId = server.internalLadder ? server.id : '414551319031054346'
 
@@ -61,11 +59,6 @@ export default {
         } else {
             const format = await Format.findByServerOrChannelId(server, interaction.channelId)
             if (!format) return await interaction.reply({ content: `Try using **/stats** in channels like: <#414575168174948372> or <#629464112749084673>.`})
-        
-            console.log('format', format)
-            console.log('playerId: player.id', player.id)
-            console.log('format: {[Op.iLike]: format.name}', format.name)
-            console.log('serverId: serverId', serverId)
             
             const stats = await Stats.findOne({ 
                 where: { 
@@ -79,7 +72,6 @@ export default {
                 } 
             })
 
-            console.log('stats', stats)
             const allStats = await Stats.findAll({ 
                     where: {
                         format: { [Op.iLike]: format.name }, 

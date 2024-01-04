@@ -1,5 +1,6 @@
 
 import { useState, useEffect, useLayoutEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import {CardImage} from '../../../Cards/CardImage'
 import {EmptySlot} from './EmptySlot'
 import {FocalCard} from './FocalCard'
@@ -39,6 +40,7 @@ export const Builder = () => {
     const [showSaveModal, setShowSaveModal] = useState(false)
     const [showShareModal, setShowShareModal] = useState(false)
     const [showUploadModal, setShowUploadModal] = useState(false)
+    const { id } = useParams()
     
     const myFormats = [...new Set(decks.map((d) => d.formatName))]
     const myDeckTypes = [...new Set(decks.map((d) => d.type))]
@@ -494,7 +496,7 @@ export const Builder = () => {
     const fetchData4 = async () => {
         try {
             const { deck, format, origin } = location.state
-            const id = deck?.playerId === playerId && origin === 'user' ? deck.id : null
+            const deckId = deck?.playerId === playerId && origin === 'user' ? deck.id : null
 
             const { data } = await axios.put(`/api/decks/read-ydk`, {
                 name: deck?.name,
@@ -505,7 +507,7 @@ export const Builder = () => {
             
             setDeck({
                 ...data,
-                id: id,
+                id: deckId,
                 name: name,
                 format: deck?.format || format || {}
             })
@@ -527,7 +529,26 @@ export const Builder = () => {
     }
   }, [])
 
+
   // USE EFFECT SET DECK
+  useEffect(() => {
+    const fetchData = async () => {
+        if (decks.length && id) {
+            try {
+                const deck = decks.find((d) => d.id === parseInt(id))
+                if (deck) {
+                    await getDeck(id)
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        }
+    }
+
+    fetchData()
+  }, [decks, format, id])
+
+  // USE EFFECT SET BANLIST
   useEffect(() => {
     if (!format.banlist) return
     const fetchData = async () => {

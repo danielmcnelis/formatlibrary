@@ -87,6 +87,8 @@ export const conductCensus = async (client) => {
             access: {[Op.not]: 'free'}
         }
     })
+
+    const checkedDiscordIds = []
     
     for (let s = 0; s < servers.length; s++) {
         try {
@@ -99,9 +101,8 @@ export const conductCensus = async (client) => {
             
             const membersMap = await guild.members.fetch()
             const members = [...membersMap.values()]
-            console.log(`${server.name} members:`, members)
             const rolesMap = guild.roles.cache
-            const roles = [...rolesMap.values()].reduce((a, v) => ({ ...a, [v.id]: v.name}), {})     
+            const roles = [...rolesMap.values()].reduce((a, v) => ({ ...a, [v.id]: v.name}), {})
             let updateCount = 0
             let createCount = 0
             let memberCount = 0
@@ -111,12 +112,12 @@ export const conductCensus = async (client) => {
 
             for (let i = 0; i < members.length; i++) {
                 const member = members[i]
-                if (member.user.bot) continue
-                console.log('member.user.id', member.user.id)
+                if (member.user.bot || checkedDiscordIds.includes(member.user.id)) continue
+                checkedDiscordIds.push(member.user.id)
+
                 const player = await Player.findOne({ where: { discordId: member.user.id } })
-                console.log(`player && player.duelingBook && (member.user.discriminator === '0' || !player.name)`, player && player.duelingBook && (member.user.discriminator === '0' || !player.name))
-                
-                if (player && player.duelingBook && (member.user.discriminator === '0' || !player.name)) {
+
+                if (player && player.duelingBook && (member.user.discriminator === '0' || !player.globalName)) {
                     try {
                         const {data} = await axios.get(`https://discord.com/api/v9/users/${member.user.id}`, {
                             headers: {

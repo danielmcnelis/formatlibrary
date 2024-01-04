@@ -19,7 +19,6 @@ export const PackSimulator = () => {
     // OPEN PACKS
     const openPacks = async () => {
         const {data} = await axios.get(`/api/sets/open-packs/${booster?.setCode}?count=${count}`)
-        console.log('data', data)
         setPacks(data)
     }
 
@@ -106,7 +105,6 @@ export const PackSimulator = () => {
                                 <>
                                     {
                                         packs.map((pack) => {
-                                            console.log('pack', pack)
                                             return (
                                             <div className="pack-flexbox">
                                                 {

@@ -83,7 +83,6 @@ export const decksDeleteId = async (req, res, next) => {
 
 export const decksUpdateId = async (req, res, next) => {
     try {
-        console.log('req.body.ydk', req.body.ydk)
         const deck = await Deck.findOne({ 
             where: {
                 id: req.params.id
@@ -896,12 +895,9 @@ export const convertYDKeToYDK = async (req, res, next) => {
 
 export const decksCreate = async (req, res, next) => {
   try {
-    console.log('req.body', req.body)
     const format = await Format.findOne({ where: { name: { [Op.iLike]: req.body.format || req.body.formatName } } })
     const player = await Player.findOne({ where: { id: req.body.playerId } })
-    console.log('format', format)
-    console.log('player', player)
-
+    
     const deck = await Deck.create({
       builder: player.name,
       playerId: player.id,

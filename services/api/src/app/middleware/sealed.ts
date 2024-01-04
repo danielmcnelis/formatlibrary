@@ -52,9 +52,7 @@ export const getSealedPacks = async (req, res, next) => {
         for (let i = 0; i < instructions.length; i++) {
             const instruction:Array<any> = instructions[i]
             const [setId, packsPerPlayer] = instruction
-            console.log('setId', setId, 'packsPerPlayer', packsPerPlayer)              
             const packNumbers = Array.from(Array(packsPerPlayer).keys()).map((e) => e + 1 + (packsPerPlayer * (entry.slot - 1)))
-            console.log('packNumbers sealed.ts ln55', packNumbers)
 
             for (let j = 0; j < packNumbers.length; j++) {
                 const packNumber = packNumbers[j]

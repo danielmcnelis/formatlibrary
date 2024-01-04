@@ -85,14 +85,16 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
             const guild = client.guilds.cache.get(serverId)
             const channel = guild.channels.cache.get(channelId)
             const player = yourPool.player
+            const playerDiscordUsername = player.discordName + player.discriminator !== '0' ? `#${player.discriminator}` : ''
             const opponent = opponentsPool.player
+            const opponentDiscordUsername = opponent.discordName + opponent.discriminator !== '0' ? `#${opponent.discriminator}` : ''
             const opposingMember = await guild.members.fetch(opponent.discordId)
-            
+
             opposingMember.user.send(
                 `New pairing for Rated ${format.name}${format.category !== 'OP' ? ` Format` : ''} ${format.emoji}!` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${channelId}>` +
-                `\nDiscord: ${player.globalName || player.discordName}${player.discriminator !== '0' ? `#${player.discriminator}` : ''}` +
+                `\nDiscord: ${player.globalName ? `${player.globalName} (${playerDiscordUsername})` : playerDiscordUsername}` +
                 `\n${format.category !== 'OP' ? `DuelingBook: ${player.duelingBook}` : `OPTCGSim: ${player.opTcgSim}`}`
             ).catch((err) => console.log(err))
             
@@ -100,7 +102,7 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
                 `New pairing for Rated ${format.name}${format.category !== 'OP' ? ` Format` : ''} ${format.emoji}!` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${channelId}>` +
-                `\nDiscord: ${opponent.globalName || opponent.discordName}${opponent.discriminator !== '0' ? `#${opponent.discriminator}` : ''}` +
+                `\nDiscord: ${opponent.globalName ? `${opponent.globalName} (${opponentDiscordUsername})` : opponentDiscordUsername}` +
                 `\n${format.category !== 'OP' ? `DuelingBook: ${opponent.duelingBook}` : `OPTCGSim: ${opponent.opTcgSim}`}`
             ).catch((err) => console.log(err))
      
@@ -219,7 +221,7 @@ export const getRatedFormat = async (interaction) => {
 //GET PREVIOUS RATED DECK
 export const getPreviousRatedDeck = async (user, yourRatedDecks, format) => {   
     if (!yourRatedDecks || !yourRatedDecks.length) return false
-    const options = yourRatedDecks.map((yRD, index) => `(${index + 1}) - ${yRD.name} - <${yRD.url}>`)
+    const options = yourRatedDecks.map((yRD, index) => `(${index + 1}) - ${yRD.name} - <https://formatlibrary.com/builder/${yRD.id}>`)
     options.push(`(${options.length + 1}) - Submit a New Deck`)
 
     const filter = m => m.author.id === user.id
@@ -228,7 +230,7 @@ export const getPreviousRatedDeck = async (user, yourRatedDecks, format) => {
     return await message.channel.awaitMessages({
         filter,
         max: 1,
-        time: 20000
+        time: 5 * 60 * 1000
     }).then(async (collected) => {
         const response = collected.first().content
         const index = !isNaN(parseInt(response)) ? parseInt(response) - 1 : null

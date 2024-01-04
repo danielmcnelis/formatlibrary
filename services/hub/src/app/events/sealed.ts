@@ -48,8 +48,6 @@ export const startSealed = async (draftId, socket) => {
 
         for (let i = 0; i < instructions.length; i++) {
             const [setId, packsPerPlayer]:[number, number] =  instructions[i]
-            console.log('setId', setId)
-            console.log('packsPerPlayer', packsPerPlayer)
             const set = await Set.findOne({
                 where: {
                     id: setId

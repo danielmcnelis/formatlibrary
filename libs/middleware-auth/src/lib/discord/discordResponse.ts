@@ -55,7 +55,6 @@ export const discordResponse = (options) => {
       console.error('middleware.discordResponse: error: ', error.message)
     }
 
-    
     const player = await Player.discordLogin(userinfo.data)
     const access = await player.getToken()
     const {id, discordId, discordPfp, name} = player

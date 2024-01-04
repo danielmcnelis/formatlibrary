@@ -175,14 +175,16 @@ const getRatedInformation = async (interaction, player) => {
                 const channelId = commonServer.ratedChannel || format.channel
                 const guild = client.guilds.cache.get(commonGuildId)
                 const channel = guild.channels.cache.get(channelId)
+                const playerDiscordUsername = player.discordName + player.discriminator !== '0' ? `#${player.discriminator}` : ''
                 const opponent = potentialPair.player
+                const opponentDiscordUsername = opponent.discordName + opponent.discriminator !== '0' ? `#${opponent.discriminator}` : ''
                 const opposingMember = await guild.members.fetch(opponent.discordId)
 
                 opposingMember.user.send(
                     `New pairing for Rated ${format.name}${format.category !== 'OP' ? ' Format' : ''} ${format.emoji}!` +
                     `\nServer: ${commonServer.name} ${commonServer.logo}` +
                     `\nChannel: <#${channelId}>` +
-                    `\nDiscord: ${player.globalName || player.discordName}${player.discriminator !== '0' ? `#${player.discriminator}` : ''}` +
+                    `\nDiscord: ${player.globalName ? `${player.globalName} (${playerDiscordUsername})` : playerDiscordUsername}` +
                     `\n${format.category !== 'OP' ? `DuelingBook: ${player.duelingBook}` : `OPTCGSim: ${player.opTcgSim}`}`
                 ).catch((err) => console.log(err))
 
@@ -190,7 +192,7 @@ const getRatedInformation = async (interaction, player) => {
                     `New pairing for Rated ${format.name}${format.category !== 'OP' ? ' Format' : ''} ${format.emoji}!` + 
                     `\nServer: ${commonServer.name} ${commonServer.logo}` + 
                     `\nChannel: <#${channelId}>` +
-                    `\nDiscord: ${opponent.globalName || opponent.discordName}${opponent.discriminator !== '0' ? `#${opponent.discriminator}` : ''}` +
+                    `\nDiscord: ${opponent.globalName ? `${opponent.globalName} (${opponentDiscordUsername})` : opponentDiscordUsername}` +
                     `\n${format.category !== 'OP' ? `DuelingBook: ${opponent.duelingBook}` : `OPTCGSim: ${opponent.opTcgSim}`}`
                 ).catch((err) => console.log(err))
 

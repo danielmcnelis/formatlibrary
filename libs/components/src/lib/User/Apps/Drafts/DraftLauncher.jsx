@@ -22,12 +22,6 @@ export const DraftLauncher = () => {
         
     const logoWidth = type === 'cube' ? '128px' : '100px'
 
-    if (type === 'cube') {
-        console.log('banner url:', `https://cdn.formatlibrary.com/images/cubes/slideshows/${cube.id?.toString() || '1'}.png`)
-     } else {
-        console.log('banner url:', `https://cdn.formatlibrary.com/images/sets/slideshows/${booster?.setCode || 'BP01'}.png`)
-     }
-
     const packSizeOptions = []
     if (type === 'cube') {
         let upperLimit = (cube.size / packsPerPlayer) < 20 ? cube.size / packsPerPlayer : 20

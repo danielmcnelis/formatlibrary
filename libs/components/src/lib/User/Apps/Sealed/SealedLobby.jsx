@@ -67,16 +67,9 @@ export const SealedLobby = () => {
     const [toggleHorn] = useAudio('/assets/sounds/horn.mp3')
     const socket = useSocket()
     const { id } = useParams()
-    console.log('draft', draft)
-    console.log('participants', participants)
-    console.log('entry', entry)
-    console.log('packs', packs)
-    console.log('card', card)
-    console.log('id', id)
 
     // FETCH PARTICIPANTS
     const fetchParticipants = async (draftId) => {
-        console.log('fetchParticipants()')
         try {
             const {data} = await axios.get(`/api/drafts/participants/${draftId}`)
             setParticipants(data)
@@ -101,7 +94,6 @@ export const SealedLobby = () => {
 
     // LEAVE
     const leave = async () => {    
-        console.log('leave()')
         try {
             const data = { playerId, draftId: draft.id }
             socket.emit('leave draft', data, setEntry)            
@@ -112,7 +104,6 @@ export const SealedLobby = () => {
 
     // START
     const start = async () => {   
-            console.log('start()')       
         try {
             const data = { draftId: draft.id }
             socket.emit('start sealed', data)            
@@ -123,7 +114,6 @@ export const SealedLobby = () => {
 
     // HOOK - CHECK IF PARTICIPANT
     useEffect(() => {
-        console.log('Check if participant useEffect()') 
         for (let i = 0; i < participants.length; i++) {
             if (participants[i].playerId === playerId) {
                 return setEntry(participants[i])
@@ -133,7 +123,6 @@ export const SealedLobby = () => {
 
     // HOOK - GET PACKS
     useEffect(() => {
-        console.log('Get packs useEffect()') 
         const fetchData = async () => {
             if (entry.id && (draft.state === 'underway' || draft.state === 'complete')) {
                 const {data} = await axios.get(`/api/sealed/packs?entryId=${entry.id}`)
@@ -146,7 +135,6 @@ export const SealedLobby = () => {
 
     // HOOK - FETCH PARTICIPANTS
     useEffect(() => {
-        console.log('Fetch participants useEffect()') 
         fetchParticipants(draft.id)
     }, [draft.id])
 

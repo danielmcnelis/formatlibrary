@@ -57,8 +57,8 @@ export default {
             const match = allMatches[i]
             const winnerId = match.winnerId
             const loserId = match.loserId
-            const winnerStats = await Stats.findOne({ where: { playerId: winnerId, format: format.name, serverId: serverId }, include: Player })
-            const loserStats = await Stats.findOne({ where: { playerId: loserId, format: format.name, serverId: serverId }, include: Player })
+            const winnerStats = allStats.find((s) => s.playerId === winnerId)
+            const loserStats = allStats.find((s) => s.playerId === loserId)
 
             if (!winnerStats) {
                 await trackStats(server, winnerId, format.name)
@@ -95,7 +95,7 @@ export default {
 
             match.delta = delta
             await match.save()
-            console.log(`${format.name} Match ${i+1}: ${winnerStats.player.globalName || winnerStats.player.discordName} > ${loserStats.player.globalName || loserStats.player.discordName}`)
+            console.log(`${format.name} Match ${i+1}: ${winnerStats.playerId} > ${loserStats.playerId}`)
         }
 
         return await interaction.channel.send({ content: `Recalculation complete!`})	
