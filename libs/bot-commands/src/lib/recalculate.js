@@ -55,14 +55,15 @@ export default {
                     format: format.name, 
                     serverId: serverId,
                     playerId: 'h99QWsXtzkCCWSCivuQVv2'
-                }, 
-                offset: i,
+                },
+                offset: 1 + i,
+                limit: 100,
                 order: [["createdAt", "ASC"]]
             })
 
             console.log('codyStats.length', codyStats.length)
     
-            for (let i = 1; i < codyStats.length; i++) {
+            for (let i = 0; i < codyStats.length; i++) {
                 await codyStats[i].destroy()
             }
         }
