@@ -38,40 +38,6 @@ export default {
 
         console.log('allMatches.length', allMatches.length)
 
-        const codyCount = await Stats.count({
-            where: {            
-                format: format.name, 
-                serverId: serverId,
-                playerId: 'h99QWsXtzkCCWSCivuQVv2'
-            }
-        })
-            
-        console.log('codyCount', codyCount)
-
-        for (let i = 0; i < codyCount; i += 100) {
-            console.log('i', i)
-            const codyStats = await Stats.findAll({
-                where: {            
-                    format: format.name, 
-                    serverId: serverId,
-                    playerId: 'h99QWsXtzkCCWSCivuQVv2'
-                },
-                offset: 1 + i,
-                limit: 100,
-                order: [["createdAt", "ASC"]]
-            })
-
-            console.log('codyStats.length', codyStats.length)
-    
-            for (let i = 0; i < codyStats.length; i++) {
-                await codyStats[i].destroy()
-            }
-        }
-
-
-
-        console.log('cody duplicates destroyed')
-
         const allStats = await Stats.findAll({ 
             where: { format: format.name, serverId: serverId }, 
             attributes: ['id', 'format', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 'streak', 'bestStreak', 'vanquished', 'playerId', 'serverId'], 
@@ -102,9 +68,7 @@ export default {
                 const winnerId = match.winnerId
                 const loserId = match.loserId
                 const winnerStats = allStats.find((s) => s.playerId === winnerId)
-                console.log('winnerStats', winnerStats)
                 const loserStats = allStats.find((s) => s.playerId === loserId)
-                console.log('loserStats', loserStats)
 
                 if (!winnerStats) {
                     const stats = await Stats.create({
