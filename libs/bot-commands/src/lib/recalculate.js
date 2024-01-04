@@ -31,12 +31,12 @@ export default {
         interaction.reply({ content: `Recalculating data from ${count} ${format.name} ${format.emoji} matches. Please wait...`})
         
         const allMatches = await Match.findAll({ 
-            where: { formatName: format.name, serverId: serverId }, 
+            where: { formatId: format.id, serverId: serverId }, 
             attributes: ['id', 'formatName', 'winnerId', 'loserId', 'delta', 'createdAt'], 
             order: [["createdAt", "ASC"]]
         })
 
-        const allStats = await Stats.findAll({ where: { format: format.name, serverId: serverId } })
+        const allStats = await Stats.findAll({ where: { format: format.name, serverId: serverId }, include: Player })
 
         for (let i = 0; i < allStats.length; i++) {
             const stats = allStats[i]
@@ -54,48 +54,71 @@ export default {
         }
 
         for (let i = 0; i < allMatches.length; i++) {
-            const match = allMatches[i]
-            const winnerId = match.winnerId
-            const loserId = match.loserId
-            const winnerStats = allStats.find((s) => s.playerId === winnerId)
-            const loserStats = allStats.find((s) => s.playerId === loserId)
-
-            if (!winnerStats) {
-                await trackStats(server, winnerId, format.name)
-                i--
-                continue
-            }
-
-            if (!loserStats) {
-                await trackStats(server, loserId, format.name)
-                i--
-                continue
-            }
-
-            const origEloWinner = winnerStats.elo || 500.00
-            const origEloLoser = loserStats.elo || 500.00
-            const delta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
-            
-            winnerStats.elo = origEloWinner + delta
-            if ((origEloWinner + delta) > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + delta
-            winnerStats.backupElo = origEloWinner
-            winnerStats.wins++
-            winnerStats.games++
-            winnerStats.streak++
-            if (winnerStats.streak >= winnerStats.bestStreak) winnerStats.bestStreak++
-            if (!await Match.checkIfVanquished(format.id, winnerId, loserId, match.createdAt)) winnerStats.vanquished++
-            await winnerStats.save()
+            try {
+                const match = allMatches[i]
+                const winnerId = match.winnerId
+                const loserId = match.loserId
+                const winnerStats = allStats.find((s) => s.playerId === winnerId)
+                const loserStats = allStats.find((s) => s.playerId === loserId)
     
-            loserStats.elo = origEloLoser - delta
-            loserStats.backupElo = origEloLoser
-            loserStats.losses++
-            loserStats.games++
-            loserStats.streak = 0
-            await loserStats.save()
+                if (!winnerStats) {
+                    await trackStats(server, winnerId, format.name)
+                    i--
+                    continue
+                }
+    
+                if (!loserStats) {
+                    await trackStats(server, loserId, format.name)
+                    i--
+                    continue
+                }
+    
+                const origEloWinner = winnerStats.elo || 500.00
+                const origEloLoser = loserStats.elo || 500.00
+                const delta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
+                
+                winnerStats.elo = origEloWinner + delta
+                if ((origEloWinner + delta) > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + delta
+                winnerStats.backupElo = origEloWinner
+                winnerStats.wins++
+                winnerStats.games++
+                winnerStats.streak++
+                if (winnerStats.streak >= winnerStats.bestStreak) winnerStats.bestStreak++
+                // if (!await Match.checkIfVanquished(format.id, winnerId, loserId, match.createdAt)) winnerStats.vanquished++
+                await winnerStats.save()
+        
+                loserStats.elo = origEloLoser - delta
+                loserStats.backupElo = origEloLoser
+                loserStats.losses++
+                loserStats.games++
+                loserStats.streak = 0
+                await loserStats.save()
+    
+                match.delta = delta
+                await match.save()
+                console.log(`${format.name} Match ${i+1}: ${winnerStats.player.name} > ${loserStats.player.name}`)
+            } catch (err) {
+                console.log(err)
+            }
+        }
 
-            match.delta = delta
-            await match.save()
-            console.log(`${format.name} Match ${i+1}: ${winnerStats.playerId} > ${loserStats.playerId}`)
+        for (let i = 0; i < allStats.length; i++) {
+            const stats = allStats[i]
+            const victories = await Match.findAll({
+                where: {
+                    winnerId: stats.playerId,
+                    formatId: format.id, 
+                    serverId: serverId
+                }
+            })
+
+            const vanquishedIds = []
+            victories.forEach((v) => {
+                if (!vanquishedIds.includes(v.loserId)) vanquishedIds.push(v.loserId)
+            })
+
+            console.log(`${stats.player.name} has defeated ${vanquishedIds.length} unique opponents`)
+            await stats.update({ vanquished: vanquishedIds.length })
         }
 
         return await interaction.channel.send({ content: `Recalculation complete!`})	
