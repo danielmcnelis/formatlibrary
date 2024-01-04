@@ -38,6 +38,23 @@ export default {
 
         console.log('allMatches.length', allMatches.length)
 
+        const codyStats = await Stats.findAll({
+            where: {            
+                format: format.name, 
+                serverId: serverId,
+                playerId: 'h99QWsXtzkCCWSCivuQVv2'
+            }, 
+            order: [["createdAt", "ASC"]]
+        })
+
+        console.log('codyStats.length', codyStats.length)
+
+        for (let i = 1; i < codyStats.length; i++) {
+            await codyStats[i].destroy()
+        }
+
+        console.log('cody duplicates destroyed')
+
         const allStats = await Stats.findAll({ 
             where: { format: format.name, serverId: serverId }, 
             attributes: ['id', 'format', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 'streak', 'bestStreak', 'vanquished', 'playerId', 'serverId'], 
@@ -45,6 +62,7 @@ export default {
         })
 
         console.log('allStats.length', allStats.length)
+
 
         for (let i = 0; i < allStats.length; i++) {
             const stats = allStats[i]
@@ -67,16 +85,34 @@ export default {
                 const winnerId = match.winnerId
                 const loserId = match.loserId
                 const winnerStats = allStats.find((s) => s.playerId === winnerId)
+                console.log('winnerStats', winnerStats)
                 const loserStats = allStats.find((s) => s.playerId === loserId)
-    
+                console.log('loserStats', loserStats)
+
                 if (!winnerStats) {
-                    await trackStats(server, winnerId, format.name)
+                    const stats = await Stats.create({
+                        playerId: winnerId,
+                        format: format.name,
+                        serverId: '414551319031054346',
+                        internal: server.internalLadder
+                    })
+
+                    console.log('created new winner stats', winnerId)
+                    allStats.push(stats)
                     i--
                     continue
                 }
     
                 if (!loserStats) {
-                    await trackStats(server, loserId, format.name)
+                    const stats = await Stats.create({
+                        playerId: loserId,
+                        format: format.name,
+                        serverId: '414551319031054346',
+                        internal: server.internalLadder
+                    })
+
+                    console.log('created new loser stats:', loserId)
+                    allStats.push(stats)
                     i--
                     continue
                 }
