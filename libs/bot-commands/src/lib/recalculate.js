@@ -38,20 +38,36 @@ export default {
 
         console.log('allMatches.length', allMatches.length)
 
-        const codyStats = await Stats.findAll({
+        const codyCount = await Stats.count({
             where: {            
                 format: format.name, 
                 serverId: serverId,
                 playerId: 'h99QWsXtzkCCWSCivuQVv2'
-            }, 
-            order: [["createdAt", "ASC"]]
+            }
         })
+            
+        console.log('codyCount', codyCount)
 
-        console.log('codyStats.length', codyStats.length)
+        for (let i = 0; i < codyCount; i += 100) {
+            console.log('i', i)
+            const codyStats = await Stats.findAll({
+                where: {            
+                    format: format.name, 
+                    serverId: serverId,
+                    playerId: 'h99QWsXtzkCCWSCivuQVv2'
+                }, 
+                offset: i,
+                order: [["createdAt", "ASC"]]
+            })
 
-        for (let i = 1; i < codyStats.length; i++) {
-            await codyStats[i].destroy()
+            console.log('codyStats.length', codyStats.length)
+    
+            for (let i = 1; i < codyStats.length; i++) {
+                await codyStats[i].destroy()
+            }
         }
+
+
 
         console.log('cody duplicates destroyed')
 
