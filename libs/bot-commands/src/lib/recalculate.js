@@ -38,37 +38,6 @@ export default {
 
         console.log('allMatches.length', allMatches.length)
 
-        const codyCount = await Stats.count({
-            where: {            
-                format: 'Edison', 
-                serverId: serverId,
-                playerId: 'h99QWsXtzkCCWSCivuQVv2'
-            }
-        })
-            
-        console.log('codyCount', codyCount)
-
-        for (let i = 0; i < (codyCount / 100); i++) {
-            const codyStats = await Stats.findAll({
-                where: {            
-                    format: format.name, 
-                    serverId: serverId,
-                    playerId: 'h99QWsXtzkCCWSCivuQVv2'
-                },
-                offset: 1 + (i * 100),
-                limit: 100,
-                order: [["id", "ASC"]]
-            })
-
-            console.log('i', i, 'codyStats.length', codyStats.length)
-    
-            for (let i = 0; i < codyStats.length; i++) {
-                await codyStats[i].destroy()
-            }
-        }
-
-        console.log('cody duplicates destroyed')
-
         const allStats = await Stats.findAll({ 
             where: { format: format.name, serverId: serverId }, 
             attributes: ['id', 'format', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 'streak', 'bestStreak', 'vanquished', 'playerId', 'serverId'], 
