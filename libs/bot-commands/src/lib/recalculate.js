@@ -36,11 +36,15 @@ export default {
             order: [["createdAt", "ASC"]]
         })
 
+        console.log('allMatches.length', allMatches.length)
+
         const allStats = await Stats.findAll({ 
             where: { format: format.name, serverId: serverId }, 
             attributes: ['id', 'format', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 'streak', 'bestStreak', 'vanquished', 'playerId', 'serverId'], 
             include: { model: Player, attributes: ['id', 'name']} 
         })
+
+        console.log('allStats.length', allStats.length)
 
         for (let i = 0; i < allStats.length; i++) {
             const stats = allStats[i]
