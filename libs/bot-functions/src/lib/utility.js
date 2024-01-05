@@ -714,19 +714,3 @@ export const shuffleArray = (arr) => {
 
     return arr
 }
-
-//TRACK STATS
-export const trackStats = async (server, id, format) => {
-    if (await isNewUser(id)) {
-        const member = { user: { id: id } }
-        await createPlayer(member)
-        return trackStats(server, id, format)
-    } else {
-        await Stats.create({
-            playerId: id,
-            format: format,
-            serverId: '414551319031054346',
-            internal: server.internalLadder
-        })
-    }
-}

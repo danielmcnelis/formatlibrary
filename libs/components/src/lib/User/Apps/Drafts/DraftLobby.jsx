@@ -345,7 +345,7 @@ export const DraftLobby = () => {
                                 </div>
                                 <img className="desktop-only" style={{ width:logoWidth}} src={logoUrl} alt="draft-logo"/>
                             </div>
-                            <div className="empty-clock"/>
+                            <div className="empty-clock desktop-only"/>
                         </div>
                         <div className="last-selection"><i>{selection ? `You selected: ${selection}!` : ''}</i></div>
                         <div className="space-between-aligned">
@@ -410,7 +410,6 @@ export const DraftLobby = () => {
                                             >                                                                 
                                                 <div 
                                                     className="inventory-button"
-                                                    style={{width: '170px'}}
                                                 >
                                                     <b style={{padding: '0px 6px'}}>Sort Inventory</b>
                                                     <img 
@@ -427,7 +426,6 @@ export const DraftLobby = () => {
                                             >                                    
                                                 <div
                                                     className="inventory-button"
-                                                    style={{width: '220px'}}
                                                 >
                                                     <b style={{padding: '0px 6px'}}>Download Inventory</b>
                                                     <img 

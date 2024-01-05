@@ -7,7 +7,7 @@ export const FocalCard = (props) => {
     if (!card.id) return <div className="focal-card-flexbox"/>
   
     return (
-        <div className="focal-card-flexbox">
+        <div className="desktop-only focal-card-flexbox">
             <img className="focal-card-image" src={`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`} alt={card.name}/>
             <div className="focal-card-description">{card.description}</div>
         </div>

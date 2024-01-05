@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { isMod, hasAffiliateAccess, trackStats } from '@fl/bot-functions'
+import { isMod, hasAffiliateAccess } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Format, Match, Player, Server, Stats } from '@fl/models'
 
@@ -36,16 +36,11 @@ export default {
             order: [["createdAt", "ASC"]]
         })
 
-        console.log('allMatches.length', allMatches.length)
-
         const allStats = await Stats.findAll({ 
             where: { format: format.name, serverId: serverId }, 
             attributes: ['id', 'format', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 'streak', 'bestStreak', 'vanquished', 'playerId', 'serverId'], 
             include: { model: Player, attributes: ['id', 'name']} 
         })
-
-        console.log('allStats.length', allStats.length)
-
 
         for (let i = 0; i < allStats.length; i++) {
             const stats = allStats[i]
@@ -109,7 +104,6 @@ export default {
                 winnerStats.games++
                 winnerStats.streak++
                 if (winnerStats.streak >= winnerStats.bestStreak) winnerStats.bestStreak++
-                // if (!await Match.checkIfVanquished(format.id, winnerId, loserId, match.createdAt)) winnerStats.vanquished++
                 await winnerStats.save()
         
                 loserStats.elo = origEloLoser - delta
