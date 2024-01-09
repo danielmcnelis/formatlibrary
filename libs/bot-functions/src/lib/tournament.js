@@ -302,7 +302,7 @@ export const sendDeck = async (interaction, id) => {
         const isAuthor = interaction.user.id === deck.player.discordId
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
-                interaction.member.send({ content: `${isAuthor ? `${deck.player.globalName || deck.player.discordName}'s` : 'Your'} deck for ${deck.tournament.name} is:`, files: [attachment] }).catch((err) => console.log(err))
+                interaction.member.send({ content: `${isAuthor ? `${deck.player?.globalName || deck.player?.discordName}'s` : 'Your'} deck for ${deck.event?.name} is:`, files: [attachment] }).catch((err) => console.log(err))
             } else {
                 interaction.member.send({ files: [attachment] }).catch((err) => console.log(err))
             }
