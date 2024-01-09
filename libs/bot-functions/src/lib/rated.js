@@ -85,9 +85,9 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
             const guild = client.guilds.cache.get(serverId)
             const channel = guild.channels.cache.get(channelId)
             const player = yourPool.player
-            const playerDiscordUsername = player.discordName + player.discriminator !== '0' ? `#${player.discriminator}` : ''
+            const playerDiscordUsername =  player.discriminator === '0' ? player.discordName : `${player.discordName}#${player.discriminator}`
             const opponent = opponentsPool.player
-            const opponentDiscordUsername = opponent.discordName + opponent.discriminator !== '0' ? `#${opponent.discriminator}` : ''
+            const opponentDiscordUsername =  opponent.discriminator === '0' ? opponent.discordName : `${opponent.discordName}#${opponent.discriminator}`
             const opposingMember = await guild.members.fetch(opponent.discordId)
 
             opposingMember.user.send(
@@ -462,12 +462,14 @@ export const sendRatedPairingAnnouncement = async (client, player, opponent, for
         const guild = client.guilds.cache.get('414551319031054346')
         const {user: user1} = await guild.members.fetch(player.discordId)
         const {user: user2} = await guild.members.fetch(opponent.discordId)
-    
+        const playerDiscordUsername =  player.discriminator === '0' ? player.discordName : `${player.discordName}#${player.discriminator}`
+        const opponentDiscordUsername =  opponent.discriminator === '0' ? opponent.discordName : `${opponent.discordName}#${opponent.discriminator}`
+
         user1.send(
             `New pairing for Rated ${format.name} Format! ${format.emoji}` + 
             `\nServer: Format Library ${emojis.FL}` + 
             `\nChannel: <#${format.channel}}>` +
-            `\nDiscord: ${opponent.globalName || opponent.discordName}${opponent.discriminator !== '0' ? `#${opponent.discriminator}` : ''}` +
+            `\nDiscord: ${opponent.globalName ? `${opponent.globalName} (${opponentDiscordUsername})` : opponentDiscordUsername}` +
             `\nDuelingBook: ${opponent.duelingBook}`
         ).catch((err) => console.log(err))
     
@@ -475,7 +477,7 @@ export const sendRatedPairingAnnouncement = async (client, player, opponent, for
             `New pairing for Rated ${format.name} Format! ${format.emoji}` +
             `\nServer: Format Library ${emojis.FL}` +
             `\nChannel: <#${format.channel}>` +
-            `\nDiscord: ${player.globalName || player.discordName}${player.discriminator !== '0' ? `#${player.discriminator}` : ''}` +
+            `\nDiscord: ${player.globalName ? `${player.globalName} (${playerDiscordUsername})` : playerDiscordUsername}` +
             `\nDuelingBook: ${player.duelingBook}`
         ).catch((err) => console.log(err))  
     } catch (err) {

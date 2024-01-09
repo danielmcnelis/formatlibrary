@@ -1560,7 +1560,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                     
                     try {
                         const pA1Member = await interaction.guild?.members.fetch(playerA1.discordId)
-                        const pA2DiscordUsername = playerA2.discordName + playerA2.discriminator !== '0' ? `#${playerA2.discriminator}` : ''
+                        const pA2DiscordUsername = playerA2.discriminator === '0' ? playerA2.discordName : `${playerA2.discordName}#${playerA2.discriminator}`
                         pA1Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
@@ -1575,7 +1575,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pA2Member = await interaction.guild?.members.fetch(playerA2.discordId)
-                        const pA1DiscordUsername = playerA1.discordName + playerA1.discriminator !== '0' ? `#${playerA1.discriminator}` : ''
+                        const pA1DiscordUsername = playerA1.discriminator === '0' ? playerA1.discordName : `${playerA1.discordName}#${playerA1.discriminator}`
                         pA2Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
@@ -1593,7 +1593,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                     
                     try {
                         const pB1Member = await interaction.guild?.members.fetch(playerB1.discordId)
-                        const pB2DiscordUsername = playerA2.discordName + playerA2.discriminator !== '0' ? `#${playerA2.discriminator}` : ''
+                        const pB2DiscordUsername = playerB2.discriminator === '0' ? playerB2.discordName : `${playerB2.discordName}#${playerB2.discriminator}`
                         pB1Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
@@ -1608,7 +1608,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pB2Member = await interaction.guild?.members.fetch(playerB2.discordId)
-                        const pB1DiscordUsername = playerB1.discordName + playerB1.discriminator !== '0' ? `#${playerB1.discriminator}` : ''
+                        const pB1DiscordUsername =  playerB1.discriminator === '0' ? playerB1.discordName : `${playerB1.discordName}#${playerB1.discriminator}`
                         pB2Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
@@ -1626,7 +1626,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pC1Member = await interaction.guild?.members.fetch(playerC1.discordId)
-                        const pC2DiscordUsername = playerC2.discordName + playerC2.discriminator !== '0' ? `#${playerC2.discriminator}` : ''
+                        const pC2DiscordUsername = playerC2.discriminator === '0' ? playerC2.discordName : `${playerC2.discordName}#${playerC2.discriminator}`
                         pC1Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
@@ -1641,7 +1641,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pC2Member = await interaction.guild?.members.fetch(playerC2.discordId)
-                        const pC1DiscordUsername = playerC1.discordName + playerC1.discriminator !== '0' ? `#${playerC1.discriminator}` : ''
+                        const pC1DiscordUsername = playerC1.discriminator === '0' ? playerC1.discordName : `${playerC1.discordName}#${playerC1.discriminator}`
                         pC2Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
@@ -1681,7 +1681,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                         try {
                             const pA1Member = await interaction.guild?.members.fetch(playerA1.discordId)
-                            const pA2DiscordUsername = playerA2.discordName + playerA2.discriminator !== '0' ? `#${playerA2.discriminator}` : ''
+                            const pA2DiscordUsername = playerA2.discriminator === '0' ? playerA2.discordName : `${playerA2.discordName}#${playerA2.discriminator}`
                             pA1Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
@@ -1696,7 +1696,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     
                         try {
                             const pA2Member = await interaction.guild?.members.fetch(playerA2.discordId)
-                            const pA1DiscordUsername = playerA1.discordName + playerA1.discriminator !== '0' ? `#${playerA1.discriminator}` : ''
+                            const pA1DiscordUsername = playerA1.discriminator === '0' ? playerA1.discordName : `${playerA1.discordName}#${playerA1.discriminator}`
                             pA2Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
@@ -1714,7 +1714,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                         try {
                             const pB1Member = await interaction.guild?.members.fetch(playerB1.discordId)
-                            const pB2DiscordUsername = playerA2.discordName + playerA2.discriminator !== '0' ? `#${playerA2.discriminator}` : ''
+                            const pB2DiscordUsername = playerB2.discriminator === '0' ? playerB2.discordName : `${playerB2.discordName}#${playerB2.discriminator}`
                             pB1Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
@@ -1729,7 +1729,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     
                         try {
                             const pB2Member = await interaction.guild?.members.fetch(playerB2.discordId)
-                            const pB1DiscordUsername = playerB1.discordName + playerB1.discriminator !== '0' ? `#${playerB1.discriminator}` : ''
+                            const pB1DiscordUsername = playerB1.discriminator === '0' ? playerB1.discordName : `${playerB1.discordName}#${playerB1.discriminator}`
                             pB2Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
@@ -1747,7 +1747,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                         try {
                             const pC1Member = await interaction.guild?.members.fetch(playerC1.discordId)
-                            const pC2DiscordUsername = playerC2.discordName + playerC2.discriminator !== '0' ? `#${playerC2.discriminator}` : ''
+                            const pC2DiscordUsername = playerC2.discriminator === '0' ? playerC2.discordName : `${playerC2.discordName}#${playerC2.discriminator}`
                             pC1Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
@@ -1762,7 +1762,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     
                         try {
                             const pC2Member = await interaction.guild?.members.fetch(playerC2.discordId)
-                            const pC1DiscordUsername = playerC1.discordName + playerC1.discriminator !== '0' ? `#${playerC1.discriminator}` : ''
+                            const pC1DiscordUsername = playerC1.discriminator === '0' ? playerC1.discordName : `${playerC1.discordName}#${playerC1.discriminator}`
                             pC2Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
@@ -1811,7 +1811,7 @@ export const sendTeamPairings = async (guild, server, tournament) => {
         
         try {
             const pA1Member = await guild.members.fetch(playerA1.discordId)
-            const pA2DiscordUsername = playerA2.discordName + playerA2.discriminator !== '0' ? `#${playerA2.discriminator}` : ''
+            const pA2DiscordUsername = playerA2.discriminator === '0' ? playerA2.discordName : `${playerA2.discordName}#${playerA2.discriminator}`
             pA1Member.user.send(
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
@@ -1826,7 +1826,7 @@ export const sendTeamPairings = async (guild, server, tournament) => {
 
         try {
             const pA2Member = await guild.members.fetch(playerA2.discordId)
-            const pA1DiscordUsername = playerA1.discordName + playerA1.discriminator !== '0' ? `#${playerA1.discriminator}` : ''
+            const pA1DiscordUsername = playerA1.discriminator === '0' ? playerA1.discordName : `${playerA1.discordName}#${playerA1.discriminator}`
             pA2Member.user.send(
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
@@ -1844,7 +1844,7 @@ export const sendTeamPairings = async (guild, server, tournament) => {
 
         try {
             const pB1Member = await guild.members.fetch(playerB1.discordId)
-            const pB2DiscordUsername = playerA2.discordName + playerA2.discriminator !== '0' ? `#${playerA2.discriminator}` : ''
+            const pB2DiscordUsername = playerB2.discriminator === '0' ? playerB2.discordName : `${playerB2.discordName}#${playerB2.discriminator}`
             pB1Member.user.send(
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
@@ -1859,7 +1859,7 @@ export const sendTeamPairings = async (guild, server, tournament) => {
 
         try {
             const pB2Member = await guild.members.fetch(playerB2.discordId)
-            const pB1DiscordUsername = playerB1.discordName + playerB1.discriminator !== '0' ? `#${playerB1.discriminator}` : ''
+            const pB1DiscordUsername = playerB1.discriminator === '0' ? playerB1.discordName : `${playerB1.discordName}#${playerB1.discriminator}`
             pB2Member.user.send(
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
@@ -1877,7 +1877,7 @@ export const sendTeamPairings = async (guild, server, tournament) => {
 
         try {
             const pC1Member = await guild.members.fetch(playerC1.discordId)
-            const pC2DiscordUsername = playerC2.discordName + playerC2.discriminator !== '0' ? `#${playerC2.discriminator}` : ''
+            const pC2DiscordUsername = playerC2.discriminator === '0' ? playerC2.discordName : `${playerC2.discordName}#${playerC2.discriminator}`
             pC1Member.user.send(
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
@@ -1892,7 +1892,7 @@ export const sendTeamPairings = async (guild, server, tournament) => {
 
         try {
             const pC2Member = await guild.members.fetch(playerC2.discordId)
-            const pC1DiscordUsername = playerC1.discordName + playerC1.discriminator !== '0' ? `#${playerC1.discriminator}` : ''
+            const pC1DiscordUsername = playerC1.discriminator === '0' ? playerC1.discordName : `${playerC1.discordName}#${playerC1.discriminator}`
             pC2Member.user.send(
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
@@ -1937,7 +1937,7 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
     
             try {
                 const p1Member = await guild.members.fetch(player1.discordId)
-                const p2DiscordUsername = player2.discordName + player2.discriminator !== '0' ? `#${player2.discriminator}` : ''
+                const p2DiscordUsername = player2.discriminator === '0' ? player2.discordName : `${player2.discordName}#${player2.discriminator}`
                 p1Member.user.send(
                     `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                     `\nServer: ${server.name} ${server.logo}` +
@@ -1952,7 +1952,7 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
     
             try {
                 const p2Member = await guild.members.fetch(player2.discordId)
-                const p1DiscordUsername = player1.discordName + player1.discriminator !== '0' ? `#${player1.discriminator}` : ''
+                const p1DiscordUsername = player1.discriminator === '0' ? player1.discordName : `${player1.discordName}#${player1.discriminator}`
                 p2Member.user.send(
                     `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                     `\nServer: ${server.name} ${server.logo}` +

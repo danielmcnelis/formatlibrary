@@ -175,9 +175,9 @@ const getRatedInformation = async (interaction, player) => {
                 const channelId = commonServer.ratedChannel || format.channel
                 const guild = client.guilds.cache.get(commonGuildId)
                 const channel = guild.channels.cache.get(channelId)
-                const playerDiscordUsername = player.discordName + player.discriminator !== '0' ? `#${player.discriminator}` : ''
+                const playerDiscordUsername =  player.discriminator === '0' ? player.discordName : `${player.discordName}#${player.discriminator}`
                 const opponent = potentialPair.player
-                const opponentDiscordUsername = opponent.discordName + opponent.discriminator !== '0' ? `#${opponent.discriminator}` : ''
+                const opponentDiscordUsername =  opponent.discriminator === '0' ? opponent.discordName : `${opponent.discordName}#${opponent.discriminator}`
                 const opposingMember = await guild.members.fetch(opponent.discordId)
 
                 opposingMember.user.send(
