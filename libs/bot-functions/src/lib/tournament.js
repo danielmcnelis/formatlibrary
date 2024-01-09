@@ -298,7 +298,7 @@ export const sendDeck = async (interaction, id) => {
         const deck = await Deck.findOne({ where: { id: id.slice(1) }, include: [Player, Event, Format] })
         interaction.editReply({ content: `Please check your DMs.` })
         const deckAttachments = deck.format?.category === 'OP' ? await drawOPDeck(deck.ydk) || [] : await drawDeck(deck.ydk) || []
-        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${deck.player.globalName || deck.player.discordName}_${deck.event?.name}.ydk` })
+        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${deck.player?.globalName || deck.player?.discordName}_${deck.event?.abbreviation || deck.event?.name}.ydk` })
         const isAuthor = interaction.user.id === deck.player.discordId
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
