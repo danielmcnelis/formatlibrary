@@ -1972,6 +1972,7 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
 
 // CALCULATE STANDINGS 
 export const calculateStandings = async (tournament, matches, participants) => {
+    if (tournament.type !== 'swiss') return null
     const data = {}
     let currentRound = 1
 
@@ -3073,7 +3074,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
             try {
                 const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeAPIKey}`)
                 const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
-                const standings = await calculateStandings(tournament, matches, participants)                
+                const standings = await calculateStandings(tournament, matches, participants)          
                 const success = await createDecks(event, participants, standings)
                 if (!success) {
                     return await interaction.editReply(`Failed to save all decks.`)

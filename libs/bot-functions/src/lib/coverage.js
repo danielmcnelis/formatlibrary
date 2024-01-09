@@ -11,7 +11,6 @@ import { checkExpiryDate, uploadDeckFolder } from './drive'
 
 // CREATE DECKS
 export const createDecks = async (event, participants, standings = []) => {
-    console.log('standings', standings)
     let b = 0
     let c = 0
     let e = 0
@@ -19,7 +18,6 @@ export const createDecks = async (event, participants, standings = []) => {
     for (let i = 0; i < participants.length; i++) {
         try {
             const {participant} = participants[i]
-            console.log('participant', participant)
 
             const entry = await Entry.findOne({
                 where: {
@@ -42,12 +40,10 @@ export const createDecks = async (event, participants, standings = []) => {
 
             if (!count) {
                 const standing = standings.find((s) => s.participantId === participant.id)
-                console.log('standing', standing)
                 const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
                     participant.final_rank ? parseInt(participant.final_rank) :
                     null
 
-                console.log('placement', placement)
                 const deckType = await getDeckType(entry.ydk, event.formatName)
 
                 await Deck.create({
@@ -86,7 +82,6 @@ export const createDecks = async (event, participants, standings = []) => {
 
 // FIX PLACEMENTS
 export const fixPlacements = async (event, participants, standings = []) => {
-    console.log('standings', standings)
     let b = 0
     let c = 0
     let d = 0
