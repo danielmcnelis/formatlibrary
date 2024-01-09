@@ -84,7 +84,6 @@ export default {
             }
         }
 
-        console.log('decks', decks)
         const deck = await selectTournamentForDeckCheck(interaction, decks, format)
         if (!deck) return
 

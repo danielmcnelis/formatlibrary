@@ -99,6 +99,7 @@ export const Tournament = db.define('tournaments', {
 Tournament.findRecent = async (format, serverId) => await Tournament.findAll({ 
     where: {
         formatId: format?.id || {[Op.not]: null},
+        isTopCutTournament: false,
         serverId
     },
     limit: 5,
