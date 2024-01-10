@@ -438,7 +438,6 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
             roundName = `Round ${challongeMatch?.match?.round}`
         } else if (tournament.type === 'single elimination') {
             const rounds = Math.ceil(Math.log2(tournamentData.participants_count))
-            console.log('rounds', rounds, 'round', round)
             roundName = rounds - round === 0 ? 'Finals' :
                 rounds - round === 1 ? 'Semi Finals' :
                 rounds - round === 2 ? 'Quarter Finals' :
@@ -450,7 +449,6 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
                 null
         } else if (tournament.type === 'double elimination') {
             const rounds = Math.ceil(Math.log2(tournamentData.participants_count))
-            console.log('rounds', rounds, 'round', round)
             if (round > 0) {
                 roundName = rounds - round === 0 ? 'Grand Finals' :
                     rounds - round === 1 ? `Winner's Finals` :
@@ -466,6 +464,18 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
         } else {
             roundName = `${challongeMatch?.match?.round}`
         }
+
+        let suggestedOrder = challongeMatch?.match?.suggested_play_order
+
+        if (!suggestedOrder) {
+            const {data: allMatches} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
+            if (allMatches?.isArray()) {
+                const index = allMatches.findIndex((m) => m.match?.id === challongeMatch?.match?.id)
+                if (index?.isInteger()) {
+                    suggestedOrder = index + 1
+                }
+            }
+        }
         
         try {
             await Replay.create({
@@ -478,7 +488,7 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
                 loserId: losingPlayer.id,
                 loserName: losingPlayer.globalName || losingPlayer.discordName,
                 matchId: match.id,
-                suggestedOrder: challongeMatch?.match?.suggested_play_order,
+                suggestedOrder: suggestedOrder,
                 roundInt: round,
                 roundName: roundName
             })
