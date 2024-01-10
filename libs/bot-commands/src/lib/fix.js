@@ -49,7 +49,7 @@ export default {
                             await replay.update({ suggestedOrder })
                             b++
                         } else {
-                            console.log(`missing: ${replay?.match?.challongeMatchId}`)
+                            console.log(`missing: ${replay?.match?.challongeMatchId} from:\n${data[replay.tournamentId]}`)
                         }
                     }
                 } catch (err) {
