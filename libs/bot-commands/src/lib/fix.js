@@ -22,7 +22,7 @@ export default {
         if (isProgrammer(interaction.member)) {
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
             // const [input, topCut] = interaction.options.getString('tournament').split('_')
-            const replays = await Replay.findOne({ 
+            const replays = await Replay.findAll({ 
                 where: { 
                     suggestedOrder: null,
                     matchId: {[Op.not]: null}
