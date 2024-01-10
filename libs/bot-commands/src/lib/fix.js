@@ -24,7 +24,7 @@ export default {
             // const [input, topCut] = interaction.options.getString('tournament').split('_')
             const replays = await Replay.findAll({ 
                 where: { 
-                    suggestedOrder: null,
+                    suggestedOrder: {[Op.or]: [null, 0]},
                     matchId: {[Op.not]: null}
                 },
                 include: Match
@@ -44,10 +44,12 @@ export default {
                     
                     if (Array.isArray(data[replay.tournamentId])) {
                         const index = data[replay.tournamentId].findIndex((m) => m.match?.id === replay?.match?.challongeMatchId)
-                        if (Number.isInteger(index)) {
+                        if (index >= 0) {
                             const suggestedOrder = index + 1
                             await replay.update({ suggestedOrder })
                             b++
+                        } else {
+                            console.log(`missing: ${replay?.match?.challongeMatchId}`)
                         }
                     }
                 } catch (err) {
