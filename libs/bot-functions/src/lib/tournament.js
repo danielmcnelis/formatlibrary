@@ -469,9 +469,9 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
 
         if (!suggestedOrder) {
             const {data: allMatches} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
-            if (allMatches?.isArray()) {
+            if (Array.isArray(allMatches)) {
                 const index = allMatches.findIndex((m) => m.match?.id === challongeMatch?.match?.id)
-                if (index?.isInteger()) {
+                if (Number.isInteger(index)) {
                     suggestedOrder = index + 1
                 }
             }

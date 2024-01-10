@@ -42,9 +42,9 @@ export default {
                         data[replay.tournamentId] = allMatches
                     }
                     
-                    if (data[replay.tournamentId]?.isArray()) {
+                    if (Array.isArray(data[replay.tournamentId])) {
                         const index = data[replay.tournamentId].findIndex((m) => m.match?.id === replay?.match?.challongeMatchId)
-                        if (index?.isInteger()) {
+                        if (Number.isInteger(index)) {
                             const suggestedOrder = index + 1
                             await replay.update({ suggestedOrder })
                             b++
