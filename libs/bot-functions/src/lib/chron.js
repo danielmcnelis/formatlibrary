@@ -7,7 +7,8 @@ import { createMembership, createPlayer } from './utility'
 import { Op } from 'sequelize'
 import { S3 } from 'aws-sdk'
 import { config } from '@fl/config'
-import * as tcgPlayer from './tokens/tcgplayer.json'
+import * as tcgPlayer from '../../../../tokens/tcgplayer.json'
+console.log('tcgPlayer', tcgPlayer)
 const Canvas = require('canvas')
 
 // GET MIDNIGHT COUNTDOWN
