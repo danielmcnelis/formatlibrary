@@ -1040,14 +1040,14 @@ import { capitalize } from '@fl/utils'
         const count = await Tournament.count({ id: tournamentData.id.toString()})
         if (!count) {
             tournament = await Tournament.create({
-                id: tournamentData.id.toString(),
-                name: tournamentData.name,
-                abbreviation: tournamentData.name,
-                url: tournamentData.url,
-                type: tournamentData.tournament_type,
+                id: tournamentData.tournament.id.toString(),
+                name: tournamentData.tournament.name,
+                abbreviation: tournamentData.tournament.name,
+                url: tournamentData.tournament.url,
+                type: tournamentData.tournament.tournament_type,
                 formatName: 'Goat',
                 formatId: 8,
-                createdAt: tournamentData.created_at,
+                createdAt: tournamentData.tournament.created_at,
                 community: 'GoatFormat.com',
                 serverId: '459826576536764426',
                 state: 'complete'
