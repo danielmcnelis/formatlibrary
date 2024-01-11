@@ -626,19 +626,21 @@ export const updatePrints = async (set, groupId) => {
                     b++
                     console.log(`created new print: ${print.rarity} ${print.cardCode} - ${print.cardName} (productId: ${print.tcgPlayerProductId})`)
                 } else {
+                    const description = result.extendedData?.slice(-1)?.value
+                    console.log('description', description)
                     await print.update({
-                        description: result.extendedData.slice(-1).value
+                        description: description
                     })
                     console.log(`updated print: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${print.description}`)
                 }
             }
         } catch (err) {
             console.log({
-                status: err.response.status,
-                statusText: err.response.statusText,
-                method: err.response.config.method,
-                url: err.response.config.url,
-                data: err.response.config.data
+                status: err.response?.status,
+                statusText: err.response?.statusText,
+                method: err.response?.config.method,
+                url: err.response?.config.url,
+                data: err.response?.config.data
             })
             e++
         }
