@@ -500,13 +500,13 @@ export const updatePrints = async (set, groupId) => {
         
             for (let i = 0; i < data.results.length; i++) {
                 const result = data.results[i]
-                const count = await Print.count({
+                let print = await Print.findOne({
                     where: {
                         tcgPlayerProductId: result.productId
                     }
                 })
     
-                if (!count) {
+                if (!print) {
                     let name = result.name.replace(/ *\[^]*\) */g, '')
                     if (name.includes('Token:')) name = name.replace('Token:', '') + ' Token'
 
@@ -610,7 +610,7 @@ export const updatePrints = async (set, groupId) => {
                         })
                     }
     
-                    const print = await Print.create({
+                    print = await Print.create({
                         cardName: card.name,
                         cardCode: result.extendedData[0].value,
                         setName: set.setName,
@@ -625,8 +625,6 @@ export const updatePrints = async (set, groupId) => {
                     b++
                     console.log(`created new print: ${print.rarity} ${print.cardCode} - ${print.cardName} (productId: ${print.tcgPlayerProductId})`)
                 } else {
-                    console.log('result.extendedData.slice(-1)[0]', result.extendedData.slice(-1)[0])
-                    console.log('result.extendedData.slice(-1)[0].value', result.extendedData.slice(-1)[0].value)
                     await print.update({ description: result.extendedData.slice(-1)[0].value })
                     console.log(`updated print: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${print.description}`)
                 }
