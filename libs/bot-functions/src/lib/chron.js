@@ -626,8 +626,11 @@ export const updatePrints = async (set, groupId) => {
                     b++
                     console.log(`created new print: ${print.rarity} ${print.cardCode} - ${print.cardName} (productId: ${print.tcgPlayerProductId})`)
                 } else {
-                    const description = result.extendedData?.slice(-1)?.value
                     console.log('result.extendedData', result.extendedData)
+                    console.log('result.extendedData.slice(-1)', result.extendedData.slice(-1))
+                    console.log('result.extendedData.slice(-1).value', result.extendedData.slice(-1).value)
+                    const description = result.extendedData.slice(-1).value
+                    console.log('description', description)
                     await print.update({
                         description: description
                     })
