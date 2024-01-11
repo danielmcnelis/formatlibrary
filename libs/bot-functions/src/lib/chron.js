@@ -37,6 +37,8 @@ export const refreshExpiredTokens = async () => {
             if (err) return console.error(err)
             console.log('Token stored to', './tokens/tcgplayer.json')
         })
+    } else {
+        console.log('TOKEN NOT EXPIRING SOON')
     }
 }
 
@@ -485,6 +487,7 @@ export const updatePrints = async (set, groupId) => {
     let c = 0
     let e = 0
     const size = set.size
+    console.log(`Authorization: bearer ${tcgPlayer.accessToken}`)
 
     for (let offset = 0; offset < (size + 100); offset += 100) {
         try {
