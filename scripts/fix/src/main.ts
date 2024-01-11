@@ -1089,8 +1089,8 @@ import { capitalize } from '@fl/utils'
 
         console.log('participantMap', participantMap)
 
-        if (Object.entries(participantMap).length < tournament.participants_count) {
-            return console.log(`missing ${tournament.participants_count - Object.entries(participantMap).length} partcipants`)
+        if (Object.entries(participantMap).length < tournamentData.tournament.participants_count) {
+            return console.log(`missing ${tournamentData.tournament.participants_count - Object.entries(participantMap).length} partcipants`)
         }
 
         for (let i = 0; i < matches.length; i++) {
