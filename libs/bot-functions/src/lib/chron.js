@@ -487,7 +487,6 @@ export const updatePrints = async (set, groupId) => {
     let c = 0
     let e = 0
     const size = set.size
-    console.log(`Authorization: bearer ${tcgPlayer.access_token}`)
 
     for (let offset = 0; offset < (size + 100); offset += 100) {
         try {
@@ -620,20 +619,13 @@ export const updatePrints = async (set, groupId) => {
                         setId: set.id,
                         tcgPlayerUrl: result.url,
                         tcgPlayerProductId: result.productId,
-                        description: result.extendedData.slice(-1).value
+                        description: result.extendedData.slice(-1)[0].value
                     })
 
                     b++
                     console.log(`created new print: ${print.rarity} ${print.cardCode} - ${print.cardName} (productId: ${print.tcgPlayerProductId})`)
                 } else {
-                    console.log('result.extendedData', result.extendedData)
-                    console.log('result.extendedData.slice(-1)', result.extendedData.slice(-1))
-                    console.log('result.extendedData.slice(-1).value', result.extendedData.slice(-1).value)
-                    const description = result.extendedData.slice(-1).value
-                    console.log('description', description)
-                    await print.update({
-                        description: description
-                    })
+                    await print.update({ description: result.extendedData.slice(-1)[0].value })
                     console.log(`updated print: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${print.description}`)
                 }
             }
