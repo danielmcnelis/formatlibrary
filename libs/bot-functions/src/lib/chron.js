@@ -8,7 +8,6 @@ import { Op } from 'sequelize'
 import { S3 } from 'aws-sdk'
 import { config } from '@fl/config'
 import * as tcgPlayer from '../../../../tokens/tcgplayer.json'
-console.log('tcgPlayer', tcgPlayer)
 const Canvas = require('canvas')
 
 // GET MIDNIGHT COUNTDOWN
@@ -430,7 +429,7 @@ export const updateMarketPrices = async () => {
             const { data } = await axios.get(endpoint, {
                 headers: {
                     "Accept": "application/json",
-                    "Authorization": `bearer ${tcgPlayer.accessToken}`
+                    "Authorization": `bearer ${tcgPlayer.access_token}`
                 }
             })
         
@@ -488,7 +487,7 @@ export const updatePrints = async (set, groupId) => {
     let c = 0
     let e = 0
     const size = set.size
-    console.log(`Authorization: bearer ${tcgPlayer.accessToken}`)
+    console.log(`Authorization: bearer ${tcgPlayer.access_token}`)
 
     for (let offset = 0; offset < (size + 100); offset += 100) {
         try {
@@ -496,7 +495,7 @@ export const updatePrints = async (set, groupId) => {
             const { data } = await axios.get(endpoint, {
                 headers: {
                     "Accept": "application/json",
-                    "Authorization": `bearer ${tcgPlayer.accessToken}`
+                    "Authorization": `bearer ${tcgPlayer.access_token}`
                 }
             })
         
@@ -657,7 +656,7 @@ export const getNewGroupId = async (setId) => {
         const { data } = await axios.get(endpoint, {
             headers: {
                 "Accept": "application/json",
-                "Authorization": `bearer ${tcgPlayer.accessToken}`
+                "Authorization": `bearer ${tcgPlayer.access_token}`
             }
         })
     
