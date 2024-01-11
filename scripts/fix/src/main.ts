@@ -1037,7 +1037,7 @@ import { capitalize } from '@fl/utils'
         const { data: tournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`)
         console.log('tournamentData', tournamentData)
         let tournament
-        const count = await Tournament.count({ id: tournamentData.id.toString()})
+        const count = await Tournament.count({ id: tournamentData.tournament.id.toString()})
         if (!count) {
             tournament = await Tournament.create({
                 id: tournamentData.tournament.id.toString(),
