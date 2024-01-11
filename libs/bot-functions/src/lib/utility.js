@@ -226,7 +226,7 @@ export const getCard = async (query, fuzzyCards, format) => {
 	    .setThumbnail(thumbnail)
 	    .setDescription(
             `${labels.join('')}` + 
-            `\n\n${recentPrint?.description ? recentPrint.description + `\n\n*•Text from ${recentPrint.setName}, ${dateToSimple(recentPrint.set.tcgDate)}*` : card.description}` +
+            `\n\n${recentPrint?.description ? recentPrint.description + `\n\n*-- ${recentPrint.setName}, ${dateToSimple(recentPrint.set.tcgDate)}*` : card.description}` +
             `${stats ? `\n\n${stats}` : ''}` +
             `\n\nhttps://formatlibrary.com/cards/${card.cleanName.replaceAll(' ', '-').toLowerCase()}`
         )
