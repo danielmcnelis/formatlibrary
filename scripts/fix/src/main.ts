@@ -1029,12 +1029,13 @@ import { capitalize } from '@fl/utils'
     for (let i = 0; i < tournamentIds.length; i++) {
         const server = await Server.findOne({
             where: {
-                id: '459826576536764426'
+                name: 'Format Library'
             }
         })
-        
+
         const tournamentId = tournamentIds[i]
         const { data: tournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`)
+        console.log('tournamentData', tournamentData)
         let tournament
         const count = await Tournament.count({ id: tournamentData.id.toString()})
         if (!count) {
