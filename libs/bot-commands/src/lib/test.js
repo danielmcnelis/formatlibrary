@@ -16,6 +16,7 @@ export default {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
             await interaction.editReply(emojis.yellow)
+            refreshExpiredTokens()
             updateSets()
             return
         } else {
