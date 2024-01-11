@@ -1,11 +1,13 @@
 
 import axios from 'axios'
+import * as fs from 'fs'
 import * as sharp from 'sharp'
 import { Card, Deck, Entry, Tournament, Match, Membership, Player, Price, Print, Role, Server, Set, Stats, DeckType } from '@fl/models'
 import { createMembership, createPlayer } from './utility'
 import { Op } from 'sequelize'
 import { S3 } from 'aws-sdk'
 import { config } from '@fl/config'
+import * as tcgPlayer from '../../../../tokens/tcgplayer.json'
 const Canvas = require('canvas')
 
 // GET MIDNIGHT COUNTDOWN
@@ -14,6 +16,28 @@ export const getMidnightCountdown = () => {
 	const remainingMinutes = 60 - date.getMinutes()
 	const remainingHours = 23 - date.getHours()
     return ( remainingHours * 60 + remainingMinutes ) * 60 * 1000
+}
+
+// REFRESH EXPIRED TOKENS
+export const refreshExpiredTokens = async () => {
+    const difference = Date.now() - new Date(tcgPlayer[".expires"])
+    if (!tcgPlayer[".expires"] ||difference > 24 * 60 * 60 * 1000) {
+        const params = new URLSearchParams()
+        params.append('grant_type', 'client_credentials')
+        params.append('client_id', config.tcgPlayer.publicKey)
+        params.append('client_secret', config.tcgPlayer.privateKey)
+
+        const { data } = await axios.post(`https://api.tcgplayer.com/token`, params, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded' 
+            }
+        })
+
+        fs.writeFile('./tokens/tcgplayer.json', JSON.stringify(data), (err) => {
+            if (err) return console.error(err)
+            console.log('Token stored to', './tokens/tcgplayer.json')
+        })
+    }
 }
 
 // UPDATE AVATARS
@@ -266,34 +290,6 @@ export const purgeEntries = async () => {
     return setTimeout(() => purgeEntries(), (24 * 60 * 60 * 1000))
 } 
 
-// PURGE RATED DECKS
-export const purgeRatedDecks = async () => {
-    let d = 0
-    const ratedDecks = await Deck.findAll({ where: { url: {[Op.not]: null}}, order: [['createdAt', 'DESC']] })
-    for (let i = 0; i < ratedDecks.length; i++) {
-        const rd = ratedDecks[i]
-        const count = await Deck.count({ where: { url: rd.url }})
-        if (count > 1) {
-            console.log(`deleting ${rd.builder} duplicate: ${rd.url}`)
-            await rd.destroy()
-            d++
-            continue
-        }
-
-        const dbDeckId = rd.url.slice(rd.url.indexOf('https://duelingbook.com/deck?id=') + 32)
-        const {data} = await axios.get(`https://www.duelingbook.com/php-scripts/load-deck.php/deck?id=${dbDeckId}`)
-        if (data?.message === 'Deck does not exist') {
-            console.log(`deleting ratedDeck: ${rd.id}, DuelingBookId: ${dbDeckId}`)
-            await rd.destroy()
-            d++
-            continue
-        }
-    }
-
-    console.log(`Purged ${d} duplicate and missing rated decks from the database.`)
-    return setTimeout(() => purgeRatedDecks(), (24 * 60 * 60 * 1000))
-}
-
 // PURGE TOURNAMENT PARTICIPANT ROLES
 export const purgeTourRoles = async (client) => {
     const servers = await Server.findAll()
@@ -431,7 +427,7 @@ export const updateMarketPrices = async () => {
             const { data } = await axios.get(endpoint, {
                 headers: {
                     "Accept": "application/json",
-                    "Authorization": `bearer ${config.tcgPlayer.accessToken}`
+                    "Authorization": `bearer ${tcgPlayer.accessToken}`
                 }
             })
         
@@ -496,7 +492,7 @@ export const updatePrints = async (set, groupId) => {
             const { data } = await axios.get(endpoint, {
                 headers: {
                     "Accept": "application/json",
-                    "Authorization": `bearer ${config.tcgPlayer.accessToken}`
+                    "Authorization": `bearer ${tcgPlayer.accessToken}`
                 }
             })
         
@@ -620,11 +616,17 @@ export const updatePrints = async (set, groupId) => {
                         cardId: card.id,
                         setId: set.id,
                         tcgPlayerUrl: result.url,
-                        tcgPlayerProductId: result.productId
+                        tcgPlayerProductId: result.productId,
+                        description: result.extendedData.slice(-1).value
                     })
 
                     b++
                     console.log(`created new print: ${print.rarity} ${print.cardCode} - ${print.cardName} (productId: ${print.tcgPlayerProductId})`)
+                } else {
+                    await print.update({
+                        description: result.extendedData.slice(-1).value
+                    })
+                    console.log(`updated print: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${print.description}`)
                 }
             }
         } catch (err) {
@@ -651,7 +653,7 @@ export const getNewGroupId = async (setId) => {
         const { data } = await axios.get(endpoint, {
             headers: {
                 "Accept": "application/json",
-                "Authorization": `bearer ${config.tcgPlayer.accessToken}`
+                "Authorization": `bearer ${tcgPlayer.accessToken}`
             }
         })
     

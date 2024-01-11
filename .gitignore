@@ -4,6 +4,7 @@
 /certs
 /dist
 /tmp
+/tokens
 /out-tsc
 
 # dependencies

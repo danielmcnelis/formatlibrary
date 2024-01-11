@@ -104,7 +104,19 @@ export const getCard = async (query, fuzzyCards, format) => {
 		}
 	})
 
-	if (!card) return false
+    if (!card) return false
+
+    const recentPrint = format?.date ? await Print.findOne({
+        where: {
+            cardId: card.id,
+            description: {[Op.not]: null},
+            '$set.tcgDate$': {[Op.lte]: format.date}
+        },
+        include: Set,
+        order: [[Set, 'tcgDate', 'DESC']]
+    }) : null
+
+    console.log('!!recentPrint', !!recentPrint)
 
     const status = format ? await Status.findOne({ 
         where: { 
@@ -214,7 +226,7 @@ export const getCard = async (query, fuzzyCards, format) => {
 	    .setThumbnail(thumbnail)
 	    .setDescription(
             `${labels.join('')}` + 
-            `\n\n${card.description}` +
+            `\n\n${recentPrint?.description ? recentPrint.description + `\n\n*•Text from ${recentPrint.setName}, ${dateToSimple(recentPrint.set.tcgDate)}*` : card.description}` +
             `${stats ? `\n\n${stats}` : ''}` +
             `\n\nhttps://formatlibrary.com/cards/${card.cleanName.replaceAll(' ', '-').toLowerCase()}`
         )

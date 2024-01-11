@@ -1,6 +1,6 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
-import { updateAvatars, purgeBetaCards, shuffleArray, getMatches, getParticipants, calculateStandings, autoRegisterTopCut, isProgrammer, conductCensus, updateSets, downloadNewCards, updateMarketPrices } from '@fl/bot-functions'
+import { refreshExpiredTokens, updateAvatars, purgeBetaCards, shuffleArray, getMatches, getParticipants, calculateStandings, autoRegisterTopCut, isProgrammer, conductCensus, updateSets, downloadNewCards, updateMarketPrices } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { Tournament, Server, TriviaQuestion } from '@fl/models'
@@ -16,7 +16,7 @@ export default {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
             await interaction.editReply(emojis.yellow)
-            await conductCensus(client)
+            refreshExpiredTokens()
             return
         } else {
             await interaction.editReply('🧪')

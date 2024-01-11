@@ -20,6 +20,9 @@ export const Print = db.define('prints', {
   original: {
     type: Sequelize.BOOLEAN
   },
+  description: {
+    type: Sequelize.TEXT,
+  },
   marketPrice: {
     type: Sequelize.FLOAT
   },

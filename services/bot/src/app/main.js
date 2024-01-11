@@ -22,7 +22,7 @@ import { Match, Membership, Player, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
 import { assignTourRoles, conductCensus, createTopCut, downloadNewCards, getMidnightCountdown, markInactives, 
-    purgeEntries, purgeRatedDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices,
+    purgeEntries, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices,
     updateSets, updateServers, fixDeckFolder, postStandings, checkTimer, closeTournament, createTournament, 
     dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
@@ -35,7 +35,7 @@ import { assignTourRoles, conductCensus, createTopCut, downloadNewCards, getMidn
 import { emojis } from '@fl/bot-emojis'
 import commands from '@fl/bot-commands'
 import { rated } from './routes'
-import { editTieBreakers } from '../../../../libs/bot-functions/src'
+import { editTieBreakers, refreshExpiredTokens } from '../../../../libs/bot-functions/src'
 client.commands = new Collection()
 Object.values(commands.formatLibraryCommands).forEach((command) => client.commands.set(command.data.name, command))
 Object.values(commands.globalCommands).forEach((command) => client.commands.set(command.data.name, command))
@@ -122,7 +122,8 @@ client.on('ready', async() => {
 
     // NIGHTLY TASKS
     const midnightCountdown = getMidnightCountdown()
-    setTimeout(() => purgeEntries(), midnightCountdown)
+    setTimeout(() => refreshExpiredTokens(), midnightCountdown)
+    setTimeout(() => purgeEntries(), midnightCountdown + (0.1 * 60 * 1000))
     setTimeout(() => purgeTourRoles(client), midnightCountdown + (0.2 * 60 * 1000))
     setTimeout(() => assignTourRoles(client), midnightCountdown + (0.4 * 60 * 1000))
     setTimeout(() => markInactives(), midnightCountdown + (0.6 * 60 * 1000))
@@ -132,8 +133,7 @@ client.on('ready', async() => {
     setTimeout(() => updateMarketPrices(), midnightCountdown + (3 * 60 * 1000))
     setTimeout(() => conductCensus(client), midnightCountdown + (4 * 60 * 1000))
     setTimeout(() => updateAvatars(client), midnightCountdown + (11 * 60 * 1000))
-    setTimeout(() => purgeRatedDecks(), midnightCountdown + (13 * 60 * 1000))
-    setTimeout(() => updateDeckTypes(client), midnightCountdown + (13.2 * 60 * 1000))
+    setTimeout(() => updateDeckTypes(client), midnightCountdown + (13 * 60 * 1000))
 })
 
 // COMMANDS
