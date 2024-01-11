@@ -1,4 +1,4 @@
-import { Card, Cube, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Print, Replay, Set, Server, Stats, Status, Tournament } from '@fl/models'
+import { Alius, Card, Cube, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Print, Replay, Set, Server, Stats, Status, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { config } from '@fl/config' 
@@ -988,37 +988,142 @@ import { capitalize } from '@fl/utils'
 // })()
 
 
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+//     const cards = [...await Card.findAll()].filter((c) => parseInt(c.konamiCode).toString() !== c.ypdId)
+
+//     for (let i = 0; i < cards.length; i++) {
+//         try {
+//             const card = cards[i]
+
+//             const {data} = await axios({
+//                 method: 'GET',
+//                 url: `https://images.ygoprodeck.com/images/cards/${card.ypdId}.jpg`,
+//                 responseType: 'stream'
+//             })
+        
+//             const s3 = new S3({
+//                 region: config.s3.region,
+//                 credentials: {
+//                     accessKeyId: config.s3.credentials.accessKeyId,
+//                     secretAccessKey: config.s3.credentials.secretAccessKey
+//                 }
+//             })
+        
+//             const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${card.konamiCode}.jpg`, Body: data, ContentType: `image/jpg` }).promise()
+//             console.log('uri', uri)
+//             b++
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     return console.log(`saved ${b} out of ${cards.length} images, encountered ${e} errors`)
+// })()
+
+
 ;(async () => {
-    let b = 0
-    let e = 0
-    const cards = [...await Card.findAll()].filter((c) => parseInt(c.konamiCode).toString() !== c.ypdId)
-
-    for (let i = 0; i < cards.length; i++) {
-        try {
-            const card = cards[i]
-
-            const {data} = await axios({
-                method: 'GET',
-                url: `https://images.ygoprodeck.com/images/cards/${card.ypdId}.jpg`,
-                responseType: 'stream'
-            })
+    const tournamentIds = ['PWCQ__50']
+    for (let i = 0; i < tournamentIds.length; i++) {
+        const server = await Server.findOne({
+            where: {
+                id: '459826576536764426'
+            }
+        })
         
-            const s3 = new S3({
-                region: config.s3.region,
-                credentials: {
-                    accessKeyId: config.s3.credentials.accessKeyId,
-                    secretAccessKey: config.s3.credentials.secretAccessKey
-                }
+        const tournamentId = tournamentIds[i]
+        const { data: tournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`)
+        let tournament
+        const count = await Tournament.count({ id: tournamentData.id.toString()})
+        if (!count) {
+            tournament = await Tournament.create({
+                id: tournamentData.id.toString(),
+                name: tournamentData.name,
+                abbreviation: tournamentData.name,
+                url: tournamentData.url,
+                type: tournamentData.tournament_type,
+                formatName: 'Goat',
+                formatId: 8,
+                createdAt: tournamentData.created_at,
+                community: 'GoatFormat.com',
+                serverId: '459826576536764426',
+                state: 'complete'
             })
-        
-            const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${card.konamiCode}.jpg`, Body: data, ContentType: `image/jpg` }).promise()
-            console.log('uri', uri)
-            b++
-        } catch (err) {
-            console.log(err)
-            e++
         }
-    }
+        
+        const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}/participants.json?api_key=${server.challongeAPIKey}`)
+        const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}/matches.json?api_key=${server.challongeAPIKey}`)
+        const participantMap = {}
+        let b = 0
+        let c = 0
+        let d = 0
 
-    return console.log(`saved ${b} out of ${cards.length} images, encountered ${e} errors`)
+        for (let i = 0; i < participants.length; i++) {
+            const { participant } = participants[i]
+            const [discordName,] = participant.name.split('#')
+            const players = [...await Player.findAll({
+                where: {
+                    [Op.or]: {
+                        discordName: {[Op.iLike]: discordName},
+                        globalName: {[Op.iLike]: discordName}
+                    }
+                }
+            }), ...[...await Alius.findAll({
+                where: {
+                    formerName: {[Op.iLike]: discordName}
+                },
+                include: Player
+            })].map((a) => a.player)]
+    
+            if (!players.length) {
+                console.log(`CANNOT FIND PLAYER matching participant: ${participant.name} (${participant.id})`)
+            } else if (players.length > 1) {
+                console.log(`Found multiple players:`, players.map((p) => p.discordName).join(','))
+            } else {
+                participantMap[participant.id] = players[0].dataValues
+            }
+        }
+
+        console.log('participantMap', participantMap)
+
+        if (Object.entries(participantMap).length < tournament.participants_count) {
+            return console.log(`missing ${tournament.participants_count - Object.entries(participantMap).length} partcipants`)
+        }
+
+        for (let i = 0; i < matches.length; i++) {
+            const { match } = matches[i]
+            const retrobotMatch = await Match.findOne({ where: { challongeMatchId: match.id }})
+    
+            if (retrobotMatch) {     
+                d++  
+                console.log(`match ${match.id} has already been recorded`)
+                continue
+            } else if (!retrobotMatch && match.forfeited) {     
+                c++  
+                console.log(`match ${match.id} appears to be forfeited from ${tournament.name}`)
+                continue
+            } else if (!retrobotMatch && !match.forfeited) {
+                console.log('match.id', match.id, '| match.forfeited', match.forfeited)
+                const botMatch = await Match.create({
+                    format: 'Goat',
+                    formatId: 8,
+                    challongeMatchId: match.id,
+                    winner: participantMap[match.winner_id].name,
+                    loser: participantMap[match.loser_id].name,
+                    winnerId: participantMap[match.winner_id].id,
+                    loserId: participantMap[match.loser_id].id,
+                    isTournament: true,
+                    serverId: '414551319031054346',
+                    createdAt: match.completed_at
+                })
+                b++
+
+                // await botMatch.update({ createdAt: match.completed_at })
+            }
+        }
+    
+        return console.log(`Generated new matches for ${b} matches from ${tournament.name}.${d ? ` ${d} matches were already recorded.` : ''}${c ? ` ${c} matches appear to have been forfeited.` : ''} ${b + d + c} out of ${matches.length} matches are now accounted for.`)
+    }
 })()
