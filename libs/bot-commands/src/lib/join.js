@@ -171,6 +171,10 @@ export default {
                 }
             })
 
+            console.log('tournament.channelId', tournament.channelId)
+            console.log('interaction.guild', interaction.guild)
+            console.log('interaction.guild?.channels', interaction.guild?.channels)
+            console.log('interaction.guild?.channels.cache', interaction.guild?.channels.cache)
             console.log('interaction.guild?.channels.cache.get(tournament.channelId)', interaction.guild?.channels.cache.get(tournament.channelId))
             return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         } else if (entry && entry.active === false && tournament.isTeamTournament) {
