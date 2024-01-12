@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
 import { isMod } from '@fl/bot-functions'
-import { Match, Player, Server } from '@fl/models'
+import { Alius, Deck, Event, Match, Membership, Pairing, Player, Replay, Server } from '@fl/models'
 import { Op } from 'sequelize'
 
 // COMBINE
@@ -31,8 +31,10 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         const oldDiscordId = interaction.options.getUser('olduser')?.id || interaction.options._hoistedOptions[0].user?.id || interaction.options._hoistedOptions[0].value
-        const newDiscordId = interaction.options.getUser('newuser')?.id
-        
+        console.log('oldDiscordId', oldDiscordId)
+        const newDiscordId = interaction.options.getUser('newuser')?.id || interaction.options._hoistedOptions[1].user?.id || interaction.options._hoistedOptions[1].value
+        console.log('newDiscordId', newDiscordId)
+
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
         if (oldDiscordId === newDiscordId) return await interaction.editReply({ content: `Please specify 2 different users.`})
@@ -42,6 +44,106 @@ export default {
 
         const newPlayer = await Player.findOne({ where: { discordId: newDiscordId } })
         if (!newPlayer) return await interaction.editReply({ content: `<@${newDiscordId}> is not in the database.`})
+
+        const aliuses = await Alius.findAll({
+            where: {
+                playerId: oldPlayer.id
+            }
+        })
+
+        for (let i = 0; i < aliuses.length; i++) {
+            const alius = aliuses[i]
+            await alius.update({ playerId: newPlayer.id })
+        }
+
+        const decks = await Deck.findAll({
+            where: {
+                playerId: oldPlayer.id
+            }
+        })
+
+        for (let i = 0; i < decks.length; i++) {
+            const deck = decks[i]
+            await deck.update({ playerId: newPlayer.id })
+        }
+
+        const events = await Event.findAll({
+            where: {
+                playerId: oldPlayer.id
+            }
+        })
+
+        for (let i = 0; i < events.length; i++) {
+            const event = events[i]
+            await event.update({ playerId: newPlayer.id })
+        }
+
+        const membership = await Membership.findOne({
+            where: {
+                playerId: oldPlayer.id
+            }
+        })
+
+        if (membership) await membership.destroy()
+
+        const replays = await Replay.findAll({
+            where: {
+                [Op.or]: [
+                    { winnerId: oldPlayer.id },
+                    { loserId: oldPlayer.id }
+                ]
+            }
+        })
+
+        for (let i = 0; i < replays.length; i++) {
+            const replay = replays[i]
+            
+            if (replay.winnerId === oldPlayer.id) {     
+                await replay.update({
+                    winnerId: newPlayer.id,
+                    winner: newPlayer.discordName
+                })
+                count++
+            } else if (replay.loserId === oldPlayer.id) {
+                await replay.update({
+                    loserId: newPlayer.id,
+                    loser: newPlayer.discordName
+                })
+                count++
+            }
+        }
+
+        const pairings = await Pairing.findAll({
+            where: {
+                [Op.or]: [
+                    { playerAId: oldPlayer.id },
+                    { playerBId: oldPlayer.id }
+                ]
+            }
+        })
+
+        for (let i = 0; i < pairings.length; i++) {
+            const pairing = pairings[i]
+            
+            if (pairing.playerAId === oldPlayer.id) {     
+                await pairing.update({
+                    playerAId: newPlayer.id,
+                    playerAName: newPlayer.discordName
+                })
+                count++
+            } else if (pairing.playerBId === oldPlayer.id) {
+                await pairing.update({
+                    playerBId: newPlayer.id,
+                    playerBName: newPlayer.discordName
+                })
+                count++
+            }
+        }
+
+        for (let i = 0; i < decks.length; i++) {
+            const deck = decks[i]
+            await deck.update({ playerId: oldPlayer.id })
+        }
 
         const matches = await Match.findAll({
             where: {
