@@ -5,14 +5,7 @@ import { Alius, Deck, DeckType, Event, Format, Match, Matchup, Player, Replay, S
 import { calculateStandings, generateMatchupData, fixPlacements } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
-import readline from 'readline'
-
-// Usage inside aync function do not need closure demo only
-(async() => {
-  
-})();
-
-// When done reading prompt, exit program 
+const readline = require('readline')
 
 export default {
     data: new SlashCommandBuilder()
