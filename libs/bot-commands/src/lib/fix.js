@@ -24,9 +24,10 @@ export default {
             const tournamentId = interaction.options.getString('tournament')
            
             const { data: tournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`)
-            console.log('!!tournamentData', !!tournamentData)
+            console.log('tournamentData?.tournament', tournamentData?.tournament)
             let tournament
             const count = await Tournament.count({ id: tournamentData.tournament.id.toString()})
+            console.log('count', count)
             if (!count) {
                 tournament = await Tournament.create({
                     id: tournamentData.tournament.id.toString(),
@@ -116,7 +117,7 @@ export default {
                 }
             }
 
-            return await interaction.editReply(`Generated new matches for ${b} matches from ${tournament.name}.${d ? ` ${d} matches were already recorded.` : ''}${c ? ` ${c} matches appear to have been forfeited.` : ''} ${b + d + c} out of ${matches.length} matches are now accounted for.`)
+            return await interaction.editReply(`Generated new matches for ${b} matches from ${tournament?.name}.${d ? ` ${d} matches were already recorded.` : ''}${c ? ` ${c} matches appear to have been forfeited.` : ''} ${b + d + c} out of ${matches.length} matches are now accounted for.`)
         } else {
             return await interaction.editReply('🛠️')
         }
