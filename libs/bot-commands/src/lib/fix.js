@@ -61,7 +61,7 @@ export default {
             for (let i = 0; i < participants.length; i++) {
                 const { participant } = participants[i]
                 const [discordName,] = participant.name.split('#')
-                let players = Player.findAll({
+                let players = await Player.findAll({
                     where: {
                         [Op.or]: {
                             discordName: {[Op.iLike]: discordName},
