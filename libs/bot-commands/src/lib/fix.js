@@ -5,7 +5,7 @@ import { Alius, Deck, DeckType, Event, Format, Match, Matchup, Player, Replay, S
 import { calculateStandings, generateMatchupData, fixPlacements } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
-import promptSync from 'prompt-sync'
+import * as promptSync from 'prompt-sync'
 
 export default {
     data: new SlashCommandBuilder()
