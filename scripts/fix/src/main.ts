@@ -5,6 +5,7 @@ import { config } from '@fl/config'
 import Canvas = require('canvas')
 import { S3 } from 'aws-sdk'
 import { capitalize } from '@fl/utils'
+import promptSync from 'prompt-sync'
 
 // ;(async () => {
 //     const decks = await Deck.findAll({ include: [DeckType, Event, Format, Player] })
@@ -1025,6 +1026,7 @@ import { capitalize } from '@fl/utils'
 
 
 ;(async () => {
+    const prompt = promptSync()
     const tournamentIds = ['PWCQ__50']
     for (let i = 0; i < tournamentIds.length; i++) {
         const server = await Server.findOne({
@@ -1035,7 +1037,7 @@ import { capitalize } from '@fl/utils'
 
         const tournamentId = tournamentIds[i]
         const { data: tournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`)
-        console.log('tournamentData', tournamentData)
+        console.log('!!tournamentData', !!tournamentData)
         let tournament
         const count = await Tournament.count({ id: tournamentData.tournament.id.toString()})
         if (!count) {
@@ -1052,6 +1054,8 @@ import { capitalize } from '@fl/utils'
                 serverId: '459826576536764426',
                 state: 'complete'
             })
+
+            console.log('!!tournament', !!tournament)
         }
         
         const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}/participants.json?api_key=${server.challongeAPIKey}`)
@@ -1081,7 +1085,9 @@ import { capitalize } from '@fl/utils'
             if (!players.length) {
                 console.log(`CANNOT FIND PLAYER matching participant: ${participant.name} (${participant.id})`)
             } else if (players.length > 1) {
-                console.log(`Found multiple players:`, players.map((p) => p.discordName).join(','))
+                const index = prompt(`Found multiple players: ${players.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`) - 1
+                console.log(`selected index:`, index)
+                participantMap[participant.id] = players[index].dataValues
             } else {
                 participantMap[participant.id] = players[0].dataValues
             }
