@@ -39,7 +39,7 @@ export const createDecks = async (event, participants, standings = []) => {
             })
 
             if (!count) {
-                const standing = standings.find((s) => s.participantId === participant.id)
+                const standing = standings?.find((s) => s.participantId === participant.id)
                 const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
                     participant.final_rank ? parseInt(participant.final_rank) :
                     null

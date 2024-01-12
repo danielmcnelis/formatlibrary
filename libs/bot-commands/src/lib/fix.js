@@ -122,7 +122,7 @@ export default {
                                 round: match.round,
                                 tournamentId: tournament.id
                             })
-                            b++
+                            b++ 
                         } catch (err) {
                             console.log(err)
                             console.log(participantMap[match.winner_id]?.name, '>', participantMap[match.loser_id]?.name )
