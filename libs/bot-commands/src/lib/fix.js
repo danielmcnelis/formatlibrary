@@ -80,18 +80,18 @@ export default {
                 }
         
                 if (!players.length) {
-                    console.log(`CANNOT FIND PLAYER matching participant: ${participant.name} (${participant.id})`)
-                    break
+                    return interaction.editReply(`Cannot find player matching participant: ${participant.name} (${participant.id})`)
                 } else if (players.length > 1) {
-                    console.log(`Found multiple players: ${players.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`)
-                    break
+                    return interaction.editReply(`Found multiple players matching participant: ${participant.name} (${participant.id}):\n${players.map((p) => `- ${p.discordName} (${p.discordId})`).join('\n')}`)
                 } else {
                     participantMap[participant.id] = players[0].dataValues
                 }
             }
 
             if (Object.entries(participantMap).length < tournamentData.tournament.participants_count) {
-                console.log(`missing ${tournamentData.tournament.participants_count - Object.entries(participantMap).length} partcipants`)
+                const count = tournamentData.tournament.participants_count
+                const difference = count - Object.entries(participantMap).length
+                return interaction.editReply(`Missing ${difference} out of ${count} participants`)
             } else {
                 for (let i = 0; i < matches.length; i++) {
                     const { match } = matches[i]
