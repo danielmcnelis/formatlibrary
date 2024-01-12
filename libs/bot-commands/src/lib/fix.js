@@ -107,21 +107,26 @@ export default {
                         continue
                     } else if (!retrobotMatch && !match.forfeited) {
                         console.log('creating match for challongeMatchId:', match.id)
-                        await Match.create({
-                            formatName: 'Goat',
-                            formatId: 8,
-                            challongeMatchId: match.id,
-                            winner: participantMap[match.winner_id].name,
-                            loser: participantMap[match.loser_id].name,
-                            winnerId: participantMap[match.winner_id].id,
-                            loserId: participantMap[match.loser_id].id,
-                            isTournament: true,
-                            serverId: '414551319031054346',
-                            createdAt: match.completed_at,
-                            round: match.round,
-                            tournamentId: tournament.id
-                        })
-                        b++
+                        try {
+                            await Match.create({
+                                formatName: 'Goat',
+                                formatId: 8,
+                                challongeMatchId: match.id,
+                                winner: participantMap[match.winner_id].name,
+                                loser: participantMap[match.loser_id].name,
+                                winnerId: participantMap[match.winner_id].id,
+                                loserId: participantMap[match.loser_id].id,
+                                isTournament: true,
+                                serverId: '414551319031054346',
+                                createdAt: match.completed_at,
+                                round: match.round,
+                                tournamentId: tournament.id
+                            })
+                            b++
+                        } catch (err) {
+                            console.log(err)
+                            console.log(participantMap[match.winner_id]?.name, '>', participantMap[match.loser_id]?.name )
+                        }
                     }
                 }
             }
