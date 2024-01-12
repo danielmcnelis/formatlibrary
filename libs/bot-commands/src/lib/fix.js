@@ -25,15 +25,15 @@ export default {
            
             const { data: tournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`)
             console.log('tournamentData?.tournament?.id', tournamentData?.tournament?.id)
-            let tournament
-            const count = await Tournament.count({ 
+            let tournament = await Tournament.findOne({ 
                 where: {
                     id: tournamentData.tournament.id.toString()
                 }
             })
+            
+            console.log('!!tournament', !!tournament)
 
-            console.log('count', count)
-            if (!count) {
+            if (!tournament) {
                 tournament = await Tournament.create({
                     id: tournamentData.tournament.id.toString(),
                     name: tournamentData.tournament.name,
