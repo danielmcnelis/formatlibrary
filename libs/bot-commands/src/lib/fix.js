@@ -61,19 +61,23 @@ export default {
             for (let i = 0; i < participants.length; i++) {
                 const { participant } = participants[i]
                 const [discordName,] = participant.name.split('#')
-                const players = [...await Player.findAll({
+                let players = Player.findAll({
                     where: {
                         [Op.or]: {
                             discordName: {[Op.iLike]: discordName},
                             globalName: {[Op.iLike]: discordName}
                         }
                     }
-                }), ...[...await Alius.findAll({
-                    where: {
-                        formerName: {[Op.iLike]: discordName}
-                    },
-                    include: Player
-                })].map((a) => a.player)]
+                })
+
+                if (!players.length) {
+                    players = [...await Alius.findAll({
+                        where: {
+                            formerName: {[Op.iLike]: discordName}
+                        },
+                        include: Player
+                    })].map((a) => a.player)
+                }
         
                 if (!players.length) {
                     console.log(`CANNOT FIND PLAYER matching participant: ${participant.name} (${participant.id})`)
