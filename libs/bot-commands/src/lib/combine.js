@@ -103,13 +103,11 @@ export default {
                     winnerId: newPlayer.id,
                     winner: newPlayer.discordName
                 })
-                count++
             } else if (replay.loserId === oldPlayer.id) {
                 await replay.update({
                     loserId: newPlayer.id,
                     loser: newPlayer.discordName
                 })
-                count++
             }
         }
 
@@ -130,13 +128,11 @@ export default {
                     playerAId: newPlayer.id,
                     playerAName: newPlayer.discordName
                 })
-                count++
             } else if (pairing.playerBId === oldPlayer.id) {
                 await pairing.update({
                     playerBId: newPlayer.id,
                     playerBName: newPlayer.discordName
                 })
-                count++
             }
         }
 
