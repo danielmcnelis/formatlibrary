@@ -30,7 +30,7 @@ export default {
                     id: tournamentData.tournament.id.toString()
                 }
             })
-            
+
             console.log('!!tournament', !!tournament)
 
             if (!tournament) {
@@ -106,9 +106,9 @@ export default {
                         console.log(`match ${match.id} appears to be forfeited from ${tournament.name}`)
                         continue
                     } else if (!retrobotMatch && !match.forfeited) {
-                        console.log('match.id', match.id, '| match.forfeited', match.forfeited)
-                        const botMatch = await Match.create({
-                            format: 'Goat',
+                        console.log('creating match for challongeMatchId:', match.id)
+                        await Match.create({
+                            formatName: 'Goat',
                             formatId: 8,
                             challongeMatchId: match.id,
                             winner: participantMap[match.winner_id].name,
@@ -117,11 +117,11 @@ export default {
                             loserId: participantMap[match.loser_id].id,
                             isTournament: true,
                             serverId: '414551319031054346',
-                            createdAt: match.completed_at
+                            createdAt: match.completed_at,
+                            round: match.round,
+                            tournamentId: tournament.id
                         })
                         b++
-    
-                        await botMatch.update({ createdAt: match.completed_at })
                     }
                 }
             }
