@@ -5,7 +5,14 @@ import { Alius, Deck, DeckType, Event, Format, Match, Matchup, Player, Replay, S
 import { calculateStandings, generateMatchupData, fixPlacements } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
-import * as promptSync from 'prompt-sync'
+import readline from 'readline'
+
+// Usage inside aync function do not need closure demo only
+(async() => {
+  
+})();
+
+// When done reading prompt, exit program 
 
 export default {
     data: new SlashCommandBuilder()
@@ -23,7 +30,9 @@ export default {
         if (isProgrammer(interaction.member)) {
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
             const tournamentId = interaction.options.getString('tournament')
-            const prompt = promptSync()
+            const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
+            const prompt = (query) => new Promise((resolve) => rl.question(query, resolve))
+
             const { data: tournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`)
             console.log('!!tournamentData', !!tournamentData)
             let tournament
@@ -73,14 +82,21 @@ export default {
                 if (!players.length) {
                     console.log(`CANNOT FIND PLAYER matching participant: ${participant.name} (${participant.id})`)
                 } else if (players.length > 1) {
-                    const index = prompt(`Found multiple players: ${players.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`) - 1
-                    console.log(`selected index:`, index)
-                    participantMap[participant.id] = players[index].dataValues
+                    try {
+                        const index = await prompt(`Found multiple players: ${players.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`) - 1
+                        console.log(`selected index:`, index)
+                        participantMap[participant.id] = players[index].dataValues
+                      } catch (e) {
+                        console.error("Unable to prompt", e);
+                      }
                 } else {
                     participantMap[participant.id] = players[0].dataValues
                 }
+
+                rl.close()
             }
 
+            rl.on('close', () => process.exit(0))
             console.log('participantMap', participantMap)
 
             if (Object.entries(participantMap).length < tournamentData.tournament.participants_count) {
