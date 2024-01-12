@@ -5,7 +5,6 @@ import { Alius, Deck, DeckType, Event, Format, Match, Matchup, Player, Replay, S
 import { calculateStandings, generateMatchupData, fixPlacements } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
-const readline = require('readline')
 
 export default {
     data: new SlashCommandBuilder()
@@ -23,9 +22,7 @@ export default {
         if (isProgrammer(interaction.member)) {
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
             const tournamentId = interaction.options.getString('tournament')
-            const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
-            const prompt = (query) => new Promise((resolve) => rl.question(query, resolve))
-
+           
             const { data: tournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`)
             console.log('!!tournamentData', !!tournamentData)
             let tournament
@@ -74,60 +71,51 @@ export default {
         
                 if (!players.length) {
                     console.log(`CANNOT FIND PLAYER matching participant: ${participant.name} (${participant.id})`)
+                    break
                 } else if (players.length > 1) {
-                    try {
-                        const index = await prompt(`Found multiple players: ${players.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`) - 1
-                        console.log(`selected index:`, index)
-                        participantMap[participant.id] = players[index].dataValues
-                      } catch (e) {
-                        console.error("Unable to prompt", e);
-                      }
+                    console.log(`Found multiple players: ${players.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`)
+                    break
                 } else {
                     participantMap[participant.id] = players[0].dataValues
                 }
-
-                rl.close()
             }
-
-            rl.on('close', () => process.exit(0))
-            console.log('participantMap', participantMap)
 
             if (Object.entries(participantMap).length < tournamentData.tournament.participants_count) {
-                return console.log(`missing ${tournamentData.tournament.participants_count - Object.entries(participantMap).length} partcipants`)
-            }
-
-            for (let i = 0; i < matches.length; i++) {
-                const { match } = matches[i]
-                const retrobotMatch = await Match.findOne({ where: { challongeMatchId: match.id }})
-        
-                if (retrobotMatch) {     
-                    d++  
-                    console.log(`match ${match.id} has already been recorded`)
-                    continue
-                } else if (!retrobotMatch && match.forfeited) {     
-                    c++  
-                    console.log(`match ${match.id} appears to be forfeited from ${tournament.name}`)
-                    continue
-                } else if (!retrobotMatch && !match.forfeited) {
-                    console.log('match.id', match.id, '| match.forfeited', match.forfeited)
-                    const botMatch = await Match.create({
-                        format: 'Goat',
-                        formatId: 8,
-                        challongeMatchId: match.id,
-                        winner: participantMap[match.winner_id].name,
-                        loser: participantMap[match.loser_id].name,
-                        winnerId: participantMap[match.winner_id].id,
-                        loserId: participantMap[match.loser_id].id,
-                        isTournament: true,
-                        serverId: '414551319031054346',
-                        createdAt: match.completed_at
-                    })
-                    b++
-
-                    await botMatch.update({ createdAt: match.completed_at })
+                console.log(`missing ${tournamentData.tournament.participants_count - Object.entries(participantMap).length} partcipants`)
+            } else {
+                for (let i = 0; i < matches.length; i++) {
+                    const { match } = matches[i]
+                    const retrobotMatch = await Match.findOne({ where: { challongeMatchId: match.id }})
+            
+                    if (retrobotMatch) {     
+                        d++  
+                        console.log(`match ${match.id} has already been recorded`)
+                        continue
+                    } else if (!retrobotMatch && match.forfeited) {     
+                        c++  
+                        console.log(`match ${match.id} appears to be forfeited from ${tournament.name}`)
+                        continue
+                    } else if (!retrobotMatch && !match.forfeited) {
+                        console.log('match.id', match.id, '| match.forfeited', match.forfeited)
+                        const botMatch = await Match.create({
+                            format: 'Goat',
+                            formatId: 8,
+                            challongeMatchId: match.id,
+                            winner: participantMap[match.winner_id].name,
+                            loser: participantMap[match.loser_id].name,
+                            winnerId: participantMap[match.winner_id].id,
+                            loserId: participantMap[match.loser_id].id,
+                            isTournament: true,
+                            serverId: '414551319031054346',
+                            createdAt: match.completed_at
+                        })
+                        b++
+    
+                        await botMatch.update({ createdAt: match.completed_at })
+                    }
                 }
             }
-    
+
             return await interaction.editReply(`Generated new matches for ${b} matches from ${tournament.name}.${d ? ` ${d} matches were already recorded.` : ''}${c ? ` ${c} matches appear to have been forfeited.` : ''} ${b + d + c} out of ${matches.length} matches are now accounted for.`)
         } else {
             return await interaction.editReply('🛠️')
