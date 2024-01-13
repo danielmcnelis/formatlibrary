@@ -28,22 +28,22 @@ const server = useHttps ? https.createServer(credentials, app).listen(port, () =
 
 server.on('error', console.error)
 
-const io = new Server(server, {
-    cors: {
-        origin: `*`
-    }
-})
+// const io = new Server(server, {
+//     cors: {
+//         origin: `*`
+//     }
+// })
 
-io.on('connection', (socket) => {
-    console.log('an https user connected')
-    socket.on('join draft', (data, setEntry) => joinDraft(data.playerId, data.draftId, socket, setEntry))
-    socket.on('leave draft', (data, setEntry) => leaveDraft(data.playerId, data.draftId, socket, setEntry))
-    socket.on('start draft', (data) => startDraft(data.draftId, socket))
-    socket.on('start sealed', (data) => startSealed(data.draftId, socket))
-    socket.on('select card', (data, handleSelection) => selectCard(data.cardId, data.playerId, data.draftId, data.round, data.pick, socket, handleSelection))
-})
+// io.on('connection', (socket) => {
+//     console.log('an https user connected')
+//     socket.on('join draft', (data, setEntry) => joinDraft(data.playerId, data.draftId, socket, setEntry))
+//     socket.on('leave draft', (data, setEntry) => leaveDraft(data.playerId, data.draftId, socket, setEntry))
+//     socket.on('start draft', (data) => startDraft(data.draftId, socket))
+//     socket.on('start sealed', (data) => startSealed(data.draftId, socket))
+//     socket.on('select card', (data, handleSelection) => selectCard(data.cardId, data.playerId, data.draftId, data.round, data.pick, socket, handleSelection))
+// })
 
-io.on('disconnection', (socket) => {
-    console.log('an https user disconnected')
-    socket.removeAllListeners()
-})
+// io.on('disconnection', (socket) => {
+//     console.log('an https user disconnected')
+//     socket.removeAllListeners()
+// })
