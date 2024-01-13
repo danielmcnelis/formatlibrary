@@ -15,8 +15,7 @@ export const getMidnightCountdown = () => {
 	const date = new Date()
 	const remainingMinutes = 60 - date.getMinutes()
 	const remainingHours = 23 - date.getHours()
-    // return ( remainingHours * 60 + remainingMinutes ) * 60 * 1000
-    return 60 * 1000
+    return ( remainingHours * 60 + remainingMinutes ) * 60 * 1000
 }
 
 // REFRESH EXPIRED TOKENS
