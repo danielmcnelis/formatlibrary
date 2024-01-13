@@ -1036,7 +1036,7 @@ import { parse } from 'csv-parse'
             const [winnerName, loserName, round] = row
             let winningPlayer
             let losingPlayer
-            i++
+            i += 1
 
             let winners = await Player.findAll({
                 where: {
