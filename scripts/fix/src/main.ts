@@ -6,6 +6,8 @@ import Canvas = require('canvas')
 import { S3 } from 'aws-sdk'
 import { capitalize } from '@fl/utils'
 import promptSync from 'prompt-sync'
+import * as fs from 'fs'
+import { parse } from 'csv-parse'
 
 // ;(async () => {
 //     const decks = await Deck.findAll({ include: [DeckType, Event, Format, Player] })
@@ -1026,111 +1028,48 @@ import promptSync from 'prompt-sync'
 
 
 ;(async () => {
-    const prompt = promptSync()
-    const tournamentIds = ['PWCQ__50']
-    for (let i = 0; i < tournamentIds.length; i++) {
-        const server = await Server.findOne({
-            where: {
-                name: 'Format Library'
-            }
-        })
-
-        const tournamentId = tournamentIds[i]
-        const { data: tournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`)
-        console.log('!!tournamentData', !!tournamentData)
-        let tournament
-        const count = await Tournament.count({ id: tournamentData.tournament.id.toString()})
-        if (!count) {
-            tournament = await Tournament.create({
-                id: tournamentData.tournament.id.toString(),
-                name: tournamentData.tournament.name,
-                abbreviation: tournamentData.tournament.name,
-                url: tournamentData.tournament.url,
-                type: tournamentData.tournament.tournament_type,
-                formatName: 'Goat',
-                formatId: 8,
-                createdAt: tournamentData.tournament.created_at,
-                community: 'GoatFormat.com',
-                serverId: '459826576536764426',
-                state: 'complete'
-            })
-
-            console.log('!!tournament', !!tournament)
-        }
-        
-        const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}/participants.json?api_key=${server.challongeAPIKey}`)
-        const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}/matches.json?api_key=${server.challongeAPIKey}`)
-        const participantMap = {}
-        let b = 0
-        let c = 0
-        let d = 0
-
-        for (let i = 0; i < participants.length; i++) {
-            const { participant } = participants[i]
-            const [discordName,] = participant.name.split('#')
-            const players = [...await Player.findAll({
-                where: {
-                    [Op.or]: {
-                        discordName: {[Op.iLike]: discordName},
-                        globalName: {[Op.iLike]: discordName}
-                    }
-                }
-            }), ...[...await Alius.findAll({
-                where: {
-                    formerName: {[Op.iLike]: discordName}
-                },
-                include: Player
-            })].map((a) => a.player)]
+    const tournament = await Tournament.findOne({ id: '103102119995051'})
+    fs.createReadStream("./goatworlds2023.csv")
+        .pipe(parse({ delimiter: ",", from_line: 2 }))
+        .on("data", async (row) => {
+            console.log(row);
+            // const players = [...await Player.findAll({
+            //     where: {
+            //         [Op.or]: {
+            //             discordName: {[Op.iLike]: discordName},
+            //             globalName: {[Op.iLike]: discordName}
+            //         }
+            //     }
+            // }), ...[...await Alius.findAll({
+            //     where: {
+            //         formerName: {[Op.iLike]: discordName}
+            //     },
+            //     include: Player
+            // })].map((a) => a.player)]
     
-            if (!players.length) {
-                console.log(`CANNOT FIND PLAYER matching participant: ${participant.name} (${participant.id})`)
-            } else if (players.length > 1) {
-                const index = prompt(`Found multiple players: ${players.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`) - 1
-                console.log(`selected index:`, index)
-                participantMap[participant.id] = players[index].dataValues
-            } else {
-                participantMap[participant.id] = players[0].dataValues
-            }
-        }
+            // if (!players.length) {
+            //     console.log(`CANNOT FIND PLAYER matching participant: ${participant.name} (${participant.id})`)
+            // } else if (players.length > 1) {
+            //     const index = prompt(`Found multiple players: ${players.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`) - 1
+            //     console.log(`selected index:`, index)
+            //     participantMap[participant.id] = players[index].dataValues
+            // } else {
+            //     participantMap[participant.id] = players[0].dataValues
+            // }
 
-        console.log('participantMap', participantMap)
-
-        if (Object.entries(participantMap).length < tournamentData.tournament.participants_count) {
-            return console.log(`missing ${tournamentData.tournament.participants_count - Object.entries(participantMap).length} partcipants`)
-        }
-
-        for (let i = 0; i < matches.length; i++) {
-            const { match } = matches[i]
-            const retrobotMatch = await Match.findOne({ where: { challongeMatchId: match.id }})
-    
-            if (retrobotMatch) {     
-                d++  
-                console.log(`match ${match.id} has already been recorded`)
-                continue
-            } else if (!retrobotMatch && match.forfeited) {     
-                c++  
-                console.log(`match ${match.id} appears to be forfeited from ${tournament.name}`)
-                continue
-            } else if (!retrobotMatch && !match.forfeited) {
-                console.log('match.id', match.id, '| match.forfeited', match.forfeited)
-                const botMatch = await Match.create({
-                    format: 'Goat',
-                    formatId: 8,
-                    challongeMatchId: match.id,
-                    winner: participantMap[match.winner_id].name,
-                    loser: participantMap[match.loser_id].name,
-                    winnerId: participantMap[match.winner_id].id,
-                    loserId: participantMap[match.loser_id].id,
-                    isTournament: true,
-                    serverId: '414551319031054346',
-                    createdAt: match.completed_at
-                })
-                b++
-
-                // await botMatch.update({ createdAt: match.completed_at })
-            }
-        }
-    
-        return console.log(`Generated new matches for ${b} matches from ${tournament.name}.${d ? ` ${d} matches were already recorded.` : ''}${c ? ` ${c} matches appear to have been forfeited.` : ''} ${b + d + c} out of ${matches.length} matches are now accounted for.`)
-    }
+            // console.log('match.id', match.id, '| match.forfeited', match.forfeited)
+            //     const botMatch = await Match.create({
+            //         format: 'Goat',
+            //         formatId: 8,
+            //         challongeMatchId: match.id,
+            //         winner: participantMap[match.winner_id].name,
+            //         loser: participantMap[match.loser_id].name,
+            //         winnerId: participantMap[match.winner_id].id,
+            //         loserId: participantMap[match.loser_id].id,
+            //         isTournament: true,
+            //         serverId: '414551319031054346',
+            //         createdAt: match.completed_at
+            //     })
+            //     b++
+    })
 })()
