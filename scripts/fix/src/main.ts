@@ -1029,17 +1029,14 @@ import { parse } from 'csv-parse'
 ;(async () => {
     const tournament = await Tournament.findOne({ id: '103102119995051'})
     const timestamp = new Date(tournament.createdAt).getTime()
-    console.log('tournament.createdAt', tournament.createdAt)
-    console.log('timestamp', timestamp)
-    let i = 1
-    console.log('timestamp + i * 60 * 1000', timestamp + i * 60 * 1000)
-    console.log('new Date(timestamp + i * 60 * 1000)', new Date(timestamp + i * 60 * 1000))
+    let i = 0
     fs.createReadStream("./goatworlds2023.csv")
         .pipe(parse({ delimiter: ",", from_line: 2 }))
         .on("data", async (row) => {
             const [winnerName, loserName, round] = row
             let winningPlayer
             let losingPlayer
+            i++
 
             let winners = await Player.findAll({
                 where: {
@@ -1060,7 +1057,7 @@ import { parse } from 'csv-parse'
             }
     
             if (!winners.length) {
-                console.log(`CANNOT FIND WINNING PLAYER matching participant: ${winnerName})`)
+                console.log(`CANNOT FIND WINNING PLAYER matching participant: ${winnerName}`)
             } else if (winners.length > 1) {
                 console.log(`Found multiple winners: ${winners.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`)
             } else {
@@ -1086,7 +1083,7 @@ import { parse } from 'csv-parse'
             }
 
             if (!losers.length) {
-                console.log(`CANNOT FIND LOSING PLAYER matching participant: ${loserName})`)
+                console.log(`CANNOT FIND LOSING PLAYER matching participant: ${loserName}`)
             } else if (losers.length > 1) {
                 console.log(`Found multiple losers: ${losers.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`)
             } else {
@@ -1103,21 +1100,23 @@ import { parse } from 'csv-parse'
                 })
 
                 if (!count) {
-                    // await Match.create({
-                    //     format: 'Goat',
-                    //     formatId: 8,
-                    //     winner: winningPlayer.name,
-                    //     loser: losingPlayer.name,
-                    //     winnerId: winningPlayer.id,
-                    //     loserId: losingPlayer.id,
-                    //     isTournament: true,
-                    //     tournamentId: '103102119995051',
-                    //     serverId: '414551319031054346',
-                    //     createdAt: tournament.createdAt + i * 60 * 1000
-                    // })
+                    const createdAt = new Date(timestamp + i * 60 * 1000)
+                        
+                    await Match.create({
+                        format: 'Goat',
+                        formatId: 8,
+                        winner: winningPlayer.name,
+                        loser: losingPlayer.name,
+                        winnerId: winningPlayer.id,
+                        loserId: losingPlayer.id,
+                        isTournament: true,
+                        tournamentId: '103102119995051',
+                        serverId: '414551319031054346',
+                        createdAt: createdAt
+                    })
 
                     i++
-                    console.log(`saved NEW MATCH data for ${winnerName} > ${loserName} (Round ${round})`)
+                    console.log(`SAVED NEW MATCH data for ${winnerName} > ${loserName} (Round ${round})`)
                 } else {
                     console.log(`already had match data for ${winnerName} > ${loserName} (Round ${round})`)
                 }
