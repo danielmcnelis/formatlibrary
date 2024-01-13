@@ -1027,7 +1027,7 @@ import { parse } from 'csv-parse'
 
 
 ;(async () => {
-    const tournament = await Tournament.findOne({ id: '103102119995051'})
+    const tournament = await Tournament.findOne({ where: {id: '103102119995051'}})
     const timestamp = new Date(tournament.createdAt).getTime()
     let i = 0
     fs.createReadStream("./goatworlds2023.csv")
@@ -1103,8 +1103,9 @@ import { parse } from 'csv-parse'
                     const createdAt = new Date(timestamp + i * 60 * 1000)
                         
                     await Match.create({
-                        format: 'Goat',
+                        formatName: 'Goat',
                         formatId: 8,
+                        round: round,
                         winner: winningPlayer.name,
                         loser: losingPlayer.name,
                         winnerId: winningPlayer.id,
