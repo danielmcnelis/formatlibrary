@@ -1028,47 +1028,90 @@ import { parse } from 'csv-parse'
 
 ;(async () => {
     const tournament = await Tournament.findOne({ id: '103102119995051'})
+    console.log('tournament.createdAt', tournament.createdAt)
+    let i = 1
+    console.log('tournament.createdAt + i * 60 * 1000', tournament.createdAt + i * 60 * 1000)
     fs.createReadStream("./goatworlds2023.csv")
         .pipe(parse({ delimiter: ",", from_line: 2 }))
         .on("data", async (row) => {
-            console.log(row);
-            // const players = [...await Player.findAll({
-            //     where: {
-            //         [Op.or]: {
-            //             discordName: {[Op.iLike]: discordName},
-            //             globalName: {[Op.iLike]: discordName}
-            //         }
-            //     }
-            // }), ...[...await Alius.findAll({
-            //     where: {
-            //         formerName: {[Op.iLike]: discordName}
-            //     },
-            //     include: Player
-            // })].map((a) => a.player)]
-    
-            // if (!players.length) {
-            //     console.log(`CANNOT FIND PLAYER matching participant: ${participant.name} (${participant.id})`)
-            // } else if (players.length > 1) {
-            //     const index = prompt(`Found multiple players: ${players.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`) - 1
-            //     console.log(`selected index:`, index)
-            //     participantMap[participant.id] = players[index].dataValues
-            // } else {
-            //     participantMap[participant.id] = players[0].dataValues
-            // }
+            const [winnerName, loserName, round] = row
+            let winningPlayer
+            let losingPlayer
 
-            // console.log('match.id', match.id, '| match.forfeited', match.forfeited)
-            //     const botMatch = await Match.create({
-            //         format: 'Goat',
-            //         formatId: 8,
-            //         challongeMatchId: match.id,
-            //         winner: participantMap[match.winner_id].name,
-            //         loser: participantMap[match.loser_id].name,
-            //         winnerId: participantMap[match.winner_id].id,
-            //         loserId: participantMap[match.loser_id].id,
-            //         isTournament: true,
-            //         serverId: '414551319031054346',
-            //         createdAt: match.completed_at
-            //     })
-            //     b++
+            const winners = [...await Player.findAll({
+                where: {
+                    [Op.or]: {
+                        discordName: {[Op.iLike]: winnerName},
+                        globalName: {[Op.iLike]: winnerName}
+                    }
+                }
+            }), ...[...await Alius.findAll({
+                where: {
+                    formerName: {[Op.iLike]: winnerName}
+                },
+                include: Player
+            })].map((a) => a.player)]
+    
+            if (!winners.length) {
+                console.log(`CANNOT FIND PLAYER matching participant: ${winnerName})`)
+            } else if (winners.length > 1) {
+                console.log(`Found multiple winners: ${winners.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`)
+            } else {
+                winningPlayer = winners[0]
+            }
+
+            const losers = [...await Player.findAll({
+                where: {
+                    [Op.or]: {
+                        discordName: {[Op.iLike]: loserName},
+                        globalName: {[Op.iLike]: loserName}
+                    }
+                }
+            }), ...[...await Alius.findAll({
+                where: {
+                    formerName: {[Op.iLike]: loserName}
+                },
+                include: Player
+            })].map((a) => a.player)]
+    
+            if (!losers.length) {
+                console.log(`CANNOT FIND PLAYER matching participant: ${loserName})`)
+            } else if (winners.length > 1) {
+                console.log(`Found multiple winners: ${losers.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`)
+            } else {
+                losingPlayer = losers[0]
+            }
+
+            if (winningPlayer && losingPlayer) {
+
+                const count = await Match.count({
+                    where: {
+                        tournamentId: tournament.id,
+                        winnerId: winningPlayer.id,
+                        loserId: losingPlayer.id
+                    }
+                })
+
+                if (!count) {
+                    // await Match.create({
+                    //     format: 'Goat',
+                    //     formatId: 8,
+                    //     winner: winningPlayer.name,
+                    //     loser: losingPlayer.name,
+                    //     winnerId: winningPlayer.id,
+                    //     loserId: losingPlayer.id,
+                    //     isTournament: true,
+                    //     tournamentId: '103102119995051',
+                    //     serverId: '414551319031054346',
+                    //     createdAt: tournament.createdAt + i * 60 * 1000
+                    // })
+
+                    i++
+                    console.log(`saved NEW MATCH data for ${winnerName} > ${loserName} (Round ${round})`)
+                } else {
+                    console.log(`already had match data for ${winnerName} > ${loserName} (Round ${round})`)
+                }
+            }
+
     })
 })()
