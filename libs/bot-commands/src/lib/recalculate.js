@@ -136,7 +136,7 @@ export default {
                 if (!vanquishedIds.includes(v.loserId)) vanquishedIds.push(v.loserId)
             })
 
-            console.log(`${stats.player.name} has defeated ${vanquishedIds.length} unique opponents`)
+            console.log(`${stats.player?.name} (${stats.playerId}) has defeated ${vanquishedIds.length} unique opponents`)
             await stats.update({ vanquished: vanquishedIds.length })
         }
 
