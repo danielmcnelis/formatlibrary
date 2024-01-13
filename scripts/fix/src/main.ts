@@ -5,7 +5,6 @@ import { config } from '@fl/config'
 import Canvas = require('canvas')
 import { S3 } from 'aws-sdk'
 import { capitalize } from '@fl/utils'
-import promptSync from 'prompt-sync'
 import * as fs from 'fs'
 import { parse } from 'csv-parse'
 
