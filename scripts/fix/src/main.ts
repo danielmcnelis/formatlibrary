@@ -1028,9 +1028,12 @@ import { parse } from 'csv-parse'
 
 ;(async () => {
     const tournament = await Tournament.findOne({ id: '103102119995051'})
+    const timestamp = new Date(tournament.createdAt).getTime()
     console.log('tournament.createdAt', tournament.createdAt)
+    console.log('timestamp', timestamp)
     let i = 1
-    console.log('tournament.createdAt + i * 60 * 1000', tournament.createdAt + i * 60 * 1000)
+    console.log('timestamp + i * 60 * 1000', timestamp + i * 60 * 1000)
+    console.log('new Date(timestamp + i * 60 * 1000)', new Date(timestamp + i * 60 * 1000))
     fs.createReadStream("./goatworlds2023.csv")
         .pipe(parse({ delimiter: ",", from_line: 2 }))
         .on("data", async (row) => {
@@ -1038,52 +1041,59 @@ import { parse } from 'csv-parse'
             let winningPlayer
             let losingPlayer
 
-            const winners = [...await Player.findAll({
+            let winners = await Player.findAll({
                 where: {
                     [Op.or]: {
                         discordName: {[Op.iLike]: winnerName},
                         globalName: {[Op.iLike]: winnerName}
                     }
                 }
-            }), ...[...await Alius.findAll({
-                where: {
-                    formerName: {[Op.iLike]: winnerName}
-                },
-                include: Player
-            })].map((a) => a.player)]
+            })
+
+            if (!winners.length) {
+                winners = [...await Alius.findAll({
+                    where: {
+                        formerName: {[Op.iLike]: winnerName}
+                    },
+                    include: Player
+                })].map((a) => a.player)
+            }
     
             if (!winners.length) {
-                console.log(`CANNOT FIND PLAYER matching participant: ${winnerName})`)
+                console.log(`CANNOT FIND WINNING PLAYER matching participant: ${winnerName})`)
             } else if (winners.length > 1) {
                 console.log(`Found multiple winners: ${winners.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`)
             } else {
                 winningPlayer = winners[0]
             }
 
-            const losers = [...await Player.findAll({
+            let losers = await Player.findAll({
                 where: {
                     [Op.or]: {
                         discordName: {[Op.iLike]: loserName},
                         globalName: {[Op.iLike]: loserName}
                     }
                 }
-            }), ...[...await Alius.findAll({
-                where: {
-                    formerName: {[Op.iLike]: loserName}
-                },
-                include: Player
-            })].map((a) => a.player)]
-    
+            })
+
             if (!losers.length) {
-                console.log(`CANNOT FIND PLAYER matching participant: ${loserName})`)
-            } else if (winners.length > 1) {
-                console.log(`Found multiple winners: ${losers.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`)
+                losers = [...await Alius.findAll({
+                    where: {
+                        formerName: {[Op.iLike]: loserName}
+                    },
+                    include: Player
+                })].map((a) => a.player)
+            }
+
+            if (!losers.length) {
+                console.log(`CANNOT FIND LOSING PLAYER matching participant: ${loserName})`)
+            } else if (losers.length > 1) {
+                console.log(`Found multiple losers: ${losers.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`)
             } else {
                 losingPlayer = losers[0]
             }
 
             if (winningPlayer && losingPlayer) {
-
                 const count = await Match.count({
                     where: {
                         tournamentId: tournament.id,
