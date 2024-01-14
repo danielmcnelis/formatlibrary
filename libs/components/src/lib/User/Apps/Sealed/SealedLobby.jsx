@@ -6,7 +6,7 @@ import { CardImage } from '../../../Cards/CardImage'
 import { FocalCard } from '../Builders/FocalCard'
 import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
-// import {useSocket} from '@fl/hooks'
+import {useSocket} from '@fl/hooks'
 import './SealedLobby.css' 
 
 const playerId = getCookie('playerId')
@@ -65,7 +65,7 @@ export const SealedLobby = () => {
     const [packs, setPacks] = useState([])
     const [card, setCard] = useState({})
     const [toggleHorn] = useAudio('/assets/sounds/horn.mp3')
-    // const socket = useSocket()
+    const socket = useSocket()
     const { id } = useParams()
 
     // FETCH PARTICIPANTS
@@ -85,7 +85,7 @@ export const SealedLobby = () => {
                 alert('Must be logged in to play Sealed.')
             } else {
                 const data = { playerId, draftId: draft.id }
-                // socket.emit('join draft', data, setEntry)  
+                socket.emit('join draft', data, setEntry)  
             }          
         } catch (err) {
             console.log(err)
@@ -96,7 +96,7 @@ export const SealedLobby = () => {
     const leave = async () => {    
         try {
             const data = { playerId, draftId: draft.id }
-            // socket.emit('leave draft', data, setEntry)            
+            socket.emit('leave draft', data, setEntry)            
         } catch (err) {
             console.log(err)
         }
@@ -106,7 +106,7 @@ export const SealedLobby = () => {
     const start = async () => {   
         try {
             const data = { draftId: draft.id }
-            // socket.emit('start sealed', data)            
+            socket.emit('start sealed', data)            
         } catch (err) {
             console.log(err)
         }
@@ -140,22 +140,22 @@ export const SealedLobby = () => {
 
     // HOOK - SOCKET.IO
     useEffect(() => {
-        // socket.on('new entry', (data) => {
-        //     console.log(`${data.playerName} joined Sealed Lobby.`)
-        //     fetchParticipants(data.draftId)
-        // });
+        socket.on('new entry', (data) => {
+            console.log(`${data.playerName} joined Sealed Lobby.`)
+            fetchParticipants(data.draftId)
+        });
 
-        // socket.on('removed entry', (data) => {
-        //     console.log(`${data.playerName} exited Sealed Lobby.`)
-        //     fetchParticipants(data.draftId)
-        // });
+        socket.on('removed entry', (data) => {
+            console.log(`${data.playerName} exited Sealed Lobby.`)
+            fetchParticipants(data.draftId)
+        });
 
-        // socket.on('sealed begins', (data) => {
-        //     console.log(`Sealed has begun!`)
-        //     setDraft(data)
-        //     alert('Sealed is Starting Now!')
-        //     toggleHorn()
-        // });
+        socket.on('sealed begins', (data) => {
+            console.log(`Sealed has begun!`)
+            setDraft(data)
+            alert('Sealed is Starting Now!')
+            toggleHorn()
+        });
     }, [])
 
     // HOOK - FETCH INITIAL DRAFT DATA

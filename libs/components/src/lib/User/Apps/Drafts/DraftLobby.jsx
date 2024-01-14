@@ -7,7 +7,7 @@ import { FocalCard } from '../Builders/FocalCard'
 import { getCookie } from '@fl/utils'
 import ReactCountdownClock from 'react-countdown-clock'
 import { Helmet } from 'react-helmet'
-// import { useSocket } from '@fl/hooks'
+import { useSocket } from '@fl/hooks'
 import './DraftLobby.css'
 
 const playerId = getCookie('playerId')
@@ -72,7 +72,7 @@ export const DraftLobby = () => {
     // const [toggleDraw] = useAudio('/assets/sounds/draw.mp3')
     const [toggleChime] = useAudio('/assets/sounds/chime.mp3')
     const [toggleHorn] = useAudio('/assets/sounds/horn.mp3')
-    // const socket = useSocket()
+    const socket = useSocket()
     const { id } = useParams()
     const timerColor = JSON.parse(localStorage.getItem('theme')) === 'dark' ? '#00bca6' : '#334569'
     const logoUrl = draft?.type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}` :
@@ -96,7 +96,7 @@ export const DraftLobby = () => {
                 alert('Must be logged in to join a Draft.')
             } else {
                 const data = { playerId, draftId: draft.id }
-                // socket.emit('join draft', data, setEntry)   
+                socket.emit('join draft', data, setEntry)   
             }
         } catch (err) {
             console.log(err)
@@ -107,7 +107,7 @@ export const DraftLobby = () => {
     const leave = async () => {    
         try {
             const data = { playerId, draftId: draft.id }
-            // socket.emit('leave draft', data, setEntry)            
+            socket.emit('leave draft', data, setEntry)            
         } catch (err) {
             console.log(err)
         }
@@ -117,7 +117,7 @@ export const DraftLobby = () => {
     const start = async () => {          
         try {
             const data = { draftId: draft.id }
-            // socket.emit('start draft', data)            
+            socket.emit('start draft', data)            
         } catch (err) {
             console.log(err)
         }
@@ -140,7 +140,7 @@ export const DraftLobby = () => {
     const selectCard = async (card) => {    
         try {
             const data = { draftId: draft.id, round: draft.round, pick: draft.pick, playerId: playerId, cardId: card.id }            
-            // socket.emit('select card', data, processSelection)            
+            socket.emit('select card', data, processSelection)            
         } catch (err) {
             console.log(err)
         }
@@ -201,40 +201,40 @@ export const DraftLobby = () => {
 
     // HOOK - SOCKET.IO
     useEffect(() => {
-        // socket.on('new entry', (data) => {
-        //     console.log(`${data.playerName} joined Draft Lobby.`)
-        //     fetchParticipants(data.draftId)
-        // });
+        socket.on('new entry', (data) => {
+            console.log(`${data.playerName} joined Draft Lobby.`)
+            fetchParticipants(data.draftId)
+        });
 
-        // socket.on('removed entry', (data) => {
-        //     console.log(`${data.playerName} exited Draft Lobby.`)
-        //     fetchParticipants(data.draftId)
-        // });
+        socket.on('removed entry', (data) => {
+            console.log(`${data.playerName} exited Draft Lobby.`)
+            fetchParticipants(data.draftId)
+        });
 
-        // socket.on('draft begins', (data) => {
-        //     console.log(`Draft has begun!`)
-        //     setTimer(data.timer)
-        //     setOnTheClock(true)
-        //     setDraft(data)
-        //     alert('The Draft is Starting Now!')
-        //     toggleHorn()
-        // });
+        socket.on('draft begins', (data) => {
+            console.log(`Draft has begun!`)
+            setTimer(data.timer)
+            setOnTheClock(true)
+            setDraft(data)
+            alert('The Draft is Starting Now!')
+            toggleHorn()
+        });
 
-        // socket.on('next pick', (data) => {
-        //     console.log(`Next pick!`)
-        //     setSelection(null)
-        //     setDraft(data)
-        //     setOnTheClock(true)
-        //     setTimer(draft.timer)
-        //     toggleChime()
-        // });
+        socket.on('next pick', (data) => {
+            console.log(`Next pick!`)
+            setSelection(null)
+            setDraft(data)
+            setOnTheClock(true)
+            setTimer(draft.timer)
+            toggleChime()
+        });
 
-        // socket.on('draft complete', (data) => {
-        //     console.log(`Draft complete!`)
-        //     setOnTheClock(false)
-        //     setSelection(null)
-        //     setDraft(data)
-        // });
+        socket.on('draft complete', (data) => {
+            console.log(`Draft complete!`)
+            setOnTheClock(false)
+            setSelection(null)
+            setDraft(data)
+        });
     }, [])
 
     // HOOK - FETCH INITIAL DRAFT DATA
