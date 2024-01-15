@@ -420,8 +420,8 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
     const winningPlayer = await Player.findOne({ where: { id: match.winnerId }})
     const losingPlayer = await Player.findOne({ where: { id: match.loserId }})
 
-    const {data: tournamentData} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
-    if (!tournamentData) return await interaction.channel.send({ content: `Error: Challonge tournament data not found.`})	
+    const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
+    if (!participants_count) return await interaction.channel.send({ content: `Error: Challonge tournament data not found.`})	
     const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
     if (!challongeMatch) return await interaction.channel.send({ content: `Error: Challonge match data not found.`})	
     const replay = await Replay.findOne({ where: { matchId: match.id }})
@@ -437,7 +437,7 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
         if (tournament.type === 'swiss' || tournament.type === 'round robin') {
             roundName = `Round ${challongeMatch?.match?.round}`
         } else if (tournament.type === 'single elimination') {
-            const rounds = Math.ceil(Math.log2(tournamentData.participants_count))
+            const rounds = Math.ceil(Math.log2(participants_count))
             roundName = rounds - round === 0 ? 'Finals' :
                 rounds - round === 1 ? 'Semi Finals' :
                 rounds - round === 2 ? 'Quarter Finals' :
@@ -448,17 +448,18 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
                 rounds - round === 7 ? 'Round of 256' :
                 null
         } else if (tournament.type === 'double elimination') {
-            const rounds = Math.ceil(Math.log2(tournamentData.participants_count))
+            const rounds = Math.ceil(Math.log2(participants_count))
             if (round > 0) {
-                roundName = rounds - round === 0 ? 'Grand Finals' :
+                roundName = rounds - round < 0 ? 'Grand Finals' :                
+                    rounds - round === 0 ? 'Grand Finals' :
                     rounds - round === 1 ? `Winner's Finals` :
-                    rounds - round === 2 ? `Winner's Semi Finals` :
-                    rounds - round === 3 ? `Winner's Quarter Finals` :
+                    rounds - round === 2 ? `Winner's Semis` :
+                    rounds - round === 3 ? `Winner's Quarters` :
                     `Winner's Round ${round}`
             } else {
                 roundName = rounds - Math.abs(round) === -1 ? `Loser's Finals` :
-                    rounds - Math.abs(round) === 0 ? `Loser's Semi Finals` :
-                    rounds - Math.abs(round) === 1 ? `Loser's Quarter Finals` :
+                    rounds - Math.abs(round) === 0 ? `Loser's Semis` :
+                    rounds - Math.abs(round) === 1 ? `Loser's Quarters` :
                     `Loser's Round ${Math.abs(round)}`
             }
         } else {
