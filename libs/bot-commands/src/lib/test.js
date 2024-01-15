@@ -19,8 +19,7 @@ export default {
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
             const tournament = await Tournament.findOne({ where: { id: '13970812' }})
             const matches = await Match.findAll({ where: { tournamentId: '13970812' }})
-
-            const {data: tournamentData} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
+            const { data: { tournament: { participants_count } }} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
             
             for (let i = 0; i < matches.length;i++) {
                 const match = matches[i]
@@ -31,7 +30,7 @@ export default {
                 if (tournament.type === 'swiss' || tournament.type === 'round robin') {
                     roundName = `Round ${challongeMatch?.match?.round}`
                 } else if (tournament.type === 'single elimination') {
-                    const rounds = Math.ceil(Math.log2(tournamentData.participants_count))
+                    const rounds = Math.ceil(Math.log2(participants_count))
                     console.log('rounds', rounds, 'round', round)
                     roundName = rounds - round === 0 ? 'Finals' :
                         rounds - round === 1 ? 'Semi Finals' :
@@ -43,7 +42,7 @@ export default {
                         rounds - round === 7 ? 'Round of 256' :
                         null
                 } else if (tournament.type === 'double elimination') {
-                    const rounds = Math.ceil(Math.log2(tournamentData.participants_count))
+                    const rounds = Math.ceil(Math.log2(participants_count))
                     console.log('rounds', rounds, 'round', round)
                     if (round > 0) {
                         roundName = rounds - round < 0 ? 'Grand Finals' :

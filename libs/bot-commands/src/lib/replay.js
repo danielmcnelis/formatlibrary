@@ -93,7 +93,6 @@ export default {
         if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const {data: tournamentData} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
 
         const winningPlayer = await Player.findOne({
             where: {
@@ -129,6 +128,7 @@ export default {
 
         const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
         if (!challongeMatch) return await interaction.editReply({ content: `Error: Challonge match not found.`})	
+
         const replay = await Replay.findOne({ where: { matchId: match.id }})
         if (replay && await isMod(server, interaction.member)) {
             await replay.update({ url })
@@ -136,13 +136,14 @@ export default {
         } else if (replay) {
             return await interaction.editReply({ content: `The replay from this match was already saved:\n<${replay.url}>\n\nIf this link is incorrect, please get a Moderator to help you.`})	
         } else if (!replay) {
+            const { data: { tournament: { participants_count } }} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
             const round = challongeMatch?.match?.round
             let roundName
 
             if (tournament.type === 'swiss' || tournament.type === 'round robin') {
                 roundName = `Round ${challongeMatch?.match?.round}`
             } else if (tournament.type === 'single elimination') {
-                const rounds = Math.ceil(Math.log2(tournamentData.participants_count))
+                const rounds = Math.ceil(Math.log2(participants_count))
                 console.log('rounds', rounds, 'round', round)
                 roundName = rounds - round === 0 ? 'Finals' :
                     rounds - round === 1 ? 'Semi Finals' :
@@ -154,7 +155,7 @@ export default {
                     rounds - round === 7 ? 'Round of 256' :
                     null
             } else if (tournament.type === 'double elimination') {
-                const rounds = Math.ceil(Math.log2(tournamentData.participants_count))
+                const rounds = Math.ceil(Math.log2(participants_count))
                 console.log('rounds', rounds, 'round', round)
                 if (round > 0) {
                     roundName = rounds - round < 0 ? 'Grand Finals' :
