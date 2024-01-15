@@ -631,6 +631,9 @@ export const hasPartnerAccess = (server) => server?.access === 'partner' || serv
 //IS PROGRAMMER?
 export const isProgrammer = (member) => member?.user?.id === '194147938786738176'
 
+//IS COMMUNITY PARTNER?
+export const isCommunityPartner = (member) => member?._roles.includes('1120540792654671973')
+
 //IS ADMIN?
 export const isAdmin = (server, member) => member?._roles.includes(server?.adminRole) || member?.user?.id === '194147938786738176'
 
