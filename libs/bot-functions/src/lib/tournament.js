@@ -540,9 +540,9 @@ export const joinTournament = async (interaction, tournamentId) => {
     let format = await Format.findByServerOrChannelId(server, interaction.channelId)
     
     if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
-        return interaction.editReply({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
+        return interaction.editReply({ content: `Sorry, premium tournaments are only open to premium server subscribers.`})
     } else if (tournament.requiredRoleId && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
-        return interaction.editReply({ content: `Sorry you must have the <@&${tournament?.requiredRoleId}> role to join ${tournament.name}.`})
+        return interaction.editReply({ content: `Sorry, you must have the <@&${tournament?.requiredRoleId}> role to join ${tournament.name}.`})
     }
 
     const team = tournament.isTeamTournament ? await Team.findOne({
@@ -1292,7 +1292,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
     const winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id }, include: Player })
     
     if (!losingEntry || !winningEntry) {
-        interaction.editReply({ content: `Sorry I could not find your tournament in the database.`})
+        interaction.editReply({ content: `Sorry, I could not find your tournament in the database.`})
         return false
     }
 
@@ -1461,7 +1461,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     const winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id }, include: [Player, Team] })
 
     if (!losingEntry || !winningEntry) {
-        await interaction.editReply({ content: `Sorry I could not find your tournament in the database.`})
+        await interaction.editReply({ content: `Sorry, I could not find your tournament in the database.`})
         return false
     }
 
@@ -3505,7 +3505,7 @@ export const processNoShow = async (interaction, tournamentId, userId) => {
     if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
     
     const noShowEntry = await Entry.findOne({ where: { playerId: noShowPlayer.id, tournamentId: tournament.id } })
-    if (!noShowEntry) return await interaction.editReply({ content: `Sorry I could not find that player's tournament entry in the database.`})
+    if (!noShowEntry) return await interaction.editReply({ content: `Sorry, I could not find that player's tournament entry in the database.`})
 
     const matchesArr = await getMatches(server, tournament.id)
     let winnerParticipantId = false

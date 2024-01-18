@@ -47,7 +47,7 @@ export default {
         if (!tournament) return interaction.reply({ content: `There is no pending team tournament.`})
 
         if (tournament.requiredRoleId && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
-            return interaction.editReply({ content: `Sorry you must have the <@&${tournament.requiredRoleId}> role to register a team for ${tournament.name}. ${tournament.logo}`})
+            return interaction.editReply({ content: `Sorry, you must have the <@&${tournament.requiredRoleId}> role to register a team for ${tournament.name}. ${tournament.logo}`})
         }
 
         const teamExists = await Team.count({
