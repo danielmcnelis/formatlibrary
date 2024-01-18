@@ -48,7 +48,7 @@ export default {
 
             if (tournament.name?.includes('Multi-Format')) {
                 if (!team) {
-                    return await interaction.editReply(tournament.channelId).send({ content: `Sorry, you cannot register for ${tournament.name} ${tournament.logo} as a Free Agent. A designated captain must first purchase the MFS Captain's Pass then register your team.`}).catch((err) => console.log(err))
+                    return await interaction.editReply({ content: `Sorry, you cannot register for ${tournament.name} ${tournament.logo} as a Free Agent. A designated captain must first purchase the MFS Captain's Pass then register your team.`}).catch((err) => console.log(err))
                 } else if (format?.name !== 'Goat' && format?.name !== 'Edison' && format?.name !== 'Tengu Plant') {
                     return await interaction.editReply({ content: `To register for ${tournament.name} ${tournament.logo} you must submit a deck for Goat, Edison, or Tengu Plant Format.` })
                 } else if (!entry) {
