@@ -36,15 +36,8 @@ export default {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         if (teamName.length > 30) return await interaction.reply({ content: `Sorry, team names must be 30 characters or fewer in length.`})
-        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
 
-        const tournament = format ? await Tournament.findOne({
-            where: {
-                isTeamTournament: true,
-                state: 'pending',
-                formatId: format.id
-            }
-        }) : await Tournament.findOne({
+        const tournament = await Tournament.findOne({ 
             where: {
                 isTeamTournament: true,
                 state: 'pending'
@@ -52,6 +45,10 @@ export default {
         })
 
         if (!tournament) return interaction.reply({ content: `There is no pending team tournament.`})
+
+        if (tournament.requiredRoleId && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
+            return interaction.editReply({ content: `Sorry you must have the <@&${tournament.requiredRoleId}> role to register a team for ${tournament.name}.`})
+        }
 
         const teamExists = await Team.count({
             where: {

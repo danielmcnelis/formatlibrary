@@ -98,7 +98,10 @@ export const Tournament = db.define('tournaments', {
 
 Tournament.findRecent = async (format, serverId) => await Tournament.findAll({ 
     where: {
-        formatId: format?.id || {[Op.not]: null},
+        [Op.or]: {
+            formatId: format?.id || {[Op.not]: null},
+            name: {[Op.substring]: 'Multi-Format Spectacular'}
+        },
         isTopCutTournament: false,
         serverId
     },
@@ -109,7 +112,10 @@ Tournament.findRecent = async (format, serverId) => await Tournament.findAll({
 Tournament.findActive = async (format, serverId, orderDirection = 'ASC') => await Tournament.findAll({ 
     where: {
         state: { [Op.not]: 'complete'},
-        formatId: format?.id || {[Op.not]: null},
+        [Op.or]: {
+            formatId: format?.id || {[Op.not]: null},
+            name: {[Op.substring]: 'Multi-Format Spectacular'}
+        },
         serverId
     },
     order: [['createdAt', orderDirection]]
@@ -119,7 +125,10 @@ Tournament.findByState = async (state, format, serverId, orderDirection = 'ASC')
     where: {
         state,
         serverId,
-        formatId: format?.id || {[Op.not]: null}
+        [Op.or]: {
+            formatId: format?.id || {[Op.not]: null},
+            name: {[Op.substring]: 'Multi-Format Spectacular'}
+        }
     },
     order: [['createdAt', orderDirection]]
 })

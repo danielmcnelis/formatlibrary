@@ -537,6 +537,8 @@ export const joinTournament = async (interaction, tournamentId) => {
         }
     })
 
+    let format = await Format.findByServerOrChannelId(server, interaction.channelId)
+    
     if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
         return interaction.editReply({ content: `Sorry premium tournaments are only open to premium server subscribers.`})
     } else if (tournament.requiredRoleId && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
@@ -557,22 +559,40 @@ export const joinTournament = async (interaction, tournamentId) => {
     let entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournamentId }})
     interaction.editReply({ content: `Please check your DMs.` })
     
-    const simName = tournament.format?.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.member, player, 'OPTCGSim') :
+    if (tournament.name?.includes('Multi-Format') && !format?.name?.includes('Goat') && !format?.name?.includes('Edison') && !format?.name?.includes('Tengu') ) {        
+        return await interaction.editReply({ content: `To register for ${tournament.name} ${tournament.logo} you must submit a deck for Goat, Edison, or Tengu Plant Format.` })
+    }
+
+    if (tournament.name?.includes('Multi-Format') && !entry) {
+        const count = await Entry.count({
+            where: {
+                teamId: team.id,
+                slot: format.name
+            }
+        })
+
+        if (count) {
+            return await interaction.editReply({ content: `Sorry, your team already has a player registered for ${format.name} Format. ${format.emoji}` })
+        }
+    }
+
+    const simName = tournament.format?.category === 'OP' || format?.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.member, player, 'OPTCGSim') :
         player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
 
     if (!simName) return
 
-    const data = tournament.format?.category === 'OP' ? await getOPDeckList(interaction.member, player) :
-        await getDeckList(interaction.member, player, tournament.format)
+    const data = tournament.format?.category === 'OP' || format?.category === 'OP' ? await getOPDeckList(interaction.member, player) :
+        await getDeckList(interaction.member, player, tournament.format || format)
 
     if (!data) return
 
     if (!entry && tournament.isTeamTournament && team) {
-        const slot = team.playerAId === player.id ? 'A' :
-            team.playerBId === player.id ? 'B' :
-            team.playerCId === player.id ? 'C' :
-            null
-
+        const slot = tournament.name?.includes('Multi-Format') ? format.name :
+                team.playerAId === player.id ? 'A' :
+                team.playerBId === player.id ? 'B' :
+                team.playerCId === player.id ? 'C' :
+                null
+                
         try { 
             await Entry.create({
                 playerName: player.globalName || player.discordName,
@@ -590,7 +610,7 @@ export const joinTournament = async (interaction, tournamentId) => {
             return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
         }
 
-        const deckAttachments = tournament.format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
+        const deckAttachments = tournament.format?.category === 'OP' || format?.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
         interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
@@ -659,7 +679,7 @@ export const joinTournament = async (interaction, tournamentId) => {
             active: true
         })
 
-        const deckAttachments = tournament.format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
+        const deckAttachments = tournament.format?.category === 'OP' || format?.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
         interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {

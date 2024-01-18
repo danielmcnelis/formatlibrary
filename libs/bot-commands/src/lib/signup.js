@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Entry, Format, Player, Server, Tournament } from '@fl/models'
-import { askForSimName, getDeckList, getOPDeckList, postParticipant, selectTournament } from '@fl/bot-functions'
+import { Entry, Format, Player, Server, Team, Tournament } from '@fl/models'
+import { askForSimName, getDeckList, getOPDeckList, getSpeedDeckList, postParticipant, selectTournament } from '@fl/bot-functions'
 import { isMod, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
@@ -34,8 +34,41 @@ export default {
 
         let entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournament.id }})
         if (!format) format = await Format.findOne({ where: { name: {[Op.iLike]: tournament.formatName } }})
-        if (!format) return await interaction.editReply(`Unable to determine what format is being played in ${tournament?.name}. Please contact an administrator.`)
+        if (!format) return await interaction.editReply({ content: `Please register in a specific format channel.`})
+        let team 
+
+        if (tournament.isTeamTournament) {
+            team = await Team.findOne({
+                where: {
+                    tournamentId: tournament.id,
+                    [Op.or]: {
+                        playerAId: player.id,
+                        playerBId: player.id,
+                        playerCId: player.id,
+                    }
+                }
+            })
+
+            if (tournament.name?.includes('Multi-Format')) {
+                if (!team) {
+                    return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `Sorry you cannot register for ${tournament.name} ${tournament.logo} as a Free Agent. You must have a designated captain purchase the 3v3 Captain's Pass and register your team.`}).catch((err) => console.log(err))
+                } else if (format?.id !== 8 & format?.id !== 8 && format?.id !== 8) {
+                    return await interaction.editReply({ content: `To register for ${tournament.name} ${tournament.logo} you must submit a deck for Goat, Edison, or Tengu Plant Format.` })
+                } else if (!entry) {
+                    const count = await Entry.count({
+                        where: {
+                            teamId: team?.id,
+                            slot: format.name
+                        }
+                    })
         
+                    if (count) {
+                        return await interaction.editReply({ content: `That team already has a player registered for ${format.name} Format. ${format.emoji}` })
+                    }
+                }
+            }
+        }
+  
         interaction.editReply({ content: `Please check your DMs.`})
         
         const simName = format.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.member, player, 'OPTCGSim') :
@@ -44,16 +77,94 @@ export default {
         if (!simName) return
 
         const data = format.category === 'OP' ? await getOPDeckList(interaction.member, player, true) :
+            format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
             await getDeckList(interaction.member, player, format, true)
 
-        if (!data) return
+        if (!data) return await interaction.editReplay({ content: `Error processing deck list.` })
 
-        if (!entry) {
+        if (entry) {
+            if (!entry.participantId) {
+                const { participant } = await postParticipant(server, tournament, player).catch((err) => console.log(err))
+        
+                if (!participant) {
+                    await entry.destroy()
+                    return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
+                } else {
+                    await entry.update({ participantId: participant.id })
+                }
+            }
+
+
+            await entry.update({ 
+                url: data.url, 
+                ydk: data.ydk || data.opdk, 
+                skillCardId: data.skillCard?.id
+            })
+            
+            interaction.member.send({ content: `Thanks! I have ${player.globalName || player.discordName}'s updated deck list for the tournament.` }).catch((err) => console.log(err))
+            return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator resubmitted <@${player.discordId}>'s deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+        } else if (!entry && !tournament.isTeamTournament) {
             try {
                 entry = await Entry.create({
                     playerName: player.globalName || player.discordName,
                     url: data.url,
                     ydk: data.ydk || data.opdk,
+                    skillCardId: data.skillCard?.id,
+                    playerId: player.id,
+                    compositeKey: player.id + tournament.id,
+                    tournamentId: tournament.id
+                })
+            } catch (err) {
+                console.log(err)
+                return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
+            }
+                                           
+            const { participant } = await postParticipant(server, tournament, player)
+
+            if (!participant) {
+                await entry.destroy()
+                return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register ${player.globalName || player.discordName} on Challonge for ${tournament?.name}. ${tournament.logo}`})
+            }
+
+            await entry.update({ participantId: participant.id })
+            member.roles.add(server.tourRole).catch((err) => console.log(err))
+            interaction.member.send({ content: `Thanks! I have all the information we need for ${player.globalName || player.discordName}.` }).catch((err) => console.log(err))
+            return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament?.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+        } else if (!entry && tournament.isTeamTournament && team) {
+            const slot = tournament.name?.includes('Multi-Format') ? format.name :
+                team.playerAId === player.id ? 'A' :
+                team.playerBId === player.id ? 'B' :
+                team.playerCId === player.id ? 'C' :
+                null
+
+            try {
+                await Entry.create({
+                    playerName: player.globalName || player.discordName,
+                    url: data.url,
+                    ydk: data.ydk || data.opdk,
+                    skillCardId: data.skillCard?.id,
+                    participantId: team.participantId,
+                    playerId: player.id,
+                    tournamentId: tournament.id,
+                    compositeKey: player.id + tournament.id,
+                    slot: slot,
+                    teamId: team.id
+                })
+            } catch (err) {
+                console.log(err)
+                return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
+            }
+
+            member.roles.add(server.tourRole).catch((err) => console.log(err))
+            interaction.member.send({ content: `Thanks! I have all the information we need for ${player.globalName || player.discordName}.`})
+            return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> (${team.name}) for ${tournament?.name}! ${tournament.logo}`}).catch((err) => console.log(err))        
+        } else if (!entry && tournament.isTeamTournament && !team) {
+            try { 
+                await Entry.create({
+                    playerName: player.globalName || player.discordName,
+                    url: data.url,
+                    ydk: data.ydk || data.opdk,
+                    skillCardId: data.skillCard?.id,
                     playerId: player.id,
                     tournamentId: tournament.id,
                     compositeKey: player.id + tournament.id
@@ -62,32 +173,10 @@ export default {
                 console.log(err)
                 return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
             }
-                                           
-            const { participant } = await postParticipant(server, tournament, player)
-            if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register ${player.globalName || player.discordName} on Challonge for ${tournament?.name}. ${tournament.logo}`})
-            await entry.update({ participantId: participant.id })
 
             member.roles.add(server.tourRole).catch((err) => console.log(err))
-            interaction.member.send({ content: `Thanks! I have all the information we need for ${player.globalName || player.discordName}.` }).catch((err) => console.log(err))
-            return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament?.name}! ${tournament.logo}`}).catch((err) => console.log(err))
-        } else if (entry && entry.active === false) {                      
-            const { participant } = await postParticipant(server, tournament, player)
-            if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament?.name}. ${tournament.logo}`})
-                      
-            await entry.update({
-                url: data.url,
-                ydk: data.ydk || data.opdk,
-                participantId: participant.id,
-                active: true
-            })
-            
-            member.roles.add(server.tourRole).catch((err) => console.log(err))
-            interaction.member.send({ content: `Thanks! I have all the information we need for ${player.globalName || player.discordName}.`}).catch((err) => console.log(err))
-            return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
-        } else if (entry && entry.active === true) {
-            await entry.update({ url: data.url, ydk: data.ydk || data.opdk })
-            interaction.member.send({ content: `Thanks! I have ${player.globalName || player.discordName}'s updated deck list for the tournament.` }).catch((err) => console.log(err))
-            return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator resubmitted <@${player.discordId}>'s deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
+            interaction.member.send({ content: `Thanks! I have all the information we need for ${player.globalName || player.discordName}.`})
+            return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> as a Free Agent for ${tournament?.name}! ${tournament.logo}`}).catch((err) => console.log(err))        
         }
     }
 }
