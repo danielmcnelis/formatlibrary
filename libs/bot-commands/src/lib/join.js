@@ -46,6 +46,9 @@ export default {
                 }
             })
 
+            console.log('!!team', !!team)
+            console.log('tournament.name', tournament.name)
+
             if (tournament.name?.includes('Multi-Format')) {
                 if (!team) {
                     return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `Sorry you cannot register for ${tournament.name} ${tournament.logo} as a Free Agent. You must have a designated captain purchase the 3v3 Captain's Pass and register your team.`}).catch((err) => console.log(err))
