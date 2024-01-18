@@ -47,7 +47,7 @@ export default {
         if (!tournament) return interaction.reply({ content: `There is no pending team tournament.`})
 
         if (tournament.requiredRoleId && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
-            return interaction.editReply({ content: `Sorry you must have the <@&${tournament.requiredRoleId}> role to register a team for ${tournament.name}.`})
+            return interaction.editReply({ content: `Sorry you must have the <@&${tournament.requiredRoleId}> role to register a team for ${tournament.name}. ${tournament.logo}`})
         }
 
         const teamExists = await Team.count({
@@ -56,7 +56,7 @@ export default {
             }
         })
 
-        if (teamExists) return interaction.editReply({ content: `Sorry, the team name, ${teamName}, is already taken for ${tournament.name}.`})
+        if (teamExists) return interaction.editReply({ content: `Sorry, the team name, ${teamName}, is already taken for ${tournament.name}. ${tournament.logo}`})
 
         const captainCount = await Team.count({
             where: {
@@ -92,16 +92,16 @@ export default {
         })
 
         if (captainCount) {
-            return await interaction.editReply({ content: `Sorry, you're already registered to a team for ${tournament.name}.`})    
+            return await interaction.editReply({ content: `Sorry, you're already registered to a team for ${tournament.name}. ${tournament.logo}`})    
         } else if (teammate1Count) {
-            return await interaction.editReply({ content: `Sorry, ${teammate1.name} is already registered to a team for ${tournament.name}.`})    
+            return await interaction.editReply({ content: `Sorry, ${teammate1.name} is already registered to a team for ${tournament.name}. ${tournament.logo}`})    
         } else if (teammate2Count) {
-            return await interaction.editReply({ content: `Sorry, ${teammate2.name} is already registered to a team for ${tournament.name}.`}) 
+            return await interaction.editReply({ content: `Sorry, ${teammate2.name} is already registered to a team for ${tournament.name}. ${tournament.logo}`}) 
         } else {
             const teammates = shuffleArray([captain, teammate1, teammate2])
 
             const { participant } = await postParticipant(server, tournament, { name: teamName })
-            if (!participant) return await interaction.editReply({ content: `Error: Unable to register on Challonge for ${tournament.name} ${tournament.logo}.`})
+            if (!participant) return await interaction.editReply({ content: `Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
             
             const team = await Team.create({
                 name: teamName,
