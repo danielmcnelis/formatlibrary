@@ -91,11 +91,17 @@ export default {
                 }
             }
 
+            let slot
+            if (tournament.isTeamTournament && tournament.name?.includes('Multi-Format')) {
+                slot = format.name
+            }
+            
             await entry.update({ 
                 url: data.url, 
-                ydk: data.ydk || data.opdk, 
-                skillCardId: data.skillCard?.id
-            })
+                ydk: data.ydk || data.opdk,
+                skillCardId: data.skillCard?.id,
+                slot: slot
+            }) 
 
             const deckAttachments = format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
             interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
