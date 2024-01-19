@@ -262,12 +262,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
             }
         }
 
+        const decipherRankedInput = (input = '') => !!input.toLowerCase()?.includes('u')
+
         const tournament_type = interaction.fields.fields.get('type') ? decipherTournamentTypeInput(interaction.fields.getTextInputValue('type')) : null
         const abbreviation = interaction.fields.fields.get('abbreviation') ? interaction.fields.getTextInputValue('abbreviation') : null
         const url = interaction.fields.fields.get('url') ? interaction.fields.getTextInputValue('url') : null
+        const isUnranked = interaction.fields.fields.get('ranked') ? decipherRankedInput(interaction.fields.getTextInputValue('ranked')) : null
         const tournamentId = interaction.customId?.split('-')[1]
 
-        return updateTournament(interaction, tournamentId, name, abbreviation, tournament_type, url)
+        return updateTournament(interaction, tournamentId, name, abbreviation, tournament_type, url, isUnranked)
     } else if (interaction.customId?.includes('tiebreakers')) {
         const decipherTieBreakerInput = (input) => {
             if (input.includes('mb') || input.includes('med')) {

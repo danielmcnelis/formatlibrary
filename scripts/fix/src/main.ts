@@ -1026,101 +1026,101 @@ import { parse } from 'csv-parse'
 // })()
 
 
-;(async () => {
-    const tournament = await Tournament.findOne({ where: {id: '103102119995051'}})
-    const timestamp = new Date(tournament.createdAt).getTime()
-    let i = 0
-    fs.createReadStream("./goatworlds2023.csv")
-        .pipe(parse({ delimiter: ",", from_line: 2 }))
-        .on("data", async (row) => {
-            const [winnerName, loserName, round] = row
-            let winningPlayer
-            let losingPlayer
+// ;(async () => {
+//     const tournament = await Tournament.findOne({ where: {id: '103102119995051'}})
+//     const timestamp = new Date(tournament.createdAt).getTime()
+//     let i = 0
+//     fs.createReadStream("./goatworlds2023.csv")
+//         .pipe(parse({ delimiter: ",", from_line: 2 }))
+//         .on("data", async (row) => {
+//             const [winnerName, loserName, round] = row
+//             let winningPlayer
+//             let losingPlayer
 
-            let winners = await Player.findAll({
-                where: {
-                    [Op.or]: {
-                        discordName: {[Op.iLike]: winnerName},
-                        globalName: {[Op.iLike]: winnerName}
-                    }
-                }
-            })
+//             let winners = await Player.findAll({
+//                 where: {
+//                     [Op.or]: {
+//                         discordName: {[Op.iLike]: winnerName},
+//                         globalName: {[Op.iLike]: winnerName}
+//                     }
+//                 }
+//             })
 
-            if (!winners.length) {
-                winners = [...await Alius.findAll({
-                    where: {
-                        formerName: {[Op.iLike]: winnerName}
-                    },
-                    include: Player
-                })].map((a) => a.player)
-            }
+//             if (!winners.length) {
+//                 winners = [...await Alius.findAll({
+//                     where: {
+//                         formerName: {[Op.iLike]: winnerName}
+//                     },
+//                     include: Player
+//                 })].map((a) => a.player)
+//             }
     
-            if (!winners.length) {
-                console.log(`CANNOT FIND WINNING PLAYER matching participant: ${winnerName}`)
-            } else if (winners.length > 1) {
-                console.log(`Found multiple winners: ${winners.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`)
-            } else {
-                winningPlayer = winners[0]
-            }
+//             if (!winners.length) {
+//                 console.log(`CANNOT FIND WINNING PLAYER matching participant: ${winnerName}`)
+//             } else if (winners.length > 1) {
+//                 console.log(`Found multiple winners: ${winners.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`)
+//             } else {
+//                 winningPlayer = winners[0]
+//             }
 
-            let losers = await Player.findAll({
-                where: {
-                    [Op.or]: {
-                        discordName: {[Op.iLike]: loserName},
-                        globalName: {[Op.iLike]: loserName}
-                    }
-                }
-            })
+//             let losers = await Player.findAll({
+//                 where: {
+//                     [Op.or]: {
+//                         discordName: {[Op.iLike]: loserName},
+//                         globalName: {[Op.iLike]: loserName}
+//                     }
+//                 }
+//             })
 
-            if (!losers.length) {
-                losers = [...await Alius.findAll({
-                    where: {
-                        formerName: {[Op.iLike]: loserName}
-                    },
-                    include: Player
-                })].map((a) => a.player)
-            }
+//             if (!losers.length) {
+//                 losers = [...await Alius.findAll({
+//                     where: {
+//                         formerName: {[Op.iLike]: loserName}
+//                     },
+//                     include: Player
+//                 })].map((a) => a.player)
+//             }
 
-            if (!losers.length) {
-                console.log(`CANNOT FIND LOSING PLAYER matching participant: ${loserName}`)
-            } else if (losers.length > 1) {
-                console.log(`Found multiple losers: ${losers.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`)
-            } else {
-                losingPlayer = losers[0]
-            }
+//             if (!losers.length) {
+//                 console.log(`CANNOT FIND LOSING PLAYER matching participant: ${loserName}`)
+//             } else if (losers.length > 1) {
+//                 console.log(`Found multiple losers: ${losers.map((p, index) => `${index + 1}. ${p.discordName} (${p.discordId})`).join('\n')}`)
+//             } else {
+//                 losingPlayer = losers[0]
+//             }
 
-            if (winningPlayer && losingPlayer) {
-                const count = await Match.count({
-                    where: {
-                        tournamentId: tournament.id,
-                        winnerId: winningPlayer.id,
-                        loserId: losingPlayer.id
-                    }
-                })
+//             if (winningPlayer && losingPlayer) {
+//                 const count = await Match.count({
+//                     where: {
+//                         tournamentId: tournament.id,
+//                         winnerId: winningPlayer.id,
+//                         loserId: losingPlayer.id
+//                     }
+//                 })
 
-                if (!count) {
-                    const createdAt = new Date(timestamp + i * 60 * 1000)
+//                 if (!count) {
+//                     const createdAt = new Date(timestamp + i * 60 * 1000)
                         
-                    await Match.create({
-                        formatName: 'Goat',
-                        formatId: 8,
-                        round: round,
-                        winner: winningPlayer.name,
-                        loser: losingPlayer.name,
-                        winnerId: winningPlayer.id,
-                        loserId: losingPlayer.id,
-                        isTournament: true,
-                        tournamentId: '103102119995051',
-                        serverId: '414551319031054346',
-                        createdAt: createdAt
-                    })
+//                     await Match.create({
+//                         formatName: 'Goat',
+//                         formatId: 8,
+//                         round: round,
+//                         winner: winningPlayer.name,
+//                         loser: losingPlayer.name,
+//                         winnerId: winningPlayer.id,
+//                         loserId: losingPlayer.id,
+//                         isTournament: true,
+//                         tournamentId: '103102119995051',
+//                         serverId: '414551319031054346',
+//                         createdAt: createdAt
+//                     })
 
-                    i++
-                    console.log(`SAVED NEW MATCH data for ${winnerName} > ${loserName} (Round ${round})`)
-                } else {
-                    console.log(`already had match data for ${winnerName} > ${loserName} (Round ${round})`)
-                }
-            }
+//                     i++
+//                     console.log(`SAVED NEW MATCH data for ${winnerName} > ${loserName} (Round ${round})`)
+//                 } else {
+//                     console.log(`already had match data for ${winnerName} > ${loserName} (Round ${round})`)
+//                 }
+//             }
 
-    })
-})()
+//     })
+// })()

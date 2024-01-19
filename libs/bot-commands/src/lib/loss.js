@@ -133,47 +133,51 @@ export default {
                 return await interaction.editReply({ content: `Sorry, ${winningPlayer.globalName || winningPlayer.discordName} is not your ${format.name} Iron opponent. ${server.emoji || format.emoji} ${emojis.iron}`})
             }
         }
+
+        let match
+        if (!isTournament || !tournament?.isUnranked) {
+            const origEloWinner = winnerStats.elo || 500.00
+            const origEloLoser = loserStats.elo || 500.00
+            const delta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
             
-        const origEloWinner = winnerStats.elo || 500.00
-        const origEloLoser = loserStats.elo || 500.00
-        const delta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
-        
-        winnerStats.elo = origEloWinner + delta
-        if (origEloWinner + delta > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + delta
-        winnerStats.backupElo = origEloWinner
-        winnerStats.wins++
-        winnerStats.games++
-        winnerStats.inactive = false
-        winnerStats.streak++
-        if (challongeMatch && tournament?.pointsEligible) winnerStats.tournamentPoints += challongeMatch.round + 1
-        if (winnerStats.streak >= winnerStats.bestStreak) winnerStats.bestStreak++
-        if (!await Match.checkIfVanquished(format.id, winningPlayer.id, losingPlayer.id)) winnerStats.vanquished++
-        await winnerStats.save()
-
-        loserStats.elo = origEloLoser - delta
-        loserStats.backupElo = origEloLoser
-        loserStats.losses++
-        loserStats.games++
-        loserStats.inactive = false
-        loserStats.streak = 0
-        if (challongeMatch?.round === 1 && tournament?.pointsEligible) loserStats.tournamentPoints++
-        await loserStats.save()
-
-        const match = await Match.create({
-            winner: winningPlayer.globalName || winningPlayer.discordName,
-            winnerId: winningPlayer.id,
-            loser: losingPlayer.globalName || losingPlayer.discordName,
-            loserId: losingPlayer.id,
-            isTournament: isTournament,
-            tournamentId: tournamentId,
-            challongeMatchId: challongeMatch?.id,
-            round: challongeMatch?.round,
-            formatName: format.name,
-            formatId: format.id,
-            delta: delta,
-            serverId: serverId,
-            internal: server.internalLadder
-        })
+            winnerStats.elo = origEloWinner + delta
+            if (origEloWinner + delta > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + delta
+            winnerStats.backupElo = origEloWinner
+            winnerStats.wins++
+            winnerStats.games++
+            winnerStats.inactive = false
+            winnerStats.streak++
+            if (challongeMatch && tournament?.pointsEligible) winnerStats.tournamentPoints += challongeMatch.round + 1
+            if (winnerStats.streak >= winnerStats.bestStreak) winnerStats.bestStreak++
+            if (!await Match.checkIfVanquished(format.id, winningPlayer.id, losingPlayer.id)) winnerStats.vanquished++
+            await winnerStats.save()
+    
+            loserStats.elo = origEloLoser - delta
+            loserStats.backupElo = origEloLoser
+            loserStats.losses++
+            loserStats.games++
+            loserStats.inactive = false
+            loserStats.streak = 0
+            if (challongeMatch?.round === 1 && tournament?.pointsEligible) loserStats.tournamentPoints++
+            await loserStats.save()
+    
+            match = await Match.create({
+                winner: winningPlayer.globalName || winningPlayer.discordName,
+                winnerId: winningPlayer.id,
+                loser: losingPlayer.globalName || losingPlayer.discordName,
+                loserId: losingPlayer.id,
+                isTournament: isTournament,
+                tournamentId: tournamentId,
+                challongeMatchId: challongeMatch?.id,
+                round: challongeMatch?.round,
+                formatName: format.name,
+                formatId: format.id,
+                delta: delta,
+                serverId: serverId,
+                internal: server.internalLadder
+            })
+        }
+            
 
         if (!isTournament && !isIronMatch) {
             const pairing = await Pairing.findOne({

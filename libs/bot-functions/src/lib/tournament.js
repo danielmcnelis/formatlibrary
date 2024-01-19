@@ -2393,7 +2393,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 `You created a new tournament:` + 
                 `\nName: ${name} ${logo}` + 
                 `\nFormat: ${format.name} ${server.emoji || format.emoji}` + 
-                `\nType: ${capitalize(data.tournament.tournament_type, true)}` +
+                `\nType: ${capitalize(data.tournament.tournament_type, true)}${tournament.isUnranked ? ' (Unranked)' : ''}` +
                 `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
             })
         } 
@@ -2459,7 +2459,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     `You created a new tournament:` + 
                     `\nName: ${data.tournament.name} ${logo}` + 
                     `\nFormat: ${format.name} ${server.emoji || format.emoji}` + 
-                    `\nType: ${capitalize(data.tournament.tournament_type, true)}` +
+                    `\nType: ${capitalize(data.tournament.tournament_type, true)}${tournament.isUnranked ? ' (Unranked)' : ''}` +
                     `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
                 })
             } 
@@ -2471,7 +2471,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
 }
 
 // UPDATE TOURNAMENT
-export const updateTournament = async (interaction, tournamentId, name, abbreviation, tournament_type, url) => {
+export const updateTournament = async (interaction, tournamentId, name, abbreviation, tournament_type, url, isUnranked) => {
     const server = !interaction.guildId ? {} : 
         await Server.findOne({ where: { id: interaction.guildId }}) || 
         await Server.create({ id: interaction.guildId, name: interaction.guild.name })
@@ -2481,6 +2481,8 @@ export const updateTournament = async (interaction, tournamentId, name, abbrevia
             id: tournamentId
         }
     })
+
+    await tournament.update({ isUnranked: isUnranked })
 
     try {
         const { status, data } = await axios({
@@ -2508,7 +2510,7 @@ export const updateTournament = async (interaction, tournamentId, name, abbrevia
                 `Updated tournament settings:` + 
                 `\nName: ${data.tournament.name} ${tournament.logo}` + 
                 `\nAbbreviation: ${tournament.abbreviation} ${server.emoji || tournament.emoji}` + 
-                `\nType: ${capitalize(data.tournament.tournament_type, true)}` +
+                `\nType: ${capitalize(data.tournament.tournament_type, true)}${tournament.isUnranked ? ' (Unranked)' : ''}` +
                 `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
             })
         } else {

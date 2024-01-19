@@ -29,6 +29,10 @@ export const Tournament = db.define('tournaments', {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
+  isUnranked: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
   pointsEligible: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
