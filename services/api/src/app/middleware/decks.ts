@@ -771,19 +771,19 @@ export const decksId = async (req, res, next) => {
       .split('#main')[1]
       .split('#extra')[0]
       .split('\n')
-      .trim()
       .filter((e) => e.length)
+      .map((e) => e.trim())
     const extraKonamiCodes = deck.ydk
       .split('#extra')[1]
       .split('!side')[0]
       .split('\n')
-      .trim()
       .filter((e) => e.length)
+      .map((e) => e.trim())
     const sideKonamiCodes = deck.ydk
       .split('!side')[1]
       .split('\n')
-      .trim()
       .filter((e) => e.length)
+      .map((e) => e.trim())
 
     console.log('mainKonamiCodes', mainKonamiCodes)
     for (let i = 0; i < mainKonamiCodes.length; i++) {
