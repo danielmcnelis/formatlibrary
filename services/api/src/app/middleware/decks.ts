@@ -811,14 +811,13 @@ export const decksId = async (req, res, next) => {
       .split('\n')
       .filter((e) => e.length)
       .map((e) => e.trim())
-      
+
     const sideKonamiCodes = deck.ydk
       .split('!side')[1]
       .split('\n')
       .filter((e) => e.length)
       .map((e) => e.trim())
 
-    console.log('mainKonamiCodes', mainKonamiCodes)
     for (let i = 0; i < mainKonamiCodes.length; i++) {
       let konamiCode = mainKonamiCodes[i]
       while (konamiCode.length < 8) konamiCode = '0' + konamiCode
@@ -849,7 +848,6 @@ export const decksId = async (req, res, next) => {
 
     main.sort(sortFn)
 
-    console.log('extraKonamiCodes', extraKonamiCodes)
     for (let i = 0; i < extraKonamiCodes.length; i++) {
       let konamiCode = extraKonamiCodes[i]
       while (konamiCode.length < 8) konamiCode = '0' + konamiCode
@@ -866,7 +864,6 @@ export const decksId = async (req, res, next) => {
 
     extra.sort(sortFn)
 
-    console.log('sideKonamiCodes', sideKonamiCodes)
     for (let i = 0; i < sideKonamiCodes.length; i++) {
       let konamiCode = sideKonamiCodes[i]
       while (konamiCode.length < 8) konamiCode = '0' + konamiCode
