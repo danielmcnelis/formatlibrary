@@ -363,7 +363,7 @@ export const composeThumbnails = async (interaction, event) => {
             
 // DISPLAY DECKS
 export const displayDecks = async (interaction, event) => {
-    const minPlacement = event.tournament.topCut ? event.tournament.topCut :
+    const minPlacement = event.tournament?.topCut ? event.tournament?.topCut :
         event.size <= 8 ? 1 :
         event.size > 8 && event.size <= 16 ? 2 :
         event.size > 16 && event.size <= 24 ? 3 :
