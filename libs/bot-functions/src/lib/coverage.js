@@ -175,7 +175,12 @@ export const composeBlogPost = async (interaction, event) => {
         const publishDate = dateToVerbose(event.endDate, true, true, false)
     
         const main = []
-        const mainKonamiCodes = deck.ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length)
+        const mainKonamiCodes = deck.ydk
+            .split('#main')[1]
+            .split('#extra')[0]
+            .split('\n')
+            .filter((e) => e.length)
+            .map((e) => e.trim())
 
         for (let i = 0; i < mainKonamiCodes.length; i++) {
             let konamiCode = mainKonamiCodes[i]
@@ -300,7 +305,12 @@ export const composeThumbnails = async (interaction, event) => {
         const deck = decks[i]
         console.log(`drawing ${deck.builder}'s deck...`)
         const main = []
-        const mainKonamiCodes = deck.ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length)
+        const mainKonamiCodes = deck.ydk
+            .split('#main')[1]
+            .split('#extra')[0]
+            .split('\n')
+            .filter((e) => e.length)
+            .map((e) => e.trim())
 
         for (let i = 0; i < mainKonamiCodes.length; i++) {
             let konamiCode = mainKonamiCodes[i]
