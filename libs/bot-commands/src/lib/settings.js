@@ -85,13 +85,18 @@ export default {
             .setStyle(TextInputStyle.Short)
             .setPlaceholder(tournament.isUnranked ? 'unranked' : 'ranked')
             .setRequired(false)
-
+        
         const nameRow = new ActionRowBuilder().addComponents(name)
         const urlRow = new ActionRowBuilder().addComponents(url)
         const abbreviationRow = new ActionRowBuilder().addComponents(abbreviation)
-        const tournamentTypeRow = new ActionRowBuilder().addComponents(tournamentType)
-        const rankedRow = new ActionRowBuilder().addComponents(ranked)
-        modal.addComponents(nameRow, urlRow, abbreviationRow, tournamentTypeRow, rankedRow)
+        
+        if (tournament.state === 'underway') {
+            modal.addComponents(nameRow, urlRow, abbreviationRow)
+        } else {
+            const tournamentTypeRow = new ActionRowBuilder().addComponents(tournamentType)
+            const rankedRow = new ActionRowBuilder().addComponents(ranked)
+            modal.addComponents(nameRow, urlRow, abbreviationRow, tournamentTypeRow, rankedRow)
+        }
 
         return await interaction.showModal(modal)        
     }
