@@ -36,7 +36,6 @@ import {
 import { SocketProvider } from '@fl/context'
 import {config} from '@fl/config'
 import io from 'socket.io-client'
-const socket = io(config.siteUrl)
 
 export const Router = () => {
   return (
@@ -55,8 +54,8 @@ export const Router = () => {
 					<Route path="/cube-maker" element=<Page element=<CubeMaker /> /> />
 					<Route path="/rated-lobby" element=<Page element=<RatedLobby /> /> />
 					<Route path="/cubes/:id" element=<Page element=<CubeBrowser /> /> />
-					<Route path="/drafts/:id" element=<Page element=<SocketProvider value={socket}><DraftLobby /></SocketProvider> /> />
-					<Route path="/sealed/:id" element=<Page element=<SocketProvider value={socket}><SealedLobby /></SocketProvider> /> />
+					<Route path="/drafts/:id" element=<Page element=<SocketProvider value={io(config.siteUrl)}><DraftLobby /></SocketProvider> /> />
+					<Route path="/sealed/:id" element=<Page element=<SocketProvider value={io(config.siteUrl)}><SealedLobby /></SocketProvider> /> />
 					<Route path="/format-maker" element=<Page element=<FormatMaker /> /> />
 					<Route path="/great-library.html" element=<Page element= <CardTable /> /> />
 					<Route path="/great-library" element=<Page element= <CardTable /> /> />
