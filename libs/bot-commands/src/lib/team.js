@@ -100,7 +100,7 @@ export default {
         } else {
             const teammates = shuffleArray([captain, teammate1, teammate2])
 
-            const { participant } = await postParticipant(server, tournament, { name: teamName, discriminator: '0' })
+            const { participant } = await postParticipant(server, tournament, { discordName: teamName, discriminator: '0' })
             if (!participant) return await interaction.editReply({ content: `Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
             
             const team = await Team.create({
