@@ -1267,16 +1267,9 @@ export const getPairing = (matchesArr = [], matchId) => {
 }
 
 //POST PARTICIPANT
-export const postParticipant = async (server, tournament, player, name) => {
+export const postParticipant = async (server, tournament, player) => {
     try {
-        if (!name) {
-            if (player.discriminator === '0') {
-                name = player.discordName
-            } else {
-                name = player.discordName + '#' + player.discriminator
-            }
-        }
-
+        const name = player.discriminator === '0' ? player.discordName : player.discordName + '#' + player.discriminator
         const { data } = await axios({
             method: 'post',
             url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`,
