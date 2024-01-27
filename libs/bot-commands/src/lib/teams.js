@@ -60,6 +60,7 @@ export default {
             players.unshift(captain)
 
             for (let j = 0; j < players.length; j++) {
+                const player = players[j]
                 const entry = await Entry.findOne({
                     where: {
                         tournamentId: tournament.id,
@@ -72,8 +73,6 @@ export default {
                     j === 0 ? 'A' : 
                     j === 1 ? 'B' : 
                     'C'
-
-                const player = players[j]
 
                 const isCaptain = player.id === captain.id
 
