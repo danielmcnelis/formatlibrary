@@ -7,9 +7,9 @@
     "bot": "nx build bot --skip-nx-cache && dotenv ./runbot",
     "build": "nx build --skip-nx-cache",
     "test": "nx test",
-    "aws": "nx build formatlibrary --skip-nx-cache && nx build site --skip-nx-cache && nx build api --skip-nx-cache && nx build auth --skip-nx-cache && dotenv ./runsite && dotenv ./runapi && dotenv ./runauth",
+    "aws": "nx build formatlibrary --skip-nx-cache && nx build site --skip-nx-cache && nx build api --skip-nx-cache && nx build hub --skip-nx-cache && nx build auth --skip-nx-cache && dotenv ./runsite && dotenv ./runapi && dotenv ./runhub && dotenv ./runauth",
     "runall": "dotenv ./runsite && dotenv ./runapi && dotenv ./runauth",
-    "buildall": "nx build formatlibrary --skip-nx-cache && nx build site --skip-nx-cache && nx build api --skip-nx-cache && nx build auth --skip-nx-cache"
+    "buildall": "nx build formatlibrary --skip-nx-cache && nx build site --skip-nx-cache && nx build api --skip-nx-cache && nx build hub --skip-nx-cache && nx build auth --skip-nx-cache"
   },
   "private": true,
   "dependencies": {
