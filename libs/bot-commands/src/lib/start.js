@@ -79,7 +79,7 @@ export default {
                 interaction.editReply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${tournament.url} ${tournament.emoji}`})
                 
                 if (tournament.isTeamTournament) {
-                    return sendTeamPairings(interaction.guild, server, tournament, format, false)
+                    return sendTeamPairings(interaction.guild, server, tournament, false)
                 } else {
                     return sendPairings(interaction.guild, server, tournament, false)
                 }

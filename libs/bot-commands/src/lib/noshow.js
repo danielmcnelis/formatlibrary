@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { createPlayer, isMod, isNewUser, hasAffiliateAccess, findNoShowOpponent, getMatches, processMatchResult, selectTournament } from '@fl/bot-functions'
+import { createPlayer, isMod, isNewUser, hasAffiliateAccess, findNoShowOpponent, getMatches, processMatchResult, processTeamResult, selectTournament } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Entry, Format, Player, Server, Tournament } from '@fl/models'
 
@@ -54,7 +54,8 @@ export default {
         if (!winningEntry) return await interaction.editReply({ content: `Error: could not find opponent.`})
         const winningPlayer = winningEntry.player
         const winner = await interaction.guild?.members.fetch(winningPlayer.discordId)
-        const success = await processMatchResult(server, interaction, winner.user, winningPlayer, noShow.user, noShowPlayer, tournament, format, true)
+        const success = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, noShowPlayer, tournament, format, true) :
+            await processMatchResult(server, interaction, winner.user, winningPlayer, noShow.user, noShowPlayer, tournament, format, true)
         if (!success) return
 
         return await interaction.editReply({ content: `<@${noShowPlayer.discordId}>, your Tournament loss to <@${winningPlayer.discordId}> has been recorded as a no-show.`})	

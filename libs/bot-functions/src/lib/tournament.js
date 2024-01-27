@@ -848,7 +848,6 @@ export const setTimerForTournament = async (interaction, tournamentId, hours, mi
         }
     })
 
-    const ignoreRound1 = !tournament.deadline
     const timestamp = Date.now()
     const timeRemaining = (hours * 60 * 60 * 1000) + (minutes * 60 * 1000)
     const deadline = new Date(timestamp + timeRemaining)
@@ -869,9 +868,9 @@ export const setTimerForTournament = async (interaction, tournamentId, hours, mi
     }
 
     if (tournament.isTeamTournament) {
-        sendTeamPairings(interaction.guild, server, tournament, tournament.format, ignoreRound1)
+        sendTeamPairings(interaction.guild, server, tournament, true)
     } else {
-        sendPairings(interaction.guild, server, tournament, tournament.format, ignoreRound1)
+        sendPairings(interaction.guild, server, tournament, true)
     }
 
     return setTimeout(async () => {
@@ -1586,8 +1585,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                         tournament.type === 'double elimination' && loserNextMatch.round > 0 ? `Winners Round ${Math.abs(loserNextMatch.round)}` :
                         `Round ${loserNextMatch.round}`
 
-                    const {player: playerA1} = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player })
-                    const {player: playerA2} = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player})
+                    const {player: playerA1} = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player })
+                    const {player: playerA2} = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player})
                     
                     try {
                         const pA1Member = await interaction.guild?.members.fetch(playerA1.discordId)
@@ -1596,7 +1595,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
-                            `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                            `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                             `\nDiscord: ${playerA2.globalName ? `${playerA2.globalName} (${pA2DiscordUsername})` : pA2DiscordUsername}` +
                             `\n${format?.category === 'OP' ? `OPTCGSim: ${playerA2.opTcgSim}` : `DuelingBook: ${playerA2.duelingBook}`}`
                         )
@@ -1611,7 +1610,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
-                            `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                            `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                             `\nDiscord: ${playerA1.globalName ? `${playerA1.globalName} (${pA1DiscordUsername})` : pA1DiscordUsername}` +
                             `\n${format?.category === 'OP' ? `OPTCGSim: ${playerA1.opTcgSim}` : `DuelingBook: ${playerA1.duelingBook}`}`
                         )
@@ -1619,8 +1618,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                         console.log(err)
                     }
 
-                    const {player: playerB1} = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
-                    const {player: playerB2} = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
+                    const {player: playerB1} = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player})
+                    const {player: playerB2} = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player})
                     
                     try {
                         const pB1Member = await interaction.guild?.members.fetch(playerB1.discordId)
@@ -1629,7 +1628,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
-                            `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                            `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                             `\nDiscord: ${playerB2.globalName ? `${playerB2.globalName} (${pB2DiscordUsername})` : pB2DiscordUsername}` +
                             `\n${format?.category === 'OP' ? `OPTCGSim: ${playerB2.opTcgSim}` : `DuelingBook: ${playerB2.duelingBook}`}`
                         )
@@ -1644,7 +1643,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
-                            `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                            `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                             `\nDiscord: ${playerB1.globalName ? `${playerB1.globalName} (${pB1DiscordUsername})` : pB1DiscordUsername}` +
                             `\n${format?.category === 'OP' ? `OPTCGSim: ${playerB1.opTcgSim}` : `DuelingBook: ${playerB1.duelingBook}`}`
                         )
@@ -1652,8 +1651,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                         console.log(err)
                     }
 
-                    const {player: playerC1} = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
-                    const {player: playerC2} = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
+                    const {player: playerC1} = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player})
+                    const {player: playerC2} = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player})
 
                     try {
                         const pC1Member = await interaction.guild?.members.fetch(playerC1.discordId)
@@ -1662,7 +1661,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
-                            `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                            `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                             `\nDiscord: ${playerC2.globalName ? `${playerC2.globalName} (${pC2DiscordUsername})` : pC2DiscordUsername}` +
                             `\n${format?.category === 'OP' ? `OPTCGSim: ${playerC2.opTcgSim}` : `DuelingBook: ${playerC2.duelingBook}`}`
                         )
@@ -1677,7 +1676,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
-                            `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                            `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                             `\nDiscord: ${playerC1.globalName ? `${playerC1.globalName} (${pC1DiscordUsername})` : pC1DiscordUsername}` +
                             `\n${format?.category === 'OP' ? `OPTCGSim: ${playerC1.opTcgSim}` : `DuelingBook: ${playerC1.duelingBook}`}`
                         )
@@ -1685,11 +1684,13 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                         console.log(err)
                     }
 
+                    const [labelA, labelB, labelC] = tournament.formatId ? ['Duel A', 'Duel B', 'Duel C'] : ['Goat <:bluesheep:646866933605466131>', 'Edison <:dandy:647150339388211201>', 'Tengu Plant <:spore:647198947185524746>']
+
                     await interaction.channel.send({ 
                         content: `New Team Match: ${losingTeam.name} vs. ${loserNextTeam.name}. Good luck to both teams.` + 
-                            `\nDuel A: <@${playerA1.discordId}> vs <@${playerA2.discordId}>`+ 
-                            `\nDuel B: <@${playerB1.discordId}> vs <@${playerB2.discordId}>`+ 
-                            `\nDuel C: <@${playerC1.discordId}> vs <@${playerC2.discordId}>`
+                            `\n${labelA}: <@${playerA1.discordId}> vs <@${playerA2.discordId}>`+ 
+                            `\n${labelB}: <@${playerB1.discordId}> vs <@${playerB2.discordId}>`+ 
+                            `\n${labelC}: <@${playerC1.discordId}> vs <@${playerC2.discordId}>`
                     })
                 } else if (loserMatchWaitingOn && loserWaitingOnTeam1 && loserWaitingOnTeam2) {
                     return await interaction.channel.send({ content: `${losingTeam.name}, You are waiting for the result of ${loserWaitingOnTeam1.name} vs ${loserWaitingOnTeam2.name}.`})
@@ -1707,8 +1708,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             tournament.type === 'double elimination' && winnerNextMatch.round > 0 ? `Winners Round ${Math.abs(winnerNextMatch.round)}` :
                             `Round ${winnerNextMatch.round}`
     
-                        const {player: playerA1} = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player })
-                        const {player: playerA2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: 'A' }, include: Player})
+                        const {player: playerA1} = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player })
+                        const {player: playerA2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player})
 
                         try {
                             const pA1Member = await interaction.guild?.members.fetch(playerA1.discordId)
@@ -1717,7 +1718,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
-                                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                                `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                                 `\nDiscord: ${playerA2.globalName ? `${playerA2.globalName} (${pA2DiscordUsername})` : pA2DiscordUsername}` +
                                 `\n${format?.category === 'OP' ? `OPTCGSim: ${playerA2.opTcgSim}` : `DuelingBook: ${playerA2.duelingBook}`}`
                             )
@@ -1732,7 +1733,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
-                                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                                `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                                 `\nDiscord: ${playerA1.globalName ? `${playerA1.globalName} (${pA1DiscordUsername})` : pA1DiscordUsername}` +
                                 `\n${format?.category === 'OP' ? `OPTCGSim: ${playerA1.opTcgSim}` : `DuelingBook: ${playerA1.duelingBook}`}`
                             )
@@ -1740,8 +1741,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             console.log(err)
                         }
 
-                        const {player: playerB1} = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
-                        const {player: playerB2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: 'B' }, include: Player})
+                        const {player: playerB1} = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player})
+                        const {player: playerB2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player})
 
                         try {
                             const pB1Member = await interaction.guild?.members.fetch(playerB1.discordId)
@@ -1750,7 +1751,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
-                                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                                `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                                 `\nDiscord: ${playerB2.globalName ? `${playerB2.globalName} (${pB2DiscordUsername})` : pB2DiscordUsername}` +
                                 `\n${format?.category === 'OP' ? `OPTCGSim: ${playerB2.opTcgSim}` : `DuelingBook: ${playerB2.duelingBook}`}`
                             )
@@ -1765,7 +1766,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
-                                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                                `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                                 `\nDiscord: ${playerB1.globalName ? `${playerB1.globalName} (${pB1DiscordUsername})` : pB1DiscordUsername}` +
                                 `\n${format?.category === 'OP' ? `OPTCGSim: ${playerB1.opTcgSim}` : `DuelingBook: ${playerB1.duelingBook}`}`
                             )
@@ -1773,8 +1774,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             console.log(err)
                         }
 
-                        const {player: playerC1} = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
-                        const {player: playerC2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: 'C' }, include: Player})
+                        const {player: playerC1} = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player})
+                        const {player: playerC2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player})
 
                         try {
                             const pC1Member = await interaction.guild?.members.fetch(playerC1.discordId)
@@ -1783,7 +1784,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
-                                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                                `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                                 `\nDiscord: ${playerC2.globalName ? `${playerC2.globalName} (${pC2DiscordUsername})` : pC2DiscordUsername}` +
                                 `\n${format?.category === 'OP' ? `OPTCGSim: ${playerC2.opTcgSim}` : `DuelingBook: ${playerC2.duelingBook}`}`
                             )
@@ -1798,7 +1799,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
-                                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                                `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                                 `\nDiscord: ${playerC1.globalName ? `${playerC1.globalName} (${pC1DiscordUsername})` : pC1DiscordUsername}` +
                                 `\n${format?.category === 'OP' ? `OPTCGSim: ${playerC1.opTcgSim}` : `DuelingBook: ${playerC1.duelingBook}`}`
                             )
@@ -1806,11 +1807,13 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             console.log(err)
                         }
 
+                        const [labelA, labelB, labelC] = tournament.formatId ? ['Duel A', 'Duel B', 'Duel C'] : ['Goat <:bluesheep:646866933605466131>', 'Edison <:dandy:647150339388211201>', 'Tengu Plant <:spore:647198947185524746>']
+
                         await interaction.channel.send({
                             content: `New Team Match: ${winningTeam.name} vs. ${winnerNextTeam.name}. Good luck to both teams.` + 
-                                `\nDuel A: <@${playerA1.discordId}> vs <@${playerA2.discordId}>`+ 
-                                `\nDuel B: <@${playerB1.discordId}> vs <@${playerB2.discordId}>`+ 
-                                `\nDuel C: <@${playerC1.discordId}> vs <@${playerC2.discordId}>`
+                                `\n${labelA}: <@${playerA1.discordId}> vs <@${playerA2.discordId}>`+ 
+                                `\n${labelB}: <@${playerB1.discordId}> vs <@${playerB2.discordId}>`+ 
+                                `\n${labelC}: <@${playerC1.discordId}> vs <@${playerC2.discordId}>`
                         })
                     } else if (winnerMatchWaitingOn && winnerWaitingOnTeam1 && winnerWaitingOnTeam2) {
                         return await interaction.channel.send({ content: `${winningTeam.name}, You are waiting for the result of ${winnerWaitingOnTeam1.name} vs ${winnerWaitingOnTeam2.name}.`})
@@ -1828,17 +1831,18 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 }
 
 //SEND TEAM PAIRINGS
-export const sendTeamPairings = async (guild, server, tournament) => {
+export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) => {
     const matches = [...await getMatches(server, tournament.id)].map((el) => el.match).filter((match) => match.state === 'open')
     
     for (let i = 0; i < matches.length; i++) {
         const match = matches[i]
+        if (ignoreRound1 && match.round === 1) continue
         const round = tournament.type === 'double elimination' && match.round < 0 ? `Losers Round ${Math.abs(match.round)}` :
             tournament.type === 'double elimination' && match.round > 0 ? `Winners Round ${Math.abs(match.round)}` :
             `Round ${match.round}`
   
-        const {player: playerA1} = await Entry.findOne({ where: { participantId: match.player1_id, tournamentId: tournament.id, slot: 'A' }, include: Player })
-        const {player: playerA2} = await Entry.findOne({ where: { participantId: match.player2_id, tournamentId: tournament.id, slot: 'A' }, include: Player })
+        const {player: playerA1} = await Entry.findOne({ where: { participantId: match.player1_id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player })
+        const {player: playerA2} = await Entry.findOne({ where: { participantId: match.player2_id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player })
         
         try {
             const pA1Member = await guild.members.fetch(playerA1.discordId)
@@ -1847,7 +1851,7 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
-                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                 `\nDiscord: ${playerA2.globalName ? `${playerA2.globalName} (${pA2DiscordUsername})` : pA2DiscordUsername}` +
                 `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerA2.opTcgSim}` : `DuelingBook: ${playerA2.duelingBook}`}`
             )
@@ -1862,7 +1866,7 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
-                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                 `\nDiscord: ${playerA1.globalName ? `${playerA1.globalName} (${pA1DiscordUsername})` : pA1DiscordUsername}` +
                 `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerA1.opTcgSim}` : `DuelingBook: ${playerA1.duelingBook}`}`
             )
@@ -1870,8 +1874,8 @@ export const sendTeamPairings = async (guild, server, tournament) => {
             console.log(err)
         }
 
-        const {player: playerB1} = await Entry.findOne({ where: { participantId: match.player1_id, tournamentId: tournament.id, slot: 'B' }, include: Player })
-        const {player: playerB2} = await Entry.findOne({ where: { participantId: match.player2_id, tournamentId: tournament.id, slot: 'B' }, include: Player })
+        const {player: playerB1} = await Entry.findOne({ where: { participantId: match.player1_id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player })
+        const {player: playerB2} = await Entry.findOne({ where: { participantId: match.player2_id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player })
 
         try {
             const pB1Member = await guild.members.fetch(playerB1.discordId)
@@ -1880,7 +1884,7 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
-                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                 `\nDiscord: ${playerB2.globalName ? `${playerB2.globalName} (${pB2DiscordUsername})` : pB2DiscordUsername}` +
                 `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerB2.opTcgSim}` : `DuelingBook: ${playerB2.duelingBook}`}`
             )
@@ -1895,7 +1899,7 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
-                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                 `\nDiscord: ${playerB1.globalName ? `${playerB1.globalName} (${pB1DiscordUsername})` : pB1DiscordUsername}` +
                 `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerB1.opTcgSim}` : `DuelingBook: ${playerB1.duelingBook}`}`
             )
@@ -1903,8 +1907,8 @@ export const sendTeamPairings = async (guild, server, tournament) => {
             console.log(err)
         }
 
-        const {player: playerC1} = await Entry.findOne({ where: { participantId: match.player1_id, tournamentId: tournament.id, slot: 'C' }, include: Player })
-        const {player: playerC2} = await Entry.findOne({ where: { participantId: match.player2_id, tournamentId: tournament.id, slot: 'C' }, include: Player })
+        const {player: playerC1} = await Entry.findOne({ where: { participantId: match.player1_id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player })
+        const {player: playerC2} = await Entry.findOne({ where: { participantId: match.player2_id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player })
 
         try {
             const pC1Member = await guild.members.fetch(playerC1.discordId)
@@ -1913,7 +1917,7 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
-                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                 `\nDiscord: ${playerC2.globalName ? `${playerC2.globalName} (${pC2DiscordUsername})` : pC2DiscordUsername}` +
                 `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerC2.opTcgSim}` : `DuelingBook: ${playerC2.duelingBook}`}`
             )
@@ -1928,7 +1932,7 @@ export const sendTeamPairings = async (guild, server, tournament) => {
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
-                `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                 `\nDiscord: ${playerC1.globalName ? `${playerC1.globalName} (${pC1DiscordUsername})` : pC1DiscordUsername}` +
                 `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerC1.opTcgSim}` : `DuelingBook: ${playerC1.duelingBook}`}`
             )
@@ -2740,7 +2744,7 @@ export const startChallongeBracket = async (interaction, tournamentId) => {
         interaction.channel.send({ content: `Let's go! Your tournament is starting now: https://challonge.com/${tournament.url} ${tournament.emoji}`})
         
         if (tournament.isTeamTournament) {
-            return sendTeamPairings(interaction.guild, server, tournament, tournament.format)
+            return sendTeamPairings(interaction.guild, server, tournament, false)
         } else {
             return sendPairings(interaction.guild, server, tournament, false)
         }
@@ -2814,7 +2818,7 @@ export const startTournament = async (interaction, tournamentId) => {
             interaction.editReply({ content: `Your tournament was already underway on Challonge.com: https://challonge.com/${tournament.url} ${tournament.emoji}`})
             
             if (tournament.isTeamTournament) {
-                return sendTeamPairings(interaction.guild, server, tournament)
+                return sendTeamPairings(interaction.guild, server, tournament, false)
             } else {
                 return sendPairings(interaction.guild, server, tournament, false)
             }

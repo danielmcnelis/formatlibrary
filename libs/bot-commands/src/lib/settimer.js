@@ -45,7 +45,6 @@ export default {
         const tournament = await selectTournament(interaction, tournaments, hours, minutes)
         if (!tournament) return
 
-        const ignoreRound1 = !tournament.deadline
         const timestamp = Date.now()
         const timeRemaining = (hours * 60 * 60 * 1000) + (minutes * 60 * 1000)
         const deadline = new Date(timestamp + timeRemaining)
@@ -61,9 +60,9 @@ export default {
         }
 
         if (tournament.isTeamTournament) {
-            sendTeamPairings(interaction.guild, server, tournament, format, ignoreRound1)
+            sendTeamPairings(interaction.guild, server, tournament, true)
         } else {
-            sendPairings(interaction.guild, server, tournament, format, ignoreRound1)
+            sendPairings(interaction.guild, server, tournament, true)
         }
 
         return setTimeout(async () => {
