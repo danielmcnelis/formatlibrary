@@ -60,9 +60,7 @@ export default {
             players.unshift(captain)
 
             for (let j = 0; j < players.length; j++) {
-                const slot = j === 0 ? 'A' : j === 1 ? 'B' : 'C'
-                const player = players[j]
-                const isRegistered = await Entry.count({
+                const entry = await Entry.findOne({
                     where: {
                         tournamentId: tournament.id,
                         participantId: team.participantId,
@@ -70,9 +68,16 @@ export default {
                     }
                 })
 
+                const slot = entry ? entry.slot :
+                    j === 0 ? 'A' : 
+                    j === 1 ? 'B' : 
+                    'C'
+
+                const player = players[j]
+
                 const isCaptain = player.id === captain.id
 
-                results.push(`Player ${slot}: ${player.globalName || player.discordName} ${isCaptain ? '(Captain) ' : ' '}${isRegistered ? emojis.check : emojis.nope}`)
+                results.push(`${slot} Player: ${player.globalName || player.discordName} ${isCaptain ? '(Captain) ' : ' '}${entry ? emojis.check : emojis.nope}`)
             }
         }
 
