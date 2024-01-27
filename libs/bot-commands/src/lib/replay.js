@@ -47,7 +47,7 @@ export default {
                     abbreviation: {[Op.substring]: focusedValue}
                 },
                 state: {[Op.not]: 'pending'},
-                formatId: format?.id || null
+                formatId: {[Op.or]: [format?.id, null]}
             },
             limit: 5,
             order: [["createdAt", "DESC"]]
@@ -59,7 +59,7 @@ export default {
                         abbreviation: {[Op.substring]: focusedValue}
                     },
                     state: {[Op.not]: 'pending'},
-                    formatId: format?.id || null,
+                    formatId: {[Op.or]: [format?.id, null]},
                     serverId: server?.id || null
                 },
                 limit: 5,
@@ -72,7 +72,7 @@ export default {
                     abbreviation: {[Op.substring]: focusedValue}
                 },
                 state: 'underway',
-                formatId: format?.id || null,
+                formatId: {[Op.or]: [format?.id, null]},
                 serverId: server?.id || null
             },
             limit: 5,
