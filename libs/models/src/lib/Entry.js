@@ -1,5 +1,5 @@
 
-import { Sequelize } from 'sequelize'
+import { Sequelize, Op } from 'sequelize'
 import { Tournament } from './Tournament'
 import { db } from './db'
 
@@ -57,7 +57,7 @@ Entry.findByPlayerIdAndTournamentId = async (playerId, tournamentId) => await En
 Entry.findByPlayerIdAndFormatId = async (playerId, formatId) => await Entry.findAll({ 
     where: { 
         playerId,
-        '$tournament.formatId$': formatId
+        '$tournament.formatId$': {[Op.or]: [formatId, null]}
     }, 
     include: Tournament 
 })
