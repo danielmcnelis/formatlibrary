@@ -161,7 +161,6 @@ export const SealedLobby = () => {
     useEffect(() => {
         return () => {
             console.log('disconnectSocket()')
-            // socket.emit('disconnection')     
             socket.disconnect()
         }
     }, [])
