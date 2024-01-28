@@ -164,7 +164,7 @@ export default {
                     if (!success) {
                         return await interaction.editReply(`Failed to save all decks.`)
                     } else {
-                        count = event.size
+                        count = !event.isTeamEvent ? event.size : event.size * 3
                     }
                 } catch (err) {
                     console.log(err)
