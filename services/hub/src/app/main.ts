@@ -36,12 +36,12 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
     console.log('an https user connected')
-    // try { 
-    //     socket.disconnect() 
-    // } catch (err) { 
-    //     console.log(err)
-    // }
-    
+
+    socket.on('disconnection', () => {
+        console.log('SOCKET.EMIT -> DISCONNECTION -> REMOVE ALL LISTENERS')
+        socket.removeAllListeners()
+    })
+
     socket.on('join draft', (data, setEntry) => joinDraft(data.playerId, data.draftId, socket, setEntry))
     socket.on('leave draft', (data, setEntry) => leaveDraft(data.playerId, data.draftId, socket, setEntry))
     socket.on('start draft', (data) => startDraft(data.draftId, socket))
