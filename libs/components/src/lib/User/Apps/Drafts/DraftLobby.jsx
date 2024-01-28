@@ -248,9 +248,10 @@ export const DraftLobby = () => {
     }, [])
 
     useEffect(() => {
-        const disconnectSocket = () => socket.disconnect()
-        window.addEventListener('beforeunload', disconnectSocket)
-        return () => window.removeEventListener('beforeunload', disconnectSocket)
+        return () => {
+            console.log('disconnectSocket()')
+            socket.disconnect()
+        }
     }, [])
 
     return (
