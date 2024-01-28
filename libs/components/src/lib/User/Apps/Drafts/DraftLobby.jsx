@@ -247,6 +247,12 @@ export const DraftLobby = () => {
         fetchData()
     }, [])
 
+    useEffect(() => {
+        const disconnectSocket = () => socket.disconnect()
+        window.addEventListener('beforeunload', disconnectSocket)
+        return () => window.removeEventListener('beforeunload', disconnectSocket)
+    }, [])
+
     return (
         <div className="cube-portal">
             {
