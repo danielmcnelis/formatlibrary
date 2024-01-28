@@ -19,7 +19,7 @@ export const createDecks = async (event, participants, standings = []) => {
         try {
             const {participant} = participants[i]
 
-            const entry = await Entry.findOne({
+            const entries = await Entry.findAll({
                 where: {
                     participantId: participant.id,
                     tournamentId: event.primaryTournamentId
@@ -27,48 +27,52 @@ export const createDecks = async (event, participants, standings = []) => {
                 include: Player
             })
 
-            if (!entry) {
+            if (!entries.length) {
                 console.log(`missing entry for participant ${participant.id}`)
             }
 
-            const count = await Deck.count({
-                where: {
-                    playerId: entry.playerId,
-                    eventId: event.id
-                }
-            })
+            for (let j = 0; j < entries.length; j++) {
+                const entry = entries[j]
 
-            if (!count) {
-                const standing = standings?.find((s) => s.participantId === participant.id)
-                const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
-                    participant.final_rank ? parseInt(participant.final_rank) :
-                    null
-
-                const deckType = await getDeckType(entry.ydk, event.formatName)
-
-                await Deck.create({
-                    type: deckType.name,
-                    category: deckType.category,
-                    builder: entry.playerName,
-                    formatName: event.formatName,
-                    formatId: event.formatId,
-                    ydk: entry.ydk,
-                    placement: placement,
-                    eventName: event.abbreviation || event.name,
-                    origin: 'event',
-                    display: false,
-                    community: event.community,
-                    playerId: entry.playerId,
-                    eventId: event.id,
-                    deckTypeId: deckType.id,
-                    eventDate: event.startDate
+                const count = await Deck.count({
+                    where: {
+                        playerId: entry.playerId,
+                        eventId: event.id
+                    }
                 })
-
-                b++
-                console.log(`uploaded ${event.abbreviation || event.name} #${placement} ${deckType.name} deck built by ${entry.playerName}`)
-            } else {
-                c++
-                console.log(`already have ${entry.playerName}'s deck for ${event.name}`)
+    
+                if (!count) {
+                    const standing = standings?.find((s) => s.participantId === participant.id)
+                    const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
+                        participant.final_rank ? parseInt(participant.final_rank) :
+                        null
+    
+                    const deckType = await getDeckType(entry.ydk, event.formatName)
+    
+                    await Deck.create({
+                        type: deckType.name,
+                        category: deckType.category,
+                        builder: entry.playerName,
+                        formatName: event.formatName,
+                        formatId: event.formatId,
+                        ydk: entry.ydk,
+                        placement: placement,
+                        eventName: event.abbreviation || event.name,
+                        origin: 'event',
+                        display: false,
+                        community: event.community,
+                        playerId: entry.playerId,
+                        eventId: event.id,
+                        deckTypeId: deckType.id,
+                        eventDate: event.startDate
+                    })
+    
+                    b++
+                    console.log(`uploaded ${event.abbreviation || event.name} #${placement} ${deckType.name} deck built by ${entry.playerName}`)
+                } else {
+                    c++
+                    console.log(`already have ${entry.playerName}'s deck for ${event.name}`)
+                }
             }
         } catch (err) {
             e++
