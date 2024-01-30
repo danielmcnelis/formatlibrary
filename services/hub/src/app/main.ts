@@ -44,16 +44,13 @@ io.on('connection', (socket) => {
 
     socket.on('kick', async () => {
         try {
-            console.log('fetching sockets')
-            let sockets = await io.fetchSockets()
-            console.log('sockets', sockets)
-            console.log('sockets.length', sockets.length)
-            console.log('KICK ALL SOCKETS')
+            console.log('counting sockets')
+            let count = io.engine.clientsCount
+            console.log('socket count:', count)
+            console.log('::: KICKING ALL SOCKETS :::')
             io.disconnectSockets()
-            console.log('fetching sockets')
-            sockets = await io.fetchSockets()
-            console.log('sockets', sockets)
-            console.log('sockets.length', sockets.length)
+            count = io.engine.clientsCount
+            console.log('socket count:', count)
         } catch (err) {
             console.log(err)
         }
