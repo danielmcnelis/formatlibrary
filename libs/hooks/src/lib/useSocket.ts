@@ -7,6 +7,8 @@ export const useSocket = () => {
     
     if (!socket) { 
         throw new Error('No socket context.')
+    } else {
+        console.log(`created new socket: ${socket.id}`)
     }
 
     return socket

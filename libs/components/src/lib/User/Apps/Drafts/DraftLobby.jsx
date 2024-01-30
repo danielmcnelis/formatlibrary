@@ -8,6 +8,7 @@ import { getCookie } from '@fl/utils'
 import ReactCountdownClock from 'react-countdown-clock'
 import { Helmet } from 'react-helmet'
 import { useSocket } from '@fl/hooks'
+
 import './DraftLobby.css'
 
 const playerId = getCookie('playerId')
@@ -104,7 +105,7 @@ export const DraftLobby = () => {
     }
 
     // LEAVE
-    const leave = async () => {    
+    const leave = async () => {  
         try {
             const data = { playerId, draftId: draft.id }
             socket.emit('leave draft', data, setEntry)            
@@ -201,15 +202,23 @@ export const DraftLobby = () => {
 
     // HOOK - SOCKET.IO
     useEffect(() => {
+        socket.on('connect', () => {
+            console.log('connected socket:', socket.id)
+        })
+
+        socket.on("connect_error", () => {
+            console.log('socket connect_error')
+        })
+
         socket.on('new entry', (data) => {
             console.log(`${data.playerName} joined Draft Lobby.`)
             fetchParticipants(data.draftId)
-        });
+        })
 
         socket.on('removed entry', (data) => {
             console.log(`${data.playerName} exited Draft Lobby.`)
             fetchParticipants(data.draftId)
-        });
+        })
 
         socket.on('draft begins', (data) => {
             console.log(`Draft has begun!`)
@@ -218,7 +227,7 @@ export const DraftLobby = () => {
             setDraft(data)
             alert('The Draft is Starting Now!')
             toggleHorn()
-        });
+        })
 
         socket.on('next pick', (data) => {
             console.log(`Next pick!`)
@@ -227,14 +236,19 @@ export const DraftLobby = () => {
             setOnTheClock(true)
             setTimer(draft.timer)
             toggleChime()
-        });
+        })
 
         socket.on('draft complete', (data) => {
             console.log(`Draft complete!`)
             setOnTheClock(false)
             setSelection(null)
             setDraft(data)
-        });
+        })
+
+        socket.on('disconnect', (reason, details) => {
+            console.log('reason:', reason)
+            console.log('details:', details)
+        })
     }, [])
 
     // HOOK - FETCH INITIAL DRAFT DATA

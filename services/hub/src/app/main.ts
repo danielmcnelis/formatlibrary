@@ -41,25 +41,27 @@ io.on('connection', (socket) => {
     console.log(`socket ${socket.id} connected (${count})`)
     // socket.removeAllListeners()
 
+    socket.on('disconnect', () => {
+        console.log('SOCKET.EMIT -> DISCONNECT -> REMOVE ALL LISTENERS')
+        socket.removeAllListeners()
+        count--
+    })
+
     socket.on('disconnection', () => {
         console.log('SOCKET.EMIT -> DISCONNECTION -> REMOVE ALL LISTENERS')
         socket.removeAllListeners()
+        count--
     })
 
     socket.on('kick', async () => {
         try {
-            let sockets = await io.fetchSockets()
-            console.log('sockets.length', sockets.length)
-            for (let i = 0; i < sockets.length; i++) {
-                sockets[i].timeout(1)
-            }
-
             console.log('socket count:', io.engine.clientsCount)
             console.log('::: KICKING ALL SOCKETS :::')
             io.disconnectSockets(true)
             console.log('fetching sockets')
-            sockets = await io.fetchSockets()
+            const sockets = await io.fetchSockets()
             console.log('sockets.length', sockets.length)
+            count = sockets.length
         } catch (err) {
             console.log(err)
         }
