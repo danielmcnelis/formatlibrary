@@ -46,6 +46,7 @@ export const Router = () => {
 					<Route path="/home" element=<Page element=<Home /> /> />
                     <Route path="/auth/"/>
 					<Route path="/apps" element=<Page element=<UserPortal /> /> />
+					{/* <Route path="/kick" element=<Page element=<KickSocket /> /> /> */}
 					<Route path="/kick" element=<Page element=<SocketProvider value={io(config.siteUrl)}><KickSocket /></SocketProvider> /> />
 					<Route path="/builder" element=<Page element=<Builder /> /> />
 					<Route path="/builder/:id" element=<Page element=<Builder /> /> />
@@ -56,8 +57,10 @@ export const Router = () => {
 					<Route path="/cube-maker" element=<Page element=<CubeMaker /> /> />
 					<Route path="/rated-lobby" element=<Page element=<RatedLobby /> /> />
 					<Route path="/cubes/:id" element=<Page element=<CubeBrowser /> /> />
+					{/* <Route path="/drafts/:id" element=<Page element=<DraftLobby /> /> /> */}
 					<Route path="/drafts/:id" element=<Page element=<SocketProvider value={io(config.siteUrl)}><DraftLobby /></SocketProvider> /> />
-					<Route path="/sealed/:id" element=<Page element=<SocketProvider value={io(config.siteUrl)}><SealedLobby /></SocketProvider> /> />
+                    <Route path="/sealed/:id" element=<Page element=<SealedLobby /> /> />
+                    {/* <Route path="/sealed/:id" element=<Page element=<SocketProvider value={io(config.siteUrl)}><SealedLobby /></SocketProvider> /> /> */}
 					<Route path="/format-maker" element=<Page element=<FormatMaker /> /> />
 					<Route path="/great-library.html" element=<Page element= <CardTable /> /> />
 					<Route path="/great-library" element=<Page element= <CardTable /> /> />

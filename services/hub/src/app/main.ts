@@ -38,7 +38,8 @@ let count = 0
 
 io.on('connection', (socket) => {
     count++
-    console.log(`an https user connected (${count})`)
+    console.log(`socket ${socket.id} connected (${count})`)
+    // socket.removeAllListeners()
 
     socket.on('disconnection', () => {
         console.log('SOCKET.EMIT -> DISCONNECTION -> REMOVE ALL LISTENERS')
@@ -54,6 +55,10 @@ io.on('connection', (socket) => {
             const sockets = await io.fetchSockets()
             console.log('sockets.length', sockets.length)
             count = sockets.length
+            for (socket of sockets) {
+                console.log(`removing listener from socket ${socket.id}`)
+                socket.removeAllListeners()
+            }
         } catch (err) {
             console.log(err)
         }
