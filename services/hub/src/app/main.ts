@@ -34,8 +34,11 @@ const io = new Server(server, {
     }
 })
 
+let zeta = 0
+
 io.on('connection', (socket) => {
-    console.log('an https user connected')
+    zeta++
+    console.log(`an https user connected (${zeta})`)
 
     socket.on('disconnection', () => {
         console.log('SOCKET.EMIT -> DISCONNECTION -> REMOVE ALL LISTENERS')
@@ -51,6 +54,7 @@ io.on('connection', (socket) => {
             io.disconnectSockets()
             count = io.engine.clientsCount
             console.log('socket count:', count)
+            zeta = count
         } catch (err) {
             console.log(err)
         }
@@ -64,6 +68,7 @@ io.on('connection', (socket) => {
 })
 
 io.on('disconnection', (socket) => {
-    console.log('an https user disconnected')
+    zeta--
+    console.log(`an https user disconnected (${zeta})`)
     socket.removeAllListeners()
 })
