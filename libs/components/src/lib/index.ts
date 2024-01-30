@@ -1,5 +1,6 @@
 
 export * from './Admin/AdminPortal'
+export * from './Admin/KickSocket'
 export * from './User/UserPortal'
 export * from './User/Apps/Builders/Builder'
 export * from './User/Apps/Builders/CubeMaker'

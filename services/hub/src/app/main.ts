@@ -42,6 +42,15 @@ io.on('connection', (socket) => {
         socket.removeAllListeners()
     })
 
+    socket.on('kick', (data) => {
+        try {
+            console.log('KICKING:', data.socketId)
+            io.sockets.sockets[data.socketId].disconnect()
+        } catch (err) {
+            console.log(err)
+        }
+    })
+
     socket.on('join draft', (data, setEntry) => joinDraft(data.playerId, data.draftId, socket, setEntry))
     socket.on('leave draft', (data, setEntry) => leaveDraft(data.playerId, data.draftId, socket, setEntry))
     socket.on('start draft', (data) => startDraft(data.draftId, socket))
