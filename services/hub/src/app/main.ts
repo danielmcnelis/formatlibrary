@@ -34,11 +34,11 @@ const io = new Server(server, {
     }
 })
 
-let zeta = 0
+let count = 0
 
 io.on('connection', (socket) => {
-    zeta++
-    console.log(`an https user connected (${zeta})`)
+    count++
+    console.log(`an https user connected (${count})`)
 
     socket.on('disconnection', () => {
         console.log('SOCKET.EMIT -> DISCONNECTION -> REMOVE ALL LISTENERS')
@@ -47,14 +47,13 @@ io.on('connection', (socket) => {
 
     socket.on('kick', async () => {
         try {
-            console.log('counting sockets')
-            let count = io.engine.clientsCount
-            console.log('socket count:', count)
+            console.log('socket count:', io.engine.clientsCount)
             console.log('::: KICKING ALL SOCKETS :::')
             io.disconnectSockets()
-            count = io.engine.clientsCount
-            console.log('socket count:', count)
-            zeta = count
+            console.log('fetching sockets')
+            const sockets = await io.fetchSockets()
+            console.log('sockets.length', sockets.length)
+            count = sockets.length
         } catch (err) {
             console.log(err)
         }
@@ -68,7 +67,7 @@ io.on('connection', (socket) => {
 })
 
 io.on('disconnection', (socket) => {
-    zeta--
-    console.log(`an https user disconnected (${zeta})`)
+    count--
+    console.log(`an https user disconnected (${count})`)
     socket.removeAllListeners()
 })
