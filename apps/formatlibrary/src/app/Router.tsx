@@ -46,7 +46,7 @@ export const Router = () => {
 					<Route path="/home" element=<Page element=<Home /> /> />
                     <Route path="/auth/"/>
 					<Route path="/apps" element=<Page element=<UserPortal /> /> />
-					<Route path="/kick" element=<Page element=<KickSocket /> /> />
+					<Route path="/kick" element=<Page element=<SocketProvider value={io(config.siteUrl)}><KickSocket /></SocketProvider> /> />
 					<Route path="/builder" element=<Page element=<Builder /> /> />
 					<Route path="/builder/:id" element=<Page element=<Builder /> /> />
 					<Route path="/deck-builder" element=<Page element=<Builder /> /> />
