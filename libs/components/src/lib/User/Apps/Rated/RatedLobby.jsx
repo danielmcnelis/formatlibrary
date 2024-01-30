@@ -10,6 +10,7 @@ import { PoolRow } from './PoolRow'
 import { MiniDeck } from '../../../Decks/MiniDeck'
 import {Button, Form, Modal} from 'react-bootstrap'
 import './RatedLobby.css'
+import { useSocket } from '@fl/hooks'
 const playerId = getCookie('playerId')
 const colors = ['#32a852', '#585ad6', '#db3b86', '#de822c', '#ed5440', '#2bcc8e', '#58aaed', '#ae5fd9']
 const colorRng =  Math.floor(Math.random() * 8)
@@ -29,7 +30,7 @@ export const RatedLobby = () => {
     const [showJoinModal, setShowJoinModal] = useState(false)
     const [showNewDeckModal, setShowNewDeckModal] = useState(false)
     const [showUploadModal, setShowUploadModal] = useState(false)
-    // const socket = useSocket()
+    // const [socket] = useState(useSocket())
 
     // JOIN
     const join = async () => {

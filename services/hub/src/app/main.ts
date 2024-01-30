@@ -38,33 +38,18 @@ let count = 0
 
 io.on('connection', (socket) => {
     count++
-    console.log(`socket ${socket.id} connected (${count})`)
-    // socket.removeAllListeners()
+    console.log(`new socket ${socket.id} connection (${count})`)
 
     socket.on('disconnect', () => {
-        console.log('SOCKET.EMIT -> DISCONNECT -> REMOVE ALL LISTENERS')
+        console.log(`client side socket ${socket.id} disconnect -> remove all listeners`)
         socket.removeAllListeners()
         count--
     })
 
     socket.on('disconnection', () => {
-        console.log('SOCKET.EMIT -> DISCONNECTION -> REMOVE ALL LISTENERS')
+        console.log(`client side socket ${socket.id} disconnection -> remove all listeners`)
         socket.removeAllListeners()
         count--
-    })
-
-    socket.on('kick', async () => {
-        try {
-            console.log('socket count:', io.engine.clientsCount)
-            console.log('::: KICKING ALL SOCKETS :::')
-            io.disconnectSockets(true)
-            console.log('fetching sockets')
-            const sockets = await io.fetchSockets()
-            console.log('sockets.length', sockets.length)
-            count = sockets.length
-        } catch (err) {
-            console.log(err)
-        }
     })
 
     socket.on('join draft', (data, setEntry) => joinDraft(data.playerId, data.draftId, socket, setEntry))
@@ -75,7 +60,7 @@ io.on('connection', (socket) => {
 })
 
 io.on('disconnection', (socket) => {
-    count--
-    console.log(`an https user disconnected (${count})`)
+    console.log(`server side socket disconnection ${socket.id} -> remove all listeners`)
     socket.removeAllListeners()
+    count--
 })
