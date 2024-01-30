@@ -34,14 +34,6 @@ const io = new Server(server, {
     }
 })
 
-const fn = async () => {
-    console.log('fetching sockets')
-    const sockets = await io.fetchSockets();
-    console.log('sockets', sockets)
-}
-
-fn()
-
 io.on('connection', (socket) => {
     console.log('an https user connected')
 
@@ -50,18 +42,18 @@ io.on('connection', (socket) => {
         socket.removeAllListeners()
     })
 
-    socket.on('kick', (data) => {
+    socket.on('kick', async () => {
         try {
-            console.log('KICKING ATTEMPT 1:', data.socketId)
-            io.sockets.sockets[data.socketId].disconnect()
+            console.log('fetching sockets')
+            let sockets = await io.fetchSockets()
+            console.log('sockets', sockets)
+            console.log('KICK ALL SOCKETS')
+            io.disconnectSockets()
+            console.log('fetching sockets')
+            sockets = await io.fetchSockets()
+            console.log('sockets', sockets)
         } catch (err) {
-            try {
-                console.log(err)
-                console.log('KICKING ATTEMPT 2:', data.socketId)
-                io.in(data.socketId).disconnectSockets();
-            } catch (err) {
-                console.log(err)
-            }
+            console.log(err)
         }
     })
 

@@ -1,9 +1,8 @@
 
 import {useSocket} from '@fl/hooks'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 
 export const KickSocket = () => {
-	const [socketId, setSocketId] = useState(null)
     const socket = useSocket()
 
     // USE EFFECT
@@ -17,8 +16,7 @@ export const KickSocket = () => {
     // KICK
     const kick = async () => {
         try {
-            const data = { socketId }
-            socket.emit('kick', data)
+            socket.emit('kick')
         } catch (err) {
             console.log(err)
         }
@@ -26,23 +24,13 @@ export const KickSocket = () => {
 
     return (
         <div className="admin-portal">
-
-            <label>Socket ID:
-                <input
-                    id="socket-id"
-                    value={socketId || ''}
-                    type="text"
-                    onChange={(e) => setSocketId(e.target.value)}
-                />
-            </label>
-
-            <a
+            <div
                 className="admin-button"
                 type="submit"
                 onClick={() => kick()}
             >
                 Kick
-            </a>
+            </div>
         </div>
     )
 }
