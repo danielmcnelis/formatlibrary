@@ -50,15 +50,10 @@ io.on('connection', (socket) => {
         try {
             console.log('socket count:', io.engine.clientsCount)
             console.log('::: KICKING ALL SOCKETS :::')
-            io.disconnectSockets()
+            io.disconnectSockets(true)
             console.log('fetching sockets')
             const sockets = await io.fetchSockets()
             console.log('sockets.length', sockets.length)
-            count = sockets.length
-            for (socket of sockets) {
-                console.log(`removing listener from socket ${socket.id}`)
-                socket.removeAllListeners()
-            }
         } catch (err) {
             console.log(err)
         }
