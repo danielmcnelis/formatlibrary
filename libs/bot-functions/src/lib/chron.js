@@ -861,6 +861,7 @@ export const downloadNewCards = async () => {
             if (!card) {
                 await Card.create({
                     name: datum.name,
+                    cleanName: datum.name.split(/[^A-Za-z0-9]/).filter((e) => e.length).join(' '),
                     konamiCode: konamiCode,
                     ypdId: id,
                     tcgLegal: tcgLegal,

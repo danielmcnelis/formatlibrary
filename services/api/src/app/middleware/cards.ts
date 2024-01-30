@@ -172,6 +172,7 @@ export const cardsCreate = async (req, res, next) => {
 
         const card = await Card.create({
             name: req.body.name,
+            cleanName: req.body.name.split(/[^A-Za-z0-9]/).filter((e) => e.length).join(' '),
             description: req.body.description,
             konamiCode: req.body.konamiCode,
             ypdId: req.body.ypdId.toString(),
