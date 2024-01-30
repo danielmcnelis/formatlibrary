@@ -47,11 +47,13 @@ io.on('connection', (socket) => {
             console.log('fetching sockets')
             let sockets = await io.fetchSockets()
             console.log('sockets', sockets)
+            console.log('sockets.length', sockets.length)
             console.log('KICK ALL SOCKETS')
             io.disconnectSockets()
             console.log('fetching sockets')
             sockets = await io.fetchSockets()
             console.log('sockets', sockets)
+            console.log('sockets.length', sockets.length)
         } catch (err) {
             console.log(err)
         }
