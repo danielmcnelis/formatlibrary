@@ -74,11 +74,11 @@ export const DraftLobby = () => {
     const [toggleChime] = useAudio('/assets/sounds/chime.mp3')
     const [toggleHorn] = useAudio('/assets/sounds/horn.mp3')
     const [socket] = useState(useSocket())
-    const [id] = useState(useParams())
-    // const { id } = useParams()
+    // const [{id}] = useState(useParams())
+    const { id } = useParams()
     const timerColor = JSON.parse(localStorage.getItem('theme')) === 'dark' ? '#00bca6' : '#334569'
-    const logoUrl = draft?.type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}` :
-        `https://cdn.formatlibrary.com/images/artworks/${draft.set?.setCode || 'back'}.jpg`
+    const logoUrl = draft?.type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${draft?.cube?.logo || 'cube.png'}` :
+        `https://cdn.formatlibrary.com/images/artworks/${draft?.set?.setCode || 'back'}.jpg`
     const logoWidth = draft?.type === 'cube' ? '128px' : '100px'
 
     // FETCH PARTICIPANTS
@@ -277,14 +277,14 @@ export const DraftLobby = () => {
                         <Helmet>
                             <title>{`Yu-Gi-Oh! Draft Lobby - Format Library`}</title>
                             <meta name="og:title" content={`Yu-Gi-Oh! Draft Lobby - Format Library`}/>
-                            <meta name="description" content={`Click here to join the next draft for ${draft.cubeName || draft.setName}.`}/>
-                            <meta name="og:description" content={`Click here to join the next draft for ${draft.cubeName || draft.setName}.`}/>
+                            <meta name="description" content={`Click here to join the next draft for ${draft?.cubeName || draft?.setName}.`}/>
+                            <meta name="og:description" content={`Click here to join the next draft for ${draft?.cubeName || draft?.setName}.`}/>
                         </Helmet>
                         <div className="card-database-flexbox">
                             <img className="desktop-only" style={{ width:logoWidth}} src={logoUrl} alt="draft-logo"/>
                             <div>
                                 <h1>Upcoming Draft!</h1>
-                                <h2>{draft.cubeName || draft.setName}</h2>
+                                <h2>{draft?.cubeName || draft?.setName}</h2>
                             </div>
                             <img className="desktop-only" style={{ width:logoWidth}} src={logoUrl} alt="draft-logo"/>
                         </div>

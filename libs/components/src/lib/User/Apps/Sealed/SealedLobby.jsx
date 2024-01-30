@@ -66,7 +66,8 @@ export const SealedLobby = () => {
     const [card, setCard] = useState({})
     const [toggleHorn] = useAudio('/assets/sounds/horn.mp3')
     const [socket] = useState(useSocket())
-    const [id] = useState(useParams())
+    // const [{id}] = useState(useParams())
+    const {id} = useParams()
 
     // FETCH PARTICIPANTS
     const fetchParticipants = async (draftId) => {
