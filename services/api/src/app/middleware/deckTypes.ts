@@ -343,7 +343,7 @@ export const deckTypesSummary = async (req, res, next) => {
         .split('#extra')[0]
         .split('\n')
         .filter((e) => e.length)
-        .map((e) => e.trim().replace(/^0+/, '')))
+        .map((e) => e.trim().replace(/^0+/, ''))
 
       const extraKonamiCodes = showExtra
         ? deck.ydk
@@ -351,7 +351,7 @@ export const deckTypesSummary = async (req, res, next) => {
             .split('!side')[0]
             .split('\n')
             .filter((e) => e.length)
-            .map((e) => e.trim().replace(/^0+/, '')))
+            .map((e) => e.trim().replace(/^0+/, ''))
         : []
         
       const sideKonamiCodes = deck.ydk
