@@ -309,6 +309,10 @@ export const drawDeck = async (ydk) => {
     const side = []
     const extra = []
     
+    console.log('mainArr', mainArr)
+    console.log('sideArr', sideArr)
+    console.log('extraArr', extraArr)
+
     for (let i = 0; i < mainArr.length; i++) {
         let konamiCode = mainArr[i]
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode
@@ -374,6 +378,10 @@ export const drawDeck = async (ydk) => {
             return false
         }
     })
+
+    console.log('main', main)
+    console.log('side', side)
+    console.log('extra', extra)
 
     const mainAttachment = main.length ? await makeCanvasAttachment(main, 57, 80, 10, 'main') : null
     const extraAttachment = extra.length ? await makeCanvasAttachment(extra, 38, 53, 15, 'extra'): null
