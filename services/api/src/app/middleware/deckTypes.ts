@@ -77,20 +77,20 @@ export const deckTypesDownload = async (req, res, next) => {
         const mainKonamiCodes = deck.ydk
             .split('#main')[1]
             .split('#extra')[0]
-            .split('\n')
+            .split(/[\s]+/)
             .filter((e) => e.length)
             .map((e) => e.trim())
 
         const extraKonamiCodes = deck.ydk
             .split('#extra')[1]
             .split('!side')[0]
-            .split('\n')
+            .split(/[\s]+/)
             .filter((e) => e.length)
             .map((e) => e.trim())
 
         const sideKonamiCodes = deck.ydk
             .split('!side')[1]
-            .split('\n')
+            .split(/[\s]+/)
             .filter((e) => e.length)
             .map((e) => e.trim())
   
@@ -341,7 +341,7 @@ export const deckTypesSummary = async (req, res, next) => {
       const mainKonamiCodes = deck.ydk
         .split('#main')[1]
         .split('#extra')[0]
-        .split('\n')
+        .split(/[\s]+/)
         .filter((e) => e.length)
         .map((e) => e.trim().replace(/^0+/, ''))
 
@@ -349,14 +349,14 @@ export const deckTypesSummary = async (req, res, next) => {
         ? deck.ydk
             .split('#extra')[1]
             .split('!side')[0]
-            .split('\n')
+            .split(/[\s]+/)
             .filter((e) => e.length)
             .map((e) => e.trim().replace(/^0+/, ''))
         : []
         
       const sideKonamiCodes = deck.ydk
         .split('!side')[1]
-        .split('\n')
+        .split(/[\s]+/)
         .filter((e) => e.length)
         .map((e) => e.trim().replace(/^0+/, ''))
 

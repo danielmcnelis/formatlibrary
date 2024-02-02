@@ -5,9 +5,9 @@ export const MiniDeck = (props) => {
     const { deck } = props
     if (!deck || !deck.id) return
     
-    const main = deck.ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length).map((e) => parseInt(e))
-    const extra = deck.ydk.split('#extra')[1].split('!side')[0].split('\n').filter((e) => e.length).map((e) => parseInt(e))
-    const side = deck.ydk.split('!side')[1].split('\n').filter((e) => e.length).map((e) => parseInt(e))
+    const main = deck.ydk.split('#main')[1].split('#extra')[0].split(/[\s]+/).filter((e) => e.length).map((e) => parseInt(e))
+    const extra = deck.ydk.split('#extra')[1].split('!side')[0].split(/[\s]+/).filter((e) => e.length).map((e) => parseInt(e))
+    const side = deck.ydk.split('!side')[1].split(/[\s]+/).filter((e) => e.length).map((e) => parseInt(e))
 
   return (
     <>

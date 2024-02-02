@@ -201,9 +201,9 @@ Deck.verifyLegality = async (ydk, formatName, formatDate, formatBanlist, formatC
     let limited2Count = 0
     let limited3Count = 0
 
-    const main = ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length)
-    const extra = ydk.split('#extra')[1].split('!side')[0].split('\n').filter((e) => e.length)
-    const side = ydk.split('!side')[1].split('\n').filter((e) => e.length)
+    const main = ydk.split('#main')[1].split('#extra')[0].split(/[\s]+/).filter((e) => e.length)
+    const extra = ydk.split('#extra')[1].split('!side')[0].split(/[\s]+/).filter((e) => e.length)
+    const side = ydk.split('!side')[1].split(/[\s]+/).filter((e) => e.length)
     const deckArr = [...main, ...side, ...extra]
     const deck = arrayToObject(deckArr)
     const keys = Object.keys(deck)

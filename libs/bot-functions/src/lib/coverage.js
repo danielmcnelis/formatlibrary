@@ -182,7 +182,7 @@ export const composeBlogPost = async (interaction, event) => {
         const mainKonamiCodes = deck.ydk
             .split('#main')[1]
             .split('#extra')[0]
-            .split('\n')
+            .split(/[\s]+/)
             .filter((e) => e.length)
             .map((e) => e.trim())
 
@@ -312,7 +312,7 @@ export const composeThumbnails = async (interaction, event) => {
         const mainKonamiCodes = deck.ydk
             .split('#main')[1]
             .split('#extra')[0]
-            .split('\n')
+            .split(/[\s]+/)
             .filter((e) => e.length)
             .map((e) => e.trim())
 

@@ -229,12 +229,12 @@ export const eventsId = async (req, res, next) => {
         const ydk = allDecks[i].ydk
         const main = ydk
           .split('#extra')[0]
-          .split('\n')
+          .split(/[\s]+/)
           .filter((el) => !el.includes('by') && !el.includes('created') && el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '')
         mainDeckCards.push(...main)
         const side = ydk
           .split('!side')[1]
-          .split('\n')
+          .split(/[\s]+/)
           .filter((el) => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '')
         sideDeckCards.push(...side)
       }

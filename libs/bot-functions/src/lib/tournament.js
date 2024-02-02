@@ -67,9 +67,9 @@ export const getDeckList = async (member, player, format, override = false) => {
             const url = collected.first()?.attachments?.first()?.url
             if (url) {
                 const {data: ydk} = await axios.get(url)
-                const main = ydk.split('#main')[1].split('#extra')[0].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
-                const extra = ydk.split('#extra')[1].split('!side')[0].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
-                const side = ydk.split('!side')[1].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)    
+                const main = ydk.split('#main')[1].split('#extra')[0].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
+                const extra = ydk.split('#extra')[1].split('!side')[0].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
+                const side = ydk.split('!side')[1].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)    
                 const minimum = format.category === 'Speed' ? 20 : 40
     
                 if (main?.length < minimum) {
@@ -145,9 +145,9 @@ export const getSpeedDeckList = async (member, player, format, override = false)
         const url = collected.first()?.attachments?.first()?.url
         if (url) {
             const {data: ydk} = await axios.get(url)
-            const main = ydk.split('#main')[1].split('#extra')[0].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
-            const extra = ydk.split('#extra')[1].split('!side')[0].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
-            const side = ydk.split('!side')[1].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)    
+            const main = ydk.split('#main')[1].split('#extra')[0].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
+            const extra = ydk.split('#extra')[1].split('!side')[0].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
+            const side = ydk.split('!side')[1].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)    
             const minimum = format.category === 'Speed' ? 20 : 40
 
             if (main?.length < minimum) {
@@ -220,7 +220,7 @@ export const getOPDeckList = async (member, player, override = false) => {
         time: 180000
     }).then(async (collected) => {
         const opdk = collected.first().content
-        const opdkArr = opdk.trim().split('\n')
+        const opdkArr = opdk.trim().split(/[\s]+/)
         const cards = []
         const wrongColorCards = []
         const unrecognizedCards = []

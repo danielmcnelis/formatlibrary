@@ -302,16 +302,12 @@ export const getOPCard = async (query, fuzzyOPCards) => {
 
 // DRAW DECK
 export const drawDeck = async (ydk) => {
-    const mainArr = ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length) || []
-    const extraArr = ydk.split('#extra')[1].split('!side')[0].split('\n').filter((e) => e.length) || []
-    const sideArr = ydk.split('!side')[1].split('\n').filter((e) => e.length) || []
+    const mainArr = ydk.split('#main')[1].split('#extra')[0].split(/[\s]+/).filter((e) => e.length) || []
+    const extraArr = ydk.split('#extra')[1].split('!side')[0].split(/[\s]+/).filter((e) => e.length) || []
+    const sideArr = ydk.split('!side')[1].split(/[\s]+/).filter((e) => e.length) || []
     const main = []
     const side = []
     const extra = []
-    
-    console.log('mainArr', mainArr)
-    console.log('sideArr', sideArr)
-    console.log('extraArr', extraArr)
 
     for (let i = 0; i < mainArr.length; i++) {
         let konamiCode = mainArr[i]
@@ -379,10 +375,6 @@ export const drawDeck = async (ydk) => {
         }
     })
 
-    console.log('main', main)
-    console.log('side', side)
-    console.log('extra', extra)
-
     const mainAttachment = main.length ? await makeCanvasAttachment(main, 57, 80, 10, 'main') : null
     const extraAttachment = extra.length ? await makeCanvasAttachment(extra, 38, 53, 15, 'extra'): null
     const sideAttachment = side.length ? await makeCanvasAttachment(side, 38, 53, 15, 'side'): null
@@ -398,7 +390,7 @@ export const drawDeck = async (ydk) => {
 
 // DRAW OP DECK
 export const drawOPDeck = async (opdk) => {
-    const splt = opdk.trim().split('\n')
+    const splt = opdk.trim().split(/[\s]+/)
     const leader = [splt[0].slice(2)]
     const main = []
     for (let i = 1; i < splt.length; i++) {

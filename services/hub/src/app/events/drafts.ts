@@ -232,7 +232,7 @@ export const startDraft = async (draftId, socket) => {
         }
 
         if (draft.type === 'cube') {
-            const konamiCodes = draft.cube.ydk.split('#main')[1].split('\n').filter((e) => e.length) || []
+            const konamiCodes = draft.cube.ydk.split('#main')[1].split(/[\s]+/).filter((e) => e.length) || []
             const cards = []
             
             for (let i = 0; i < konamiCodes.length; i++) {

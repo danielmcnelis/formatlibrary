@@ -35,7 +35,7 @@ export const cubesId = async (req, res, next) => {
       const konamiCodes = cube.ydk
         .split('#main')[1]
         .split('#extra')[0]
-        .split('\n')
+        .split(/[\s]+/)
         .filter((e) => e.length)
   
       for (let i = 0; i < konamiCodes.length; i++) {
@@ -95,7 +95,7 @@ export const cubesId = async (req, res, next) => {
 export const cubesReadYdk = async (req, res, next) => {
     try {
         const cardPool = []
-        const konamiCodes = req.body.ydk.split('#main')[1].split('#extra')[0].split('\n').filter((e) => e.length)
+        const konamiCodes = req.body.ydk.split('#main')[1].split('#extra')[0].split(/[\s]+/).filter((e) => e.length)
         
         for (let i = 0; i < konamiCodes.length; i++) {
             let konamiCode = konamiCodes[i]
@@ -246,7 +246,7 @@ export const unpublishCube = async (req, res, next) => {
         })
     
         if (!cube) return res.sendStatus(404)
-        const mainArr = cube.ydk.split('#main')[1].split('\n').filter((e) => e.length) || []
+        const mainArr = cube.ydk.split('#main')[1].split(/[\s]+/).filter((e) => e.length) || []
         const main = []
         
         for (let i = 0; i < mainArr.length; i++) {

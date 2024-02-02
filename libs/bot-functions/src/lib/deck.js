@@ -162,9 +162,9 @@ export const checkDeckList = async (member, format) => {
         const url = collected.first()?.attachments?.first()?.url
         if (url) {
             const {data: ydk} = await axios.get(url)
-            const main = ydk.split('#main')[1].split('#extra')[0].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
-            const extra = ydk.split('#extra')[1].split('!side')[0].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
-            const side = ydk.split('!side')[1].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)    
+            const main = ydk.split('#main')[1].split('#extra')[0].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
+            const extra = ydk.split('#extra')[1].split('!side')[0].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
+            const side = ydk.split('!side')[1].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)    
             const minimum = format.category === 'Speed' ? 20 : 40
 
             if (main?.length < minimum) {
@@ -229,9 +229,9 @@ export const checkSpeedDeckList = async (member, format, skillCard) => {
         const url = collected.first()?.attachments?.first()?.url
         if (url) {
             const {data: ydk} = await axios.get(url)
-            const main = ydk.split('#main')[1].split('#extra')[0].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
-            const extra = ydk.split('#extra')[1].split('!side')[0].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
-            const side = ydk.split('!side')[1].split('\n').map((e) => e.replace(/\D/g,'')).filter((e) => e.length)    
+            const main = ydk.split('#main')[1].split('#extra')[0].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
+            const extra = ydk.split('#extra')[1].split('!side')[0].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
+            const side = ydk.split('!side')[1].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)    
             const minimum = format.category === 'Speed' ? 20 : 40
 
             if (main?.length < minimum) {
@@ -335,7 +335,7 @@ export const checkOPDeckList = async (member, format) => {
         time: 30000
     }).then(async collected => {
         const opdk = collected.first().content
-        const opdkArr = opdk.trim().split('\n')
+        const opdkArr = opdk.trim().split(/[\s]+/)
         const cards = []
         const wrongColorCards = []
         const unrecognizedCards = []
@@ -385,7 +385,7 @@ export const checkOPDeckList = async (member, format) => {
 
 // GET OP DECK TYPE
 export const getOPDeckType = async (opdk) => {
-    const str = opdk.trim().split('\n')[0]
+    const str = opdk.trim().split(/[\s]+/)[0]
     const cardCode = str.slice(str.indexOf('x') + 1)
     const leader = await OPCard.findOne({ where: { cardCode }})
     let deckType = await DeckType.findOne({
@@ -407,7 +407,7 @@ export const getDeckType = async (deckfile, formatName) => {
 
     const main = deckfile?.split('#extra')[0]
     if (!main) return
-    const primaryDeckArr = main.split('\n').filter(el => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '').sort()
+    const primaryDeckArr = main.split(/[\s]+/).filter(el => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '').sort()
 
     const labeledDecks = await Deck.findAll({
         where: {
@@ -424,7 +424,7 @@ export const getDeckType = async (deckfile, formatName) => {
         const otherDeck = labeledDecks[i]
         const otherMain = otherDeck.ydk.split('#extra')[0]
         if (!otherMain) continue
-        const comparisonDeckArr = otherMain.split('\n').filter(el => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '').sort()
+        const comparisonDeckArr = otherMain.split(/[\s]+/).filter(el => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '').sort()
 
         const score = compareDecks(primaryDeckArr, comparisonDeckArr)
         similarityScores.push([score, otherDeck.deckType])

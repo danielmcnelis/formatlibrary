@@ -700,7 +700,7 @@ import { parse } from 'csv-parse'
 
 //     for (let i = 0; i < cubes.length; i++) {
 //         const cube = cubes[i]
-//         const mainArr = cube.ydk.split('#main')[1].split('\n').filter((e) => e.length) || []
+//         const mainArr = cube.ydk.split('#main')[1].split(/[\s]+/).filter((e) => e.length) || []
 //         const main = []
         
 //         for (let i = 0; i < mainArr.length; i++) {
@@ -842,7 +842,7 @@ import { parse } from 'csv-parse'
 //         const konamiCodes = cube.ydk
 //             .split('#main')[1]
 //             .split('#extra')[0]
-//             .split('\n')
+//             .split(/[\s]+/)
 //             .filter((e) => e.length)
 
 //         await cube.update({ size: konamiCodes.length })

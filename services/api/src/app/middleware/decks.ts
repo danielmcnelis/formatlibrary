@@ -10,20 +10,20 @@ export const decksReadYdk = async (req, res, next) => {
         const mainKonamiCodes = req.body.ydk
             .split('#main')[1]
             .split('#extra')[0]
-            .split('\n')
+            .split(/[\s]+/)
             .filter((e) => e.length)
             .map((e) => e.trim())
 
         const extraKonamiCodes = req.body.ydk
             .split('#extra')[1]
             .split('!side')[0]
-            .split('\n')
+            .split(/[\s]+/)
             .filter((e) => e.length)
             .map((e) => e.trim())
 
         const sideKonamiCodes = req.body.ydk
             .split('!side')[1]
-            .split('\n')
+            .split(/[\s]+/)
             .filter((e) => e.length)
             .map((e) => e.trim())
 
@@ -199,19 +199,19 @@ export const decksBuilderId = async (req, res, next) => {
         const mainKonamiCodes = deck.ydk
             .split('#main')[1]
             .split('#extra')[0]
-            .split('\n')
+            .split(/[\s]+/)
             .filter((e) => e.length)
             .map((e) => e.trim())
 
         const extraKonamiCodes = deck.ydk
             .split('#extra')[1]
             .split('!side')[0]
-            .split('\n')
+            .split(/[\s]+/)
             .filter((e) => e.length)
 
         const sideKonamiCodes = deck.ydk
             .split('!side')[1]
-            .split('\n')
+            .split(/[\s]+/)
             .filter((e) => e.length)
             .map((e) => e.trim())
 
@@ -578,7 +578,7 @@ const findCard = async (query, fuzzyCards) => {
 export const convertTextToYDK = async (req, res, next) => {
     try {
         const text = req.body.headers?.text?.trim() || ''
-        const arr = text.replace(/^\s*[\n]/gm, '').split('\n')
+        const arr = text.replace(/^\s*[\n]/gm, '').split(/[\s]+/)
         let ydk = 'created by...\n#main\n'
         let fileName = null
         const errors = []
@@ -678,7 +678,7 @@ export const convertTextToYDK = async (req, res, next) => {
             }
         }
 
-        const split = ydk.split('\n')
+        const split = ydk.split(/[\s]+/)
         const extraIndex = split.indexOf('#extra')
         const sideIndex = split.indexOf('!side')
 
@@ -801,20 +801,20 @@ export const decksId = async (req, res, next) => {
     const mainKonamiCodes = deck.ydk
       .split('#main')[1]
       .split('#extra')[0]
-      .split('\n')
+      .split(/[\s]+/)
       .filter((e) => e.length)
       .map((e) => e.trim())
 
     const extraKonamiCodes = deck.ydk
       .split('#extra')[1]
       .split('!side')[0]
-      .split('\n')
+      .split(/[\s]+/)
       .filter((e) => e.length)
       .map((e) => e.trim())
 
     const sideKonamiCodes = deck.ydk
       .split('!side')[1]
-      .split('\n')
+      .split(/[\s]+/)
       .filter((e) => e.length)
       .map((e) => e.trim())
 
