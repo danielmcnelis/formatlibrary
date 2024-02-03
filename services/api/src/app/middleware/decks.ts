@@ -578,7 +578,7 @@ const findCard = async (query, fuzzyCards) => {
 export const convertTextToYDK = async (req, res, next) => {
     try {
         const text = req.body.headers?.text?.trim() || ''
-        const arr = text.replace(/^\s*[\n]/gm, '').split(/[\s]+/)
+        const arr = text.replace(/^\s*[\n]/gm, '').split('\n')
         let ydk = 'created by...\n#main\n'
         let fileName = null
         const errors = []
