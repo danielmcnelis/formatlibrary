@@ -1135,20 +1135,15 @@ import { parse } from 'csv-parse'
         try {
             const url = `https://yugipedia.com/api.php?action=parse&format=json&page=Card_Errata:${name}`
             const {data} = await axios.get(url)
-            console.log('data:', data)
-            console.log('!!data', !!data)
             const parse = data?.parse 
-            console.log('!!parse', !!parse)
             const text = parse?.text
-            console.log('!!text', !!text)
             const content = text?.["*"]
-            console.log('!!content', !!content)
     
             const rows = content.split('<tr>').filter((r) => r.includes('<td>'))
     
             for (let j = 0; j < rows.length; j++) {
                 const row = rows[j]
-                const cells = row.split('<td>').filter((c) => !c.includes('<th'))
+                const cells = row.split('<td>').filter((c) => !c.includes('<th') && !c.includes('['))
     
                 for (let k = 0; k < cells.length; k++) {
                     const c = cells[k]
@@ -1181,7 +1176,7 @@ import { parse } from 'csv-parse'
             }
         } catch(err) {
             e++
-            console.log(`Error processing Yu-Gi-Oh! Card: ${name}`, err)
+            console.log(`Error processing card: ${name}`, err)
         }
     }
 
