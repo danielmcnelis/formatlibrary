@@ -1128,10 +1128,13 @@ import { parse } from 'csv-parse'
 ;(async () => {
     const cards = await Card.findAll()
     let b = 0
+    let d = 0
     let e = 0
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < cards.length; i++) {
         const {name, id} = cards[i]
+        let cardWasUpdated = false
+
         try {
             const url = `https://yugipedia.com/api.php?action=parse&format=json&page=Card_Errata:${name}`
             const {data} = await axios.get(url)
@@ -1139,15 +1142,15 @@ import { parse } from 'csv-parse'
             const text = parse?.text
             const content = text?.["*"]
     
-            const rows = content?.split('<tr>').filter((r) => r.includes('<td>'))
+            const rows = content?.split('<tr>').filter((r) => r.includes('<td>')) || []
     
             for (let j = 0; j < rows.length; j++) {
                 const row = rows[j]
-                const cells = row.split('<td>').filter((c) => !c.includes('<th') && !c.startsWith('['))
+                const cells = row.split('<td>').filter((c) => !c.includes('<th') && !c.startsWith('[')) || []
+                const numCols = cells.length / 2
     
                 for (let k = 0; k < cells.length; k++) {
                     const c = cells[k]
-                    const numCol = cells.length / 2
                     const cardCode = c.split('</div><a href="/wiki/')[1]?.split(`"`)[0]
                     if (!cardCode) continue
     
@@ -1158,21 +1161,39 @@ import { parse } from 'csv-parse'
                         }
                     })
     
-                    if (!print) continue
+                    if (!print) {
+                        console.log(`No print for cardCode: ${cardCode}`)
+                        continue
+                    }
     
-                    const rawDesc = cells[k - numCol]
+                    const rawDesc = cells[k - numCols]
                     const description = rawDesc.slice(0, rawDesc.indexOf('</td>'))
                         .replaceAll('<ins>', '')
                         .replaceAll('</ins>', '')
+                        .replaceAll('<br>', '\n')
+                        .replaceAll('<br >', '\n')
+                        .replaceAll('<br/>', '\n')
                         .replaceAll('<br />', '\n')
                         .replaceAll('<del>', '')
                         .replaceAll('</del>', '')
                         .replaceAll('<b>', '')
                         .replaceAll('</b>', '')
-    
+                        .replaceAll('<i>', '')
+                        .replaceAll('</i>', '')
+                        .replaceAll('<center>', '')
+                        .replaceAll('</center>', '')
+                        .replaceAll('<span class="original">', '')
+                        .replaceAll('</span>', '')
+                        
+
                     console.log(`UPDATING PRINT: ${cardCode} - ${name}`)
                     await print.update({ description })
                     b++
+                    
+                    if (!cardWasUpdated) {
+                        cardWasUpdated = true
+                        d++
+                    }
                 }
             }
         } catch(err) {
@@ -1181,5 +1202,5 @@ import { parse } from 'csv-parse'
         }
     }
 
-    return console.log(`updated descriptions for ${b} prints, encountered ${e} errors`)
+    return console.log(`Updated descriptions for ${b} prints, from ${d} out of ${cards.length} cards, encountered ${e} errors.`)
 })()
