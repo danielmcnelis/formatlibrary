@@ -1134,7 +1134,14 @@ import { parse } from 'csv-parse'
         const {name, id} = cards[i]
         try {
             const url = `https://yugipedia.com/api.php?action=parse&format=json&page=Card_Errata:${name}`
-            const {data: {parse: {text: {"*": content}}}} = await axios.get(url)
+            const {data} = await axios.get(url)
+            console.log('!!data', !!data)
+            const parse = data?.parse 
+            console.log('!!parse', !!parse)
+            const text = parse?.text
+            console.log('!!text', !!text)
+            const content = text?.["*"]
+            console.log('!!content', !!content)
     
             const rows = content.split('<tr>').filter((r) => r.includes('<td>'))
     
