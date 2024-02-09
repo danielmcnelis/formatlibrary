@@ -1194,7 +1194,7 @@ import { parse } from 'csv-parse'
                         .replaceAll('</span>', '')
                         
 
-                    console.log(`UPDATING PRINT: ${cardCode} - ${name}\n${description}\n`)
+                    console.log(`UPDATING PRINT: ${cardCode} - ${name}`)
                     await print.update({ description })
                     b++
 
