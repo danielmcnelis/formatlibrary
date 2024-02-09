@@ -1124,3 +1124,58 @@ import { parse } from 'csv-parse'
 
 //     })
 // })()
+
+;(async () => {
+    const cards = await Card.findAll()
+    let b = 0
+    let e = 0
+
+    for (let i = 0; i < 100; i++) {
+        const {name, id} = cards[i]
+        try {
+            const url = `https://yugipedia.com/api.php?action=parse&format=json&page=Card_Errata:${name}`
+            const {data: {parse: {text: {"*": content}}}} = await axios.get(url)
+    
+            const rows = content.split('<tr>').filter((r) => r.includes('<td>'))
+    
+            for (let j = 0; j < rows.length; j++) {
+                const row = rows[j]
+                const cells = row.split('<td>').filter((c) => !c.includes('<th'))
+    
+                for (let k = 0; k < cells.length; k++) {
+                    const c = cells[k]
+                    const numCol = cells.length / 2
+                    const cardCode = c.split('</div><a href="/wiki/')[1]?.split(`"`)[0]
+                    if (!cardCode) continue
+    
+                    const print = await Print.findOne({
+                        where: {
+                            cardId: id,
+                            cardCode: cardCode
+                        }
+                    })
+    
+                    if (!print) continue
+    
+                    const rawDesc = cells[k - numCol]
+                    const description = rawDesc.slice(0, rawDesc.indexOf('</td>'))
+                        .replaceAll('<ins>', '')
+                        .replaceAll('</ins>', '')
+                        .replaceAll('<br />', '\n')
+                        .replaceAll('<del>', '')
+                        .replaceAll('</del>', '')
+                        .replaceAll('<b>', '')
+                        .replaceAll('</b>', '')
+    
+                    await print.update({ description })
+                    b++
+                }
+            }
+        } catch(err) {
+            e++
+            console.log(`Error processing Yu-Gi-Oh! Card: ${name}`, err)
+        }
+    }
+
+    return console.log(`updated descriptions for ${b} prints, encountered ${e} errors`)
+})()
