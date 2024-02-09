@@ -1135,6 +1135,7 @@ import { parse } from 'csv-parse'
         try {
             const url = `https://yugipedia.com/api.php?action=parse&format=json&page=Card_Errata:${name}`
             const {data} = await axios.get(url)
+            console.log('data:', data)
             console.log('!!data', !!data)
             const parse = data?.parse 
             console.log('!!parse', !!parse)
