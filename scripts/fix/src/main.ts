@@ -1139,11 +1139,11 @@ import { parse } from 'csv-parse'
             const text = parse?.text
             const content = text?.["*"]
     
-            const rows = content.split('<tr>').filter((r) => r.includes('<td>'))
+            const rows = content?.split('<tr>').filter((r) => r.includes('<td>'))
     
             for (let j = 0; j < rows.length; j++) {
                 const row = rows[j]
-                const cells = row.split('<td>').filter((c) => !c.includes('<th') && !c.includes('['))
+                const cells = row.split('<td>').filter((c) => !c.includes('<th') && !c.startsWith('['))
     
                 for (let k = 0; k < cells.length; k++) {
                     const c = cells[k]
@@ -1170,6 +1170,7 @@ import { parse } from 'csv-parse'
                         .replaceAll('<b>', '')
                         .replaceAll('</b>', '')
     
+                    console.log(`UPDATING PRINT: ${cardCode} - ${name}`)
                     await print.update({ description })
                     b++
                 }
