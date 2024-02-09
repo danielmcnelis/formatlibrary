@@ -1170,7 +1170,7 @@ import { parse } from 'csv-parse'
                     })
     
                     if (!print) {
-                        console.log(`No print for cardCode: ${cardCode}`)
+                        console.log(`No print for ${name} - (card code: ${cardCode})`)
                         continue
                     }
     
