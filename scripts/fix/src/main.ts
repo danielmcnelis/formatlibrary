@@ -1130,24 +1130,32 @@ import { parse } from 'csv-parse'
     let b = 0
     let d = 0
     let e = 0
+    const failures = []
 
     for (let i = 0; i < cards.length; i++) {
-        const {name, id} = cards[i]
+        const {name, id, category, normal} = cards[i]
+        if (category === 'Monster' && normal) {
+            const prints = await Print.findAll({ where: { cardId: id }})
+            for (let j = 0; j < prints.length; j++) {
+                const print = prints[i]
+                await print.update({ description: null })
+                b++
+            }
+            d++
+            continue
+        }
+
         let cardWasUpdated = false
 
         try {
             const url = `https://yugipedia.com/api.php?action=parse&format=json&page=Card_Errata:${name}`
             const {data} = await axios.get(url)
-            const parse = data?.parse 
-            const text = parse?.text
-            const content = text?.["*"]
-    
-            const rows = content?.split('<tr>').filter((r) => r.includes('<td>')) || []
+            const rows = data?.parse?.text?.["*"]?.split('<tr>').filter((r) => r.includes('<td>')) || []
     
             for (let j = 0; j < rows.length; j++) {
                 const row = rows[j]
-                const cells = row.split('<td>').filter((c) => !c.includes('<th') && !c.startsWith('[')) || []
-                const numCols = cells.length / 2
+                const cells = row.split('<td>')
+                const numCols = row.match(/<th/g)?.length
     
                 for (let k = 0; k < cells.length; k++) {
                     const c = cells[k]
@@ -1167,7 +1175,7 @@ import { parse } from 'csv-parse'
                     }
     
                     const rawDesc = cells[k - numCols]
-                    const description = rawDesc.slice(0, rawDesc.indexOf('</td>'))
+                    const description = rawDesc?.slice(0, rawDesc.indexOf('</td>'))
                         .replaceAll('<ins>', '')
                         .replaceAll('</ins>', '')
                         .replaceAll('<br>', '\n')
@@ -1186,21 +1194,25 @@ import { parse } from 'csv-parse'
                         .replaceAll('</span>', '')
                         
 
-                    console.log(`UPDATING PRINT: ${cardCode} - ${name}`)
+                    console.log(`UPDATING PRINT: ${cardCode} - ${name}\n${description}\n`)
                     await print.update({ description })
                     b++
-                    
+
                     if (!cardWasUpdated) {
                         cardWasUpdated = true
                         d++
                     }
                 }
             }
+
+            if (!cardWasUpdated) failures.push(name)
         } catch(err) {
             e++
+            failures.push(name)
             console.log(`Error processing card: ${name}`, err)
         }
     }
 
+    console.log(`Failed to update the following ${failures.length} cards:\n`, failures.sort().join('\n'))
     return console.log(`Updated descriptions for ${b} prints, from ${d} out of ${cards.length} cards, encountered ${e} errors.`)
 })()
