@@ -1137,7 +1137,7 @@ import { parse } from 'csv-parse'
         if (category === 'Monster' && normal) {
             const prints = await Print.findAll({ where: { cardId: id }})
             for (let j = 0; j < prints.length; j++) {
-                const print = prints[i]
+                const print = prints[j]
                 await print.update({ description: null })
                 b++
             }
