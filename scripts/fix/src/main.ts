@@ -1159,7 +1159,20 @@ import { parse } from 'csv-parse'
     
                 for (let k = 0; k < cells.length; k++) {
                     const c = cells[k]
-                    const potentialCardCodes = c.split('<a href="/wiki/').map((pcc) => pcc.slice(0, pcc.indexOf(`"`))).filter((pcc) => pcc.includes('-') && !pcc.includes('<') && !pcc.includes('.'))
+                    const potentialCardCodes = c.split('<a href="/wiki/')
+                        .map((pcc) => pcc.slice(0, pcc.indexOf(`"`)))
+                        .filter((pcc) => 
+                            pcc.includes('-') && 
+                            !pcc.includes('<') && 
+                            !pcc.includes('.') && 
+                            !pcc.includes('-IT') && 
+                            !pcc.includes('-SP') && 
+                            !pcc.includes('-DE') && 
+                            !pcc.includes('-KR') && 
+                            !pcc.includes('-FR') && 
+                            !pcc.includes('-PT')
+                        )
+                        
                     if (!potentialCardCodes.length) continue
                     let print
 
