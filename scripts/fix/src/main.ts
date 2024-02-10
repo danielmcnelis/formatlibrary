@@ -1166,13 +1166,14 @@ import { parse } from 'csv-parse'
                             !pcc.includes('<') && 
                             !pcc.includes('.') && 
                             !pcc.includes('-IT') && 
+                            !pcc.includes('-JP') && 
                             !pcc.includes('-SP') && 
                             !pcc.includes('-DE') && 
                             !pcc.includes('-KR') && 
                             !pcc.includes('-FR') && 
                             !pcc.includes('-PT')
                         )
-                        
+
                     if (!potentialCardCodes.length) continue
                     let print
 
