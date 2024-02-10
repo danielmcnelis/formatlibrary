@@ -1126,6 +1126,12 @@ import { parse } from 'csv-parse'
 // })()
 
 ;(async () => {
+    const prints = await Print.findAll()
+    for (let i = 0; i < prints.length; i++) {
+        const print = prints[i]
+        await print.update({ description: null })
+    }
+
     const cards = await Card.findAll()
     let b = 0
     let d = 0
@@ -1209,6 +1215,8 @@ import { parse } from 'csv-parse'
                         .replaceAll('</b>', '')
                         .replaceAll('<i>', '')
                         .replaceAll('</i>', '')
+                        .replaceAll('<strong>', '')
+                        .replaceAll('</strong>', '')
                         .replaceAll('<center>', '')
                         .replaceAll('</center>', '')
                         .replaceAll('<span class="original">', '')
