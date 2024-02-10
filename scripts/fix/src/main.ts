@@ -1159,18 +1159,25 @@ import { parse } from 'csv-parse'
     
                 for (let k = 0; k < cells.length; k++) {
                     const c = cells[k]
-                    const cardCode = c.split('</div><a href="/wiki/')[1]?.split(`"`)[0]
-                    if (!cardCode) continue
+                    const potentialCardCodes = c.split('<a href="/wiki/').map((pcc) => pcc.slice(0, pcc.indexOf(`"`)))
+                    if (!potentialCardCodes.length) continue
+                    let print
+
+                    for (let z = 0; z < potentialCardCodes.length; z++) {
+                        const potentialCardCode = potentialCardCodes[z]
+                        print = await Print.findOne({
+                            where: {
+                                cardId: id,
+                                cardCode: potentialCardCode
+                            }
+                        })
+
+                        if (print) break
+                    }
     
-                    const print = await Print.findOne({
-                        where: {
-                            cardId: id,
-                            cardCode: cardCode
-                        }
-                    })
     
                     if (!print) {
-                        console.log(`No print for ${name} - (card code: ${cardCode})`)
+                        console.log(`No print for ${name} - (potential card codes: [${potentialCardCodes.join(',')})]`)
                         continue
                     }
     
@@ -1194,7 +1201,7 @@ import { parse } from 'csv-parse'
                         .replaceAll('</span>', '')
                         
 
-                    console.log(`UPDATING PRINT: ${cardCode} - ${name}`)
+                    console.log(`UPDATING PRINT: ${print.cardCode} - ${name}`)
                     await print.update({ description })
                     b++
 

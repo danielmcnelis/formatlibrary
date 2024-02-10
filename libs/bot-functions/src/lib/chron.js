@@ -510,10 +510,6 @@ export const updatePrints = async (set, groupId) => {
                     let name = result.name.replace(/ *\[^]*\) */g, '')
                     if (name.includes('Token:')) name = name.replace('Token:', '') + ' Token'
 
-                    // name = name.replace(' (Super Rare)', '')
-                    //     .replace(' (Quarter Century Secret Rare)', '')
-                    //     .replace(' (B. Dragon', 'Black Dragon')
-
                     if (
                         name.includes('Yu-Gi-Oh!') ||
                         name.includes('Booster Pack') ||
@@ -618,15 +614,11 @@ export const updatePrints = async (set, groupId) => {
                         cardId: card.id,
                         setId: set.id,
                         tcgPlayerUrl: result.url,
-                        tcgPlayerProductId: result.productId,
-                        description: result.extendedData.slice(-1)[0].value
+                        tcgPlayerProductId: result.productId
                     })
 
                     b++
                     console.log(`created new print: ${print.rarity} ${print.cardCode} - ${print.cardName} (productId: ${print.tcgPlayerProductId})`)
-                } else if (!print.description) {
-                    await print.update({ description: result.extendedData.slice(-1)[0].value })
-                    console.log(`updated print: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${print.description}`)
                 }
             }
         } catch (err) {
