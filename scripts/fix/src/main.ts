@@ -445,8 +445,37 @@ import { parse } from 'csv-parse'
     let e = 0
     let count = 0
 
-    const tournaments = await Tournament.findAll()
+    const allReplays = await Replay.findAll()
+
+    for (let i = 0; i < allReplays.length; i++) {
+        const replay = allReplays[i]
+        await replay.update({ display: false })
+    }
+
     const server = await Server.findOne({ where: { id: '414551319031054346'}})
+    const tournaments = [...await Event.findAll({ include: Tournament }).map((e) => e.tournament)]
+    const topCutTournaments = await Tournament.findAll({ where: { isTopCutTournament: true }})
+
+    for (let i = 0; i < topCutTournaments.length; i++) {
+        const tournament = topCutTournaments[i]
+
+        const replays = await Replay.findAll({
+            where: {
+                tournamentId: tournament.id
+            }
+        })
+
+        if (replays.length) console.log(`reviewing ${replays.length} replays from ${tournament.name}`)
+        count += replays.length
+
+        for (let j = 0; j < replays.length; j++) {
+            const replay = replays[j]
+            await replay.update({ display: true })
+            b++
+            console.log(`updated replay ${replay.id}`)
+        }
+    }
+    
 
     for (let i = 0; i < tournaments.length; i++) {
         try {
@@ -465,7 +494,6 @@ import { parse } from 'csv-parse'
             })
 
             if (replays.length) console.log(`reviewing ${replays.length} replays from ${tournament.name}`)
-    
             count += replays.length
         
             for (let j = 0; j < replays.length; j++) {
