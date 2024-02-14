@@ -458,6 +458,7 @@ import { parse } from 'csv-parse'
 
     for (let i = 0; i < topCutTournaments.length; i++) {
         const tournament = topCutTournaments[i]
+        const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
 
         const replays = await Replay.findAll({
             where: {
@@ -470,13 +471,58 @@ import { parse } from 'csv-parse'
 
         for (let j = 0; j < replays.length; j++) {
             const replay = replays[j]
-            await replay.update({ display: true })
+            const round = replays.roundInt
+            let roundName
+            if (tournament.type === 'single elimination') {
+                const totalRounds = Math.ceil(Math.log2(participants_count))
+                const roundsRemaining = totalRounds - round
+                roundName = roundsRemaining === 0 ? 'Finals' :
+                    roundsRemaining === 1 ? 'Semi Finals' :
+                    roundsRemaining === 2 ? 'Quarter Finals' :
+                    roundsRemaining === 3 ? 'Round of 16' :
+                    roundsRemaining === 4 ? 'Round of 32' :
+                    roundsRemaining === 5 ? 'Round of 64' :
+                    roundsRemaining === 6 ? 'Round of 128' :
+                    roundsRemaining === 7 ? 'Round of 256' :
+                    null
+            } else if (tournament.type === 'double elimination') {
+                const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
+                const totalLosersRounds = (totalWinnersRounds - 2) * 2
+                if (round > 0) {
+                    const roundsRemaining = totalWinnersRounds - round
+                    if (roundsRemaining <= 0) {
+                        roundName = 'Grand Finals'
+                    } else if (roundsRemaining === 1) {
+                        roundName = `Winner's Finals`
+                    } else if (roundsRemaining === 2) {
+                        roundName = `Winner's Semis`
+                    } else if (roundsRemaining === 3) {
+                        roundName = `Winner's Quarters`
+                    } else {
+                        roundName = `Winner's Round of ${Math.pow(2, roundsRemaining)}`
+                    }
+                } else {
+                    const roundsRemaining = totalLosersRounds - Math.abs(round)
+                    if (roundsRemaining <= 0) {
+                        roundName = `Loser's Finals`
+                    } else if (roundsRemaining === 1) {
+                        roundName = `Loser's Semis`
+                    } else if (roundsRemaining === 2) {
+                        roundName = `Loser's Thirds`
+                    } else if (roundsRemaining === 3) {
+                        roundName = `Loser's Fifths`
+                    } else {
+                        roundName = `Loser's Round of ${Math.pow(2, roundsRemaining) - 1}`
+                    }
+                }
+            }
+
+            await replay.update({ display: true, roundName })
             b++
             console.log(`updated replay ${replay.id}`)
         }
     }
     
-
     for (let i = 0; i < primaryTournaments.length; i++) {
         try {
             const tournament = primaryTournaments[i]
