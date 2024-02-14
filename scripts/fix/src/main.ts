@@ -572,6 +572,8 @@ import { parse } from 'csv-parse'
                                 roundName = `Loser's Semis`
                             } else if (roundsRemaining === 2) {
                                 roundName = `Loser's Thirds`
+                            } else if (roundsRemaining === 3) {
+                                roundName = `Loser's Fifths`
                             } else {
                                 roundName = `Loser's Round ${Math.abs(round)}`
                             }
