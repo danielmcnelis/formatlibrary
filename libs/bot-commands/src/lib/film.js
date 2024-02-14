@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Format, Player, Replay, Server, Tournament } from '@fl/models'
-import { hasAffiliateAccess, selectTournament } from '@fl/bot-functions'
+import { hasPartnerAccess, isMod, selectTournament } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
 
@@ -19,16 +19,22 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         
         const user = interaction.options.getUser('player') || interaction.user    
         const discordId = user.id
         const player = await Player.findOne({ where: { discordId: discordId } })
         if (!player) return await interaction.editReply({ content: "That user is not in the database."})
 
+        const inspectingOtherUser = discordId !== interaction.user.id
+        if (!(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        const userIsMod = isMod(server, interaction.member)
+        if (!userIsMod && inspectingOtherUser) return await interaction.editReply({ content: `You do not have permission to do that.` })
+    
         let format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const tournaments = await Tournament.findByState('underway', format, interaction.guildId, 'ASC')
-        const tournament = await selectTournament(interaction, tournaments, 'ASC')
+        const state = userIsMod ? {[Op.or]: ['underway', 'complete']} : 'underway'
+        const tournaments =  await Tournament.findByState(state, format, interaction.guildId, 'ASC')
+        const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
 
         const replays = [...await Replay.findAll({
@@ -38,7 +44,7 @@ export default {
                     { loserId: player.id }
                 ],
                 tournamentId: tournament.id,
-                '$tournament.state$': 'underway'
+                '$tournament.state$': state
             },
             include: Tournament,
             order: [['suggestedOrder', 'ASC']]

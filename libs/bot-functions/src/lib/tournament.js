@@ -392,7 +392,10 @@ export const selectTournament = async (interaction, tournaments) => {
 // GET FILM
 export const getFilm = async (interaction, tournamentId, userId) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
+    const server = await Server.findOne({ where: { id: interaction.guildId }})
     const player = await Player.findOne({ where: { discordId: userId }})
+    const userIsMod = isMod(server, interaction.member)
+    const state = userIsMod ? {[Op.or]: ['underway', 'complete']} : 'underway'
 
     const replays = [...await Replay.findAll({
         where: {
@@ -401,7 +404,7 @@ export const getFilm = async (interaction, tournamentId, userId) => {
                 { loserId: player.id }
             ],
             tournamentId: tournament.id,
-            '$tournament.state$': 'underway'
+            '$tournament.state$': state
         },
         include: Tournament,
         order: [['createdAt', 'ASC']]
@@ -434,36 +437,38 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
         const round = challongeMatch?.match?.round || ''
         let roundName 
 
-        if (tournament.type === 'swiss' || tournament.type === 'round robin') {
-            roundName = `Round ${challongeMatch?.match?.round}`
-        } else if (tournament.type === 'single elimination') {
+        if (tournament.type === 'single elimination') {
             const totalRounds = Math.ceil(Math.log2(participants_count))
-            roundName = totalRounds - round === 0 ? 'Finals' :
-                totalRounds - round === 1 ? 'Semi Finals' :
-                totalRounds - round === 2 ? 'Quarter Finals' :
-                totalRounds - round === 3 ? 'Round of 16' :
-                totalRounds - round === 4 ? 'Round of 32' :
-                totalRounds - round === 5 ? 'Round of 64' :
-                totalRounds - round === 6 ? 'Round of 128' :
-                totalRounds - round === 7 ? 'Round of 256' :
+            const roundsRemaining = totalRounds - round
+            roundName = roundsRemaining === 0 ? 'Finals' :
+                roundsRemaining === 1 ? 'Semi Finals' :
+                roundsRemaining === 2 ? 'Quarter Finals' :
+                roundsRemaining === 3 ? 'Round of 16' :
+                roundsRemaining === 4 ? 'Round of 32' :
+                roundsRemaining === 5 ? 'Round of 64' :
+                roundsRemaining === 6 ? 'Round of 128' :
+                roundsRemaining === 7 ? 'Round of 256' :
                 null
         } else if (tournament.type === 'double elimination') {
             const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
             const totalLosersRounds = (totalWinnersRounds - 2) * 2
             if (round > 0) {
-                roundName = totalWinnersRounds - round <= 0 ? 'Grand Finals' :
-                    totalWinnersRounds - round === 1 ? `Winner's Finals` :
-                    totalWinnersRounds - round === 2 ? `Winner's Semis` :
-                    totalWinnersRounds - round === 3 ? `Winner's Quarters` :
+                const roundsRemaining = totalWinnersRounds - round
+                roundName = roundsRemaining <= 0 ? 'Grand Finals' :
+                    roundsRemaining === 1 ? `Winner's Finals` :
+                    roundsRemaining === 2 ? `Winner's Semis` :
+                    roundsRemaining === 3 ? `Winner's Quarters` :
                     `Winner's Round ${round}`
             } else {
-                roundName = totalLosersRounds - Math.abs(round) === 0 ? `Loser's Finals` :
-                    totalLosersRounds - Math.abs(round) === 1 ? `Loser's Semis` :
-                    totalLosersRounds - Math.abs(round) === 2 ? `Loser's Thirds` :
+                const roundsRemaining = totalLosersRounds - Math.abs(round)
+                roundName = roundsRemaining === 0 ? `Loser's Finals` :
+                    roundsRemaining === 1 ? `Loser's Semis` :
+                    roundsRemaining === 2 ? `Loser's Thirds` :
+                    roundsRemaining === 3 ? `Loser's Fifths` :
                     `Loser's Round ${Math.abs(round)}`
             }
         } else {
-            roundName = `${challongeMatch?.match?.round}`
+            roundName = `Round ${challongeMatch?.match?.round}`
         }
 
         let suggestedOrder = challongeMatch?.match?.suggested_play_order

@@ -527,13 +527,13 @@ import { parse } from 'csv-parse'
                             null
 
                         display = roundsRemaining === 0 || 
-                            participants_count >= 8 && roundsRemaining <= 0 ||
-                            participants_count >= 16 && roundsRemaining <= 1 ||
-                            participants_count >= 32 && roundsRemaining <= 2 ||
-                            participants_count >= 64 && roundsRemaining <= 3 ||
-                            participants_count >= 128 && roundsRemaining <= 4 ||
-                            participants_count >= 256 && roundsRemaining <= 5 ||
-                            participants_count >= 512 && roundsRemaining <= 6
+                            participants_count > 8 && roundsRemaining <= 1 ||
+                            participants_count > 16 && roundsRemaining <= 2 ||
+                            participants_count > 32 && roundsRemaining <= 3 ||
+                            participants_count > 64 && roundsRemaining <= 4 ||
+                            participants_count > 128 && roundsRemaining <= 5 ||
+                            participants_count > 256 && roundsRemaining <= 6 ||
+                            participants_count > 512 && roundsRemaining <= 7
 
                         console.log(`(SE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                     } else if (tournament.type === 'double elimination') {
@@ -554,13 +554,13 @@ import { parse } from 'csv-parse'
                             }
 
                             display = roundsRemaining === 0 || 
-                                participants_count >= 8 && roundsRemaining <= 0 ||
-                                participants_count >= 16 && roundsRemaining <= 1 ||
-                                participants_count >= 32 && roundsRemaining <= 2 ||
-                                participants_count >= 64 && roundsRemaining <= 3 ||
-                                participants_count >= 128 && roundsRemaining <= 4 ||
-                                participants_count >= 256 && roundsRemaining <= 5 ||
-                                participants_count >= 512 && roundsRemaining <= 6
+                                participants_count > 8 && roundsRemaining <= 1 ||
+                                participants_count > 16 && roundsRemaining <= 2 ||
+                                participants_count > 32 && roundsRemaining <= 3 ||
+                                participants_count > 64 && roundsRemaining <= 4 ||
+                                participants_count > 128 && roundsRemaining <= 5 ||
+                                participants_count > 256 && roundsRemaining <= 6 ||
+                                participants_count > 512 && roundsRemaining <= 7
                                 
                             console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                         } else {
@@ -578,13 +578,13 @@ import { parse } from 'csv-parse'
                                 roundName = `Loser's Round ${Math.abs(round)}`
                             }
 
-                            display = participants_count >= 8 && roundsRemaining <= 0 ||
-                                participants_count >= 16 && roundsRemaining <= 1 ||
-                                participants_count >= 32 && roundsRemaining <= 2 ||
-                                participants_count >= 64 && roundsRemaining <= 3 ||
-                                participants_count >= 128 && roundsRemaining <= 4 ||
-                                participants_count >= 256 && roundsRemaining <= 5 ||
-                                participants_count >= 512 && roundsRemaining <= 6
+                            display = participants_count > 8 && roundsRemaining <= 0 ||
+                                participants_count > 16 && roundsRemaining <= 1 ||
+                                participants_count > 32 && roundsRemaining <= 2 ||
+                                participants_count > 64 && roundsRemaining <= 3 ||
+                                participants_count > 128 && roundsRemaining <= 4 ||
+                                participants_count > 256 && roundsRemaining <= 5 ||
+                                participants_count > 512 && roundsRemaining <= 6
 
                             console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                         }

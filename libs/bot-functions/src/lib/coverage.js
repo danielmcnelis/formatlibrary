@@ -457,15 +457,37 @@ export const displayReplays = async (interaction, event) => {
         
                 if (event.tournament?.type === 'single elimination') {
                     const totalRounds = Math.ceil(Math.log2(event.size))
-                    display = ((totalRounds - round + 1) / event.size) <= 0.125
+                    const roundsRemaining = totalRounds - round
+                    display = roundsRemaining === 0 || 
+                        event.size > 8 && roundsRemaining <= 1 ||
+                        event.size > 16 && roundsRemaining <= 2 ||
+                        event.size > 32 && roundsRemaining <= 3 ||
+                        event.size > 64 && roundsRemaining <= 4 ||
+                        event.size > 128 && roundsRemaining <= 5 ||
+                        event.size > 256 && roundsRemaining <= 6 ||
+                        event.size > 512 && roundsRemaining <= 7
                 } else if (event.tournament?.type === 'double elimination') {
                     const totalWinnersRounds = Math.ceil(Math.log2(event.size)) + 1
                     const totalLosersRounds = (totalWinnersRounds - 2) * 2
                     if (round > 0) {
                         const roundsRemaining = totalWinnersRounds - round
-                        display = roundsRemaining === 0 || ((totalWinnersRounds - round + 1) / event.size) <= 0.125
+                        display = roundsRemaining === 0 || 
+                            event.size > 8 && roundsRemaining <= 1 ||
+                            event.size > 16 && roundsRemaining <= 2 ||
+                            event.size > 32 && roundsRemaining <= 3 ||
+                            event.size > 64 && roundsRemaining <= 4 ||
+                            event.size > 128 && roundsRemaining <= 5 ||
+                            event.size > 256 && roundsRemaining <= 6 ||
+                            event.size > 512 && roundsRemaining <= 7
                     } else {
-                        display = ((totalLosersRounds - round + 1) / event.size) <= 0.125
+                        const roundsRemaining = totalLosersRounds - Math.abs(round)
+                        display = event.size > 8 && roundsRemaining <= 0 ||
+                            event.size > 16 && roundsRemaining <= 1 ||
+                            event.size > 32 && roundsRemaining <= 2 ||
+                            event.size > 64 && roundsRemaining <= 3 ||
+                            event.size > 128 && roundsRemaining <= 4 ||
+                            event.size > 256 && roundsRemaining <= 5 ||
+                            event.size > 512 && roundsRemaining <= 6
                     }
                 }
 
