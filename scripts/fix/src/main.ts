@@ -453,7 +453,7 @@ import { parse } from 'csv-parse'
     }
 
     const server = await Server.findOne({ where: { id: '414551319031054346'}})
-    const tournaments = [...await Event.findAll({ include: Tournament }).map((e) => e.tournament)]
+    const tournaments = [...await Event.findAll({ include: Tournament })].map((e) => e.tournament)
     const topCutTournaments = await Tournament.findAll({ where: { isTopCutTournament: true }})
 
     for (let i = 0; i < topCutTournaments.length; i++) {
