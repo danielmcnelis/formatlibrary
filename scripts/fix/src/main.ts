@@ -540,14 +540,15 @@ import { parse } from 'csv-parse'
                                 roundName = `Winner's Finals`
                             } else if (roundsRemaining === 2) {
                                 roundName = `Winner's Semis`
+                            } else if (roundsRemaining === 3) {
+                                roundName = `Winner's Quarters`
                             } else {
                                 roundName = `Winner's Round ${round}`
                             }
                             console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                         } else {
                             const roundsRemaining = totalLosersRounds - Math.abs(round)
-                            display = roundsRemaining === 0 || roundsRemaining <= (totalLosersRounds - 4)
-                            display = ((roundsRemaining + 1) / participants_count) <= 0.125
+                            display = roundsRemaining === 0 || roundsRemaining <= (totalLosersRounds - 2)
                         
                             if (roundsRemaining <= 0) {
                                 roundName = `Loser's Finals`
