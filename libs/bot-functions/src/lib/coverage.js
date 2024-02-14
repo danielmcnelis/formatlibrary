@@ -473,10 +473,10 @@ export const displayReplays = async (interaction, event) => {
                             event.size > 32 && roundsRemaining <= 3
                     } else {
                         const roundsRemaining = totalLosersRounds - Math.abs(round)
-                        display = event.size > 8 && roundsRemaining <= 0 ||
-                            event.size > 16 && roundsRemaining <= 1 ||
-                            event.size > 32 && roundsRemaining <= 2 ||
-                            event.size > 64 && roundsRemaining <= 3
+                        display = roundsRemaining === 0 ||
+                            event.size > 8 && roundsRemaining <= 1 ||
+                            event.size > 16 && roundsRemaining <= 2 ||
+                            event.size > 32 && roundsRemaining <= 3
                     }
                 }
 

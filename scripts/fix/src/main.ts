@@ -570,10 +570,10 @@ import { parse } from 'csv-parse'
                                 roundName = `Loser's Round of ${Math.pow(2, roundsRemaining) - 1}`
                             }
 
-                            display = participants_count > 8 && roundsRemaining <= 0 ||
-                                participants_count > 16 && roundsRemaining <= 1 ||
-                                participants_count > 32 && roundsRemaining <= 2 ||
-                                participants_count > 64 && roundsRemaining <= 3
+                            display = roundsRemaining === 0 ||
+                                participants_count > 8 && roundsRemaining <= 1 ||
+                                participants_count > 16 && roundsRemaining <= 2 ||
+                                participants_count > 32 && roundsRemaining <= 3
 
                             console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                         }
