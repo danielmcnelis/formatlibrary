@@ -450,7 +450,6 @@ import { parse } from 'csv-parse'
 
     for (let i = 0; i < tournaments.length; i++) {
         try {
-
             const tournament = tournaments[i]
             const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
             if (!participants_count) {
@@ -464,6 +463,8 @@ import { parse } from 'csv-parse'
                 },
                 include: Match
             })
+
+            if (replays.length) console.log(`reviewing ${replays.length} replays from ${tournament.name}`)
     
             count += replays.length
         
@@ -530,14 +531,15 @@ import { parse } from 'csv-parse'
                     }
     
                     await replay.update({ roundName, display })
+                    console.log(`updated replay ${replay.id}`)
                     b++
                 }  catch (err) {
-                    console.log(err)
+                    console.log('err', err.message)
                     e++
                 }
            }
         } catch (err) {
-            console.log(err)
+            console.log('err', err.message)
             e++
         }
     }
