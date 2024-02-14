@@ -143,29 +143,29 @@ export default {
             if (tournament.type === 'swiss' || tournament.type === 'round robin') {
                 roundName = `Round ${challongeMatch?.match?.round}`
             } else if (tournament.type === 'single elimination') {
-                const rounds = Math.ceil(Math.log2(participants_count))
-                roundName = rounds - round === 0 ? 'Finals' :
-                    rounds - round === 1 ? 'Semi Finals' :
-                    rounds - round === 2 ? 'Quarter Finals' :
-                    rounds - round === 3 ? 'Round of 16' :
-                    rounds - round === 4 ? 'Round of 32' :
-                    rounds - round === 5 ? 'Round of 64' :
-                    rounds - round === 6 ? 'Round of 128' :
-                    rounds - round === 7 ? 'Round of 256' :
+                const totalRounds = Math.ceil(Math.log2(participants_count))
+                roundName = totalRounds - round === 0 ? 'Finals' :
+                    totalRounds - round === 1 ? 'Semi Finals' :
+                    totalRounds - round === 2 ? 'Quarter Finals' :
+                    totalRounds - round === 3 ? 'Round of 16' :
+                    totalRounds - round === 4 ? 'Round of 32' :
+                    totalRounds - round === 5 ? 'Round of 64' :
+                    totalRounds - round === 6 ? 'Round of 128' :
+                    totalRounds - round === 7 ? 'Round of 256' :
                     null
             } else if (tournament.type === 'double elimination') {
-                const rounds = Math.ceil(Math.log2(participants_count))
+                const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
+                const totalLosersRounds = (totalWinnersRounds - 2) * 2
                 if (round > 0) {
-                    roundName = rounds - round < 0 ? 'Grand Finals' :
-                        rounds - round === 0 ? 'Grand Finals' :
-                        rounds - round === 1 ? `Winner's Finals` :
-                        rounds - round === 2 ? `Winner's Semis` :
-                        rounds - round === 3 ? `Winner's Quarters` :
+                    roundName = totalWinnersRounds - round <= 0 ? 'Grand Finals' :
+                        totalWinnersRounds - round === 1 ? `Winner's Finals` :
+                        totalWinnersRounds - round === 2 ? `Winner's Semis` :
+                        totalWinnersRounds - round === 3 ? `Winner's Quarters` :
                         `Winner's Round ${round}`
                 } else {
-                    roundName = rounds - Math.abs(round) === -1 ? `Loser's Finals` :
-                        rounds - Math.abs(round) === 0 ? `Loser's Semis` :
-                        rounds - Math.abs(round) === 1 ? `Loser's Quarters` :
+                    roundName = totalLosersRounds - Math.abs(round) === 0 ? `Loser's Finals` :
+                        totalLosersRounds - Math.abs(round) === 1 ? `Loser's Semis` :
+                        totalLosersRounds - Math.abs(round) === 2 ? `Loser's Thirds` :
                         `Loser's Round ${Math.abs(round)}`
                 }
             } else {

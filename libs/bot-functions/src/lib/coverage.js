@@ -451,7 +451,24 @@ export const displayReplays = async (interaction, event) => {
                     },
                     include: DeckType
                 })
-    
+
+                const round = replay.roundInt
+                let display = false
+        
+                if (event.tournament?.type === 'single elimination') {
+                    const totalRounds = Math.ceil(Math.log2(event.size))
+                    display = ((totalRounds - round + 1) / event.size) <= 0.125
+                } else if (event.tournament?.type === 'double elimination') {
+                    const totalWinnersRounds = Math.ceil(Math.log2(event.size)) + 1
+                    const totalLosersRounds = (totalWinnersRounds - 2) * 2
+                    if (round > 0) {
+                        const roundsRemaining = totalWinnersRounds - round
+                        display = roundsRemaining === 0 || ((totalWinnersRounds - round + 1) / event.size) <= 0.125
+                    } else {
+                        display = ((totalLosersRounds - round + 1) / event.size) <= 0.125
+                    }
+                }
+
                 await replay.update({
                     winningDeckType: winningDeck?.deckType.name,
                     winningDeckId: winningDeck?.id,
@@ -461,7 +478,8 @@ export const displayReplays = async (interaction, event) => {
                     losingDeckTypeId: losingDeck?.deckTypeId,
                     eventName: event.abbreviation,
                     eventId: event.id,
-                    publishDate: event.endDate
+                    publishDate: event.endDate,
+                    display: display
                 })
             } catch (err) {
                 console.log(err)

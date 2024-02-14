@@ -31,9 +31,7 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         const oldDiscordId = interaction.options.getUser('olduser')?.id || interaction.options._hoistedOptions[0].user?.id || interaction.options._hoistedOptions[0].value
-        console.log('oldDiscordId', oldDiscordId)
         const newDiscordId = interaction.options.getUser('newuser')?.id || interaction.options._hoistedOptions[1].user?.id || interaction.options._hoistedOptions[1].value
-        console.log('newDiscordId', newDiscordId)
 
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
@@ -138,7 +136,7 @@ export default {
 
         for (let i = 0; i < decks.length; i++) {
             const deck = decks[i]
-            await deck.update({ playerId: oldPlayer.id })
+            await deck.update({ playerId: newPlayer.id })
         }
 
         const matches = await Match.findAll({

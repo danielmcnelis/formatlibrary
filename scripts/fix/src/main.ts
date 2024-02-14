@@ -440,85 +440,104 @@ import { parse } from 'csv-parse'
 //     return console.log(`updated ${b} replays and encountered ${e} errors`)
 // })()
 
-// ;(async () => {
-//     let b = 0
-//     let e = 0
+;(async () => {
+    let b = 0
+    let e = 0
+    let count = 0
+
+    const tournaments = await Tournament.findAll()
+    const server = await Server.findOne({ where: { id: '414551319031054346'}})
+
+    for (let i = 0; i < tournaments.length; i++) {
+        const tournament = tournaments[i]
+        const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
+        if (!participants_count) {
+            console.log(`no participants_count found for replay ${tournament.name}`)
+            continue
+        }
+
+        const replays = await Replay.findAll({
+            where: {
+                tournamentId: tournament.id
+            },
+            include: Match
+        })
+
+        count += replays.length
     
-//     const replays = await Replay.findAll({
-//         where: {
-//             eventId: {[Op.not]: null},
-//             tournamentId: {[Op.not]: null}
-//         },
-//         include: [Event, Tournament]
-//     })
+        for (let j = 0; j < replays.length; j++) {
+            try {
+                const replay = replays[j]
+                const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${replay?.match?.challongeMatchId}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
+                if (!challongeMatch) {
+                    console.log(`no challonge match found for replay ${replay.id}`)
+                    continue
+                }
 
-//     for (let i = 0; i < replays.length; i++) {
-//         try {
-//             const replay = replays[i]
-//             const winningDeck = await Deck.findOne({
-//                 where: {
-//                     playerId: replay.winnerId,
-//                     eventId: replay.eventId
-//                 },
-//                 include: DeckType
-//             })
+                const round = challongeMatch?.match?.round || ''
+                let roundName 
+                let display
+        
+                if (tournament.type === 'swiss' || tournament.type === 'round robin') {
+                    roundName = `Round ${challongeMatch?.match?.round}`
+                    display = false
+                } else if (tournament.type === 'single elimination') {
+                    const totalRounds = Math.ceil(Math.log2(participants_count))
+                    roundName = totalRounds - round === 0 ? 'Finals' :
+                        totalRounds - round === 1 ? 'Semi Finals' :
+                        totalRounds - round === 2 ? 'Quarter Finals' :
+                        totalRounds - round === 3 ? 'Round of 16' :
+                        totalRounds - round === 4 ? 'Round of 32' :
+                        totalRounds - round === 5 ? 'Round of 64' :
+                        totalRounds - round === 6 ? 'Round of 128' :
+                        totalRounds - round === 7 ? 'Round of 256' :
+                        null
+                    display = ((totalRounds - round + 1) / participants_count) <= 0.125
+                } else if (tournament.type === 'double elimination') {
+                    const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
+                    const totalLosersRounds = (totalWinnersRounds - 2) * 2
+                    if (round > 0) {
+                        const roundsRemaining = totalWinnersRounds - round
+                        display = roundsRemaining === 0 || ((totalWinnersRounds - round + 1) / participants_count) <= 0.125
+                        if (roundsRemaining <= 0) {
+                            roundName = 'Grand Finals'
+                        } else if (roundsRemaining === 1) {
+                            roundName = `Winner's Finals`
+                        } else if (roundsRemaining === 2) {
+                            roundName = `Winner's Semis`
+                        } else {
+                            roundName = `Winner's Round ${round}`
+                        }
+                    } else {
+                        const roundsRemaining = totalLosersRounds - Math.abs(round)
+                        display = ((totalLosersRounds - round + 1) / participants_count) <= 0.125
+                        
+                        if (roundsRemaining <= 0) {
+                            roundName = `Loser's Finals`
+                        } else if (roundsRemaining === 1) {
+                            roundName = `Loser's Semis`
+                        } else if (roundsRemaining === 2) {
+                            roundName = `Loser's Thirds`
+                        } else {
+                            roundName = `Loser's Round ${round}`
+                        }
+                    }
+                } else {
+                    roundName = `Round ${challongeMatch?.match?.round}`
+                    display = false
+                }
 
-//             const losingDeck = await Deck.findOne({
-//                 where: {
-//                     playerId: replay.loserId,
-//                     eventId: replay.eventId
-//                 },
-//                 include: DeckType
-//             })
+                await replay.update({ roundName, display })
+                b++
+            }  catch (err) {
+                console.log(err)
+                e++
+            }
+       }
+    }
 
-//             let roundName
-
-//             if (replay?.tournament?.type === 'swiss' || replay?.tournament?.type === 'round robin') {
-//                 roundName = `Round ${replay.roundInt}`
-//             } else if (replay?.tournament.type === 'single elimination') {
-//                 roundName = replay?.tournament.rounds - replay.roundInt === 0 ? 'Finals' :
-//                     replay.tournament?.rounds - replay.roundInt === 1 ? 'Semi Finals' :
-//                     replay.tournament?.rounds - replay.roundInt === 2 ? 'Quarter Finals' :
-//                     replay.tournament?.rounds - replay.roundInt === 3 ? 'Round of 16' :
-//                     replay.tournament?.rounds - replay.roundInt === 4 ? 'Round of 32' :
-//                     replay.tournament?.rounds - replay.roundInt === 5 ? 'Round of 64' :
-//                     replay.tournament?.rounds - replay.roundInt === 6 ? 'Round of 128' :
-//                     replay.tournament?.rounds - replay.roundInt === 7 ? 'Round of 256' :
-//                     null
-//             } else if (replay?.tournament.type === 'double elimination') {
-//                 if (replay.roundInt > 0) {
-//                     roundName = replay?.tournament.rounds - replay.roundInt === 0 ? 'Grand Finals' :
-//                         replay?.tournament.rounds - replay.roundInt === 1 ? `Winner's Finals` :
-//                         replay?.tournament.rounds - replay.roundInt === 2 ? `Winner's Semis` :
-//                         `Winner's Round ${replay.roundInt}`
-//                 } else {
-//                     roundName = replay?.tournament.rounds - Math.abs(replay.roundInt) === -1 ? `Loser's Finals` :
-//                         replay.tournament?.rounds - Math.abs(replay.roundInt) === 0 ? `Loser's Semis` :
-//                         `Loser's Round ${Math.abs(replay.roundInt)}`
-//                 }
-//             } else {
-//                 roundName = replay.roundName
-//             }
-
-//             await replay.update({
-//                 winningDeckType: winningDeck?.deckType?.name,
-//                 winningDeckId: winningDeck?.id,
-//                 winningDeckTypeId: winningDeck?.deckTypeId,
-//                 losingDeckType: losingDeck?.deckType?.name,
-//                 losingDeckId: losingDeck?.id,
-//                 losingDeckTypeId: losingDeck?.deckTypeId,
-//                 publishDate: replay?.event?.endDate,
-//                 roundName: roundName
-//             })
-//             b++
-//         } catch (err) {
-//             console.log(err)
-//             e++
-//         }
-//     }
-
-//     return console.log(`updated ${b} replays and encountered ${e} errors`)
-// })()
+    return console.log(`updated ${b} out of ${count} replays and encountered ${e} errors`)
+})()
 
 
 // ;(async () => {
@@ -1125,123 +1144,123 @@ import { parse } from 'csv-parse'
 //     })
 // })()
 
-;(async () => {
-    const prints = await Print.findAll()
-    for (let i = 0; i < prints.length; i++) {
-        const print = prints[i]
-        await print.update({ description: null })
-    }
+// ;(async () => {
+//     const prints = await Print.findAll()
+//     for (let i = 0; i < prints.length; i++) {
+//         const print = prints[i]
+//         await print.update({ description: null })
+//     }
 
-    const cards = await Card.findAll()
-    let b = 0
-    let d = 0
-    let e = 0
-    const failures = []
+//     const cards = await Card.findAll()
+//     let b = 0
+//     let d = 0
+//     let e = 0
+//     const failures = []
 
-    for (let i = 0; i < cards.length; i++) {
-        const {name, id, category, normal} = cards[i]
-        if (category === 'Monster' && normal) {
-            const prints = await Print.findAll({ where: { cardId: id }})
-            for (let j = 0; j < prints.length; j++) {
-                const print = prints[j]
-                await print.update({ description: null })
-                b++
-            }
-            d++
-            continue
-        }
+//     for (let i = 0; i < cards.length; i++) {
+//         const {name, id, category, normal} = cards[i]
+//         if (category === 'Monster' && normal) {
+//             const prints = await Print.findAll({ where: { cardId: id }})
+//             for (let j = 0; j < prints.length; j++) {
+//                 const print = prints[j]
+//                 await print.update({ description: null })
+//                 b++
+//             }
+//             d++
+//             continue
+//         }
 
-        let cardWasUpdated = false
+//         let cardWasUpdated = false
 
-        try {
-            const url = `https://yugipedia.com/api.php?action=parse&format=json&page=Card_Errata:${name}`
-            const {data} = await axios.get(url)
-            const rows = data?.parse?.text?.["*"]?.split('<tr>').filter((r) => r.includes('<td>')) || []
+//         try {
+//             const url = `https://yugipedia.com/api.php?action=parse&format=json&page=Card_Errata:${name}`
+//             const {data} = await axios.get(url)
+//             const rows = data?.parse?.text?.["*"]?.split('<tr>').filter((r) => r.includes('<td>')) || []
     
-            for (let j = 0; j < rows.length; j++) {
-                const row = rows[j]
-                const cells = row.split('<td>')
-                const numCols = row.match(/<th/g)?.length
+//             for (let j = 0; j < rows.length; j++) {
+//                 const row = rows[j]
+//                 const cells = row.split('<td>')
+//                 const numCols = row.match(/<th/g)?.length
     
-                for (let k = 0; k < cells.length; k++) {
-                    const c = cells[k]
-                    const potentialCardCodes = c.split('<a href="/wiki/')
-                        .map((pcc) => pcc.slice(0, pcc.indexOf(`"`)))
-                        .filter((pcc) => 
-                            pcc.includes('-') && 
-                            !pcc.includes('<') && 
-                            !pcc.includes('.') && 
-                            !pcc.includes('-IT') && 
-                            !pcc.includes('-JP') && 
-                            !pcc.includes('-SP') && 
-                            !pcc.includes('-DE') && 
-                            !pcc.includes('-KR') && 
-                            !pcc.includes('-FR') && 
-                            !pcc.includes('-PT')
-                        )
+//                 for (let k = 0; k < cells.length; k++) {
+//                     const c = cells[k]
+//                     const potentialCardCodes = c.split('<a href="/wiki/')
+//                         .map((pcc) => pcc.slice(0, pcc.indexOf(`"`)))
+//                         .filter((pcc) => 
+//                             pcc.includes('-') && 
+//                             !pcc.includes('<') && 
+//                             !pcc.includes('.') && 
+//                             !pcc.includes('-IT') && 
+//                             !pcc.includes('-JP') && 
+//                             !pcc.includes('-SP') && 
+//                             !pcc.includes('-DE') && 
+//                             !pcc.includes('-KR') && 
+//                             !pcc.includes('-FR') && 
+//                             !pcc.includes('-PT')
+//                         )
 
-                    if (!potentialCardCodes.length) continue
-                    let print
+//                     if (!potentialCardCodes.length) continue
+//                     let print
 
-                    for (let z = 0; z < potentialCardCodes.length; z++) {
-                        const potentialCardCode = potentialCardCodes[z]
-                        print = await Print.findOne({
-                            where: {
-                                cardId: id,
-                                cardCode: potentialCardCode
-                            }
-                        })
+//                     for (let z = 0; z < potentialCardCodes.length; z++) {
+//                         const potentialCardCode = potentialCardCodes[z]
+//                         print = await Print.findOne({
+//                             where: {
+//                                 cardId: id,
+//                                 cardCode: potentialCardCode
+//                             }
+//                         })
 
-                        if (print) break
-                    }
+//                         if (print) break
+//                     }
     
     
-                    if (!print) {
-                        console.log(`No print for ${name} - (potential card codes: [${potentialCardCodes.join(',')})]`)
-                        continue
-                    }
+//                     if (!print) {
+//                         console.log(`No print for ${name} - (potential card codes: [${potentialCardCodes.join(',')})]`)
+//                         continue
+//                     }
     
-                    const rawDesc = cells[k - numCols]
-                    const description = rawDesc?.slice(0, rawDesc.indexOf('</td>'))
-                        .replaceAll('<ins>', '')
-                        .replaceAll('</ins>', '')
-                        .replaceAll('<br>', '\n')
-                        .replaceAll('<br >', '\n')
-                        .replaceAll('<br/>', '\n')
-                        .replaceAll('<br />', '\n')
-                        .replaceAll('<del>', '')
-                        .replaceAll('</del>', '')
-                        .replaceAll('<b>', '')
-                        .replaceAll('</b>', '')
-                        .replaceAll('<i>', '')
-                        .replaceAll('</i>', '')
-                        .replaceAll('<strong>', '')
-                        .replaceAll('</strong>', '')
-                        .replaceAll('<center>', '')
-                        .replaceAll('</center>', '')
-                        .replaceAll('<span class="original">', '')
-                        .replaceAll('</span>', '')
+//                     const rawDesc = cells[k - numCols]
+//                     const description = rawDesc?.slice(0, rawDesc.indexOf('</td>'))
+//                         .replaceAll('<ins>', '')
+//                         .replaceAll('</ins>', '')
+//                         .replaceAll('<br>', '\n')
+//                         .replaceAll('<br >', '\n')
+//                         .replaceAll('<br/>', '\n')
+//                         .replaceAll('<br />', '\n')
+//                         .replaceAll('<del>', '')
+//                         .replaceAll('</del>', '')
+//                         .replaceAll('<b>', '')
+//                         .replaceAll('</b>', '')
+//                         .replaceAll('<i>', '')
+//                         .replaceAll('</i>', '')
+//                         .replaceAll('<strong>', '')
+//                         .replaceAll('</strong>', '')
+//                         .replaceAll('<center>', '')
+//                         .replaceAll('</center>', '')
+//                         .replaceAll('<span class="original">', '')
+//                         .replaceAll('</span>', '')
                         
 
-                    console.log(`UPDATING PRINT: ${print.cardCode} - ${name}`)
-                    await print.update({ description })
-                    b++
+//                     console.log(`UPDATING PRINT: ${print.cardCode} - ${name}`)
+//                     await print.update({ description })
+//                     b++
 
-                    if (!cardWasUpdated) {
-                        cardWasUpdated = true
-                        d++
-                    }
-                }
-            }
+//                     if (!cardWasUpdated) {
+//                         cardWasUpdated = true
+//                         d++
+//                     }
+//                 }
+//             }
 
-            if (!cardWasUpdated) failures.push(name)
-        } catch(err) {
-            e++
-            failures.push(name)
-            console.log(`Error processing card: ${name}`, err)
-        }
-    }
+//             if (!cardWasUpdated) failures.push(name)
+//         } catch(err) {
+//             e++
+//             failures.push(name)
+//             console.log(`Error processing card: ${name}`, err)
+//         }
+//     }
 
-    console.log(`Failed to update the following ${failures.length} cards:\n`, failures.sort().join('\n'))
-    return console.log(`Updated descriptions for ${b} prints, from ${d} out of ${cards.length} cards, encountered ${e} errors.`)
-})()
+//     console.log(`Failed to update the following ${failures.length} cards:\n`, failures.sort().join('\n'))
+//     return console.log(`Updated descriptions for ${b} prints, from ${d} out of ${cards.length} cards, encountered ${e} errors.`)
+// })()
