@@ -472,12 +472,7 @@ import { parse } from 'csv-parse'
                 try {
                     const replay = replays[j]
                     const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${replay?.match?.challongeMatchId}.json?api_key=${server.challongeAPIKey}`)
-                    if (!challongeMatch) {
-                        console.log(`no challonge match found for replay ${replay.id}`)
-                        continue
-                    }
-    
-                    const round = challongeMatch?.match?.round || ''
+                    const round = challongeMatch?.match?.round || replay.roundInt || ''
                     let roundName 
                     let display
             
