@@ -520,14 +520,14 @@ import { parse } from 'csv-parse'
                             roundsRemaining === 7 ? 'Round of 256' :
                             null
 
-                        display = ((roundsRemaining + 1) / participants_count) <= 0.125
-                        console.log(`(SE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count} (${(roundsRemaining + 1) / participants_count})`)
+                        display = roundsRemaining <= (totalRounds - 3)
+                        console.log(`(SE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                     } else if (tournament.type === 'double elimination') {
                         const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
                         const totalLosersRounds = (totalWinnersRounds - 2) * 2
                         if (round > 0) {
                             const roundsRemaining = totalWinnersRounds - round
-                            display = roundsRemaining === 0 || ((roundsRemaining + 1) / participants_count) <= 0.125
+                            display = roundsRemaining === 0 || roundsRemaining <= (totalWinnersRounds - 3)
                             if (roundsRemaining <= 0) {
                                 roundName = 'Grand Finals'
                             } else if (roundsRemaining === 1) {
@@ -537,9 +537,10 @@ import { parse } from 'csv-parse'
                             } else {
                                 roundName = `Winner's Round ${round}`
                             }
-                            console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count} (${(roundsRemaining + 1) / participants_count})`)
+                            console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                         } else {
                             const roundsRemaining = totalLosersRounds - Math.abs(round)
+                            display = roundsRemaining === 0 || roundsRemaining <= (totalLosersRounds - 4)
                             display = ((roundsRemaining + 1) / participants_count) <= 0.125
                         
                             if (roundsRemaining <= 0) {
@@ -552,7 +553,7 @@ import { parse } from 'csv-parse'
                                 roundName = `Loser's Round ${Math.abs(round)}`
                             }
 
-                            console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count} (${(roundsRemaining + 1) / participants_count})`)
+                            console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                         }
                     } else {
                         roundName = `Round ${challongeMatch?.match?.round}`
