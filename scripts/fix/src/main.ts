@@ -511,7 +511,7 @@ import { parse } from 'csv-parse'
                     }
             
                     if (tournament.type === 'swiss' || tournament.type === 'round robin') {
-                        roundName = `Round ${challongeMatch?.match?.round}`
+                        roundName = `Round ${round}`
                         display = false
                     } else if (tournament.type === 'single elimination') {
                         const totalRounds = Math.ceil(Math.log2(participants_count))
@@ -562,7 +562,7 @@ import { parse } from 'csv-parse'
                             console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                         }
                     } else {
-                        roundName = `Round ${challongeMatch?.match?.round}`
+                        roundName = `Round ${round}`
                         display = false
                     }
     
