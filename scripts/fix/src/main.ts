@@ -473,7 +473,7 @@ import { parse } from 'csv-parse'
                     const replay = replays[j]
                     const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${replay?.match?.challongeMatchId}.json?api_key=${server.challongeAPIKey}`)
                     const round = challongeMatch?.match?.round || replay.roundInt || ''
-                    let roundName 
+                    let roundName
                     let display
             
                     if (tournament.type === 'swiss' || tournament.type === 'round robin') {
@@ -506,6 +506,7 @@ import { parse } from 'csv-parse'
                             } else {
                                 roundName = `Winner's Round ${round}`
                             }
+                            console.log(`roundName (W)`, roundName, (totalWinnersRounds - round + 1) / participants_count)
                         } else {
                             const roundsRemaining = totalLosersRounds - Math.abs(round)
                             display = ((totalLosersRounds - round + 1) / participants_count) <= 0.125
@@ -519,6 +520,7 @@ import { parse } from 'csv-parse'
                             } else {
                                 roundName = `Loser's Round ${round}`
                             }
+                            console.log(`roundName (L)`, roundName, (totalWinnersRounds - round + 1) / participants_count)
                         }
                     } else {
                         roundName = `Round ${challongeMatch?.match?.round}`
