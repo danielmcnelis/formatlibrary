@@ -461,11 +461,7 @@ export const displayReplays = async (interaction, event) => {
                     display = roundsRemaining === 0 || 
                         event.size > 8 && roundsRemaining <= 1 ||
                         event.size > 16 && roundsRemaining <= 2 ||
-                        event.size > 32 && roundsRemaining <= 3 ||
-                        event.size > 64 && roundsRemaining <= 4 ||
-                        event.size > 128 && roundsRemaining <= 5 ||
-                        event.size > 256 && roundsRemaining <= 6 ||
-                        event.size > 512 && roundsRemaining <= 7
+                        event.size > 32 && roundsRemaining <= 3
                 } else if (event.tournament?.type === 'double elimination') {
                     const totalWinnersRounds = Math.ceil(Math.log2(event.size)) + 1
                     const totalLosersRounds = (totalWinnersRounds - 2) * 2
@@ -474,20 +470,13 @@ export const displayReplays = async (interaction, event) => {
                         display = roundsRemaining === 0 || 
                             event.size > 8 && roundsRemaining <= 1 ||
                             event.size > 16 && roundsRemaining <= 2 ||
-                            event.size > 32 && roundsRemaining <= 3 ||
-                            event.size > 64 && roundsRemaining <= 4 ||
-                            event.size > 128 && roundsRemaining <= 5 ||
-                            event.size > 256 && roundsRemaining <= 6 ||
-                            event.size > 512 && roundsRemaining <= 7
+                            event.size > 32 && roundsRemaining <= 3
                     } else {
                         const roundsRemaining = totalLosersRounds - Math.abs(round)
                         display = event.size > 8 && roundsRemaining <= 0 ||
                             event.size > 16 && roundsRemaining <= 1 ||
                             event.size > 32 && roundsRemaining <= 2 ||
-                            event.size > 64 && roundsRemaining <= 3 ||
-                            event.size > 128 && roundsRemaining <= 4 ||
-                            event.size > 256 && roundsRemaining <= 5 ||
-                            event.size > 512 && roundsRemaining <= 6
+                            event.size > 64 && roundsRemaining <= 3
                     }
                 }
 

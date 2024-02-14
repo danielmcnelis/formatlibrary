@@ -529,11 +529,7 @@ import { parse } from 'csv-parse'
                         display = roundsRemaining === 0 || 
                             participants_count > 8 && roundsRemaining <= 1 ||
                             participants_count > 16 && roundsRemaining <= 2 ||
-                            participants_count > 32 && roundsRemaining <= 3 ||
-                            participants_count > 64 && roundsRemaining <= 4 ||
-                            participants_count > 128 && roundsRemaining <= 5 ||
-                            participants_count > 256 && roundsRemaining <= 6 ||
-                            participants_count > 512 && roundsRemaining <= 7
+                            participants_count > 32 && roundsRemaining <= 3
 
                         console.log(`(SE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                     } else if (tournament.type === 'double elimination') {
@@ -550,17 +546,13 @@ import { parse } from 'csv-parse'
                             } else if (roundsRemaining === 3) {
                                 roundName = `Winner's Quarters`
                             } else {
-                                roundName = `Winner's Round ${round}`
+                                roundName = `Winner's Round of ${Math.pow(2, roundsRemaining)}`
                             }
 
-                            display = roundsRemaining === 0 || 
+                            display = roundsRemaining === 0 ||
                                 participants_count > 8 && roundsRemaining <= 1 ||
                                 participants_count > 16 && roundsRemaining <= 2 ||
-                                participants_count > 32 && roundsRemaining <= 3 ||
-                                participants_count > 64 && roundsRemaining <= 4 ||
-                                participants_count > 128 && roundsRemaining <= 5 ||
-                                participants_count > 256 && roundsRemaining <= 6 ||
-                                participants_count > 512 && roundsRemaining <= 7
+                                participants_count > 32 && roundsRemaining <= 3
                                 
                             console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                         } else {
@@ -575,16 +567,13 @@ import { parse } from 'csv-parse'
                             } else if (roundsRemaining === 3) {
                                 roundName = `Loser's Fifths`
                             } else {
-                                roundName = `Loser's Round ${Math.abs(round)}`
+                                roundName = `Loser's Round of ${Math.pow(2, roundsRemaining) - 1}`
                             }
 
                             display = participants_count > 8 && roundsRemaining <= 0 ||
                                 participants_count > 16 && roundsRemaining <= 1 ||
                                 participants_count > 32 && roundsRemaining <= 2 ||
-                                participants_count > 64 && roundsRemaining <= 3 ||
-                                participants_count > 128 && roundsRemaining <= 4 ||
-                                participants_count > 256 && roundsRemaining <= 5 ||
-                                participants_count > 512 && roundsRemaining <= 6
+                                participants_count > 64 && roundsRemaining <= 3
 
                             console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                         }

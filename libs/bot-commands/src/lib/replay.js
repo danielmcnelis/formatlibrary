@@ -162,14 +162,14 @@ export default {
                         roundsRemaining === 1 ? `Winner's Finals` :
                         roundsRemaining === 2 ? `Winner's Semis` :
                         roundsRemaining === 3 ? `Winner's Quarters` :
-                        `Winner's Round ${round}`
+                        `Winner's Round ${Math.pow(2, roundsRemaining)}`
                 } else {
                     const roundsRemaining = totalLosersRounds - Math.abs(round)
                     roundName = roundsRemaining === 0 ? `Loser's Finals` :
                         roundsRemaining === 1 ? `Loser's Semis` :
                         roundsRemaining === 2 ? `Loser's Thirds` :
                         roundsRemaining === 3 ? `Loser's Fifths` :
-                        `Loser's Round ${Math.abs(round)}`
+                        `Loser's Round of ${Math.pow(2, roundsRemaining) - 1}`
                 }
             } else {
                 roundName = `Round ${challongeMatch?.match?.round}`
