@@ -453,7 +453,7 @@ import { parse } from 'csv-parse'
     }
 
     const server = await Server.findOne({ where: { id: '414551319031054346'}})
-    const tournaments = [...await Event.findAll({ include: Tournament })].map((e) => e.tournament)
+    const primaryTournaments = [...await Event.findAll({ include: Tournament })].map((e) => e.tournament)
     const topCutTournaments = await Tournament.findAll({ where: { isTopCutTournament: true }})
 
     for (let i = 0; i < topCutTournaments.length; i++) {
@@ -477,9 +477,9 @@ import { parse } from 'csv-parse'
     }
     
 
-    for (let i = 0; i < tournaments.length; i++) {
+    for (let i = 0; i < primaryTournaments.length; i++) {
         try {
-            const tournament = tournaments[i]
+            const tournament = primaryTournaments[i]
             const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
             if (!participants_count) {
                 console.log(`no participants_count found for replay ${tournament.name}`)
@@ -509,16 +509,19 @@ import { parse } from 'csv-parse'
                         display = false
                     } else if (tournament.type === 'single elimination') {
                         const totalRounds = Math.ceil(Math.log2(participants_count))
-                        roundName = totalRounds - round === 0 ? 'Finals' :
-                            totalRounds - round === 1 ? 'Semi Finals' :
-                            totalRounds - round === 2 ? 'Quarter Finals' :
-                            totalRounds - round === 3 ? 'Round of 16' :
-                            totalRounds - round === 4 ? 'Round of 32' :
-                            totalRounds - round === 5 ? 'Round of 64' :
-                            totalRounds - round === 6 ? 'Round of 128' :
-                            totalRounds - round === 7 ? 'Round of 256' :
+                        const roundsRemaining = totalRounds - round
+                        roundName = roundsRemaining === 0 ? 'Finals' :
+                            roundsRemaining === 1 ? 'Semi Finals' :
+                            roundsRemaining === 2 ? 'Quarter Finals' :
+                            roundsRemaining === 3 ? 'Round of 16' :
+                            roundsRemaining === 4 ? 'Round of 32' :
+                            roundsRemaining === 5 ? 'Round of 64' :
+                            roundsRemaining === 6 ? 'Round of 128' :
+                            roundsRemaining === 7 ? 'Round of 256' :
                             null
-                        display = ((totalRounds - round + 1) / participants_count) <= 0.125
+
+                        display = ((roundsRemaining + 1) / participants_count) <= 0.125
+                        console.log(`(SE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count} (${(roundsRemaining + 1) / participants_count})`)
                     } else if (tournament.type === 'double elimination') {
                         const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
                         const totalLosersRounds = (totalWinnersRounds - 2) * 2
@@ -534,11 +537,11 @@ import { parse } from 'csv-parse'
                             } else {
                                 roundName = `Winner's Round ${round}`
                             }
-                            console.log(`${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining} (${(roundsRemaining + 1) / participants_count})`)
+                            console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count} (${(roundsRemaining + 1) / participants_count})`)
                         } else {
                             const roundsRemaining = totalLosersRounds - Math.abs(round)
                             display = ((roundsRemaining + 1) / participants_count) <= 0.125
-                            
+                        
                             if (roundsRemaining <= 0) {
                                 roundName = `Loser's Finals`
                             } else if (roundsRemaining === 1) {
@@ -546,9 +549,10 @@ import { parse } from 'csv-parse'
                             } else if (roundsRemaining === 2) {
                                 roundName = `Loser's Thirds`
                             } else {
-                                roundName = `Loser's Round ${round}`
+                                roundName = `Loser's Round ${Math.abs(round)}`
                             }
-                            console.log(`${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining} (${(roundsRemaining + 1) / participants_count})`)
+
+                            console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count} (${(roundsRemaining + 1) / participants_count})`)
                         }
                     } else {
                         roundName = `Round ${challongeMatch?.match?.round}`
