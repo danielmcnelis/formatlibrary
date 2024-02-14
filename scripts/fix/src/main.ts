@@ -520,7 +520,7 @@ import { parse } from 'csv-parse'
                             roundsRemaining === 7 ? 'Round of 256' :
                             null
 
-                        display = roundsRemaining <= (totalRounds - 3)
+                        display = roundsRemaining === 0 || roundsRemaining <= (totalRounds - 3)
                         console.log(`(SE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                     } else if (tournament.type === 'double elimination') {
                         const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
