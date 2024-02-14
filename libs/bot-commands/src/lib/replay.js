@@ -162,7 +162,7 @@ export default {
                         roundsRemaining === 1 ? `Winner's Finals` :
                         roundsRemaining === 2 ? `Winner's Semis` :
                         roundsRemaining === 3 ? `Winner's Quarters` :
-                        `Winner's Round ${Math.pow(2, roundsRemaining)}`
+                        `Winner's Round of ${Math.pow(2, roundsRemaining)}`
                 } else {
                     const roundsRemaining = totalLosersRounds - Math.abs(round)
                     roundName = roundsRemaining === 0 ? `Loser's Finals` :

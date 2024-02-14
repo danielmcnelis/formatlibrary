@@ -471,7 +471,7 @@ import { parse } from 'csv-parse'
 
         for (let j = 0; j < replays.length; j++) {
             const replay = replays[j]
-            const round = replays.roundInt
+            const round = replay.roundInt
             let roundName
             if (tournament.type === 'single elimination') {
                 const totalRounds = Math.ceil(Math.log2(participants_count))
