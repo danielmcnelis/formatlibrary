@@ -499,10 +499,16 @@ import { parse } from 'csv-parse'
             for (let j = 0; j < replays.length; j++) {
                 try {
                     const replay = replays[j]
-                    const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${replay?.match?.challongeMatchId}.json?api_key=${server.challongeAPIKey}`)
-                    const round = challongeMatch?.match?.round || replay.roundInt || ''
+                    let round
                     let roundName
                     let display
+
+                    if (!replay.roundInt) {
+                        const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${replay?.match?.challongeMatchId}.json?api_key=${server.challongeAPIKey}`)
+                        round = challongeMatch?.match?.round ||  ''
+                    } else {
+                        round = replay.roundInt
+                    }
             
                     if (tournament.type === 'swiss' || tournament.type === 'round robin') {
                         roundName = `Round ${challongeMatch?.match?.round}`
