@@ -506,7 +506,7 @@ import { parse } from 'csv-parse'
                             } else {
                                 roundName = `Winner's Round ${round}`
                             }
-                            console.log(`${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining} (${(roundsRemaining - round + 1) / participants_count})`)
+                            console.log(`${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining} (${(roundsRemaining + 1) / participants_count})`)
                         } else {
                             const roundsRemaining = totalLosersRounds - Math.abs(round)
                             display = ((roundsRemaining + 1) / participants_count) <= 0.125
@@ -520,7 +520,7 @@ import { parse } from 'csv-parse'
                             } else {
                                 roundName = `Loser's Round ${round}`
                             }
-                            console.log(`${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining} (${(roundsRemaining - round + 1) / participants_count})`)
+                            console.log(`${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining} (${(roundsRemaining + 1) / participants_count})`)
                         }
                     } else {
                         roundName = `Round ${challongeMatch?.match?.round}`
