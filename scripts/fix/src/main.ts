@@ -496,7 +496,7 @@ import { parse } from 'csv-parse'
                         const totalLosersRounds = (totalWinnersRounds - 2) * 2
                         if (round > 0) {
                             const roundsRemaining = totalWinnersRounds - round
-                            display = roundsRemaining === 0 || ((totalWinnersRounds - round + 1) / participants_count) <= 0.125
+                            display = roundsRemaining === 0 || ((roundsRemaining + 1) / participants_count) <= 0.125
                             if (roundsRemaining <= 0) {
                                 roundName = 'Grand Finals'
                             } else if (roundsRemaining === 1) {
@@ -506,10 +506,10 @@ import { parse } from 'csv-parse'
                             } else {
                                 roundName = `Winner's Round ${round}`
                             }
-                            console.log(`roundName (W)`, roundName, (totalWinnersRounds - round + 1) / participants_count)
+                            console.log(`${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining} (${(roundsRemaining - round + 1) / participants_count})`)
                         } else {
                             const roundsRemaining = totalLosersRounds - Math.abs(round)
-                            display = ((totalLosersRounds - round + 1) / participants_count) <= 0.125
+                            display = ((roundsRemaining + 1) / participants_count) <= 0.125
                             
                             if (roundsRemaining <= 0) {
                                 roundName = `Loser's Finals`
@@ -520,7 +520,7 @@ import { parse } from 'csv-parse'
                             } else {
                                 roundName = `Loser's Round ${round}`
                             }
-                            console.log(`roundName (L)`, roundName, (totalWinnersRounds - round + 1) / participants_count)
+                            console.log(`${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining} (${(roundsRemaining - round + 1) / participants_count})`)
                         }
                     } else {
                         roundName = `Round ${challongeMatch?.match?.round}`
