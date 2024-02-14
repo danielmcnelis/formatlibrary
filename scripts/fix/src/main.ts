@@ -526,14 +526,21 @@ import { parse } from 'csv-parse'
                             roundsRemaining === 7 ? 'Round of 256' :
                             null
 
-                        display = roundsRemaining === 0 || roundsRemaining <= (totalRounds - 3)
+                        display = roundsRemaining === 0 || 
+                            participants_count >= 8 && roundsRemaining <= 0 ||
+                            participants_count >= 16 && roundsRemaining <= 1 ||
+                            participants_count >= 32 && roundsRemaining <= 2 ||
+                            participants_count >= 64 && roundsRemaining <= 3 ||
+                            participants_count >= 128 && roundsRemaining <= 4 ||
+                            participants_count >= 256 && roundsRemaining <= 5 ||
+                            participants_count >= 512 && roundsRemaining <= 6
+
                         console.log(`(SE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                     } else if (tournament.type === 'double elimination') {
                         const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
                         const totalLosersRounds = (totalWinnersRounds - 2) * 2
                         if (round > 0) {
                             const roundsRemaining = totalWinnersRounds - round
-                            display = roundsRemaining === 0 || roundsRemaining <= (totalWinnersRounds - 3)
                             if (roundsRemaining <= 0) {
                                 roundName = 'Grand Finals'
                             } else if (roundsRemaining === 1) {
@@ -545,10 +552,19 @@ import { parse } from 'csv-parse'
                             } else {
                                 roundName = `Winner's Round ${round}`
                             }
+
+                            display = roundsRemaining === 0 || 
+                                participants_count >= 8 && roundsRemaining <= 0 ||
+                                participants_count >= 16 && roundsRemaining <= 1 ||
+                                participants_count >= 32 && roundsRemaining <= 2 ||
+                                participants_count >= 64 && roundsRemaining <= 3 ||
+                                participants_count >= 128 && roundsRemaining <= 4 ||
+                                participants_count >= 256 && roundsRemaining <= 5 ||
+                                participants_count >= 512 && roundsRemaining <= 6
+                                
                             console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                         } else {
                             const roundsRemaining = totalLosersRounds - Math.abs(round)
-                            display = roundsRemaining === 0 || roundsRemaining <= (totalLosersRounds - 2)
                         
                             if (roundsRemaining <= 0) {
                                 roundName = `Loser's Finals`
@@ -559,6 +575,14 @@ import { parse } from 'csv-parse'
                             } else {
                                 roundName = `Loser's Round ${Math.abs(round)}`
                             }
+
+                            display = participants_count >= 8 && roundsRemaining <= 0 ||
+                                participants_count >= 16 && roundsRemaining <= 1 ||
+                                participants_count >= 32 && roundsRemaining <= 2 ||
+                                participants_count >= 64 && roundsRemaining <= 3 ||
+                                participants_count >= 128 && roundsRemaining <= 4 ||
+                                participants_count >= 256 && roundsRemaining <= 5 ||
+                                participants_count >= 512 && roundsRemaining <= 6
 
                             console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
                         }
