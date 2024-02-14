@@ -449,91 +449,97 @@ import { parse } from 'csv-parse'
     const server = await Server.findOne({ where: { id: '414551319031054346'}})
 
     for (let i = 0; i < tournaments.length; i++) {
-        const tournament = tournaments[i]
-        const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
-        if (!participants_count) {
-            console.log(`no participants_count found for replay ${tournament.name}`)
-            continue
-        }
+        try {
 
-        const replays = await Replay.findAll({
-            where: {
-                tournamentId: tournament.id
-            },
-            include: Match
-        })
-
-        count += replays.length
+            const tournament = tournaments[i]
+            const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+            if (!participants_count) {
+                console.log(`no participants_count found for replay ${tournament.name}`)
+                continue
+            }
     
-        for (let j = 0; j < replays.length; j++) {
-            try {
-                const replay = replays[j]
-                const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${replay?.match?.challongeMatchId}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
-                if (!challongeMatch) {
-                    console.log(`no challonge match found for replay ${replay.id}`)
-                    continue
-                }
-
-                const round = challongeMatch?.match?.round || ''
-                let roundName 
-                let display
+            const replays = await Replay.findAll({
+                where: {
+                    tournamentId: tournament.id
+                },
+                include: Match
+            })
+    
+            count += replays.length
         
-                if (tournament.type === 'swiss' || tournament.type === 'round robin') {
-                    roundName = `Round ${challongeMatch?.match?.round}`
-                    display = false
-                } else if (tournament.type === 'single elimination') {
-                    const totalRounds = Math.ceil(Math.log2(participants_count))
-                    roundName = totalRounds - round === 0 ? 'Finals' :
-                        totalRounds - round === 1 ? 'Semi Finals' :
-                        totalRounds - round === 2 ? 'Quarter Finals' :
-                        totalRounds - round === 3 ? 'Round of 16' :
-                        totalRounds - round === 4 ? 'Round of 32' :
-                        totalRounds - round === 5 ? 'Round of 64' :
-                        totalRounds - round === 6 ? 'Round of 128' :
-                        totalRounds - round === 7 ? 'Round of 256' :
-                        null
-                    display = ((totalRounds - round + 1) / participants_count) <= 0.125
-                } else if (tournament.type === 'double elimination') {
-                    const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
-                    const totalLosersRounds = (totalWinnersRounds - 2) * 2
-                    if (round > 0) {
-                        const roundsRemaining = totalWinnersRounds - round
-                        display = roundsRemaining === 0 || ((totalWinnersRounds - round + 1) / participants_count) <= 0.125
-                        if (roundsRemaining <= 0) {
-                            roundName = 'Grand Finals'
-                        } else if (roundsRemaining === 1) {
-                            roundName = `Winner's Finals`
-                        } else if (roundsRemaining === 2) {
-                            roundName = `Winner's Semis`
+            for (let j = 0; j < replays.length; j++) {
+                try {
+                    const replay = replays[j]
+                    const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${replay?.match?.challongeMatchId}.json?api_key=${server.challongeAPIKey}`)
+                    if (!challongeMatch) {
+                        console.log(`no challonge match found for replay ${replay.id}`)
+                        continue
+                    }
+    
+                    const round = challongeMatch?.match?.round || ''
+                    let roundName 
+                    let display
+            
+                    if (tournament.type === 'swiss' || tournament.type === 'round robin') {
+                        roundName = `Round ${challongeMatch?.match?.round}`
+                        display = false
+                    } else if (tournament.type === 'single elimination') {
+                        const totalRounds = Math.ceil(Math.log2(participants_count))
+                        roundName = totalRounds - round === 0 ? 'Finals' :
+                            totalRounds - round === 1 ? 'Semi Finals' :
+                            totalRounds - round === 2 ? 'Quarter Finals' :
+                            totalRounds - round === 3 ? 'Round of 16' :
+                            totalRounds - round === 4 ? 'Round of 32' :
+                            totalRounds - round === 5 ? 'Round of 64' :
+                            totalRounds - round === 6 ? 'Round of 128' :
+                            totalRounds - round === 7 ? 'Round of 256' :
+                            null
+                        display = ((totalRounds - round + 1) / participants_count) <= 0.125
+                    } else if (tournament.type === 'double elimination') {
+                        const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
+                        const totalLosersRounds = (totalWinnersRounds - 2) * 2
+                        if (round > 0) {
+                            const roundsRemaining = totalWinnersRounds - round
+                            display = roundsRemaining === 0 || ((totalWinnersRounds - round + 1) / participants_count) <= 0.125
+                            if (roundsRemaining <= 0) {
+                                roundName = 'Grand Finals'
+                            } else if (roundsRemaining === 1) {
+                                roundName = `Winner's Finals`
+                            } else if (roundsRemaining === 2) {
+                                roundName = `Winner's Semis`
+                            } else {
+                                roundName = `Winner's Round ${round}`
+                            }
                         } else {
-                            roundName = `Winner's Round ${round}`
+                            const roundsRemaining = totalLosersRounds - Math.abs(round)
+                            display = ((totalLosersRounds - round + 1) / participants_count) <= 0.125
+                            
+                            if (roundsRemaining <= 0) {
+                                roundName = `Loser's Finals`
+                            } else if (roundsRemaining === 1) {
+                                roundName = `Loser's Semis`
+                            } else if (roundsRemaining === 2) {
+                                roundName = `Loser's Thirds`
+                            } else {
+                                roundName = `Loser's Round ${round}`
+                            }
                         }
                     } else {
-                        const roundsRemaining = totalLosersRounds - Math.abs(round)
-                        display = ((totalLosersRounds - round + 1) / participants_count) <= 0.125
-                        
-                        if (roundsRemaining <= 0) {
-                            roundName = `Loser's Finals`
-                        } else if (roundsRemaining === 1) {
-                            roundName = `Loser's Semis`
-                        } else if (roundsRemaining === 2) {
-                            roundName = `Loser's Thirds`
-                        } else {
-                            roundName = `Loser's Round ${round}`
-                        }
+                        roundName = `Round ${challongeMatch?.match?.round}`
+                        display = false
                     }
-                } else {
-                    roundName = `Round ${challongeMatch?.match?.round}`
-                    display = false
+    
+                    await replay.update({ roundName, display })
+                    b++
+                }  catch (err) {
+                    console.log(err)
+                    e++
                 }
-
-                await replay.update({ roundName, display })
-                b++
-            }  catch (err) {
-                console.log(err)
-                e++
-            }
-       }
+           }
+        } catch (err) {
+            console.log(err)
+            e++
+        }
     }
 
     return console.log(`updated ${b} out of ${count} replays and encountered ${e} errors`)
