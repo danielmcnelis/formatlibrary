@@ -467,7 +467,7 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
                     roundsRemaining === 1 ? `Loser's Semis` :
                     roundsRemaining === 2 ? `Loser's Thirds` :
                     roundsRemaining === 3 ? `Loser's Fifths` :
-                    `Loser's Round of ${Math.pow(2, roundsRemaining) - 1}`
+                    `Loser's Round ${Math.abs(round)}`
             }
         } else {
             roundName = `Round ${challongeMatch?.match?.round}`

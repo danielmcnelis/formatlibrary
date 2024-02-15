@@ -514,7 +514,7 @@ import { parse } from 'csv-parse'
                     } else if (roundsRemaining === 3) {
                         roundName = `Loser's Fifths`
                     } else {
-                        roundName = `Loser's Round of ${Math.pow(2, roundsRemaining) - 1}`
+                        roundName = `Loser's Round ${Math.abs(round)}`
                     }
                 }
             }
@@ -585,7 +585,7 @@ import { parse } from 'csv-parse'
                         const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(participants_count)))
                         const correction = (participants_count - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
                         const totalLosersRounds = (totalWinnersRounds - 2) * 2 + correction
-                        
+
                         if (round > 0) {
                             const roundsRemaining = totalWinnersRounds - round
                             if (roundsRemaining <= 0) {
@@ -618,7 +618,7 @@ import { parse } from 'csv-parse'
                             } else if (roundsRemaining === 3) {
                                 roundName = `Loser's Fifths`
                             } else {
-                                roundName = `Loser's Round of ${Math.pow(2, roundsRemaining) - 1}`
+                                roundName = `Loser's Round ${Math.abs(round)}`
                             }
 
                             display = roundsRemaining === 0 ||
