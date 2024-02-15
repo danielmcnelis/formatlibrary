@@ -107,6 +107,7 @@ export const CubeMaker = () => {
         const main = cube?.cardPool.map((card) => card.konamiCode)
         const ydk = ['created by...', '#main', ...main, ''].join('\n')
         const playerId = getCookie('playerId')
+        if (!playerId) alert('Must be logged in to save Cube.')
 
         if (cube?.id) {
             try {
@@ -122,13 +123,13 @@ export const CubeMaker = () => {
                 if (err.response.status === 400) {
                     alert('Name is already in use.')
                 } else {
-                    alert('Error Saving cube?.')
+                    alert('Error Saving cube.')
                 }
             }
         } else {
             try {
                 const { data } = await axios.post(`/api/cubes/create`, {
-                    name: cube?.name,
+                    name: name || 'Unnamed Cube',
                     playerId: playerId,
                     ydk: ydk,
                     display: false
@@ -136,8 +137,8 @@ export const CubeMaker = () => {
 
                 setCube({
                     ...cube,
-                    name: name,
-                    id: data.id
+                    name: name || 'Unnamed Cube',
+                    id: data?.id
                 })
 
                 setEdited(false)
@@ -145,7 +146,7 @@ export const CubeMaker = () => {
                 getCubes()
             } catch (err) {
                 console.log(err)
-                alert('Error Saving cube?.')
+                alert('Error Saving cube.')
             }
         }
 

@@ -13,32 +13,41 @@ export const ReplayThumbnail = (props = {}) => {
                 target="_blank" 
                 rel="noopener noreferrer"
             >
-                <div className="replayThumbnail-flexbox">
-                    <img 
-                    className="replayThumbnail-player-pfp" 
-                    src={`https://cdn.formatlibrary.com/images/pfps/${winner.discordId || winner.name}.png`}
-                    onError={(e) => {
-                            e.target.onerror = null
-                            e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
-                        }
-                    }
-                    alt={winner.discordName || winner.name}
-                    />
+                <div className="thumbnail-flexbox">
+                    <div className="replay-player">
+                        <img 
+                            className="thumbnail-player-pfp" 
+                            src={`https://cdn.formatlibrary.com/images/pfps/${winner.discordId || winner.name}.png`}
+                            onError={(e) => {
+                                    e.target.onerror = null
+                                    e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
+                                }
+                            }
+                            alt={winner.discordName || winner.name}
+                        />                
+                        <p className="playerName">{winner.name}</p>
+                    </div>
+
                     <img 
                         className="replayThumbnail-image" 
                         src={`https://cdn.formatlibrary.com/images/emojis/versus.png`}
                         alt="vs"
                     />
-                    <img 
-                    className="replayThumbnail-player-pfp" 
-                    src={`https://cdn.formatlibrary.com/images/pfps/${loser.discordId || loser.name}.png`}
-                    onError={(e) => {
-                            e.target.onerror = null
-                            e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
-                        }
-                    }
-                    alt={loser.name}
-                    />
+                    
+                    <div className="replay-player">
+                        <img 
+                            className="thumbnail-player-pfp" 
+                            src={`https://cdn.formatlibrary.com/images/pfps/${loser.discordId || loser.name}.png`}
+                            onError={(e) => {
+                                    e.target.onerror = null
+                                    e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
+                                }
+                            }
+                            alt={loser.discordName || loser.name}
+                        />
+                        <p className="playerName">{loser.name}</p>
+                    </div>
+                    
                 </div>
             </a>
         </div>

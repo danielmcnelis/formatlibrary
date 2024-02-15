@@ -28,6 +28,57 @@
     width: 100px;
     margin: 0px 3px;
   }
+
+.pairing-player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.playerName {
+    width: 100%;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    margin: 2px;
+    font-weight: bold;
+    text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+}
+  
+.thumbnail-flexbox {
+    padding: 3px 6px;
+    margin: 0px 10px 20px;
+    max-height: 140px;
+    max-width: 330px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+    border-top: 4px solid black;
+    border-bottom: 4px solid black;
+    border-radius: 4px;
+    background-image: url('https://cdn.formatlibrary.com/images/duelingbook.png');
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .thumbnail-image {
+    height: 100px;
+  }
+  
+  .thumbnail-player-pfp {
+    border: 5px solid black;
+    border-radius: 100px;
+    background-color: #000000;
+    width: 100px;
+    margin: 0px 3px;
+  }
   
 
 @media only screen and (max-width: 1000px) {
