@@ -392,10 +392,7 @@ export const selectTournament = async (interaction, tournaments) => {
 // GET FILM
 export const getFilm = async (interaction, tournamentId, userId) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
-    const server = await Server.findOne({ where: { id: interaction.guildId }})
     const player = await Player.findOne({ where: { discordId: userId }})
-    const userIsMod = isMod(server, interaction.member)
-    const state = userIsMod ? {[Op.or]: ['underway', 'complete']} : 'underway'
 
     const replays = [...await Replay.findAll({
         where: {
@@ -404,7 +401,7 @@ export const getFilm = async (interaction, tournamentId, userId) => {
                 { loserId: player.id }
             ],
             tournamentId: tournament.id,
-            '$tournament.state$': state
+            '$tournament.state$': 'underway'
         },
         include: Tournament,
         order: [['createdAt', 'ASC']]
