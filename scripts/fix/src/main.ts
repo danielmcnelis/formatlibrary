@@ -487,7 +487,9 @@ import { parse } from 'csv-parse'
                     null
             } else if (tournament.type === 'double elimination') {
                 const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
-                const totalLosersRounds = (totalWinnersRounds - 2) * 2
+                const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(participants_count)))
+                const correction = (participants_count - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
+                const totalLosersRounds = (totalWinnersRounds - 2) * 2 + correction
                 if (round > 0) {
                     const roundsRemaining = totalWinnersRounds - round
                     if (roundsRemaining <= 0) {
@@ -578,9 +580,12 @@ import { parse } from 'csv-parse'
                             participants_count > 32 && roundsRemaining <= 3
 
                         console.log(`(SE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
-                    } else if (tournament.type === 'double elimination') {
+                    } else if (tournament.type === 'double elimination') {            
                         const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
-                        const totalLosersRounds = (totalWinnersRounds - 2) * 2
+                        const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(participants_count)))
+                        const correction = (participants_count - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
+                        const totalLosersRounds = (totalWinnersRounds - 2) * 2 + correction
+                        
                         if (round > 0) {
                             const roundsRemaining = totalWinnersRounds - round
                             if (roundsRemaining <= 0) {

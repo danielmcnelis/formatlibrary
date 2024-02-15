@@ -463,8 +463,10 @@ export const displayReplays = async (interaction, event) => {
                         event.size > 16 && roundsRemaining <= 2 ||
                         event.size > 32 && roundsRemaining <= 3
                 } else if (event.tournament?.type === 'double elimination') {
-                    const totalWinnersRounds = Math.ceil(Math.log2(event.size)) + 1
-                    const totalLosersRounds = (totalWinnersRounds - 2) * 2
+                const totalWinnersRounds = Math.ceil(Math.log2(event.size)) + 1
+                const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(event.size)))
+                const correction = (event.size - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
+                const totalLosersRounds = (totalWinnersRounds - 2) * 2 + correction
                     if (round > 0) {
                         const roundsRemaining = totalWinnersRounds - round
                         display = roundsRemaining === 0 || 
