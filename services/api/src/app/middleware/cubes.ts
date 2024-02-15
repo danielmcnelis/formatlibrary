@@ -176,6 +176,7 @@ export const cubesCreate = async (req, res, next) => {
       const player = await Player.findOne({ where: { id: req.body.playerId } })
   
       const cube = await Cube.create({
+        name: req.body.name,
         builder: player.name,
         playerId: player.id,
         ydk: req.body.ydk,
