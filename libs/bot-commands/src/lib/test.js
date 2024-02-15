@@ -17,8 +17,8 @@ export default {
         if (isProgrammer(interaction.member)) {
             await interaction.editReply(emojis.yellow)
             // downloadNewCards()
-            updateSets()
-            // updateMarketPrices()
+            // updateSets()
+            updateMarketPrices()
             return await interaction.editReply(emojis.yellow)
         } else {
             await interaction.editReply('🧪')
