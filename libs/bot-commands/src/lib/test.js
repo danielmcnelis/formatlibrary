@@ -16,8 +16,8 @@ export default {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
             await interaction.editReply(emojis.yellow)
-            downloadNewCards()
-            // updateSets()
+            // downloadNewCards()
+            updateSets()
             // updateMarketPrices()
             return await interaction.editReply(emojis.yellow)
         } else {
