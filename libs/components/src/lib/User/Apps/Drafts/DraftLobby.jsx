@@ -289,9 +289,17 @@ export const DraftLobby = () => {
                             <img className="desktop-only" style={{ width:logoWidth}} src={logoUrl} alt="draft-logo"/>
                         </div>
                         <br/>
+
                         <div className="slideshow">
-                            <div className="mover"></div>
+                        {
+                            draft.cubeId ? (
+                                <div className="mover" style={{background: `url(https://cdn.formatlibrary.com/images/cubes/slideshows/${draft.cubeId?.toString() || '1'}.png)`}}></div>
+                            ) : (
+                                <div className="mover" style={{background: `url(https://cdn.formatlibrary.com/images/sets/slideshows/${draft.set?.setCode || 'MRD'}.png)`}}></div>
+                            )
+                        }
                         </div>
+                        
                         <br/>
                         <h3>Hosted by {draft.hostName}</h3>
                         <div className="participants-flexbox">
