@@ -119,7 +119,7 @@ label {
   
   .slideshow > div {
     height: 105px;
-    width: 31176px;
+    /* width: 31176px; */
     transform: translate3d(0, 0, 0);
   }
 

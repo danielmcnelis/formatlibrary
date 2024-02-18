@@ -136,7 +136,7 @@
   
   .slideshow > div {
     height: 105px;
-    width: 31176px;
+    /* width: 31176px; */
     background: url(https://cdn.formatlibrary.com/images/cubes/slideshows/1.png);
     transform: translate3d(0, 0, 0);
   }

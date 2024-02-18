@@ -803,13 +803,15 @@ export const downloadNewCards = async () => {
     for (let i = 0; i < data.data.length; i++) {
         const datum = data.data[i]
         const id = datum.id.toString()
+        const name = datum.name
+        const cleanName = datum.name.replaceAll(/['"]/g, '').split(/[^A-Za-z0-9]/).filter((e) => e.length).join(' ')
 
         try {
             const card = await Card.findOne({
                 where: {
                     [Op.or]: [
                         {ypdId: id},
-                        {name: datum.name}
+                        {name: name}
                     ]
                     
                 }
@@ -846,14 +848,13 @@ export const downloadNewCards = async () => {
             ) ? false : !!datum.misc_info[0]?.ocg_date
 
             const speedLegal = datum.misc_info[0]?.formats?.includes('Speed Duel')
-
             const tcgDate = category !== 'Skill' ? datum.misc_info[0]?.tcg_date || null : null
             const ocgDate = category !== 'Skill' ? datum.misc_info[0]?.ocg_date || null : null
 
             if (!card) {
                 await Card.create({
-                    name: datum.name,
-                    cleanName: datum.name.replaceAll(/['"]/g, '').split(/[^A-Za-z0-9]/).filter((e) => e.length).join(' '),
+                    name: name,
+                    cleanName: cleanName,
                     konamiCode: konamiCode,
                     ypdId: id,
                     tcgLegal: tcgLegal,
@@ -901,15 +902,16 @@ export const downloadNewCards = async () => {
                     sortPriority: getSortPriority(datum.type)
                 })
                 b++
-                console.log(`New card: ${datum.name} (TCG Date: ${datum.misc_info[0]?.tcg_date}, OCG Date: ${datum.misc_info[0]?.ocg_date})`)
+                console.log(`New card: ${name} (TCG Date: ${datum.misc_info[0]?.tcg_date}, OCG Date: ${datum.misc_info[0]?.ocg_date})`)
                 await downloadCardImage(id)
-                console.log(`Image saved (${datum.name})`)
-            } else if (card && (card.name !== datum.name || card.ypdId !== id)) {
+                console.log(`Image saved (${name})`)
+            } else if (card && (card.name !== name || card.ypdId !== id || card.cleanName !== cleanName)) {
                 c++
-                console.log(`New name and/or ID: ${card.name} (${card.ypdId}) is now: ${datum.name} (${id})`)
+                console.log(`New name and/or ID: ${card.name} (${card.ypdId}) is now: ${name} (${id})`)
                 
                 await card.update({
-                    name: datum.name,
+                    name: name,
+                    cleanName: cleanName,
                     ypdId: id,
                     konamiCode: konamiCode,
                     description: datum.desc,
@@ -923,10 +925,11 @@ export const downloadNewCards = async () => {
                 console.log(`Image saved (${datum.name})`)
             } else if (card && (!card.tcgDate || !card.tcgLegal) && tcgDate) {
                 await card.update({
-                    name: datum.name,
+                    name: name,
+                    cleanName: cleanName,
                     description: datum.desc,
                     tcgDate: tcgDate,
-                    tcgLegal: tcgLegal
+                    tcgLegal: true
                 })
 
                 t++
@@ -936,15 +939,27 @@ export const downloadNewCards = async () => {
             } else if (card && (!card.ocgDate || !card.ocgLegal) && ocgDate) {
                 await card.update({
                     ocgDate: ocgDate,
-                    ocgLegal: ocgLegal  
+                    ocgLegal: true  
                 })
 
                 o++
                 console.log(`New OCG Card: ${card.name}`)
                 await downloadCardImage(id)
                 console.log(`Image saved (${card.name})`)
-            } else if (card && (!card.speedLegal) && speedLegal) {
+            } else if (card && (!card.speedLegal || !card.speedDate) && speedLegal) {
+                const print = await Print.findOne({
+                    where: {
+                        cardId: card.id,
+                        setName: {[Op.substring]: 'Speed Duel'}
+                    },
+                    include: Set,
+                    order: [[Set, 'tcgDate', 'DESC']],
+                })
+
+                const speedDate = print?.set?.tcgDate
+
                 await card.save({
+                    speedDate: speedDate,
                     speedLegal: true
                 })
 
@@ -1000,15 +1015,9 @@ export const purgeBetaCards = async () => {
             } else if (betaCard && !card) {
                 console.log(`Beta Card: ${betaCard.name} (${betaCard.ypdId}) exists, but ${card.name} (${card.ypdId}) does not ⚠️`)
             } else if (!betaCard && card) {
-                if (card.name !== name) {
-                    console.log(`UPDATING the name of ${card.name} (${card.ypdId}) to ${name} (${id}) !!!`)
-                    c++
-                    await card.update({ name })
-                } else {
-                    console.log(`${card.name} (${card.ypdId}) exists, while Beta Card: ${betaName} (${betaId}) does not 👍`)
-                }
+                console.log(`${card.name} (${card.ypdId}) exists, while Beta Card: ${betaName} (${betaId}) does not 👍`)
             } else {                
-                console.log(`Beta Card: ${betaCard.name} (${betaCard.ypdId}) and ${card.name} (${card.ypdId}) share the same FL id????? (${betaCard.id})`)
+                console.log(`Beta Card: ${betaCard.name} (${betaCard.ypdId}) and ${card.name} (${card.ypdId}) share the same FL id: (${betaCard.id})`)
             }
         } catch (err) {
             e++ 
