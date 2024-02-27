@@ -21,10 +21,20 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
-            const user = interaction.options.getUser('player')
-            const member = await interaction.guild?.members.fetch(user?.id)
-            console.log('user', user)
-            console.log('member', member)
+            try {
+                const user = interaction.options.getUser('player')
+                console.log('user', user)
+            } catch (err) {
+                console.log(err)
+            }
+            
+            try {
+                const member = await interaction.guild?.members.fetch(user?.id)
+                console.log('member', member)
+            } catch (err) {
+                console.log(err)
+            }
+
             // downloadNewCards()
             // updateSets()
             // updateMarketPrices()
