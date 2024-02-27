@@ -151,7 +151,8 @@ export const conductCensus = async (client) => {
                             }
                         })
 
-                        if (player.globalName !== data.global_name ||
+                        if (
+                            player.globalName !== data.global_name ||
                             player.discordName !== member.user.username || 
                             player.discriminator !== member.user.discriminator 
                         ) {
@@ -1221,4 +1222,18 @@ export const updateServers = async (client) => {
     }
 
     return setTimeout(() => updateServers(client), (24 * 60 * 60 * 1000))
+}
+
+
+// UPDATE DISPLAY NAMES
+export const updateDisplayNames = async () => {
+    const decks = await Deck.findAll({ include: Player })
+    for (let i = 0; i < decks.length; i++) {
+        const deck = decks[i]
+        await deck.update({
+            builder: deck.player.name
+        })
+    }
+
+    return setTimeout(() => updateDisplayNames(), (24 * 60 * 60 * 1000))
 }
