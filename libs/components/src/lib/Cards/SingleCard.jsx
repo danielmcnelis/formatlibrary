@@ -97,8 +97,8 @@ export const SingleCard = () => {
     const [rulings, setRulings] = useState({})
     const { id } = useParams()
   
-    // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop))
+    // USE EFFECT
+    useEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop), [inEditMode])
   
     // USE EFFECT
     useEffect(() => {
@@ -641,22 +641,18 @@ export const SingleCard = () => {
                         ) : null
                     }
                     {
-                        rulings?.specific && Object.keys(rulings?.specific).length ? (
-                            <div>
-                                {
-                                    Object.entries(rulings.specific).map((entry) => {
-                                        return (
-                                            <div>
-                                                <div>{entry[0] + ' Rulings:'}</div>
-                                                {
-                                                    entry[1].map((ruling) => (<li className="ruling">{ruling.content}</li>))
-                                                }
-                                                <br/>
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </div>
+                        rulings?.specific && Object.keys(rulings?.specific).length && !inEditMode ? (
+                            Object.entries(rulings.specific).map((entry) => {
+                                return (
+                                    <div className="prints-flexbox">
+                                        <div>{entry[0] + ' Rulings:'}</div>
+                                        {
+                                            entry[1].map((ruling) => (<li className="ruling">{ruling.content}</li>))
+                                        }
+                                        <br/>
+                                    </div>
+                                )
+                            })
                         ) : null
                     }
 

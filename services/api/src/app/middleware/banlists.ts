@@ -1,4 +1,5 @@
 import { Card, Status } from '@fl/models'
+import {Op} from 'sequelize'
 
 export const banlistsAll = async (req, res, next) => {
   try {
@@ -17,12 +18,12 @@ export const banlistsAll = async (req, res, next) => {
 
 export const banlistsDate = async (req, res, next) => {
   try {
-    const {date} = req.params
+    const date = req.params?.date?.replaceAll('-', ' ')
     const category = req.query?.category || 'TCG'
 
     const forbidden = await Status.findAll({
       where: {
-        banlist: date,
+        banlist: {[Op.iLike]: date},
         category: category,
         restriction: 'forbidden'
       },
@@ -36,7 +37,7 @@ export const banlistsDate = async (req, res, next) => {
 
     const limited = await Status.findAll({
       where: {
-        banlist: date,
+        banlist: {[Op.iLike]: date},
         category: category,
         restriction: 'limited'
       },
@@ -50,9 +51,9 @@ export const banlistsDate = async (req, res, next) => {
 
     const semiLimited = await Status.findAll({
         where: {
-          banlist: date,
-          category: category,
-          restriction: 'semi-limited'
+            banlist: {[Op.iLike]: date},
+            category: category,
+            restriction: 'semi-limited'
         },
         attributes: { exclude: ['createdAt', 'updatedAt'] },
         include: [{ model: Card, attributes: ['id', 'name', 'ypdId', 'sortPriority'] }],
@@ -64,7 +65,7 @@ export const banlistsDate = async (req, res, next) => {
 
     const unlimited = await Status.findAll({
       where: {
-        banlist: date,
+        banlist: {[Op.iLike]: date},
         category: category,
         restriction: 'no longer on list'
       },
@@ -78,9 +79,9 @@ export const banlistsDate = async (req, res, next) => {
 
     const limited1 = await Status.findAll({
         where: {
-          banlist: date,
-          category: category,
-          restriction: 'limited-1'
+            banlist: {[Op.iLike]: date},
+            category: category,
+            restriction: 'limited-1'
         },
         attributes: { exclude: ['createdAt', 'updatedAt'] },
         include: [{ model: Card, attributes: ['id', 'name', 'ypdId', 'sortPriority'] }],
@@ -93,9 +94,9 @@ export const banlistsDate = async (req, res, next) => {
       
     const limited2 = await Status.findAll({
         where: {
-          banlist: date,
-          category: category,
-          restriction: 'limited-2'
+            banlist: {[Op.iLike]: date},
+            category: category,
+            restriction: 'limited-2'
         },
         attributes: { exclude: ['createdAt', 'updatedAt'] },
         include: [{ model: Card, attributes: ['id', 'name', 'ypdId', 'sortPriority'] }],
@@ -108,9 +109,9 @@ export const banlistsDate = async (req, res, next) => {
       
     const limited3 = await Status.findAll({
         where: {
-          banlist: date,
-          category: category,
-          restriction: 'limited-3'
+            banlist: {[Op.iLike]: date},
+            category: category,
+            restriction: 'limited-3'
         },
         attributes: { exclude: ['createdAt', 'updatedAt'] },
         include: [{ model: Card, attributes: ['id', 'name', 'ypdId', 'sortPriority'] }],
