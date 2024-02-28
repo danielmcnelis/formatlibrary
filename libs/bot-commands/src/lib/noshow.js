@@ -24,9 +24,7 @@ export default {
         if (!format) return await interaction.editReply({ content: `Try using **/noShow** in channels like: <#414575168174948372> or <#629464112749084673>.`})
 
         const noShow = interaction.options.getUser('player')
-        const noShowMember = await interaction.guild?.members.fetch(noShow.id)
-        if ((noShowMember && noShow.bot)) return await interaction.editReply({ content: `Sorry, Bots do not play ${format.name} Format... *yet*.`})
-        if (noShowMember && await isNewUser(noShow.id)) await createPlayer(noShow)
+        if ((noShow.bot)) return await interaction.editReply({ content: `Sorry, Bots do not play ${format.name} Format... *yet*.`})
 
         const noShowPlayer = await Player.findOne({ where: { discordId: noShow.id } })
         if (!noShowPlayer) return await interaction.editReply({ content: `Sorry, <@${noShow.id}> is not in the database.`})

@@ -11,25 +11,10 @@ export default {
     data: new SlashCommandBuilder()
         .setName('test')
         .setDescription('Admin Only - Performs a test. 🧪')
-        .setDMPermission(false)
-        .addUserOption(option =>
-            option
-                .setName('player')
-                .setDescription('The player you want to remove.')
-                .setRequired(true)
-        ),
+        .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
-            try {
-                const user = interaction.options.getUser('player')
-                console.log('user', user)
-                const member = await interaction.guild?.members.fetch(user?.id)
-                console.log('member', member)
-            } catch (err) {
-                console.log(err)
-            }
-
             // downloadNewCards()
             // updateSets()
             // updateMarketPrices()

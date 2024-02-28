@@ -24,7 +24,7 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         const winner = interaction.options.getUser('winner')
-        const winningMember = await interaction.guild?.members.fetch(winner.id)
+        const winningMember = await interaction.guild?.members.fetch(winner.id).catch((err) => console.log(err))
         
         const loser = interaction.options.getUser('loser')
         const losingMember = await interaction.guild?.members.fetch(loser.id).catch((err) => console.log(err))

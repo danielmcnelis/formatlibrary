@@ -471,6 +471,12 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
     const wasSubscriber = oldRoles.has('1102002844850208810')
     const isSubscriber = newRoles.has('1102002844850208810')
 
+    const {data: programmer} = await axios.get(`https://discord.com/api/v9/users/194147938786738176`, {
+        headers: {
+          Authorization: `Bot ${config.services.bot.token}`
+        }
+    })
+
     if (wasSubscriber && !isSubscriber) {
         const player = await Player.findOne({
             where: {
@@ -493,15 +499,19 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
         if (isSupporter) {
             await player.update({ subscriber: true, subTier: 'Supporter' })
             console.log(`Welcome ${oldMember.user?.username} to the Supporter Tier!`)
+            return await programmer.send({ content: `Welcome ${oldMember.user?.username} to the Supporter Tier!` })
         } else if (isPremium) {
             await player.update({ subscriber: true, subTier: 'Premium' })
             console.log(`Welcome ${oldMember.user?.username} to the Premium Tier!`)
+            return await programmer.send({ content: `Welcome ${oldMember.user?.username} to the Premium Tier!` })
         } else if (isDoublePremium) {
             await player.update({ subscriber: true, subTier: 'Double Premium' })
             console.log(`Welcome ${oldMember.user?.username} to the Double Premium Tier!`)
+            return await programmer.send({ content: `Welcome ${oldMember.user?.username} to the Double Premium Tier!` })
         } else {
-            await player.update({ subscriber: true })
-            console.log(`Welcome ${oldMember.user?.username} to the Subscribers!`)
+            await player.update({ subscriber: true, subTier: 'Unknown' })
+            console.log(`Welcome ${oldMember.user?.username} to the Subscribers(?)!`)
+            return await programmer.send({ content: `Welcome ${oldMember.user?.username} to the Subscribers(?)!` })
         }
     }
 });

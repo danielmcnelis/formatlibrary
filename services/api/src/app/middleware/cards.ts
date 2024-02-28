@@ -148,6 +148,23 @@ export const cardsId = async (req, res, next) => {
     }
 }
 
+export const updateCardInfo = async (req, res, next) => {
+    try {
+        const card = await Card.findOne({
+            where: {
+                id: req.query.id
+            }
+        })
+
+        console.log('!!card', !!card)
+        console.log('req.body', req.body)
+        await card.update({ ...req.body })
+        res.json(card)
+    } catch (err) {
+    next(err)
+    }
+}
+
 export const cardsCreate = async (req, res, next) => {
     try {
         if (req.body.image) {

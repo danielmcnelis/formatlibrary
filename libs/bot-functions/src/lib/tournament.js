@@ -921,16 +921,17 @@ export const createSheetData = async (tournament) => {
 }
 
 //REMOVE PARTICIPANT
-export const removeParticipant = async (server, interaction, member, entry, tournament, drop = false) => {    
+export const removeParticipant = async (server, interaction, member, entry, tournament, drop = false) => {  
+    const playerId = entry.playerId
+    const playerName = member?.user?.username || entry.playerName
+
     try {
         // DELETE PARTICIPANT FROM CHALLONGE BRACKET 
         await axios({
             method: 'delete',
             url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${entry.participantId}.json?api_key=${server.challongeAPIKey}`
         })
-
-        const playerId = entry.playerId
-
+        
         // DE-ACTIVATE ENTRY DATA IF UNDERWAY, OTHERWISE DELETE ENTRY DATA
         if (tournament.state === 'underway') {
             await entry.update({ active: false, roundDropped: entry.wins + entry.losses })
@@ -956,7 +957,7 @@ export const removeParticipant = async (server, interaction, member, entry, tour
         } else if (drop) {
             return await interaction.editReply({ content: `I removed you from ${tournament.name}. Better luck next time! ${tournament.emoji}`})
         } else {
-            return await interaction.editReply({ content: `${member.user.username} has been removed from ${tournament.name}. ${tournament.emoji}`})
+            return await interaction.editReply({ content: `${playerName} has been removed from ${tournament.name}. ${tournament.emoji}`})
         }
     } catch (err) {
         console.log(err)
@@ -964,7 +965,7 @@ export const removeParticipant = async (server, interaction, member, entry, tour
         if (drop) {
             return await interaction.editReply({ content: `Hmm... I don't see you in the participants list for ${tournament.name}. ${tournament.emoji}`})
         } else {
-            return await interaction.editReply({ content: `I could not find ${member.user.username} in the participants list for ${tournament.name}. ${tournament.emoji}`})
+            return await interaction.editReply({ content: `I could not find ${playerName} in the participants list for ${tournament.name}. ${tournament.emoji}`})
         }
     }   
 }

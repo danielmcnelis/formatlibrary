@@ -6,7 +6,7 @@ import axios from 'axios'
 import { NotFound } from '../General/NotFound'
 import { PrintRow } from './PrintRow'
 import { StatusBox } from './StatusBar'
-import { dateToVerbose, getCookie } from '@fl/utils'
+import { capitalize, dateToVerbose, getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import './SingleCard.css'
 
@@ -81,13 +81,16 @@ const banlists = [
   ['December 2022', '2022-12-01'],
   ['February 2023', '2023-02-13'],
   ['June 2023', '2023-06-05'],
-  ['September 2023', '2023-09-25']
+  ['September 2023', '2023-09-25'],
+  ['January 2024', '2024-01-01']
 ]
 
 const playerId = getCookie('playerId')
 
 export const SingleCard = () => {
     const [isAdmin, setIsAdmin] = useState(false)
+    const [isContentManager, setIsContentManager] = useState(false)
+    const [inEditMode, setInEditMode] = useState(false)
     const [card, setCard] = useState({})
     const [statuses, setStatuses] = useState({})
     const [prints, setPrints] = useState([])
@@ -110,6 +113,22 @@ export const SingleCard = () => {
 
         if (playerId) checkIfAdmin()
     }, [])
+
+    // USE EFFECT
+    useEffect(() => {
+        const checkIfContentManager = async () => {
+            try {
+                const { status } = await axios.get(`/api/players/content-manager/${playerId}`)
+                if (status === 200) {
+                    setIsContentManager(true)
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        if (playerId) checkIfContentManager()
+    }, [])
     
     // DOWNLOAD CARD IMAGE
     const downloadCardImage = async () => {
@@ -120,6 +139,17 @@ export const SingleCard = () => {
             console.log(err)
         }
     }
+
+    // UPDATE CARD INFO
+    const updateCardInfo = async () => {
+        try {
+            await axios.post(`/api/cards/update?id=${card.id}`, { ...card })
+            setInEditMode(false)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    
     // USE EFFECT SET CARD
     useEffect(() => {
       const fetchData = async () => {
@@ -208,162 +238,410 @@ export const SingleCard = () => {
                 <div>
                     <div className="flexy">
                     <img className="single-card-image" src={imagePath} alt={card.name}/>
-                    <table className="single-card-table">
-                        <thead>
-                            <tr>
-                                <th colSpan="5" className="single-card-title">{card.name}</th>
-                            </tr>
-                        </thead>
                         {
-                            card.category === 'Monster' ? (
-                                <tbody>
-                                    <tr className="single-card-standard-row">
-                                        <td className="single-card-symbol-td">
-                                            <img src={template} className="single-card-cardType" alt="card type"/>
-                                        </td>
-                                        <td colSpan="4" className="single-card-large-label">{cardType}</td>
+                            !inEditMode ? (
+                                <table className="single-card-table">
+                                    <thead>
+                                    <tr>
+                                        <th colSpan="5" className="single-card-title">{card.name}</th>
                                     </tr>
-                                    <tr className="single-card-standard-row">
-                                        <td className="single-card-symbol-td">
-                                            <img src={attribute} className="single-card-symbol" alt="card symbol"/>
-                                        </td>
-                                        <td className="single-card-label-inner-td">{card.attribute}</td>
-                                        <td className="single-card-symbol-td">
-                                            <img src={type} className="single-card-symbol" alt="card symbol"/>
-                                        </td>
-                                        <td colSpan="2" className="single-card-label-td">{card.type}</td>
+                                    </thead>
+                                    {
+                                    card.category === 'Monster' ? (
+                                        <tbody>
+                                            <tr className="single-card-standard-row">
+                                                <td className="single-card-symbol-td">
+                                                    <img src={template} className="single-card-cardType" alt="card type"/>
+                                                </td>
+                                                <td colSpan="4" className="single-card-large-label">{cardType}</td>
+                                            </tr>
+                                            <tr className="single-card-standard-row">
+                                                <td className="single-card-symbol-td">
+                                                    <img src={attribute} className="single-card-symbol" alt="card symbol"/>
+                                                </td>
+                                                <td className="single-card-label-inner-td">{card.attribute}</td>
+                                                <td className="single-card-symbol-td">
+                                                    <img src={type} className="single-card-symbol" alt="card symbol"/>
+                                                </td>
+                                                <td colSpan="2" className="single-card-label-td">{card.type}</td>
+                                            </tr>
+                                            <tr style={{ alignContent: 'left', fontSize: '16px', fontStyle: 'italic'}}>
+                                                <td className="single-card-description-label" colSpan="5">Description:</td>
+                                            </tr>
+                                            <tr style={{alignContent: 'left', fontSize: '18px'}}>
+                                                <td colSpan="5" className="single-card-description-box">
+                                                {
+                                                    card.pendulumEffect && card.normal ? 'Pendulum Effect:\n' + card.pendulumEffect + '\n\nFlavor Text:\n' + <i>card.description</i> :
+                                                    card.pendulumEffect && !card.normal ? 'Pendulum Effect:\n' + card.pendulumEffect + '\n\nMonster Effect:\n' + card.description :
+                                                    card.normal ? <i>{card.description}</i> :
+                                                    card.description
+                                                }
+                                                </td>
+                                            </tr>
+                                            <tr className="blank-row">
+                                            <td colSpan="5">
+                                                <div />
+                                            </td>
+                                            </tr>
+                                            <tr className="single-card-bottom-row">
+                                            <td id="star-td" className="single-card-symbol-td">
+                                                <img src={starType} className="single-card-symbol" alt={starType}/>
+                                            </td>
+                                            <td id="level-td" colSpan="2" className="single-card-label-inner-td">
+                                                {starWord} {card.level || card.rating}
+                                            </td>
+                                            <td id="atk-td" className="single-card-label-inner-td">
+                                                <span>ATK: </span>{card.atk}
+                                            </td>
+                                            <td id="def-td" className="single-card-label-td"><span>DEF: </span>{card.def}</td>
+                                            </tr>
+                                            <tr className="single-card-date-row">
+                                            <td colSpan="3">
+                                                TCG Release: {dateToVerbose(card.tcgDate, false, false)}
+                                            </td>
+                                            <td colSpan="3">
+                                                OCG Release: {dateToVerbose(card.ocgDate, false, false)}
+                                            </td>
+                                            </tr>
+                                        </tbody>
+                                    ) : (
+                                        <tbody>
+                                            <tr className="single-card-standard-row">
+                                                <td className="single-card-symbol-td">
+                                                    <img src={template} className="single-card-cardType" alt="card type"/>
+                                                </td>
+                                                <td className="single-card-label-inner-td">
+                                                    {card.category}
+                                                </td>
+                                                <td className="single-card-symbol-td">
+                                                    <img src={symbol} className="single-card-symbol" alt="card symbol"/>
+                                                </td>
+                                                <td colSpan="2" className="single-card-label-td">
+                                                    {card.icon}
+                                                </td>
+                                            </tr>
+                                            <tr
+                                                style={{
+                                                    alignContent: 'left',
+                                                    fontSize: '16px',
+                                                    fontStyle: 'italic'
+                                                }}
+                                            >
+                                                <td colSpan="5" style={{padding: '20px 0px 0px 10px'}}>
+                                                    Description:
+                                                </td>
+                                            </tr>
+                                            <tr style={{alignContent: 'left', fontSize: '18px'}}>
+                                                <td colSpan="5" className="single-card-description-box">
+                                                    {card.description}
+                                                </td>
+                                            </tr>
+                                            <tr className="blank-row">
+                                                <td colSpan="5">
+                                                    <div />
+                                                </td>
+                                            </tr>
+                                            <tr className="single-card-date-row">
+                                                <td colSpan="3">
+                                                    TCG Release: {dateToVerbose(card.tcgDate, false, false)}
+                                                </td>
+                                                <td colSpan="3">
+                                                    OCG Release: {dateToVerbose(card.ocgDate, false, false)}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    )}
+                                </table>
+                            ) : (
+                                <table className="single-card-table">
+                                    <thead>
+                                    <tr>
+                                        <th colSpan="5" className="single-card-title">
+                                            <input
+                                                id="name"
+                                                className="large-input"
+                                                defaultValue={card.name || ''}
+                                                type="text"
+                                                onChange={(e) => {
+                                                    const cleanName = e.target.value.replaceAll(/['"]/g, '').split(/[^A-Za-z0-9]/).filter((e) => e.length).join(' ')
+                                                    setCard({ ...card, cleanName, name: e.target.value })
+                                                }}
+                                            />
+                                        </th>
                                     </tr>
-                                    <tr style={{ alignContent: 'left', fontSize: '16px', fontStyle: 'italic'}}>
-                                        <td className="single-card-description-label" colSpan="5">Description:</td>
-                                    </tr>
-                                    <tr style={{alignContent: 'left', fontSize: '18px'}}>
-                                        <td colSpan="5" className="single-card-description-box">
-                                        {
-                                            card.pendulumEffect && card.normal ? 'Pendulum Effect:\n' + card.pendulumEffect + '\n\nFlavor Text:\n' + <i>card.description</i> :
-                                            card.pendulumEffect && !card.normal ? 'Pendulum Effect:\n' + card.pendulumEffect + '\n\nMonster Effect:\n' + card.description :
-                                            card.normal ? <i>{card.description}</i> :
-                                            card.description
-                                        }
-                                    </td>
-                                    </tr>
-                                    <tr className="blank-row">
-                                    <td colSpan="5">
-                                        <div />
-                                    </td>
-                                    </tr>
-                                    <tr className="single-card-bottom-row">
-                                    <td id="star-td" className="single-card-symbol-td">
-                                        <img src={starType} className="single-card-symbol" alt={starType}/>
-                                    </td>
-                                    <td id="level-td" colSpan="2" className="single-card-label-inner-td">
-                                        {starWord} {card.level || card.rating}
-                                    </td>
-                                    <td id="atk-td" className="single-card-label-inner-td">
-                                        <span>ATK: </span>{card.atk}
-                                    </td>
-                                    <td id="def-td" className="single-card-label-td"><span>DEF: </span>{card.def}</td>
-                                    </tr>
-                                    <tr className="single-card-date-row">
-                                    <td colSpan="3">
-                                        TCG Release: {dateToVerbose(card.tcgDate, false, false)}
-                                    </td>
-                                    <td colSpan="3">
-                                        OCG Release: {dateToVerbose(card.ocgDate, false, false)}
-                                    </td>
-                                    </tr>
-                                </tbody>
-                        ) : (
-                        <tbody>
-                            <tr className="single-card-standard-row">
-                            <td className="single-card-symbol-td">
-                                <img src={template} className="single-card-cardType" alt="card type"/>
-                            </td>
-                            <td className="single-card-label-inner-td">
-                                {card.category}
-                            </td>
-                            <td className="single-card-symbol-td">
-                                <img src={symbol} className="single-card-symbol" alt="card symbol"/>
-                            </td>
-                            <td colSpan="2" className="single-card-label-td">
-                                {card.icon}
-                            </td>
-                            </tr>
-                            <tr
-                            style={{
-                                alignContent: 'left',
-                                fontSize: '16px',
-                                fontStyle: 'italic'
-                            }}
-                            >
-                            <td colSpan="5" style={{padding: '20px 0px 0px 10px'}}>
-                                Description:
-                            </td>
-                            </tr>
-                            <tr style={{alignContent: 'left', fontSize: '18px'}}>
-                            <td colSpan="5" className="single-card-description-box">
-                            {
-                                card.pendulumEffect && card.normal ? card.pendulumEffect + '\n\n' + <i>card.description</i> :
-                                card.pendulumEffect && !card.normal ? card.pendulumEffect + '\n\n' + card.description :
-                                card.normal ? <i>{card.description}</i> :
-                                card.description
-                            }
-                            </td>
-                            </tr>
-                            <tr className="blank-row">
-                            <td colSpan="5">
-                                <div />
-                            </td>
-                            </tr>
-                            <tr className="single-card-date-row">
-                            <td colSpan="3">
-                                TCG Release: {dateToVerbose(card.tcgDate, false, false)}
-                            </td>
-                            <td colSpan="3">
-                                OCG Release: {dateToVerbose(card.ocgDate, false, false)}
-                            </td>
-                            </tr>
-                        </tbody>
-                        )}
-                    </table>
+                                    </thead>
+                                    {
+                                    card.category === 'Monster' ? (
+                                        <tbody>
+                                            <tr className="single-card-standard-row">
+                                                <td className="single-card-symbol-td">
+                                                    <img src={template} className="single-card-cardType" alt="card type"/>
+                                                </td>
+                                                <td colSpan="4" className="single-card-large-label">
+                                                    <input
+                                                        id="card-type"
+                                                        className="medium-input"
+                                                        defaultValue={cardType || ''}
+                                                        type="text"
+                                                        onChange={(e) => {
+                                                            const items = e.target.value.split('/').map((item) => item.trim().toLowerCase())
+                                                            const data = {}
+                                                            const category = capitalize(items[0])
+                                                            items.slice(1).forEach((item) => data[item] = true)
+                                                            setCard({ 
+                                                                ...card, 
+                                                                category,
+                                                                normal: false,
+                                                                effect: false,
+                                                                fusion: false,
+                                                                ritual: false,
+                                                                synchro: false,
+                                                                xyz: false,
+                                                                pendulum: false,
+                                                                link: false,
+                                                                flip: false,
+                                                                gemini: false,
+                                                                spirit: false,
+                                                                toon: false,
+                                                                tuner: false,
+                                                                union: false,
+                                                                ...data 
+                                                            })
+                                                        }}
+                                                    />
+                                                </td>
+                                            </tr>
+                                            <tr className="single-card-standard-row">
+                                                <td className="single-card-symbol-td">
+                                                    <img src={attribute} className="single-card-symbol" alt="card symbol"/>
+                                                </td>
+                                                <td className="single-card-label-inner-td">
+                                                    <input
+                                                        id="attribute"
+                                                        className="medium-input"
+                                                        defaultValue={card.attribute || ''}
+                                                        type="text"
+                                                        onChange={(e) => setCard({ ...card, attribute: e.target.value.toUpperCase() })}
+                                                    />
+                                                </td>
+                                                <td className="single-card-symbol-td">
+                                                    <img src={type} className="single-card-symbol" alt="card symbol"/>
+                                                </td>
+                                                <td colSpan="2" className="single-card-label-td">
+                                                    <input
+                                                        id="type"
+                                                        className="medium-input"
+                                                        defaultValue={card.type || ''}
+                                                        type="text"
+                                                        onChange={(e) => setCard({ ...card, type: capitalize(e.target.value.toLowerCase(), true) })}
+                                                    />
+                                                </td>
+                                            </tr>
+                                            <tr style={{ alignContent: 'left', fontSize: '16px', fontStyle: 'italic'}}>
+                                                <td className="single-card-description-label" colSpan="5">Description:</td>
+                                            </tr>
+                                            <tr style={{alignContent: 'left', fontSize: '18px'}}>
+                                                <td colSpan="5" className="single-card-description-box">
+                                                {
+                                                    card.pendulum ? (
+                                                        <>
+                                                            Pendulum Effect:
+                                                            <textarea
+                                                                id="pendulum-effect"
+                                                                className="description-input"
+                                                                defaultValue={card.pendulumEffect || ''}
+                                                                type="text"
+                                                                onChange={(e) => setCard({ ...card, pendulumEffect: e.target.value })}
+                                                            />
+                                                            Monster Effect:
+                                                            <textarea
+                                                                id="type"
+                                                                className="description-input"
+                                                                defaultValue={card.description || ''}
+                                                                type="text"
+                                                                onChange={(e) => setCard({ ...card, description: e.target.value })}
+                                                            />
+                                                        </>
+                                                    ) : (
+                                                        <textarea
+                                                            id="description"
+                                                            className="description-input"
+                                                            defaultValue={card.description || ''}
+                                                            type="text"
+                                                            onChange={(e) => setCard({ ...card, description: e.target.value })}
+                                                        />
+                                                    )
+                                                }
+                                            </td>
+                                            </tr>
+                                            <tr className="blank-row">
+                                            <td colSpan="5">
+                                                <div />
+                                            </td>
+                                            </tr>
+                                            <tr className="single-card-bottom-row">
+                                                <td id="star-td" className="single-card-symbol-td">
+                                                    <img src={starType} className="single-card-symbol" alt={starType}/>
+                                                </td>
+                                                <td id="level-td" colSpan="2" className="single-card-label-inner-td">
+                                                    {starWord}
+                                                    <input
+                                                        id="level"
+                                                        className="small-input"
+                                                        defaultValue={card.level || card.rating || ''}
+                                                        type="text"
+                                                        onChange={(e) => {
+                                                            if (card.level) {
+                                                                setCard({ ...card, level: parseInt(e.target.value) })
+                                                            } else if (card.rating) {
+                                                                setCard({ ...card, rating: parseInt(e.target.value) })
+                                                            }
+                                                        }}
+                                                    />
+                                                </td>
+                                                <td id="atk-td" className="single-card-label-inner-td">
+                                                    ATK:
+                                                    <input
+                                                        id="atk"
+                                                        className="small-input"
+                                                        defaultValue={`${card.atk}`}
+                                                        type="text"
+                                                        onChange={(e) => setCard({ ...card, atk: parseInt(e.target.value) })}
+                                                    />
+                                                </td>
+                                                <td id="def-td" className="single-card-label-td">
+                                                    DEF:
+                                                    <input
+                                                        id="def"
+                                                        className="small-input"
+                                                        defaultValue={`${card.def}`}
+                                                        type="text"
+                                                        onChange={(e) => setCard({ ...card, def: parseInt(e.target.value) })}
+                                                    />
+                                                </td>
+                                            </tr>
+                                            <tr className="single-card-date-row">
+                                            <td colSpan="3">
+                                                TCG Release: {dateToVerbose(card.tcgDate, false, false)}
+                                            </td>
+                                            <td colSpan="3">
+                                                OCG Release: {dateToVerbose(card.ocgDate, false, false)}
+                                            </td>
+                                            </tr>
+                                        </tbody>
+                                    ) : (
+                                        <tbody>
+                                            <tr className="single-card-standard-row">
+                                                <td className="single-card-symbol-td">
+                                                    <img src={template} className="single-card-cardType" alt="card type"/>
+                                                </td>
+                                                <td className="single-card-label-inner-td">
+                                                    <input
+                                                        id="category"
+                                                        className="medium-input"
+                                                        defaultValue={card.category}
+                                                        type="text"
+                                                        onChange={(e) => setCard({ ...card, category: capitalize(e.target.value.toLowerCase(), true) })}
+                                                    />
+                                                </td>
+                                                <td className="single-card-symbol-td">
+                                                    <img src={symbol} className="single-card-symbol" alt="card symbol"/>
+                                                </td>
+                                                <td colSpan="2" className="single-card-label-td">
+                                                    <input
+                                                        id="icon"
+                                                        className="medium-input"
+                                                        defaultValue={card.icon}
+                                                        type="text"
+                                                        onChange={(e) => setCard({ ...card, icon: capitalize(e.target.value.toLowerCase(), true) })}
+                                                    />
+                                                </td>
+                                            </tr>
+                                            <tr
+                                                style={{
+                                                    alignContent: 'left',
+                                                    fontSize: '16px',
+                                                    fontStyle: 'italic'
+                                                }}
+                                            >
+                                                <td colSpan="5" style={{padding: '20px 0px 0px 10px'}}>
+                                                    Description:
+                                                </td>
+                                            </tr>
+                                            <tr style={{alignContent: 'left', fontSize: '18px'}}>
+                                                <td colSpan="5" className="single-card-description-box">
+                                                    <textarea
+                                                        id="description"
+                                                        className="description-input"
+                                                        defaultValue={card.description || ''}
+                                                        type="text"
+                                                        onChange={(e) => setCard({ ...card, description: e.target.value })}
+                                                    />
+                                                </td>
+                                            </tr>
+                                            <tr className="blank-row">
+                                                <td colSpan="5">
+                                                    <div />
+                                                </td>
+                                            </tr>
+                                            <tr className="single-card-date-row">
+                                                <td colSpan="3">
+                                                    TCG Release: {dateToVerbose(card.tcgDate, false, false)}
+                                                </td>
+                                                <td colSpan="3">
+                                                    OCG Release: {dateToVerbose(card.ocgDate, false, false)}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    )}
+                                </table>   
+                            )
+                        }
                     </div>
-                    <div className="status-flexbox">
-                    <div>TCG Status History:</div>
-                    <div className="status-box">
-                        {banlists.map((b) => {
-                        const banlist = b[0]
-                        const date = b[1]
-                        const status = statuses[banlist] ? statuses[banlist] : card.tcgDate < date ? 'unlimited' : null
-                        return <StatusBox key={banlist} banlist={banlist} status={status}/>
-                        })}
-                    </div>
-                    </div>
-                    <div className="prints-flexbox">
-                    {prints?.length ? (
-                        <>
-                            <div>Prints:</div>
-                            <div className="print-box">
-                            <table>
-                                <tbody>
-                                {prints.map((print, index) => <PrintRow key={print.id} index={index} print={print}/>)}
-                                </tbody>
-                            </table>
+                    {
+                        !inEditMode ? (
+                            <div className="status-flexbox">
+                                <div>TCG Status History:</div>
+                                <div className="status-box">
+                                    {banlists.map((b) => {
+                                    const banlist = b[0]
+                                    const date = b[1]
+                                    const status = statuses[banlist] ? statuses[banlist] : card.tcgDate < date ? 'unlimited' : null
+                                    return <StatusBox key={banlist} banlist={banlist} status={status}/>
+                                    })}
+                                </div>
                             </div>
-                        </>
-                    ) : ''}
-                    </div>
+                        ) : null
+                    }
 
-                    <div className="prints-flexbox">
-                    {rulings?.generic?.length ? (
-                        <>
-                            <div>Generic Rulings:</div>
-                            <div>
-                                {rulings.generic.map((ruling) => <li className="ruling">{ruling.content}</li>)}
+                    {
+                        prints?.length && !inEditMode ? (
+                            <div className="prints-flexbox">
+                                <div>Prints:</div>
+                                <div className="print-box">
+                                <table>
+                                    <tbody>
+                                    {prints.map((print, index) => <PrintRow key={print.id} index={index} print={print}/>)}
+                                    </tbody>
+                                </table>
+                                </div>
                             </div>
-                            <br/>
-                        </>
-                    ) : ''}
-                    <div> 
-                        {rulings && rulings.specific && Object.keys(rulings.specific).length ? (
+                        ) : null
+                    }
+
+                    {
+                        rulings?.generic?.length && !inEditMode ? (
+                            <div className="prints-flexbox">
+                                <div>Generic Rulings:</div>
+                                <div>
+                                    {rulings.generic.map((ruling) => <li className="ruling">{ruling.content}</li>)}
+                                </div>
+                                <br/>
+                            </div>
+                        ) : null
+                    }
+                    {
+                        rulings?.specific && Object.keys(rulings?.specific).length ? (
                             <div>
                                 {
                                     Object.entries(rulings.specific).map((entry) => {
@@ -379,19 +657,41 @@ export const SingleCard = () => {
                                     })
                                 }
                             </div>
-                        ) : ''}
-                    </div>
-                    </div>
-                    <div>
+                        ) : null
+                    }
+
+                    <div className="space-apart">       
+                        {
+                            isContentManager ? (
+                                !inEditMode ? (
+                                    <div
+                                        className="downloadButton"
+                                        style={{width: '200px'}}
+                                        onClick={()=> setInEditMode(true)}
+                                    >
+                                        Edit Mode
+                                    </div>
+                                ) : (
+                                    <div
+                                        className="downloadButton"
+                                        style={{width: '200px'}}
+                                        onClick={()=> updateCardInfo()}
+                                    >
+                                        Save Changes
+                                    </div>
+                                )
+                            ) : null
+                        }
                         {
                             isAdmin ? (
                                 <div
                                     className="downloadButton"
+                                    style={{width: '200px'}}
                                     onClick={()=> downloadCardImage()}
                                 >
                                     Update Image
                                 </div>
-                            ) : ''
+                            ) : null
                         }
                     </div>
                 </div>
