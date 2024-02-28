@@ -24,11 +24,6 @@ export default {
             try {
                 const user = interaction.options.getUser('player')
                 console.log('user', user)
-            } catch (err) {
-                console.log(err)
-            }
-            
-            try {
                 const member = await interaction.guild?.members.fetch(user?.id)
                 console.log('member', member)
             } catch (err) {
