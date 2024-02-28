@@ -98,7 +98,7 @@ export const SingleCard = () => {
     const { id } = useParams()
   
     // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, 0), [card.id])
+    useLayoutEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop))
   
     // USE EFFECT
     useEffect(() => {
@@ -233,7 +233,7 @@ export const SingleCard = () => {
                 <meta name="image" content={`https://cdn.formatlibrary.com/images/artworks/${card.ypdId}.jpg`}/>
                 <meta name="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${card.ypdId}.jpg`}/>
             </Helmet>
-            <div className="body">
+            <div className="body" id="body">
                 {card.id ? (
                 <div>
                     <div className="flexy">
