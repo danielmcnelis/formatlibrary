@@ -98,7 +98,7 @@ export const SingleCard = () => {
     const { id } = useParams()
   
     // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, 0))
+    useLayoutEffect(() => window.scrollTo(0, 0), [card.id])
   
     // USE EFFECT
     useEffect(() => {
