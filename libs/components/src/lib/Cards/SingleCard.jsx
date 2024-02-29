@@ -701,7 +701,7 @@ export const SingleCard = () => {
                                                     <li className="ruling">
                                                         {ruling.content}
                                                     </li>
-                                                    <div onClick={() => deleteRuling(ruling.id)}>
+                                                    <div className="delete-button" onClick={() => deleteRuling(ruling.id)}>
                                                         DELETE
                                                     </div>
                                                 </div>
