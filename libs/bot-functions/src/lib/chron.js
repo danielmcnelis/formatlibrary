@@ -12,6 +12,7 @@ const Canvas = require('canvas')
 
 // GET MIDNIGHT COUNTDOWN
 export const getMidnightCountdown = () => {
+    return 60000
 	const date = new Date()
 	const remainingMinutes = 60 - date.getMinutes()
 	const remainingHours = 23 - date.getHours()
