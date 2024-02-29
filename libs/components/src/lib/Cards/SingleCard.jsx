@@ -151,22 +151,21 @@ export const SingleCard = () => {
     }
     
     // UPDATE RULING
-    const updateRuling = async (rulingId) => {
+    const updateRuling = async (rulingId, key, index) => {
         try {
             const content = document.getElementById(`ruling-${rulingId}`)?.value
             if (content) await axios.post(`/api/rulings/update?id=${rulingId}`, { content })
+            setRulings({ ...rulings, [key]: rulings[key].splice(index, 1, content)})
         } catch (err) {
             console.log(err)
         }
     }
-    
 
     // DELETE RULING
-    const deleteRuling = async (rulingId) => {
+    const deleteRuling = async (rulingId, key, index) => {
         try {
             await axios.delete(`/api/rulings/delete?id=${rulingId}`)
-            const {data} = await axios.get(`/api/cards/${id}`)
-            setRulings(data.rulings)
+            setRulings({ ...rulings, [key]: rulings[key][index].splice(index, 1)})
         } catch (err) {
             console.log(err)
         }
@@ -668,7 +667,7 @@ export const SingleCard = () => {
                             <div className="prints-flexbox">
                                 <div>Generic Rulings:</div>
                                 <div>
-                                    {rulings.generic.map((ruling) => (
+                                    {rulings.generic.map((ruling, index) => (
                                         <div className="ruling-editor-flexbox">
                                             <div className="ruling" style={{width: '80%'}}>   
                                                 <textarea
@@ -679,11 +678,11 @@ export const SingleCard = () => {
                                                 />
                                             </div>
 
-                                            <div className="delete-button" onClick={() => updateRuling(ruling.id)}>
+                                            <div className="delete-button" onClick={() => updateRuling(ruling.id, 'generic', index)}>
                                                 UPDATE
                                             </div>
 
-                                            <div className="delete-button" onClick={() => deleteRuling(ruling.id)}>
+                                            <div className="delete-button" onClick={() => deleteRuling(ruling.id, 'generic', index)}>
                                                 DELETE
                                             </div>
                                         </div>
@@ -717,7 +716,7 @@ export const SingleCard = () => {
                                     <div className="prints-flexbox">
                                         <div>{entry[0] + ' Rulings:'}</div>
                                         {
-                                            entry[1].map((ruling) => (
+                                            entry[1].map((ruling, index) => (
                                                 <div className="ruling-editor-flexbox">
                                                     <div className="ruling" style={{width: '80%'}}>   
                                                         <textarea
@@ -728,11 +727,11 @@ export const SingleCard = () => {
                                                         />
                                                     </div>
         
-                                                    <div className="delete-button" onClick={() => updateRuling(ruling.id)}>
+                                                    <div className="delete-button" onClick={() => updateRuling(ruling.id, entry[0], index)}>
                                                         UPDATE
                                                     </div>
         
-                                                    <div className="delete-button" onClick={() => deleteRuling(ruling.id)}>
+                                                    <div className="delete-button" onClick={() => deleteRuling(ruling.id, entry[0], index)}>
                                                         DELETE
                                                     </div>
                                                 </div>
