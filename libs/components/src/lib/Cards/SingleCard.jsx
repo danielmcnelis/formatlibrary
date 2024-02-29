@@ -150,6 +150,18 @@ export const SingleCard = () => {
         }
     }
     
+    // UPDATE RULING
+    const updateRuling = async (rulingId) => {
+        try {
+            const content = document.getElementById(`ruling-${rulingId}`)?.value
+            console.log('content', content)
+            if (content) await axios.post(`/api/rulings/update?id=${rulingId}`, { content })
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    
+
     // DELETE RULING
     const deleteRuling = async (rulingId) => {
         try {
@@ -659,9 +671,19 @@ export const SingleCard = () => {
                                 <div>
                                     {rulings.generic.map((ruling) => (
                                         <div className="ruling-editor-flexbox">
-                                            <li className="ruling">
-                                                {ruling.content}
-                                            </li>
+                                            <div className="ruling" style={{width: '80%'}}>   
+                                                <textarea
+                                                    id={`ruling-${ruling.id}`}
+                                                    className="description-input"
+                                                    defaultValue={ruling.content}
+                                                    type="text"
+                                                />
+                                            </div>
+
+                                            <div className="delete-button" onClick={() => updateRuling(ruling.id)}>
+                                                UPDATE
+                                            </div>
+
                                             <div className="delete-button" onClick={() => deleteRuling(ruling.id)}>
                                                 DELETE
                                             </div>

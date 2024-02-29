@@ -108,16 +108,16 @@ export const cardsId = async (req, res, next) => {
 
         const genericRulings = await Ruling.findAll({
             where: {
-            cardId: card.id,
-            formatId: null
+                cardId: card.id,
+                formatId: null
             },
             attributes: { exclude: ['createdAt', 'updatedAt'] }
         })
 
         const additionalRulings = await Ruling.findAll({
             where: {
-            cardId: card.id,
-            formatId: {[Op.not]: null}
+                cardId: card.id,
+                formatId: {[Op.not]: null}
             },
             include: Format,
             attributes: { exclude: ['createdAt', 'updatedAt'] },
@@ -156,8 +156,6 @@ export const updateCardInfo = async (req, res, next) => {
             }
         })
 
-        console.log('!!card', !!card)
-        console.log('req.body', req.body)
         await card.update({ ...req.body })
         res.json(card)
     } catch (err) {
