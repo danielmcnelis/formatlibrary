@@ -720,9 +720,19 @@ export const SingleCard = () => {
                                         {
                                             entry[1].map((ruling) => (
                                                 <div className="ruling-editor-flexbox">
-                                                    <li className="ruling">
-                                                        {ruling.content}
-                                                    </li>
+                                                    <div className="ruling" style={{width: '80%'}}>   
+                                                        <textarea
+                                                            id={`ruling-${ruling.id}`}
+                                                            className="description-input"
+                                                            defaultValue={ruling.content}
+                                                            type="text"
+                                                        />
+                                                    </div>
+        
+                                                    <div className="delete-button" onClick={() => updateRuling(ruling.id)}>
+                                                        UPDATE
+                                                    </div>
+        
                                                     <div className="delete-button" onClick={() => deleteRuling(ruling.id)}>
                                                         DELETE
                                                     </div>
