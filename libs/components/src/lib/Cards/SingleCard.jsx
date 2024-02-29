@@ -95,6 +95,7 @@ export const SingleCard = () => {
     const [statuses, setStatuses] = useState({})
     const [prints, setPrints] = useState([])
     const [rulings, setRulings] = useState({})
+    console.log('rulings', rulings)
     const { id } = useParams()
 
     // USE EFFECT
@@ -151,29 +152,24 @@ export const SingleCard = () => {
     }
     
     // UPDATE RULING
-    const updateRuling = async (rulingId, isGeneric, key, index) => {
+    const updateRuling = async (rulingId) => {
         try {
             const content = document.getElementById(`ruling-${rulingId}`)?.value
             if (content) await axios.post(`/api/rulings/update?id=${rulingId}`, { content })
-
-            if (isGeneric) {
-                setRulings({ ...rulings, [key]: rulings.generic[index].splice(index, 1, content)})
-            } else {
-                setRulings({ ...rulings, [key]: rulings.specific[key][index].splice(index, 1, content)})
-            }
         } catch (err) {
             console.log(err)
         }
     }
 
     // DELETE RULING
-    const deleteRuling = async (rulingId, isGeneric, key, index) => {
+    const deleteRuling = async (rulingId, isGeneric, key) => {
+        console.log('rulingId, isGeneric, key', rulingId, isGeneric, key)
         try {
             await axios.delete(`/api/rulings/delete?id=${rulingId}`)
             if (isGeneric) {
-                setRulings({ ...rulings, [key]: rulings.generic[index].splice(index, 1)})
+                setRulings({ ...rulings, generic: rulings.generic.filter((e) => e.id !== rulingId)})
             } else {
-                setRulings({ ...rulings, [key]: rulings.specific[key][index].splice(index, 1)})
+                setRulings({ ...rulings, specific: { ...rulings.specific, [key]: rulings.specific[key].filter((e) => e.id !== rulingId) }})
             }
         } catch (err) {
             console.log(err)
@@ -665,7 +661,7 @@ export const SingleCard = () => {
                                 <div>Generic Rulings:</div>
                                 <div>
                                     {rulings.generic.map((ruling) => (
-                                        <li className="ruling">
+                                        <li className="ruling" key={ruling.id}>
                                             {ruling.content}
                                         </li>
                                     ))}
@@ -676,8 +672,8 @@ export const SingleCard = () => {
                             <div className="prints-flexbox">
                                 <div>Generic Rulings:</div>
                                 <div>
-                                    {rulings.generic.map((ruling, index) => (
-                                        <div className="ruling-editor-flexbox">
+                                    {rulings.generic.map((ruling) => (
+                                        <div className="ruling-editor-flexbox" key={ruling.id}>
                                             <div className="ruling" style={{width: '80%'}}>   
                                                 <textarea
                                                     id={`ruling-${ruling.id}`}
@@ -687,11 +683,11 @@ export const SingleCard = () => {
                                                 />
                                             </div>
 
-                                            <div className="delete-button" onClick={() => updateRuling(ruling.id, true, 'generic', index)}>
+                                            <div className="delete-button" onClick={() => updateRuling(ruling.id)}>
                                                 UPDATE
                                             </div>
 
-                                            <div className="delete-button" onClick={() => deleteRuling(ruling.id, true, 'generic', index)}>
+                                            <div className="delete-button" onClick={() => deleteRuling(ruling.id, true, 'generic')}>
                                                 DELETE
                                             </div>
                                         </div>
@@ -710,7 +706,7 @@ export const SingleCard = () => {
                                         <div>{entry[0] + ' Rulings:'}</div>
                                         {
                                             entry[1].map((ruling) => (
-                                                <li className="ruling">
+                                                <li className="ruling" key={ruling.id}>
                                                     {ruling.content}
                                                 </li>
                                             ))
@@ -725,8 +721,8 @@ export const SingleCard = () => {
                                     <div className="prints-flexbox">
                                         <div>{entry[0] + ' Rulings:'}</div>
                                         {
-                                            entry[1].map((ruling, index) => (
-                                                <div className="ruling-editor-flexbox">
+                                            entry[1].map((ruling) => (
+                                                <div className="ruling-editor-flexbox" key={ruling.id}>
                                                     <div className="ruling" style={{width: '80%'}}>   
                                                         <textarea
                                                             id={`ruling-${ruling.id}`}
@@ -736,11 +732,11 @@ export const SingleCard = () => {
                                                         />
                                                     </div>
         
-                                                    <div className="delete-button" onClick={() => updateRuling(ruling.id, false, entry[0], index)}>
+                                                    <div className="delete-button" onClick={() => updateRuling(ruling.id)}>
                                                         UPDATE
                                                     </div>
         
-                                                    <div className="delete-button" onClick={() => deleteRuling(ruling.id, false, entry[0], index)}>
+                                                    <div className="delete-button" onClick={() => deleteRuling(ruling.id, false, entry[0])}>
                                                         DELETE
                                                     </div>
                                                 </div>
@@ -753,7 +749,7 @@ export const SingleCard = () => {
                         ) : null
                     }
 
-                    <div className="space-apart">       
+                    <div className="space-apart">
                         {
                             isContentManager ? (
                                 !inEditMode ? (

@@ -134,13 +134,13 @@ export const cardsId = async (req, res, next) => {
         }
 
         const info = {
-        card: card,
-        statuses: Object.fromEntries(statuses),
-        prints: prints || [],
-        rulings: {
-            generic: genericRulings || [],
-            specific: specificRulings || {}
-        }
+            card: card,
+            statuses: Object.fromEntries(statuses),
+            prints: prints || [],
+            rulings: {
+                generic: genericRulings || [],
+                specific: specificRulings || {}
+            }
         }
 
         res.json(info)
