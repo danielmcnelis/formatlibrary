@@ -11,7 +11,7 @@ export const updateRuling = async (req, res, next) => {
         })
         
         await ruling.update({ content: req.body.content })
-        res.json(200)
+        res.sendStatus(200)
     } catch (err) {
         next(err)
     }
@@ -26,7 +26,7 @@ export const deleteRuling = async (req, res, next) => {
         })
         
         await ruling.destroy()
-        res.json(200)
+        res.sendStatus(200)
     } catch (err) {
         next(err)
     }

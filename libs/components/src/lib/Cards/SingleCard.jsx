@@ -154,7 +154,6 @@ export const SingleCard = () => {
     const updateRuling = async (rulingId) => {
         try {
             const content = document.getElementById(`ruling-${rulingId}`)?.value
-            console.log('content', content)
             if (content) await axios.post(`/api/rulings/update?id=${rulingId}`, { content })
         } catch (err) {
             console.log(err)

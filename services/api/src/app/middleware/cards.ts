@@ -111,7 +111,8 @@ export const cardsId = async (req, res, next) => {
                 cardId: card.id,
                 formatId: null
             },
-            attributes: { exclude: ['createdAt', 'updatedAt'] }
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+            order: [['id', 'ASC']]
         })
 
         const additionalRulings = await Ruling.findAll({
@@ -121,7 +122,7 @@ export const cardsId = async (req, res, next) => {
             },
             include: Format,
             attributes: { exclude: ['createdAt', 'updatedAt'] },
-            order: [[Format, 'date', 'ASC']]
+            order: [[Format, 'date', 'ASC'], ['id', 'ASC']]
         })
 
         const specificRulings = {}
