@@ -116,8 +116,6 @@ export const getCard = async (query, fuzzyCards, format) => {
         order: [[Set, 'tcgDate', 'DESC']]
     }) : null
 
-    console.log('!!recentPrint', !!recentPrint)
-
     const status = format ? await Status.findOne({ 
         where: { 
             banlist: format.banlist,

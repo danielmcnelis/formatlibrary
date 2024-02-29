@@ -4,6 +4,11 @@
     margin: 5px 0px;
 }
 
+.ruling-editor-flexbox {
+    display: flex;
+    align-items: center;
+}
+
 .flexy {
     display: flex;
     flex-direction: row;
@@ -202,7 +207,7 @@
     border-bottom: 2px solid #9ba9cc !important;
   }
   
-  .downloadButton {
+  .downloadButton, .delete-button {
     margin-left: auto;
     padding: 0.36em 0.84em;
     border: 1px solid #000000;
@@ -217,7 +222,7 @@
     transition: all 0.15s;
   }
   
-  .downloadButton:hover {
+  .downloadButton:hover, .delete-button:hover {
     cursor: pointer;
     text-shadow: 0 0 2em rgba(255, 255, 255, 1);
     color: black;

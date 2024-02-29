@@ -96,7 +96,7 @@ export const SingleCard = () => {
     const [prints, setPrints] = useState([])
     const [rulings, setRulings] = useState({})
     const { id } = useParams()
-  
+
     // USE EFFECT
     useEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop), [inEditMode])
   
@@ -145,6 +145,17 @@ export const SingleCard = () => {
         try {
             await axios.post(`/api/cards/update?id=${card.id}`, { ...card })
             setInEditMode(false)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    
+    // DELETE RULING
+    const deleteRuling = async (rulingId) => {
+        try {
+            await axios.delete(`/api/rulings/delete?id=${rulingId}`)
+            const {data} = await axios.get(`/api/cards/${id}`)
+            setRulings(data.rulings)
         } catch (err) {
             console.log(err)
         }
@@ -634,12 +645,34 @@ export const SingleCard = () => {
                             <div className="prints-flexbox">
                                 <div>Generic Rulings:</div>
                                 <div>
-                                    {rulings.generic.map((ruling) => <li className="ruling">{ruling.content}</li>)}
+                                    {rulings.generic.map((ruling) => (
+                                        <li className="ruling">
+                                            {ruling.content}
+                                        </li>
+                                    ))}
+                                </div>
+                                <br/>
+                            </div>
+                        ) : rulings?.generic?.length && inEditMode && isAdmin ? (
+                            <div className="prints-flexbox">
+                                <div>Generic Rulings:</div>
+                                <div>
+                                    {rulings.generic.map((ruling) => (
+                                        <div className="ruling-editor-flexbox">
+                                            <li className="ruling">
+                                                {ruling.content}
+                                            </li>
+                                            <div className="delete-button" onClick={() => deleteRuling(ruling.id)}>
+                                                DELETE
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                                 <br/>
                             </div>
                         ) : null
                     }
+
                     {
                         rulings?.specific && Object.keys(rulings?.specific).length && !inEditMode ? (
                             Object.entries(rulings.specific).map((entry) => {
@@ -647,7 +680,32 @@ export const SingleCard = () => {
                                     <div className="prints-flexbox">
                                         <div>{entry[0] + ' Rulings:'}</div>
                                         {
-                                            entry[1].map((ruling) => (<li className="ruling">{ruling.content}</li>))
+                                            entry[1].map((ruling) => (
+                                                <li className="ruling">
+                                                    {ruling.content}
+                                                </li>
+                                            ))
+                                        }
+                                        <br/>
+                                    </div>
+                                )
+                            })
+                        ) : rulings?.specific && Object.keys(rulings?.specific).length && inEditMode && isAdmin ? (
+                            Object.entries(rulings.specific).map((entry) => {
+                                return (
+                                    <div className="prints-flexbox">
+                                        <div>{entry[0] + ' Rulings:'}</div>
+                                        {
+                                            entry[1].map((ruling) => (
+                                                <div className="ruling-editor-flexbox">
+                                                    <li className="ruling">
+                                                        {ruling.content}
+                                                    </li>
+                                                    <div onClick={() => deleteRuling(ruling.id)}>
+                                                        DELETE
+                                                    </div>
+                                                </div>
+                                            ))
                                         }
                                         <br/>
                                     </div>

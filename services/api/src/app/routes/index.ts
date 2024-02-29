@@ -13,9 +13,10 @@ import matchups from './matchups'
 import players from './players'
 import rated from './rated'
 import replays from './replays'
+import rulings from './rulings'
 import sealed from './sealed'
 import sets from './sets'
 import stats from './stats'
 import statuses from './statuses'
 
-export { banlists, blogposts, cards, cookies, cubes, decks, deckTypes, drafts, events, formats, images, matchups, players, rated, replays, sealed, sets, stats, statuses }
+export { banlists, blogposts, cards, cookies, cubes, decks, deckTypes, drafts, events, formats, images, matchups, players, rated, replays, rulings, sealed, sets, stats, statuses }
