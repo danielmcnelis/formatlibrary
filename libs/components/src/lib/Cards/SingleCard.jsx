@@ -151,21 +151,30 @@ export const SingleCard = () => {
     }
     
     // UPDATE RULING
-    const updateRuling = async (rulingId, key, index) => {
+    const updateRuling = async (rulingId, isGeneric, key, index) => {
         try {
             const content = document.getElementById(`ruling-${rulingId}`)?.value
             if (content) await axios.post(`/api/rulings/update?id=${rulingId}`, { content })
-            setRulings({ ...rulings, [key]: rulings[key].splice(index, 1, content)})
+
+            if (isGeneric) {
+                setRulings({ ...rulings, [key]: rulings.generic[index].splice(index, 1, content)})
+            } else {
+                setRulings({ ...rulings, [key]: rulings.specific[key][index].splice(index, 1, content)})
+            }
         } catch (err) {
             console.log(err)
         }
     }
 
     // DELETE RULING
-    const deleteRuling = async (rulingId, key, index) => {
+    const deleteRuling = async (rulingId, isGeneric, key, index) => {
         try {
             await axios.delete(`/api/rulings/delete?id=${rulingId}`)
-            setRulings({ ...rulings, [key]: rulings[key][index].splice(index, 1)})
+            if (isGeneric) {
+                setRulings({ ...rulings, [key]: rulings.generic[index].splice(index, 1)})
+            } else {
+                setRulings({ ...rulings, [key]: rulings.specific[key][index].splice(index, 1)})
+            }
         } catch (err) {
             console.log(err)
         }
@@ -678,11 +687,11 @@ export const SingleCard = () => {
                                                 />
                                             </div>
 
-                                            <div className="delete-button" onClick={() => updateRuling(ruling.id, 'generic', index)}>
+                                            <div className="delete-button" onClick={() => updateRuling(ruling.id, true, 'generic', index)}>
                                                 UPDATE
                                             </div>
 
-                                            <div className="delete-button" onClick={() => deleteRuling(ruling.id, 'generic', index)}>
+                                            <div className="delete-button" onClick={() => deleteRuling(ruling.id, true, 'generic', index)}>
                                                 DELETE
                                             </div>
                                         </div>
@@ -727,11 +736,11 @@ export const SingleCard = () => {
                                                         />
                                                     </div>
         
-                                                    <div className="delete-button" onClick={() => updateRuling(ruling.id, entry[0], index)}>
+                                                    <div className="delete-button" onClick={() => updateRuling(ruling.id, false, entry[0], index)}>
                                                         UPDATE
                                                     </div>
         
-                                                    <div className="delete-button" onClick={() => deleteRuling(ruling.id, entry[0], index)}>
+                                                    <div className="delete-button" onClick={() => deleteRuling(ruling.id, false, entry[0], index)}>
                                                         DELETE
                                                     </div>
                                                 </div>
