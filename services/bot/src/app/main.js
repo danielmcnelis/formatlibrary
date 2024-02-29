@@ -506,7 +506,9 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
                 }
             })
     
+            const subTier = player.subTier
             await player.update({ subscriber: false, subTier: null })
+            return await programmer.send({ content: `${oldMember.user?.username} is no longer a Subscriber (${subTier}).` })
         } else if (!wasSubscriber && isSubscriber) {
             const player = await Player.findOne({
                 where: {
