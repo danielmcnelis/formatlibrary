@@ -1378,64 +1378,119 @@ import { parse } from 'csv-parse'
 
 
 ;(async () => {
-    function similarity(s1, s2) {
-        let longer = s1;
-        let shorter = s2;
-        if (s1.length < s2.length) {
-          longer = s2;
-          shorter = s1;
-        }
-        const longerLength = longer.length;
-        if (longerLength == 0) {
-          return 1.0;
-        }
-        return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
-      }
-  
-      function editDistance(s1, s2) {
-        s1 = s1.toLowerCase()
-        s2 = s2.toLowerCase()
-  
-        const costs = []
-        for (let i = 0; i <= s1.length; i++) {
-          let lastValue = i
-          for (let j = 0; j <= s2.length; j++) {
-            if (i == 0)
-              costs[j] = j
-            else {
-                if (j > 0) {
-                    let newValue = costs[j - 1];
-                    if (s1.charAt(i - 1) != s2.charAt(j - 1)) {
-                        newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1
-                    }
-                    costs[j - 1] = lastValue;
-                    lastValue = newValue;
-                  }
-            }
-          }
-          if (i > 0)
-            costs[s2.length] = lastValue
-        }
-        return costs[s2.length]
-      }
-
-    const genericRulings = await Ruling.findAll({ where: { formatId: null }})
-    for (let i = 0; i < genericRulings.length; i++) {
-        const genericRuling = genericRulings[i]
-        const goatRulings = await Ruling.findAll({
+    {
+        const cardIds = [...await Ruling.findAll({
             where: {
-                cardId: genericRuling.cardId
+                formatName: 'Edison'
             }
-        })
-        
-        for (let j = 0; j < goatRulings.length; j++) {
-            const goatRuling = goatRulings[j]
-            const simScore = similarity(genericRuling.content, goatRuling.content)
-            if (simScore > 0.75) {
-                console.log(`destroying:\n${goatRuling.content}\n-----\ncounterpart: ${genericRuling.content}\n\n`)
-                await goatRuling.destroy()
+        })].map((r) => r.cardId)
+    
+     
+        for (let i = 0; i < cardIds.length; i++) {
+            const cardId = cardIds[i]
+            console.log('cardId', cardId)
+            const tenguRulings = await Ruling.findAll({
+                where: {
+                    cardId: cardId,
+                    formatName: 'Tengu Plant'
+                }
+            })
+     
+     
+            for (let j = 0; j < tenguRulings.length; j++) {
+                await tenguRulings[j].destroy()
             }
-            
         }
     }
+
+    {
+
+        const cardIds = [...await Status.findAll({
+            where: {
+                banlist: 'March 2010',
+                restriction: 'forbidden'
+            }
+        })].map((r) => r.cardId)
+     
+     
+        for (let i = 0; i < cardIds.length; i++) {
+            const cardId = cardIds[i]
+            console.log('cardId', cardId)
+            const edisonRulings = await Ruling.findAll({
+                where: {
+                    cardId: cardId,
+                    formatName: 'Edison'
+                }
+            })
+     
+     
+            for (let j = 0; j < edisonRulings.length; j++) {
+                console.log(`destroying ${edisonRulings[j]?.cardName} edison ruling`)
+                await edisonRulings[j].destroy()
+            }
+        }  
+    }
+
+    {
+        function similarity(s1, s2) {
+            let longer = s1;
+            let shorter = s2;
+            if (s1.length < s2.length) {
+              longer = s2;
+              shorter = s1;
+            }
+            const longerLength = longer.length;
+            if (longerLength == 0) {
+              return 1.0;
+            }
+            return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+          }
+           function editDistance(s1, s2) {
+            s1 = s1.toLowerCase()
+            s2 = s2.toLowerCase()
+             const costs = []
+            for (let i = 0; i <= s1.length; i++) {
+              let lastValue = i
+              for (let j = 0; j <= s2.length; j++) {
+                if (i == 0)
+                  costs[j] = j
+                else {
+                    if (j > 0) {
+                        let newValue = costs[j - 1];
+                        if (s1.charAt(i - 1) != s2.charAt(j - 1)) {
+                            newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1
+                        }
+                        costs[j - 1] = lastValue;
+                        lastValue = newValue;
+                      }
+                }
+              }
+              if (i > 0)
+                costs[s2.length] = lastValue
+            }
+            return costs[s2.length]
+          }
+     
+     
+        const genericRulings = await Ruling.findAll({ where: { formatId: null }})
+        for (let i = 0; i < genericRulings.length; i++) {
+            const genericRuling = genericRulings[i]
+            const goatRulings = await Ruling.findAll({
+                where: {
+                    cardId: genericRuling.cardId,
+                    formatName: 'Goat'
+                }
+            })
+           
+            for (let j = 0; j < goatRulings.length; j++) {
+                const goatRuling = goatRulings[j]
+                const simScore = similarity(genericRuling.content, goatRuling.content)
+                if (simScore > 0.75) {
+                    console.log(`destroying:\n${goatRuling.content}\n-----\ncounterpart: ${genericRuling.content}\n\n`)
+                    await goatRuling.destroy()
+                }
+            }
+        } 
+    }
+
 })()
