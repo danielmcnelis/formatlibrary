@@ -1379,6 +1379,18 @@ import { parse } from 'csv-parse'
 
 ;(async () => {
     {
+        const rulings = await Ruling.findAll({
+            where: {
+                formatName: {[Op.or]: ['Stein', 'Trooper', 'Perfect Circle', 'DAD Return', 'Gladiator', 'TeleDAD', 'Cat']}
+            }
+        })
+     
+        for (let j = 0; j < rulings.length; j++) {
+            await rulings[j].destroy()
+        }
+    }
+
+    {
         const cardIds = [...await Ruling.findAll({
             where: {
                 formatName: 'Edison'
@@ -1432,7 +1444,7 @@ import { parse } from 'csv-parse'
     }
 
     {
-        function similarity(s1, s2) {
+        const similarity = (s1, s2) => {
             let longer = s1;
             let shorter = s2;
             if (s1.length < s2.length) {
@@ -1445,7 +1457,7 @@ import { parse } from 'csv-parse'
             }
             return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
           }
-           function editDistance(s1, s2) {
+           const editDistance = (s1, s2) => {
             s1 = s1.toLowerCase()
             s2 = s2.toLowerCase()
              const costs = []
