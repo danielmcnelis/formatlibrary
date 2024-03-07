@@ -1,4 +1,4 @@
-import { Alius, Card, Cube, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Print, Replay, Set, Server, Stats, Status, Tournament } from '@fl/models'
+import { Alius, Card, Cube, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Print, Replay, Ruling, Set, Server, Stats, Status, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { config } from '@fl/config' 
@@ -440,215 +440,215 @@ import { parse } from 'csv-parse'
 //     return console.log(`updated ${b} replays and encountered ${e} errors`)
 // })()
 
-;(async () => {
-    let b = 0
-    let e = 0
-    let count = 0
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+//     let count = 0
 
-    const allReplays = await Replay.findAll()
+//     const allReplays = await Replay.findAll()
 
-    for (let i = 0; i < allReplays.length; i++) {
-        const replay = allReplays[i]
-        await replay.update({ display: false })
-    }
+//     for (let i = 0; i < allReplays.length; i++) {
+//         const replay = allReplays[i]
+//         await replay.update({ display: false })
+//     }
 
-    const server = await Server.findOne({ where: { id: '414551319031054346'}})
-    const primaryTournaments = [...await Event.findAll({ include: Tournament })].map((e) => e.tournament)
-    const topCutTournaments = await Tournament.findAll({ where: { isTopCutTournament: true }})
+//     const server = await Server.findOne({ where: { id: '414551319031054346'}})
+//     const primaryTournaments = [...await Event.findAll({ include: Tournament })].map((e) => e.tournament)
+//     const topCutTournaments = await Tournament.findAll({ where: { isTopCutTournament: true }})
 
-    for (let i = 0; i < topCutTournaments.length; i++) {
-        const tournament = topCutTournaments[i]
-        const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+//     for (let i = 0; i < topCutTournaments.length; i++) {
+//         const tournament = topCutTournaments[i]
+//         const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
 
-        const replays = await Replay.findAll({
-            where: {
-                tournamentId: tournament.id
-            }
-        })
+//         const replays = await Replay.findAll({
+//             where: {
+//                 tournamentId: tournament.id
+//             }
+//         })
 
-        if (replays.length) console.log(`reviewing ${replays.length} replays from ${tournament.name}`)
-        count += replays.length
+//         if (replays.length) console.log(`reviewing ${replays.length} replays from ${tournament.name}`)
+//         count += replays.length
 
-        for (let j = 0; j < replays.length; j++) {
-            const replay = replays[j]
-            const round = replay.roundInt
-            let roundName
-            if (tournament.type === 'single elimination') {
-                const totalRounds = Math.ceil(Math.log2(participants_count))
-                const roundsRemaining = totalRounds - round
-                roundName = roundsRemaining === 0 ? 'Finals' :
-                    roundsRemaining === 1 ? 'Semi Finals' :
-                    roundsRemaining === 2 ? 'Quarter Finals' :
-                    roundsRemaining === 3 ? 'Round of 16' :
-                    roundsRemaining === 4 ? 'Round of 32' :
-                    roundsRemaining === 5 ? 'Round of 64' :
-                    roundsRemaining === 6 ? 'Round of 128' :
-                    roundsRemaining === 7 ? 'Round of 256' :
-                    null
-            } else if (tournament.type === 'double elimination') {
-                const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
-                const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(participants_count)))
-                const correction = (participants_count - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
-                const totalLosersRounds = (totalWinnersRounds - 2) * 2 + correction
-                if (round > 0) {
-                    const roundsRemaining = totalWinnersRounds - round
-                    if (roundsRemaining <= 0) {
-                        roundName = 'Grand Finals'
-                    } else if (roundsRemaining === 1) {
-                        roundName = `Winner's Finals`
-                    } else if (roundsRemaining === 2) {
-                        roundName = `Winner's Semis`
-                    } else if (roundsRemaining === 3) {
-                        roundName = `Winner's Quarters`
-                    } else {
-                        roundName = `Winner's Round of ${Math.pow(2, roundsRemaining)}`
-                    }
-                } else {
-                    const roundsRemaining = totalLosersRounds - Math.abs(round)
-                    if (roundsRemaining <= 0) {
-                        roundName = `Loser's Finals`
-                    } else if (roundsRemaining === 1) {
-                        roundName = `Loser's Semis`
-                    } else if (roundsRemaining === 2) {
-                        roundName = `Loser's Thirds`
-                    } else if (roundsRemaining === 3) {
-                        roundName = `Loser's Fifths`
-                    } else {
-                        roundName = `Loser's Round ${Math.abs(round)}`
-                    }
-                }
-            }
+//         for (let j = 0; j < replays.length; j++) {
+//             const replay = replays[j]
+//             const round = replay.roundInt
+//             let roundName
+//             if (tournament.type === 'single elimination') {
+//                 const totalRounds = Math.ceil(Math.log2(participants_count))
+//                 const roundsRemaining = totalRounds - round
+//                 roundName = roundsRemaining === 0 ? 'Finals' :
+//                     roundsRemaining === 1 ? 'Semi Finals' :
+//                     roundsRemaining === 2 ? 'Quarter Finals' :
+//                     roundsRemaining === 3 ? 'Round of 16' :
+//                     roundsRemaining === 4 ? 'Round of 32' :
+//                     roundsRemaining === 5 ? 'Round of 64' :
+//                     roundsRemaining === 6 ? 'Round of 128' :
+//                     roundsRemaining === 7 ? 'Round of 256' :
+//                     null
+//             } else if (tournament.type === 'double elimination') {
+//                 const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
+//                 const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(participants_count)))
+//                 const correction = (participants_count - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
+//                 const totalLosersRounds = (totalWinnersRounds - 2) * 2 + correction
+//                 if (round > 0) {
+//                     const roundsRemaining = totalWinnersRounds - round
+//                     if (roundsRemaining <= 0) {
+//                         roundName = 'Grand Finals'
+//                     } else if (roundsRemaining === 1) {
+//                         roundName = `Winner's Finals`
+//                     } else if (roundsRemaining === 2) {
+//                         roundName = `Winner's Semis`
+//                     } else if (roundsRemaining === 3) {
+//                         roundName = `Winner's Quarters`
+//                     } else {
+//                         roundName = `Winner's Round of ${Math.pow(2, roundsRemaining)}`
+//                     }
+//                 } else {
+//                     const roundsRemaining = totalLosersRounds - Math.abs(round)
+//                     if (roundsRemaining <= 0) {
+//                         roundName = `Loser's Finals`
+//                     } else if (roundsRemaining === 1) {
+//                         roundName = `Loser's Semis`
+//                     } else if (roundsRemaining === 2) {
+//                         roundName = `Loser's Thirds`
+//                     } else if (roundsRemaining === 3) {
+//                         roundName = `Loser's Fifths`
+//                     } else {
+//                         roundName = `Loser's Round ${Math.abs(round)}`
+//                     }
+//                 }
+//             }
 
-            await replay.update({ display: true, roundName })
-            b++
-            console.log(`updated replay ${replay.id}`)
-        }
-    }
+//             await replay.update({ display: true, roundName })
+//             b++
+//             console.log(`updated replay ${replay.id}`)
+//         }
+//     }
     
-    for (let i = 0; i < primaryTournaments.length; i++) {
-        try {
-            const tournament = primaryTournaments[i]
-            const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
-            if (!participants_count) {
-                console.log(`no participants_count found for replay ${tournament.name}`)
-                continue
-            }
+//     for (let i = 0; i < primaryTournaments.length; i++) {
+//         try {
+//             const tournament = primaryTournaments[i]
+//             const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+//             if (!participants_count) {
+//                 console.log(`no participants_count found for replay ${tournament.name}`)
+//                 continue
+//             }
     
-            const replays = await Replay.findAll({
-                where: {
-                    tournamentId: tournament.id
-                },
-                include: Match
-            })
+//             const replays = await Replay.findAll({
+//                 where: {
+//                     tournamentId: tournament.id
+//                 },
+//                 include: Match
+//             })
 
-            if (replays.length) console.log(`reviewing ${replays.length} replays from ${tournament.name}`)
-            count += replays.length
+//             if (replays.length) console.log(`reviewing ${replays.length} replays from ${tournament.name}`)
+//             count += replays.length
         
-            for (let j = 0; j < replays.length; j++) {
-                try {
-                    const replay = replays[j]
-                    let round
-                    let roundName
-                    let display
+//             for (let j = 0; j < replays.length; j++) {
+//                 try {
+//                     const replay = replays[j]
+//                     let round
+//                     let roundName
+//                     let display
 
-                    if (!replay.roundInt) {
-                        const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${replay?.match?.challongeMatchId}.json?api_key=${server.challongeAPIKey}`)
-                        round = challongeMatch?.match?.round ||  ''
-                    } else {
-                        round = replay.roundInt
-                    }
+//                     if (!replay.roundInt) {
+//                         const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${replay?.match?.challongeMatchId}.json?api_key=${server.challongeAPIKey}`)
+//                         round = challongeMatch?.match?.round ||  ''
+//                     } else {
+//                         round = replay.roundInt
+//                     }
             
-                    if (tournament.type === 'swiss' || tournament.type === 'round robin') {
-                        roundName = `Round ${round}`
-                        display = false
-                    } else if (tournament.type === 'single elimination') {
-                        const totalRounds = Math.ceil(Math.log2(participants_count))
-                        const roundsRemaining = totalRounds - round
-                        roundName = roundsRemaining === 0 ? 'Finals' :
-                            roundsRemaining === 1 ? 'Semi Finals' :
-                            roundsRemaining === 2 ? 'Quarter Finals' :
-                            roundsRemaining === 3 ? 'Round of 16' :
-                            roundsRemaining === 4 ? 'Round of 32' :
-                            roundsRemaining === 5 ? 'Round of 64' :
-                            roundsRemaining === 6 ? 'Round of 128' :
-                            roundsRemaining === 7 ? 'Round of 256' :
-                            null
+//                     if (tournament.type === 'swiss' || tournament.type === 'round robin') {
+//                         roundName = `Round ${round}`
+//                         display = false
+//                     } else if (tournament.type === 'single elimination') {
+//                         const totalRounds = Math.ceil(Math.log2(participants_count))
+//                         const roundsRemaining = totalRounds - round
+//                         roundName = roundsRemaining === 0 ? 'Finals' :
+//                             roundsRemaining === 1 ? 'Semi Finals' :
+//                             roundsRemaining === 2 ? 'Quarter Finals' :
+//                             roundsRemaining === 3 ? 'Round of 16' :
+//                             roundsRemaining === 4 ? 'Round of 32' :
+//                             roundsRemaining === 5 ? 'Round of 64' :
+//                             roundsRemaining === 6 ? 'Round of 128' :
+//                             roundsRemaining === 7 ? 'Round of 256' :
+//                             null
 
-                        display = roundsRemaining === 0 || 
-                            participants_count > 8 && roundsRemaining <= 1 ||
-                            participants_count > 16 && roundsRemaining <= 2 ||
-                            participants_count > 32 && roundsRemaining <= 3
+//                         display = roundsRemaining === 0 || 
+//                             participants_count > 8 && roundsRemaining <= 1 ||
+//                             participants_count > 16 && roundsRemaining <= 2 ||
+//                             participants_count > 32 && roundsRemaining <= 3
 
-                        console.log(`(SE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
-                    } else if (tournament.type === 'double elimination') {            
-                        const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
-                        const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(participants_count)))
-                        const correction = (participants_count - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
-                        const totalLosersRounds = (totalWinnersRounds - 2) * 2 + correction
+//                         console.log(`(SE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
+//                     } else if (tournament.type === 'double elimination') {            
+//                         const totalWinnersRounds = Math.ceil(Math.log2(participants_count)) + 1
+//                         const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(participants_count)))
+//                         const correction = (participants_count - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
+//                         const totalLosersRounds = (totalWinnersRounds - 2) * 2 + correction
 
-                        if (round > 0) {
-                            const roundsRemaining = totalWinnersRounds - round
-                            if (roundsRemaining <= 0) {
-                                roundName = 'Grand Finals'
-                            } else if (roundsRemaining === 1) {
-                                roundName = `Winner's Finals`
-                            } else if (roundsRemaining === 2) {
-                                roundName = `Winner's Semis`
-                            } else if (roundsRemaining === 3) {
-                                roundName = `Winner's Quarters`
-                            } else {
-                                roundName = `Winner's Round of ${Math.pow(2, roundsRemaining)}`
-                            }
+//                         if (round > 0) {
+//                             const roundsRemaining = totalWinnersRounds - round
+//                             if (roundsRemaining <= 0) {
+//                                 roundName = 'Grand Finals'
+//                             } else if (roundsRemaining === 1) {
+//                                 roundName = `Winner's Finals`
+//                             } else if (roundsRemaining === 2) {
+//                                 roundName = `Winner's Semis`
+//                             } else if (roundsRemaining === 3) {
+//                                 roundName = `Winner's Quarters`
+//                             } else {
+//                                 roundName = `Winner's Round of ${Math.pow(2, roundsRemaining)}`
+//                             }
 
-                            display = roundsRemaining === 0 ||
-                                participants_count > 8 && roundsRemaining <= 1 ||
-                                participants_count > 16 && roundsRemaining <= 2 ||
-                                participants_count > 32 && roundsRemaining <= 3
+//                             display = roundsRemaining === 0 ||
+//                                 participants_count > 8 && roundsRemaining <= 1 ||
+//                                 participants_count > 16 && roundsRemaining <= 2 ||
+//                                 participants_count > 32 && roundsRemaining <= 3
                                 
-                            console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
-                        } else {
-                            const roundsRemaining = totalLosersRounds - Math.abs(round)
+//                             console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
+//                         } else {
+//                             const roundsRemaining = totalLosersRounds - Math.abs(round)
                         
-                            if (roundsRemaining <= 0) {
-                                roundName = `Loser's Finals`
-                            } else if (roundsRemaining === 1) {
-                                roundName = `Loser's Semis`
-                            } else if (roundsRemaining === 2) {
-                                roundName = `Loser's Thirds`
-                            } else if (roundsRemaining === 3) {
-                                roundName = `Loser's Fifths`
-                            } else {
-                                roundName = `Loser's Round ${Math.abs(round)}`
-                            }
+//                             if (roundsRemaining <= 0) {
+//                                 roundName = `Loser's Finals`
+//                             } else if (roundsRemaining === 1) {
+//                                 roundName = `Loser's Semis`
+//                             } else if (roundsRemaining === 2) {
+//                                 roundName = `Loser's Thirds`
+//                             } else if (roundsRemaining === 3) {
+//                                 roundName = `Loser's Fifths`
+//                             } else {
+//                                 roundName = `Loser's Round ${Math.abs(round)}`
+//                             }
 
-                            display = roundsRemaining === 0 ||
-                                participants_count > 8 && roundsRemaining <= 1 ||
-                                participants_count > 16 && roundsRemaining <= 2 ||
-                                participants_count > 32 && roundsRemaining <= 3
+//                             display = roundsRemaining === 0 ||
+//                                 participants_count > 8 && roundsRemaining <= 1 ||
+//                                 participants_count > 16 && roundsRemaining <= 2 ||
+//                                 participants_count > 32 && roundsRemaining <= 3
 
-                            console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
-                        }
-                    } else {
-                        roundName = `Round ${round}`
-                        display = false
-                    }
+//                             console.log(`(DE) ${roundName}, display = ${display}, roundsRemaining = ${roundsRemaining}, participants_count = ${participants_count}`)
+//                         }
+//                     } else {
+//                         roundName = `Round ${round}`
+//                         display = false
+//                     }
     
-                    await replay.update({ roundName, display })
-                    console.log(`updated replay ${replay.id}`)
-                    b++
-                }  catch (err) {
-                    console.log('err', err.message)
-                    e++
-                }
-           }
-        } catch (err) {
-            console.log('err', err.message)
-            e++
-        }
-    }
+//                     await replay.update({ roundName, display })
+//                     console.log(`updated replay ${replay.id}`)
+//                     b++
+//                 }  catch (err) {
+//                     console.log('err', err.message)
+//                     e++
+//                 }
+//            }
+//         } catch (err) {
+//             console.log('err', err.message)
+//             e++
+//         }
+//     }
 
-    return console.log(`updated ${b} out of ${count} replays and encountered ${e} errors`)
-})()
+//     return console.log(`updated ${b} out of ${count} replays and encountered ${e} errors`)
+// })()
 
 
 // ;(async () => {
@@ -1375,3 +1375,27 @@ import { parse } from 'csv-parse'
 //     console.log(`Failed to update the following ${failures.length} cards:\n`, failures.sort().join('\n'))
 //     return console.log(`Updated descriptions for ${b} prints, from ${d} out of ${cards.length} cards, encountered ${e} errors.`)
 // })()
+
+
+;(async () => {
+    const cardIds = [...await Ruling.findAll({
+        where: {
+            formatName: 'Edison'
+        }
+    })].map((r) => r.cardId)
+
+    for (let i = 0; i < cardIds.length; i++) {
+        const cardId = cardIds[i]
+        console.log('cardId', cardId)
+        const tenguRulings = await Ruling.findAll({
+            where: {
+                cardId: cardId,
+                formatName: 'Tengu Plant'
+            }
+        })
+
+        for (let j = 0; j < tenguRulings.length; j++) {
+            await tenguRulings[j].destroy()
+        }
+    }
+})()

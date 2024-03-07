@@ -56,7 +56,6 @@ export default {
         if (!winningPlayer || !winnerStats) return await interaction.editReply({ content: `Sorry, <@${winnerDiscordId}> is not in the database.`})
 
         const activeTournament = await Tournament.count({ where: { state: 'underway', serverId: interaction.guildId, formatName: {[Op.or]: [format.name, 'Multiple']} }}) 
-        console.log('activeTournament', activeTournament)
         let isTournament
         let winningEntry
         let losingEntry
