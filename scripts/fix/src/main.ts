@@ -1490,7 +1490,7 @@ import { parse } from 'csv-parse'
             const goatRulings = await Ruling.findAll({
                 where: {
                     cardId: genericRuling.cardId,
-                    formatName: 'Goat'
+                    formatName: {[Op.or]: ['Goat', 'Edison']}
                 }
             })
            
