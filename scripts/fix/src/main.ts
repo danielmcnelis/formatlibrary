@@ -1378,24 +1378,26 @@ import { parse } from 'csv-parse'
 
 
 ;(async () => {
-    const cardIds = [...await Ruling.findAll({
+    const cardIds = [...await Status.findAll({
         where: {
-            formatName: 'Edison'
+            banlist: 'March 2010',
+            restriction: 'forbidden'
         }
     })].map((r) => r.cardId)
 
     for (let i = 0; i < cardIds.length; i++) {
         const cardId = cardIds[i]
         console.log('cardId', cardId)
-        const tenguRulings = await Ruling.findAll({
+        const edisonRulings = await Ruling.findAll({
             where: {
                 cardId: cardId,
-                formatName: 'Tengu Plant'
+                formatName: 'Edison'
             }
         })
 
-        for (let j = 0; j < tenguRulings.length; j++) {
-            await tenguRulings[j].destroy()
+        for (let j = 0; j < edisonRulings.length; j++) {
+            console.log(`destroying ${edisonRulings[j]?.cardName} edison ruling`)
+            await edisonRulings[j].destroy()
         }
     }
 })()
