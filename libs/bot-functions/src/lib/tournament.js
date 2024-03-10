@@ -2094,7 +2094,6 @@ export const calculateStandings = async (tournament, matches, participants) => {
                 opponentsOpponentLossTotal: 0,
                 opponentsWinPercentage: 0,
                 opponentsOpponentWinPercentage: 0
-
             }
         }
 
@@ -2102,16 +2101,14 @@ export const calculateStandings = async (tournament, matches, participants) => {
 
     for (let i = 0; i < matches.length; i++) {
         const match = matches[i].match
+        if (match.state === 'pending') continue
         const round = parseInt(match.round)
+        if (round > currentRound) currentRound = round
 
-        if (match.state === 'pending') {
-            continue
-        } else if (match.state === 'open') {
-            if (round > currentRound) currentRound = round
+        if (match.state === 'open') {
             data[match.player1_id].roundsWithoutBye.push(round)
             data[match.player2_id].roundsWithoutBye.push(round)
         } else if (match.state === 'complete' && match.winner_id && match.loser_id) {
-            if (round > currentRound) currentRound = match.round
             data[match.winner_id].wins++
             data[match.winner_id].defeated.push(match.loser_id)
             data[match.winner_id].opponents.push(match.loser_id)
@@ -2122,7 +2119,11 @@ export const calculateStandings = async (tournament, matches, participants) => {
             data[match.loser_id].roundsWithoutBye.push(round)
             data[match.loser_id].pointsDifference-=1
         } else if (match.state === 'complete') {
-            if (round > currentRound) currentRound = round
+            if (
+                data[match.player1_id].opponents.includes(match.player2_id) || 
+                data[match.player2_id].opponents.includes(match.player1_id)
+            ) continue
+
             data[match.player1_id].ties++
             data[match.player1_id].opponents.push(match.player2_id)
             data[match.player1_id].roundsWithoutBye.push(round)
