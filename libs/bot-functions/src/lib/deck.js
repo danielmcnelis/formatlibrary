@@ -88,6 +88,7 @@ export const getIssues = async (deckArr, format) => {
 
     const keys = Object.keys(deck)
     for (let i = 0; i < keys.length; i++) {
+        const key = keys[i]
         let konamiCode = keys[i]
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode 
         if (konamiCode === '00000000' && format.name === 'Current') continue
@@ -101,24 +102,24 @@ export const getIssues = async (deckArr, format) => {
         } else if (forbiddenIds.includes(konamiCode)) {
             const card = await Card.findOne({ where: { konamiCode: konamiCode } })
             if (card) forbiddenCards.push(card.name)
-        } else if ((format.isHighlander || limitedIds.includes(konamiCode)) && deck[konamiCode] > 1) {
+        } else if ((format.isHighlander || limitedIds.includes(konamiCode)) && deck[key] > 1) {
             const card = await Card.findOne({ where: { konamiCode: konamiCode } })
             if (card) limitedCards.push(card.name)
-        } else if (semiIds.includes(konamiCode) && deck[konamiCode] > 2) {
+        } else if (semiIds.includes(konamiCode) && deck[key] > 2) {
             const card = await Card.findOne({ where: { konamiCode: konamiCode } })
             if (card) semiLimitedCards.push(card.name)
         } else if (limited1Ids.includes(konamiCode)) {
             const card = await Card.findOne({ where: { konamiCode: konamiCode } })
             if (card) limited1Cards.push(card.name)
-            limited1Count += deck[konamiCode]
+            limited1Count += deck[key]
         } else if (limited2Ids.includes(konamiCode)) {
             const card = await Card.findOne({ where: { konamiCode: konamiCode } })
             if (card) limited2Cards.push(card.name)
-            limited2Count += deck[konamiCode]
+            limited2Count += deck[key]
         } else if (limited3Ids.includes(konamiCode)) {
             const card = await Card.findOne({ where: { konamiCode: konamiCode } })
             if (card) limited3Cards.push(card.name)
-            limited3Count += deck[konamiCode]
+            limited3Count += deck[key]
         }
     }
 
