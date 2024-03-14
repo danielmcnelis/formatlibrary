@@ -186,6 +186,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
             return handleTriviaConfirmation(interaction, entryId, confirmed)
         } else if (interaction.message?.content?.includes(`I've found a Rated`)) {
             await interaction.update({ components: [] }).catch((err) => console.log(err))
+            console.log('interaction?.message?.timestamp', interaction?.message?.timestamp)
+            const twoMinutesAgo = new Date(new Date() - (2 * 60 * 1000))
+            if (interaction?.message?.timestamp < twoMinutesAgo.getTime()) {
+                console.log('OLD BUTTON')
+            } else {
+                console.log('RECENT BUTTON')
+            }
+            
             const customId = interaction.customId
             const confirmed = customId.charAt(0) === 'Y'
             const ids = customId.slice(2).split('-')

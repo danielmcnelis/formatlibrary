@@ -1,9 +1,10 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { checkPairing, getDeckType, getMatches, processMatchResult, processTeamResult, selectTournament, postStory, createPlayer, isNewUser, hasAffiliateAccess, isIronPlayer, isTourPlayer } from '@fl/bot-functions'
+import { checkPairing, getDeckType, getMatches, processMatchResult, processTeamResult, selectTournament, postStory, createPlayer, isNewUser, hasAffiliateAccess, isIronPlayer, lookForPotentialPairs } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Entry, Format, Iron, Match, Matchup, Pairing, Player, Pool, Server, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
+import { client } from '../client'
 
 export default {
     data: new SlashCommandBuilder()
@@ -216,12 +217,14 @@ export default {
             where: {
                 playerId: {[Op.or]: [winningPlayer.id, losingPlayer.id]},
                 status: 'inactive'
-            }
+            },
+            include: [Player, Format]
         }) || []
 
         for (let d = 0; d < poolsToUpdate.length; d++) {
             const rPTU = poolsToUpdate[d]
             await rPTU.update({ status: 'pending' })
+            lookForPotentialPairs(client, interaction, rPTU, rPTU.player, rPTU.format)
         }
 
         return await interaction.editReply({ content: `${losingPlayer.globalName || losingPlayer.discordName}${tournament?.pointsEligible && challongeMatch?.round === 1 ? ` (+1 TP)` : ''}, your ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournament ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss to <@${winningPlayer.discordId}>${tournament?.pointsEligible ? ` (+${challongeMatch.round + 1} TP)` : ''} has been recorded.`})

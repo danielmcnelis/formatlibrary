@@ -1,9 +1,10 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { createPlayer, getDeckType, postStory, isMod, isNewUser, hasAffiliateAccess, isIronPlayer, isTourPlayer, checkPairing, getMatches, processMatchResult, processTeamResult, selectTournament } from '@fl/bot-functions'
+import { createPlayer, getDeckType, postStory, isMod, isNewUser, hasAffiliateAccess, isIronPlayer, lookForPotentialPairs, checkPairing, getMatches, processMatchResult, processTeamResult, selectTournament } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Entry, Format, Iron, Match, Matchup, Pairing, Player, Pool, Server, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
+import { client } from '../client'
 
 export default {
     data: new SlashCommandBuilder()
@@ -241,6 +242,7 @@ export default {
         for (let d = 0; d < poolsToUpdate.length; d++) {
             const rPTU = poolsToUpdate[d]
             await rPTU.update({ status: 'pending' })
+            lookForPotentialPairs(client, interaction, rPTU, rPTU.player, rPTU.format)
         }
 
         return await interaction.editReply({ content: `A manual ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournament ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss by <@${losingPlayer.discordId}>${tournament?.pointsEligible && challongeMatch?.round ? ` (+1 TP)` : ''} to <@${winningPlayer.discordId}>${tournament?.pointsEligible ? ` (+${challongeMatch.round + 1} TP)` : ''} has been recorded.`})		
