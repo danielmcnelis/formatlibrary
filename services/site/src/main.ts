@@ -22,11 +22,14 @@ app.use(compression())
 
 // proxies
 if (config.services.site.proxy) {
-  const proxies = { api, auth, bot, socketio }
+  const proxies = { api, auth, bot }
   Object.entries(proxies).forEach(([, prxy]) => {
     app.use(proxy(prxy.path, { target: prxy.target, secure: prxy.secure }))
     console.log(chalk.cyan(`Proxy ${prxy.path} to ${prxy.target}`))
   })
+
+  app.use(proxy(socketio.path, { target: socketio.target, ws: true, secure: socketio.secure }))
+  console.log(chalk.cyan(`Proxy ${socketio.path} to ${socketio.target}`))
 }
 
 // assets

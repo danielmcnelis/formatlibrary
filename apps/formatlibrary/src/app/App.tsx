@@ -4,10 +4,6 @@ import axios from 'axios'
 import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import { useDetectAdBlock } from 'adblock-detect-react'
-import { SocketProvider } from '@fl/context'
-import {config} from '@fl/config'
-import io from 'socket.io-client'
-const socket = io(config.siteUrl)
 
 const App = () => {
     const playerId = getCookie('playerId')
@@ -64,7 +60,7 @@ const App = () => {
         </Helmet>
         <div className="app">
             {
-                playerId && !checkedSubscription ? (<SocketProvider value={socket}> <Router/> </SocketProvider>) :
+                playerId && !checkedSubscription ? (<Router/>) :
                     adBlockDetected && showReminder ? (
                         <div className="ad-block-detected">
                             <h2>Reminder: Please allow cookies and disable your ad-blocker.</h2>
@@ -91,7 +87,7 @@ const App = () => {
                                 </div>
                             </div>
                         </div>
-                    ) : (<SocketProvider value={socket}> <Router/> </SocketProvider>)
+                    ) : (<Router/>)
             }
         </div>
     </div>

@@ -4,6 +4,7 @@ const secure = config.services.hub.https === '1' || config.services.hub.https ==
 
 export const socketio = {
   path: '/socket.io',
+  ws: true,
   target: `${secure ? 'https' : 'http'}://${config.services.hub.host}:${config.services.hub.port}`,
   secure
 }
