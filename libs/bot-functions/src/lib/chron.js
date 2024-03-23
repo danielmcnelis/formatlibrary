@@ -980,6 +980,33 @@ export const downloadNewCards = async () => {
 }
 
 
+// PURGE LOCALS AND INTERNAL DECKS
+export const purgeLocalsAndInternalDecks = async () => {
+    let b = 0
+    let e = 0
+    const decks = await Deck.findAll({
+        where: {
+            origin: 'event',
+            eventId: null
+        }
+    })
+
+    for (let i = 0; i < decks.length; i++) {
+        try {
+            const deck = decks[i]
+            await deck.destroy()
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    console.log(`Purged ${b} locals and internal tournament decks, encountered ${e} errors`)
+    return setTimeout(() => purgeLocalsAndInternalDecks(), (24 * 60 * 60 * 1000))
+}
+
+
 // PURGE BETA CARDS
 export const purgeBetaCards = async () => {
     let b = 0

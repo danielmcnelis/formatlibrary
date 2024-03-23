@@ -7,6 +7,10 @@ import { FocalCard } from '../Builders/FocalCard'
 import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import {useSocket} from '@fl/hooks'
+import { SocketProvider } from '@fl/context'
+import {config} from '@fl/config'
+import io from 'socket.io-client'
+const websocket = io(config.siteUrl, { transports: ["websocket"] })
 import './SealedLobby.css' 
 
 const playerId = getCookie('playerId')
@@ -178,6 +182,8 @@ export const SealedLobby = () => {
     }, [id])
 
     return (
+
+        <SocketProvider value={websocket}>
         <div className="sealed-portal">
             {
                 draft.state === 'pending' ? (
@@ -320,7 +326,7 @@ export const SealedLobby = () => {
                                         <div className="space-evenly">
                                             <div
                                                 className="show-cursor"
-                                                onClick={() => sortInventory()}
+                                                // onClick={() => sortInventory()}
                                             >                                                                 
                                                 <div 
                                                     className="inventory-button"
@@ -361,5 +367,6 @@ export const SealedLobby = () => {
                 )
             }
         </div>
+        </SocketProvider>
     )
 }

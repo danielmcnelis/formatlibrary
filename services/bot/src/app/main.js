@@ -23,7 +23,7 @@ import { Match, Membership, Player, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
 import { assignTourRoles, conductCensus, createTopCut, downloadNewCards, getMidnightCountdown, markInactives, 
-    purgeEntries, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices,
+    purgeEntries, purgeLocalsAndInternalDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices,
     updateSets, updateServers, fixDeckFolder, postStandings, checkTimer, closeTournament, createTournament, 
     dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
@@ -127,6 +127,7 @@ client.on('ready', async() => {
         setTimeout(() => refreshExpiredTokens(), midnightCountdown)
         setTimeout(() => purgeEntries(), midnightCountdown + (0.1 * 60 * 1000))
         setTimeout(() => purgeTourRoles(client), midnightCountdown + (0.2 * 60 * 1000))
+        setTimeout(() => purgeLocalsAndInternalDecks(client), midnightCountdown + (0.3 * 60 * 1000))
         setTimeout(() => assignTourRoles(client), midnightCountdown + (0.4 * 60 * 1000))
         setTimeout(() => markInactives(), midnightCountdown + (0.6 * 60 * 1000))
         setTimeout(() => updateServers(client), midnightCountdown + (0.8 * 60 * 1000))
