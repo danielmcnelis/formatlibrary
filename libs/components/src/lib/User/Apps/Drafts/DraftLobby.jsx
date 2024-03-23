@@ -8,10 +8,6 @@ import { getCookie } from '@fl/utils'
 import ReactCountdownClock from 'react-countdown-clock'
 import { Helmet } from 'react-helmet'
 import { useSocket } from '@fl/hooks'
-import { SocketProvider } from '@fl/context'
-import {config} from '@fl/config'
-import io from 'socket.io-client'
-const websocket = io(config.siteUrl, { transports: ["websocket"] })
 
 import './DraftLobby.css'
 
@@ -274,7 +270,6 @@ export const DraftLobby = () => {
     }, [])
 
     return (
-        <SocketProvider value={websocket}>
         <div className="cube-portal">
             {
                 draft.state === 'pending' ? (
@@ -479,7 +474,7 @@ export const DraftLobby = () => {
                     </>
                 )
             }
+
         </div>
-        </SocketProvider>
     )
 }

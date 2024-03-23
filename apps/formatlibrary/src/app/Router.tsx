@@ -56,8 +56,8 @@ export const Router = () => {
 					<Route path="/cube-maker" element=<Page element=<CubeMaker /> /> />
 					<Route path="/rated-lobby" element=<Page element=<RatedLobby /> /> />
 					<Route path="/cubes/:id" element=<Page element=<CubeBrowser /> /> />
-					<Route path="/drafts/:id" element=<Page element=<DraftLobby /> /> />
-					<Route path="/sealed/:id" element=<Page element=<SealedLobby /> /> />
+					<Route path="/drafts/:id" element=<Page element= <DraftLobby/> /> />
+					<Route path="/sealed/:id" element=<Page element= <SealedLobby/> /> />
 					<Route path="/format-maker" element=<Page element=<FormatMaker /> /> />
 					<Route path="/great-library.html" element=<Page element= <CardTable /> /> />
 					<Route path="/great-library" element=<Page element= <CardTable /> /> />
