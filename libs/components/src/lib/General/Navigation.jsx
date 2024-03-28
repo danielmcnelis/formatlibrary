@@ -24,16 +24,22 @@ export const Navigation = (props) => {
 
     // USE EFFECT
     useEffect(() => {
-        const checkIfAdmin = async () => {
+        const checkRoles = async () => {
             try {
-                const { status } = await axios.get(`/api/players/content-manager/${playerId}`)
-                if (status === 200) setIsContentManager(true)
+                const accessToken = getCookie('access')
+                const { data: player } = await axios.get(`/api/players/roles`, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
+
+                if (player.contentManager) setIsContentManager(true)
             } catch (err) {
                 console.log(err)
             }
         }
 
-        checkIfAdmin()
+        if (playerId) checkRoles()
     }, [])
     
     return (

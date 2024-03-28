@@ -34,28 +34,26 @@ export const DeckTable = () => {
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [page])
   
+
     // USE EFFECT
     useEffect(() => {
-        const checkIfAdmin = async () => {
+        const checkRoles = async () => {
             try {
-                const { status } = await axios.get(`/api/players/admin/${playerId}`)
-                if (status === 200) setIsAdmin(true)
+                const accessToken = getCookie('access')
+                const { data: player } = await axios.get(`/api/players/roles`, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
+
+                if (player.admin) setIsAdmin(true)
+                if (player.subscriber) setIsSubscriber(true)
             } catch (err) {
                 console.log(err)
             }
         }
 
-        const checkIfSubscriber = async () => {
-            try {
-                const { status } = await axios.get(`/api/players/subscriber/${playerId}`)
-                if (status === 200) setIsSubscriber(true)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        checkIfAdmin()
-        checkIfSubscriber()
+        if (playerId) checkRoles()
     }, [])
 
     // COUNT

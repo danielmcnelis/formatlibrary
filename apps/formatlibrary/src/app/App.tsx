@@ -32,20 +32,22 @@ const App = () => {
 
     // USE EFFECT
     useEffect(() => {
-        if (playerId) {
-            const checkIfSubscriber = async () => {
-                try {
-                    const { status } = await axios.get(`/api/players/subscriber/${playerId}`)
-                    if (status === 200) setIsSubscriber(true)
-                } catch (err) {
-                    console.log(err)
-                }
-    
-                setCheckedSubscription(true)
+        const checkRoles = async () => {
+            try {
+                const accessToken = getCookie('access')
+                const { data: player } = await axios.get(`/api/players/roles`, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
+
+                if (player.subscriber) setIsSubscriber(true)
+            } catch (err) {
+                console.log(err)
             }
-    
-            checkIfSubscriber()
         }
+
+        if (playerId) checkRoles()
     }, [])
 
   return (

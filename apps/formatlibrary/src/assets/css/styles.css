@@ -2209,13 +2209,6 @@
     align-items: left;
   }
   
-  .flexy {
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    vertical-align: text-top;
-    align-items: flex-start;
-  }
   
   .buttonWrapper {
     display: flex;
@@ -3228,9 +3221,6 @@
         padding: 0px;
     }
   
-    .flexy {
-      flex-direction: column;
-    }
   
     .single-card-image {
       padding: 0px;

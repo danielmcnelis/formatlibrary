@@ -4,58 +4,17 @@ import { S3 } from 'aws-sdk'
 import { config } from '@fl/config'
 import * as bcrypt from 'bcrypt'
 
-export const isAdmin = async (req, res, next) => {
+export const getPlayerRoles = async (req, res, next) => {
     try {
-        const player = await Player.count({
-          where: {
-            id: req.params.id,
-            admin: true
-          }
-        })
-
-        if (player) {
-            res.send(200)
-        } else {
-            res.send(404)
-        }
-      } catch (err) {
-        next(err)
-      }
-}
-
-export const playersSubscriber = async (req, res, next) => {
-    try {
-        const player = await Player.count({
-          where: {
-            id: req.params.id,
-            subscriber: true
-          }
-        })
-
-        if (player) {
-            res.send(200)
-        } else {
-            res.send(404)
-        }
-      } catch (err) {
-        next(err)
-      }
-}
-
-export const playersContentManager = async (req, res, next) => {
-    try {
+        const playerId = req.user?.playerId
         const player = await Player.findOne({
           where: {
-            id: req.params.id,
-            contentManager: true
-          }
+            id: playerId
+          },
+          attributes: ['admin', 'contentManager', 'subscriber']
         })
 
-        if (player) {
-            res.send(200)
-        } else {
-            res.send(404)
-        }
+        res.json(player)
       } catch (err) {
         next(err)
       }

@@ -1094,10 +1094,6 @@
         padding: 0px;
     }
   
-    .flexy {
-      flex-direction: column;
-    }
-  
     .single-card-image {
       padding: 0px;
       margin: 10px auto;

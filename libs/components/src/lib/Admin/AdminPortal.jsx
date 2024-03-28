@@ -12,21 +12,25 @@ export const AdminPortal = () => {
   const [isContentManager, setIsContentManager] = useState(true)
   const [view, setView] = useState(false)
 
-  // USE EFFECT
-  useEffect(() => {
-    const checkIfContentManager = async () => {
-      try {
-        const { status } = await axios.get(`/api/players/content-manager/${playerId}`)
-        if (status === 200) {
-            setIsContentManager(true)
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    }
+    // USE EFFECT
+    useEffect(() => {
+        const checkRoles = async () => {
+            try {
+                const accessToken = getCookie('access')
+                const { data: player } = await axios.get(`/api/players/roles`, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
 
-    checkIfContentManager()
-  }, [])
+                if (player.contentManager) setIsContentManager(true)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        if (playerId) checkRoles()
+    }, [])
 
   // SWITCH VIEW
   const switchView = (view) => {
