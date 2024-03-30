@@ -2118,7 +2118,7 @@ export const calculateStandings = async (tournament, matches, participants) => {
             data[match.loser_id].opponents.push(match.winner_id)
             data[match.loser_id].roundsWithoutBye.push(round)
             data[match.loser_id].pointsDifference-=1
-        } else if (match.state === 'complete') {
+        } else if (match.state === 'complete' && tournament.pointsPerMatchTie !== '0.0') {
             if (
                 data[match.player1_id].opponents.includes(match.player2_id) || 
                 data[match.player2_id].opponents.includes(match.player1_id)
