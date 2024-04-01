@@ -40,6 +40,7 @@ export const DeckTable = () => {
         const checkRoles = async () => {
             try {
                 const accessToken = getCookie('access')
+                console.log('accessToken', accessToken)
                 const { data: player } = await axios.get(`/api/players/roles`, {
                     headers: {
                         ...(accessToken && {authorization: `Bearer ${accessToken}`})
