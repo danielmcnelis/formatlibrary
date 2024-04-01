@@ -265,6 +265,7 @@ export const CubeMaker = () => {
     const getCubes = async () => {
         try {
             const accessToken = getCookie('access')
+            console.log('accessToken', accessToken)
             if (accessToken) {
                 const {data} = await axios.get(`/api/cubes/my-cubes`, {
                     headers: {
