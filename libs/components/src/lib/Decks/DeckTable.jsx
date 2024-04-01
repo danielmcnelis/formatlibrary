@@ -46,6 +46,7 @@ export const DeckTable = () => {
                     }
                 })
 
+                console.log('player', player)
                 if (player.admin) setIsAdmin(true)
                 if (player.subscriber) setIsSubscriber(true)
             } catch (err) {

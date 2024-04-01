@@ -7,13 +7,15 @@ import * as bcrypt from 'bcrypt'
 export const getPlayerRoles = async (req, res, next) => {
     try {
         const playerId = req.user?.playerId
+        console.log('playerId', playerId)
         const player = await Player.findOne({
           where: {
             id: playerId
           },
-          attributes: ['admin', 'contentManager', 'subscriber']
+          attributes: ['playerId', 'admin', 'contentManager', 'subscriber']
         })
 
+        console.log('player', player)
         res.json(player)
       } catch (err) {
         next(err)
