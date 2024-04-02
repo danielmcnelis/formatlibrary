@@ -42,7 +42,9 @@ const App = () => {
                 })
 
                 if (player.subscriber) setIsSubscriber(true)
+                setCheckedSubscription(true)
             } catch (err) {
+                setCheckedSubscription(true)
                 console.log(err)
             }
         }
