@@ -12,7 +12,7 @@ export const getPlayerRoles = async (req, res, next) => {
           where: {
             id: playerId
           },
-          attributes: ['playerId', 'admin', 'contentManager', 'subscriber']
+          attributes: ['id', 'admin', 'contentManager', 'subscriber']
         })
 
         console.log('player', player)
