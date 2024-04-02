@@ -71,7 +71,7 @@ import { JWT } from '@fl/tokens'
         claims = await jwt.verify(token)
     } catch (err) {
         console.error(err)
-        throw new Error('Failed to verify JWT!')
+        throw new Error('Failed to verify JWT (main.ts)!')
     }
   }
 })()

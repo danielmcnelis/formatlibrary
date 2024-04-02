@@ -66,12 +66,17 @@ export class JWT {
 
         let claims
         try {
+            console.log('token', token)
+            console.log('key', key)
+            console.log('this.issuer', this.issuer)
+            console.log('this.audience', this.audience)
+            console.log('!!jwtVerify', !!jwtVerify)
             claims = await jwtVerify(token, key, {
                 issuer: this.issuer,
                 audience: this.audience
             })
         } catch (error) {
-            throw new Error('Failed to verify JWT!')
+            throw new Error('Failed to verify JWT (JTS.ts)!')
         }
 
         return claims
