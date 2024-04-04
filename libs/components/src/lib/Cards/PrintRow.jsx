@@ -13,26 +13,14 @@ export const PrintRow = (props) => {
 
   return (
     <tr onClick={() => openNewTab()} className={`${evenOrOdd}-print-row`}>
-        <td className="print-cell-1">
-            {minPrice}
-        </td>
+        <td className="print-cell-1">{minPrice}</td>
         <td className="rarity-cell" id={id}/>
-        <td className="print-cell-2 desktop-only">
-            {print.rarity}
-        </td>
-        <td className="print-cell-3">
-            {print.cardCode}
-        </td>
-        <td className="print-cell-4 desktop-only">
-            {print.setName}
-        </td>
+        <td className="print-cell-2 desktop-only">{print.rarity}</td>
+        <td className="print-cell-3">{print.cardCode}</td>
+        <td className="print-cell-4 desktop-only">{print.setName}</td>
         <td className="print-cell-5">
-          <div className="desktop-only">
-            {print.set.tcgDate}
-          </div>
-          <div className="mobile-only">
-            {dateToSimple(print.set.tcgDate)}
-          </div>
+          <div className="desktop-only">{print.set.tcgDate}</div>
+          <div className="mobile-only">{dateToSimple(print.set.tcgDate)}</div>
         </td>
     </tr>
   )

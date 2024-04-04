@@ -14,6 +14,7 @@ import banlists from '../../data/banlists.json'
 
 const playerId = getCookie('playerId')
 
+// SINGLE CARD COMPONENT
 export const SingleCard = () => {
     const isMobile = useMediaQuery({ query: '(max-width: 480px)' })
     const [isAdmin, setIsAdmin] = useState(false)
@@ -95,20 +96,21 @@ export const SingleCard = () => {
     
     // USE EFFECT SET CARD
     useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const {data} = await axios.get(`/api/cards/${id}`)
-          setCard(data.card)
-          setStatuses(data.statuses)
-          setPrints(data.prints)
-          setRulings(data.rulings)
-        } catch (err) {
-          console.log(err)
-          setCard(null)
+        let data
+        const fetchData = async () => {
+            try {
+                ({data} = await axios.get(`/api/cards/${id}`))
+            } catch (err) {
+                console.log(err)
+                setCard(null)
+            }
         }
-      }
   
-      fetchData()
+        fetchData()
+        setCard(data.card)
+        setStatuses(data.statuses)
+        setPrints(data.prints)
+        setRulings(data.rulings)
     }, [id])
   
     if (card === null) return <NotFound/>
