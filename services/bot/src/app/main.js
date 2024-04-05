@@ -22,21 +22,20 @@ import { config } from '@fl/config'
 import { Match, Membership, Player, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
-import { assignTourRoles, conductCensus, createTopCut, downloadNewCards, getMidnightCountdown, getMonthCountdown, markInactives, 
-    purgeEntries, purgeLocalsAndInternalDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateGlobalNames, updateMarketPrices,
+import { assignTourRoles, checkIfEndOfMonth, conductCensus, createTopCut, downloadNewCards, editTieBreakers, getMidnightCountdown, markInactives, 
+    purgeEntries, purgeLocalsAndInternalDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices,
     updateSets, updateServers, fixDeckFolder, postStandings, checkTimer, closeTournament, createTournament, 
     dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
     startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, assignRoles, createMembership,
     createPlayer, fetchCardNames, fetchOPCardNames, hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, 
-    isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, editPointsSystem
+    isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, editPointsSystem, refreshExpiredTokens
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
 import { emojis } from '@fl/bot-emojis'
 import commands from '@fl/bot-commands'
 import { rated } from './routes'
-import { editTieBreakers, refreshExpiredTokens } from '../../../../libs/bot-functions/src'
 client.commands = new Collection()
 Object.values(commands.formatLibraryCommands).forEach((command) => client.commands.set(command.data.name, command))
 Object.values(commands.globalCommands).forEach((command) => client.commands.set(command.data.name, command))
@@ -139,9 +138,7 @@ client.on('ready', async() => {
         setTimeout(() => updateDeckTypes(client), midnightCountdown + (13 * 60 * 1000))
 
         // MONTHLY TASKS
-        const monthCountdown = getMonthCountdown()
-        console.log('monthCountdown', monthCountdown)
-        setTimeout(() => updateGlobalNames(), monthCountdown)
+        checkIfEndOfMonth()
     } catch (err) {
         console.log(err)
     }
