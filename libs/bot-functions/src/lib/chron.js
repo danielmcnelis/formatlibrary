@@ -21,7 +21,7 @@ export const getMidnightCountdown = () => {
 // GET MONTH COUNTDOWN
 export const getMonthCountdown = () => {
 	const date = new Date()
-    const daysInMonth = (new Date(date.getFullYear(), date.getMonth + 1, 0)).getDate()
+    const daysInMonth = (new Date(date.getFullYear(), date.getMont() + 1, 0)).getDate()
 	const remainingDays = daysInMonth - date.getDate()
 	const remainingMinutes = 60 - date.getMinutes()
 	const remainingHours = 23 - date.getHours()
