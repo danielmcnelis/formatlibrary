@@ -18,6 +18,16 @@ export const getMidnightCountdown = () => {
     return ( remainingHours * 60 + remainingMinutes ) * 60 * 1000
 }
 
+// GET MONTH COUNTDOWN
+export const getMonthCountdown = () => {
+	const date = new Date()
+    const daysInMonth = (new Date(date.getFullYear(), date.getMonth + 1, 0)).getDate()
+	const remainingDays = daysInMonth - date.getDate()
+	const remainingMinutes = 60 - date.getMinutes()
+	const remainingHours = 23 - date.getHours()
+    return ( remainingDays * 24 * 60 + remainingHours * 60 + remainingMinutes ) * 60 * 1000
+}
+
 // REFRESH EXPIRED TOKENS
 export const refreshExpiredTokens = async () => {
     const difference = Date.now() - new Date(tcgPlayer[".expires"])
@@ -143,35 +153,7 @@ export const conductCensus = async (client) => {
 
                 const player = await Player.findOne({ where: { discordId: member.user.id } })
 
-                if (player && player.duelingBook && (member.user.discriminator === '0' || !player.globalName)) {
-                    try {
-                        const {data} = await axios.get(`https://discord.com/api/v9/users/${member.user.id}`, {
-                            headers: {
-                              Authorization: `Bot ${config.services.bot.token}`
-                            }
-                        })
-
-                        if (
-                            player.globalName !== data.global_name ||
-                            player.discordName !== member.user.username || 
-                            player.discriminator !== member.user.discriminator 
-                        ) {
-                            console.log(`updating ${member.user.username}`)
-                            updateCount++
-                            await player.update({
-                                globalName: data.global_name,
-                                discordName: member.user.username,
-                                discriminator: member.user.discriminator
-                            })
-                        }
-                    } catch (err) {
-                        console.log(`err`, err.response.headers['retry-after'])
-                        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-                        await sleep(err.response.headers['retry-after'] * 1000)
-                        i--
-                        continue
-                    }
-                } else if (player && ( 
+                if (player && ( 
                     player.discordName !== member.user.username || 
                     player.discriminator !== member.user.discriminator 
                 )) {
@@ -243,6 +225,75 @@ export const conductCensus = async (client) => {
 
     return setTimeout(() => conductCensus(client), (24 * 60 * 60 * 1000))
 }
+
+
+// UPDATE GLOBAL NAMES
+export const updateGlobalNames = async (client) => {
+    // Update active player's global names to match their Discord account.
+
+    const servers = await Server.findAll({
+        where: {
+            access: {[Op.not]: 'free'}
+        }
+    })
+
+    const checkedDiscordIds = []
+    let updateCount = 0
+    
+    for (let s = 0; s < servers.length; s++) {
+        try {
+            const server = servers[s]
+            const guild = client.guilds.cache.get(server.id)
+            if (!guild) {
+                console.log(`cannot find cached guild for ${server.name}`)
+                continue
+            }
+            
+            const membersMap = await guild.members.fetch()
+            const members = [...membersMap.values()]
+
+            for (let i = 0; i < members.length; i++) {
+                const member = members[i]
+                if (member.user.bot || checkedDiscordIds.includes(member.user.id)) continue
+                checkedDiscordIds.push(member.user.id)
+
+                const player = await Player.findOne({ where: { discordId: member.user.id } })
+
+                if (player && player.duelingBook && (member.user.discriminator === '0' || !player.globalName)) {
+                    try {
+                        const {data} = await axios.get(`https://discord.com/api/v9/users/${member.user.id}`, {
+                            headers: {
+                              Authorization: `Bot ${config.services.bot.token}`
+                            }
+                        })
+
+                        if (
+                            player.globalName !== data.global_name
+                        ) {
+                            console.log(`updating ${member.user.username}`)
+                            updateCount++
+                            await player.update({
+                                globalName: data.global_name
+                            })
+                        }
+                    } catch (err) {
+                        console.log(`err`, err.response.headers['retry-after'])
+                        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+                        await sleep(err.response.headers['retry-after'] * 1000)
+                        i--
+                        continue
+                    }
+                }
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    console.log(`Monthly Task Complete: Updated ${updateCount} global names.`)
+    return setTimeout(() => updateGlobalNames(client), getMonthCountdown())
+}
+
 
 // MARK INACTIVES
 export const markInactives = async () => {

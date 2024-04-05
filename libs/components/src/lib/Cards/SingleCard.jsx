@@ -20,10 +20,13 @@ export const SingleCard = () => {
     const [isAdmin, setIsAdmin] = useState(false)
     const [isContentManager, setIsContentManager] = useState(false)
     const [inEditMode, setInEditMode] = useState(false)
-    const [card, setCard] = useState({})
-    const [statuses, setStatuses] = useState({})
-    const [prints, setPrints] = useState([])
-    const [rulings, setRulings] = useState({})
+    const [data, setData] = useState({
+        card: {},
+        statuses: {},
+        prints: [],
+        rulings: {}
+    })
+    const { card, statuses, prints, rulings } = data || {}
     const { id } = useParams()
 
     // USE EFFECT
@@ -53,8 +56,8 @@ export const SingleCard = () => {
     // DOWNLOAD CARD IMAGE
     const downloadCardImage = async () => {
         try {
-            const {data} = await axios.post(`/api/images/update-card?ypdId=${card.ypdId}`)
-            if (data.success) alert(`Success! New Image: /images/cards/${card.ypdId}`)
+            const {data:{success}} = await axios.post(`/api/images/update-card?ypdId=${card.ypdId}`)
+            if (success) alert(`Success! New Image: /images/cards/${card.ypdId}`)
         } catch (err) {
             console.log(err)
         }
@@ -85,9 +88,9 @@ export const SingleCard = () => {
         try {
             await axios.delete(`/api/rulings/delete?id=${rulingId}`)
             if (isGeneric) {
-                setRulings({ ...rulings, generic: rulings.generic.filter((e) => e.id !== rulingId)})
+                setData({ ...data, rulings: { ...rulings, generic: rulings.generic.filter((e) => e.id !== rulingId)} })
             } else {
-                setRulings({ ...rulings, specific: { ...rulings.specific, [key]: rulings.specific[key].filter((e) => e.id !== rulingId) }})
+                setData({ ...data, rulings: { ...rulings, specific: { ...rulings.specific, [key]: rulings.specific.filter((e) => e.id !== rulingId)}}})
             }
         } catch (err) {
             console.log(err)
@@ -100,21 +103,18 @@ export const SingleCard = () => {
         const fetchData = async () => {
             try {
                 ({data} = await axios.get(`/api/cards/${id}`))
+                setData(data)
             } catch (err) {
                 console.log(err)
-                setCard(null)
+                setData(null)
             }
         }
   
         fetchData()
-        setCard(data.card)
-        setStatuses(data.statuses)
-        setPrints(data.prints)
-        setRulings(data.rulings)
     }, [id])
   
-    if (card === null) return <NotFound/>
-    if (!card.id) return <div />
+    if (data === null) return <NotFound/>
+    if (!card?.id) return <div />
   
     const template = card.category === 'Spell' ? `https://cdn.formatlibrary.com/images/templates/spellCard.png` :
       card.category === 'Trap' ? `https://cdn.formatlibrary.com/images/templates/trapCard.jpeg` :
@@ -301,7 +301,7 @@ export const SingleCard = () => {
                                             type="text"
                                             onChange={(e) => {
                                                 const cleanName = e.target.value.replaceAll(/['"]/g, '').split(/[^A-Za-z0-9]/).filter((e) => e.length).join(' ')
-                                                setCard({ ...card, cleanName, name: e.target.value })
+                                                setData({...data, card:{ ...card, cleanName, name: e.target.value }})
                                             }}
                                         />
                                     </div>
@@ -318,7 +318,7 @@ export const SingleCard = () => {
                                                     const data = {}
                                                     const category = capitalize(items[0])
                                                     items.slice(1).forEach((item) => data[item] = true)
-                                                    setCard({ 
+                                                    setData({ ...data, card: { 
                                                         ...card, 
                                                         category,
                                                         normal: false,
@@ -336,7 +336,7 @@ export const SingleCard = () => {
                                                         tuner: false,
                                                         union: false,
                                                         ...data 
-                                                    })
+                                                    }})
                                                 }}
                                             />
                                         </div>
@@ -350,7 +350,7 @@ export const SingleCard = () => {
                                                     className="medium-input"
                                                     defaultValue={card.attribute || ''}
                                                     type="text"
-                                                    onChange={(e) => setCard({ ...card, attribute: e.target.value.toUpperCase() })}
+                                                    onChange={(e) => setData({ ...data, card: { ...card, attribute: e.target.value.toUpperCase() }})}
                                                 />
                                             </div>
                                         </div>
@@ -362,7 +362,7 @@ export const SingleCard = () => {
                                                     className="medium-input"
                                                     defaultValue={card.type || ''}
                                                     type="text"
-                                                    onChange={(e) => setCard({ ...card, type: capitalize(e.target.value.toLowerCase(), true) })}
+                                                    onChange={(e) => setData({ ...data, card: { ...card, type: capitalize(e.target.value.toLowerCase(), true) }})}
                                                 />
                                             </div>
                                         </div>
@@ -377,7 +377,7 @@ export const SingleCard = () => {
                                                     className="description-input"
                                                     defaultValue={card.pendulumEffect || ''}
                                                     type="text"
-                                                    onChange={(e) => setCard({ ...card, pendulumEffect: e.target.value })}
+                                                    onChange={(e) => setData({ ...data, card: { ...card, pendulumEffect: e.target.value }})}
                                                 />
                                             ) + '\n\nMonster Effect / Flavor Text:\n' + (
                                                 <textarea
@@ -385,7 +385,7 @@ export const SingleCard = () => {
                                                     className="description-input"
                                                     defaultValue={card.description || ''}
                                                     type="text"
-                                                    onChange={(e) => setCard({ ...card, description: e.target.value })}
+                                                    onChange={(e) => setData({...data, card: { ...card, description: e.target.value }})}
                                                 />
                                             ) : (
                                                 <textarea
@@ -393,7 +393,7 @@ export const SingleCard = () => {
                                                     className="description-input"
                                                     defaultValue={card.description || ''}
                                                     type="text"
-                                                    onChange={(e) => setCard({ ...card, description: e.target.value })}
+                                                    onChange={(e) => setData({...data, card: { ...card, description: e.target.value }})}
                                                 />
                                             )
                                         }
@@ -411,9 +411,9 @@ export const SingleCard = () => {
                                                     type="text"
                                                     onChange={(e) => {
                                                         if (card.level) {
-                                                            setCard({ ...card, level: parseInt(e.target.value) })
+                                                            setData({...data, card:{ ...card, level: parseInt(e.target.value) }})
                                                         } else if (card.rating) {
-                                                            setCard({ ...card, rating: parseInt(e.target.value) })
+                                                            setData({...data, card:{ ...card, rating: parseInt(e.target.value) }})
                                                         }
                                                     }}
                                                 />
@@ -428,7 +428,7 @@ export const SingleCard = () => {
                                                     className="small-input"
                                                     defaultValue={`${card.atk}`}
                                                     type="text"
-                                                    onChange={(e) => setCard({ ...card, atk: parseInt(e.target.value) })}
+                                                    onChange={(e) => setData({...data, card:{ ...card, atk: parseInt(e.target.value) }})}
                                                 />
                                             </div>
                                         </div>
@@ -441,7 +441,7 @@ export const SingleCard = () => {
                                                     className="small-input"
                                                     defaultValue={`${card.def}`}
                                                     type="text"
-                                                    onChange={(e) => setCard({ ...card, def: parseInt(e.target.value) })}
+                                                    onChange={(e) => setData({...data, card:{ ...card, def: parseInt(e.target.value) }})}
                                                 />
                                             </div>
                                         </div>
@@ -465,7 +465,7 @@ export const SingleCard = () => {
                                             type="text"
                                             onChange={(e) => {
                                                 const cleanName = e.target.value.replaceAll(/['"]/g, '').split(/[^A-Za-z0-9]/).filter((e) => e.length).join(' ')
-                                                setCard({ ...card, cleanName, name: e.target.value })
+                                                setData({...data, card:{ ...card, cleanName, name: e.target.value }})
                                             }}
                                         />
                                     </div>
@@ -478,7 +478,7 @@ export const SingleCard = () => {
                                                     className="medium-input"
                                                     defaultValue={card.category}
                                                     type="text"
-                                                    onChange={(e) => setCard({ ...card, category: capitalize(e.target.value.toLowerCase(), true) })}
+                                                    onChange={(e) => setData({...data, card:{ ...card, category: capitalize(e.target.value.toLowerCase(), true) }})}
                                                 />
                                             </div>
                                         </div>
@@ -490,7 +490,7 @@ export const SingleCard = () => {
                                                     className="medium-input"
                                                     defaultValue={card.icon}
                                                     type="text"
-                                                    onChange={(e) => setCard({ ...card, icon: capitalize(e.target.value.toLowerCase(), true) })}
+                                                    onChange={(e) => setData({...data, card:{ ...card, icon: capitalize(e.target.value.toLowerCase(), true) }})}
                                                 />
                                             </div>
                                         </div>
@@ -503,7 +503,7 @@ export const SingleCard = () => {
                                                 className="description-input"
                                                 defaultValue={card.description || ''}
                                                 type="text"
-                                                onChange={(e) => setCard({ ...card, description: e.target.value })}
+                                                onChange={(e) => setData({...data, card:{ ...card, description: e.target.value }})}
                                             />
                                         </div>
                                     </div>

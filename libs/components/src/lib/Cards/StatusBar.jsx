@@ -5,12 +5,11 @@ import './StatusBar.css'
 //STATUS BOX
 export const StatusBox = (props) => {
     const { banlist, status } = props
-    if (!banlist) return <p></p>
+    if (!banlist) return <p/>
     const backgroundColor = status === 'forbidden' ? 'red' :
       status === 'limited' ? 'orange' :
       status === 'semi-limited' ? 'yellow' :
-      status === 'no longer on list' ? 'green' :
-      status === 'unlimited' ? 'green' :
+      status === 'unlimited' || status === 'no longer on list' ? 'green' :
       '#e8e8e8'
   
       return (

@@ -22,7 +22,7 @@ import { config } from '@fl/config'
 import { Match, Membership, Player, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
-import { assignTourRoles, conductCensus, createTopCut, downloadNewCards, getMidnightCountdown, markInactives, 
+import { assignTourRoles, conductCensus, createTopCut, downloadNewCards, getMidnightCountdown, getMonthCountdown, markInactives, 
     purgeEntries, purgeLocalsAndInternalDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices,
     updateSets, updateServers, fixDeckFolder, postStandings, checkTimer, closeTournament, createTournament, 
     dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
@@ -137,6 +137,11 @@ client.on('ready', async() => {
         setTimeout(() => conductCensus(client), midnightCountdown + (4 * 60 * 1000))
         setTimeout(() => updateAvatars(client), midnightCountdown + (11 * 60 * 1000))
         setTimeout(() => updateDeckTypes(client), midnightCountdown + (13 * 60 * 1000))
+
+        // MONTHLY TASKS
+        const monthCountdown = getMonthCountdown()
+        console.log('monthCountdown', monthCountdown)
+        setTimeout(() => updateGlobalNames(), monthCountdown)
     } catch (err) {
         console.log(err)
     }
