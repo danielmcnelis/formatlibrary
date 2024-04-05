@@ -126,6 +126,7 @@ export const conductCensus = async (client) => {
         }
     })
 
+    console.log('server names:', servers.map((s) => s.name))
     const checkedDiscordIds = []
     
     for (let s = 0; s < servers.length; s++) {
@@ -139,6 +140,7 @@ export const conductCensus = async (client) => {
             
             const membersMap = await guild.members.fetch()
             const members = [...membersMap.values()]
+            console.log(server.name, 'member names:', members.map((m) => m.user.username))
             const rolesMap = guild.roles.cache
             const roles = [...rolesMap.values()].reduce((a, v) => ({ ...a, [v.id]: v.name}), {})
             let updateCount = 0
@@ -150,23 +152,24 @@ export const conductCensus = async (client) => {
 
             for (let i = 0; i < members.length; i++) {
                 const member = members[i]
-                if (member.user.bot || checkedDiscordIds.includes(member.user.id)) continue
-                checkedDiscordIds.push(member.user.id)
+                if (member.user.bot ) continue
 
-                const player = await Player.findOne({ where: { discordId: member.user.id } })
-
-                if (player && ( 
-                    player.discordName !== member.user.username || 
-                    player.discriminator !== member.user.discriminator 
-                )) {
-                    updateCount++
-                    await player.update({
-                        discordName: member.user.username,
-                        discriminator: member.user.discriminator
-                    })
-                } else if (!player && !member.user.bot) {
-                    createCount++
-                    await createPlayer(member)
+                if (!checkedDiscordIds.includes(member.user.id)) {
+                    checkedDiscordIds.push(member.user.id)
+                    const player = await Player.findOne({ where: { discordId: member.user.id } })
+                    if (player && ( 
+                        player.discordName !== member.user.username || 
+                        player.discriminator !== member.user.discriminator 
+                    )) {
+                        updateCount++
+                        await player.update({
+                            discordName: member.user.username,
+                            discriminator: member.user.discriminator
+                        })
+                    } else if (!player && !member.user.bot) {
+                        createCount++
+                        await createPlayer(member)
+                    }
                 }
 
                 const membership = await Membership.count({ where: { '$player.discordId$': member.user.id, serverId: guild.id }, include: Player })
