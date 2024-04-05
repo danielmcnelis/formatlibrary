@@ -23,7 +23,7 @@ import { Match, Membership, Player, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
 import { assignTourRoles, conductCensus, createTopCut, downloadNewCards, getMidnightCountdown, getMonthCountdown, markInactives, 
-    purgeEntries, purgeLocalsAndInternalDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateMarketPrices,
+    purgeEntries, purgeLocalsAndInternalDecks, purgeTourRoles, updateAvatars, updateDeckTypes, updateGlobalNames, updateMarketPrices,
     updateSets, updateServers, fixDeckFolder, postStandings, checkTimer, closeTournament, createTournament, 
     dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
