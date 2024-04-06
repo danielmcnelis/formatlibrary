@@ -202,19 +202,9 @@ Matchup.belongsTo(Deck, {
     id: 'losingDeckId'
 })
 
-Matchup.belongsTo(DeckType, {
-    as: 'losingDeckType',
-    id: 'losingDeckTypeId'
-})
-
 Matchup.belongsTo(Deck, {
     as: 'winningDeck',
     id: 'winningDeckId'
-})
-
-Matchup.belongsTo(DeckType, {
-    as: 'winningDeckType',
-    id: 'winningDeckTypeId'
 })
 
 //MEMBERSHIP
