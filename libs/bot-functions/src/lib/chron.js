@@ -1314,19 +1314,19 @@ export const updateDecks = async () => {
     for (let i = 0; i < decks.length; i++) {
         const deck = decks[i]
 
-        if (deck.builder !== deck.player?.name) {
+        if (deck.player?.name && deck.builder !== deck.player?.name) {
             console.log(`updating deck ${deck.id} builder:`, deck.builder, '->', deck.player?.name)
         }
 
-        if (deck.type !== deck.deckType?.name) {
+        if (deck.deckType?.name && deck.type !== deck.deckType?.name) {
             console.log(`updating deck ${deck.id} type:`, deck.type, '->', deck.deckType?.name)
         }
 
-        if (deck.category !== deck.deckType?.category) {
+        if (deck.deckType?.category && deck.category !== deck.deckType?.category) {
             console.log(`updating deck ${deck.id} category:`, deck.category, '->', deck.deckType?.category)
         }
 
-        if (deck.eventName !== deck.event?.abbreviation) {
+        if (deck.event?.abbreviation && deck.eventName !== deck.event?.abbreviation) {
             console.log(`updating deck ${deck.id} eventName:`, deck.eventName, '->', deck.event?.abbreviation)
         }
 
