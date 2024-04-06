@@ -1310,75 +1310,92 @@ export const updateServers = async (client) => {
 
 // UPDATE DECKS
 export const updateDecks = async () => {
+    let b = 0
+    let e = 1
     const decks = await Deck.findAll({ include: [DeckType, Event, Player] })
     for (let i = 0; i < decks.length; i++) {
-        const deck = decks[i]
+        try {
+            const deck = decks[i]
+            let updated
 
-        if (deck.player?.name && deck.builder !== deck.player?.name) {
-            console.log(`updating deck ${deck.id} builder:`, deck.builder, '->', deck.player?.name)
+            if (deck.player?.name && deck.builder !== deck.player?.name) {
+                console.log(`updating deck ${deck.id} builder:`, deck.builder, '->', deck.player?.name)
+                await deck.update({ builder: deck.player.name })
+                updated = true
+            }
+    
+            if (deck.deckType?.name && deck.type !== deck.deckType?.name) {
+                console.log(`updating deck ${deck.id} type:`, deck.type, '->', deck.deckType?.name)
+                await deck.update({ type: deck.deckType.name })
+                updated = true
+            }
+    
+            if (deck.deckType?.category && deck.category !== deck.deckType?.category) {
+                console.log(`updating deck ${deck.id} category:`, deck.category, '->', deck.deckType?.category)
+                await deck.update({ category: deck.deckType.category })
+                updated = true
+            }
+    
+            if (deck.event?.abbreviation && deck.eventName !== deck.event?.abbreviation) {
+                console.log(`updating deck ${deck.id} eventName:`, deck.eventName, '->', deck.event?.abbreviation)
+                await deck.update({ eventName: deck.event.abbreviation })
+                updated = true
+            }
+
+            if (updated) b++
+        } catch (err) {
+            e++
+            console.log(err)
         }
-
-        if (deck.deckType?.name && deck.type !== deck.deckType?.name) {
-            console.log(`updating deck ${deck.id} type:`, deck.type, '->', deck.deckType?.name)
-        }
-
-        if (deck.deckType?.category && deck.category !== deck.deckType?.category) {
-            console.log(`updating deck ${deck.id} category:`, deck.category, '->', deck.deckType?.category)
-        }
-
-        if (deck.event?.abbreviation && deck.eventName !== deck.event?.abbreviation) {
-            console.log(`updating deck ${deck.id} eventName:`, deck.eventName, '->', deck.event?.abbreviation)
-        }
-
-        await deck.update({
-            builder: deck.player?.name || deck.builder,
-            type: deck.deckType?.name || deck.type,
-            category: deck.deckType?.category || deck.category,
-            eventName: deck.event?.abbreviation || deck.eventName
-        })
     }
 
+    console.log(`updated ${b} decks, encountered ${e} errors`)
     return setTimeout(() => updateDecks(), (24 * 60 * 60 * 1000))
 }
 
 
 // UPDATE REPLAYS
 export const updateReplays = async () => {
+    let b = 0
+    let e = 0
     const replays = await Replay.findAll({ 
         include: [{ model: Deck, as: 'losingDeck' }, { model: Deck, as: 'winningDeck' }, Event, { model: Player, as: 'loser' }, { model: Player, as: 'winner' }] 
     })
 
     for (let i = 0; i < replays.length; i++) {
-        const replay = replays[i]
+        try {
+            const replay = replays[i]
 
-        if (replay.winningDeckType !== replay.winningDeck?.type) {
-            console.log(`updating replay ${replay.id} winningDeckType:`, replay.winningDeckType, '->', replay.winningDeck?.type)
+            if (replay.winningDeck?.type && replay.winningDeckType !== replay.winningDeck?.type) {
+                console.log(`updating replay ${replay.id} winningDeckType:`, replay.winningDeckType, '->', replay.winningDeck?.type)
+                await replay.update({ winningDeckType: replay.winningDeck.type })
+            }
+    
+            if (replay.losingDeck?.type && replay.losingDeckType !== replay.losingDeck?.type) {
+                console.log(`updating replay ${replay.id} losingDeckType:`, replay.losingDeckType, '->', replay.losingDeck?.type)
+                await replay.update({ losingDeckType: replay.losingDeck.type })
+            }
+    
+            if (replay.winner?.name && replay.winnerName !== replay.winner?.name) {
+                console.log(`updating replay ${replay.id} winnerName:`, replay.winnerName, '->', replay.winner?.name)
+                await replay.update({ winnerName: replay.winner.name })
+            }
+    
+            if (replay.loser?.name && replay.loserName !== replay.loser?.name) {
+                console.log(`updating replay ${replay.id} loserName:`, replay.loserName, '->', replay.loser?.name)
+                await replay.update({ loserName: replay.loser.name })
+            }
+    
+            if (replay.event?.abbreviation && replay.eventName !== replay.event?.abbreviation) {
+                console.log(`updating replay ${replay.id} eventName:`, replay.eventName, '->', replay.event?.abbreviation)
+                await replay.update({ eventName: replay.event.abbreviation })
+            }
+        } catch (err) {
+            e++
+            console.log(err)
         }
-
-        if (replay.losingDeckType !== replay.losingDeck?.type) {
-            console.log(`updating replay ${replay.id} losingDeckType:`, replay.losingDeckType, '->', replay.losingDeck?.type)
-        }
-
-        if (replay.winnerName !== replay.winner?.name) {
-            console.log(`updating replay ${replay.id} winnerName:`, replay.winnerName, '->', replay.winner?.name)
-        }
-
-        if (replay.loserName !== replay.loser?.name) {
-            console.log(`updating replay ${replay.id} loserName:`, replay.loserName, '->', replay.loser?.name)
-        }
-
-        if (replay.eventName !== replay.event?.abbreviation) {
-            console.log(`updating replay ${replay.id} eventName:`, replay.eventName, '->', replay.event?.abbreviation)
-        }
-
-        await replay.update({
-            winningDeckType: replay.winningDeck?.type || replay.winningDeckType,
-            losingDeckType: replay.losingDeck?.type || replay.losingDeckType,
-            winnerName: replay.winner?.name || replay.winnerName,
-            loserName: replay.loser?.name || replay.loserName,
-            eventName: replay.event?.abbreviation || replay.eventName,
-        })
     }
 
+    console.log(`updated ${b} replays, encountered ${e} errors`)
     return setTimeout(() => updateReplays(), (24 * 60 * 60 * 1000))
 }
