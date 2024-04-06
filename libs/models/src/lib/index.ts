@@ -197,6 +197,26 @@ Tournament.hasMany(Matchup)
 Matchup.belongsTo(Pairing)
 Pairing.hasOne(Matchup)
 
+Matchup.belongsTo(Deck, {
+    as: 'losingDeck',
+    id: 'losingDeckId'
+})
+
+Matchup.belongsTo(DeckType, {
+    as: 'losingDeckType',
+    id: 'losingDeckTypeId'
+})
+
+Matchup.belongsTo(Deck, {
+    as: 'winningDeck',
+    id: 'winningDeckId'
+})
+
+Matchup.belongsTo(DeckType, {
+    as: 'winningDeckType',
+    id: 'winningDeckTypeId'
+})
+
 //MEMBERSHIP
 Membership.belongsTo(Player)
 Player.hasMany(Membership)

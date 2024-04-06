@@ -30,7 +30,7 @@ import { assignTourRoles, checkIfEndOfMonth, conductCensus, createTopCut, downlo
     startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, assignRoles, createMembership,
     createPlayer, fetchCardNames, fetchOPCardNames, hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, 
     isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, editPointsSystem, refreshExpiredTokens, 
-    updateDecks, updateReplays
+    updateDecks, updateMatchups, updateReplays
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
@@ -139,6 +139,7 @@ client.on('ready', async() => {
         setTimeout(() => updateDeckTypes(client), midnightCountdown + (13 * 60 * 1000))
         setTimeout(() => updateDecks(), midnightCountdown + (14 * 60 * 1000))
         setTimeout(() => updateReplays(), midnightCountdown + (15 * 60 * 1000))
+        setTimeout(() => updateMatchups(), midnightCountdown + (16 * 60 * 1000))
 
         // MONTHLY TASKS
         checkIfEndOfMonth()

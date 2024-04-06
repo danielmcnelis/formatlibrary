@@ -2,7 +2,7 @@
 import axios from 'axios'
 import * as fs from 'fs'
 import * as sharp from 'sharp'
-import { Card, Deck, DeckType, Entry, Event, Tournament, Match, Membership, Player, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
+import { Card, Deck, DeckType, Entry, Event, Tournament, Match, Matchup, Membership, Player, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
 import { createMembership, createPlayer } from './utility'
 import { Op } from 'sequelize'
 import { S3 } from 'aws-sdk'
@@ -1365,31 +1365,39 @@ export const updateReplays = async () => {
     for (let i = 0; i < replays.length; i++) {
         try {
             const replay = replays[i]
+            let updated
 
             if (replay.winningDeck?.type && replay.winningDeckType !== replay.winningDeck?.type) {
                 console.log(`updating replay ${replay.id} winningDeckType:`, replay.winningDeckType, '->', replay.winningDeck?.type)
                 await replay.update({ winningDeckType: replay.winningDeck.type })
+                updated = true
             }
     
             if (replay.losingDeck?.type && replay.losingDeckType !== replay.losingDeck?.type) {
                 console.log(`updating replay ${replay.id} losingDeckType:`, replay.losingDeckType, '->', replay.losingDeck?.type)
                 await replay.update({ losingDeckType: replay.losingDeck.type })
+                updated = true
             }
     
             if (replay.winner?.name && replay.winnerName !== replay.winner?.name) {
                 console.log(`updating replay ${replay.id} winnerName:`, replay.winnerName, '->', replay.winner?.name)
                 await replay.update({ winnerName: replay.winner.name })
+                updated = true
             }
     
             if (replay.loser?.name && replay.loserName !== replay.loser?.name) {
                 console.log(`updating replay ${replay.id} loserName:`, replay.loserName, '->', replay.loser?.name)
                 await replay.update({ loserName: replay.loser.name })
+                updated = true
             }
     
             if (replay.event?.abbreviation && replay.eventName !== replay.event?.abbreviation) {
                 console.log(`updating replay ${replay.id} eventName:`, replay.eventName, '->', replay.event?.abbreviation)
                 await replay.update({ eventName: replay.event.abbreviation })
+                updated = true
             }
+
+            if (updated) b++
         } catch (err) {
             e++
             console.log(err)
@@ -1398,4 +1406,47 @@ export const updateReplays = async () => {
 
     console.log(`updated ${b} replays, encountered ${e} errors`)
     return setTimeout(() => updateReplays(), (24 * 60 * 60 * 1000))
+}
+
+
+// UPDATE MATCHUPS
+export const updateMatchups = async () => {
+    let b = 0
+    let e = 0
+    const matchups = await Matchup.findAll({ 
+        include: [{ model: Deck, as: 'losingDeck' }, { model: Deck, as: 'winningDeck' }] 
+    })
+
+    for (let i = 0; i < matchups.length; i++) {
+        try {
+            const matchup = matchups[i]
+            let updated
+
+            if (matchup.winningDeck?.type && matchup.winningDeckType !== matchup.winningDeck?.type) {
+                console.log(`updating matchup ${matchup.id} winningDeckType:`, matchup.winningDeckType, '->', matchup.winningDeck?.type)
+                await matchup.update({ 
+                    winningDeckType: matchup.winningDeck.type,
+                    winningDeckTypeId: matchup.winningDeck.deckTypeId
+                })
+                updated = true
+            }
+    
+            if (matchup.losingDeck?.type && matchup.losingDeckType !== matchup.losingDeck?.type) {
+                console.log(`updating matchup ${matchup.id} losingDeckType:`, matchup.losingDeckType, '->', matchup.losingDeck?.type)
+                await matchup.update({ 
+                    losingDeckType: matchup.losingDeck.type,
+                    losingDeckTypeId: matchup.losingDeck.deckTypeId
+                })
+                updated = true
+            }
+
+            if (updated) b++
+        } catch (err) {
+            e++
+            console.log(err)
+        }
+    }
+
+    console.log(`updated ${b} matchups, encountered ${e} errors`)
+    return setTimeout(() => updateMatchups(), (24 * 60 * 60 * 1000))
 }
