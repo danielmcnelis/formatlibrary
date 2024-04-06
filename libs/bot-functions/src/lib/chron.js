@@ -1310,7 +1310,7 @@ export const updateServers = async (client) => {
 
 // UPDATE DECKS
 export const updateDecks = async () => {
-    const decks = await Deck.findAll({ include: DeckType, Event, Player })
+    const decks = await Deck.findAll({ include: [DeckType, Event, Player] })
     for (let i = 0; i < decks.length; i++) {
         const deck = decks[i]
 
