@@ -2,7 +2,7 @@
 import axios from 'axios'
 import * as fs from 'fs'
 import * as sharp from 'sharp'
-import { Card, Deck, Entry, Tournament, Match, Membership, Player, Price, Print, Replay, Role, Server, Set, Stats, DeckType } from '@fl/models'
+import { Card, Deck, DeckType, Entry, Event, Tournament, Match, Membership, Player, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
 import { createMembership, createPlayer } from './utility'
 import { Op } from 'sequelize'
 import { S3 } from 'aws-sdk'
@@ -1310,7 +1310,7 @@ export const updateServers = async (client) => {
 
 // UPDATE DECKS
 export const updateDecks = async () => {
-    const decks = await Deck.findAll({ include: [DeckType, Event, Player] })
+    const decks = await Deck.findAll({ include: DeckType, Event, Player })
     for (let i = 0; i < decks.length; i++) {
         const deck = decks[i]
 
