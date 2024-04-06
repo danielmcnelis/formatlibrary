@@ -269,6 +269,16 @@ Replay.belongsTo(Player, {
     id: 'winnerId'
 })
 
+Replay.belongsTo(Deck, {
+    as: 'losingDeck',
+    id: 'losingDeckId'
+})
+
+Replay.belongsTo(Deck, {
+    as: 'winningDeck',
+    id: 'winningDeckId'
+})
+
 Player.hasMany(Replay)
 
 //ROLE

@@ -228,7 +228,6 @@ export const draftTeams = async (pick, captainA, captainB, channel, format) => {
             time: 60000
         }).then(async (collected) => {
             const response = collected.first().content.toLowerCase()
-            console.log('response', response)
             const index = response.includes('1') ? 0 :
                 response.includes('2') ? 1 :
                 response.includes('3') ? 2 :

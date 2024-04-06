@@ -104,7 +104,6 @@ export const CubeMaker = () => {
     // SAVE CUBE
     const saveCube = async () => {
         const name = document.getElementById('save-as-name') ? document.getElementById('save-as-name').value : cube?.name
-        console.log('name', name)
         const main = cube?.cardPool.map((card) => card.konamiCode)
         const ydk = ['created by...', '#main', ...main, ''].join('\n')
         const playerId = getCookie('playerId')
@@ -265,7 +264,6 @@ export const CubeMaker = () => {
     const getCubes = async () => {
         try {
             const accessToken = getCookie('access')
-            console.log('accessToken', accessToken)
             if (accessToken) {
                 const {data} = await axios.get(`/api/cubes/my-cubes`, {
                     headers: {

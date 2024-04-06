@@ -1059,8 +1059,6 @@ export const seed = async (interaction, tournamentId, shuffle = false) => {
         let count = 0
         const results = []
         let e = 0
-
-        console.log('seeds', seeds)
     
         for (let i = 0; i < seeds.length; i++) {
             const participantId = seeds[i][0]

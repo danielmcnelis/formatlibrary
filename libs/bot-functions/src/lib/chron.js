@@ -2,7 +2,7 @@
 import axios from 'axios'
 import * as fs from 'fs'
 import * as sharp from 'sharp'
-import { Card, Deck, Entry, Tournament, Match, Membership, Player, Price, Print, Role, Server, Set, Stats, DeckType } from '@fl/models'
+import { Card, Deck, Entry, Tournament, Match, Membership, Player, Price, Print, Replay, Role, Server, Set, Stats, DeckType } from '@fl/models'
 import { createMembership, createPlayer } from './utility'
 import { Op } from 'sequelize'
 import { S3 } from 'aws-sdk'
@@ -50,13 +50,14 @@ export const refreshExpiredTokens = async () => {
             console.log('Token stored to', './tokens/tcgplayer.json')
         })
     } else {
-        console.log('TOKEN NOT EXPIRING SOON')
+        console.log('Token Is Not Expiring Soon')
     }
 }
 
 // UPDATE AVATARS
 export const updateAvatars = async (client) => {
     const servers = await Server.findAll({ order: [['size', 'DESC']]})
+    const discordIds = []
     for (let s = 0; s < servers.length; s++) {
         try {
             let count = 0
@@ -70,15 +71,17 @@ export const updateAvatars = async (client) => {
                     const memberId = memberIds[i]
                     const member = membersMap.get(memberId)
                     const user = member.user
+                    if (discordIds.includes(user.id)) continue
+                    discordIds.push(user.id)
                     const avatar = user.avatar
                     if (!avatar) continue
                     const player = await Player.findOne({ where: { discordId: memberId }})
                     if (!player) continue
                     const isActive = player.email || await Deck.count({ where: { playerId: player.id }}) || await Stats.count({ where: { playerId: player.id }})
 
-                    if (player && isActive && player.discordPfp) {
+                    if (player && isActive && player.discordPfp && player.discordPfp !== avatar) {
                         await player.update({ discordPfp: avatar })
-
+                        
                         const {data} = await axios.get(
                             `https://cdn.discordapp.com/avatars/${player.discordId}/${avatar}.webp`, {
                                 responseType: 'arraybuffer',
@@ -126,7 +129,6 @@ export const conductCensus = async (client) => {
         }
     })
 
-    console.log('server names:', servers.map((s) => s.name))
     const checkedDiscordIds = []
     
     for (let s = 0; s < servers.length; s++) {
@@ -140,7 +142,6 @@ export const conductCensus = async (client) => {
             
             const membersMap = await guild.members.fetch()
             const members = [...membersMap.values()]
-            console.log(server.name, 'member names:', members.map((m) => m.user.username))
             const rolesMap = guild.roles.cache
             const roles = [...rolesMap.values()].reduce((a, v) => ({ ...a, [v.id]: v.name}), {})
             let updateCount = 0
@@ -320,7 +321,7 @@ export const markInactives = async () => {
         })
 
         if (!count) { 
-            console.log(`INACTIVATING ${s.player ? s.player.globalName || s.player.discordName : s.playerId}'s STATS IN ${s.format} FORMAT`)
+            console.log(`Inactivating ${s.player ? s.player.globalName || s.player.discordName : s.playerId}'s STATS IN ${s.format} FORMAT`)
             await s.update({ inactive: true })
             b++
         } else {
@@ -1249,7 +1250,6 @@ export const drawSetBanner = async (set) => {
 // UPDATE SERVERS
 export const updateServers = async (client) => {
     const guilds = [...client.guilds.cache.values()]
-    console.log('guilds.length', guilds.length)
 
     for (let i = 0; i < guilds.length; i++) {
         const guild = guilds[i]
@@ -1260,7 +1260,7 @@ export const updateServers = async (client) => {
         }) 
 
         if (!count) {
-            console.log('CREATING server:', guild.name)
+            console.log('Creating server:', guild.name)
             await Server.create({ id: guild.id, name: guild.name })
         } else {
             console.log(`server found: ${guild.name}`)
@@ -1308,15 +1308,77 @@ export const updateServers = async (client) => {
 }
 
 
-// UPDATE DISPLAY NAMES
-export const updateDisplayNames = async () => {
-    const decks = await Deck.findAll({ include: Player })
+// UPDATE DECKS
+export const updateDecks = async () => {
+    const decks = await Deck.findAll({ include: [DeckType, Event, Player] })
     for (let i = 0; i < decks.length; i++) {
         const deck = decks[i]
+
+        if (deck.builder !== deck.player?.name) {
+            console.log(`updating deck ${deck.id} builder:`, deck.builder, '->', deck.player?.name)
+        }
+
+        if (deck.type !== deck.deckType?.name) {
+            console.log(`updating deck ${deck.id} type:`, deck.type, '->', deck.deckType?.name)
+        }
+
+        if (deck.category !== deck.deckType?.category) {
+            console.log(`updating deck ${deck.id} category:`, deck.category, '->', deck.deckType?.category)
+        }
+
+        if (deck.eventName !== deck.event?.abbreviation) {
+            console.log(`updating deck ${deck.id} eventName:`, deck.eventName, '->', deck.event?.abbreviation)
+        }
+
         await deck.update({
-            builder: deck.player.name
+            builder: deck.player?.name || deck.builder,
+            type: deck.deckType?.name || deck.type,
+            category: deck.deckType?.category || deck.category,
+            eventName: deck.event?.abbreviation || deck.eventName
         })
     }
 
-    return setTimeout(() => updateDisplayNames(), (24 * 60 * 60 * 1000))
+    return setTimeout(() => updateDecks(), (24 * 60 * 60 * 1000))
+}
+
+
+// UPDATE REPLAYS
+export const updateReplays = async () => {
+    const replays = await Replay.findAll({ 
+        include: [{ model: Deck, as: 'losingDeck' }, { model: Deck, as: 'winningDeck' }, Event, { model: Player, as: 'loser' }, { model: Player, as: 'winner' }] 
+    })
+
+    for (let i = 0; i < replays.length; i++) {
+        const replay = replays[i]
+
+        if (replay.winningDeckType !== replay.winningDeck?.type) {
+            console.log(`updating replay ${replay.id} winningDeckType:`, replay.winningDeckType, '->', replay.winningDeck?.type)
+        }
+
+        if (replay.losingDeckType !== replay.losingDeck?.type) {
+            console.log(`updating replay ${replay.id} losingDeckType:`, replay.losingDeckType, '->', replay.losingDeck?.type)
+        }
+
+        if (replay.winnerName !== replay.winner?.name) {
+            console.log(`updating replay ${replay.id} winnerName:`, replay.winnerName, '->', replay.winner?.name)
+        }
+
+        if (replay.loserName !== replay.loser?.name) {
+            console.log(`updating replay ${replay.id} loserName:`, replay.loserName, '->', replay.loser?.name)
+        }
+
+        if (replay.eventName !== replay.event?.abbreviation) {
+            console.log(`updating replay ${replay.id} eventName:`, replay.eventName, '->', replay.event?.abbreviation)
+        }
+
+        await replay.update({
+            winningDeckType: replay.winningDeck?.type || replay.winningDeckType,
+            losingDeckType: replay.losingDeck?.type || replay.losingDeckType,
+            winnerName: replay.winner?.name || replay.winnerName,
+            loserName: replay.loser?.name || replay.loserName,
+            eventName: replay.event?.abbreviation || replay.eventName,
+        })
+    }
+
+    return setTimeout(() => updateReplays(), (24 * 60 * 60 * 1000))
 }

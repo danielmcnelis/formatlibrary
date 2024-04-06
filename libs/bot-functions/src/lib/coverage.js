@@ -52,7 +52,7 @@ export const createDecks = async (event, participants, standings = []) => {
                     await Deck.create({
                         type: deckType.name,
                         category: deckType.category,
-                        builder: entry.playerName,
+                        builder: entry.player?.name,
                         formatName: event.formatName,
                         formatId: event.formatId,
                         ydk: entry.ydk,

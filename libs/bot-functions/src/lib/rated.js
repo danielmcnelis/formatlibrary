@@ -419,7 +419,7 @@ export const getNewRatedDeck = async (user, player, format) => {
                 user.send({ content: `Thanks, ${user.username}, your deck is perfectly legal. ${emojis.legend}`}).catch((err) => console.log(err))
                 const deckName = await askForDeckName(user, player) || 'Unnamed Deck'
                 const newRatedDeck = await Deck.create({
-                    builder: player.globalName || player.discordName,
+                    builder: player.name,
                     formatName: format.name,
                     formatId: format.id,
                     name: deckName,

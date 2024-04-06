@@ -29,7 +29,8 @@ import { assignTourRoles, checkIfEndOfMonth, conductCensus, createTopCut, downlo
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
     startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, assignRoles, createMembership,
     createPlayer, fetchCardNames, fetchOPCardNames, hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, 
-    isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, editPointsSystem, refreshExpiredTokens
+    isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, editPointsSystem, refreshExpiredTokens, 
+    updateDecks, updateReplays
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
@@ -136,6 +137,8 @@ client.on('ready', async() => {
         setTimeout(() => conductCensus(client), midnightCountdown + (4 * 60 * 1000))
         setTimeout(() => updateAvatars(client), midnightCountdown + (11 * 60 * 1000))
         setTimeout(() => updateDeckTypes(client), midnightCountdown + (13 * 60 * 1000))
+        setTimeout(() => updateDecks(), midnightCountdown + (14 * 60 * 1000))
+        setTimeout(() => updateReplays(), midnightCountdown + (15 * 60 * 1000))
 
         // MONTHLY TASKS
         checkIfEndOfMonth()
@@ -503,14 +506,18 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
     
         const wasSubscriber = oldRoles.has('1102002844850208810')
         const isSubscriber = newRoles.has('1102002844850208810')
+        const wasTest = oldRoles.has('414576126107844609')
+        const isTest = newRoles.has('414576126107844609')
     
-        const {data: programmer} = await axios.get(`https://discord.com/api/v9/users/194147938786738176`, {
-            headers: {
-              Authorization: `Bot ${config.services.bot.token}`
-            }
-        })
-    
-        if (wasSubscriber && !isSubscriber) {
+        if ((wasSubscriber && !isSubscriber) || (wasTest && !isTest)) {
+            const {data: programmer} = await axios.get(`https://discord.com/api/v9/users/194147938786738176`, {
+                headers: {
+                Authorization: `Bot ${config.services.bot.token}`
+                }
+            })
+            
+            console.log('programmer', programmer)
+            
             const player = await Player.findOne({
                 where: {
                     discordId: oldMember.id
@@ -520,7 +527,15 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
             const subTier = player.subTier
             await player.update({ subscriber: false, subTier: null })
             return await programmer.send({ content: `${oldMember.user?.username} is no longer a Subscriber (${subTier}).` })
-        } else if (!wasSubscriber && isSubscriber) {
+        } else if ((!wasSubscriber && isSubscriber) || (!wasTest && isTest)) {
+            const {data: programmer} = await axios.get(`https://discord.com/api/v9/users/194147938786738176`, {
+                headers: {
+                Authorization: `Bot ${config.services.bot.token}`
+                }
+            })
+
+            console.log('programmer', programmer)
+            
             const player = await Player.findOne({
                 where: {
                     discordId: oldMember.id

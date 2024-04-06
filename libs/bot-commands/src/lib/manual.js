@@ -71,11 +71,8 @@ export default {
 
         if (activeTournament) {
             const loserTournamentIds = [...await Entry.findByPlayerIdAndFormatId(losingPlayer.id, format.id)].map((e) => e.tournamentId)
-            console.log('loserTournamentIds', loserTournamentIds)
             const winnerTournamentIds = [...await Entry.findByPlayerIdAndFormatId(winningPlayer.id, format.id)].map((e) => e.tournamentId)
-            console.log('winnerTournamentIds', winnerTournamentIds)
             const commonTournamentIds = loserTournamentIds.filter((id) => winnerTournamentIds.includes(id))
-            console.log('commonTournamentIds', commonTournamentIds)
             const tournaments = []
                
             if (commonTournamentIds.length) {
@@ -84,9 +81,7 @@ export default {
                     tournament = await Tournament.findOne({ where: { id: id, serverId: interaction.guildId, state: 'underway' }})
                     if (!tournament) continue
                     losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id } })
-                    console.log('!!losingEntry', !!losingEntry)
                     winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id } })
-                    console.log('!!winningEntry', !!winningEntry)
                     if (!losingEntry || !winningEntry) continue
                     const matches = await getMatches(server, tournament.id)
                     if (!matches) continue
@@ -100,15 +95,12 @@ export default {
                     }
                 }
             }
-
-            console.log('tournaments', tournaments)
                 
             if (tournaments.length) {
                 const tournament = await selectTournament(interaction, tournaments, interaction.user.id)
                 if (tournament) {
                     isTournament = true
                     tournamentId = tournament.id
-                    console.log('tournament.isTeamTournament', tournament.isTeamTournament)
                     challongeMatch = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament, format) :
                         await processMatchResult(server, interaction, winner, winningPlayer, loser, losingPlayer, tournament, format)
                     if (!challongeMatch) return
