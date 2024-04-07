@@ -56,6 +56,7 @@ export const refreshExpiredTokens = async () => {
 
 // UPDATE AVATARS
 export const updateAvatars = async (client) => {
+    const start = Date.now()
     const servers = await Server.findAll({ order: [['size', 'DESC']]})
     const discordIds = []
     for (let s = 0; s < servers.length; s++) {
@@ -116,11 +117,13 @@ export const updateAvatars = async (client) => {
         }
     }
 
-    return setTimeout(() => updateAvatars(client), (24 * 60 * 60 * 1000))
+    console.log(`updateAvatars() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => updateAvatars(client), getMidnightCountdown() + (11 * 60 * 1000))
 }
 
 // CONDUCT CENSUS
 export const conductCensus = async (client) => {
+    const start = Date.now()
     // Update every player's username and tag to match their Discord account.
     // It also creates new players if they are not in the database (i.e. they joined while bot was down).
     const servers = await Server.findAll({
@@ -229,12 +232,14 @@ export const conductCensus = async (client) => {
         }
     }
 
-    return setTimeout(() => conductCensus(client), (24 * 60 * 60 * 1000))
+    console.log(`conductCensus() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => conductCensus(client), getMidnightCountdown() + (4 * 60 * 1000))
 }
 
 
 // UPDATE GLOBAL NAMES
 export const updateGlobalNames = async (client) => {
+    const start = Date.now()
     // Update active player's global names to match their Discord account.
 
     const servers = await Server.findAll({
@@ -297,12 +302,14 @@ export const updateGlobalNames = async (client) => {
     }
 
     console.log(`Monthly Task Complete: Updated ${updateCount} global names.`)
+    console.log(`updateGlobalNames() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
     return setTimeout(() => checkIfEndOfMonth(), 24 * 60 * 60 * 1000)
 }
 
 
 // MARK INACTIVES
 export const markInactives = async () => {
+    const start = Date.now()
     let b = 0
     const oneYearAgo = new Date() - (365 * 24 * 60 * 60 * 1000)
     const stats = await Stats.findAll({ where: { inactive: {[Op.not]: true }}, include: Player })
@@ -330,11 +337,13 @@ export const markInactives = async () => {
     }
 
     console.log(`Inactivated ${b} stats rows in the database.`)
-    return setTimeout(() => markInactives(), (24 * 60 * 60 * 1000))
+    console.log(`markInactives() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => markInactives(), getMidnightCountdown + (0.6 * 60 * 1000))
 }
 
 // PURGE ENTRIES
 export const purgeEntries = async () => {
+    const start = Date.now()
     let count = 0
     const entries = await Entry.findAll({ include: Tournament })
     for (let i = 0; i < entries.length; i++) {
@@ -347,11 +356,13 @@ export const purgeEntries = async () => {
     }
 
     console.log(`Purged ${count} old tournament entries from the database.`)
-    return setTimeout(() => purgeEntries(), (24 * 60 * 60 * 1000))
+    console.log(`purgeEntries() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => purgeEntries(), getMidnightCountdown() + (0.1 * 60 * 1000))
 } 
 
 // PURGE TOURNAMENT PARTICIPANT ROLES
 export const purgeTourRoles = async (client) => {
+    const start = Date.now()
     const servers = await Server.findAll()
     for (let s = 0; s < servers.length; s++) {
         let b = 0
@@ -389,11 +400,13 @@ export const purgeTourRoles = async (client) => {
         }
     }
 
-    return setTimeout(() => purgeTourRoles(client), (24 * 60 * 60 * 1000))
+    console.log(`purgeTourRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => purgeTourRoles(client), getMidnightCountdown() + (0.2 * 60 * 1000))
 }
 
 // ASSIGN TOURNAMENT PARTICIPANT ROLES
 export const assignTourRoles = async (client) => {
+    const start = Date.now()
     const servers = await Server.findAll()
     for (let s = 0; s < servers.length; s++) {
         let b = 0
@@ -431,11 +444,13 @@ export const assignTourRoles = async (client) => {
         }
     }
 
-    return setTimeout(() => assignTourRoles(client), (24 * 60 * 60 * 1000))
+    console.log(`assignTourRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => assignTourRoles(client), getMidnightCountdown() + (0.4 * 60 * 1000))
 }
 
 // UPDATE DECK TYPES
 export const updateDeckTypes = async (client) => {
+    const start = Date.now()
     let b = 0
     const decks = await Deck.findAll({
         where: {
@@ -466,11 +481,13 @@ export const updateDeckTypes = async (client) => {
     }
 
     console.log(`updated ${b} decks with suggested deck-types`)
-    return setTimeout(() => updateDeckTypes(client), (24 * 60 * 60 * 1000))
+    console.log(`updateDeckTypes() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => updateDeckTypes(client), getMidnightCountdown() + (13 * 60 * 1000))
 }
 
 // UPDATE MARKET PRICES
 export const updateMarketPrices = async () => {
+    const start = Date.now()
     let b = 0 
     let c = 0
     const prints = await Print.findAll({
@@ -536,7 +553,8 @@ export const updateMarketPrices = async () => {
     }
 
     console.log(`created ${b} new prices and checked ${c} other(s)`)
-    return setTimeout(() => updateMarketPrices(), (24 * 60 * 60 * 1000))
+    console.log(`updateMarketPrices() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => updateMarketPrices(), getMidnightCountdown() + (3 * 60 * 1000))
 }
 
 // UPDATE PRINTS
@@ -851,6 +869,7 @@ export const downloadCardArtworks = async () => {
 
 // DOWNLOAD NEW CARDS
 export const downloadNewCards = async () => {
+    const start = Date.now()
     let b = 0
     let c = 0
     let t = 0
@@ -1033,12 +1052,14 @@ export const downloadNewCards = async () => {
     }
 
     console.log(`Found ${b} new cards, ${c} new names, ${t} new TCG cards, ${o} new OCG cards, ${p} new Speed Duel cards, encountered ${e} errors`)
-    return setTimeout(() => downloadNewCards(), (24 * 60 * 60 * 1000))
+    console.log(`downloadNewCards() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => downloadNewCards(), getMidnightCountdown() + (2 * 60 * 1000))
 }
 
 
 // PURGE LOCALS AND INTERNAL DECKS
 export const purgeLocalsAndInternalDecks = async () => {
+    const start = Date.now()
     let b = 0
     let e = 0
     const decks = await Deck.findAll({
@@ -1060,12 +1081,14 @@ export const purgeLocalsAndInternalDecks = async () => {
     }
 
     console.log(`Purged ${b} locals and internal tournament decks, encountered ${e} errors`)
-    return setTimeout(() => purgeLocalsAndInternalDecks(), (24 * 60 * 60 * 1000))
+    console.log(`purgeLocalsAndInternalDecks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => purgeLocalsAndInternalDecks(), getMidnightCountdown() + (0.3 * 60 * 1000))
 }
 
 
 // PURGE BETA CARDS
 export const purgeBetaCards = async () => {
+    const start = Date.now()
     let b = 0
     let c = 0
     let e = 0
@@ -1111,12 +1134,14 @@ export const purgeBetaCards = async () => {
     }
 
     console.log(`Purged ${b} beta cards, updating ${c} card names, encountered ${e} errors`)
+    console.log(`purgeBetaCards() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
     return setTimeout(() => purgeBetaCards(), (24 * 60 * 60 * 1000))
 }
 
 
 // UPDATE SETS
 export const updateSets = async () => {
+    const start = Date.now()
     let b = 0
     let c = 0
     const { data } = await axios.get('https://db.ygoprodeck.com/api/v7/cardsets.php')
@@ -1182,7 +1207,8 @@ export const updateSets = async () => {
     }
 
     console.log(`created ${b} new sets and updated ${c} other(s)`)
-    return setTimeout(() => updateSets(), (24 * 60 * 60 * 1000))
+    console.log(`updateSets() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => updateSets(), getMidnightCountdown() + (1 * 60 * 1000))
 }
 
 // DRAW SET BANNED
@@ -1249,6 +1275,7 @@ export const drawSetBanner = async (set) => {
 
 // UPDATE SERVERS
 export const updateServers = async (client) => {
+    const start = Date.now()
     const guilds = [...client.guilds.cache.values()]
 
     for (let i = 0; i < guilds.length; i++) {
@@ -1304,12 +1331,14 @@ export const updateServers = async (client) => {
         }
     }
 
-    return setTimeout(() => updateServers(client), (24 * 60 * 60 * 1000))
+    console.log(`updateServers() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => updateServers(client), getMidnightCountdown() + (0.8 * 60 * 1000))
 }
 
 
 // UPDATE DECKS
 export const updateDecks = async () => {
+    const start = Date.now()
     let b = 0
     let e = 0
     const decks = await Deck.findAll({ include: [DeckType, Event, Player] })
@@ -1350,12 +1379,14 @@ export const updateDecks = async () => {
     }
 
     console.log(`updated ${b} decks, encountered ${e} errors`)
-    return setTimeout(() => updateDecks(), (24 * 60 * 60 * 1000))
+    console.log(`updateDecks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => updateDecks(), getMidnightCountdown() + (14 * 60 * 1000))
 }
 
 
 // UPDATE REPLAYS
 export const updateReplays = async () => {
+    const start = Date.now()
     let b = 0
     let e = 0
     const replays = await Replay.findAll({ 
@@ -1405,12 +1436,14 @@ export const updateReplays = async () => {
     }
 
     console.log(`updated ${b} replays, encountered ${e} errors`)
-    return setTimeout(() => updateReplays(), (24 * 60 * 60 * 1000))
+    console.log(`updateReplays() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => updateReplays(), getMidnightCountdown() + (15 * 60 * 1000))
 }
 
 
 // UPDATE MATCHUPS
 export const updateMatchups = async () => {
+    const start = Date.now()
     let b = 0
     let e = 0
     const matchups = await Matchup.findAll({ 
@@ -1448,5 +1481,6 @@ export const updateMatchups = async () => {
     }
 
     console.log(`updated ${b} matchups, encountered ${e} errors`)
-    return setTimeout(() => updateMatchups(), (24 * 60 * 60 * 1000))
+    console.log(`updateMatchups() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => updateMatchups(), getMidnightCountdown() + (16 * 60 * 1000))
 }
