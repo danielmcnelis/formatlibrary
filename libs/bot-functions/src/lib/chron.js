@@ -338,7 +338,7 @@ export const markInactives = async () => {
 
     console.log(`Inactivated ${b} stats rows in the database.`)
     console.log(`markInactives() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => markInactives(), getMidnightCountdown + (0.6 * 60 * 1000))
+    return setTimeout(() => markInactives(), getMidnightCountdown() + (0.6 * 60 * 1000))
 }
 
 // PURGE ENTRIES
