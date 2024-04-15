@@ -69,8 +69,6 @@ export default {
         iron,
         queue,
         recalculate,
-        team,
-        teams,
         trivia,
         test
     },
@@ -119,6 +117,8 @@ export default {
         standings,
         start,
         stats,
+        team,
+        teams,
         tiebreakers,
         timer,
         undo,
