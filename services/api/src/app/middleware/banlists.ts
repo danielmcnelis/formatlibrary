@@ -162,8 +162,10 @@ export const banlistsSimpleDate = async (req, res, next) => {
 
 export const banlistsCreate = async (req, res, next) => {
   try {
-    const {month, year, changes, category} = req.body
-    const banlist = `${month}${year}`
+    const {month, day, year, changes, category} = req.body
+    const abbrevs = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+    const abr = abbrevs[Number(month)-1]
+    const banlist = `${abr}${year}`
     let b = 0
 
     for (let i = 0; i < changes.length; i++) {
@@ -173,6 +175,8 @@ export const banlistsCreate = async (req, res, next) => {
         await Status.create({
           name: c.name,
           restriction: c.newStatus,
+          previous: c.prevStatus,
+          date: `${year}-${month}-${day}`,
           banlist: banlist,
           category: category,
           cardId: card.id
@@ -187,6 +191,7 @@ export const banlistsCreate = async (req, res, next) => {
     const prevStatuses = await Status.findAll({
       where: {
         banlist: req.body.previous,
+        restriction: {[Op.not]: 'unlimited'},
         category: category
       }
     })

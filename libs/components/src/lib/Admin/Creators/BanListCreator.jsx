@@ -5,6 +5,7 @@ import { capitalize } from '@fl/utils'
 
 export const BanListCreator = () => {
 	const [month, setMonth] = useState(null)
+	const [day, setDay] = useState(null)
     const [year, setYear] = useState(null)
     const [previous, setPrevious] = useState(null)
     const [category, setCategory] = useState('TCG')
@@ -25,6 +26,7 @@ export const BanListCreator = () => {
     // RESET
     const reset = async () => {
         setMonth(null)  
+        setDay(null)  
         setYear(null)  
         setPrevious(null)  
         setChanges([])  
@@ -40,12 +42,13 @@ export const BanListCreator = () => {
     // CREATE
     const create = async () => {
         if (!month) return alert('Please select a Month.')
+        if (!day) return alert('Please select a Day.')
         if (!year) return alert('Please select a Year.')
         if (!previous) return alert('Please select a Previous Ban List.')
         if (!changes || !changes.length) return alert('Please add some changes.')
         
         try {
-            const { data } = await axios.post('/api/banlists/create', { month, year, category, changes, previous })
+            const { data } = await axios.post('/api/banlists/create', { month, day, year, category, changes, previous })
             alert(`Success! Added ${data} Cards to the ${month}${year} Ban List`)
             return reset()
         } catch (err) {
@@ -128,18 +131,30 @@ export const BanListCreator = () => {
                     onChange={(e) => setMonth(e.target.value || null)}
                 >
                     <option value=""></option>
-                    <option value="jan">January</option>
-                    <option value="feb">February</option>
-                    <option value="mar">March</option>
-                    <option value="apr">April</option>
-                    <option value="may">May</option>
-                    <option value="jun">June</option>
-                    <option value="jul">July</option>
-                    <option value="aug">August</option>
-                    <option value="sep">September</option>
-                    <option value="oct">October</option>
-                    <option value="nov">November</option>
-                    <option value="dec">December</option>
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </label>
+
+            <label>Day:
+                <select
+                    id="day"
+                    onChange={(e) => setDay(e.target.value || null)}
+                >
+                    <option value=""></option>
+                    {
+                        Array(31).fill(0).map((e, index) => <option value={`${('0' + (index + 1)).slice(-2)}`}>{index+1}</option>)
+                    }
                 </select>
             </label>
 
