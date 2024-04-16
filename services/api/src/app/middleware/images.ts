@@ -6,7 +6,7 @@ import { config } from '@fl/config'
 // IMAGES UPDATE CARD
 export const imagesUpdateCard = async (req, res, next) => {
     try {
-        const {data} = await axios({
+        const {data: fullCardImage} = await axios({
             method: 'GET',
             url: `https://images.ygoprodeck.com/images/cards/${req.query.ypdId}.jpg`,
             responseType: 'stream'
@@ -20,14 +20,29 @@ export const imagesUpdateCard = async (req, res, next) => {
             }
         })
     
-        const { Location: uri} = await s3.upload({ 
+        const { Location: fullCardImageUri} = await s3.upload({ 
             Bucket: 'formatlibrary', 
             Key: `images/cards/${req.query.ypdId}.jpg`, 
-            Body: data, 
+            Body: fullCardImage, 
             ContentType: `image/jpg`
         }).promise()
 
-        console.log('uri', uri)
+        console.log('fullCardImageUri', fullCardImageUri)
+
+        const {data: croppedCardImage} = await axios({
+            method: 'GET',
+            url: `https://images.ygoprodeck.com/images/cards_cropped/${id}.jpg`,
+            responseType: 'stream'
+        })
+
+        const { Location: croppedCardImageUri} = await s3.upload({ 
+            Bucket: 'formatlibrary', 
+            Key: `images/cards/${req.query.ypdId}.jpg`, 
+            Body: croppedCardImage, 
+            ContentType: `image/jpg`
+        }).promise()
+
+        console.log('croppedCardImageUri', croppedCardImageUri)
         res.json({success: true})
     } catch (err) {
         next(err)

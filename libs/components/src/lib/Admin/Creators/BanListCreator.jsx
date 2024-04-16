@@ -234,7 +234,7 @@ export const BanListCreator = () => {
                                 <option value="forbidden">Forbidden</option>
                                 <option value="limited">Limited</option>
                                 <option value="semi-limited">Semi-Limited</option>
-                                <option value="unlimited">Unlimited</option>
+                                <option value="no longer on list">Unlimited</option>
                             </select>
                         </td>
                         <td onClick={() => addChange()}>Add</td>

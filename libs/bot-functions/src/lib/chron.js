@@ -821,7 +821,7 @@ export const downloadCardImage = async (id) => {
 
 // DOWNLOAD OP CARD IMAGE
 export const downloadOPCardImage = async (id) => {
-    const {data} = await axios({
+    const {data: fullCardImage} = await axios({
         method: 'GET',
         url: `https://images.ygoprodeck.com/images/cards/${id}.jpg`,
         responseType: 'stream'
@@ -835,13 +835,29 @@ export const downloadOPCardImage = async (id) => {
         }
     })
 
-    const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${id}.jpg`, Body: data, ContentType: `image/jpg` }).promise()
-    console.log('uri', uri)
+    const { Location: imageUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${id}.jpg`, Body: fullCardImage, ContentType: `image/jpg` }).promise()
+    console.log('imageUri', imageUri)
+
+    const {data: croppedCardImage} = await axios({
+        method: 'GET',
+        url: `https://images.ygoprodeck.com/images/cards_cropped/${id}.jpg`,
+        responseType: 'stream'
+    })
+
+    const { Location: artworkUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/artworks/${id}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` }).promise()
+    console.log('artworkUri', artworkUri)
 }
 
 // DOWNLOAD CARD ARTWORK
 export const downloadCardArtworks = async () => {
-    const cards = await Card.findAll()
+    const cards = await Card.findAll({
+        where: {
+            id: {[Op.gte]: 11325}
+        }
+    })
+
+    console.log('downloadCardArtworks() cards.length', cards.length)
+
     for (let i = 0; i < cards.length; i++) {
         try {
             const {ypdId: id} = cards[i]
