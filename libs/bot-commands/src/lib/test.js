@@ -15,7 +15,8 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
-            downloadCardArtworks()
+            // downloadCardArtworks()
+            downloadNewCards()
             // setTimeout(() => refreshExpiredTokens())
             // setTimeout(() => purgeEntries(), (0.1 * 60 * 1000))
             // setTimeout(() => purgeTourRoles(client), (0.2 * 60 * 1000))
