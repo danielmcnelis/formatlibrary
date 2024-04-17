@@ -1024,8 +1024,6 @@ export const downloadNewCards = async () => {
 
                 o++
                 console.log(`New OCG Card: ${card.name}`)
-                await downloadCardImage(id)
-                console.log(`Image saved (${card.name})`)
             } else if (card && (!card.speedLegal || !card.speedDate) && speedLegal) {
                 const print = await Print.findOne({
                     where: {
@@ -1045,8 +1043,6 @@ export const downloadNewCards = async () => {
 
                 p++
                 console.log(`New Speed Duel Card: ${card.name}`)
-                await downloadCardImage(id)
-                console.log(`Image saved (${card.name})`)
             }
         } catch (err) {
             e++ 

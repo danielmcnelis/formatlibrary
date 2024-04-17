@@ -72,8 +72,7 @@ export const DeckCreator = () => {
         const reader = new FileReader()
         reader.readAsBinaryString(file)
         reader.onloadend = () => {
-            const arr = reader.result?.split('\n')
-            arr.map((e) => {
+            const arr = reader.result?.split('\n').map((e) => {
                 while (/^\d/.test(e) && e.length < 8) e = '0' + e
                 return e
             })
