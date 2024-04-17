@@ -936,29 +936,31 @@ export const decksCreate = async (req, res, next) => {
     const raw = req.body.ydk.split('\n')
     const verified = []
     for (let i = 0; i < raw.length; i++) {
-        // let el = raw[i]
-        // if (/^\d/.test(e)) 
-
-        // const count = await Artwork.count({
-        //     where: {
-        //         ypdId: el
-        //     }
-        // })
-
-        // if (!count) {
-        //     verified.push(el)
-        // } else  {
-        //     const artwork = await Artwork.findOne({
-        //         where: {
-        //             ydpId: el
-        //         },
-        //         include: Card
-        //     })
-
-        //     verified.push(artwork.card.konamiCode)
-        // }
+        if (!/^\d/.test(raw[i])) {
+            verified.push(raw[i])
+        } else {
+            const count = await Artwork.count({
+                where: {
+                    ypdId: parseInt(raw[i]).toString(),
+                    isOriginal: false
+                }
+            })
+    
+            if (!count) {
+                verified.push(raw[i])
+            } else  {
+                const artwork = await Artwork.findOne({
+                    where: {
+                        ypdId: parseInt(raw[i]).toString(),
+                        isOriginal: false
+                    },
+                    include: Card
+                })
+                
+                verified.push(artwork.card.konamiCode)
+            }
+        }
     }
-
     
     const deck = await Deck.create({
       builder: player.name,
@@ -970,7 +972,7 @@ export const decksCreate = async (req, res, next) => {
       category: req.body.category,
       formatName: format.name,
       formatId: format.id,
-      ydk: req.body.ydk,
+      ydk: verified.join('\n'),
       eventName: req.body.eventName,
       eventId: req.body.eventId,
       origin: req.body.origin,
