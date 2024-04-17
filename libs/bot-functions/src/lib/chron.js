@@ -926,6 +926,7 @@ export const downloadAltArtworks = async () => {
             }
         } catch (err) {
             console.log(err)
+            e++
         }
     }
 
