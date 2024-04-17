@@ -74,10 +74,13 @@ export const DeckCreator = () => {
         reader.readAsBinaryString(file)
         reader.onloadend = () => {
             const arr = reader.result?.split('\n').map((e) => {
+                console.log('e', e)
                 while (/^\d/.test(e) && e.length < 8) e = '0' + e
+                console.log(`e'`, e)
                 return e
             })
 
+            console.log('arr', arr)
             setYDK(arr.join('\n'))
         }
     }
