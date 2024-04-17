@@ -2,6 +2,7 @@
 import { Alius } from './Alius'
 import { Archetype } from './Archetype'
 import { Article } from './Article'
+import { Artwork } from './Artwork'
 import { BlogPost } from './BlogPost'
 import { CardDeckType } from './CardDeckType'
 import { Card } from './Card'
@@ -56,6 +57,10 @@ Player.hasMany(Alius)
 //ARTICLE
 Article.belongsTo(Player)
 Player.hasMany(Article)
+
+//ARTWORK
+Artwork.belongsTo(Card)
+Card.hasMany(Artwork)
 
 //CardDeckType
 // CardDeckType.hasOne(Card)
@@ -347,6 +352,7 @@ export {
   Alius,
   Archetype,
   Article,
+  Artwork,
   BlogPost,
   Card,
   CardDeckType,

@@ -2,7 +2,7 @@
 import axios from 'axios'
 import * as fs from 'fs'
 import * as sharp from 'sharp'
-import { Card, Deck, DeckType, Entry, Event, Tournament, Match, Matchup, Membership, Player, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
+import { Artwork, Card, Deck, DeckType, Entry, Event, Tournament, Match, Matchup, Membership, Player, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
 import { createMembership, createPlayer } from './utility'
 import { Op } from 'sequelize'
 import { S3 } from 'aws-sdk'
@@ -836,15 +836,109 @@ export const downloadCardImage = async (id) => {
     }
 }
 
-// DOWNLOAD CARD ARTWORK
-export const downloadCardArtworks = async () => {
-    const cards = await Card.findAll({
-        where: {
-            id: {[Op.gte]: 11325}
+// DOWNLOAD ALT ARTWORKS
+export const downloadAltArtworks = async () => {
+    const start = Date.now()
+    let b = 0
+    let e = 0
+
+    const s3 = new S3({
+        region: config.s3.region,
+        credentials: {
+            accessKeyId: config.s3.credentials.accessKeyId,
+            secretAccessKey: config.s3.credentials.secretAccessKey
         }
     })
 
-    console.log('downloadCardArtworks() cards.length', cards.length)
+    const { data } = await axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?misc=yes')
+
+    for (let i = 0; i < data.data.length; i++) {
+        const datum = data.data[i]
+        const id = datum.id.toString()
+        const name = datum.name
+        const images = data.card_images
+
+        try {
+            const card = await Card.findOne({
+                where: {
+                    [Op.or]: [
+                        {ypdId: id},
+                        {name: name}
+                    ]
+                }
+            })
+
+            if (!card) continue
+
+            for (let i = 0; i < images.length; i++) {
+                const image = images[i]
+                const ypdId = image.id
+
+                const count = await Artwork.count({
+                    where: {
+                        ypdId: image.id
+                    }
+                })
+
+                if (count) {
+                    console.log(`artwork is already saved, ypdId: ${image.id}`)
+                } else if (ypdId === card.id) {
+                    await Artwork.create({
+                        cardName: card.name,
+                        cardId: card.id,
+                        ypdId: card.ypdId,
+                        isOriginal: true
+                    })
+                } else {
+                    try {
+                        const {data: fullCardImage} = await axios({
+                            method: 'GET',
+                            url: image.image_url,
+                            responseType: 'stream'
+                        })
+                    
+                        const { Location: imageUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${id}.jpg`, Body: fullCardImage, ContentType: `image/jpg` }).promise()
+                        console.log('imageUri', imageUri)
+
+                        const {data: croppedCardImage} = await axios({
+                            method: 'GET',
+                            url: image.image_url_cropped,
+                            responseType: 'stream'
+                        })
+                    
+                        const { Location: artworkUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/artworks/${id}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` }).promise()
+                        console.log('artworkUri', artworkUri)
+
+                        if (imageUri && artworkUri) {
+                            await Artwork.create({
+                                cardName: card.name,
+                                cardId: card.id,
+                                ypdId: image.id
+                            })
+
+                            console.log(`saved new alternate artwork data, ypdId: ${image.id}`)
+                            b++
+                        }
+                    } catch (err) {
+                        console.log(err)
+                    }  
+                }
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    console.log(`Saved ${b} new artworks, encountered ${e} errors`)
+    console.log(`downloadAltArtworks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => downloadAltArtworks(), getMidnightCountdown() + (2 * 60 * 1000))
+}
+
+
+// DOWNLOAD CARD ARTWORK
+export const downloadCardArtworks = async () => {
+    const cards = await Card.findAll()
+
     for (let i = 0; i < cards.length; i++) {
         try {
             const {ypdId: id} = cards[i]

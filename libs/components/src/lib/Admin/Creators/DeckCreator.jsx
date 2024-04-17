@@ -14,7 +14,6 @@ export const DeckCreator = () => {
     const [player, setPlayer] = useState(null)
     const [players, setPlayers] = useState([])
     const [ydk, setYDK] = useState(null)
-    console.log('ydk', ydk)
     
     const placementArr = event ? Array.from({length: event.size}, (_, i) => i + 1) : []
 
@@ -74,16 +73,10 @@ export const DeckCreator = () => {
         reader.readAsBinaryString(file)
         reader.onloadend = () => {
             const arr = reader.result?.split('\n').map((e) => {
-                console.log('e', e)
-                console.log(`/^\d/.test(e)`, /^\d/.test(e))
-                console.log(`e.trim().length`, e.trim().length)
-                console.log(`e.trim().length < 8`, e.trim().length < 8)
                 while (/^\d/.test(e) && e.trim().length < 8) e = '0' + e
-                console.log(`e'`, e)
                 return e
             })
 
-            console.log('arr', arr)
             setYDK(arr.join('\n'))
         }
     }
