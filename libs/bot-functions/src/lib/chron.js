@@ -856,7 +856,7 @@ export const downloadAltArtworks = async () => {
         const datum = data.data[i]
         const id = datum.id.toString()
         const name = datum.name
-        const images = data.card_images
+        const images = datum.card_images
 
         try {
             const card = await Card.findOne({
