@@ -1,6 +1,6 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
-import { downloadAltArtworks, downloadCardArtworks, updateDeckTypes, updateServers, markInactives, purgeEntries, purgeTourRoles, purgeLocalsAndInternalDecks, updateDecks, updateMatchups, updateReplays, selectMatch, assignTourRoles, refreshExpiredTokens, updateAvatars, purgeBetaCards, shuffleArray, getMatches, getParticipants, calculateStandings, autoRegisterTopCut, isProgrammer, conductCensus, updateSets, downloadNewCards, updateMarketPrices } from '@fl/bot-functions'
+import { downloadOriginalArtworks, downloadAltArtworks, downloadCardArtworks, updateDeckTypes, updateServers, markInactives, purgeEntries, purgeTourRoles, purgeLocalsAndInternalDecks, updateDecks, updateMatchups, updateReplays, selectMatch, assignTourRoles, refreshExpiredTokens, updateAvatars, purgeBetaCards, shuffleArray, getMatches, getParticipants, calculateStandings, autoRegisterTopCut, isProgrammer, conductCensus, updateSets, downloadNewCards, updateMarketPrices } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { Match, Tournament, Server, TriviaQuestion } from '@fl/models'
@@ -15,7 +15,8 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
-            downloadAltArtworks()
+            downloadOriginalArtworks()
+            // downloadAltArtworks()
             // downloadCardArtworks()
             // downloadNewCards()
             // setTimeout(() => refreshExpiredTokens())

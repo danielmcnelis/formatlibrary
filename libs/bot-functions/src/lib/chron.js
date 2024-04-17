@@ -939,8 +939,61 @@ export const downloadAltArtworks = async () => {
 
     console.log(`Saved ${b} original artworks, ${c} new artworks, encountered ${e} errors`)
     console.log(`downloadAltArtworks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => downloadAltArtworks(), getMidnightCountdown() + (2 * 60 * 1000))
+    return setTimeout(() => downloadAltArtworks(), getMidnightCountdown() + (2.5 * 60 * 1000))
 }
+
+
+// DOWNLOAD ORIGINAL ARTWORKS
+export const downloadOriginalArtworks = async () => {
+    let b = 0
+    let e = 0
+
+    const s3 = new S3({
+        region: config.s3.region,
+        credentials: {
+            accessKeyId: config.s3.credentials.accessKeyId,
+            secretAccessKey: config.s3.credentials.secretAccessKey
+        }
+    })
+    
+    const artworks = await Artwork.findAll({
+        where: {
+            isOriginal: false
+        },
+        include: Card
+    })
+
+    for (let i = 0; i < artworks.length; i++) {
+        const artwork = artworks[i]
+
+        try {
+            const {data: fullCardImage} = await axios({
+                method: 'GET',
+                url: `https://images.ygoprodeck.com/images/cards/${artwork.card.ypdId}.jpg`,
+                responseType: 'stream'
+            })
+        
+            const { Location: imageUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${artwork.card.ypdId}.jpg`, Body: fullCardImage, ContentType: `image/jpg` }).promise()
+            console.log('imageUri', imageUri)
+
+            const {data: croppedCardImage} = await axios({
+                method: 'GET',
+                url: `https://images.ygoprodeck.com/images/cards_cropped/${artwork.card.ypdId}.jpg`,
+                responseType: 'stream'
+            })
+        
+            const { Location: artworkUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/artworks/${artwork.card.ypdId}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` }).promise()
+            console.log('artworkUri', artworkUri)
+
+            b++
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    return console.log(`Saved ${b} original artworks, encountered ${e} errors`)
+}
+
 
 
 // DOWNLOAD CARD ARTWORK
