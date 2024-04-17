@@ -31,7 +31,7 @@ export const imagesUpdateCard = async (req, res, next) => {
 
         const {data: croppedCardImage} = await axios({
             method: 'GET',
-            url: `https://images.ygoprodeck.com/images/cards_cropped/${id}.jpg`,
+            url: `https://images.ygoprodeck.com/images/cards_cropped/${req.query.ypdId}.jpg`,
             responseType: 'stream'
         })
 
