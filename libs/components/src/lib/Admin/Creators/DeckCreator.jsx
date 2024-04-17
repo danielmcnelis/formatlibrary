@@ -71,7 +71,15 @@ export const DeckCreator = () => {
     const readYDK = (file) => {
         const reader = new FileReader()
         reader.readAsBinaryString(file)
-        reader.onloadend = () => setYDK(reader.result)
+        reader.onloadend = () => {
+            const arr = reader.result?.split('\n')
+            arr.map((e) => {
+                while (/^\d/.test(e) && e.length < 8) e = '0' + e
+                return e
+            })
+
+            setYDK(arr.join('\n'))
+        }
     }
 
     const findPlayers = async (query) => {
