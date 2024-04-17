@@ -872,17 +872,17 @@ export const downloadAltArtworks = async () => {
 
             for (let i = 0; i < images.length; i++) {
                 const image = images[i]
-                const ypdId = image.id
+                const ypdId = image.id.toString()
 
                 const count = await Artwork.count({
                     where: {
-                        ypdId: image.id
+                        ypdId: ypdId
                     }
                 })
 
                 if (count) {
                     console.log(`artwork is already saved, ypdId: ${image.id}`)
-                } else if (ypdId === card.id) {
+                } else if (image.id === card.id) {
                     await Artwork.create({
                         cardName: card.name,
                         cardId: card.id,
@@ -913,7 +913,7 @@ export const downloadAltArtworks = async () => {
                             await Artwork.create({
                                 cardName: card.name,
                                 cardId: card.id,
-                                ypdId: image.id
+                                ypdId: ypdId
                             })
 
                             console.log(`saved new alternate artwork data, ypdId: ${image.id}`)
