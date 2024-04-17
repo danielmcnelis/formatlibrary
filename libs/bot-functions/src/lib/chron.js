@@ -840,6 +840,7 @@ export const downloadCardImage = async (id) => {
 export const downloadAltArtworks = async () => {
     const start = Date.now()
     let b = 0
+    let c = 0
     let e = 0
 
     const s3 = new S3({
@@ -882,13 +883,16 @@ export const downloadAltArtworks = async () => {
 
                 if (count) {
                     console.log(`artwork is already saved, ypdId: ${image.id}`)
-                } else if (image.id === card.id) {
+                } else if (ypdId === card.ypdId) {
                     await Artwork.create({
                         cardName: card.name,
                         cardId: card.id,
                         ypdId: card.ypdId,
                         isOriginal: true
                     })
+
+                    console.log(`saved new original artwork data, ypdId: ${image.id}`)
+                    b++
                 } else {
                     try {
                         const {data: fullCardImage} = await axios({
@@ -917,7 +921,7 @@ export const downloadAltArtworks = async () => {
                             })
 
                             console.log(`saved new alternate artwork data, ypdId: ${image.id}`)
-                            b++
+                            c++
                         }
                     } catch (err) {
                         console.log(err)
@@ -930,7 +934,7 @@ export const downloadAltArtworks = async () => {
         }
     }
 
-    console.log(`Saved ${b} new artworks, encountered ${e} errors`)
+    console.log(`Saved ${b} original artworks, ${c} new artworks, encountered ${e} errors`)
     console.log(`downloadAltArtworks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
     return setTimeout(() => downloadAltArtworks(), getMidnightCountdown() + (2 * 60 * 1000))
 }

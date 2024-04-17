@@ -1,4 +1,4 @@
-import { Card, Deck, DeckThumb, DeckType, Format, Player } from '@fl/models'
+import { Artwork, Card, Deck, DeckThumb, DeckType, Format, Player } from '@fl/models'
 import { Op } from 'sequelize'
 const FuzzySet = require('fuzzyset')
 
@@ -933,6 +933,31 @@ export const decksCreate = async (req, res, next) => {
   try {
     const format = await Format.findOne({ where: { name: { [Op.iLike]: req.body.format || req.body.formatName } } })
     const player = await Player.findOne({ where: { id: req.body.playerId } })
+    const raw = req.body.ydk.split('\n')
+    const verified = []
+    for (let i = 0; i < raw.length; i++) {
+        // let el = raw[i]
+        // if (el )
+        // const count = await Artwork.count({
+        //     where: {
+        //         ypdId: el
+        //     }
+        // })
+
+        // if (!count) {
+        //     verified.push(el)
+        // } else {
+        //     const artwork = await Artwork.findOne({
+        //         where: {
+        //             ydpId: el
+        //         },
+        //         include: Card
+        //     })
+
+        //     verified.push(artwork.card.konamiCode)
+        // }
+    }
+
     
     const deck = await Deck.create({
       builder: player.name,
