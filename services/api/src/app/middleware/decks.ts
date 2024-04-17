@@ -937,7 +937,8 @@ export const decksCreate = async (req, res, next) => {
     const verified = []
     for (let i = 0; i < raw.length; i++) {
         // let el = raw[i]
-        // if (el )
+        // if (/^\d/.test(e)) 
+
         // const count = await Artwork.count({
         //     where: {
         //         ypdId: el
@@ -946,7 +947,7 @@ export const decksCreate = async (req, res, next) => {
 
         // if (!count) {
         //     verified.push(el)
-        // } else {
+        // } else  {
         //     const artwork = await Artwork.findOne({
         //         where: {
         //             ydpId: el

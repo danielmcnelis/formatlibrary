@@ -869,7 +869,10 @@ export const downloadAltArtworks = async () => {
                 }
             })
 
-            if (!card) continue
+            if (!card) {
+                console.log(`could not find card: ${name} (${id})`)
+                continue
+            }
 
             for (let i = 0; i < images.length; i++) {
                 const image = images[i]
@@ -901,7 +904,7 @@ export const downloadAltArtworks = async () => {
                             responseType: 'stream'
                         })
                     
-                        const { Location: imageUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${id}.jpg`, Body: fullCardImage, ContentType: `image/jpg` }).promise()
+                        const { Location: imageUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${ypdId}.jpg`, Body: fullCardImage, ContentType: `image/jpg` }).promise()
                         console.log('imageUri', imageUri)
 
                         const {data: croppedCardImage} = await axios({
@@ -910,7 +913,7 @@ export const downloadAltArtworks = async () => {
                             responseType: 'stream'
                         })
                     
-                        const { Location: artworkUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/artworks/${id}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` }).promise()
+                        const { Location: artworkUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/artworks/${ypdId}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` }).promise()
                         console.log('artworkUri', artworkUri)
 
                         if (imageUri && artworkUri) {
@@ -920,7 +923,7 @@ export const downloadAltArtworks = async () => {
                                 ypdId: ypdId
                             })
 
-                            console.log(`saved new alternate artwork data, ypdId: ${image.id}`)
+                            console.log(`saved new alternate artwork data, ypdId: ${ypdId}`)
                             c++
                         }
                     } catch (err) {
