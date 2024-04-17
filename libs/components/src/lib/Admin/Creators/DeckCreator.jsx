@@ -76,6 +76,7 @@ export const DeckCreator = () => {
             const arr = reader.result?.split('\n').map((e) => {
                 console.log('e', e)
                 console.log(`/^\d/.test(e)`, /^\d/.test(e))
+                console.log(`e.length`, e.length)
                 console.log(`e.length < 8`, e.length < 8)
                 while (/^\d/.test(e) && e.length < 8) e = '0' + e
                 console.log(`e'`, e)
