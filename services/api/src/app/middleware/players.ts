@@ -225,6 +225,7 @@ export const playersCreate = async (req, res, next) => {
             name: req.body.name,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
+            country: req.body.country,
             discordName: req.body.discordName,
             discriminator: req.body.discriminator
         })

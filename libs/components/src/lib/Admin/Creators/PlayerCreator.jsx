@@ -5,6 +5,7 @@ import axios from 'axios'
 export const PlayerCreator = () => {
     const [firstName, setFirstName] = useState(null)
     const [lastName, setLastName] = useState(null)
+    const [country, setCountry] = useState(null)
     const [pfp, setPfp] = useState(null)
     const [discordName, setDiscordName] = useState(null)
     const [discriminator, setDiscriminator] = useState(null)
@@ -13,11 +14,13 @@ export const PlayerCreator = () => {
     const reset = async () => {
         setFirstName(null)
         setLastName(null)
+        setCountry(null)
         setPfp(null)
         setDiscordName(null)
         setDiscriminator(null)
         document.getElementById('firstName').value = null
         document.getElementById('lastName').value = null
+        document.getElementById('country').value = null
         document.getElementById('pfp').value = null
         document.getElementById('discordName').value = null
         document.getElementById('discriminator').value = null
@@ -31,6 +34,7 @@ export const PlayerCreator = () => {
                 name: discordName || `${firstName} ${lastName}`,
                 firstName: firstName,
                 lastName: lastName,
+                country: country,
                 pfp: pfp,
                 discordName: discordName,
                 discriminator: discriminator
@@ -80,6 +84,14 @@ export const PlayerCreator = () => {
                     onChange={(e) => readPfp(e.target.files[0])}
                 />
             </label>
+            <label>Country (2-letter code):
+                <input
+                    id="country"
+                    value={country || ''}
+                    type="text"
+                    onChange={(e) => setCountry(e.target.value.toUpperCase())}
+                />
+            </label>
             <label>Discord Name:
                 <input
                     id="discordName"
@@ -96,13 +108,13 @@ export const PlayerCreator = () => {
                     onChange={(e) => setDiscriminator(e.target.value)}
                 />
             </label>
-            <a
+            <div
                 className="admin-button"
                 type="submit"
                 onClick={() => createPlayer()}
             >
                 Submit
-            </a>
+            </div>
         </div>
     )
 }
