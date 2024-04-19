@@ -186,13 +186,13 @@ export const DeckTypeCreator = () => {
                 </select>
             </label>
 
-            <a
+            <div
                 className="admin-button"
                 type="submit"
                 onClick={() => create()}
             >
                 Submit
-            </a>
+            </div>
         </div>
     )
 }

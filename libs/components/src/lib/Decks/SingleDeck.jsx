@@ -97,7 +97,7 @@ export const SingleDeck = () => {
   if (!deck) return <NotFound/>
   if (!deck.id) return <div/>
 
-  let extension =  (deck.player?.discordName || '').replaceAll('%', '%25')
+  let extension =  (deck.player?.discordName || deck.player?.name || '').replaceAll('%', '%25')
     .replaceAll('/', '%2F')
     .replaceAll(' ', '_')
     .replaceAll('#', '%23')
