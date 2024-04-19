@@ -232,7 +232,7 @@ export const EventCreator = () => {
         </select>
       </label>
       <label>
-        Bracket:
+        Bracket (not req.):
         <input
           id="bracket"
           type="file"

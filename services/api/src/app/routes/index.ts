@@ -18,5 +18,6 @@ import sealed from './sealed'
 import sets from './sets'
 import stats from './stats'
 import statuses from './statuses'
+import tournaments from './tournaments'
 
-export { banlists, blogposts, cards, cookies, cubes, decks, deckTypes, drafts, events, formats, images, matchups, players, rated, replays, rulings, sealed, sets, stats, statuses }
+export { banlists, blogposts, cards, cookies, cubes, decks, deckTypes, drafts, events, formats, images, matchups, players, rated, replays, rulings, sealed, sets, stats, statuses, tournaments }

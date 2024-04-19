@@ -25,7 +25,8 @@ import {
   sealed,
   sets,
   stats,
-  statuses
+  statuses,
+  tournaments
 } from './routes'
 import { error } from '@fl/middleware'
 import { config } from '@fl/config'
@@ -51,7 +52,7 @@ app.use(express.json({ limit: '1mb' }))
 app.use(express.urlencoded({ extended: true, limit: '1mb' }))
 
 // routes
-const routes = { banlists, blogposts, cards, cookies, cubes, decks, deckTypes, drafts, events, formats, images, matchups, players, rated, replays, rulings, sealed, sets, stats, statuses }
+const routes = { banlists, blogposts, cards, cookies, cubes, decks, deckTypes, drafts, events, formats, images, matchups, players, rated, replays, rulings, sealed, sets, stats, statuses, tournaments }
 Object.values(routes).forEach((route) => {
   route.stack.forEach((route) => {
     const path = route.route.path

@@ -1,5 +1,6 @@
 
 export * from './BanListCreator'
+export * from './BracketCreator'
 export * from './CardCreator'
 export * from './DeckCreator'
 export * from './DeckTypeCreator'

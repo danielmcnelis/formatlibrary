@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react'
-import { BanListCreator, CardCreator, DeckCreator, DeckTypeCreator, EventCreator, ImageCreator, PlayerCreator, YDKCreator } from './Creators'
+import { BanListCreator, BracketCreator, CardCreator, DeckCreator, DeckTypeCreator, EventCreator, ImageCreator, PlayerCreator, YDKCreator } from './Creators'
 import { NotFound } from '../General/NotFound'
 import { getCookie } from '@fl/utils'
 import axios from 'axios'
@@ -49,6 +49,8 @@ export const AdminPortal = () => {
             return <ImageCreator/>
         case 'ban-lists':
             return <BanListCreator/>
+        case 'bracket':
+            return <BracketCreator/>
         case 'ydk':
             return <YDKCreator/>
         default:
@@ -68,6 +70,7 @@ export const AdminPortal = () => {
                 <div onClick={() => setView('cards')} className={view === 'cards' ? 'clicked-admin-button' : 'admin-button'}>New Card</div>
                 <div onClick={() => setView('images')} className={view === 'images' ? 'clicked-admin-button' : 'admin-button'}>Upload Image</div>
                 <div onClick={() => setView('ban-lists')} className={view === 'ban-lists' ? 'clicked-admin-button' : 'admin-button'}>New Ban List</div>
+                <div onClick={() => setView('bracket')} className={view === 'bracket' ? 'clicked-admin-button' : 'admin-button'}>Mock Bracket</div>
                 <div onClick={() => setView('ydk')} className={view === 'ydk' ? 'clicked-admin-button' : 'admin-button'}>Convert to YDK</div>
             </div>
             <div>{switchView(view)}</div>

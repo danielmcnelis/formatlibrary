@@ -15,7 +15,7 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
-            downloadOriginalArtworks()
+            // downloadOriginalArtworks()
             // downloadAltArtworks()
             // downloadCardArtworks()
             // downloadNewCards()
