@@ -13,6 +13,7 @@ import {
 
 import {
     countries,
+    iso2ToFips,
     timezones,
     getCountry
 } from './country'
@@ -26,6 +27,7 @@ export {
   dateToVerbose,
   getCookie,
   getCountry,
+  iso2ToFips,
   ordinalize,
   shouldDisplay,
   timezones,
