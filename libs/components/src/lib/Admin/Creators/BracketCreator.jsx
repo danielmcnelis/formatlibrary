@@ -2,26 +2,33 @@
 import { useState } from 'react'
 import axios from 'axios'
 
+// BRACKET CREATOR
 export const BracketCreator = () => {
     const [name, setName] = useState(null)
+    const [abbreviation, setAbbreviation] = useState(null)
+    const [useStandings, setUseStandings] = useState(true)
     const [participants, setParticipants] = useState([])
 
     // RESET
     const reset = async () => {
         setName(null) 
+        setAbbreviation(null) 
+        setUseStandings(true)
         setParticipants([])   
 
         document.getElementById('name').value = null
+        document.getElementById('abbreviation').value = null
         document.getElementById('participants').value = null
     }
 
     // CREATE
     const create = async () => {
         if (!name) return alert('Please enter a Tournament Name.')
+        if (!abbreviation) return alert('Please enter a Tournament Abbreviation.')
         if (!participants || !participants.length) return alert('Please add some participants.')
         
         try {
-            const { data } = await axios.post('/api/tournaments/mock-bracket', { name, participants })
+            const { data } = await axios.post('/api/tournaments/mock-bracket', { name, abbreviation, participants })
             alert(`Success! Created new bracket: https://challonge.com/${data.url}`)
             return reset()
         } catch (err) {
@@ -29,14 +36,31 @@ export const BracketCreator = () => {
         }
     }
 
+    // REVERSE ENGINEER PARTICIPANTS
+    const reverseEngineerParticipants = (raw) => {
+        const logic = [[32, 1], [2, 31], [17, 16], [18, 15], [25, 8], [26, 7], [9, 24], [10, 23], [29, 4], [30, 3], [13, 20], [19, 14], [28, 5], [27, 6], [12, 21], [11, 22]].flat()
+        const keys = Array.from(logic.keys()).sort((a, b) => logic[a] - logic[b])
+        const pairings = raw.replace(/[0-9\t]/g, '').split('\n').map((e) => e.split('vs.')).flat().map((e) => {
+            if (e.includes(',')) {
+                const [surname, forename] = e.split(',')
+                return `${forename} ${surname}`.trim()
+              } else {
+                return e.trim()
+              }
+        })
+
+        const mappedParticipants = keys.map(i => pairings[i])
+        return setParticipants(mappedParticipants)
+    }
+
     // PROCESS PARTICIPANTS
     const processParticipants = (data) => {
         const processedParticipants = data.split('\n').map((e) => {
             if (e.includes(',')) {
-              const [surname, forename] = e.replace(/[0-9\t.)]/g, '').split(',')
+              const [surname, forename] = e.replace(/[0-9\t)]/g, '').split(',')
               return `${forename} ${surname}`.trim()
             } else {
-              return e.replace(/[0-9\t.)]/g, '').trim()
+              return e.replace(/[0-9\t)]/g, '').trim()
             }
         })
 
@@ -54,11 +78,35 @@ export const BracketCreator = () => {
                 />
             </label>
 
-            <label>Participants:</label>
-            <textarea
-                id="participants"
-                onChange={(e) => processParticipants(e.target.value)}
-            />
+            <label>Tournament Abbreviation:
+                <input
+                    id="abbreviation"
+                    value={abbreviation || ''}
+                    type="text"
+                    onChange={(e) => setAbbreviation(e.target.value)}
+                />
+            </label>
+
+            <div className="option-toggle-flexbox">
+                <div id={`option-toggle-${useStandings ? 'on' : 'off'}`} onClick={() => setUseStandings(!useStandings)}>
+                    <div id={`option-toggle-inner-circle-${useStandings ? 'on' : 'off'}`}></div>
+                </div>
+                <div>{useStandings ? 'Final Standings:' : 'Top 32 Pairings:'}</div>
+            </div>
+
+            {
+                useStandings ? (
+                    <textarea
+                        id="participants"
+                        onChange={(e) => processParticipants(e.target.value)}
+                    />
+                ) : (
+                    <textarea
+                        id="top32-pairings"
+                        onChange={(e) => reverseEngineerParticipants(e.target.value)}
+                    />
+                )
+            }
 
             <div
                 className="admin-button"

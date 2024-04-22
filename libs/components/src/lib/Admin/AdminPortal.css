@@ -146,3 +146,56 @@ label {
     border: 0.1em solid #000000;
     margin: 0.1em 0.5em 0.2em 0.5em;
   }
+
+  .option-toggle-flexbox {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+
+#option-toggle-off {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: rgb(175, 82, 28);
+    padding: 2px;
+    margin: 0px 6px 0px 0px;
+    border-radius: 24px;
+    width: 48px;
+    height: 24px;
+}
+
+#option-toggle-on {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: nowrap;    
+    background-color: rgb(28, 175, 85);
+    padding: 2px;
+    margin: 0px 6px 0px 0px;
+    border-radius: 24px;
+    width: 48px;
+    height: 24px;
+}
+
+#option-toggle-inner-circle-on, #option-toggle-inner-circle-off {
+    background: url("https://cdn.formatlibrary.com/images/emojis/switch-circle.png") no-repeat center;
+    background-size: 20px;
+    border-radius: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+#option-toggle-inner-circle-on {
+    background-color: rgb(7, 84, 36);
+}
+
+#option-toggle-inner-circle-off {
+    background-color: rgb(99, 44, 11);
+}
+
+#option-toggle-off:hover, #option-toggle-on:hover {
+    cursor: pointer;
+}
