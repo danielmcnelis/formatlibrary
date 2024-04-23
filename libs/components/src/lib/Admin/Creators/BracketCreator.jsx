@@ -8,13 +8,15 @@ export const BracketCreator = () => {
     const [abbreviation, setAbbreviation] = useState(null)
     const [useStandings, setUseStandings] = useState(true)
     const [participants, setParticipants] = useState([])
-
+    const [useNewLogic, setUseNewLogic] = useState(true)
+    const newLogic = [[32, 1], [2, 31], [17, 16], [18, 15], [25, 8], [26, 7], [9, 24], [10, 23], [29, 4], [30, 3], [13, 20], [19, 14], [28, 5], [27, 6], [12, 21], [11, 22]].flat()
+    const oldLogic = [[1, 32], [16, 17], [8, 25], [9, 24], [4, 29], [13, 20], [5, 28], [12, 21], [2, 31], [15, 18], [7, 26], [10, 23], [3, 30], [14, 19], [6, 27], [11, 22]].flat()
+         
     // RESET
     const reset = async () => {
         setName(null) 
         setAbbreviation(null) 
-        setUseStandings(true)
-        setParticipants([])   
+        setParticipants([])
 
         document.getElementById('name').value = null
         document.getElementById('abbreviation').value = null
@@ -38,7 +40,7 @@ export const BracketCreator = () => {
 
     // REVERSE ENGINEER PARTICIPANTS
     const reverseEngineerParticipants = (raw) => {
-        const logic = [[32, 1], [2, 31], [17, 16], [18, 15], [25, 8], [26, 7], [9, 24], [10, 23], [29, 4], [30, 3], [13, 20], [19, 14], [28, 5], [27, 6], [12, 21], [11, 22]].flat()
+        const logic = useNewLogic ? newLogic : oldLogic
         const keys = Array.from(logic.keys()).sort((a, b) => logic[a] - logic[b])
         const pairings = raw.replace(/[0-9\t]/g, '').split('\n').map((e) => e.split('vs.')).flat().map((e) => {
             if (e.includes(',')) {
@@ -93,6 +95,21 @@ export const BracketCreator = () => {
                 </div>
                 <div>{useStandings ? 'Final Standings:' : 'Top 32 Pairings:'}</div>
             </div>
+
+            {
+                !useStandings ? (
+                    <label>Use New Bracket Logic:
+                        <input
+                            id="logic"
+                            checked={!!useNewLogic}
+                            type="checkbox"
+                            onChange={() => setUseNewLogic(!useNewLogic)}
+                        />
+                    </label>
+
+                ) : ''
+            }
+
 
             {
                 useStandings ? (
