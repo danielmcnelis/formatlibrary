@@ -11,6 +11,7 @@ export const EventCreator = () => {
   const [formats, setFormats] = useState([])
   const [format, setFormat] = useState(null)
   const [fullName, setFullName] = useState(null)
+  const [isTeamEvent, setIsTeamEvent] = useState(false)
   const [isSeries, setIsSeries] = useState(true)
   const [player, setPlayer] = useState(null)
   const [players, setPlayers] = useState([])
@@ -33,6 +34,7 @@ export const EventCreator = () => {
     setFormat(null)
     setFullName(null)
     setIsSeries(true)
+    setIsTeamEvent(false)
     setPlayer(null)
     setPlayers([])
     setReferenceUrl(null)
@@ -83,6 +85,7 @@ export const EventCreator = () => {
         format: format,
         size: size,
         series: isSeries,
+        isTeamEvent: isTeamEvent,
         type: tournamentType,
         winner: player.globalName || player.discordName || player.name,
         playerId: player.id,
@@ -226,7 +229,14 @@ export const EventCreator = () => {
       </label>
       <label>
         Series:
-        <select id="series" onChange={(e) => setIsSeries(e.target.value)}>
+        <select id="is-team-event" defaultValue="false" onChange={(e) => setIsTeamEvent(e.target.value)}>
+          <option value="true">True</option>
+          <option value="false">False</option>
+        </select>
+      </label>
+      <label>
+        Series:
+        <select id="series" defaultValue="true" onChange={(e) => setIsSeries(e.target.value)}>
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
@@ -268,9 +278,9 @@ export const EventCreator = () => {
           }}
         />
       </label>
-      <a className="admin-button" type="submit" onClick={() => createEvent()}>
+      <div className="admin-button" type="submit" onClick={() => createEvent()}>
         Submit
-      </a>
+      </div>
     </div>
   )
 }

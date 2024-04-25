@@ -35,6 +35,9 @@ export const Event = db.define('events', {
   playerId: {
     type: Sequelize.STRING
   },
+  teamId: {
+    type: Sequelize.INTEGER
+  },
   size: {
     type: Sequelize.INTEGER
   },

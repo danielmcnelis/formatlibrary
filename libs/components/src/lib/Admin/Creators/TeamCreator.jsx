@@ -1,116 +1,104 @@
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { shouldDisplay } from '@fl/utils'
 
-export const DeckCreator = () => {
+export const TeamCreator = () => {
+    const [name, setName] = useState(null)
+    const [captain, setCaptain] = useState(null)
+    const [playerA, setPlayerA] = useState(null)
+    const [playerB, setPlayerB] = useState(null)
+    const [playerC, setPlayerC] = useState(null)
+    const [players, setPlayers] = useState([])
     const [community, setCommunity] = useState(null)
-    const [deckType, setDeckType] = useState(null)
-    const [deckTypes, setDeckTypes] = useState([])
-    const [display, setDisplay] = useState(true)
     const [event, setEvent] = useState(null)
     const [events, setEvents] = useState([])
     const [placement, setPlacement] = useState(1)
-    const [player, setPlayer] = useState(null)
-    const [players, setPlayers] = useState([])
-    const [ydk, setYDK] = useState(null)
-    
+
     const placementArr = event ? Array.from({length: event.size}, (_, i) => i + 1) : []
 
-    const reset = async () => {
-        setCommunity(null)
-        setDeckType(null)
-        setDisplay(true)
-        setEvent(null)
-        setEvents([])
-        setPlacement(1)
-        setPlayer(null) 
-        setPlayers([])
-        setYDK(null)  
-
-        document.getElementById('builder').value = ''
-        document.getElementById('deckType').value = null
-        document.getElementById('display').value = true
-        document.getElementById('community').value = null
-        document.getElementById('event').value = null
-        document.getElementById('ydk').value = null
-    }
-
-    const createDeck = async () => {
-        if (!player) return alert('No Player found.')
-        if (!event) return alert('No Event found.')
-        if (!ydk) return alert('Missing YDK file.')
-        if (!deckType) return alert('Please select a Deck Type.')
+    //CREATE TEAM
+    const createTeam = async () => {
+        if (!name) return alert('Please provide a Team Name.')
+        if (!playerA || !playerB || !playerC) return alert('Please select 3 players.')
+        if (!event) return alert('Please select an Event.')
         if (!placement) return alert('Please select a Placement.')
-        
+
         try {
-            const { data } = await axios.post('/api/decks/create', {
-                builder: player.globalName || player.discordName || player.name,
-                playerId: player.id,
-                type: deckType.name,
-                deckTypeId: deckType.id,
-                category: deckType.category,
-                format: event.formatName,
-                ydk: ydk,
-                eventName: event.abbreviation,
-                eventId: event.id,
-                publishDate: event.startDate,
-                placement: placement,
-                origin: 'event',
-                community: community,
-                display: display
+            const {data} = await axios.post('/api/teams/create', {
+                name: name,
+                captain: captain?.id,
+                playerAId: playerA?.id,
+                playerBId: playerB?.id,
+                playerCId: playerC?.id,
+                eventId: event?.id,
+                placement: placement
             })
 
-            alert(`Success! New Deck: https://formatlibrary.com/decks/${data.id}`)
+            if (data.name) {
+                alert(`Success! New Team: ${data.name}`)
+            } else {
+                alert(`Failure! This team already exists.`)
+            }
             return reset()
         } catch (err) {
             console.log(err)
         }
     }
 
-    const readYDK = (file) => {
-        const reader = new FileReader()
-        reader.readAsBinaryString(file)
-        reader.onloadend = () => {
-            const arr = reader.result?.split('\n').map((e) => {
-                while (/^\d/.test(e) && e.trim().length < 8) e = '0' + e
-                return e
-            })
+    //RESET
+    const reset = async () => {
+        setName(null)
+        setCaptain(null)
+        setPlayerA(null)
+        setPlayerB(null)
+        setPlayerC(null)
+        setCommunity(null)
+        setEvent(null)
+        setPlacement(1)
+        document.getElementById('name').value = null
+        document.getElementById('captain').value = null
+        document.getElementById('playerA').value = null
+        document.getElementById('playerB').value = null
+        document.getElementById('playerC').value = null
+        document.getElementById('community').value = null
+        document.getElementById('event').value = null
+        document.getElementById('placement').value = null
+    }
 
-            setYDK(arr.join('\n'))
+    // FIND PLAYERS
+    const findPlayers = async (query, slot) => {
+        const {data} = await axios.get(`/api/players/query/${query}`)
+        setPlayers(data)
+        if (slot === 'captain') {
+            setCaptain(data[0])
+        } else if (slot === 'playerA') {
+            setPlayerA(data[0])
+        } else if (slot === 'playerB') {
+            setPlayerB(data[0])
+        } else if (slot === 'playerC') {
+            setPlayerC(data[0])
         }
     }
 
-    const findPlayers = async (query) => {
-        const {data} = await axios.get(`/api/players/query/${query}`)
-        setPlayers(data)
-        setPlayer(data[0])
-    }
-
-    const getPlayer = async (name) => {
+    // GET PLAYER
+    const getPlayer = async (name, slot) => {
         const elem = players.filter((e) => e.name === name)[0]
-        return setPlayer(elem)
+        if (slot === 'captain') {
+            setCaptain(elem)
+        } else if (slot === 'playerA') {
+            setPlayerA(elem)
+        } else if (slot === 'playerB') {
+            setPlayerB(elem)
+        } else if (slot === 'playerC') {
+            setPlayerC(elem)
+        }
     }
 
-    const getDeckType = async (name) => {
-        const elem = deckTypes.filter((e) => e.name === name)[0]
-        return setDeckType(elem)
-    }
-
+    // GET EVENT
     const getEvent = async (name) => {
         const elem = events.filter((e) => e.name === name)[0]
         return setEvent(elem)
     }
-
-    // USE EFFECT
-    useEffect(() => {
-        const fetchDeckTypes = async () => {
-            const {data} = await axios.get(`/api/decktypes/`)
-            setDeckTypes(data)
-        }
-        
-        fetchDeckTypes()
-    }, [])
 
     // USE EFFECT
     useEffect(() => {
@@ -124,15 +112,72 @@ export const DeckCreator = () => {
 
     return (
         <div className="admin-portal">
-            <label>Builder:
+            <label>Team Name:
                 <input
-                    id="builder"
+                    id="firstName"
+                    value={name || ''}
+                    type="text"
+                    onChange={(e) => setName(e.target.value)}
+                />
+            </label>
+
+            <label>Captain:
+                <input
+                    id="captain"
                     type="search"
                     onKeyDown={(e) => { if (e.key === 'Enter') findPlayers(e.target.value)}}
                 />
                 <select
-                    id="builder-select"
-                    onChange={(e) => getPlayer(e.target.value)}
+                    id="captain-select"
+                    onChange={(e) => getPlayer(e.target.value, 'captain')}
+                >
+                {
+                    players.map((e) => <option value={e.name}>{e.name}</option>)
+                }
+                </select>
+            </label>
+
+            <label>Player A:
+                <input
+                    id="playerA"
+                    type="search"
+                    onKeyDown={(e) => { if (e.key === 'Enter') findPlayers(e.target.value)}}
+                />
+                <select
+                    id="playerA-select"
+                    onChange={(e) => getPlayer(e.target.value, 'playerA')}
+                >
+                {
+                    players.map((e) => <option value={e.name}>{e.name}</option>)
+                }
+                </select>
+            </label>
+
+            <label>Player B:
+                <input
+                    id="playerB"
+                    type="search"
+                    onKeyDown={(e) => { if (e.key === 'Enter') findPlayers(e.target.value)}}
+                />
+                <select
+                    id="playerB-select"
+                    onChange={(e) => getPlayer(e.target.value, 'playerB')}
+                >
+                {
+                    players.map((e) => <option value={e.name}>{e.name}</option>)
+                }
+                </select>
+            </label>
+
+            <label>Player C:
+                <input
+                    id="playerC"
+                    type="search"
+                    onKeyDown={(e) => { if (e.key === 'Enter') findPlayers(e.target.value)}}
+                />
+                <select
+                    id="playerC-select"
+                    onChange={(e) => getPlayer(e.target.value, 'playerC')}
                 >
                 {
                     players.map((e) => <option value={e.name}>{e.name}</option>)
@@ -140,18 +185,6 @@ export const DeckCreator = () => {
                 </select>
             </label>
             
-            <label>Deck Type:
-                <select
-                    id="deckType"
-                    onChange={(e) => getDeckType(e.target.value || null)}
-                >
-                <option value=""></option>
-                {
-                    deckTypes.map((e) => <option value={e.name}>{e.name}</option>)
-                }
-                </select>
-            </label>
-
             <label>
                 Community:
                 <select
@@ -205,7 +238,6 @@ export const DeckCreator = () => {
                 <select
                     id="placement"
                     onChange={(e) => {
-                        setDisplay(shouldDisplay(e.target.value, event.size))
                         setPlacement(e.target.value)}
                     }
                 >
@@ -214,31 +246,11 @@ export const DeckCreator = () => {
                 }
                 </select>
             </label>
-
-            <label>Display:
-                <select
-                    id="display"
-                    value={display}
-                    onChange={(e) => setDisplay(e.target.value)}
-                >
-                    <option value="true">True</option>
-                    <option value="false">False</option>
-                </select>
-            </label>
-
-            <label>YDK:
-                <input
-                    id="ydk"
-                    type="file"
-                    accept=".ydk"
-                    onChange={(e) => readYDK(e.target.files[0])}
-                />
-            </label>
-
+            
             <div
                 className="admin-button"
                 type="submit"
-                onClick={() => createDeck()}
+                onClick={() => createTeam()}
             >
                 Submit
             </div>

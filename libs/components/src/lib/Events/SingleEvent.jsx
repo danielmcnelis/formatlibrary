@@ -10,6 +10,7 @@ import './SingleEvent.css'
 import { Chart as ChartJS, ArcElement, CategoryScale, BarElement, Title, LinearScale, Tooltip, Legend } from 'chart.js'
 import { Bar, Doughnut } from 'react-chartjs-2'
 import { Helmet } from 'react-helmet'
+import { format } from 'path'
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const playerId = getCookie('playerId')
@@ -75,7 +76,7 @@ export const SingleEvent = () => {
       try {
         const {data} = await axios.get(`/api/events/${id}?isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`)
         setEvent(data.event)
-        setWinner(data.event.player)
+        setWinner(data.event.player || data.event.team)
         setReplays(data.replays)
         setTopDecks(data.topDecks)
         setMetagame(data.metagame)
@@ -88,7 +89,6 @@ export const SingleEvent = () => {
     uploadEvent()
   }, [id, isAdmin, isSubscriber])
 
-    
   if (event === null) return <NotFound/>
   if (!event.name) return <div></div>
   if (!event.format) return <div></div>
@@ -210,21 +210,29 @@ export const SingleEvent = () => {
                     <tr className="single-event-info-1">
                         <td>
                         <div className="single-event-cell">
-                            <div onClick={() => goToPlayer()} className="single-event-winner-link">
-                                <b>Winner: </b>{event.winner}
-                                <img 
-                                    className="single-event-winner-cell-pfp"
-                                    src={
-                                        event.player.discordPfp ? `https://cdn.discordapp.com/avatars/${event.player.discordId}/${event.player.discordPfp}.webp` :
-                                        `https://cdn.formatlibrary.com/images/pfps/${event.player.name}.png`
-                                    }
-                                    onError={(e) => {
-                                        e.target.onerror = null
-                                        e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
-                                    }}
-                                    alt={event.player.name}
-                                />
-                            </div>
+                            {
+                                event.isTeamEvent ? (
+                                    <div className="single-event-cell">
+                                        <b>Winner: </b>{event.winner}
+                                    </div>
+                                ) : (
+                                    <div onClick={() => goToPlayer()} className="single-event-winner-link">
+                                        <b>Winner: </b>{event.winner}
+                                        <img 
+                                            className="single-event-winner-cell-pfp"
+                                            src={
+                                                event.player.discordPfp ? `https://cdn.discordapp.com/avatars/${event.player?.discordId}/${event.player.discordPfp}.webp` :
+                                                `https://cdn.formatlibrary.com/images/pfps/${event.player?.name}.png`
+                                            }
+                                            onError={(e) => {
+                                                e.target.onerror = null
+                                                e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
+                                            }}
+                                            alt={event.player.name}
+                                        />
+                                    </div>
+                                )
+                            }
                             <img 
                                 style={{width:'32px'}} 
                                 src={`https://cdn.formatlibrary.com/images/emojis/1st.png`}
@@ -240,11 +248,17 @@ export const SingleEvent = () => {
                                 src={`https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png`}
                                 alt={event.community}
                             />
-                        </div>   
+                        </div>
                         </td>
-                        <td>   
+                        <td>
                         <div className="single-event-cell">
-                            <div style={{paddingRight:'7px'}}><b>Players:</b> {event.size} 👤</div> 
+                            {
+                                event.isTeamEvent ? (
+                                    <div style={{paddingRight:'7px'}}><b>Teams:</b> {event.size} 👤</div> 
+                                ) : (
+                                    <div style={{paddingRight:'7px'}}><b>Players:</b> {event.size} 👤</div> 
+                                )
+                            }
                         </div>
                         </td>
                     </tr>
@@ -301,7 +315,7 @@ export const SingleEvent = () => {
                     ) : ''
                 }
                 </div>
-                <img className="desktop-only" id="format-icon-large" src={formatArtwork} />
+                <img className="desktop-only" id="format-icon-large" src={formatArtwork} alt={format?.name} />
             </div>
 
             <div className="divider"/>
@@ -314,28 +328,28 @@ export const SingleEvent = () => {
                     alt={event.format.name}
                 />
                 <h2 className="subheading"><b>{event.abbreviation}</b> Bracket:</h2>
-                <img 
+                <img
                     style={{ width:'64px'}} 
                     src={'https://cdn.formatlibrary.com/images/logos/Challonge.png'}
                     alt="challonge"
                 />
                 </div>
                 <img 
-                style={{width:'800px'}}
-                className="bracket" 
-                src={`https://cdn.formatlibrary.com/images/brackets/${event.abbreviation}.png`}
-                onError={(e) => {
-                    e.target.onerror = null
-                    e.target.style.width = "300px"
-                    e.target.src="https://cdn.formatlibrary.com/images/artworks/dig.jpg"
-                }}
-                alt="bracket"
+                    style={{width:'800px'}}
+                    className="bracket" 
+                    src={`https://cdn.formatlibrary.com/images/brackets/${event.abbreviation}.png`}
+                    onError={(e) => {
+                        e.target.onerror = null
+                        e.target.style.width = "300px"
+                        e.target.src="https://cdn.formatlibrary.com/images/artworks/dig.jpg"
+                    }}
+                    alt="bracket"
                 />
                 <a 
-                className="bracket-link"
-                href={event.referenceUrl} 
-                target="_blank"
-                rel="noreferrer"
+                    className="bracket-link"
+                    href={event.referenceUrl} 
+                    target="_blank"
+                    rel="noreferrer"
                 >
                 Click Here for Full Bracket
                 </a>

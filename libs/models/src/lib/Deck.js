@@ -23,6 +23,9 @@ export const Deck = db.define('decks', {
   playerId: {
     type: Sequelize.STRING
   },
+  teamId: {
+    type: Sequelize.INTEGER
+  },
   formatName: {
     type: Sequelize.STRING
   },

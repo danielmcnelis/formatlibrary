@@ -336,6 +336,29 @@ Format.hasMany(Tournament)
 Team.belongsTo(Tournament)
 Tournament.hasMany(Team)
 
+Team.belongsTo(Event)
+Event.hasOne(Team)
+
+Team.belongsTo(Player, {
+    as: 'captain',
+    id: 'captainId'
+})
+
+Team.belongsTo(Player, {
+    as: 'playerA',
+    id: 'playerAId'
+})
+
+Team.belongsTo(Player, {
+    as: 'playerB',
+    id: 'playerBId'
+})
+
+Team.belongsTo(Player, {
+    as: 'playerC',
+    id: 'playerCId'
+})
+
 //TriviaEntry
 TriviaEntry.belongsTo(Player)
 Player.hasMany(TriviaEntry)
