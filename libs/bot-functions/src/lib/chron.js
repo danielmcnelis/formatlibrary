@@ -449,7 +449,28 @@ export const assignTourRoles = async (client) => {
 }
 
 // UPDATE DECK TYPES
-export const updateDeckTypes = async (client) => {
+export const updateDeckThumbs = async () => {
+    const start = Date.now()
+    let b = 0
+    const deckThumbs = await DeckThumb.findAll({ include: DeckType })
+
+    for (let i = 0; i < deckThumbs.length; i++) {
+        const deckThumb = deckThumbs[i]
+        if (deckThumb.name !== deckThumb.deckType.name) {
+            await deckThumb.update({ name: deckThumb.deckType.name })
+            b++
+        } else {
+            continue
+        }
+    }
+
+    console.log(`updated ${b} deckthumbs with new decktypes names`)
+    console.log(`updateDeckThumbs() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return setTimeout(() => updateDeckThumbs(), getMidnightCountdown() + (13 * 60 * 1000))
+}
+
+// UPDATE DECK TYPES
+export const updateDeckTypes = async () => {
     const start = Date.now()
     let b = 0
     const decks = await Deck.findAll({
@@ -482,7 +503,7 @@ export const updateDeckTypes = async (client) => {
 
     console.log(`updated ${b} decks with suggested deck-types`)
     console.log(`updateDeckTypes() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => updateDeckTypes(client), getMidnightCountdown() + (13 * 60 * 1000))
+    return setTimeout(() => updateDeckTypes(), getMidnightCountdown() + (13 * 60 * 1000))
 }
 
 // UPDATE MARKET PRICES
