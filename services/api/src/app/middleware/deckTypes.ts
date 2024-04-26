@@ -79,20 +79,20 @@ export const deckTypesDownload = async (req, res, next) => {
             .split('#extra')[0]
             .split(/[\s]+/)
             .filter((e) => e.length)
-            .map((e) => e.trim())
+            .map((e) => e.trim().replace(/^0+/, ''))
 
         const extraKonamiCodes = deck.ydk
             .split('#extra')[1]
             .split('!side')[0]
             .split(/[\s]+/)
             .filter((e) => e.length)
-            .map((e) => e.trim())
+            .map((e) => e.trim().replace(/^0+/, ''))
 
         const sideKonamiCodes = deck.ydk
             .split('!side')[1]
             .split(/[\s]+/)
             .filter((e) => e.length)
-            .map((e) => e.trim())
+            .map((e) => e.trim().replace(/^0+/, ''))
   
         const main = mainKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
         const extra = extraKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})

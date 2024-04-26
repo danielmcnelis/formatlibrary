@@ -1265,7 +1265,6 @@ export const purgeLocalsAndInternalDecks = async () => {
 export const purgeBetaCards = async () => {
     const start = Date.now()
     let b = 0
-    let c = 0
     let e = 0
     const { data } = await axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?misc=yes')
     for (let i = 0; i < data.data.length; i++) {
@@ -1308,7 +1307,7 @@ export const purgeBetaCards = async () => {
         }
     }
 
-    console.log(`Purged ${b} beta cards, updating ${c} card names, encountered ${e} errors`)
+    console.log(`Purged ${b} beta cards, encountered ${e} errors`)
     console.log(`purgeBetaCards() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
     return setTimeout(() => purgeBetaCards(), (24 * 60 * 60 * 1000))
 }
