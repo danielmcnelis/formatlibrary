@@ -51,7 +51,6 @@ export default {
             .map((e) => e.match)
 
         if (tournament.type === 'double elimination') matches.sort((a, b) => a.suggested_play_order - b.suggested_play_order)
-        console.log('matches', matches)
 
         const replays = []
         let n = 0
@@ -87,9 +86,6 @@ export default {
                 replays.push(`${roundName}: Missing ${emojis.skipper}`)
             }
         }
-
-        console.log('replays', replays)
-        console.log(`**/replay** command message length: ${replays.join('\n').length}`)
 
         if (!replays.length) {
             return await interaction.editReply(`No replays found featuring ${player.globalName || player.discordName} in ${tournament.name}. ${tournament.emoji}`)

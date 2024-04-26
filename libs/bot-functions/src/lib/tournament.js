@@ -8,7 +8,7 @@ import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, String
 import { Deck, Entry, Event, Format, Match, OPCard, Player, Replay, Stats, Server, Team, Tournament } from '@fl/models'
 import { getIssues, getSkillCard } from './deck.js'
 import { createDecks } from './coverage.js'
-import { capitalize, drawDeck, drawOPDeck, generateRandomString, isMod, shuffleArray } from './utility.js'
+import { capitalize, drawDeck, drawOPDeck, generateRandomString, getRoundName, isMod, shuffleArray } from './utility.js'
 import { emojis } from '@fl/bot-emojis'
 
 ////// TOURNAMENT REGISTRATION FUNCTIONS ///////
@@ -396,19 +396,63 @@ export const selectTournament = async (interaction, tournaments) => {
 export const getFilm = async (interaction, tournamentId, userId) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
     const player = await Player.findOne({ where: { discordId: userId }})
+    const server = await Server.findOne({ where: { id: interaction.guildId }})
 
-    const replays = [...await Replay.findAll({
+    const entry = await Entry.findOne({
         where: {
-            [Op.or]: [
-                { winnerId: player.id },
-                { loserId: player.id }
-            ],
             tournamentId: tournament.id,
-            '$tournament.state$': 'underway'
-        },
-        include: Tournament,
-        order: [['createdAt', 'ASC']]
-    })].map((r) => `${r.roundName} ${r.winnerId === player.id ? `(W) vs ${r.loserName}` : `(L) vs ${r.winnerName}`}: <${r.url}>`)
+            playerId: player.id
+        }
+    })
+
+    const entryCount = await Entry.count({
+        where: {
+            tournamentId: tournament.id
+        }
+    })
+
+    if (!entry) return await interaction.editReply({ content: `That user is not in ${tournament.name}.`})
+
+    const matches = [...await getMatches(server, tournament.id)]
+        .filter((e) => e.match?.state === 'complete' && e.match?.player1_id === entry.participantId || e.match?.player2_id === entry.participantId)
+        .map((e) => e.match)
+
+    if (tournament.type === 'double elimination') matches.sort((a, b) => a.suggested_play_order - b.suggested_play_order)
+
+    const replays = []
+    let n = 0
+
+    for (let i = 0; i < matches.length; i++) {
+        const match = matches[i]
+        const roundName = getRoundName(tournament, match.round, entryCount)
+        n++
+
+        const replay = await Replay.findOne({
+            where: {
+                [Op.or]: [
+                    { winnerId: player.id },
+                    { loserId: player.id }
+                ],
+                roundInt: match.round,
+                tournamentId: tournament.id,
+                '$tournament.state$': 'underway'
+            },
+            include: Tournament
+        })
+
+        if ((tournament.type === 'swiss' || tournament.type === 'round robin') && match.round !== n) {
+            replays.push(`Round ${n}: Bye ${emojis.casablanca}`)
+            n++
+        }
+        
+        if (replay) {
+            replays.push(`${replay.roundName || roundName}: ${replay.winnerId === player.id ? `(W) vs ${replay.loserName}` : `(L) vs ${replay.winnerName}`}: <${replay.url}>`)
+        } else if (match.forfeited === true || match.scores_csv === '0-0') {
+            replays.push(`${roundName}: No-Show ${emojis.sippin}`)
+        } else {
+            replays.push(`${roundName}: Missing ${emojis.skipper}`)
+        }
+    }
 
     if (!replays.length) {
         return await interaction.editReply(`No replays found featuring ${player.globalName || player.discordName} in ${tournament.name}. ${tournament.emoji}`)
