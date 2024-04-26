@@ -271,6 +271,7 @@ export const deckTypesDownload = async (req, res, next) => {
 
   
 export const deckTypesSummary = async (req, res, next) => {
+    console.log('deckTypesSummary()')
   try {
     const deckType = await DeckType.findOne({
         where: {
@@ -281,6 +282,7 @@ export const deckTypesSummary = async (req, res, next) => {
     let format
 
     if (req.query.format) {
+        console.log('req.query.format', req.query.format)
         format = await Format.findOne({
             where: {
                 name: { [Op.iLike]: req.query.format.replaceAll('-', '_') }
@@ -294,6 +296,8 @@ export const deckTypesSummary = async (req, res, next) => {
                 primary: true
             }
         })
+        console.log('!!deckThumb', !!deckThumb)
+        console.log('deckThumb?.formatId', deckThumb?.formatId)
 
         format = await Format.findOne({
             where: {
@@ -316,7 +320,9 @@ export const deckTypesSummary = async (req, res, next) => {
     })
 
     const showExtra = format.date >= '2008-08-05' || !format.date
+    console.log('showExtra', showExtra)
     const total = await Deck.count({ where: { formatId: format.id }})
+    console.log('total', total)
 
     const data = {
       percent: Math.round((decks.length / total) * 100) || '<1',
@@ -337,90 +343,95 @@ export const deckTypesSummary = async (req, res, next) => {
     }
 
     for (let i = 0; i < decks.length; i++) {
-      data.analyzed++
-      const deck = decks[i]
+        try {
 
-      const mainKonamiCodes = deck.ydk
-        ?.split('#main')[1]
-        ?.split('#extra')[0]
-        ?.split(/[\s]+/)
-        ?.filter((e) => e.length)
-        ?.map((e) => e.trim().replace(/^0+/, ''))
-
-      const extraKonamiCodes = showExtra
-        ? deck.ydk
-            ?.split('#extra')[1]
-            ?.split('!side')[0]
-            ?.split(/[\s]+/)
-            ?.filter((e) => e.length)
-            ?.map((e) => e.trim().replace(/^0+/, ''))
-        : []
-        
-      const sideKonamiCodes = deck.ydk
-        ?.split('!side')[1]
-        ?.split(/[\s]+/)
-        ?.filter((e) => e.length)
-        ?.map((e) => e.trim().replace(/^0+/, ''))
-
-      const main = mainKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
-      const extra = showExtra
-        ? extraKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
-        : {}
-      const side = sideKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
-
-      Object.entries(main).forEach((e) => {
-        const konamiCode = e[0]
-        const count = e[1]
-        if (data.main[konamiCode]) {
-          data.main[konamiCode][count] += 1
-          data.main[konamiCode].decks += 1 
-          data.main[konamiCode].total += count
-        } else {
-          data.main[konamiCode] = {
-            total: count,
-            decks: 1,
-            1: count === 1 ? 1 : 0,
-            2: count === 2 ? 1 : 0,
-            3: count === 3 ? 1 : 0
-          }
+            data.analyzed++
+            const deck = decks[i]
+      
+            const mainKonamiCodes = deck.ydk
+              ?.split('#main')[1]
+              ?.split('#extra')[0]
+              ?.split(/[\s]+/)
+              ?.filter((e) => e.length)
+              ?.map((e) => e.trim().replace(/^0+/, ''))
+      
+            const extraKonamiCodes = showExtra
+              ? deck.ydk
+                  ?.split('#extra')[1]
+                  ?.split('!side')[0]
+                  ?.split(/[\s]+/)
+                  ?.filter((e) => e.length)
+                  ?.map((e) => e.trim().replace(/^0+/, ''))
+              : []
+              
+            const sideKonamiCodes = deck.ydk
+              ?.split('!side')[1]
+              ?.split(/[\s]+/)
+              ?.filter((e) => e.length)
+              ?.map((e) => e.trim().replace(/^0+/, ''))
+      
+            const main = mainKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
+            const extra = showExtra
+              ? extraKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
+              : {}
+            const side = sideKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
+      
+            Object.entries(main).forEach((e) => {
+              const konamiCode = e[0]
+              const count = e[1]
+              if (data.main[konamiCode]) {
+                data.main[konamiCode][count] += 1
+                data.main[konamiCode].decks += 1 
+                data.main[konamiCode].total += count
+              } else {
+                data.main[konamiCode] = {
+                  total: count,
+                  decks: 1,
+                  1: count === 1 ? 1 : 0,
+                  2: count === 2 ? 1 : 0,
+                  3: count === 3 ? 1 : 0
+                }
+              }
+            })
+      
+            Object.entries(extra).forEach((e) => {
+              const konamiCode = e[0]
+              const count = e[1]
+              if (data.extra[konamiCode]) {
+                data.extra[konamiCode][count] += 1
+                data.extra[konamiCode].decks += 1
+                data.extra[konamiCode].total += count
+              } else {
+                data.extra[konamiCode] = {
+                  total: count,
+                  decks: 1,
+                  1: count === 1 ? 1 : 0,
+                  2: count === 2 ? 1 : 0,
+                  3: count === 3 ? 1 : 0
+                }
+              }
+            })
+      
+            Object.entries(side).forEach((e) => {
+              const konamiCode = e[0]
+              const count = e[1]
+              if (data.side[konamiCode]) {
+                data.side[konamiCode][count] += 1
+                data.side[konamiCode].decks += 1
+                data.side[konamiCode].total += count
+              } else {
+                data.side[konamiCode] = {
+                  total: count,
+                  decks: 1,
+                  1: count === 1 ? 1 : 0,
+                  2: count === 2 ? 1 : 0,
+                  3: count === 3 ? 1 : 0
+                }
+              }
+            })
+        } catch (err) {
+            console.log(err)
         }
-      })
-
-      Object.entries(extra).forEach((e) => {
-        const konamiCode = e[0]
-        const count = e[1]
-        if (data.extra[konamiCode]) {
-          data.extra[konamiCode][count] += 1
-          data.extra[konamiCode].decks += 1
-          data.extra[konamiCode].total += count
-        } else {
-          data.extra[konamiCode] = {
-            total: count,
-            decks: 1,
-            1: count === 1 ? 1 : 0,
-            2: count === 2 ? 1 : 0,
-            3: count === 3 ? 1 : 0
-          }
-        }
-      })
-
-      Object.entries(side).forEach((e) => {
-        const konamiCode = e[0]
-        const count = e[1]
-        if (data.side[konamiCode]) {
-          data.side[konamiCode][count] += 1
-          data.side[konamiCode].decks += 1
-          data.side[konamiCode].total += count
-        } else {
-          data.side[konamiCode] = {
-            total: count,
-            decks: 1,
-            1: count === 1 ? 1 : 0,
-            2: count === 2 ? 1 : 0,
-            3: count === 3 ? 1 : 0
-          }
-        }
-      })
     }
 
     const main = Object.entries(data.main)
@@ -509,6 +520,7 @@ export const deckTypesSummary = async (req, res, next) => {
       .filter((v: any) => v.card.category === 'Trap')
       .sort((a: any, b: any) => b.decks - a.decks)
 
+      console.log(`res.json(data)`)
     res.json(data)
   } catch (err) {
     console.log(err)
