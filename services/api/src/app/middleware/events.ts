@@ -232,12 +232,12 @@ export const eventsId = async (req, res, next) => {
         const main = ydk
           .split('#extra')[0]
           .split(/[\s]+/)
-          .filter((el) => !el.includes('by') && !el.includes('created') && el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '')
+          .filter((el) => !el.includes('by') && !el.includes('created') &&  el.charAt(0) !== '.' && el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '')
         mainDeckCards.push(...main)
         const side = ydk
           .split('!side')[1]
           .split(/[\s]+/)
-          .filter((el) => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '')
+          .filter((el) => && el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '')
         sideDeckCards.push(...side)
       }
 
@@ -248,7 +248,8 @@ export const eventsId = async (req, res, next) => {
 
       for (let i = 0; i < topMainDeckFrequencies.length; i++) {
         const e = topMainDeckFrequencies[i]
-        const konamiCode = e[0]
+        let konamiCode = e[0]
+        while (konamiCode.length < 8) konamiCode = '0' + konamiCode
         try {
           const card = await Card.findOne({
             where: {
@@ -275,7 +276,8 @@ export const eventsId = async (req, res, next) => {
 
       for (let i = 0; i < topSideDeckFrequencies.length; i++) {
         const e = topSideDeckFrequencies[i]
-        const konamiCode = e[0]
+        let konamiCode = e[0]
+        while (konamiCode.length < 8) konamiCode = '0' + konamiCode
         try {
           const card = await Card.findOne({
             where: {
