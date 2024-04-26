@@ -50,7 +50,6 @@ export const Router = () => {
 					<Route path="/builder/:id" element=<Page element=<Builder /> /> />
 					<Route path="/deck-builder" element=<Page element=<Builder /> /> />
 					<Route path="/pack-simulator" element=<Page element=<PackSimulator /> /> />
-					<Route path="/text-to-ydk" element=<Page element=<YDKCreator /> /> />
 					<Route path="/settings" element=<Page element=<Settings /> /> />
 					<Route path="/cube-maker" element=<Page element=<CubeMaker /> /> />
 					<Route path="/rated-lobby" element=<Page element=<RatedLobby /> /> />
