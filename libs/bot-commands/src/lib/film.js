@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Replay, Server, Tournament } from '@fl/models'
-import { getMatches, hasPartnerAccess, selectTournament } from '@fl/bot-functions'
+import { getMatches, getRoundName, hasPartnerAccess, selectTournament } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
 
@@ -38,19 +38,29 @@ export default {
             }
         })
 
+        const entryCount = await Entry.count({
+            where: {
+                tournamentId: tournament.id
+            }
+        })
+
         if (!entry) return await interaction.editReply({ content: `That user is not in ${tournament.name}.`})
 
         const matches = [...await getMatches(server, tournament.id)]
             .filter((e) => e.match?.state === 'complete' && e.match?.player1_id === entry.participantId || e.match?.player2_id === entry.participantId)
             .map((e) => e.match)
-            .sort((a, b) => b.suggested_play_order - a.suggested_play_order)
+            .sort((a, b) => a.suggested_play_order - b.suggested_play_order)
 
-        console.log('matches')
+        console.log('matches', matches)
 
         const replays = []
+        let n = 0
 
         for (let i = 0; i < matches.length; i++) {
             const match = matches[i]
+            const roundName = getRoundName(tournament, match.round, entryCount)
+            n++
+
             const replay = await Replay.findOne({
                 where: {
                     [Op.or]: [
@@ -63,19 +73,20 @@ export default {
                 },
                 include: Tournament
             })
-
+            
             if (replay) {
-                replays.push(replay)
+                replays.push(`${replay.roundName || roundName} ${replay.winnerId === player.id ? `(W) vs ${replay.loserName}` : `(L) vs ${replay.winnerName}`}: <${replay.url}>`)
             } else if (match.forfeited === true || match.scores_csv === '0-0') {
-                replays.push('no-show')
+                replays.push(`${roundName}: No-Show ${emojis.sippin}`)
+            } else if ((tournament.type === 'swiss' || tournament.type === 'round robin') && match.round !== n) {
+                replays.push(`${roundName}: Bye ${emojis.casablanca}`)
             } else {
-                replays.push('missing')
+                replays.push(`${roundName}: Missing ${emojis.skipper}`)
             }
         }
 
-        const results = replays.map((r) => {
-            return `${r.roundName || `Round ${r.roundInt}`} ${r.winnerId === player.id ? `(W) vs ${r.loserName}` : `(L) vs ${r.winnerName}`}: <${r.url}>`
-        })
+        console.log('replays', replays)
+        console.log(`**/replay** command message length: ${replays.join('\n').length()}`)
 
         if (!replays.length) {
             return await interaction.editReply(`No replays found featuring ${player.globalName || player.discordName} in ${tournament.name}. ${tournament.emoji}`)
