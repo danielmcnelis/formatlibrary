@@ -128,7 +128,7 @@ export const SingleEvent = () => {
   } : {}
 
   const topMainDeckCardsData = metagame.topMainDeckCards?.length ? {
-    labels: metagame.topMainDeckCards.map((e) => e[0]?.length <= 30 ? e[0] : e[0].slice(0, 30).split(' ').slice(0, -1).join(' ')),
+    labels: metagame.topMainDeckCards.map((e) => e[0] && e[0].length <= 30 ? e[0] : e[0].slice(0, 30).split(' ').slice(0, -1).join(' ')),
     datasets: [
       {
         label: 'Main Deck Count',
@@ -139,7 +139,7 @@ export const SingleEvent = () => {
   } : {}
  
   const topSideDeckCardsData = metagame.topSideDeckCards?.length ? {
-    labels: metagame.topSideDeckCards.map((e) => e[0]?.length <= 30 ? e[0] : e[0].slice(0, 30).split(' ').slice(0, -1).join(' ')),
+    labels: metagame.topSideDeckCards.map((e) => e[0] && e[0].length <= 30 ? e[0] : e[0].slice(0, 30).split(' ').slice(0, -1).join(' ')),
     datasets: [
       {
         label: 'Side Deck Count',
