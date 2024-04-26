@@ -27,6 +27,11 @@ export const SingleEvent = () => {
     topMainDeckCards: [],
     topSideDeckCards: []
   })
+  console.log('event', event)
+  console.log('replays', replays)
+  console.log('topDecks', topDecks)
+  console.log('winner', winner)
+  console.log('metagame', metagame)
 
   const { id } = useParams()
   const navigate = useNavigate()
@@ -100,30 +105,30 @@ export const SingleEvent = () => {
       '#d65180', '#307a3a', '#735645', '#fc8c1c', '#8dc276', '#c4495f', 
   ]
 
-  const deckTypeData = metagame.deckTypes.length ? {
+  const deckTypeData = metagame.deckTypes?.length ? {
     labels: metagame.deckTypes.map((e) => e[0]),
     datasets: [
       {
         data: metagame.deckTypes.map((e) => e[1]),
-        backgroundColor: colors.slice(0, metagame.deckTypes.length),
+        backgroundColor: colors.slice(0, metagame.deckTypes?.length),
         borderWidth: 1,
       },
     ]
   } : {}
 
-  const deckCategoryData = metagame.deckCategories.length ? {
+  const deckCategoryData = metagame.deckCategories?.length ? {
     labels: metagame.deckCategories.map((e) => e[0]),
     datasets: [
       {
         data: metagame.deckCategories.map((e) => e[1]),
-        backgroundColor: colors.slice(0, metagame.deckCategories.length),
+        backgroundColor: colors.slice(0, metagame.deckCategories?.length),
         borderWidth: 1,
       },
     ]
   } : {}
 
-  const topMainDeckCardsData = metagame.topMainDeckCards.length ? {
-    labels: metagame.topMainDeckCards.map((e) => e[0].length <= 30 ? e[0] : e[0].slice(0, 30).split(' ').slice(0, -1).join(' ')),
+  const topMainDeckCardsData = metagame.topMainDeckCards?.length ? {
+    labels: metagame.topMainDeckCards.map((e) => e[0]?.length <= 30 ? e[0] : e[0].slice(0, 30).split(' ').slice(0, -1).join(' ')),
     datasets: [
       {
         label: 'Main Deck Count',
@@ -133,8 +138,8 @@ export const SingleEvent = () => {
     ]
   } : {}
  
-  const topSideDeckCardsData = metagame.topSideDeckCards.length ? {
-    labels: metagame.topSideDeckCards.map((e) => e[0].length <= 30 ? e[0] : e[0].slice(0, 30).split(' ').slice(0, -1).join(' ')),
+  const topSideDeckCardsData = metagame.topSideDeckCards?.length ? {
+    labels: metagame.topSideDeckCards.map((e) => e[0]?.length <= 30 ? e[0] : e[0].slice(0, 30).split(' ').slice(0, -1).join(' ')),
     datasets: [
       {
         label: 'Side Deck Count',
@@ -293,21 +298,21 @@ export const SingleEvent = () => {
                     <a href="#bracket">Bracket</a>
                 </li>
                 {
-                    topDecks.length ? (
+                    topDecks?.length ? (
                     <li>
                         <a href="#top-decks">Top Decks</a>
                     </li>
                     ) : ''
                 }
                 {
-                    metagame.deckTypes.length ? (
+                    metagame.deckTypes?.length ? (
                     <li>
                     <a href="#metagame-stats">Metagame Stats</a>
                     </li>
                     ) : ''
                 }
                 {
-                    replays.length ? (
+                    replays?.length ? (
                     <li>
                         <a href="#replays">Replays</a>
                     </li>
@@ -355,7 +360,7 @@ export const SingleEvent = () => {
             </div>
             <div className="divider"/>
             {
-                topDecks.length ? (
+                topDecks?.length ? (
                 <div id="top-decks">
                     <div className="subcategory-title-flexbox">
                     <img 
@@ -363,7 +368,7 @@ export const SingleEvent = () => {
                         src={`https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png`}
                         alt={event.format.name}
                     />
-                    <h2 className="subheading"><b>{event.abbreviation}</b> {topDecks.length === 1 ? 'Winning Deck' : (isSubscriber || isAdmin) ? `Decks` : `Top ${topDecks.length} Decks`}:</h2>
+                    <h2 className="subheading"><b>{event.abbreviation}</b> {topDecks?.length === 1 ? 'Winning Deck' : (isSubscriber || isAdmin) ? `Decks` : `Top ${topDecks?.length} Decks`}:</h2>
                     <img 
                         style={{ height:'64px'}} 
                         src={'https://cdn.formatlibrary.com/images/emojis/deckbox.png'}
@@ -391,7 +396,7 @@ export const SingleEvent = () => {
             }
             <div className="divider"/>  
             {
-                metagame.deckTypes.length ? (
+                metagame.deckTypes?.length ? (
                 <div id="metagame-stats">
                     <div className="subcategory-title-flexbox">
                     <img 
@@ -424,7 +429,7 @@ export const SingleEvent = () => {
                         <br/>
                         <Doughnut 
                         className="doughnut"
-                        height={parseInt(500 - (20 * Math.ceil(metagame.deckTypes.length / 4)))}
+                        height={parseInt(500 - (20 * Math.ceil(metagame.deckTypes?.length / 4)))}
                         width="500px"
                         data={deckCategoryData}
                         options={doughnutOptions}
@@ -445,7 +450,7 @@ export const SingleEvent = () => {
                         />
                     </div>
                     {
-                        metagame.topSideDeckCards.length ? (
+                        metagame.topSideDeckCards?.length ? (
                             <div className="bargraph-container">
                                 <h2>Top Side Deck Cards</h2>
                                 <br/>
@@ -465,7 +470,7 @@ export const SingleEvent = () => {
             }
             <div className="divider"/>
             {
-                replays.length ? (
+                replays?.length ? (
                 <div id="replays">
                     <div className="subcategory-title-flexbox">
                     <img 
