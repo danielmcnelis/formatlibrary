@@ -314,7 +314,7 @@ export const SingleEvent = () => {
                     ) : ''
                 }
                 </div>
-                <img className="desktop-only" id="format-icon-large" src={formatArtwork} alt={format?.name} />
+                <img className="desktop-only" id="format-icon-large" src={formatArtwork} alt={event.format?.name} />
             </div>
 
             <div className="divider"/>
@@ -323,7 +323,7 @@ export const SingleEvent = () => {
                 <div className="subcategory-title-flexbox">
                 <img 
                     style={{ width:'64px'}} 
-                    src={`https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png`}
+                    src={`https://cdn.formatlibrary.com/images/emojis/${event.format?.icon}.png`}
                     alt={event.format.name}
                 />
                 <h2 className="subheading"><b>{event.abbreviation}</b> Bracket:</h2>
