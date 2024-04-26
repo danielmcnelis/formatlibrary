@@ -124,6 +124,7 @@ export const emojis = {
     'Vegas (April 2014) Format': "<:Duelist:970372450535763978>",
     vince: "<a:vince:832443892023558164>",
     vincent: "<:vincent:897001609471594516>",
+    waah: "<:waah:1174945171973087283>",
     Warrior: "<:Warrior:935749315849228320>",
     WATER: "<:WATER:935749315329146930>",
     WIND: "<:WIND:935749315064914020>",

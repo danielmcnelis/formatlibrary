@@ -84,7 +84,7 @@ export default {
                 if (match.winner_id === entry.participantId) {
                     replays.push(`${roundName}: (W) No-Show ${emojis.sippin}`)
                 } else {
-                    replays.push(`${roundName}: (L) No-Show ${emojis.sippin}`)
+                    replays.push(`${roundName}: (L) No-Show ${emojis.waah}`)
                 }
             } else {
                 replays.push(`${roundName}: Missing ${emojis.skipper}`)
