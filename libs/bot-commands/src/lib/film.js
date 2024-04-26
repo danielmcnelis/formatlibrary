@@ -86,7 +86,7 @@ export default {
         }
 
         console.log('replays', replays)
-        console.log(`**/replay** command message length: ${(replays.join('\n')).length()}`)
+        console.log(`**/replay** command message length: ${replays.join('\n').length}`)
 
         if (!replays.length) {
             return await interaction.editReply(`No replays found featuring ${player.globalName || player.discordName} in ${tournament.name}. ${tournament.emoji}`)
