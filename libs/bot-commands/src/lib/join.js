@@ -75,7 +75,7 @@ export default {
 
         const data = format.category === 'OP' ? await getOPDeckList(interaction.member, player) :
             format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
-            await getDeckList(interaction.member, player, format)
+            await getDeckList(interaction.member, player, format, false, tournament.isUnranked)
 
         if (!data) return
 

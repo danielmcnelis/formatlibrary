@@ -78,7 +78,7 @@ export default {
 
         const data = format.category === 'OP' ? await getOPDeckList(interaction.member, player, true) :
             format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
-            await getDeckList(interaction.member, player, format, true)
+            await getDeckList(interaction.member, player, format, true, tournament.isUnranked)
 
         if (!data) return await interaction.editReplay({ content: `Error processing deck list.` })
 

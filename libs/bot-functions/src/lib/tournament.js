@@ -54,7 +54,7 @@ export const askForSimName = async (member, player, simulator, override = false,
 }
 
 //GET DECK LIST
-export const getDeckList = async (member, player, format, override = false) => {            
+export const getDeckList = async (member, player, format, override = false, unranked = false) => {            
     const filter = m => m.author.id === member.user.id
     const pronoun = override ? `${player.globalName || player.discordName}'s` : 'your'
     const message = await member.send({ content: `Please upload a **__YDK File__** for ${pronoun} tournament deck.`}).catch((err) => console.log(err))
@@ -87,7 +87,10 @@ export const getDeckList = async (member, player, format, override = false) => {
                 if (override) {
                     member.send({ content: `Thanks, ${member.user.username}, I saved a copy of ${pronoun} deck. ${emojis.legend}`}).catch((err) => console.log(err))
                     return { url, ydk }
-                } else if (format.category !== 'TCG' && format.category !== 'Speed') {
+                } else if (unranked) {
+                    member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck has been saved. ${emojis.legend}\n\nPlease note: Decks for unranked tournaments are not checked for legality. Be sure your deck is legal for this tournament!`}).catch((err) => console.log(err))
+                    return { url, ydk }
+                } else if (format.category !== 'TCG') {
                     member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck has been saved. ${emojis.legend}\n\nPlease note: Decks for ${format.category} Formats cannot be verified at this time. Be sure your deck is legal for this tournament!`}).catch((err) => console.log(err))
                     return { url, ydk }
                 } else if (illegalCards.length || forbiddenCards.length || limitedCards.length || semiLimitedCards.length) {
@@ -586,7 +589,7 @@ export const joinTournament = async (interaction, tournamentId) => {
     if (!simName) return
 
     const data = tournament.format?.category === 'OP' || format?.category === 'OP' ? await getOPDeckList(interaction.member, player) :
-        await getDeckList(interaction.member, player, tournament.format || format)
+        await getDeckList(interaction.member, player, tournament.format || format, false, tournament.isUnranked)
 
     if (!data) return
 
@@ -758,7 +761,7 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
     if (!simName) return
 
     const data = tournament.format?.category === 'OP' ? await getOPDeckList(interaction.member, player, true) :
-        await getDeckList(interaction.member, player, tournament.format, true)
+        await getDeckList(interaction.member, player, tournament.format, true, tournament.isUnranked)
 
     if (!data) return
 

@@ -20,7 +20,6 @@ export const UserPortal = () => {
                     <PortalButton label="Pack Simulator" to="/pack-simulator" icon="/artworks/LOB.jpg" />
                     <PortalButton label="Draft App" to="/start-draft" icon="/emojis/cube.png" />
                     <PortalButton label="Sealed App" to="/start-sealed" icon="/artworks/back.png" />
-                    <PortalButton label="Text to YDK" to="/text-to-ydk" icon="/emojis/ydk.png" />
                 </div>
             </div>
         </>
