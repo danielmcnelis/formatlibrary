@@ -309,6 +309,7 @@ export const decksPopular = async (req, res, next) => {
     const decks = await Deck.findAll({
       where: {
         formatId: format.id,
+        origin: 'event',
         type: { [Op.not]: 'Other' }
       },
       attributes: ['id', 'type']

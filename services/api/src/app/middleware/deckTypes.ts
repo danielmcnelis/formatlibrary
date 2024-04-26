@@ -271,7 +271,6 @@ export const deckTypesDownload = async (req, res, next) => {
 
   
 export const deckTypesSummary = async (req, res, next) => {
-    console.log('deckTypesSummary()')
   try {
     const deckType = await DeckType.findOne({
         where: {
@@ -282,7 +281,6 @@ export const deckTypesSummary = async (req, res, next) => {
     let format
 
     if (req.query.format) {
-        console.log('req.query.format', req.query.format)
         format = await Format.findOne({
             where: {
                 name: { [Op.iLike]: req.query.format.replaceAll('-', '_') }
@@ -296,9 +294,7 @@ export const deckTypesSummary = async (req, res, next) => {
                 primary: true
             }
         })
-        console.log('!!deckThumb', !!deckThumb)
-        console.log('deckThumb?.formatId', deckThumb?.formatId)
-
+        
         format = await Format.findOne({
             where: {
                 id: deckThumb.formatId
@@ -306,8 +302,6 @@ export const deckTypesSummary = async (req, res, next) => {
             attributes: ['id', 'name', 'banlist', 'date', 'icon']
         })
     }
-
-    console.log('format', format)
 
     const decks = await Deck.findAll({
         where: {
@@ -320,9 +314,7 @@ export const deckTypesSummary = async (req, res, next) => {
     })
 
     const showExtra = format.date >= '2008-08-05' || !format.date
-    console.log('showExtra', showExtra)
-    const total = await Deck.count({ where: { formatId: format.id }})
-    console.log('total', total)
+    const total = await Deck.count({ where: { origin: 'event', formatId: format.id }})
 
     const data = {
       percent: Math.round((decks.length / total) * 100) || '<1',
@@ -354,6 +346,7 @@ export const deckTypesSummary = async (req, res, next) => {
               ?.split(/[\s]+/)
               ?.filter((e) => e.length)
               ?.map((e) => e.trim().replace(/^0+/, ''))
+              || []
       
             const extraKonamiCodes = showExtra
               ? deck.ydk
@@ -369,6 +362,7 @@ export const deckTypesSummary = async (req, res, next) => {
               ?.split(/[\s]+/)
               ?.filter((e) => e.length)
               ?.map((e) => e.trim().replace(/^0+/, ''))
+              || []
       
             const main = mainKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
             const extra = showExtra
