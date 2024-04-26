@@ -76,10 +76,11 @@ export default {
 
             if ((tournament.type === 'swiss' || tournament.type === 'round robin') && match.round !== n) {
                 replays.push(`${roundName}: Bye ${emojis.casablanca}`)
+                n++
             }
             
             if (replay) {
-                replays.push(`${replay.roundName || roundName} ${replay.winnerId === player.id ? `(W) vs ${replay.loserName}` : `(L) vs ${replay.winnerName}`}: <${replay.url}>`)
+                replays.push(`${replay.roundName || roundName}: ${replay.winnerId === player.id ? `(W) vs ${replay.loserName}` : `(L) vs ${replay.winnerName}`}: <${replay.url}>`)
             } else if (match.forfeited === true || match.scores_csv === '0-0') {
                 replays.push(`${roundName}: No-Show ${emojis.sippin}`)
             } else {
