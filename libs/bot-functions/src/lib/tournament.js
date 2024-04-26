@@ -448,7 +448,11 @@ export const getFilm = async (interaction, tournamentId, userId) => {
         if (replay) {
             replays.push(`${replay.roundName || roundName}: ${replay.winnerId === player.id ? `(W) vs ${replay.loserName}` : `(L) vs ${replay.winnerName}`}: <${replay.url}>`)
         } else if (match.forfeited === true || match.scores_csv === '0-0') {
-            replays.push(`${roundName}: No-Show ${emojis.sippin}`)
+            if (match.winner_id === entry.participantId) {
+                replays.push(`${roundName}: (W) No-Show ${emojis.sippin}`)
+            } else {
+                replays.push(`${roundName}: (L) No-Show ${emojis.sippin}`)
+            }
         } else {
             replays.push(`${roundName}: Missing ${emojis.skipper}`)
         }
