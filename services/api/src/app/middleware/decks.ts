@@ -34,7 +34,7 @@ export const decksReadYdk = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'id', 'konamiCode', 'ypdId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id', 'konamiCode', 'ypdId', 'sortPriority'],
             })
 
             if (!card) continue
@@ -48,7 +48,7 @@ export const decksReadYdk = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'id', 'konamiCode', 'ypdId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id', 'konamiCode', 'ypdId', 'sortPriority'],
             })
 
             if (!card) continue
@@ -62,7 +62,7 @@ export const decksReadYdk = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'id', 'konamiCode', 'ypdId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id', 'konamiCode', 'ypdId', 'sortPriority'],
             })
             
             if (!card) continue
@@ -222,7 +222,7 @@ export const decksBuilderId = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'id',  'konamiCode', 'ypdId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id',  'konamiCode', 'ypdId', 'sortPriority'],
             })
 
             if (!card) continue
@@ -236,7 +236,7 @@ export const decksBuilderId = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'id',  'konamiCode', 'ypdId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id',  'konamiCode', 'ypdId', 'sortPriority'],
             })
 
             if (!card) continue
@@ -250,7 +250,7 @@ export const decksBuilderId = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'id',  'konamiCode', 'ypdId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id',  'konamiCode', 'ypdId', 'sortPriority'],
             })
             
             if (!card) continue
@@ -825,7 +825,7 @@ export const decksId = async (req, res, next) => {
         where: {
           konamiCode: konamiCode
         },
-        attributes: ['name', 'id', 'ypdId', 'sortPriority']
+        attributes: ['name', 'cleanName', 'id', 'ypdId', 'sortPriority']
       })
 
       if (!card) continue
@@ -855,7 +855,7 @@ export const decksId = async (req, res, next) => {
         where: {
           konamiCode: konamiCode
         },
-        attributes: ['name', 'id', 'ypdId', 'sortPriority']
+        attributes: ['name', 'cleanName', 'id', 'ypdId', 'sortPriority']
       })
 
       if (!card) continue
@@ -871,7 +871,7 @@ export const decksId = async (req, res, next) => {
         where: {
           konamiCode: konamiCode
         },
-        attributes: ['name', 'id', 'ypdId', 'sortPriority']
+        attributes: ['name', 'cleanName', 'id', 'ypdId', 'sortPriority']
       })
 
       if (!card) continue

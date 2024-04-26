@@ -167,7 +167,7 @@ export const deckTypesDownload = async (req, res, next) => {
               where: {
                 konamiCode
               },
-              attributes: ['id', 'name', 'category', 'ypdId', 'konamiCode', 'sortPriority']
+              attributes: ['id', 'name', 'cleanName', 'category', 'ypdId', 'konamiCode', 'sortPriority']
             })) || {}
   
           data.main[e[0]].card = card
@@ -188,7 +188,7 @@ export const deckTypesDownload = async (req, res, next) => {
               where: {
                 konamiCode
               },
-              attributes: ['id', 'name', 'category', 'ypdId', 'konamiCode', 'sortPriority']
+              attributes: ['id', 'name', 'cleanName', 'category', 'ypdId', 'konamiCode', 'sortPriority']
             })) || {}
   
           data.extra[e[0]].card = card
@@ -209,7 +209,7 @@ export const deckTypesDownload = async (req, res, next) => {
               where: {
                 konamiCode
               },
-              attributes: ['id', 'name', 'category', 'ypdId', 'konamiCode', 'sortPriority']
+              attributes: ['id', 'name', 'cleanName', 'category', 'ypdId', 'konamiCode', 'sortPriority']
             })) || {}
   
           data.side[e[0]].card = card
@@ -435,7 +435,7 @@ export const deckTypesSummary = async (req, res, next) => {
             where: {
               konamiCode
             },
-            attributes: ['id', 'name', 'category', 'ypdId']
+            attributes: ['id', 'name', 'cleanName', 'category', 'ypdId']
           })) || {}
 
         data.main[e[0]].card = card
@@ -456,7 +456,7 @@ export const deckTypesSummary = async (req, res, next) => {
             where: {
               konamiCode
             },
-            attributes: ['id', 'name', 'category', 'ypdId']
+            attributes: ['id', 'name', 'cleanName', 'category', 'ypdId']
           })) || {}
 
         data.extra[e[0]].card = card
@@ -477,7 +477,7 @@ export const deckTypesSummary = async (req, res, next) => {
             where: {
               konamiCode
             },
-            attributes: ['id', 'name', 'category', 'ypdId']
+            attributes: ['id', 'name', 'cleanName', 'category', 'ypdId']
           })) || {}
 
         data.side[e[0]].card = card

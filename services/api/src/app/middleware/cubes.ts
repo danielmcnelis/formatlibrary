@@ -104,7 +104,7 @@ export const cubesReadYdk = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'id', 'konamiCode', 'ypdId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id', 'konamiCode', 'ypdId', 'sortPriority'],
             })
 
             if (!card) continue
