@@ -1377,132 +1377,193 @@ import { parse } from 'csv-parse'
 // })()
 
 
-;(async () => {
-    {
-        const rulings = await Ruling.findAll({
-            where: {
-                formatName: {[Op.or]: ['Stein', 'Trooper', 'Perfect Circle', 'DAD Return', 'Gladiator', 'TeleDAD', 'Cat']}
-            }
-        })
+// ;(async () => {
+//     {
+//         const rulings = await Ruling.findAll({
+//             where: {
+//                 formatName: {[Op.or]: ['Stein', 'Trooper', 'Perfect Circle', 'DAD Return', 'Gladiator', 'TeleDAD', 'Cat']}
+//             }
+//         })
      
-        for (let j = 0; j < rulings.length; j++) {
-            await rulings[j].destroy()
-        }
-    }
+//         for (let j = 0; j < rulings.length; j++) {
+//             await rulings[j].destroy()
+//         }
+//     }
 
-    {
-        const cardIds = [...await Ruling.findAll({
-            where: {
-                formatName: 'Edison'
-            }
-        })].map((r) => r.cardId)
+//     {
+//         const cardIds = [...await Ruling.findAll({
+//             where: {
+//                 formatName: 'Edison'
+//             }
+//         })].map((r) => r.cardId)
     
      
-        for (let i = 0; i < cardIds.length; i++) {
-            const cardId = cardIds[i]
-            console.log('cardId', cardId)
-            const tenguRulings = await Ruling.findAll({
+//         for (let i = 0; i < cardIds.length; i++) {
+//             const cardId = cardIds[i]
+//             console.log('cardId', cardId)
+//             const tenguRulings = await Ruling.findAll({
+//                 where: {
+//                     cardId: cardId,
+//                     formatName: 'Tengu Plant'
+//                 }
+//             })
+     
+     
+//             for (let j = 0; j < tenguRulings.length; j++) {
+//                 await tenguRulings[j].destroy()
+//             }
+//         }
+//     }
+
+//     {
+
+//         const cardIds = [...await Status.findAll({
+//             where: {
+//                 banlist: 'March 2010',
+//                 restriction: 'forbidden'
+//             }
+//         })].map((r) => r.cardId)
+     
+     
+//         for (let i = 0; i < cardIds.length; i++) {
+//             const cardId = cardIds[i]
+//             console.log('cardId', cardId)
+//             const edisonRulings = await Ruling.findAll({
+//                 where: {
+//                     cardId: cardId,
+//                     formatName: 'Edison'
+//                 }
+//             })
+     
+     
+//             for (let j = 0; j < edisonRulings.length; j++) {
+//                 console.log(`destroying ${edisonRulings[j]?.cardName} edison ruling`)
+//                 await edisonRulings[j].destroy()
+//             }
+//         }  
+//     }
+
+//     {
+//         const similarity = (s1, s2) => {
+//             let longer = s1;
+//             let shorter = s2;
+//             if (s1.length < s2.length) {
+//               longer = s2;
+//               shorter = s1;
+//             }
+//             const longerLength = longer.length;
+//             if (longerLength == 0) {
+//               return 1.0;
+//             }
+//             return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+//           }
+//            const editDistance = (s1, s2) => {
+//             s1 = s1.toLowerCase()
+//             s2 = s2.toLowerCase()
+//              const costs = []
+//             for (let i = 0; i <= s1.length; i++) {
+//               let lastValue = i
+//               for (let j = 0; j <= s2.length; j++) {
+//                 if (i == 0)
+//                   costs[j] = j
+//                 else {
+//                     if (j > 0) {
+//                         let newValue = costs[j - 1];
+//                         if (s1.charAt(i - 1) != s2.charAt(j - 1)) {
+//                             newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1
+//                         }
+//                         costs[j - 1] = lastValue;
+//                         lastValue = newValue;
+//                       }
+//                 }
+//               }
+//               if (i > 0)
+//                 costs[s2.length] = lastValue
+//             }
+//             return costs[s2.length]
+//           }
+     
+     
+//         const genericRulings = await Ruling.findAll({ where: { formatId: null }})
+//         for (let i = 0; i < genericRulings.length; i++) {
+//             const genericRuling = genericRulings[i]
+//             const goatRulings = await Ruling.findAll({
+//                 where: {
+//                     cardId: genericRuling.cardId,
+//                     formatName: {[Op.or]: ['Goat', 'Edison']}
+//                 }
+//             })
+           
+//             for (let j = 0; j < goatRulings.length; j++) {
+//                 const goatRuling = goatRulings[j]
+//                 const simScore = similarity(genericRuling.content, goatRuling.content)
+//                 if (simScore > 0.75) {
+//                     console.log(`destroying:\n${goatRuling.content}\n-----\ncounterpart: ${genericRuling.content}\n\n`)
+//                     await goatRuling.destroy()
+//                 }
+//             }
+//         } 
+//     }
+
+// })()
+
+;(async () => {
+    const start = Date.now()
+    let b = 0
+    let e = 0
+    const names = []
+
+    const { data } = await axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?misc=yes')
+    for (let i = 0; i < data.data.length; i++) {
+        const datum = data.data[i]
+        const id = datum.id.toString()
+        const name = datum.name
+        const description = datum.desc
+        const betaId = datum.misc_info[0]?.beta_id?.toString()
+        const betaName = datum.misc_info[0]?.beta_name
+        if (!betaId || !betaName) continue
+
+        try {
+            const betaCard = await Card.findOne({
                 where: {
-                    cardId: cardId,
-                    formatName: 'Tengu Plant'
+                    ypdId: betaId,
+                    name: betaName
                 }
             })
-     
-     
-            for (let j = 0; j < tenguRulings.length; j++) {
-                await tenguRulings[j].destroy()
+    
+            const card = await Card.findOne({
+                where: {
+                    ypdId: id,
+                    name: name
+                }
+            })
+
+            if (betaCard && card && betaCard.id !== card.id) {
+                console.log(`destroying ${betaCard.name} (${betaCard.ypdId}), which is now ${card.name} (${card.ypdId})`)
+                await betaCard.destroy()
+                await card.update({ description })
+                names.push(card.name)
+                b++
+            } else if (betaCard && !card) {
+                console.log(`Beta Card: ${betaCard.name} (${betaCard.ypdId}) exists, but ${card.name} (${card.ypdId}) does not ⚠️`)
+            } else if (!betaCard && card) {
+                console.log(`${card.name} (${card.ypdId}) exists, while Beta Card: ${betaName} (${betaId}) does not 👍`)
+                await card.update({ description })
+                names.push(card.name)
+                b++
+            } else {                
+                console.log(`Beta Card: ${betaCard.name} (${betaCard.ypdId}) and ${card.name} (${card.ypdId}) share the same FL id: (${betaCard.id})`)
+                await card.update({ description })
+                names.push(card.name)
+                b++
             }
+        } catch (err) {
+            e++ 
+            console.log(err)
         }
     }
 
-    {
-
-        const cardIds = [...await Status.findAll({
-            where: {
-                banlist: 'March 2010',
-                restriction: 'forbidden'
-            }
-        })].map((r) => r.cardId)
-     
-     
-        for (let i = 0; i < cardIds.length; i++) {
-            const cardId = cardIds[i]
-            console.log('cardId', cardId)
-            const edisonRulings = await Ruling.findAll({
-                where: {
-                    cardId: cardId,
-                    formatName: 'Edison'
-                }
-            })
-     
-     
-            for (let j = 0; j < edisonRulings.length; j++) {
-                console.log(`destroying ${edisonRulings[j]?.cardName} edison ruling`)
-                await edisonRulings[j].destroy()
-            }
-        }  
-    }
-
-    {
-        const similarity = (s1, s2) => {
-            let longer = s1;
-            let shorter = s2;
-            if (s1.length < s2.length) {
-              longer = s2;
-              shorter = s1;
-            }
-            const longerLength = longer.length;
-            if (longerLength == 0) {
-              return 1.0;
-            }
-            return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
-          }
-           const editDistance = (s1, s2) => {
-            s1 = s1.toLowerCase()
-            s2 = s2.toLowerCase()
-             const costs = []
-            for (let i = 0; i <= s1.length; i++) {
-              let lastValue = i
-              for (let j = 0; j <= s2.length; j++) {
-                if (i == 0)
-                  costs[j] = j
-                else {
-                    if (j > 0) {
-                        let newValue = costs[j - 1];
-                        if (s1.charAt(i - 1) != s2.charAt(j - 1)) {
-                            newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1
-                        }
-                        costs[j - 1] = lastValue;
-                        lastValue = newValue;
-                      }
-                }
-              }
-              if (i > 0)
-                costs[s2.length] = lastValue
-            }
-            return costs[s2.length]
-          }
-     
-     
-        const genericRulings = await Ruling.findAll({ where: { formatId: null }})
-        for (let i = 0; i < genericRulings.length; i++) {
-            const genericRuling = genericRulings[i]
-            const goatRulings = await Ruling.findAll({
-                where: {
-                    cardId: genericRuling.cardId,
-                    formatName: {[Op.or]: ['Goat', 'Edison']}
-                }
-            })
-           
-            for (let j = 0; j < goatRulings.length; j++) {
-                const goatRuling = goatRulings[j]
-                const simScore = similarity(genericRuling.content, goatRuling.content)
-                if (simScore > 0.75) {
-                    console.log(`destroying:\n${goatRuling.content}\n-----\ncounterpart: ${genericRuling.content}\n\n`)
-                    await goatRuling.destroy()
-                }
-            }
-        } 
-    }
-
+    console.log(`Updated descriptions of ${b} cards. Encountered ${e} errors.`)
+    console.log(names.sort().join('\n'))
+    return
 })()
