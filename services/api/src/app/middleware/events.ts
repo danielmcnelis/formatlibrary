@@ -257,7 +257,12 @@ export const eventsId = async (req, res, next) => {
             attributes: ['name']
           })
 
-          topMainDeckCards.push([card?.name, e[1]])
+          if (!card) {
+            console.log(`no card: ${konamiCode}`)
+            continue
+          } else {
+            topMainDeckCards.push([card?.name, e[1]])
+          }
         } catch (err) {
           console.log(err)
         }
@@ -279,7 +284,12 @@ export const eventsId = async (req, res, next) => {
             attributes: ['name']
           })
 
-          topSideDeckCards.push([card?.name, e[1]])
+          if (!card) {
+            console.log(`no card: ${konamiCode}`)
+            continue
+          } else {
+            topSideDeckCards.push([card?.name, e[1]])
+          }
         } catch (err) {
           console.log(err)
         }
