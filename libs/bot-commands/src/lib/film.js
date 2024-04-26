@@ -75,7 +75,7 @@ export default {
             })
 
             if ((tournament.type === 'swiss' || tournament.type === 'round robin') && match.round !== n) {
-                replays.push(`${roundName}: Bye ${emojis.casablanca}`)
+                replays.push(`Round ${n}: Bye ${emojis.casablanca}`)
                 n++
             }
             
