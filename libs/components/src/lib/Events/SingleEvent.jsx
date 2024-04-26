@@ -10,7 +10,6 @@ import './SingleEvent.css'
 import { Chart as ChartJS, ArcElement, CategoryScale, BarElement, Title, LinearScale, Tooltip, Legend } from 'chart.js'
 import { Bar, Doughnut } from 'react-chartjs-2'
 import { Helmet } from 'react-helmet'
-import { format } from 'path'
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const playerId = getCookie('playerId')
