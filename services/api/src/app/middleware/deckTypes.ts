@@ -303,6 +303,8 @@ export const deckTypesSummary = async (req, res, next) => {
         })
     }
 
+    console.log('format', format)
+
     const decks = await Deck.findAll({
         where: {
             deckTypeId: deckType.id,
@@ -438,6 +440,7 @@ export const deckTypesSummary = async (req, res, next) => {
             attributes: ['id', 'name', 'cleanName', 'category', 'ypdId']
           })) || {}
 
+        if (!card) console.log(`no card: ${konamiCode}`)
         data.main[e[0]].card = card
       }
     }
@@ -459,6 +462,7 @@ export const deckTypesSummary = async (req, res, next) => {
             attributes: ['id', 'name', 'cleanName', 'category', 'ypdId']
           })) || {}
 
+        if (!card) console.log(`no card: ${konamiCode}`)
         data.extra[e[0]].card = card
       }
     }
@@ -480,6 +484,7 @@ export const deckTypesSummary = async (req, res, next) => {
             attributes: ['id', 'name', 'cleanName', 'category', 'ypdId']
           })) || {}
 
+        if (!card) console.log(`no card: ${konamiCode}`)
         data.side[e[0]].card = card
       }
     }
