@@ -237,7 +237,7 @@ export const eventsId = async (req, res, next) => {
         const side = ydk
           .split('!side')[1]
           .split(/[\s]+/)
-          .filter((el) => && el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '')
+          .filter((el) => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '')
         sideDeckCards.push(...side)
       }
 
