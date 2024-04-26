@@ -49,8 +49,8 @@ export default {
         const matches = [...await getMatches(server, tournament.id)]
             .filter((e) => e.match?.state === 'complete' && e.match?.player1_id === entry.participantId || e.match?.player2_id === entry.participantId)
             .map((e) => e.match)
-            .sort((a, b) => a.suggested_play_order - b.suggested_play_order)
 
+        if (tournament.type === 'double elimination') matches.sort((a, b) => a.suggested_play_order - b.suggested_play_order)
         console.log('matches', matches)
 
         const replays = []
@@ -86,7 +86,7 @@ export default {
         }
 
         console.log('replays', replays)
-        console.log(`**/replay** command message length: ${replays.join('\n').length()}`)
+        console.log(`**/replay** command message length: ${(replays.join('\n')).length()}`)
 
         if (!replays.length) {
             return await interaction.editReply(`No replays found featuring ${player.globalName || player.discordName} in ${tournament.name}. ${tournament.emoji}`)
