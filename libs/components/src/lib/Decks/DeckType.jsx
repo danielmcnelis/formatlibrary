@@ -166,14 +166,14 @@ export const DeckType = () => {
                     >                                    
                         <div className="deck-button">
                             <b style={{padding: '0px 6px'}}>Download</b>
-                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`}/>
+                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`} alt="download"/>
                         </div>
                     </a>
                     <div className="single-deck-title">{summary.deckType}</div>
                     <Link to="/deck-builder" state={{ deck: {} }} className="desktop-only">                                    
                         <div className="deck-button">
                             <b style={{padding: '0px 6px'}}>Open Deck</b>
-                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`}/>
+                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`} alt="open-file"/>
                         </div>
                     </Link>
                 </div>
@@ -183,19 +183,19 @@ export const DeckType = () => {
                     <td>
                         <div onClick={() => goToFormat()} className="single-deck-cell">
                         <div className="single-deck-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {summary.format.name}</div>
-                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/${summary.format.icon}.png`}/>
+                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/${summary.format.icon}.png`} alt="format-icon"/>
                         </div>       
                     </td>
                     <td>
                         <div className="single-deck-cell">
                         <div className="single-deck-category" style={{paddingRight:'7px'}}><b>Category:</b> {summary.deckCategory}</div>
-                        <img className="single-deck-category-emoji" style={{width:'28px'}} src={categoryImage}/>
+                        <img className="single-deck-category-emoji" style={{width:'28px'}} src={categoryImage} alt={summary.deckCategory}/>
                         </div>
                     </td>
                     <td>
                         <div className="single-deck-cell">
                         <div className="single-deck-category" style={{paddingRight:'7px'}}><b>Frequency:</b> {summary.percent}%</div>
-                        <img className="single-deck-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`}/>
+                        <img className="single-deck-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
                         </div>
                     </td>
                     </tr>

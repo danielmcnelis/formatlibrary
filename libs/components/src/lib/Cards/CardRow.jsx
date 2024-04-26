@@ -72,8 +72,7 @@ export const CardRow = (props) => {
               </Link>
           </td>
           <td className="no-padding-2" style={{verticalAlign: 'top'}}>
-              <Link className="search-results-link" to={`/cards/${
-                  card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
+              <Link className="search-results-link" to={`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
                   target="_blank" 
                   rel="noopener noreferrer"
               >
@@ -86,7 +85,7 @@ export const CardRow = (props) => {
                               textAlign: 'left',
                               fontSize: '24px',
                               borderBottom: '2px solid #CFDCE5'
-                              }}
+                            }}
                           >
                               {card.name}
                           </th>

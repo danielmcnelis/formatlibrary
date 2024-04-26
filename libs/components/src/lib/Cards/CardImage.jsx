@@ -28,21 +28,7 @@ export const CardImage = (props) => {
     } else if (isPackSimulator) {
          return (
             <div className="CardImage-box">
-                <Link to={`/cards/${
-                    card.name.toLowerCase().replaceAll(' ', '-')
-                        .replaceAll(`"`, '')
-                        .replaceAll(`'`, '')
-                        .replaceAll('#', '')
-                        .replaceAll('/', '')
-                        .replaceAll('!', '')
-                        .replaceAll('?', '')
-                        .replaceAll(':', '')
-                        .replaceAll('★', '-')
-                        .replaceAll('&', 'and')
-                        .replaceAll('%', '-percent')
-                        .replaceAll('---', '-')
-                        .replaceAll('--', '-')
-                    }`}
+                <Link to={`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
                     target="_blank" 
                     rel="noopener noreferrer"
                 >
@@ -107,21 +93,7 @@ export const CardImage = (props) => {
                     alt={card.name}
                   />
                 ) : (
-                  <Link to={`/cards/${
-                    card.name.toLowerCase().replaceAll(' ', '-')
-                        .replaceAll(`"`, '')
-                        .replaceAll(`'`, '')
-                        .replaceAll('#', '')
-                        .replaceAll('/', '')
-                        .replaceAll('!', '')
-                        .replaceAll('?', '')
-                        .replaceAll('★', '-')
-                        .replaceAll(':', '-')
-                        .replaceAll('&', 'and')
-                        .replaceAll('%', '-percent')
-                        .replaceAll('---', '-')
-                        .replaceAll('--', '-')
-                    }`}
+                  <Link to={`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
                     target="_blank" 
                     rel="noopener noreferrer"
                   >
