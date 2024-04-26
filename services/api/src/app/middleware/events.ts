@@ -257,7 +257,7 @@ export const eventsId = async (req, res, next) => {
             attributes: ['name']
           })
 
-          topMainDeckCards.push([card.name, e[1]])
+          topMainDeckCards.push([card?.name, e[1]])
         } catch (err) {
           console.log(err)
         }
@@ -279,7 +279,7 @@ export const eventsId = async (req, res, next) => {
             attributes: ['name']
           })
 
-          topSideDeckCards.push([card.name, e[1]])
+          topSideDeckCards.push([card?.name, e[1]])
         } catch (err) {
           console.log(err)
         }
