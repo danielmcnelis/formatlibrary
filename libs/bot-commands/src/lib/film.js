@@ -47,7 +47,7 @@ export default {
         if (!entry) return await interaction.editReply({ content: `That user is not in ${tournament.name}.`})
 
         const matches = [...await getMatches(server, tournament.id)]
-            .filter((e) => e.match?.state === 'complete' && e.match?.player1_id === entry.participantId || e.match?.player2_id === entry.participantId)
+            .filter((e) => e.match?.state === 'complete' && (e.match?.player1_id === entry.participantId || e.match?.player2_id === entry.participantId))
             .map((e) => e.match)
 
         if (tournament.type === 'double elimination') matches.sort((a, b) => a.suggested_play_order - b.suggested_play_order)
