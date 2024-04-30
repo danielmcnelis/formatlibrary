@@ -24,6 +24,9 @@ export const Team = db.define('teams', {
     playerCId: {
         type: Sequelize.STRING
     },
+    placement: {
+        type: Sequelize.INTEGER
+    },
     teamWins: {
         type: Sequelize.INTEGER,
         default: 0
