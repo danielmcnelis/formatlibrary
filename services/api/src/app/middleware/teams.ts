@@ -2,7 +2,7 @@ import { Team } from '@fl/models'
 
 export const createTeam = async (req, res, next) => {
   try {
-    const { name, eventId, captainId, playerAId, playerBId, playerCId, placement } = req.headers
+    const { name, eventId, captainId, playerAId, playerBId, playerCId, placement } = req.body
 
     const count = await Team.count({
       where: {
