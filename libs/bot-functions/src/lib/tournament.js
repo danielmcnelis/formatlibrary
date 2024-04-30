@@ -72,7 +72,7 @@ export const getDeckList = async (member, player, format, override = false, unra
             const {data} = await axios.get(url)
             ydk = data
         } else {
-            const {data} = await axios.put(`/api/decks/convert-ydke-to-ydk`, { ydke: ydke })
+            const {data} = await axios.put(`https://formatlibrary.com/api/decks/convert-ydke-to-ydk`, { ydke: ydke })
             ydk = data                
         }
         
@@ -163,7 +163,7 @@ export const getSpeedDeckList = async (member, player, format, override = false)
             const {data} = await axios.get(url)
             ydk = data
         } else {
-            const {data} = await axios.put(`/api/decks/convert-ydke-to-ydk`, { ydke: ydke })
+            const {data} = await axios.put(`https://formatlibrary.com/api/decks/convert-ydke-to-ydk`, { ydke: ydke })
             ydk = data                
         }
 
