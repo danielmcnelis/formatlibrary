@@ -5,14 +5,21 @@ import axios from 'axios'
 export const TeamCreator = () => {
     const [name, setName] = useState(null)
     const [captain, setCaptain] = useState(null)
+    const [captains, setCaptains] = useState([])
     const [playerA, setPlayerA] = useState(null)
+    const [playerAs, setPlayerAs] = useState([])
     const [playerB, setPlayerB] = useState(null)
+    const [playerBs, setPlayerBs] = useState([])
     const [playerC, setPlayerC] = useState(null)
-    const [players, setPlayers] = useState([])
+    const [playerCs, setPlayerCs] = useState([])
     const [community, setCommunity] = useState(null)
     const [event, setEvent] = useState(null)
     const [events, setEvents] = useState([])
     const [placement, setPlacement] = useState(1)
+    console.log('captain', captain)
+    console.log('playerA', playerA)
+    console.log('playerB', playerB)
+    console.log('playerC', playerC)
 
     const placementArr = event ? Array.from({length: event.size}, (_, i) => i + 1) : []
 
@@ -49,9 +56,13 @@ export const TeamCreator = () => {
     const reset = async () => {
         setName(null)
         setCaptain(null)
+        setCaptains([])
         setPlayerA(null)
+        setPlayerAs([])
         setPlayerB(null)
+        setPlayerBs([])
         setPlayerC(null)
+        setPlayerCs([])
         setCommunity(null)
         setEvent(null)
         setPlacement(1)
@@ -68,28 +79,34 @@ export const TeamCreator = () => {
     // FIND PLAYERS
     const findPlayers = async (query, slot) => {
         const {data} = await axios.get(`/api/players/query/${query}`)
-        setPlayers(data)
         if (slot === 'captain') {
+            setCaptains(data)
             setCaptain(data[0])
         } else if (slot === 'playerA') {
+            setPlayerAs(data)
             setPlayerA(data[0])
         } else if (slot === 'playerB') {
+            setPlayerBs(data)
             setPlayerB(data[0])
         } else if (slot === 'playerC') {
+            setPlayerCs(data)
             setPlayerC(data[0])
         }
     }
 
     // GET PLAYER
     const getPlayer = async (name, slot) => {
-        const elem = players.filter((e) => e.name === name)[0]
         if (slot === 'captain') {
+            const elem = captains.filter((e) => e.name === name)[0]
             setCaptain(elem)
         } else if (slot === 'playerA') {
+            const elem = playerAs.filter((e) => e.name === name)[0]
             setPlayerA(elem)
         } else if (slot === 'playerB') {
+            const elem = playerBs.filter((e) => e.name === name)[0]
             setPlayerB(elem)
         } else if (slot === 'playerC') {
+            const elem = playerCs.filter((e) => e.name === name)[0]
             setPlayerC(elem)
         }
     }
@@ -125,14 +142,14 @@ export const TeamCreator = () => {
                 <input
                     id="captain"
                     type="search"
-                    onKeyDown={(e) => { if (e.key === 'Enter') findPlayers(e.target.value)}}
+                    onKeyDown={(e) => { if (e.key === 'Enter') findPlayers(e.target.value, 'captain')}}
                 />
                 <select
                     id="captain-select"
                     onChange={(e) => getPlayer(e.target.value, 'captain')}
                 >
                 {
-                    players.map((e) => <option value={e.name}>{e.name}</option>)
+                    captains.map((e) => <option value={e.name}>{e.name}</option>)
                 }
                 </select>
             </label>
@@ -141,14 +158,14 @@ export const TeamCreator = () => {
                 <input
                     id="playerA"
                     type="search"
-                    onKeyDown={(e) => { if (e.key === 'Enter') findPlayers(e.target.value)}}
+                    onKeyDown={(e) => { if (e.key === 'Enter') findPlayers(e.target.value, 'playerA')}}
                 />
                 <select
                     id="playerA-select"
                     onChange={(e) => getPlayer(e.target.value, 'playerA')}
                 >
                 {
-                    players.map((e) => <option value={e.name}>{e.name}</option>)
+                    playerAs.map((e) => <option value={e.name}>{e.name}</option>)
                 }
                 </select>
             </label>
@@ -157,14 +174,14 @@ export const TeamCreator = () => {
                 <input
                     id="playerB"
                     type="search"
-                    onKeyDown={(e) => { if (e.key === 'Enter') findPlayers(e.target.value)}}
+                    onKeyDown={(e) => { if (e.key === 'Enter') findPlayers(e.target.value, 'playerB')}}
                 />
                 <select
                     id="playerB-select"
                     onChange={(e) => getPlayer(e.target.value, 'playerB')}
                 >
                 {
-                    players.map((e) => <option value={e.name}>{e.name}</option>)
+                    playerBs.map((e) => <option value={e.name}>{e.name}</option>)
                 }
                 </select>
             </label>
@@ -173,14 +190,14 @@ export const TeamCreator = () => {
                 <input
                     id="playerC"
                     type="search"
-                    onKeyDown={(e) => { if (e.key === 'Enter') findPlayers(e.target.value)}}
+                    onKeyDown={(e) => { if (e.key === 'Enter') findPlayers(e.target.value, 'playerC')}}
                 />
                 <select
                     id="playerC-select"
                     onChange={(e) => getPlayer(e.target.value, 'playerC')}
                 >
                 {
-                    players.map((e) => <option value={e.name}>{e.name}</option>)
+                    playerCs.map((e) => <option value={e.name}>{e.name}</option>)
                 }
                 </select>
             </label>

@@ -1508,7 +1508,6 @@ import { parse } from 'csv-parse'
 // })()
 
 ;(async () => {
-    const start = Date.now()
     let b = 0
     let e = 0
     const names = []

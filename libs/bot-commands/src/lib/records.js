@@ -22,7 +22,7 @@ export default {
         if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
         
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        if (!format) return await interaction.editReply({ content: `Try using **/history** in channels like: <#414575168174948372> or <#629464112749084673>.`})  
+        if (!format) return await interaction.editReply({ content: `Try using **/records** in channels like: <#414575168174948372> or <#629464112749084673>.`})  
 
         const user = interaction.options.getUser('player') || interaction.user    
         const discordId = user.id
