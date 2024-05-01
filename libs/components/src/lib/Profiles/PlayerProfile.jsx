@@ -114,7 +114,7 @@ export const PlayerProfile = () => {
                         <div className="profile-line"><b>Discord:</b> {player.globalName || player.discordName && player.discriminator && player.discriminator !== '0' ? (<><span>{player.discordName}</span><span style={{ color: 'gray' }}>#{player.discriminator}</span></>) : player.discordName || 'N/A'}</div>
                         {
                             player.country ? (
-                                <div className="profile-line"><b>Country:</b> {regionNames.of(iso2ToFips[player.country] || player.country)} <img className="country" src={`https://www.worldometers.info/img/flags/${(player.country).toLowerCase()}-flag.gif`} alt={player.country + ' flag'}/></div>
+                                <div className="profile-line"><b>Country:</b> {regionNames.of(player.country)} <img className="country" src={`https://www.worldometers.info/img/flags/${(player.country).toLowerCase()}-flag.gif`} alt={player.country + ' flag'}/></div>
                             ) : ''
                         }
                         {
