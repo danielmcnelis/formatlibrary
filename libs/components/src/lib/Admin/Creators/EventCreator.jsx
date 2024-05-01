@@ -228,7 +228,7 @@ export const EventCreator = () => {
         </select>
       </label>
       <label>
-        Series:
+        Team Event:
         <select id="is-team-event" defaultValue="false" onChange={(e) => setIsTeamEvent(e.target.value)}>
           <option value="true">True</option>
           <option value="false">False</option>
