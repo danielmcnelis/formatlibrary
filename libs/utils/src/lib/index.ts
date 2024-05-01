@@ -13,9 +13,10 @@ import {
 
 import {
     countries,
+    fipsToIso2,
+    getCountry,
     iso2ToFips,
-    timezones,
-    getCountry
+    timezones
 } from './country'
 
 export {
@@ -25,6 +26,7 @@ export {
   arrayToObject,
   dateToSimple,
   dateToVerbose,
+  fipsToIso2,
   getCookie,
   getCountry,
   iso2ToFips,
