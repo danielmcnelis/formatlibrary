@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { isMod, hasAffiliateAccess } from '@fl/bot-functions'
+import { isMod, hasPartnerAccess } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Format, Match, Player, Server, Stats } from '@fl/models'
 
@@ -22,7 +22,7 @@ export default {
     async execute(interaction) {
         const formatName = interaction.options.getString('format')
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         if (!isMod(server, interaction.member)) return await interaction.reply({ content: `You do not have permission to do that.`})
         const format = await Format.findByServerOrInputOrChannelId(server, formatName, interaction.channelId)
         if (!format) return await interaction.reply({ content: `Try using **/recalculate** in channels like: <#414575168174948372> or <#629464112749084673>.`})

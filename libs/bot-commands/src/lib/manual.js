@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { createPlayer, getDeckType, postStory, isMod, isNewUser, hasAffiliateAccess, isIronPlayer, lookForPotentialPairs, checkPairing, getMatches, processMatchResult, processTeamResult, selectTournament } from '@fl/bot-functions'
+import { createPlayer, getDeckType, postStory, isMod, isNewUser, hasPartnerAccess, isIronPlayer, lookForPotentialPairs, checkPairing, getMatches, processMatchResult, processTeamResult, selectTournament } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Entry, Format, Iron, Match, Matchup, Pairing, Player, Pool, Server, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
@@ -30,7 +30,7 @@ export default {
         const loser = interaction.options.getUser('loser')
         const losingMember = await interaction.guild?.members.fetch(loser.id).catch((err) => console.log(err))
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.editReply({ content: `Try using **/manual** in channels like: <#414575168174948372> or <#629464112749084673>.`})

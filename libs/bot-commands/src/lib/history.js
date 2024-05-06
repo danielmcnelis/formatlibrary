@@ -2,7 +2,7 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { Format, Match, Player, Server } from '@fl/models'
 const QuickChart = require('quickchart-js')
-import { hasAffiliateAccess } from '@fl/bot-functions'
+import { hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
 
@@ -19,7 +19,7 @@ export default {
         .setDMPermission(false),
     async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.reply({ content: `Try using **/history** in channels like: <#414575168174948372> or <#629464112749084673>.`})  

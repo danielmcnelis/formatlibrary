@@ -14,8 +14,6 @@ import * as chalk from 'chalk'
 import * as http from 'http'
 import * as https from 'https'
 import axios from 'axios'
-
-import { error } from '@fl/middleware'
 import { config } from '@fl/config'
 
 // DATABASE IMPORTS 
@@ -28,7 +26,7 @@ import { assignTourRoles, checkIfEndOfMonth, conductCensus, createTopCut, downlo
     dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
     startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, assignRoles, createMembership,
-    createPlayer, fetchCardNames, fetchOPCardNames, hasAffiliateAccess, hasPartnerAccess, isMod, isNewMember, 
+    createPlayer, fetchCardNames, fetchOPCardNames, hasPartnerAccess, isMod, isNewMember, 
     isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, editPointsSystem, refreshExpiredTokens, 
     updateDecks, updateMatchups, updateReplays, downloadAltArtworks
 } from '@fl/bot-functions'
@@ -449,9 +447,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
             await checkTimer(interaction, tournamentId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'undo') {
-            if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+            const authorIsMod = isMod(server, interaction.member)
+            if (!authorIsMod) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const matchId = interaction.values[0]
-            await undoMatch(server, interaction.channel, matchId)
+            await undoMatch(interaction, server, matchId, authorIsMod)
             return interaction.message.edit({components: []})
         } else {
             return
@@ -467,7 +466,7 @@ client.on('guildMemberAdd', async (member) => {
     try {
         const guild = member.guild
         const server = await Server.findOne({ where: { id: guild.id }})
-        if (!server || !hasAffiliateAccess(server)) return
+        if (!server || !hasPartnerAccess(server)) return
         const channel = guild.channels.cache.get(server.welcomeChannel)
         if (await isNewUser(member.user.id)) await createPlayer(member) 
         if (await isNewMember(guild.id, member.user.id)) {

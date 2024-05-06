@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { hasAffiliateAccess, getMedal } from '@fl/bot-functions'
+import { hasPartnerAccess, getMedal } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Format, Player, Server, Stats, TriviaKnowledge } from '@fl/models'
 import { Op } from 'sequelize'
@@ -18,7 +18,7 @@ export default {
         .setDMPermission(false),
     async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!hasAffiliateAccess(server)) return await interaction.reply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         const user = interaction.options.getUser('player') || interaction.user
         const player = await Player.findOne({ where: { discordId: user?.id } })
         if (!player) return await interaction.reply({ content: `That user is not in the database.`})

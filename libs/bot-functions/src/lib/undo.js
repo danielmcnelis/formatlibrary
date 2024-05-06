@@ -3,9 +3,31 @@ import { Format, Match, Player, Stats } from '@fl/models'
 import axios from 'axios'
 
 // UNDO MATCH
-export const undoMatch = async (server, channel, id) => {
+export const undoMatch = async (interaction, server, matchId, authorIsMod) => {
     try {
-        const match = await Match.findOne({ where: { id }, include: Format})
+        const match = await Match.findOne({ where: { id: matchId }, include: Format})
+        const winningPlayer = await Player.findOne({ where: { id: match.winnerId } })
+        const losingPlayer = await Player.findOne({ where: { id: match.loserId } })
+        const winnerStats = await Stats.findOne({ where: { playerId: winningPlayer.id, formatId: match.formatId, serverId: match.serverId } })
+        const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, formatId: match.formatId, serverId: match.serverId } })
+    
+        if (!authorIsMod && interaction.user.id !== losingPlayer.discordId) return await interaction.editReply({ content: `You did not report in the last recorded match. Please get a Moderator to help you.`})
+    
+        if (!winnerStats.backupElo) {
+            if (authorIsMod) {
+                interaction.channel.send({ content: `${winningPlayer.globalName || winningPlayer.discordName} has no backup stats: Remember to **/recalculate** when finished.`})
+            } else {
+                return await interaction.editReply({ content: `Your last opponent, ${winningPlayer.globalName || winningPlayer.discordName}, has no backup stats. Please get a Moderator to help you.`})
+            }
+        }
+
+        if (!loserStats.backupElo) {
+            if (authorIsMod) {
+                interaction.channel.send({ content: `${losingPlayer.globalName || losingPlayer.discordName} has no backup stats: Remember to **/recalculate** when finished.`})
+            } else {
+                return await interaction.editReply({ content: `Your last opponent, ${losingPlayer.globalName || losingPlayer.discordName}, has no backup stats. Please get a Moderator to help you.`})
+            }
+        }
 
         if (match.isTournament && match.tournamentId && match.challongeMatchId) {
             try {
@@ -17,16 +39,6 @@ export const undoMatch = async (server, channel, id) => {
                 console.log(err)
             }
         }
-        
-        const winnerId = match.winnerId
-        const loserId = match.loserId
-        const winningPlayer = await Player.findOne({ where: { id: winnerId } })
-        const winnerStats = await Stats.findOne({ where: { playerId: winningPlayer.id, format: match.formatName, serverId: match.serverId } })
-        const losingPlayer = await Player.findOne({ where: { id: loserId } })
-        const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, format: match.formatName, serverId: match.serverId } })
-    
-        if (!winnerStats.backupElo) channel.send({ content: `${winningPlayer.globalName || winningPlayer.discordName} has no backup stats: Remember to **/recalculate** when finished.`})
-        if (!loserStats.backupElo) channel.send({ content: `${losingPlayer.globalName || losingPlayer.discordName} has no backup stats: Remember to **/recalculate** when finished.`})
 
         winnerStats.elo = winnerStats.backupElo
         winnerStats.backupElo = null
@@ -41,7 +53,7 @@ export const undoMatch = async (server, channel, id) => {
         await loserStats.save()
     
         await match.destroy()
-        return channel.send({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${match.formatName} Format ${server.emoji || match.format?.emoji || ''} ${match.isTournament ? 'Tournament ' : ''}match in which ${winningPlayer.globalName || winningPlayer.discordName} defeated ${losingPlayer.globalName || losingPlayer.discordName} has been erased.`})	
+        return interaction.channel.send({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${match.formatName} Format ${server.emoji || match.format?.emoji || ''} ${match.isTournament ? 'Tournament ' : ''}match in which ${winningPlayer.globalName || winningPlayer.discordName} defeated ${losingPlayer.globalName || losingPlayer.discordName} has been erased.`})	
     } catch (err) {
         console.log(err)
     }

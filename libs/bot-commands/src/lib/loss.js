@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { checkPairing, getDeckType, getMatches, processMatchResult, processTeamResult, selectTournament, postStory, createPlayer, isNewUser, hasAffiliateAccess, isIronPlayer, lookForPotentialPairs } from '@fl/bot-functions'
+import { checkPairing, getDeckType, getMatches, processMatchResult, processTeamResult, selectTournament, postStory, createPlayer, isNewUser, hasPartnerAccess, isIronPlayer, lookForPotentialPairs } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Entry, Format, Iron, Match, Matchup, Pairing, Player, Pool, Server, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
@@ -23,7 +23,7 @@ export default {
         const member = await interaction.guild?.members.fetch(interaction.user.id)
         const winningMember = await interaction.guild?.members.fetch(winninguser.id).catch((err) => console.log(err))
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!hasAffiliateAccess(server)) return await interaction.editReply({ content: `This feature is only available with affiliate access. ${emojis.legend}`})
+        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.editReply({ content: `Try using /loss in channels like: <#414575168174948372> or <#629464112749084673>.`})
         if (winninguser.id === interaction.user.id) return await interaction.editReply({ content: `You cannot lose a match to yourself.`})

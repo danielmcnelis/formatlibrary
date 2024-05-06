@@ -1,44 +1,41 @@
 import { S3 } from 'aws-sdk'
-import { createReadStream } from 'fs'
 import { config } from '@fl/config'
 import axios from 'axios'
-
+import * as webp from 'webp-converter'
+console.log('webp.str2webpstr', webp.str2webpstr)
 
 ;(async () => {
-  try {    
-    const s3 = new S3({
-        region: config.s3.region,
-        credentials: {
-            accessKeyId: config.s3.credentials.accessKeyId,
-            secretAccessKey: config.s3.credentials.secretAccessKey
-        }
-    })
-  
-//   const readStream = createReadStream('./penguin.jpg')
+    try {    
+        const s3 = new S3({
+            region: config.s3.region,
+            credentials: {
+                accessKeyId: config.s3.credentials.accessKeyId,
+                secretAccessKey: config.s3.credentials.secretAccessKey
+            }
+        })
 
-// const {data} = await axios({
-//     method: 'GET',
-//     url: `https://storage.googleapis.com/ygoprodeck.com/pics/${id}.jpg`,
-//     responseType: 'stream'
-// })
+        const {data: readStream} = await axios({
+            method: 'GET',
+            url: 'https://cdn.formatlibrary.com/images/alexandria.jpg',
+            responseType: 'arraybuffer',
+        })
 
-// (fs.createWriteStream(`../cards/${id}.jpg`))
+        console.log('readStream', readStream)
+        console.log('typeof readStream', typeof readStream)
+        console.log('webp.str2webpstr', webp.str2webpstr)
 
-const {data: readStream} = await axios({
-    method: 'GET',
-    url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/World_Globe_Map.jpg/800px-World_Globe_Map.jpg',
-    responseType: 'stream',
-  })
-
-//   const readStream = createReadStream(data)
-  
-  const { Location: uri} = await s3
-    .upload({ Bucket: 'formatlibrary', Key: 'images/globe.jpg', Body: readStream })
-    .promise()
-
-    console.log('uri', uri)
-    process.exit()
-  } catch (e) {
-    console.error('Error: ', e)
-  }
+        const buffer = Buffer.from(readStream)
+        console.log(' buffer',  buffer)
+        console.log('typeof buffer', typeof buffer)
+        const result = webp.buffer2webpbuffer(buffer, "jpg","-q 80");
+        result.then(async (result) => {
+            // you access the value from the promise here
+            console.log('result', result)
+            const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: 'images/alexandria.webp', Body: result }).promise()
+            console.log('uri', uri)
+            process.exit()
+        });
+    } catch (err) {
+        console.error('Error: ', err)
+    }
 })()

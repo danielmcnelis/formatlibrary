@@ -661,9 +661,6 @@ export const getRandomSubset = (arr, n) => {
     return shuffledArr.slice(0, n)
 }
 
-//HAS AFFILIATE ACCESS?
-export const hasAffiliateAccess = (server) => server?.access === 'affiliate' || server?.access === 'partner' || server?.access === 'full'
-
 //HAS PARTNER ACCESS?
 export const hasPartnerAccess = (server) => server?.access === 'partner' || server?.access === 'full'
 
