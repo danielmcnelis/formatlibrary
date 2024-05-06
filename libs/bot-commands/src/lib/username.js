@@ -6,6 +6,16 @@ export default {
 	data: new SlashCommandBuilder()
 		.setName('username')
 		.setDescription('Set or look-up a username for various simulators. 📛')
+        .addStringOption(str =>
+            str
+                .setName('simulator')
+                .setDescription('Select a simulator.')
+                .setRequired(true)
+                .addChoices(
+					{ name: 'DuelingBook', value: 'DuelingBook, duelingBook' },	
+					{ name: 'One Piece TCG Simulator', value: 'One Piece TCG Simulator, opTcgSim' },
+				)
+        )
 		.addUserOption(user =>
             user
                 .setName('user')
@@ -17,16 +27,6 @@ export default {
                 .setName('name')
                 .setDescription('Enter a username.')
                 .setRequired(false)
-        )
-        .addStringOption(str =>
-            str
-                .setName('simulator')
-                .setDescription('Select a simulator.')
-                .setRequired(true)
-                .addChoices(
-					{ name: 'DuelingBook', value: 'DuelingBook, duelingBook' },	
-					{ name: 'One Piece TCG Simulator', value: 'One Piece TCG Simulator, opTcgSim' },
-				)
         ),
 	async execute(interaction) {
         const userId = interaction.options.getUser('user')?.id || interaction.user.id
