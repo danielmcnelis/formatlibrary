@@ -26,7 +26,7 @@ export default {
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         
         if (format) {
-            const stats = await Stats.findOne({ 
+            const stats = await stats?.findOne({ 
                 where: { 
                     playerId: player.id, 
                     format: {[Op.iLike]: format.name}, 
@@ -66,12 +66,12 @@ export default {
                 { 
                     name: `${format.name} Format Stats`,
                     value: 
-                    `Best Medal: ${getMedal(stats ? stats.bestElo : null, true)}` +
-                    `\nHighest Elo: ${stats && stats.bestElo ? stats.bestElo.toFixed(2) : '500.00'}` +
-                    `${stats.tournamentPoints ? `\nTournament Points: ${stats.tournamentPoints}` : ''}` +
-                    `\nWinrate: ${stats && (stats.wins || stats.losses) ? `${(100 * stats.wins / (stats.wins + stats.losses)).toFixed(2)}%` : 'N/A'}` +
-                    `\nVanquished Foes: ${stats ? stats.vanquished : 0}` +
-                    `\nLongest Win Streak: ${stats ? stats.bestStreak : 0}`
+                    `Best Medal: ${getMedal(stats ? stats?.bestElo : null, true)}` +
+                    `\nHighest Elo: ${stats && stats?.bestElo ? stats?.bestElo.toFixed(2) : '500.00'}` +
+                    `${stats?.tournamentPoints ? `\nTournament Points: ${stats?.tournamentPoints}` : ''}` +
+                    `\nWinrate: ${stats && (stats?.wins || stats?.losses) ? `${(100 * stats?.wins / (stats?.wins + stats?.losses)).toFixed(2)}%` : 'N/A'}` +
+                    `\nVanquished Foes: ${stats ? stats?.vanquished : 0}` +
+                    `\nLongest Win Streak: ${stats ? stats?.bestStreak : 0}`
                 },
                 { 
                     name: `${format.name} Format Trophies`, 
@@ -112,9 +112,9 @@ export default {
             
             for (let i = 0; i < allStats.length; i++) {
                 const stats = allStats[i]
-                const format = await Format.findOne({ where: { name: {[Op.iLike]: stats.format } }})
+                const format = await Format.findOne({ where: { name: {[Op.iLike]: stats?.format } }})
                 if (!format) continue
-                const medal = getMedal(stats.elo, true)
+                const medal = getMedal(stats?.elo, true)
                 medals.push(`${format.emoji} ${format.name}: ${medal}`)
             }
 

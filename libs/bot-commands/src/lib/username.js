@@ -5,15 +5,21 @@ import { Player } from '@fl/models'
 export default {
 	data: new SlashCommandBuilder()
 		.setName('username')
-		.setDescription('Set your username for various simulators. 📛')
+		.setDescription('Set or look-up a username for various simulators. 📛')
+		.addUserOption(user =>
+            user
+                .setName('user')
+                .setDescription('Tag another user.')
+                .setRequired(false)
+        )
 		.addStringOption(str =>
             str
                 .setName('name')
-                .setDescription('Enter your username.')
-                .setRequired(true)
+                .setDescription('Enter a username.')
+                .setRequired(false)
         )
-        .addStringOption(option =>
-            option
+        .addStringOption(str =>
+            str
                 .setName('simulator')
                 .setDescription('Select a simulator.')
                 .setRequired(true)
@@ -23,10 +29,16 @@ export default {
 				)
         ),
 	async execute(interaction) {
+        const userId = interaction.options.getUser('user')?.id || interaction.user.id
+        const userIsAuthor = userId === interaction.user.id
         const name = interaction.options.getString('name')
         const [simulator, colName] = interaction.options.getString('simulator').split(', ')
-        const player =  await Player.findOne({ where: { discordId: interaction.user.id } })
-        await player.update({ [colName]: name })
-        return await interaction.reply({ content: `Your ${simulator} username has been set to: ${player[colName]}.`})
+        const player =  await Player.findOne({ where: { discordId: userId } })
+        if (userIsAuthor && name) {
+            await player.update({ [colName]: name })
+            return await interaction.reply({ content: `Your ${simulator} username has been set to: ${player[colName]}.`})
+        } else {
+            return await interaction.reply({ content: `${userIsAuthor ? 'Your' : `<@${userId}>'s`} ${simulator} username is: ${player[colName]}.`})
+        }
 	}
 }
