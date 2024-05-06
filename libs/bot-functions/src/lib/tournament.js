@@ -1120,7 +1120,7 @@ export const seed = async (interaction, tournamentId, shuffle = false) => {
         for (let i = 0; i < entries.length; i++) {
             const entry = entries[i]
             const playerId = entry.playerId
-            const stats = await Stats.findOne({ where: { format: tournament.formatName, playerId, serverId }})
+            const stats = await Stats.findOne({ where: { formatId: tournament.formatId, playerId, serverId }})
             
             if (stats) {
                 expEntries.push([entry.participantId, entry.playerName, stats.elo])

@@ -19,7 +19,7 @@ export default {
 
         const stats = await Stats.findAll({ 
             where: {
-                format: { [Op.iLike]: format.name }, 
+                formatId: format.id, 
                 games: { [Op.gte]: 3 },
                 serverId: serverId,
                 inactive: false,

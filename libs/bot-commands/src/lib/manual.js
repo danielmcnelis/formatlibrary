@@ -45,13 +45,13 @@ export default {
 
         const serverId = server.internalLadder ? server.id : '414551319031054346'
         const winningPlayer = await Player.findOne({ where: { discordId: winnerDiscordId } })
-        const wCount = await Stats.count({ where: { playerId: winningPlayer.id, format: format.name, serverId: serverId } })
-        if (!wCount) await Stats.create({ playerId: winningPlayer.id, format: format.name, serverId: serverId, internal: server.internalLadder })
-        const winnerStats = await Stats.findOne({ where: { playerId: winningPlayer.id, format: format.name, serverId: serverId } })
+        const wCount = await Stats.count({ where: { playerId: winningPlayer.id, formatId: format.id, serverId: serverId } })
+        if (!wCount) await Stats.create({ playerId: winningPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, internal: server.internalLadder })
+        const winnerStats = await Stats.findOne({ where: { playerId: winningPlayer.id, formatId: format.id, serverId: serverId } })
         const losingPlayer = await Player.findOne({ where: { discordId: loserDiscordId } })
-        const lCount = await Stats.count({ where: { playerId: losingPlayer.id, format: format.name, serverId: serverId } })
-        if (!lCount) await Stats.create({ playerId: losingPlayer.id, format: format.name, serverId: serverId, internal: server.internalLadder })
-        const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, format: format.name, serverId: serverId } })
+        const lCount = await Stats.count({ where: { playerId: losingPlayer.id, formatId: format.id, serverId: serverId } })
+        if (!lCount) await Stats.create({ playerId: losingPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, internal: server.internalLadder })
+        const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, formatId: format.id, serverId: serverId } })
 
         if (!losingPlayer || !loserStats) return await interaction.editReply({ content: `Sorry, <@${loserDiscordId}> is not in the database.`})
         if (!winningPlayer || !winnerStats) return await interaction.editReply({ content: `Sorry, <@${winnerDiscordId}> is not in the database.`})

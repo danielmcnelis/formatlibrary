@@ -153,7 +153,7 @@ export const assignCaptains = async (entries, channel, format) => {
         const playerId = entry.playerId
 
         const stats = await Stats.findOne({ where: {
-            format: format.name,
+            formatId: format.id,
             playerId: playerId,
             serverId: '414551319031054346'
         }})

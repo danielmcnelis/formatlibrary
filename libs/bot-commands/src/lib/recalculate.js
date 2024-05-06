@@ -37,8 +37,8 @@ export default {
         })
 
         const allStats = await Stats.findAll({ 
-            where: { format: format.name, serverId: serverId }, 
-            attributes: ['id', 'format', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 'streak', 'bestStreak', 'vanquished', 'playerId', 'serverId'], 
+            where: { formatId: format.id, serverId: serverId }, 
+            attributes: ['id', 'formatName', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 'streak', 'bestStreak', 'vanquished', 'playerId', 'serverId'], 
             include: { model: Player, attributes: ['id', 'name']} 
         })
 
@@ -68,7 +68,8 @@ export default {
                 if (!winnerStats) {
                     const stats = await Stats.create({
                         playerId: winnerId,
-                        format: format.name,
+                        formatName: format.name,
+                        formatId: format.id,
                         serverId: '414551319031054346',
                         internal: server.internalLadder
                     })
@@ -82,7 +83,8 @@ export default {
                 if (!loserStats) {
                     const stats = await Stats.create({
                         playerId: loserId,
-                        format: format.name,
+                        formatName: format.name,
+                        formatId: format.id,
                         serverId: '414551319031054346',
                         internal: server.internalLadder
                     })

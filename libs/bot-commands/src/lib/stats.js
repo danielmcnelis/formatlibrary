@@ -63,7 +63,7 @@ export default {
             const stats = await Stats.findOne({ 
                 where: { 
                     playerId: player.id, 
-                    format: {[Op.iLike]: format.name}, 
+                    formatId: format.id, 
                     [Op.or]: [
                         { wins: { [Op.not]: null } }, 
                         { losses: { [Op.not]: null } }, 
@@ -74,7 +74,7 @@ export default {
 
             const allStats = await Stats.findAll({ 
                     where: {
-                        format: { [Op.iLike]: format.name }, 
+                        format: format.id, 
                         games: { [Op.gte]: 3 },
                         serverId: serverId,
                         inactive: false,

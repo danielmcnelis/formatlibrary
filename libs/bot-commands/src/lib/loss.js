@@ -32,13 +32,13 @@ export default {
         const winningPlayer = await Player.findOne({ where: { discordId: winninguser.id } })
         const serverId = server.internalLadder ? server.id : '414551319031054346'
         
-        const wCount = await Stats.count({ where: { playerId: winningPlayer.id, format: format.name, serverId: serverId } })
-        if (!wCount) await Stats.create({ playerId: winningPlayer.id, format: format.name, serverId: serverId, internal: server.internalLadder })
-        const winnerStats = await Stats.findOne({ where: { playerId: winningPlayer.id, format: format.name, serverId: serverId } })
+        const wCount = await Stats.count({ where: { playerId: winningPlayer.id, formatId: format.id, serverId: serverId } })
+        if (!wCount) await Stats.create({ playerId: winningPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, internal: server.internalLadder })
+        const winnerStats = await Stats.findOne({ where: { playerId: winningPlayer.id, formatId: format.id, serverId: serverId } })
         const losingPlayer = await Player.findOne({ where: { discordId: interaction.user.id } })
-        const lCount = await Stats.count({ where: { playerId: losingPlayer.id, format: format.name, serverId: serverId } })
-        if (!lCount) await Stats.create({ playerId: losingPlayer.id, format: format.name, serverId: serverId, internal: server.internalLadder })
-        const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, format: format.name, serverId: serverId } })
+        const lCount = await Stats.count({ where: { playerId: losingPlayer.id, formatId: format.id, serverId: serverId } })
+        if (!lCount) await Stats.create({ playerId: losingPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, internal: server.internalLadder })
+        const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, formatId: format.id, serverId: serverId } })
 
         if (winninguser.bot) return await interaction.editReply({ content: `Sorry, Bots do not play ${format.name} Format... *yet*.`})
         if (!losingPlayer || !loserStats) return await interaction.editReply({ content: `You are not in the database.`})

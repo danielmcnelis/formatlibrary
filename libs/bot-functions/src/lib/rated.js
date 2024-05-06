@@ -160,7 +160,7 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
 
             const allStats = await Stats.findAll({ 
                 where: {
-                    format: { [Op.iLike]: format.name }, 
+                    formatId: format.id, 
                     games: { [Op.gte]: 3 },
                     serverId: '414551319031054346',
                     inactive: false,
@@ -251,7 +251,7 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
     
             const allStats = await Stats.findAll({ 
                 where: {
-                    format: { [Op.iLike]: format.name }, 
+                    formatId: format.id, 
                     games: { [Op.gte]: 3 },
                     serverId: '414551319031054346',
                     inactive: false,
@@ -609,7 +609,7 @@ export const sendRatedPairingNotifications = async (client, player, opponent, fo
     
         const allStats = await Stats.findAll({ 
             where: {
-                format: { [Op.iLike]: format.name }, 
+                formatId: format.id, 
                 games: { [Op.gte]: 3 },
                 serverId: '414551319031054346',
                 inactive: false,

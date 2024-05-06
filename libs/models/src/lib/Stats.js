@@ -2,7 +2,10 @@ import { Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const Stats = db.define('stats', {
-  format: {
+  formatId: {
+    type: Sequelize.INTEGER
+  },
+  formatName: {
     type: Sequelize.STRING
   },
   elo: {
