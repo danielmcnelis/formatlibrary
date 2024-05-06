@@ -1507,62 +1507,87 @@ import { parse } from 'csv-parse'
 
 // })()
 
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+//     const names = []
+
+//     const { data } = await axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?misc=yes')
+//     for (let i = 0; i < data.data.length; i++) {
+//         const datum = data.data[i]
+//         const id = datum.id.toString()
+//         const name = datum.name
+//         const description = datum.desc
+//         const betaId = datum.misc_info[0]?.beta_id?.toString()
+//         const betaName = datum.misc_info[0]?.beta_name
+//         if (!betaId || !betaName) continue
+
+//         try {
+//             const betaCard = await Card.findOne({
+//                 where: {
+//                     ypdId: betaId,
+//                     name: betaName
+//                 }
+//             })
+    
+//             const card = await Card.findOne({
+//                 where: {
+//                     ypdId: id,
+//                     name: name
+//                 }
+//             })
+
+//             if (betaCard && card && betaCard.id !== card.id) {
+//                 console.log(`destroying ${betaCard.name} (${betaCard.ypdId}), which is now ${card.name} (${card.ypdId})`)
+//                 await betaCard.destroy()
+//                 await card.update({ description })
+//                 names.push(card.name)
+//                 b++
+//             } else if (betaCard && !card) {
+//                 console.log(`Beta Card: ${betaCard.name} (${betaCard.ypdId}) exists, but ${card.name} (${card.ypdId}) does not ⚠️`)
+//             } else if (!betaCard && card) {
+//                 console.log(`${card.name} (${card.ypdId}) exists, while Beta Card: ${betaName} (${betaId}) does not 👍`)
+//                 await card.update({ description })
+//                 names.push(card.name)
+//                 b++
+//             } else {                
+//                 console.log(`Beta Card: ${betaCard.name} (${betaCard.ypdId}) and ${card.name} (${card.ypdId}) share the same FL id: (${betaCard.id})`)
+//                 await card.update({ description })
+//                 names.push(card.name)
+//                 b++
+//             }
+//         } catch (err) {
+//             e++ 
+//             console.log(err)
+//         }
+//     }
+
+//     console.log(`Updated descriptions of ${b} cards. Encountered ${e} errors.`)
+//     console.log(names.sort().join('\n'))
+//     return
+// })()
+
+
 ;(async () => {
     let b = 0
     let e = 0
-    const names = []
-
-    const { data } = await axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?misc=yes')
-    for (let i = 0; i < data.data.length; i++) {
-        const datum = data.data[i]
-        const id = datum.id.toString()
-        const name = datum.name
-        const description = datum.desc
-        const betaId = datum.misc_info[0]?.beta_id?.toString()
-        const betaName = datum.misc_info[0]?.beta_name
-        if (!betaId || !betaName) continue
-
+    const allStats = await Stats.findAll()
+    for (let i = 0; i < allStats.length; i++) {
         try {
-            const betaCard = await Card.findOne({
+            const stats = allStats[i]
+            const format = await Format.findOne({
                 where: {
-                    ypdId: betaId,
-                    name: betaName
+                    name: {[Op.iLike]: stats.formatName }
                 }
             })
     
-            const card = await Card.findOne({
-                where: {
-                    ypdId: id,
-                    name: name
-                }
-            })
-
-            if (betaCard && card && betaCard.id !== card.id) {
-                console.log(`destroying ${betaCard.name} (${betaCard.ypdId}), which is now ${card.name} (${card.ypdId})`)
-                await betaCard.destroy()
-                await card.update({ description })
-                names.push(card.name)
-                b++
-            } else if (betaCard && !card) {
-                console.log(`Beta Card: ${betaCard.name} (${betaCard.ypdId}) exists, but ${card.name} (${card.ypdId}) does not ⚠️`)
-            } else if (!betaCard && card) {
-                console.log(`${card.name} (${card.ypdId}) exists, while Beta Card: ${betaName} (${betaId}) does not 👍`)
-                await card.update({ description })
-                names.push(card.name)
-                b++
-            } else {                
-                console.log(`Beta Card: ${betaCard.name} (${betaCard.ypdId}) and ${card.name} (${card.ypdId}) share the same FL id: (${betaCard.id})`)
-                await card.update({ description })
-                names.push(card.name)
-                b++
-            }
+            await stats.update({ formatId: format.id })
+            b++
         } catch (err) {
-            e++ 
+            e++
             console.log(err)
         }
     }
 
-    console.log(`Updated descriptions of ${b} cards. Encountered ${e} errors.`)
-    console.log(names.sort().join('\n'))
-    return
+    return console.log(`updated ${b} out of ${allStats.length} stats rows, encountered ${e} errors`)
 })()
