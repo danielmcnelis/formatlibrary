@@ -8,7 +8,7 @@ import { NotFound } from '../General/NotFound'
 import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import './PlayerProfile.css'
-import { countries, fipsToIso2 } from '@fl/utils'
+import { countries } from '@fl/utils'
 
 export const PlayerProfile = () => {
   const [player, setPlayer] = useState({})
@@ -114,7 +114,7 @@ export const PlayerProfile = () => {
                         <div className="profile-line"><b>Discord:</b> {player.globalName || player.discordName && player.discriminator && player.discriminator !== '0' ? (<><span>{player.discordName}</span><span style={{ color: 'gray' }}>#{player.discriminator}</span></>) : player.discordName || 'N/A'}</div>
                         {
                             player.country ? (
-                                <div className="profile-line"><b>Country:</b> {regionNames.of(fipsToIso2[player.country])} <img className="country" src={`https://www.worldometers.info/img/flags/${(player.country).toLowerCase()}-flag.gif`} alt={player.country + ' flag'}/></div>
+                                <div className="profile-line"><b>Country:</b> {regionNames.of(countries[player.country]?.iso2) || player.country} <img className="country" src={`https://www.worldometers.info/img/flags/${(countries[player.country].fips).toLowerCase()}-flag.gif`} alt="flag"/></div>
                             ) : ''
                         }
                         {

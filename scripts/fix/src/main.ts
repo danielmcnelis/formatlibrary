@@ -7,6 +7,7 @@ import { S3 } from 'aws-sdk'
 import { capitalize } from '@fl/utils'
 import * as fs from 'fs'
 import { parse } from 'csv-parse'
+import { iso2ToCountries } from '@fl/utils'
 
 // ;(async () => {
 //     const decks = await Deck.findAll({ include: [DeckType, Event, Format, Player] })
@@ -1568,26 +1569,44 @@ import { parse } from 'csv-parse'
 // })()
 
 
-;(async () => {
-    let b = 0
-    let e = 0
-    const allStats = await Stats.findAll()
-    for (let i = 0; i < allStats.length; i++) {
-        try {
-            const stats = allStats[i]
-            const format = await Format.findOne({
-                where: {
-                    name: {[Op.iLike]: stats.formatName }
-                }
-            })
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+//     const allStats = await Stats.findAll()
+//     for (let i = 0; i < allStats.length; i++) {
+//         try {
+//             const stats = allStats[i]
+//             const format = await Format.findOne({
+//                 where: {
+//                     name: {[Op.iLike]: stats.formatName }
+//                 }
+//             })
     
-            await stats.update({ formatId: format.id })
-            b++
-        } catch (err) {
-            e++
-            console.log(err)
+//             await stats.update({ formatId: format.id })
+//             b++
+//         } catch (err) {
+//             e++
+//             console.log(err)
+//         }
+//     }
+
+//     return console.log(`updated ${b} out of ${allStats.length} stats rows, encountered ${e} errors`)
+// })()
+
+;(async () => { 
+    const players = await Player.findAll({
+        where: {
+            country: {
+                [Op.not]: null
+            }
         }
+    })
+
+    for (let i = 0; i < players.length; i++) {
+        const player = players[i]
+        const country = iso2ToCountries(player.country)
+        await player.update({ country })
     }
 
-    return console.log(`updated ${b} out of ${allStats.length} stats rows, encountered ${e} errors`)
+    return console.log('Fin.')
 })()

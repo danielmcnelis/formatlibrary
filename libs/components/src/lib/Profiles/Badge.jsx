@@ -26,10 +26,10 @@ export const Badge = (props) => {
   const medal = getMedal(stats.elo)
 
   return (
-    <Link to={urlize(`/formats/${stats.format}`)}>
+    <Link to={urlize(`/formats/${stats.formatName}`)}>
         <div className="badge">
             <img src={medal} alt="medal"/>
-            <div className="badge-label">{capitalize(stats.format.replace('_', ' '), true)}</div>
+            <div className="badge-label">{capitalize(stats.formatName.replace('_', ' '), true)}</div>
         </div>
     </Link>
   )

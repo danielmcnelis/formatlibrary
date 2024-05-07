@@ -1,5 +1,6 @@
 
 import { useState } from 'react'
+import { countries } from '@fl/utils'
 import axios from 'axios'
 
 export const PlayerCreator = () => {
@@ -20,7 +21,7 @@ export const PlayerCreator = () => {
         setDiscriminator(null)
         document.getElementById('firstName').value = null
         document.getElementById('lastName').value = null
-        document.getElementById('country').value = null
+        document.getElementById('country-select').value = null
         document.getElementById('pfp').value = null
         document.getElementById('discordName').value = null
         document.getElementById('discriminator').value = null
@@ -84,14 +85,17 @@ export const PlayerCreator = () => {
                     onChange={(e) => readPfp(e.target.files[0])}
                 />
             </label>
-            <label>Country (2-letter code):
-                <input
-                    id="country"
-                    value={country || ''}
-                    type="text"
-                    onChange={(e) => setCountry(e.target.value.toUpperCase())}
-                />
+
+            <label>
+                Country:
+                <select id="country-select" onChange={(e) => setCountry(e.target.value)}>
+                    <option value={null}>Unknown</option>
+                    {
+                        Object.keys(countries).map((c) => <option value={c}>{c}</option>)
+                    }
+                </select>
             </label>
+            
             <label>Discord Name:
                 <input
                     id="discordName"

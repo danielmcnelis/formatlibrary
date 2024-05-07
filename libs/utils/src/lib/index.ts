@@ -15,6 +15,7 @@ import {
     countries,
     fipsToIso2,
     getCountry,
+    iso2ToCountries,
     iso2ToFips,
     timezones
 } from './country'
@@ -29,6 +30,7 @@ export {
   fipsToIso2,
   getCookie,
   getCountry,
+  iso2ToCountries,
   iso2ToFips,
   ordinalize,
   shouldDisplay,

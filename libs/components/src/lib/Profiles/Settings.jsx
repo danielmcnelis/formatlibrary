@@ -182,7 +182,7 @@ export const Settings = () => {
                                     onChange={(e) => setDetectedCountry(e.target.value)}
                                 >  
                                 {
-                                    Object.entries(countries).sort((a, b) => b[1] > a[1] ? -1 : 1).map((e) => <option key={e[0]} value={e[0]}>{e[1]}</option>)
+                                    Object.keys(countries).map((key) => <option key={key} value={key}>{key}</option>)
                                 }
                                 </Form.Select>
                                 <div className="show-cursor detect-button" onClick={() => setDetectedCountry(getCountry(Intl.DateTimeFormat().resolvedOptions().timeZone))}>Auto Detect</div>

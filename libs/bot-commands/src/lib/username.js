@@ -36,9 +36,9 @@ export default {
         const player =  await Player.findOne({ where: { discordId: user.id } })
         if (userIsAuthor && name) {
             await player.update({ [colName]: name })
-            return await interaction.reply({ content: `Your ${simulator} username has been set to: ${player[colName]}.`})
+            return await interaction.reply({ content: `Your ${simulator} username has been set to: ${player[colName]}`})
         } else {
-            return await interaction.reply({ content: `${userIsAuthor ? 'Your' : `${user.username}'s`} ${simulator} username is: ${player[colName]}.`})
+            return await interaction.reply({ content: `${userIsAuthor ? 'Your' : `${user.username}'s`} ${simulator} username is: ${player[colName]}`})
         }
 	}
 }
