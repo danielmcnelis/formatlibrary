@@ -24,7 +24,7 @@ export const formatsName = async (req, res, next) => {
 
     const statsCount = await Stats.count({
       where: {
-        format: { [Op.iLike]: format.name.replace(' ', '_').replace('-', '_') },
+        formatId: format.id,
         serverId: '414551319031054346'
       }
     })
