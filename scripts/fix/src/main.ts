@@ -1604,7 +1604,7 @@ import { iso2ToCountries } from '@fl/utils'
 
     for (let i = 0; i < players.length; i++) {
         const player = players[i]
-        const country = iso2ToCountries(player.country)
+        const country = iso2ToCountries[player.country]
         await player.update({ country })
     }
 
