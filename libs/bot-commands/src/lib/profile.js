@@ -29,7 +29,7 @@ export default {
             const stats = await stats?.findOne({ 
                 where: { 
                     playerId: player.id, 
-                    format: {[Op.iLike]: format.name}, 
+                    formatId: format.id, 
                     [Op.or]: [
                         { wins: { [Op.not]: null } }, 
                         { losses: { [Op.not]: null } }, 

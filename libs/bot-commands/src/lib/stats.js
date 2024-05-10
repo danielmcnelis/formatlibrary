@@ -74,7 +74,7 @@ export default {
 
             const allStats = await Stats.findAll({ 
                     where: {
-                        format: format.id, 
+                        formatId: format.id, 
                         games: { [Op.gte]: 3 },
                         serverId: serverId,
                         inactive: false,
