@@ -7,8 +7,23 @@ import { S3 } from 'aws-sdk'
 import { capitalize } from '@fl/utils'
 import * as fs from 'fs'
 import { parse } from 'csv-parse'
-import { shuffleArray } from '@fl/bot-functions'
 import { iso2ToCountries } from '@fl/utils'
+
+//SHUFFLE ARRAY
+const shuffleArray = (arr) => {
+    let i = arr.length
+    let temp
+    let index
+
+    while (i--) {
+        index = Math.floor((i + 1) * Math.random())
+        temp = arr[index]
+        arr[index] = arr[i]
+        arr[i] = temp
+    }
+
+    return arr
+}
 
 // ;(async () => {
 //     const decks = await Deck.findAll({ include: [DeckType, Event, Format, Player] })
