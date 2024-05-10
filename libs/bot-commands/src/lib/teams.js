@@ -10,7 +10,6 @@ export default {
         .setDescription('View list of teams. 📋')
         .setDMPermission(false),
     async execute(interaction) {
-        // return interaction.reply(emojis.yellow)
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
@@ -50,8 +49,6 @@ export default {
             const playerC = await Player.findOne({ where: { id: team.playerCId }})
 
             let players = []
-            // const players = [playerA, playerB, playerC]
-
             if (captain.id !== playerA.id) players.push(playerA)
             if (captain.id !== playerB.id) players.push(playerB)
             if (captain.id !== playerC.id) players.push(playerC)
@@ -69,14 +66,12 @@ export default {
                     }
                 })
 
-                const slot = entry ? entry.slot :
-                    j === 0 ? 'A' : 
-                    j === 1 ? 'B' : 
-                    'C'
+                const slot = tournament.formatName === 'multiple' && entry ? `${entry.slot} Player` : 
+                    tournament.formatName !== 'multiple' && tournament.state === 'underway' ? `Player ${entry.slot}` :
+                    'Player'
 
                 const isCaptain = player.id === captain.id
-
-                results.push(`${slot} Player: ${player.globalName || player.discordName} ${isCaptain ? '(Captain) ' : ' '}${entry ? emojis.check : emojis.nope}`)
+                results.push(`${slot}: ${player.globalName || player.discordName} ${isCaptain ? '(Captain) ' : ' '}${entry ? emojis.check : emojis.nope}`)
             }
         }
 
@@ -93,8 +88,19 @@ export default {
         if (!freeAgents.length) results.push('N/A')
         freeAgents.forEach((freeAgent) => results.push(freeAgent.playerName))
 
-        await interaction.editReply({ content: `${tournament.name} ${tournament.logo} - Teams ${tournament.emoji}`}) 
-        for (let i = 0; i < results.length; i += 30) interaction.channel.send({ content: results.slice(i, i + 30).join('\n').toString() })
+        const channel = interaction.guild?.channels?.cache?.get(server.botSpamChannel) || interaction.channel
+        console.log(`channel.id`, channel.id)
+        console.log(`interaction.channel?.id`, interaction.channel?.id)
+        console.log(`server.botSpamChannel`, server.botSpamChannel)
+        console.log(`server.botSpamChannel === channel.id && interaction.channel?.id !== server.botSpamChannel`, server.botSpamChannel === channel.id && interaction.channel?.id !== server.botSpamChannel)
+        if (server.botSpamChannel === channel.id && interaction.channel?.id !== server.botSpamChannel) {
+            await interaction.editReply(`Please visit <#${channel.id}> to view the ${tournament.name} teams. ${tournament.logo}`)
+            await channel.send({ content: `${tournament.name} ${tournament.logo} - Teams ${tournament.emoji}`}) 
+        } else {
+            await interaction.editReply({ content: `${tournament.name} ${tournament.logo} - Teams ${tournament.emoji}`}) 
+        }
+        
+        for (let i = 0; i < results.length; i += 30) await channel.send({ content: results.slice(i, i + 30).join('\n').toString() })
         return    
     }
 }

@@ -1,4 +1,4 @@
-import { Alius, Card, Cube, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Print, Replay, Ruling, Set, Server, Stats, Status, Tournament } from '@fl/models'
+import { Alius, Card, Cube, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Print, Replay, Ruling, Set, Server, Stats, Status, Team, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { config } from '@fl/config' 
@@ -7,6 +7,7 @@ import { S3 } from 'aws-sdk'
 import { capitalize } from '@fl/utils'
 import * as fs from 'fs'
 import { parse } from 'csv-parse'
+import { shuffleArray } from '@fl/bot-functions'
 import { iso2ToCountries } from '@fl/utils'
 
 // ;(async () => {
@@ -1593,20 +1594,48 @@ import { iso2ToCountries } from '@fl/utils'
 //     return console.log(`updated ${b} out of ${allStats.length} stats rows, encountered ${e} errors`)
 // })()
 
+// ;(async () => { 
+//     const players = await Player.findAll({
+//         where: {
+//             country: {
+//                 [Op.not]: null
+//             }
+//         }
+//     })
+
+//     for (let i = 0; i < players.length; i++) {
+//         const player = players[i]
+//         const country = iso2ToCountries[player.country]
+//         await player.update({ country })
+//     }
+
+//     return console.log('Fin.')
+// })()
+
+
 ;(async () => { 
-    const players = await Player.findAll({
+    let b = 0
+    let e = 0
+    const teams = await Team.findAll({
         where: {
-            country: {
-                [Op.not]: null
-            }
+            tournamentId: '14470411'
         }
     })
 
-    for (let i = 0; i < players.length; i++) {
-        const player = players[i]
-        const country = iso2ToCountries[player.country]
-        await player.update({ country })
+    for (let i = 0; i < teams.length; i++) {
+        try {
+            const team = teams[i]
+            let playerIds = [team.playerAId, team.playerBId, team.playerCId]
+            console.log(`original playerIds:`, playerIds)
+            playerIds = shuffleArray(playerIds)
+            await team.update({ playerAId: playerIds[0], playerBId: playerIds[1], playerCId: playerIds[2] })
+            console.log(`UPDATED playerIds:`, [team.playerIdA, team.playerIdB, team.playerIdC])
+            b++
+        } catch (err) {
+            e++
+            console.log(err)
+        }
     }
 
-    return console.log('Fin.')
+    return console.log(`Fin. ~ updated: ${b}, errors: ${e}`)
 })()
