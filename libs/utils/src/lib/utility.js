@@ -98,7 +98,8 @@ export const shouldDisplay = (placement = 1, size = 0) => {
     (size > 64 && size <= 96 && placement <= 12) ||
     (size > 96 && size <= 128 && placement <= 16) ||
     (size > 128 && size <= 224 && placement <= 24) ||
-    (size > 224 && placement <= 32) ||
+    (size > 224 && size <= 352 && placement <= 32) ||
+    (size > 352 && placement <= 64) ||
     false
 
   return display

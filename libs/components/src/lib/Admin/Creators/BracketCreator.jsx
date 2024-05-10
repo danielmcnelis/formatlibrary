@@ -42,7 +42,7 @@ export const BracketCreator = () => {
     const reverseEngineerParticipants = (raw) => {
         const logic = useNewLogic ? newLogic : oldLogic
         const keys = Array.from(logic.keys()).sort((a, b) => logic[a] - logic[b])
-        const pairings = raw.replace(/[0-9\t]/g, '').split('\n').map((e) => e.split('vs.')).flat().map((e) => {
+        const pairings = raw.replace(/[0-9+\t]/g, '').split('\n').map((e) => e.split('vs.')).flat().map((e) => {
             if (e.includes(',')) {
                 const [surname, forename] = e.split(',')
                 return `${forename} ${surname}`.trim()
@@ -59,10 +59,10 @@ export const BracketCreator = () => {
     const processParticipants = (data) => {
         const processedParticipants = data.split('\n').map((e) => {
             if (e.includes(',')) {
-              const [surname, forename] = e.replace(/[0-9\t)]/g, '').split(',')
+              const [surname, forename] = e.replace(/[0-9+\t)]/g, '').split(',')
               return `${forename} ${surname}`.trim()
             } else {
-              return e.replace(/[0-9\t)]/g, '').trim()
+              return e.replace(/[0-9+\t)]/g, '').trim()
             }
         })
 
