@@ -28,14 +28,13 @@ import { assignTourRoles, checkIfEndOfMonth, conductCensus, createTopCut, downlo
     startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, assignRoles, createMembership,
     createPlayer, fetchCardNames, fetchOPCardNames, hasPartnerAccess, isMod, isNewMember, 
     isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, editPointsSystem, refreshExpiredTokens, 
-    updateDecks, updateMatchups, updateReplays, downloadAltArtworks
+    updateDecks, updateMatchups, updateReplays, downloadAltArtworks, getTournament
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
 import { emojis } from '@fl/bot-emojis'
 import commands from '@fl/bot-commands'
 import { rated } from './routes'
-import { getTournament } from '../../../../libs/bot-functions/src'
 client.commands = new Collection()
 Object.values(commands.formatLibraryCommands).forEach((command) => client.commands.set(command.data.name, command))
 Object.values(commands.globalCommands).forEach((command) => client.commands.set(command.data.name, command))
