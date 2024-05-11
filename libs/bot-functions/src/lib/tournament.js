@@ -1318,16 +1318,15 @@ export const findOtherPreReqMatch = (matchesArr = [], nextMatchId, completedMatc
 }
 
 //GET MATCHES
-export const getMatches = async (server, tournamentId, state = 'all', participantId = '') => {
-    console.log('!!server', !!server)
-    console.log('tournamentId', tournamentId)
-    console.log('state', state)
-    console.log('participantId', participantId)
-    console.log('path', `https://api.challonge.com/v1/tournaments/${tournamentId}/matches.json?state=${state}&participant_id=${participantId}&api_key=${server.challongeAPIKey}`)
+export const getMatches = async (server, tournamentId, state = 'all', participantId) => {
+    let url = `https://api.challonge.com/v1/tournaments/${tournamentId}/matches.json?api_key=${server.challongeAPIKey}&state=${state}`
+    if (participantId) url += `&participant_id=${participantId}`
+    console.log('path', url)
+    
     try {
         const { data } = await axios({
             method: 'get',
-            url: `https://api.challonge.com/v1/tournaments/${tournamentId}/matches.json?state=${state}&participant_id=${participantId}&api_key=${server.challongeAPIKey}`
+            url: url
         })
         
         console.log('data', data)
