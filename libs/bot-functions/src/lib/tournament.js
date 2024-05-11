@@ -3668,6 +3668,8 @@ export const processNoShow = async (interaction, tournamentId, userId) => {
         winnerParticipantId = findNoShowOpponent(match, noShowEntry.participantId)
         if (winnerParticipantId) break
     }
+    
+    if (!winnerParticipantId) return await interaction.editReply({ content: `Error: could not find open match featuring ${noShowEntry.name} in ${tournament.name}.`})
 
     const winningEntry = await Entry.findOne({ where: { participantId: winnerParticipantId, tournamentId: tournament.id }, include: Player })
     if (!winningEntry) return await interaction.editReply({ content: `Error: could not find opponent.`})
