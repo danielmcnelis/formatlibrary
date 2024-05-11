@@ -1,11 +1,12 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
-import { Entry, Format, Server, Tournament } from '@fl/models'
-import { initiateEndTournament, selectTournament, sendPairings, sendTeamPairings } from '@fl/bot-functions'
-import { isMod, hasPartnerAccess } from '@fl/bot-functions'
+import { Entry, Format, Server, Team, Tournament } from '@fl/models'
+import { initiateEndTournament, selectTournament, sendPairings, sendTeamPairings, postParticipant } from '@fl/bot-functions'
+import { isMod, hasPartnerAccess, shuffleArray } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { emojis } from '@fl/bot-emojis'
+import { Player } from '../../../models/src'
 
 export default {
 	data: new SlashCommandBuilder()
@@ -33,6 +34,50 @@ export default {
             return await interaction.editReply({ content: `Error: No tournament entrants found.`})
         } else if (entryCount < 2) {
             return await interaction.editReply({ content: `Error: At least 2 players are required to start a tournament.`})
+        }
+
+        if (tournament.isTeamTournament) {
+            let freeAgents = await Entry.findAll({
+                where: {
+                    tournamentId: tournament.id,
+                    teamId: null,
+                },
+                include: Player,
+                order: [['createdAt', 'ASC']]
+            })
+
+            const removedEntries = []
+
+            while (freeAgents.length % 3 !== 0) {
+                removedEntries.push(freeAgents.pop())                
+            }
+
+            freeAgents = shuffleArray(freeAgents)
+
+            for (let i = 0; i < (freeAgents.length / 3); i++) {
+                const freeAgentA = freeAgents[i*3]
+                const freeAgentB = freeAgents[i*3+1]
+                const freeAgentC = freeAgents[i*3+2]
+                const teamName = `Free Agents ${i+1}`
+                
+                const data = await postParticipant(server, tournament, { discordName: teamName, discriminator: '0' })
+                if (!data) return await interaction.editReply({ content: `Error: Unable to register ${teamName} on Challonge for ${tournament.name}. ${tournament.logo}`})
+                
+                const team = await Team.create({
+                    name: teamName,
+                    captainId: freeAgentA.playerId,
+                    tournamentId: tournament.id,
+                    participantId: data.participant.id,
+                    playerAId: freeAgentA.playerId,
+                    playerBId: freeAgentB.playerId,
+                    playerCId: freeAgentC.playerId,
+                })
+
+                await freeAgentA.update({ slot: 'A', teamId: team.id, participantId: team.participantId })
+                await freeAgentB.update({ slot: 'B', teamId: team.id, participantId: team.participantId })
+                await freeAgentC.update({ slot: 'C', teamId: team.id, participantId: team.participantId })   
+                await interaction.channel.send(`Registered new free agent team: ${teamName}\nCaptain: <@${freeAgentA.player?.discordId}>\nPlayer 1: <@${freeAgentB.player?.discordId}>\nPlayer 2: <@${freeAgentC.player?.discordId}>`) 
+            }
         }
 
         if (tournament?.type?.toLowerCase() === 'swiss') {
