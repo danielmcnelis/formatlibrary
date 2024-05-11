@@ -83,7 +83,9 @@ export default {
                     losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id } })
                     winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id } })
                     if (!losingEntry || !winningEntry) continue
+                    console.log('losingEntry?.participantId', losingEntry?.participantId)
                     const data = await getMatches(server, tournament.id, 'open', losingEntry.participantId)
+                    console.log('DATA', data)
                     if (!data[0]) continue
                     if (checkPairing(data[0].match, losingEntry.participantId, winningEntry.participantId)) {
                         tournaments.push(tournament)
