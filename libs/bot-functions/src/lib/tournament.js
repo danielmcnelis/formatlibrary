@@ -1724,9 +1724,11 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                         tournament.type === 'double elimination' && loserNextMatch.round > 0 ? `Winners Round ${Math.abs(loserNextMatch.round)}` :
                         `Round ${loserNextMatch.round}`
 
-                    const {player: playerA1} = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player })
-                    const {player: playerA2} = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player})
-                    
+                    const entryA1 = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player })
+                    const entryA2 = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player})
+                    const playerA1 = entryA1?.player
+                    const playerA2 = entryA2?.player
+
                     try {
                         const pA1Member = await interaction.guild?.members.fetch(playerA1.discordId)
                         const pA2DiscordUsername = playerA2.discriminator === '0' ? playerA2.discordName : `${playerA2.discordName}#${playerA2.discriminator}`
@@ -1757,9 +1759,11 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                         console.log(err)
                     }
 
-                    const {player: playerB1} = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player})
-                    const {player: playerB2} = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player})
-                    
+                    const entryB1 = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player})
+                    const entryB2 = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player})
+                    const playerB1 = entryB1?.player
+                    const playerB2 = entryB2?.player
+
                     try {
                         const pB1Member = await interaction.guild?.members.fetch(playerB1.discordId)
                         const pB2DiscordUsername = playerB2.discriminator === '0' ? playerB2.discordName : `${playerB2.discordName}#${playerB2.discriminator}`
@@ -1790,8 +1794,10 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                         console.log(err)
                     }
 
-                    const {player: playerC1} = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player})
-                    const {player: playerC2} = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player})
+                    const entryC1 = await Entry.findOne({ where: { teamId: losingTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player})
+                    const entryC2 = await Entry.findOne({ where: { teamId: loserNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player})
+                    const playerC1 = entryC1?.player
+                    const playerC2 = entryC2?.player
 
                     try {
                         const pC1Member = await interaction.guild?.members.fetch(playerC1.discordId)
@@ -1847,9 +1853,11 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             tournament.type === 'double elimination' && winnerNextMatch.round > 0 ? `Winners Round ${Math.abs(winnerNextMatch.round)}` :
                             `Round ${winnerNextMatch.round}`
     
-                        const {player: playerA1} = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player })
-                        const {player: playerA2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player})
-
+                        const entryA1 = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player })
+                        const entryA2 = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player})
+                        const playerA1 = entryA1?.player
+                        const playerA2 = entryA2?.player
+    
                         try {
                             const pA1Member = await interaction.guild?.members.fetch(playerA1.discordId)
                             const pA2DiscordUsername = playerA2.discriminator === '0' ? playerA2.discordName : `${playerA2.discordName}#${playerA2.discriminator}`
@@ -1880,9 +1888,11 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             console.log(err)
                         }
 
-                        const {player: playerB1} = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player})
-                        const {player: playerB2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player})
-
+                        const entryB1 = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player})
+                        const entryB2 = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player})
+                        const playerB1 = entryB1?.player
+                        const playerB2 = entryB2?.player
+    
                         try {
                             const pB1Member = await interaction.guild?.members.fetch(playerB1.discordId)
                             const pB2DiscordUsername = playerB2.discriminator === '0' ? playerB2.discordName : `${playerB2.discordName}#${playerB2.discriminator}`
@@ -1913,9 +1923,11 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             console.log(err)
                         }
 
-                        const {player: playerC1} = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player})
-                        const {player: playerC2} = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player})
-
+                        const entryC1 = await Entry.findOne({ where: { teamId: winningTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player})
+                        const entryC2 = await Entry.findOne({ where: { teamId: winnerNextTeam.id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player})
+                        const playerC1 = entryC1?.player
+                        const playerC2 = entryC2?.player
+    
                         try {
                             const pC1Member = await interaction.guild?.members.fetch(playerC1.discordId)
                             const pC2DiscordUsername = playerC2.discriminator === '0' ? playerC2.discordName : `${playerC2.discordName}#${playerC2.discriminator}`
@@ -3655,6 +3667,7 @@ export const processNoShow = async (interaction, tournamentId, userId) => {
     if (!tournament || !noShowPlayer || !server) return
  
     if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
+    if (tournament.state === 'processing') return await interaction.editReply({ content: `Sorry, another API request is processing for ${tournament.name}. Please try again shortly.`})
     if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
     
     const noShowEntry = await Entry.findOne({ where: { playerId: noShowPlayer.id, tournamentId: tournament.id } })
@@ -3668,7 +3681,7 @@ export const processNoShow = async (interaction, tournamentId, userId) => {
         winnerParticipantId = findNoShowOpponent(match, noShowEntry.participantId)
         if (winnerParticipantId) break
     }
-    
+
     if (!winnerParticipantId) return await interaction.editReply({ content: `Error: could not find open match featuring ${noShowEntry.name} in ${tournament.name}.`})
 
     const winningEntry = await Entry.findOne({ where: { participantId: winnerParticipantId, tournamentId: tournament.id }, include: Player })

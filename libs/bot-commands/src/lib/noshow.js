@@ -34,6 +34,7 @@ export default {
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
         if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
+        if (tournament.state === 'processing') return await interaction.editReply({ content: `Sorry, another API request is processing for ${tournament.name}. Please try again shortly.`})
         if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
         
         const noShowEntry = await Entry.findOne({ where: { playerId: noShowPlayer.id, tournamentId: tournament.id } })
@@ -47,7 +48,7 @@ export default {
             winnerParticipantId = findNoShowOpponent(match, noShowEntry.participantId)
             if (winnerParticipantId) break
         }
-        
+
         if (!winnerParticipantId) return await interaction.editReply({ content: `Error: could not find open match featuring ${noShowEntry.name} in ${tournament.name}.`})
 
         const winningEntry = await Entry.findOne({ where: { participantId: winnerParticipantId, tournamentId: tournament.id }, include: Player })
