@@ -39,6 +39,7 @@ export default {
 
         const tournament = await Tournament.findOne({ 
             where: {
+                serverId: server.id,
                 isTeamTournament: true,
                 state: 'pending'
             }
