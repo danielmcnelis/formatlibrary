@@ -618,9 +618,9 @@ export const joinTournament = async (interaction, tournamentId) => {
     let format = await Format.findByServerOrChannelId(server, interaction.channelId)
     
     if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
-        return interaction.editReply({ content: `Sorry, premium tournaments are only open to premium server subscribers.`})
+        return await interaction.editReply({ content: `Sorry, premium tournaments are only open to premium server subscribers.`})
     } else if (tournament.requiredRoleId && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
-        return interaction.editReply({ content: `Sorry, you must have the <@&${tournament?.requiredRoleId}> role to join ${tournament.name}.`})
+        return await interaction.editReply({ content: `Sorry, you must have the <@&${tournament?.requiredRoleId}> role to join ${tournament.name}.`})
     }
 
     const team = tournament.isTeamTournament ? await Team.findOne({
@@ -998,8 +998,23 @@ export const createSheetData = async (tournament) => {
 export const removeParticipant = async (server, interaction, member, entry, tournament, drop = false) => {  
     const playerId = entry.playerId
     const playerName = member?.user?.username || entry.playerName
+    const initialState = tournament.state
+
+    const swissAndUnderway = await Tournament.count({ where: { id: tournament.id, type: 'swiss', state: 'underway' }})
+    if (swissAndUnderway) {
+        const matches = await getMatches(server, tournament.id, 'open')
+        if (!matches?.length) {
+            return await interaction.editReply({ content: `Error: Cannot ${drop ? 'drop' : 'remove participants'} while generating pairings for the next round. Please try again in a moment.`})
+        }
+    }
+ 
+    const processing = await Tournament.count({ where: { id: tournament.id, state: 'processing' }})
+    if (processing) {
+        return await interaction.editReply({ content: `Error: Processing another API request for this tournament. Please try again shortly.`})
+    }
 
     try {
+        await tournament.update({ state: 'processing' })
         // DELETE PARTICIPANT FROM CHALLONGE BRACKET 
         await axios({
             method: 'delete',
@@ -1041,12 +1056,21 @@ export const removeParticipant = async (server, interaction, member, entry, tour
         } else {
             return await interaction.editReply({ content: `I could not find ${playerName} in the participants list for ${tournament.name}. ${tournament.emoji}`})
         }
-    }   
+    } finally {
+        await tournament.update({ state: initialState })
+    }
 }
 
 //REMOVE TEAM
-export const removeTeam = async (server, interaction, team, entries, tournament, drop = false) => {    
+export const removeTeam = async (server, interaction, team, entries, tournament, drop = false) => {   
+    const initialState = tournament.state
+    const processing = await Tournament.count({ where: { id: tournament.id, state: 'processing' }})
+    if (processing) {
+        return await interaction.editReply({ content: `Error: Processing another API request for this tournament. Please try again shortly.`})
+    }
+    
     try {
+        await tournament.update({ state: 'processing' })
         const success = await axios({
             method: 'delete',
             url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${team.participantId}.json?api_key=${server.challongeAPIKey}`
@@ -1090,7 +1114,9 @@ export const removeTeam = async (server, interaction, team, entries, tournament,
         } else {
             return await interaction.editReply({ content: `Could not find ${team.name} in the participants list for ${tournament.name}. ${tournament.emoji}`})
         }
-    }   
+    } finally {
+        await tournament.update({ state: initialState })
+    }
 }
 
 //SEED
@@ -1174,7 +1200,7 @@ export const seed = async (interaction, tournamentId, shuffle = false) => {
 ////// TOURNAMENT MANAGEMENT FUNCTIONS ///////
 
 //CHECK PAIRING
-export const checkPairing = (match, p1, p2) => (match.player1_id === p1 && match.player2_id === p2) || (match.player1_id === p2 && match.player2_id === p1)
+export const checkPairing = (match, p1, p2) => (match?.player1_id === p1 && match?.player2_id === p2) || (match?.player1_id === p2 && match?.player2_id === p1)
 
 //FIND NEXT MATCH
 export const findNextMatch = (matchesArr = [], matchId, participantId) => {
@@ -1291,11 +1317,11 @@ export const findOtherPreReqMatch = (matchesArr = [], nextMatchId, completedMatc
 }
 
 //GET MATCHES
-export const getMatches = async (server, tournamentId) => {
+export const getMatches = async (server, tournamentId, state = 'all', participantId) => {
     try {
         const { data } = await axios({
             method: 'get',
-            url: `https://api.challonge.com/v1/tournaments/${tournamentId}/matches.json?api_key=${server.challongeAPIKey}`
+            url: `https://api.challonge.com/v1/tournaments/${tournamentId}/matches.json?state=${state}&participant_id=${participantId}&api_key=${server.challongeAPIKey}`
         })
         
         return data
@@ -1318,6 +1344,21 @@ export const getParticipants = async (server, tournamentId) => {
         console.log(err)
         return []
     }   
+}
+
+//GET TOURNAMENT
+export const getTournament = async (server, tournamentId) => {
+    try {
+        const { data } = await axios({
+            method: 'get',
+            url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`
+        })
+        
+        return data
+    } catch (err) {
+        console.log(err)
+        return []
+    }
 }
 
 //GET PAIRING
@@ -1378,24 +1419,30 @@ export const processMatchResult = async (server, interaction, winner, winningPla
         return false
     }
 
-    const matchesArr = await getMatches(server, tournament.id) || []
+    const data = await getMatches(server, tournament.id, 'open', losingPlayer.participantId) || []
     let matchId = false
     let scores = false
-    let challongeMatch
-    for (let i = 0; i < matchesArr.length; i++) {
-        const match = matchesArr[i].match
-        if (match.state !== 'open') continue
-        if (checkPairing(match, losingEntry.participantId, winningEntry.participantId)) {
-            challongeMatch = match
-            matchId = match.id    
-            scores = match.player1_id === winningEntry.participantId ? `${gameCount[0]}-${gameCount[1]}` : `${gameCount[1]}-${gameCount[0]}`
-            break
-        }
+    const match = data[0].match
+ 
+    if (match && checkPairing(match, losingEntry.participantId, winningEntry.participantId)) {
+        matchId = match.id    
+        scores = match.player1_id === winningEntry.participantId ? `${gameCount[0]}-${gameCount[1]}` : `${gameCount[1]}-${gameCount[0]}`
+    } else {
+        interaction.editReply({ content: `Error: could not find open match between ${losingPlayer.name} and ${winningPlayer.name} in ${tournament.name}.`})
+        return false
+    }
+
+    const processing = await Tournament.count({ where: { id: tournament.id, state: 'processing' }})
+    
+    if (processing) {
+        interaction.editReply({ content: `Error: Processing another API request for this tournament. Please try again shortly.`})
+        return false
     }
 
     let success
 
     try {
+        await tournament.update({ state: 'processing' })
         success = await axios({
             method: 'put',
             url: `https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${matchId}.json?api_key=${server.challongeAPIKey}`,
@@ -1408,8 +1455,10 @@ export const processMatchResult = async (server, interaction, winner, winningPla
         })
     } catch (err) {
         console.log(err)
+    } finally {
+        await tournament.update({ state: 'underway' })
     }
-     
+
     if (!success) {
         interaction.editReply({ content: `Error: could not update bracket for ${tournament.name}.`})
         return false
@@ -1528,7 +1577,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
         }
     }
     
-    return challongeMatch
+    return match
 }
 
 //PROCESS TEAM RESULT
@@ -1561,27 +1610,34 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
         include: Player
     })
 
-    const matchesArr = await getMatches(server, tournament.id) || []
+
+    const data = await getMatches(server, tournament.id, 'open', losingPlayer.participantId) || []
     let matchId = false
     let scores = false
-    let challongeMatch
-    let success
-
-    for (let i = 0; i < matchesArr.length; i++) {
-        const match = matchesArr[i].match
-        if (match.state !== 'open') continue
-        if (checkPairing(match, losingEntry.participantId, winningEntry.participantId)) {
-            challongeMatch = match
-            matchId = match.id    
-            scores =  match.player1_id === winningEntry.participantId ? 
-                `${winningTeam.matchWins}-${winningTeam.matchLosses}` : 
-                `${winningTeam.matchLosses}-${winningTeam.matchWins}`
-            break
-        }
+    const match = data[0].match
+ 
+    if (match && checkPairing(match, losingEntry.participantId, winningEntry.participantId)) {
+        matchId = match.id    
+        scores =  match.player1_id === winningEntry.participantId ? 
+            `${winningTeam.matchWins}-${winningTeam.matchLosses}` : 
+            `${winningTeam.matchLosses}-${winningTeam.matchWins}`
+    } else {
+        interaction.editReply({ content: `Error: could not find open match between ${losingTeam.name} and ${winningTeam.name} in ${tournament.name}.`})
+        return false
     }
+
+    const processing = await Tournament.count({ where: { id: tournament.id, state: 'processing' }})
+    
+    if (processing) {
+        interaction.editReply({ content: `Error: Processing another API request for this tournament. Please try again shortly.`})
+        return false
+    }
+
+    let success
 
     if (winningTeam.matchWins >= 2) {
         try {
+            await tournament.update({ state: 'processing' })
             success = await axios({
                 method: 'put',
                 url: `https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${matchId}.json?api_key=${server.challongeAPIKey}`,
@@ -1606,6 +1662,8 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
             })
         } catch (err) {
             console.log(err)
+        } finally {
+            await tournament.update({ state: 'underway' })
         }
         
         if (!success) {
@@ -1904,7 +1962,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
     await losingEntry.update({ losses: losingEntry.losses + 1 })
     await winningEntry.update({ wins: winningEntry.wins + 1 })   
-    return challongeMatch
+    return match
 }
 
 //SEND TEAM PAIRINGS

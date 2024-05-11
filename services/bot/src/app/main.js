@@ -35,6 +35,7 @@ import { assignTourRoles, checkIfEndOfMonth, conductCensus, createTopCut, downlo
 import { emojis } from '@fl/bot-emojis'
 import commands from '@fl/bot-commands'
 import { rated } from './routes'
+import { getTournament } from '../../../../libs/bot-functions/src'
 client.commands = new Collection()
 Object.values(commands.formatLibraryCommands).forEach((command) => client.commands.set(command.data.name, command))
 Object.values(commands.globalCommands).forEach((command) => client.commands.set(command.data.name, command))
@@ -106,6 +107,7 @@ client.on('ready', async() => {
     }
 
     try {
+        // FETCH CARD NAMES
         const names = await fetchCardNames()
         names.forEach((card) => fuzzyCards.add(card))
     } catch (err) {
@@ -113,8 +115,29 @@ client.on('ready', async() => {
     }
 
     try {
+        // FETCH ONE PIECE CARD NAMES
         const names = await fetchOPCardNames()
         names.forEach((card) => fuzzyOPCards.add(card))
+    } catch (err) {
+        console.log(err)
+    }
+
+    try {
+        // RESTORE TOURNAMENT STATES
+        const server = await Server.findOne({
+            where: {
+                id: '414551319031054346'
+            }
+        })
+
+        const tournaments = await Tournament.findAll({ where: { state: 'processing' }})
+        for (let i = 0; i < tournaments.length; i++) {
+            const tournament = tournaments[i]
+            const data = await getTournament(server, tournament.id)
+            console.log('data', data)
+            if (!data) continue
+            await tournament.update({ state: data.tournament?.state })
+        }
     } catch (err) {
         console.log(err)
     }

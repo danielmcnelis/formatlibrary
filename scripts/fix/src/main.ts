@@ -1644,7 +1644,7 @@ const shuffleArray = (arr) => {
             console.log(`original playerIds:`, playerIds)
             playerIds = shuffleArray(playerIds)
             await team.update({ playerAId: playerIds[0], playerBId: playerIds[1], playerCId: playerIds[2] })
-            console.log(`UPDATED playerIds:`, [team.playerIdA, team.playerIdB, team.playerIdC])
+            console.log(`UPDATED playerIds:`, [team.playerAId, team.playerBId, team.playerCId])
             b++
         } catch (err) {
             e++

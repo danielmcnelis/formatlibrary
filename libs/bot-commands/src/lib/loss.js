@@ -19,17 +19,17 @@ export default {
         .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
-        const winninguser = interaction.options.getUser('opponent')
+        const winningUser = interaction.options.getUser('opponent')
         const member = await interaction.guild?.members.fetch(interaction.user.id)
-        const winningMember = await interaction.guild?.members.fetch(winninguser.id).catch((err) => console.log(err))
+        const winningMember = await interaction.guild?.members.fetch(winningUser.id).catch((err) => console.log(err))
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.editReply({ content: `Try using /loss in channels like: <#414575168174948372> or <#629464112749084673>.`})
-        if (winninguser.id === interaction.user.id) return await interaction.editReply({ content: `You cannot lose a match to yourself.`})
+        if (winningUser.id === interaction.user.id) return await interaction.editReply({ content: `You cannot lose a match to yourself.`})
         
-        if (await isNewUser(winninguser.id)) await createPlayer(winningMember)
-        const winningPlayer = await Player.findOne({ where: { discordId: winninguser.id } })
+        if (await isNewUser(winningUser.id)) await createPlayer(winningMember)
+        const winningPlayer = await Player.findOne({ where: { discordId: winningUser.id } })
         const serverId = server.internalLadder ? server.id : '414551319031054346'
         
         const wCount = await Stats.count({ where: { playerId: winningPlayer.id, formatId: format.id, serverId: serverId } })
@@ -40,7 +40,7 @@ export default {
         if (!lCount) await Stats.create({ playerId: losingPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, internal: server.internalLadder })
         const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, formatId: format.id, serverId: serverId } })
 
-        if (winninguser.bot) return await interaction.editReply({ content: `Sorry, Bots do not play ${format.name} Format... *yet*.`})
+        if (winningUser.bot) return await interaction.editReply({ content: `Sorry, Bots do not play ${format.name} Format... *yet*.`})
         if (!losingPlayer || !loserStats) return await interaction.editReply({ content: `You are not in the database.`})
         if (!winningPlayer || !winnerStats) return await interaction.editReply({ content: `That user is not in the database.`})
 
@@ -71,15 +71,11 @@ export default {
                     losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id } })
                     winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id } })
                     if (!losingEntry || !winningEntry) continue
-                    const matches = await getMatches(server, tournament.id)
-                    if (!matches) continue
-                    for (let i = 0; i < matches.length; i++) {
-                        const match = matches[i].match
-                        if (match.state !== 'open') continue
-                        if (checkPairing(match, losingEntry.participantId, winningEntry.participantId)) {
-                            tournaments.push(tournament)
-                            break
-                        }
+                    const data = await getMatches(server, tournament.id, 'open', losingEntry.participantId)
+                    if (!data[0]) continue
+                    if (checkPairing(data[0].match, losingEntry.participantId, winningEntry.participantId)) {
+                        tournaments.push(tournament)
+                        break
                     }
                 }
             }
@@ -92,7 +88,7 @@ export default {
                     if (tournament.state === 'pending') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
                     if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
                     challongeMatch = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament, format) :
-                        await processMatchResult(server, interaction, winninguser, winningPlayer, interaction.member.user, losingPlayer, tournament, format)
+                        await processMatchResult(server, interaction, winningUser, winningPlayer, interaction.member.user, losingPlayer, tournament, format)
                     if (!challongeMatch) return
                 } else {
                     return
