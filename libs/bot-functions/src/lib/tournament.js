@@ -1322,7 +1322,7 @@ export const getMatches = async (server, tournamentId, state = 'all', participan
     let url = `https://api.challonge.com/v1/tournaments/${tournamentId}/matches.json?api_key=${server.challongeAPIKey}&state=${state}`
     if (participantId) url += `&participant_id=${participantId}`
     console.log('path', url)
-    
+
     try {
         const { data } = await axios({
             method: 'get',
@@ -3464,6 +3464,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
 
 // END SWISS TOURNAMENT WITHOUT PLAYOFF
 export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId) => {
+    await interaction.deferReply()
     const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
     const tournament = await Tournament.findOne({ where: { id: tournamentId }, include: Format })
     if (!tournament) return
