@@ -1003,7 +1003,6 @@ export const removeParticipant = async (server, interaction, member, entry, tour
     const swissAndUnderway = await Tournament.count({ where: { id: tournament.id, type: 'swiss', state: 'underway' }})
     if (swissAndUnderway) {
         const matches = await getMatches(server, tournament.id, 'open')
-        console.log('matches', matches)
         if (!matches?.length) {
             return await interaction.editReply({ content: `Error: Cannot ${drop ? 'drop' : 'remove participants'} while generating pairings for the next round. Please try again in a moment.`})
         }
@@ -1329,7 +1328,6 @@ export const getMatches = async (server, tournamentId, state = 'all', participan
             url: url
         })
         
-        console.log('data', data)
         return data
     } catch (err) {
         console.log(err)
@@ -1425,7 +1423,6 @@ export const processMatchResult = async (server, interaction, winner, winningPla
         return false
     }
 
-    console.log('losingEntry.participantId', losingEntry.participantId)
     const data = await getMatches(server, tournament.id, 'open', losingEntry.participantId) || []
     let matchId = false
     let scores = false

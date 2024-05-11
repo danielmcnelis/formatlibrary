@@ -1628,29 +1628,35 @@ const shuffleArray = (arr) => {
 // })()
 
 
-;(async () => { 
-    let b = 0
-    let e = 0
-    const teams = await Team.findAll({
-        where: {
-            tournamentId: '14470411'
-        }
-    })
+// ;(async () => { 
+//     let b = 0
+//     let e = 0
+//     const teams = await Team.findAll({
+//         where: {
+//             tournamentId: '14470411'
+//         }
+//     })
 
-    for (let i = 0; i < teams.length; i++) {
-        try {
-            const team = teams[i]
-            let playerIds = [team.playerAId, team.playerBId, team.playerCId]
-            console.log(`original playerIds:`, playerIds)
-            playerIds = shuffleArray(playerIds)
-            await team.update({ playerAId: playerIds[0], playerBId: playerIds[1], playerCId: playerIds[2] })
-            console.log(`UPDATED playerIds:`, [team.playerAId, team.playerBId, team.playerCId])
-            b++
-        } catch (err) {
-            e++
-            console.log(err)
-        }
-    }
+//     for (let i = 0; i < teams.length; i++) {
+//         try {
+//             const entries = await Entry.findAll({
+//                 where: {
+//                     teamId: 
+//                 }
+//             })
 
-    return console.log(`Fin. ~ updated: ${b}, errors: ${e}`)
-})()
+//             const team = teams[i]
+//             let playerIds = [team.playerAId, team.playerBId, team.playerCId]
+//             console.log(`original playerIds:`, playerIds)
+//             playerIds = shuffleArray(playerIds)
+//             await team.update({ playerAId: playerIds[0], playerBId: playerIds[1], playerCId: playerIds[2] })
+//             console.log(`UPDATED playerIds:`, [team.playerAId, team.playerBId, team.playerCId])
+//             b++
+//         } catch (err) {
+//             e++
+//             console.log(err)
+//         }
+//     }
+
+//     return console.log(`Fin. ~ updated: ${b}, errors: ${e}`)
+// })()

@@ -133,7 +133,6 @@ client.on('ready', async() => {
         for (let i = 0; i < tournaments.length; i++) {
             const tournament = tournaments[i]
             const data = await getTournament(server, tournament.id)
-            console.log('data', data)
             if (!data) continue
             await tournament.update({ state: data.tournament?.state })
         }
