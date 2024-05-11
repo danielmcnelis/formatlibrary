@@ -1983,9 +1983,11 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
             tournament.type === 'double elimination' && match.round > 0 ? `Winners Round ${Math.abs(match.round)}` :
             `Round ${match.round}`
   
-        const {player: playerA1} = await Entry.findOne({ where: { participantId: match.player1_id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player })
-        const {player: playerA2} = await Entry.findOne({ where: { participantId: match.player2_id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player })
-        
+        const entryA1 = await Entry.findOne({ where: { participantId: match.player1_id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player })
+        const entryA2 = await Entry.findOne({ where: { participantId: match.player2_id, tournamentId: tournament.id, slot: {[Op.or]: ['A', 'Goat']}}, include: Player })
+        const playerA1 = entryA1?.player
+        const playerA2 = entryA2?.player
+
         try {
             const pA1Member = await guild.members.fetch(playerA1.discordId)
             const pA2DiscordUsername = playerA2.discriminator === '0' ? playerA2.discordName : `${playerA2.discordName}#${playerA2.discriminator}`
@@ -2016,8 +2018,10 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
             console.log(err)
         }
 
-        const {player: playerB1} = await Entry.findOne({ where: { participantId: match.player1_id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player })
-        const {player: playerB2} = await Entry.findOne({ where: { participantId: match.player2_id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player })
+        const entryB1 = await Entry.findOne({ where: { participantId: match.player1_id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player })
+        const entryB2 = await Entry.findOne({ where: { participantId: match.player2_id, tournamentId: tournament.id, slot: {[Op.or]: ['B', 'Edison']}}, include: Player })
+        const playerB1 = entryB1?.player
+        const playerB2 = entryB2?.player
 
         try {
             const pB1Member = await guild.members.fetch(playerB1.discordId)
@@ -2049,8 +2053,10 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
             console.log(err)
         }
 
-        const {player: playerC1} = await Entry.findOne({ where: { participantId: match.player1_id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player })
-        const {player: playerC2} = await Entry.findOne({ where: { participantId: match.player2_id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player })
+        const entryC1 = await Entry.findOne({ where: { participantId: match.player1_id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player })
+        const entryC2 = await Entry.findOne({ where: { participantId: match.player2_id, tournamentId: tournament.id, slot: {[Op.or]: ['C', 'Tengu Plant']}}, include: Player })
+        const playerC1 = entryC1?.player
+        const playerC2 = entryC2?.player
 
         try {
             const pC1Member = await guild.members.fetch(playerC1.discordId)

@@ -26,7 +26,7 @@ export default {
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         
         if (format) {
-            const stats = await stats?.findOne({ 
+            const stats = await Stats?.findOne({ 
                 where: { 
                     playerId: player.id, 
                     formatId: format.id, 
