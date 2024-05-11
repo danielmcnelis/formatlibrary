@@ -1425,7 +1425,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
         return false
     }
 
-    const data = await getMatches(server, tournament.id, 'open', losingPlayer.participantId) || []
+    const data = await getMatches(server, tournament.id, 'open', losingEntry.participantId) || []
     let matchId = false
     let scores = false
     const match = data[0].match
@@ -1617,7 +1617,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     })
 
 
-    const data = await getMatches(server, tournament.id, 'open', losingPlayer.participantId) || []
+    const data = await getMatches(server, tournament.id, 'open', losingEntry.participantId) || []
     let matchId = false
     let scores = false
     const match = data[0].match
