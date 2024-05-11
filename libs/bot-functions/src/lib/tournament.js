@@ -1318,7 +1318,7 @@ export const findOtherPreReqMatch = (matchesArr = [], nextMatchId, completedMatc
 }
 
 //GET MATCHES
-export const getMatches = async (server, tournamentId, state = 'all', participantId) => {
+export const getMatches = async (server, tournamentId, state = 'all', participantId = '') => {
     console.log('!!server', !!server)
     console.log('tournamentId', tournamentId)
     console.log('state', state)
