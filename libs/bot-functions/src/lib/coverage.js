@@ -3,7 +3,7 @@ const Canvas = require('canvas')
 import axios from 'axios'
 import { S3 } from 'aws-sdk'
 import { Op } from 'sequelize'
-import { Alius, BlogPost, Card, Deck, DeckType, Entry, Match, Matchup, Player, Replay, Tournament, Server }  from '@fl/models'
+import { Alius, BlogPost, Card, Deck, DeckType, Entry, Match, Matchup, Player, Replay, Team, Tournament, Server, DeckThumb }  from '@fl/models'
 import { capitalize, dateToVerbose } from './utility'
 import { getDeckType } from './deck'
 import { config } from '@fl/config'
@@ -141,145 +141,302 @@ export const fixPlacements = async (event, participants, standings = []) => {
 
 // COMPOSE BLOG POST
 export const composeBlogPost = async (interaction, event) => {
-    if (event.isTeamEvent) return await interaction.channel.send(`Cannot make blogpost for team event: ${event.name}.`)
-
-    try {
-        const count = await BlogPost.count({
-            where: {
-                title: {
-                    [Op.or]: {
-                        [Op.substring]: event.name,
-                        [Op.substring]: event.abbreviation
-                    }
+    const count = await BlogPost.count({
+        where: {
+            title: {
+                [Op.or]: {
+                    [Op.substring]: event.name,
+                    [Op.substring]: event.abbreviation
                 }
             }
-        })
+        }
+    })
 
-        if (count) return await interaction.channel.send(`Blogpost for ${event.name} already exists.`)
-
-        const deck = await Deck.findOne({
-            where: {
-                eventId: event.id,
-                placement: 1
-            }
-        })
-
-        const decks = await Deck.findAll({ 
-            where: {
-                formatId: event.formatId
-            }
-        })
+    if (count) return await interaction.channel.send(`Blogpost for ${event.name} already exists.`)
     
-        if (!decks.length) return console.log('no decks found')
+    const decks = await Deck.findAll({ 
+        where: {
+            formatId: event.formatId
+        }
+    })
+
+    if (!decks.length) return await interaction.channel.send(`No decks found for ${event.formatName}.`)
+    const title = `Congrats to ${event.winner} on winning ${event.abbreviation}!`
+    const blogTitleDate = dateToVerbose(event.endDate, false, false, true)
+    const publishDate = dateToVerbose(event.endDate, true, true, false)
+      
+    try {
+        if (event.isTeamEvent) {
+            const team = await Team.findOne({
+                where: {
+                    id: event.teamId
+                },
+                include: Player
+            })
+
+            const winningDeckA = await Deck.findOne({
+                where: {
+                    playerId: team.playerAId,
+                    eventId: event.id,
+                    placement: 1
+                }
+            })
+
+            const winningDeckB = await Deck.findOne({
+                where: {
+                    playerId: team.playerBId,
+                    eventId: event.id,
+                    placement: 1
+                }
+            })
+
+            const winningDeckC = await Deck.findOne({
+                where: {
+                    playerId: team.playerCId,
+                    eventId: event.id,
+                    placement: 1
+                }
+            })
+
+            const winningDecks = [winningDeckA, winningDeckB, winningDeckC]
+            const deckThumbnails = []
+
+            for (let i = 0; i < winningDecks.length; i++) {
+                const winningDeck = winningDecks[i]
+                const deckThumb = (await DeckThumb.findOne({
+                    where: {
+                        formatId: winningDeck.formatId,
+                        deckTypeId: winningDeck.deckTypeId
+                    },
+                    attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+                })) ||
+                    (await DeckThumb.findOne({
+                    where: {
+                        primary: true,
+                        deckTypeId: winningDeck.deckTypeId
+                    },
+                    attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+                })) ||
+                    (await DeckThumb.findOne({
+                    where: {
+                        deckTypeId: winningDeck.deckTypeId
+                    },
+                    attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+                }))
+
+                deckThumbnails.push(
+                    `<div className="deckThumbnail">
+                        <h3>{${capitalize(winningDeck.name, true)}}</h3>
+                        <div className="deckThumbnail-flexbox">
+                            <img 
+                                className="deckThumbnail-image" 
+                                src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardYpdId}.jpg"
+                                onError={(e) => {
+                                e.target.onerror = null
+                                e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"
+                                }}
+                                alt={deck.leftCard}
+                            />
+                            <img 
+                                className="deckThumbnail-image" 
+                                src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardYpdId}.jpg"
+                                onError={(e) => {
+                                e.target.onerror = null
+                                e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"
+                                }}
+                                alt={deck.centerCard}
+                            />
+                            <img 
+                                className="deckThumbnail-image" 
+                                src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardYpdId}.jpg"
+                                onError={(e) => {
+                                e.target.onerror = null
+                                e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"
+                                }}
+                                alt={deck.rightCard}
+                            />
+                        </div>
+                    </div>`
+                )
+            }
         
-        const freqs = decks.reduce((acc, curr) => (acc[curr.type] ? acc[curr.type]++ : acc[curr.type] = 1, acc), {})
-        const popularDecks = Object.entries(freqs).sort((a, b) => b[1] - a[1]).map((e) => e[0]).slice(0, 6)
-        const title = `Congrats to ${event.winner} on winning ${event.abbreviation}!`
-        const blogTitleDate = dateToVerbose(event.endDate, false, false, true)
-        const publishDate = dateToVerbose(event.endDate, true, true, false)
-    
-        const main = []
-        const mainKonamiCodes = deck.ydk
-            .split('#main')[1]
-            .split('#extra')[0]
-            .split(/[\s]+/)
-            .filter((e) => e.length)
-            .map((e) => e.trim())
-
-        for (let i = 0; i < mainKonamiCodes.length; i++) {
-            let konamiCode = mainKonamiCodes[i]
-            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-            const card = await Card.findOne({ where: { konamiCode }})
-            if (!card) continue
-            main.push(card)
-        }
-
-        main.sort((a, b) => {
-            if (a.sortPriority > b.sortPriority) {
-                return 1
-            } else if (b.sortPriority > a.sortPriority) {
-                return -1
-            } else if (a.name > b.name) {
-                return 1
-            } else if (b.name > a.name) {
-                return -1
-            } else {
-                return false
-            }
-        })
-
-        const rows = Math.ceil(main.length / 10)
-        const card_width = 72
-        const card_height = 105
-        const canvas = Canvas.createCanvas((card_width * 10) + 9, (card_height * rows) + rows - 1)
-        const context = canvas.getContext('2d')
-    
-        for (let i = 0; i < main.length; i++) {
-            const card = main[i]
-            const row = Math.floor(i / 10)
-            const col = i % 10
-            const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`) 
-            context.drawImage(image, (card_width + 1) * col, row * (card_height + 1), card_width, card_height)
-        }
-    
-        const conclusion = event.series ? `Enter the next <i>${event.name.replace(/[0-9]/g, '').trim()}</i> to see if you can knock out the reigning champ!` :
-            event.name.includes('Format World Championship') ? `And so the ${event.startDate.getFullYear()} ${capitalize(event.formatName, true)} Format season comes to a close. Be sure to enter next year's qualifiers for your chance to compete in the World Championship!` :
-            event.name.includes('Last Chance') ? `And so the ${event.startDate.getFullYear()} ${capitalize(event.formatName, true)} Format qualifying season comes to a close. Tune in to find out who wins the World Championship!` :
-            event.name.includes('Obelisk') || event.name.includes('Ra') || event.name.includes('Slifer') ? `Join the Goat Format Europe Discord community to compete in the <i>Academy series</i>!` :
-            `Join the ${event.community} Discord community to compete in similar events!`
-    
-        const content = 
-            `<div className="blogpost-title-flexbox">` +
-                    `<div className="blogpost-title-text">` +
-                        `<a href="/events/${event.abbreviation}">` +
-                            `<h1 className="blogpost-title">${title}</h1>` +
-                        `</a>` +
-                        `<p className="blogpost-date">${blogTitleDate}</p>` +
-                    `</div>` +
-                `<div className="blogpost-title-emojis">` +
-                    `<img className="blogpost-format-icon" src="https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png"/>` +
-                    `<img className="blogpost-event-icon" src="https://cdn.formatlibrary.com/images/emojis/event.png"/>` +
-                `</div>` +
-            `</div>` +
-            `<div className="blogpost-content-flexbox">` +
-                `<p className="blogpost-paragraph">` +
-                    `${event.winner} won <a className="blogpost-event-link" href="/events/${event.abbreviation}">${event.name}</a> on ${publishDate} with a ${popularDecks.includes(deck.type) ? 'popular' : 'rogue'} deck, ${capitalize(deck.type, true)}!` +
-                `</p>` +
-                `<div className="blogpost-images-flexbox">` +
-                    `<div className="blogpost-pfp-community-flexbox">` +
-                        `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${event.player.discordId || event.player.globalName || event.player.discordName || event.player.name}.png" />` +
-                        `<img className="blogpost-community"  src="https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png" />` +
-                    `</div>` +
-                    `<div className="blogpost-deck-box">` + 
-                        `<a className="blogpost-deck-link" href="/decks/${deck.id}">` +
-                            `<img className="blogpost-deck" src="https://cdn.formatlibrary.com/images/decks/previews/${deck.id}.png" />` +
-                        `</a>` +
+            const conclusion = event.series ? `Enter the next <i>${event.name.replace(/[0-9]/g, '').trim()}</i> to see if you can knock out the reigning champ!` :
+                event.name.includes('Format World Championship') ? `And so the ${event.startDate.getFullYear()} ${capitalize(event.formatName, true)} Format season comes to a close. Be sure to enter next year's qualifiers for your chance to compete in the World Championship!` :
+                event.name.includes('Last Chance') ? `And so the ${event.startDate.getFullYear()} ${capitalize(event.formatName, true)} Format qualifying season comes to a close. Tune in to find out who wins the World Championship!` :
+                event.name.includes('Obelisk') || event.name.includes('Ra') || event.name.includes('Slifer') ? `Join the Goat Format Europe Discord community to compete in the <i>Academy series</i>!` :
+                `Join the ${event.community} Discord community to compete in similar events!`
+        
+            const content = 
+                `<div className="blogpost-title-flexbox">` +
+                        `<div className="blogpost-title-text">` +
+                            `<a href="/events/${event.abbreviation}">` +
+                                `<h1 className="blogpost-title">${title}</h1>` +
+                            `</a>` +
+                            `<p className="blogpost-date">${blogTitleDate}</p>` +
+                        `</div>` +
+                    `<div className="blogpost-title-emojis">` +
+                        `<img className="blogpost-format-icon" src="https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png"/>` +
+                        `<img className="blogpost-event-icon" src="https://cdn.formatlibrary.com/images/emojis/event.png"/>` +
                     `</div>` +
                 `</div>` +
-                `<p className="blogpost-paragraph">${conclusion}</p>` +
-            `</div>`
+                `<div className="blogpost-content-flexbox">` +
+                    `<p className="blogpost-paragraph">` +
+                        `${team.playerA.name}, ${team.playerB.name}, and ${team.playerC.name} (${event.winner}) won <a className="blogpost-event-link" href="/events/${event.abbreviation}">${event.name}</a> on ${publishDate}!` +
+                    `</p>` +
+                    `<div className="blogpost-images-flexbox">` +
+                        `<div className="blogpost-pfp-community-flexbox">` +
+                            `<img className="blogpost-community"  src="https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png" />` +
+                        `</div>` +
+                        `<div className="blogpost-deck-box">` + 
+                            `${deckThumbnails[0]}` +
+                            `${deckThumbnails[1]}` +
+                            `${deckThumbnails[2]}` +
+                            +
+                        `</div>` +
+                        `<div className="blogpost-pfp-community-flexbox">` +
+                            `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${event.playerA.discordId || event.playerA.globalName || event.playerA.discordName || event.playerA.name}.png" />` +
+                            `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${event.playerB.discordId || event.playerB.globalName || event.playerB.discordName || event.playerB.name}.png" />` +
+                            `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${event.playerC.discordId || event.playerC.globalName || event.playerC.discordName || event.playerC.name}.png" />` +
+                        `</div>` +
+                    `</div>` +
+                    `<p className="blogpost-paragraph">${conclusion}</p>` +
+                `</div>`
+        
+            await BlogPost.create({
+                title: title,
+                content: content,
+                publishDate: publishDate,
+                format: event.formatName,
+                eventDate: event.endDate,
+                eventId: event.id
+            })
+        
+            return await interaction.channel.send(`Composed blogpost for ${event.name}.`)
+        } else {
+            const deck = await Deck.findOne({
+                where: {
+                    eventId: event.id,
+                    placement: 1
+                }
+            })
     
-        await BlogPost.create({
-            title: title,
-            content: content,
-            publishDate: publishDate,
-            format: event.formatName,
-            eventDate: event.endDate,
-            eventId: event.id
-        })
+            const decks = await Deck.findAll({ 
+                where: {
+                    formatId: event.formatId
+                }
+            })
+        
+            if (!decks.length) return console.log('no decks found')
+            
+            const freqs = decks.reduce((acc, curr) => (acc[curr.type] ? acc[curr.type]++ : acc[curr.type] = 1, acc), {})
+            const popularDecks = Object.entries(freqs).sort((a, b) => b[1] - a[1]).map((e) => e[0]).slice(0, 6)
+            const title = `Congrats to ${event.winner} on winning ${event.abbreviation}!`
+            const blogTitleDate = dateToVerbose(event.endDate, false, false, true)
+            const publishDate = dateToVerbose(event.endDate, true, true, false)
+        
+            const main = []
+            const mainKonamiCodes = deck.ydk
+                .split('#main')[1]
+                .split('#extra')[0]
+                .split(/[\s]+/)
+                .filter((e) => e.length)
+                .map((e) => e.trim())
     
-        const buffer = canvas.toBuffer('image/png')
-        const s3 = new S3({
-            region: config.s3.region,
-            credentials: {
-                accessKeyId: config.s3.credentials.accessKeyId,
-                secretAccessKey: config.s3.credentials.secretAccessKey
+            for (let i = 0; i < mainKonamiCodes.length; i++) {
+                let konamiCode = mainKonamiCodes[i]
+                while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+                const card = await Card.findOne({ where: { konamiCode }})
+                if (!card) continue
+                main.push(card)
             }
-        })
-
-        const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/decks/previews/${deck.id}.png`, Body: buffer, ContentType: `image/png` }).promise()
-        console.log('uri', uri)
-        return await interaction.channel.send(`Composed blogpost for ${event.name}.`)
+    
+            main.sort((a, b) => {
+                if (a.sortPriority > b.sortPriority) {
+                    return 1
+                } else if (b.sortPriority > a.sortPriority) {
+                    return -1
+                } else if (a.name > b.name) {
+                    return 1
+                } else if (b.name > a.name) {
+                    return -1
+                } else {
+                    return false
+                }
+            })
+    
+            const rows = Math.ceil(main.length / 10)
+            const card_width = 72
+            const card_height = 105
+            const canvas = Canvas.createCanvas((card_width * 10) + 9, (card_height * rows) + rows - 1)
+            const context = canvas.getContext('2d')
+        
+            for (let i = 0; i < main.length; i++) {
+                const card = main[i]
+                const row = Math.floor(i / 10)
+                const col = i % 10
+                const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`) 
+                context.drawImage(image, (card_width + 1) * col, row * (card_height + 1), card_width, card_height)
+            }
+        
+            const conclusion = event.series ? `Enter the next <i>${event.name.replace(/[0-9]/g, '').trim()}</i> to see if you can knock out the reigning champ!` :
+                event.name.includes('Format World Championship') ? `And so the ${event.startDate.getFullYear()} ${capitalize(event.formatName, true)} Format season comes to a close. Be sure to enter next year's qualifiers for your chance to compete in the World Championship!` :
+                event.name.includes('Last Chance') ? `And so the ${event.startDate.getFullYear()} ${capitalize(event.formatName, true)} Format qualifying season comes to a close. Tune in to find out who wins the World Championship!` :
+                event.name.includes('Obelisk') || event.name.includes('Ra') || event.name.includes('Slifer') ? `Join the Goat Format Europe Discord community to compete in the <i>Academy series</i>!` :
+                `Join the ${event.community} Discord community to compete in similar events!`
+        
+            const content = 
+                `<div className="blogpost-title-flexbox">` +
+                        `<div className="blogpost-title-text">` +
+                            `<a href="/events/${event.abbreviation}">` +
+                                `<h1 className="blogpost-title">${title}</h1>` +
+                            `</a>` +
+                            `<p className="blogpost-date">${blogTitleDate}</p>` +
+                        `</div>` +
+                    `<div className="blogpost-title-emojis">` +
+                        `<img className="blogpost-format-icon" src="https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png"/>` +
+                        `<img className="blogpost-event-icon" src="https://cdn.formatlibrary.com/images/emojis/event.png"/>` +
+                    `</div>` +
+                `</div>` +
+                `<div className="blogpost-content-flexbox">` +
+                    `<p className="blogpost-paragraph">` +
+                        `${event.winner} won <a className="blogpost-event-link" href="/events/${event.abbreviation}">${event.name}</a> on ${publishDate} with a ${popularDecks.includes(deck.type) ? 'popular' : 'rogue'} deck, ${capitalize(deck.type, true)}!` +
+                    `</p>` +
+                    `<div className="blogpost-images-flexbox">` +
+                        `<div className="blogpost-pfp-community-flexbox">` +
+                            `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${event.player.discordId || event.player.globalName || event.player.discordName || event.player.name}.png" />` +
+                            `<img className="blogpost-community"  src="https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png" />` +
+                        `</div>` +
+                        `<div className="blogpost-deck-box">` + 
+                            `<a className="blogpost-deck-link" href="/decks/${deck.id}">` +
+                                `<img className="blogpost-deck" src="https://cdn.formatlibrary.com/images/decks/previews/${deck.id}.png" />` +
+                            `</a>` +
+                        `</div>` +
+                    `</div>` +
+                    `<p className="blogpost-paragraph">${conclusion}</p>` +
+                `</div>`
+        
+            await BlogPost.create({
+                title: title,
+                content: content,
+                publishDate: publishDate,
+                format: event.formatName,
+                eventDate: event.endDate,
+                eventId: event.id
+            })
+        
+            const buffer = canvas.toBuffer('image/png')
+            const s3 = new S3({
+                region: config.s3.region,
+                credentials: {
+                    accessKeyId: config.s3.credentials.accessKeyId,
+                    secretAccessKey: config.s3.credentials.secretAccessKey
+                }
+            })
+    
+            const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/decks/previews/${deck.id}.png`, Body: buffer, ContentType: `image/png` }).promise()
+            console.log('uri', uri)
+            return await interaction.channel.send(`Composed blogpost for ${event.name}.`)
+        }
     } catch (err) {
         console.log(err)
         return await interaction.channel.send(`Error composing blogpost for ${event.name}.`)
