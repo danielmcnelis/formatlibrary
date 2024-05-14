@@ -4,7 +4,7 @@ import axios from 'axios'
 import { S3 } from 'aws-sdk'
 import { Op } from 'sequelize'
 import { Alius, BlogPost, Card, Deck, DeckType, Entry, Match, Matchup, Player, Replay, Team, Tournament, Server, DeckThumb }  from '@fl/models'
-import { capitalize, dateToVerbose } from './utility'
+import { capitalize, dateToVerbose, urlize } from './utility'
 import { getDeckType } from './deck'
 import { config } from '@fl/config'
 import { checkExpiryDate, uploadDeckFolder } from './drive'
@@ -218,14 +218,16 @@ export const composeBlogPost = async (interaction, event) => {
                 }))
 
                 deckThumbnails.push(
+                    `<Link class="link" to="${urlize(`/decktypes/${winningDeck.type}?format=${winningDeck.formatName}`)}">` +
                     `<div class="deckThumbnail">` +
                         `<h3>${capitalize(winningDeck.type, true)}</h3>` +
                         `<div class="deckThumbnail-flexbox">` +
-                            `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardYpdId}.jpg" onerror="(e) => { e.target.onerror = null; e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"}" alt="${deckThumb.leftCard}"/>` +
-                            `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardYpdId}.jpg" onerror="(e) => { e.target.onerror = null; e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"}" alt="${deckThumb.centerCard}"/>` +
-                            `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardYpdId}.jpg" onerror="(e) => { e.target.onerror = null; e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"}" alt="${deckThumb.rightCard}"/>` +
+                            `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardYpdId}.jpg" alt="${deckThumb.leftCard}"/>` +
+                            `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardYpdId}.jpg" alt="${deckThumb.centerCard}"/>` +
+                            `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardYpdId}.jpg" alt="${deckThumb.rightCard}"/>` +
                         `</div>` +
-                    `</div>`
+                    `</div>` +
+                    `</Link>`
                 )
             }
         
