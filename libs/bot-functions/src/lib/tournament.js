@@ -1022,7 +1022,7 @@ export const removeParticipant = async (server, interaction, member, entry, tour
         })
         
         // DE-ACTIVATE ENTRY DATA IF UNDERWAY, OTHERWISE DELETE ENTRY DATA
-        if (tournament.state === 'underway') {
+        if (initialState === 'underway') {
             await entry.update({ active: false, roundDropped: entry.wins + entry.losses })
         } else {
             await entry.destroy()
