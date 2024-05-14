@@ -218,38 +218,14 @@ export const composeBlogPost = async (interaction, event) => {
                 }))
 
                 deckThumbnails.push(
-                    `<div className="deckThumbnail">
-                        <h3>{${capitalize(winningDeck.name, true)}}</h3>
-                        <div className="deckThumbnail-flexbox">
-                            <img 
-                                className="deckThumbnail-image" 
-                                src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardYpdId}.jpg"
-                                onError={(e) => {
-                                e.target.onerror = null
-                                e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"
-                                }}
-                                alt={deck.leftCard}
-                            />
-                            <img 
-                                className="deckThumbnail-image" 
-                                src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardYpdId}.jpg"
-                                onError={(e) => {
-                                e.target.onerror = null
-                                e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"
-                                }}
-                                alt={deck.centerCard}
-                            />
-                            <img 
-                                className="deckThumbnail-image" 
-                                src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardYpdId}.jpg"
-                                onError={(e) => {
-                                e.target.onerror = null
-                                e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"
-                                }}
-                                alt={deck.rightCard}
-                            />
-                        </div>
-                    </div>`
+                    `<div className="deckThumbnail">` +
+                        `<h3>{${capitalize(winningDeck.type, true)}}</h3>` +
+                        `<div className="deckThumbnail-flexbox">` +
+                            `<img className="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardYpdId}.jpg" onError={(e) => { e.target.onerror = null e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"}} alt={deck.leftCard}/>` +
+                            `<img className="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardYpdId}.jpg" onError={(e) => { e.target.onerror = null e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"}} alt={deck.centerCard}/>` +
+                            `<img className="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardYpdId}.jpg" onError={(e) => { e.target.onerror = null e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"}} alt={deck.rightCard}/>` +
+                        `</div>` +
+                    `</div>`
                 )
             }
         
@@ -261,21 +237,19 @@ export const composeBlogPost = async (interaction, event) => {
         
             const content = 
                 `<div className="blogpost-title-flexbox">` +
-                        `<div className="blogpost-title-text">` +
-                            `<a href="/events/${event.abbreviation}">` +
-                                `<h1 className="blogpost-title">${title}</h1>` +
-                            `</a>` +
-                            `<p className="blogpost-date">${blogTitleDate}</p>` +
-                        `</div>` +
+                    `<div className="blogpost-title-text">` +
+                        `<a href="/events/${event.abbreviation}">` +
+                            `<h1 className="blogpost-title">${title}</h1>` +
+                        `</a>` +
+                        `<p className="blogpost-date">${blogTitleDate}</p>` +
+                    `</div>` +
                     `<div className="blogpost-title-emojis">` +
                         `<img className="blogpost-format-icon" src="https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png"/>` +
                         `<img className="blogpost-event-icon" src="https://cdn.formatlibrary.com/images/emojis/event.png"/>` +
                     `</div>` +
                 `</div>` +
                 `<div className="blogpost-content-flexbox">` +
-                    `<p className="blogpost-paragraph">` +
-                        `${team.playerA.name}, ${team.playerB.name}, and ${team.playerC.name} (${event.winner}) won <a className="blogpost-event-link" href="/events/${event.abbreviation}">${event.name}</a> on ${publishDate}!` +
-                    `</p>` +
+                    `<p className="blogpost-paragraph"> ${event.winner} won <a className="blogpost-event-link" href="/events/${event.abbreviation}">${event.name}</a> on ${publishDate}!</p>` +
                     `<div className="blogpost-images-flexbox">` +
                         `<div className="blogpost-pfp-community-flexbox">` +
                             `<img className="blogpost-community"  src="https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png" />` +
@@ -284,7 +258,6 @@ export const composeBlogPost = async (interaction, event) => {
                             `${deckThumbnails[0]}` +
                             `${deckThumbnails[1]}` +
                             `${deckThumbnails[2]}` +
-                            +
                         `</div>` +
                         `<div className="blogpost-pfp-community-flexbox">` +
                             `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${team.playerA.discordId || team.playerA.globalName || team.playerA.discordName || team.playerA.name}.png" />` +
