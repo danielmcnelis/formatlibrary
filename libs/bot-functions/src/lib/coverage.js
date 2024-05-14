@@ -287,9 +287,9 @@ export const composeBlogPost = async (interaction, event) => {
                             +
                         `</div>` +
                         `<div className="blogpost-pfp-community-flexbox">` +
-                            `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${event.playerA.discordId || event.playerA.globalName || event.playerA.discordName || event.playerA.name}.png" />` +
-                            `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${event.playerB.discordId || event.playerB.globalName || event.playerB.discordName || event.playerB.name}.png" />` +
-                            `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${event.playerC.discordId || event.playerC.globalName || event.playerC.discordName || event.playerC.name}.png" />` +
+                            `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${team.playerA.discordId || team.playerA.globalName || team.playerA.discordName || team.playerA.name}.png" />` +
+                            `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${team.playerB.discordId || team.playerB.globalName || team.playerB.discordName || team.playerB.name}.png" />` +
+                            `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${team.playerC.discordId || team.playerC.globalName || team.playerC.discordName || team.playerC.name}.png" />` +
                         `</div>` +
                     `</div>` +
                     `<p className="blogpost-paragraph">${conclusion}</p>` +
