@@ -154,13 +154,6 @@ export const composeBlogPost = async (interaction, event) => {
 
     if (count) return await interaction.channel.send(`Blogpost for ${event.name} already exists.`)
     
-    const decks = await Deck.findAll({ 
-        where: {
-            formatId: event.formatId
-        }
-    })
-
-    if (!decks.length) return await interaction.channel.send(`No decks found for ${event.formatName}.`)
     const title = `Congrats to ${event.winner} on winning ${event.abbreviation}!`
     const blogTitleDate = dateToVerbose(event.endDate, false, false, true)
     const publishDate = dateToVerbose(event.endDate, true, true, false)
@@ -171,7 +164,7 @@ export const composeBlogPost = async (interaction, event) => {
                 where: {
                     id: event.teamId
                 },
-                include: Player
+                include: [{ model: Player, as: 'playerA' }, { model: Player, as: 'playerB' }, Event, { model: Player, as: 'playerC' }]
             })
 
             const winningDeckA = await Deck.findOne({
@@ -319,15 +312,15 @@ export const composeBlogPost = async (interaction, event) => {
                     placement: 1
                 }
             })
-    
+        
             const decks = await Deck.findAll({ 
                 where: {
                     formatId: event.formatId
                 }
             })
         
-            if (!decks.length) return console.log('no decks found')
-            
+            if (!decks.length) return await interaction.channel.send(`No decks found for ${event.formatName}.`)
+                     
             const freqs = decks.reduce((acc, curr) => (acc[curr.type] ? acc[curr.type]++ : acc[curr.type] = 1, acc), {})
             const popularDecks = Object.entries(freqs).sort((a, b) => b[1] - a[1]).map((e) => e[0]).slice(0, 6)
             const title = `Congrats to ${event.winner} on winning ${event.abbreviation}!`

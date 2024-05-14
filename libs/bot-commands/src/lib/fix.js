@@ -30,6 +30,8 @@ export default {
                 include: [Format, Player, Team, Tournament]
             })
 
+            console.log(`events?.map((e) => e.name)`, events?.map((e) => e.name))
+
             for (let i = 0; i < events.length; i++) {
                 const event = events[i]
                 await composeBlogPost(interaction, event)
