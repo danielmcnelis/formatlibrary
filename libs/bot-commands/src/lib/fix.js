@@ -22,6 +22,7 @@ export default {
         if (isProgrammer(interaction.member)) {
             const events = await Event.findAll({
                 where: { isTeamEvent: true },
+                distinct: true,
                 include: [Format, Player, Team, Tournament]
             })
 

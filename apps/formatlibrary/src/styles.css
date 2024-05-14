@@ -707,9 +707,12 @@
     }
   
     .deckThumbnail-image {
-      width: 30%;
-    }
-  
+        width: 30%;
+        aspect-ratio: 1/1;
+        margin: 0px 2px;
+        border: 1px solid white;
+      }
+
     .recent-events-flexbox {
       margin: 6px 0px 0px;
     }

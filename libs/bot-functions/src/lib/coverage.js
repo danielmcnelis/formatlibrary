@@ -218,12 +218,12 @@ export const composeBlogPost = async (interaction, event) => {
                 }))
 
                 deckThumbnails.push(
-                    `<div className="deckThumbnail">` +
-                        `<h3>{${capitalize(winningDeck.type, true)}}</h3>` +
-                        `<div className="deckThumbnail-flexbox">` +
-                            `<img className="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardYpdId}.jpg" onError={(e) => { e.target.onerror = null e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"}} alt={deck.leftCard}/>` +
-                            `<img className="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardYpdId}.jpg" onError={(e) => { e.target.onerror = null e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"}} alt={deck.centerCard}/>` +
-                            `<img className="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardYpdId}.jpg" onError={(e) => { e.target.onerror = null e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"}} alt={deck.rightCard}/>` +
+                    `<div class="deckThumbnail">` +
+                        `<h3>${capitalize(winningDeck.type, true)}</h3>` +
+                        `<div class="deckThumbnail-flexbox">` +
+                            `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardYpdId}.jpg" onerror="(e) => { e.target.onerror = null; e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"}" alt="${deckThumb.leftCard}"/>` +
+                            `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardYpdId}.jpg" onerror="(e) => { e.target.onerror = null; e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"}" alt="${deckThumb.centerCard}"/>` +
+                            `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardYpdId}.jpg" onerror="(e) => { e.target.onerror = null; e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"}" alt="${deckThumb.rightCard}"/>` +
                         `</div>` +
                     `</div>`
                 )
@@ -236,36 +236,36 @@ export const composeBlogPost = async (interaction, event) => {
                 `Join the ${event.community} Discord community to compete in similar events!`
         
             const content = 
-                `<div className="blogpost-title-flexbox">` +
-                    `<div className="blogpost-title-text">` +
+                `<div class="blogpost-title-flexbox">` +
+                    `<div class="blogpost-title-text">` +
                         `<a href="/events/${event.abbreviation}">` +
-                            `<h1 className="blogpost-title">${title}</h1>` +
+                            `<h1 class="blogpost-title">${title}</h1>` +
                         `</a>` +
-                        `<p className="blogpost-date">${blogTitleDate}</p>` +
+                        `<p class="blogpost-date">${blogTitleDate}</p>` +
                     `</div>` +
-                    `<div className="blogpost-title-emojis">` +
-                        `<img className="blogpost-format-icon" src="https://cdn.formatlibrary.com/images/emojis/${event.format?.icon || 'unicorn'}.png"/>` +
-                        `<img className="blogpost-event-icon" src="https://cdn.formatlibrary.com/images/emojis/event.png"/>` +
+                    `<div class="blogpost-title-emojis">` +
+                        `<img class="blogpost-format-icon" src="https://cdn.formatlibrary.com/images/emojis/${event.format?.icon || 'unicorn'}.png"/>` +
+                        `<img class="blogpost-event-icon" src="https://cdn.formatlibrary.com/images/emojis/event.png"/>` +
                     `</div>` +
                 `</div>` +
-                `<div className="blogpost-content-flexbox">` +
-                    `<p className="blogpost-paragraph"> ${event.winner} won <a className="blogpost-event-link" href="/events/${event.abbreviation}">${event.name}</a> on ${publishDate}!</p>` +
-                    `<div className="blogpost-images-flexbox">` +
-                        `<div className="blogpost-pfp-community-flexbox">` +
-                            `<img className="blogpost-community"  src="https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png" />` +
+                `<div class="blogpost-content-flexbox">` +
+                    `<p class="blogpost-paragraph"> ${event.winner} won <a class="blogpost-event-link" href="/events/${event.abbreviation}">${event.name}</a> on ${publishDate}!</p>` +
+                    `<div class="blogpost-images-flexbox">` +
+                        `<div class="blogpost-pfp-community-flexbox">` +
+                            `<img class="blogpost-community"  src="https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png" />` +
                         `</div>` +
-                        `<div className="blogpost-deck-box">` + 
+                        `<div class="blogpost-deck-box">` + 
                             `${deckThumbnails[0]}` +
                             `${deckThumbnails[1]}` +
                             `${deckThumbnails[2]}` +
                         `</div>` +
-                        `<div className="blogpost-pfp-community-flexbox">` +
-                            `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${team.playerA.discordId || team.playerA.globalName || team.playerA.discordName || team.playerA.name}.png" />` +
-                            `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${team.playerB.discordId || team.playerB.globalName || team.playerB.discordName || team.playerB.name}.png" />` +
-                            `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${team.playerC.discordId || team.playerC.globalName || team.playerC.discordName || team.playerC.name}.png" />` +
+                        `<div class="blogpost-pfp-community-flexbox">` +
+                            `<img class="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${team.playerA.discordId || team.playerA.globalName || team.playerA.discordName || team.playerA.name}.png" />` +
+                            `<img class="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${team.playerB.discordId || team.playerB.globalName || team.playerB.discordName || team.playerB.name}.png" />` +
+                            `<img class="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${team.playerC.discordId || team.playerC.globalName || team.playerC.discordName || team.playerC.name}.png" />` +
                         `</div>` +
                     `</div>` +
-                    `<p className="blogpost-paragraph">${conclusion}</p>` +
+                    `<p class="blogpost-paragraph">${conclusion}</p>` +
                 `</div>`
         
             await BlogPost.create({
@@ -351,34 +351,34 @@ export const composeBlogPost = async (interaction, event) => {
                 `Join the ${event.community} Discord community to compete in similar events!`
         
             const content = 
-                `<div className="blogpost-title-flexbox">` +
-                        `<div className="blogpost-title-text">` +
+                `<div class="blogpost-title-flexbox">` +
+                        `<div class="blogpost-title-text">` +
                             `<a href="/events/${event.abbreviation}">` +
-                                `<h1 className="blogpost-title">${title}</h1>` +
+                                `<h1 class="blogpost-title">${title}</h1>` +
                             `</a>` +
-                            `<p className="blogpost-date">${blogTitleDate}</p>` +
+                            `<p class="blogpost-date">${blogTitleDate}</p>` +
                         `</div>` +
-                    `<div className="blogpost-title-emojis">` +
-                        `<img className="blogpost-format-icon" src="https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png"/>` +
-                        `<img className="blogpost-event-icon" src="https://cdn.formatlibrary.com/images/emojis/event.png"/>` +
+                    `<div class="blogpost-title-emojis">` +
+                        `<img class="blogpost-format-icon" src="https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png"/>` +
+                        `<img class="blogpost-event-icon" src="https://cdn.formatlibrary.com/images/emojis/event.png"/>` +
                     `</div>` +
                 `</div>` +
-                `<div className="blogpost-content-flexbox">` +
-                    `<p className="blogpost-paragraph">` +
-                        `${event.winner} won <a className="blogpost-event-link" href="/events/${event.abbreviation}">${event.name}</a> on ${publishDate} with a ${popularDecks.includes(deck.type) ? 'popular' : 'rogue'} deck, ${capitalize(deck.type, true)}!` +
+                `<div class="blogpost-content-flexbox">` +
+                    `<p class="blogpost-paragraph">` +
+                        `${event.winner} won <a class="blogpost-event-link" href="/events/${event.abbreviation}">${event.name}</a> on ${publishDate} with a ${popularDecks.includes(deck.type) ? 'popular' : 'rogue'} deck, ${capitalize(deck.type, true)}!` +
                     `</p>` +
-                    `<div className="blogpost-images-flexbox">` +
-                        `<div className="blogpost-pfp-community-flexbox">` +
-                            `<img className="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${event.player.discordId || event.player.globalName || event.player.discordName || event.player.name}.png" />` +
-                            `<img className="blogpost-community"  src="https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png" />` +
+                    `<div class="blogpost-images-flexbox">` +
+                        `<div class="blogpost-pfp-community-flexbox">` +
+                            `<img class="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${event.player.discordId || event.player.globalName || event.player.discordName || event.player.name}.png" />` +
+                            `<img class="blogpost-community"  src="https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png" />` +
                         `</div>` +
-                        `<div className="blogpost-deck-box">` + 
-                            `<a className="blogpost-deck-link" href="/decks/${deck.id}">` +
-                                `<img className="blogpost-deck" src="https://cdn.formatlibrary.com/images/decks/previews/${deck.id}.png" />` +
+                        `<div class="blogpost-deck-box">` + 
+                            `<a class="blogpost-deck-link" href="/decks/${deck.id}">` +
+                                `<img class="blogpost-deck" src="https://cdn.formatlibrary.com/images/decks/previews/${deck.id}.png" />` +
                             `</a>` +
                         `</div>` +
                     `</div>` +
-                    `<p className="blogpost-paragraph">${conclusion}</p>` +
+                    `<p class="blogpost-paragraph">${conclusion}</p>` +
                 `</div>`
         
             await BlogPost.create({
