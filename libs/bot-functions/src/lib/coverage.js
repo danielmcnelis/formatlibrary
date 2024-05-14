@@ -244,7 +244,7 @@ export const composeBlogPost = async (interaction, event) => {
                         `<p className="blogpost-date">${blogTitleDate}</p>` +
                     `</div>` +
                     `<div className="blogpost-title-emojis">` +
-                        `<img className="blogpost-format-icon" src="https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png"/>` +
+                        `<img className="blogpost-format-icon" src="https://cdn.formatlibrary.com/images/emojis/${event.format?.icon || 'unicorn'}.png"/>` +
                         `<img className="blogpost-event-icon" src="https://cdn.formatlibrary.com/images/emojis/event.png"/>` +
                     `</div>` +
                 `</div>` +
