@@ -10,12 +10,12 @@ export default {
     data: new SlashCommandBuilder()
         .setName('fix')
         .setDescription('Admin Only - Fix an issue. 🛠️')
-		.addStringOption(str =>
-            str
-                .setName('tournament')
-                .setDescription('Enter tournament name or abbreviation.')
-                .setRequired(true)
-        )
+		// .addStringOption(str =>
+        //     str
+        //         .setName('tournament')
+        //         .setDescription('Enter tournament name or abbreviation.')
+        //         .setRequired(false)
+        // )
         .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
