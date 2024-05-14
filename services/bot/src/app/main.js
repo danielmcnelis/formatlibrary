@@ -533,14 +533,8 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
         const isTest = newRoles.has('414576126107844609')
     
         if ((wasSubscriber && !isSubscriber) || (wasTest && !isTest)) {
-            const {data: programmer} = await axios.get(`https://discord.com/api/v9/users/194147938786738176`, {
-                headers: {
-                Authorization: `Bot ${config.services.bot.token}`
-                }
-            })
-            
-            console.log('programmer', programmer)
-            
+            const programmer = await client.users.fetch('194147938786738176')
+                        
             const player = await Player.findOne({
                 where: {
                     discordId: oldMember.id
@@ -551,13 +545,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
             await player.update({ subscriber: false, subTier: null })
             return await programmer.send({ content: `${oldMember.user?.username} is no longer a Subscriber (${subTier}).` })
         } else if ((!wasSubscriber && isSubscriber) || (!wasTest && isTest)) {
-            const {data: programmer} = await axios.get(`https://discord.com/api/v9/users/194147938786738176`, {
-                headers: {
-                Authorization: `Bot ${config.services.bot.token}`
-                }
-            })
-
-            console.log('programmer', programmer)
+            const programmer = await client.users.fetch('194147938786738176')
             
             const player = await Player.findOne({
                 where: {
