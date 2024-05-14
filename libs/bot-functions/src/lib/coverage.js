@@ -164,7 +164,7 @@ export const composeBlogPost = async (interaction, event) => {
                 where: {
                     id: event.teamId
                 },
-                include: [{ model: Player, as: 'playerA' }, { model: Player, as: 'playerB' }, Event, { model: Player, as: 'playerC' }]
+                include: [{ model: Player, as: 'playerA' }, { model: Player, as: 'playerB' }, { model: Player, as: 'playerC' }]
             })
 
             const winningDeckA = await Deck.findOne({

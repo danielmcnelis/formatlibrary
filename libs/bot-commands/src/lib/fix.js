@@ -23,14 +23,10 @@ export default {
             const events = await Event.findAll({
                 where: {
                     isTeamEvent: true
-                    // community: {
-                    //     [Op.or]: ['Upper Deck Entertainment', 'Konami']
-                    // }
                 },
                 include: [Format, Player, Team, Tournament]
             })
 
-            console.log(`events`, events)
             console.log(`events.length`, events.length)
             console.log(`events?.map((e) => e.name)`, events?.map((e) => e.name))
 
