@@ -30,6 +30,8 @@ export default {
                 include: [Format, Player, Team, Tournament]
             })
 
+            console.log(`events`, events)
+            console.log(`events.length`, events.length)
             console.log(`events?.map((e) => e.name)`, events?.map((e) => e.name))
 
             for (let i = 0; i < events.length; i++) {
