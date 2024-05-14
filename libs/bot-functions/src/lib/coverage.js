@@ -200,25 +200,21 @@ export const composeBlogPost = async (interaction, event) => {
                     where: {
                         formatId: winningDeck.formatId,
                         deckTypeId: winningDeck.deckTypeId
-                    },
-                    attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+                    }
                 })) ||
                     (await DeckThumb.findOne({
                     where: {
                         primary: true,
                         deckTypeId: winningDeck.deckTypeId
-                    },
-                    attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+                    }
                 })) ||
                     (await DeckThumb.findOne({
                     where: {
                         deckTypeId: winningDeck.deckTypeId
-                    },
-                    attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+                    }
                 }))
 
                 deckThumbnails.push(
-                    `<Link class="link" to="${urlize(`/decktypes/${winningDeck.type}?format=${winningDeck.formatName}`)}">` +
                     `<div class="deckThumbnail">` +
                         `<h3>${capitalize(winningDeck.type, true)}</h3>` +
                         `<div class="deckThumbnail-flexbox">` +
@@ -226,8 +222,7 @@ export const composeBlogPost = async (interaction, event) => {
                             `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardYpdId}.jpg" alt="${deckThumb.centerCard}"/>` +
                             `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardYpdId}.jpg" alt="${deckThumb.rightCard}"/>` +
                         `</div>` +
-                    `</div>` +
-                    `</Link>`
+                    `</div>`
                 )
             }
         

@@ -369,31 +369,7 @@
     margin: 10px;
   }
   
-  .deckThumbnail-flexbox {
-    padding: 3px 6px;
-    margin: 0px 10px 20px;
-    max-height: 120px;
-    max-width: 330px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: left;
-    flex-direction: row;
-    border-top: 4px solid black;
-    border-bottom: 4px solid black;
-    border-radius: 4px;
-    background-image: url('https://cdn.formatlibrary.com/images/duelingbook.png');
-    background-size: cover;
-    background-position: center;
-  }
-  
-  .deckThumbnail-image {
-    width: 100px;
-    margin: 0px 3px;
-    border: 1px solid white;
-  }
-  
-  .eventThumbnail:hover, .deckThumbnail:hover, .badge:hover, .subheading#recent-events:hover, .subheading#popular-decks:hover {
+  .eventThumbnail:hover, .badge:hover, .subheading#recent-events:hover, .subheading#popular-decks:hover {
     cursor: pointer;
     color: #34AD5A;
   }
@@ -2811,16 +2787,6 @@
       margin: 6px 0px 0px;
     }
   
-    .deckThumbnail-flexbox {
-      width: 80%;
-      margin: 0px auto 10px;
-      justify-content: center;
-    }
-  
-    .deckThumbnail-image {
-      width: 30%;
-    }
-  
     .recent-events-flexbox {
       margin: 6px 0px 0px;
     }
@@ -3393,9 +3359,5 @@
   
     .subcategory-title-flexbox img {
       max-width: 45px;
-    }
-  
-    .deckThumbnail-image {
-      margin: 0px 2.7px;
     }
   }

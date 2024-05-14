@@ -489,9 +489,6 @@
       margin: 10px auto;
     }
   
-  
-  
-  
     /* BLOG */
   
     .blogpost {
@@ -699,19 +696,6 @@
     .popular-decks-flexbox {
       margin: 6px 0px 0px;
     }
-  
-    .deckThumbnail-flexbox {
-      width: 80%;
-      margin: 0px auto 10px;
-      justify-content: center;
-    }
-  
-    .deckThumbnail-image {
-        width: 30%;
-        aspect-ratio: 1/1;
-        margin: 0px 2px;
-        border: 1px solid white;
-      }
 
     .recent-events-flexbox {
       margin: 6px 0px 0px;
@@ -1268,8 +1252,5 @@
       max-width: 45px;
       height: auto;
     }
-  
-    .deckThumbnail-image {
-      margin: 0px 2.7px;
-    }
+
   }
