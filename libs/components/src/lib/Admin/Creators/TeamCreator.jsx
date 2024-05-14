@@ -16,7 +16,6 @@ export const TeamCreator = () => {
     const [event, setEvent] = useState(null)
     const [events, setEvents] = useState([])
     const [placement, setPlacement] = useState(1)
-    console.log('placement', placement)
 
     const placementArr = event ? Array.from({length: event.size}, (_, i) => i + 1) : []
 

@@ -27,11 +27,6 @@ export const SingleEvent = () => {
     topMainDeckCards: [],
     topSideDeckCards: []
   })
-  console.log('event', event)
-  console.log('replays', replays)
-  console.log('topDecks', topDecks)
-  console.log('winner', winner)
-  console.log('metagame', metagame)
 
   const { id } = useParams()
   const navigate = useNavigate()

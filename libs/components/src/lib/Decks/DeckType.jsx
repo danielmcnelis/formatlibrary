@@ -36,10 +36,6 @@ export const DeckType = () => {
     const { id } = useParams()
     const location = useLocation()
     const format = location?.search?.slice(8)
-    console.log('format', format)
-    console.log('summary', summary)
-    console.log('matchups', matchups)
-    console.log('banlist', banlist)
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])

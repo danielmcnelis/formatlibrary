@@ -134,7 +134,6 @@ export const generatePacks = async (req, res, next) => {
                 for (let i = 0; i < 3; i++) odds.push(ultras)
                 for (let i = 0; i < 6; i++) odds.push(supers)
                 for (let i = 0; i < 26; i++) odds.push(rares)
-                console.log('odds', odds)
     
                 pack = [...getRandomSubset(commons, 8), getRandomElement(getRandomElement(odds))].sort((a, b) => b.setCode - a.setCode)
             } else if (coreV2.includes(set.setCode)) {
