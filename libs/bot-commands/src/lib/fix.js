@@ -21,14 +21,13 @@ export default {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
             const events = await Event.findAll({
-                where: {
-                    isTeamEvent: true
-                },
+                where: { isTeamEvent: true },
                 include: [Format, Player, Team, Tournament]
             })
 
             console.log(`events.length`, events.length)
             console.log(`events?.map((e) => e.name)`, events?.map((e) => e.name))
+            console.log(`events?.map((e) => e.id)`, events?.map((e) => e.id))
 
             for (let i = 0; i < events.length; i++) {
                 const event = events[i]
