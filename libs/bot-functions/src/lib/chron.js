@@ -145,8 +145,7 @@ export const updateAvatars = async (client) => {
         }
     }
 
-    console.log(`updateAvatars() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => updateAvatars(client), getMidnightCountdown() + (11 * 60 * 1000))
+    return console.log(`updateAvatars() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // CONDUCT CENSUS
@@ -260,8 +259,7 @@ export const conductCensus = async (client) => {
         }
     }
 
-    console.log(`conductCensus() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => conductCensus(client), getMidnightCountdown() + (4 * 60 * 1000))
+    return console.log(`conductCensus() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 
@@ -365,8 +363,7 @@ export const markInactives = async () => {
     }
 
     console.log(`Inactivated ${b} stats rows in the database.`)
-    console.log(`markInactives() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => markInactives(), getMidnightCountdown() + (0.6 * 60 * 1000))
+    return console.log(`markInactives() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // PURGE ENTRIES
@@ -384,8 +381,7 @@ export const purgeEntries = async () => {
     }
 
     console.log(`Purged ${count} old tournament entries from the database.`)
-    console.log(`purgeEntries() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => purgeEntries(), getMidnightCountdown() + (0.1 * 60 * 1000))
+    return console.log(`purgeEntries() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 } 
 
 // PURGE TOURNAMENT PARTICIPANT ROLES
@@ -428,8 +424,7 @@ export const purgeTourRoles = async (client) => {
         }
     }
 
-    console.log(`purgeTourRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => purgeTourRoles(client), getMidnightCountdown() + (0.2 * 60 * 1000))
+    return console.log(`purgeTourRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // ASSIGN TOURNAMENT PARTICIPANT ROLES
@@ -472,8 +467,7 @@ export const assignTourRoles = async (client) => {
         }
     }
 
-    console.log(`assignTourRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => assignTourRoles(client), getMidnightCountdown() + (0.4 * 60 * 1000))
+    return console.log(`assignTourRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // UPDATE DECK TYPES
@@ -493,8 +487,7 @@ export const updateDeckThumbs = async () => {
     }
 
     console.log(`updated ${b} deckthumbs with new decktypes names`)
-    console.log(`updateDeckThumbs() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => updateDeckThumbs(), getMidnightCountdown() + (13 * 60 * 1000))
+    return console.log(`updateDeckThumbs() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // UPDATE DECK TYPES
@@ -530,8 +523,7 @@ export const updateDeckTypes = async () => {
     }
 
     console.log(`updated ${b} decks with suggested deck-types`)
-    console.log(`updateDeckTypes() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => updateDeckTypes(), getMidnightCountdown() + (13 * 60 * 1000))
+    return console.log(`updateDeckTypes() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // UPDATE MARKET PRICES
@@ -602,8 +594,7 @@ export const updateMarketPrices = async () => {
     }
 
     console.log(`created ${b} new prices and checked ${c} other(s)`)
-    console.log(`updateMarketPrices() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => updateMarketPrices(), getMidnightCountdown() + (3 * 60 * 1000))
+    return console.log(`updateMarketPrices() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // UPDATE PRINTS
@@ -987,8 +978,7 @@ export const downloadAltArtworks = async () => {
     }
 
     console.log(`Saved ${b} original artworks, ${c} new artworks, encountered ${e} errors`)
-    console.log(`downloadAltArtworks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => downloadAltArtworks(), getMidnightCountdown() + (2.5 * 60 * 1000))
+    return console.log(`downloadAltArtworks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 
@@ -1255,8 +1245,7 @@ export const downloadNewCards = async () => {
     }
 
     console.log(`Found ${b} new cards, ${c} new names, ${t} new TCG cards, ${o} new OCG cards, ${p} new Speed Duel cards, encountered ${e} errors`)
-    console.log(`downloadNewCards() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => downloadNewCards(), getMidnightCountdown() + (2 * 60 * 1000))
+    return console.log(`downloadNewCards() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 
@@ -1284,8 +1273,7 @@ export const purgeLocalsAndInternalDecks = async () => {
     }
 
     console.log(`Purged ${b} locals and internal tournament decks, encountered ${e} errors`)
-    console.log(`purgeLocalsAndInternalDecks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => purgeLocalsAndInternalDecks(), getMidnightCountdown() + (0.3 * 60 * 1000))
+    return console.log(`purgeLocalsAndInternalDecks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 
@@ -1336,8 +1324,7 @@ export const purgeBetaCards = async () => {
     }
 
     console.log(`Purged ${b} beta cards, encountered ${e} errors`)
-    console.log(`purgeBetaCards() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => purgeBetaCards(), (24 * 60 * 60 * 1000))
+    return console.log(`purgeBetaCards() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 
@@ -1409,8 +1396,7 @@ export const updateSets = async () => {
     }
 
     console.log(`created ${b} new sets and updated ${c} other(s)`)
-    console.log(`updateSets() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => updateSets(), getMidnightCountdown() + (1 * 60 * 1000))
+    return console.log(`updateSets() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // DRAW SET BANNED
@@ -1533,8 +1519,7 @@ export const updateServers = async (client) => {
         }
     }
 
-    console.log(`updateServers() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => updateServers(client), getMidnightCountdown() + (0.8 * 60 * 1000))
+    return console.log(`updateServers() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 
@@ -1581,8 +1566,7 @@ export const updateDecks = async () => {
     }
 
     console.log(`updated ${b} decks, encountered ${e} errors`)
-    console.log(`updateDecks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => updateDecks(), getMidnightCountdown() + (14 * 60 * 1000))
+    return console.log(`updateDecks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 
@@ -1638,8 +1622,7 @@ export const updateReplays = async () => {
     }
 
     console.log(`updated ${b} replays, encountered ${e} errors`)
-    console.log(`updateReplays() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => updateReplays(), getMidnightCountdown() + (15 * 60 * 1000))
+    return console.log(`updateReplays() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 
@@ -1683,6 +1666,5 @@ export const updateMatchups = async () => {
     }
 
     console.log(`updated ${b} matchups, encountered ${e} errors`)
-    console.log(`updateMatchups() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => updateMatchups(), getMidnightCountdown() + (16 * 60 * 1000))
+    return console.log(`updateMatchups() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
