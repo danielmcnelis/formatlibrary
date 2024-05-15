@@ -27,7 +27,7 @@ import { assignTourRoles, checkIfEndOfMonth, conductCensus, createTopCut, downlo
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
     startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, assignRoles, createMembership,
     createPlayer, fetchCardNames, fetchOPCardNames, hasPartnerAccess, isMod, isNewMember, 
-    isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, editPointsSystem, refreshExpiredTokens, 
+    isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, editPointsSystem, refreshExpiredTokens, runNightlyTasks,
     updateDecks, updateMatchups, updateReplays, downloadAltArtworks, getTournament
 } from '@fl/bot-functions'
 
@@ -35,6 +35,7 @@ import { assignTourRoles, checkIfEndOfMonth, conductCensus, createTopCut, downlo
 import { emojis } from '@fl/bot-emojis'
 import commands from '@fl/bot-commands'
 import { rated } from './routes'
+import { runNightlyTasks } from '../../../../libs/bot-functions/src'
 client.commands = new Collection()
 Object.values(commands.formatLibraryCommands).forEach((command) => client.commands.set(command.data.name, command))
 Object.values(commands.globalCommands).forEach((command) => client.commands.set(command.data.name, command))
@@ -143,24 +144,7 @@ client.on('ready', async() => {
     try {
         // NIGHTLY TASKS
         const midnightCountdown = getMidnightCountdown()
-        setTimeout(() => refreshExpiredTokens(), midnightCountdown)
-        setTimeout(() => purgeEntries(), midnightCountdown + (0.1 * 60 * 1000))
-        setTimeout(() => purgeTourRoles(client), midnightCountdown + (0.2 * 60 * 1000))
-        setTimeout(() => purgeLocalsAndInternalDecks(client), midnightCountdown + (0.3 * 60 * 1000))
-        setTimeout(() => assignTourRoles(client), midnightCountdown + (0.4 * 60 * 1000))
-        setTimeout(() => markInactives(), midnightCountdown + (0.6 * 60 * 1000))
-        setTimeout(() => updateServers(client), midnightCountdown + (0.8 * 60 * 1000))
-        setTimeout(() => updateSets(), midnightCountdown + (1 * 60 * 1000))
-        setTimeout(() => downloadNewCards(), midnightCountdown + (2 * 60 * 1000))
-        setTimeout(() => downloadAltArtworks(), midnightCountdown + (2.5 * 60 * 1000))
-        setTimeout(() => updateMarketPrices(), midnightCountdown + (3 * 60 * 1000))
-        setTimeout(() => conductCensus(client), midnightCountdown + (4 * 60 * 1000))
-        setTimeout(() => updateAvatars(client), midnightCountdown + (11 * 60 * 1000))
-        setTimeout(() => updateDeckThumbs(), midnightCountdown + (12.75 * 60 * 1000))
-        setTimeout(() => updateDeckTypes(), midnightCountdown + (13 * 60 * 1000))
-        setTimeout(() => updateDecks(), midnightCountdown + (14 * 60 * 1000))
-        setTimeout(() => updateReplays(), midnightCountdown + (15 * 60 * 1000))
-        setTimeout(() => updateMatchups(), midnightCountdown + (16 * 60 * 1000))
+        setTimeout(() => runNightlyTasks(client), midnightCountdown)
 
         // MONTHLY TASKS
         checkIfEndOfMonth()

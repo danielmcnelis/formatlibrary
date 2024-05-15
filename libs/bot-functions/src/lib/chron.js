@@ -18,6 +18,7 @@ export const getMidnightCountdown = () => {
     return ( remainingHours * 60 + remainingMinutes ) * 60 * 1000
 }
 
+// CHECK IF END OF MONTH
 export const checkIfEndOfMonth = () => {
 	const date = new Date()
     const daysInMonth = (new Date(date.getFullYear(), date.getMonth() + 1, 0)).getDate()
@@ -28,6 +29,30 @@ export const checkIfEndOfMonth = () => {
     } else {
         setTimeout(() => checkIfEndOfMonth(), 24 * 60 * 60 * 1000)
     }
+}
+
+// RUN NIGHTLY TASKS
+export const runNightlyTasks = async (client) => {
+    await refreshExpiredTokens()
+    await purgeEntries()
+    await purgeTourRoles(client)
+    await purgeLocalsAndInternalDecks(client)
+    await assignTourRoles(client)
+    await markInactives()
+    await updateServers(client)
+    await updateSets()
+    await downloadNewCards()
+    await downloadAltArtworks()
+    await updateMarketPrices()
+    await conductCensus(client)
+    await updateAvatars(client)
+    await updateDeckThumbs()
+    await updateDeckTypes()
+    await updateDecks()
+    await updateReplays()
+    await updateMatchups()
+
+    return setTimeout(() => runNightlyTasks(client), getMidnightCountdown())
 }
 
 // REFRESH EXPIRED TOKENS
