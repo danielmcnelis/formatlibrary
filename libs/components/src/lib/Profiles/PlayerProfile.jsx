@@ -165,7 +165,7 @@ export const PlayerProfile = () => {
                     <div className="badges-title">Best Formats:</div>
                     <div className="badges-flexbox">
                         {stats.map((s) => (
-                        <Badge key={s.format} stats={s} />
+                        <Badge key={s.formatName} stats={s} />
                         ))}
                     </div>
                     </div>

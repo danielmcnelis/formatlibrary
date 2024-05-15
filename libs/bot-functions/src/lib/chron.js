@@ -12,6 +12,7 @@ const Canvas = require('canvas')
 
 // GET MIDNIGHT COUNTDOWN
 export const getMidnightCountdown = () => {
+    return 1
 	const date = new Date()
 	const remainingMinutes = 60 - date.getMinutes()
 	const remainingHours = 23 - date.getHours()
@@ -57,8 +58,9 @@ export const runNightlyTasks = async (client) => {
 
 // REFRESH EXPIRED TOKENS
 export const refreshExpiredTokens = async () => {
-    const difference = Date.now() - new Date(tcgPlayer[".expires"])
-    if (!tcgPlayer[".expires"] ||difference > 24 * 60 * 60 * 1000) {
+    const difference = new Date(tcgPlayer[".expires"]) -  Date.now()
+    console.log('difference', difference)
+    if (!tcgPlayer[".expires"] || difference < 24 * 60 * 60 * 1000) {
         const params = new URLSearchParams()
         params.append('grant_type', 'client_credentials')
         params.append('client_id', config.tcgPlayer.publicKey)
@@ -353,7 +355,7 @@ export const markInactives = async () => {
         })
 
         if (!count) { 
-            console.log(`Inactivating ${s.player ? s.player.globalName || s.player.discordName : s.playerId}'s STATS IN ${s.format} FORMAT`)
+            console.log(`Inactivating ${s.player ? s.player.globalName || s.player.discordName : s.playerId}'s STATS IN ${s.formatName} FORMAT`)
             await s.update({ inactive: true })
             b++
         } else {
@@ -1237,7 +1239,7 @@ export const downloadNewCards = async () => {
 
                 const speedDate = print?.set?.tcgDate
 
-                await card.save({
+                await card.update({
                     speedDate: speedDate,
                     speedLegal: true
                 })

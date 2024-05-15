@@ -211,7 +211,7 @@ export const getAnswer = async (entry, content, round) => {
         return member.user.send({ content: `Thanks!`})
 	}).catch(async (err) => {
 		console.log(err)
-        await entry.save({ answer: 'no answer'})
+        await entry.update({ answer: 'no answer'})
         return member.user.send({ content: `Time's up!`})
 	})
 }
