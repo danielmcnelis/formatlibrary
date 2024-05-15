@@ -58,7 +58,8 @@ export const runNightlyTasks = async (client) => {
 
 // REFRESH EXPIRED TOKENS
 export const refreshExpiredTokens = async () => {
-    const difference = new Date(tcgPlayer[".expires"]) -  Date.now()
+    console.log('tcgPlayer[".expires"]', tcgPlayer[".expires"])
+    const difference = new Date(tcgPlayer[".expires"]) - Date.now()
     console.log('difference', difference)
     if (!tcgPlayer[".expires"] || difference < 24 * 60 * 60 * 1000) {
         const params = new URLSearchParams()
