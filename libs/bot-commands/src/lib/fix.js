@@ -21,7 +21,7 @@ export default {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
             const events = await Event.findAll({
-                where: { isTeamEvent: true },
+                where: { community: {[Op.or]: ['Upper Deck Entertainment', 'Konami']} },
                 distinct: true,
                 include: [Format, Player, Team, Tournament]
             })
