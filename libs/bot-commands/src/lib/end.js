@@ -297,13 +297,13 @@ export default {
                     const success = await createDecks(event, participants, standings)
 
                     if (!success) {
-                        return await interaction.editReply(`Failed to save all decks.`)
+                        // return await interaction.editReply(`Failed to save all decks.`)
                     } else {
                         count = event.size
                     }
                 } catch (err) {
                     console.log(err)
-                    return await interaction.editReply(`Failed to save all decks.`)
+                    // return await interaction.editReply(`Failed to save all decks.`)
                 }
             }
             
