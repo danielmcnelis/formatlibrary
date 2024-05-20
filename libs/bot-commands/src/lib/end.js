@@ -162,14 +162,13 @@ export default {
                     const success = await createDecks(event, participants, standings)
 
                     if (!success) {
-                        count = !event.isTeamEvent ? event.size : event.size * 3
-                        // return await interaction.editReply(`Failed to save all decks.`)
+                        return await interaction.editReply(`Failed to save all decks.`)
                     } else {
                         count = !event.isTeamEvent ? event.size : event.size * 3
                     }
                 } catch (err) {
                     console.log(err)
-                    // return await interaction.editReply(`Failed to save all decks.`)
+                    return await interaction.editReply(`Failed to save all decks.`)
                 }
             }
             
@@ -298,14 +297,13 @@ export default {
                     const success = await createDecks(event, participants, standings)
 
                     if (!success) {
-                        count = event.size
-                        // return await interaction.editReply(`Failed to save all decks.`)
+                        return await interaction.editReply(`Failed to save all decks.`)
                     } else {
                         count = event.size
                     }
                 } catch (err) {
                     console.log(err)
-                    // return await interaction.editReply(`Failed to save all decks.`)
+                    return await interaction.editReply(`Failed to save all decks.`)
                 }
             }
             
