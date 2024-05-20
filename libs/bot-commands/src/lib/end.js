@@ -162,6 +162,7 @@ export default {
                     const success = await createDecks(event, participants, standings)
 
                     if (!success) {
+                        count = !event.isTeamEvent ? event.size : event.size * 3
                         // return await interaction.editReply(`Failed to save all decks.`)
                     } else {
                         count = !event.isTeamEvent ? event.size : event.size * 3
@@ -297,6 +298,7 @@ export default {
                     const success = await createDecks(event, participants, standings)
 
                     if (!success) {
+                        count = event.size
                         // return await interaction.editReply(`Failed to save all decks.`)
                     } else {
                         count = event.size
