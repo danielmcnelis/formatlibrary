@@ -3128,7 +3128,7 @@ export const createTopCut = async(interaction, tournamentId) => {
         `\nBracket: https://${subdomain}challonge.com/${topCutTournament.url}`
     })
 
-    await primaryTournament.update({ assocTournamentId: topCutTournament.id })
+    await primaryTournament.update({ state: 'topcut', assocTournamentId: topCutTournament.id })
 
     try {
         const matches = await getMatches(server, primaryTournament.id)

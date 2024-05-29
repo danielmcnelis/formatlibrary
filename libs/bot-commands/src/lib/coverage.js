@@ -32,6 +32,15 @@ export default {
         })
 
         if (!event) return await interaction.editReply({ content: `No event found.` })
+
+        const count = await Tournament.count({
+            where:{
+                id: {[Op.or]: [event.primaryTournamentId, event.topCutTournamentId] },
+                state: {[Op.not]: 'complete'}
+            }
+        })
+
+        if (count) return await interaction.editReply({ content: `Please use the **/end** command first.` })
         if (event.display === false) await event.update({ display: true })
 
         await interaction.editReply({ content: `Generating coverage for ${event.name}. Please wait.` })
@@ -44,12 +53,7 @@ export default {
             await generateMatchupData(interaction, server, event, event.tournament)
         }
 
-        await composeBlogPost(interaction, event)
-
-        // if (event.community !== 'Konami' && event.community !== 'Upper Deck Entertainment') {
-        //     await composeBlogPost(interaction, event)
-        // }
-        
+        await composeBlogPost(interaction, event) 
         return
     }
 }

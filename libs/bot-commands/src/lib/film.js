@@ -27,7 +27,7 @@ export default {
         if (!player) return await interaction.editReply({ content: "That user is not in the database."})
 
         let format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const tournaments = await Tournament.findByState('underway', format, interaction.guildId, 'ASC')
+        const tournaments = await Tournament.findByState({[Op.or]:['underway', 'topcut']}, format, interaction.guildId, 'ASC')
         const tournament = await selectTournament(interaction, tournaments, 'ASC')
         if (!tournament) return
 

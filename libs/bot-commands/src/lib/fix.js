@@ -2,41 +2,62 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { isProgrammer } from '@fl/bot-functions'
 import { Alius, Deck, DeckType, Event, Format, Match, Matchup, Player, Replay, Server, Team, Tournament } from '@fl/models'
-import { composeBlogPost, calculateStandings, generateMatchupData, fixPlacements } from '@fl/bot-functions'
+import { getMatches, getParticipants, composeBlogPost, calculateStandings, generateMatchupData, fixPlacements } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
+import { getParticipants } from '../../../bot-functions/src'
 
 export default {
     data: new SlashCommandBuilder()
         .setName('fix')
         .setDescription('Admin Only - Fix an issue. 🛠️')
-		// .addStringOption(str =>
-        //     str
-        //         .setName('tournament')
-        //         .setDescription('Enter tournament name or abbreviation.')
-        //         .setRequired(false)
-        // )
+		.addStringOption(str =>
+            str
+                .setName('tournament')
+                .setDescription('Enter tournament name or abbreviation.')
+                .setRequired(false)
+        )
         .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
-            const events = await Event.findAll({
-                where: { community: {[Op.or]: ['Upper Deck Entertainment', 'Konami']} },
-                distinct: true,
-                include: [Format, Player, Team, Tournament]
+            const input = interaction.options.getString('tournament')    
+            const event = await Event.findOne({
+                where: { 
+                    [Op.or]: {
+                        name: input,
+                        abbreviation: input
+                    }
+                },
+                include: [Format, Player, Tournament]
             })
 
-            console.log(`events.length`, events.length)
-            console.log(`events?.map((e) => e.name)`, events?.map((e) => e.name))
-            console.log(`events?.map((e) => e.id)`, events?.map((e) => e.id))
+            const server = await Server.findOne({
+                where: {
+                    id: event.serverId
+                }
+            }) 
 
-            for (let i = 0; i < events.length; i++) {
-                const event = events[i]
-                await composeBlogPost(interaction, event)
+            const matches = await getMatches(server, event.tournamentId)
+            const participants = await getParticipants(server, event.tournamentId)
+            const standings = calculateStandings(event.tournament, matches, participants)
+
+            for (let i = 0; i < standings.length; i++) {
+                const standing = standings[i] 
+                const deck = await Deck.findOne({
+                    where: {
+                        eventId: event.id,
+                        
+                    }
+                })
+                const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
+                    participant.final_rank ? parseInt(participant.final_rank) :
+                    null
             }
             
             return await interaction.editReply('🛠️')
-
+x
+            
         // const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
             // const tournamentId = interaction.options.getString('tournament')
            

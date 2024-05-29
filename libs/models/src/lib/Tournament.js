@@ -115,7 +115,7 @@ Tournament.findRecent = async (format, serverId) => await Tournament.findAll({
 
 Tournament.findActive = async (format, serverId, orderDirection = 'ASC') => await Tournament.findAll({ 
     where: {
-        state: { [Op.not]: 'complete'},
+        state: { [Op.notIn]: ['complete', 'topcut']},
         [Op.or]: {
             formatId: format?.id || {[Op.not]: null},
             name: {[Op.substring]: 'Multi-Format Spectacular'}
