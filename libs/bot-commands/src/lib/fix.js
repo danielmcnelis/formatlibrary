@@ -42,24 +42,66 @@ export default {
                 }
             }) 
 
-            const matches = await getMatches(server, event.tournamentId)
-            const participants = await getParticipants(server, event.tournamentId)
+            const matches = await getMatches(server, event.primaryTournamentId)
+            const participants = await getParticipants(server, event.primaryTournamentId)
             const standings = calculateStandings(event.tournament, matches, participants)
 
             for (let i = 0; i < standings.length; i++) {
-                const standing = standings[i] 
-                const deck = await Deck.findOne({
-                    where: {
-                        eventId: event.id,
-
+                try {
+                    const standing = standings[i] 
+                    console.log('standing', standing)
+                    const player = await Player.findOne({
+                        where: {
+                            [Op.or]: {
+                                name: standing.name,
+                                globalName: standing.name,
+                                discordName: standing.name,
+                            }
+                        }
+                    })
+    
+                    if (!player) {
+                        console.log(`no player found: ${standing.name}`)
+                        continue
                     }
-                })
-                const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
-                    participant.final_rank ? parseInt(participant.final_rank) :
-                    null
+    
+                    const deck = await Deck.findOne({
+                        where: {
+                            eventId: event.id,
+                            playerId: player?.id
+                        }
+                    })
+    
+                    if (!deck) {
+                        console.log(`no deck found: ${player.name}`)
+                        continue
+                    } else if (deck.display === true) {
+                        console.log(`deck topped: ${player.name}`)
+                        continue
+                    }
+    
+                    const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
+                        participant.final_rank ? parseInt(participant.final_rank) :
+                        null
+                    
+                    if (!placement) {
+                        console.log(`no placement found: ${player.name}`)
+                        continue
+                    } else if (placement === deck.placement) {
+                        console.log(`${player.name}'s deck already has the correct placement (${placement})`)
+                    }
+    
+                    console.log(`updating deck placement: ${deck.placement} -> ${placement}`)
+                    await deck.update({ placement })
+                    b++
+                } catch (err) {
+                    e++
+                    console.log(err)
+                }
             }
             
-x
+            console.log(`updated placements for ${b} decks; encountered ${e} errors`)
+
             
         // const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
             // const tournamentId = interaction.options.getString('tournament')
