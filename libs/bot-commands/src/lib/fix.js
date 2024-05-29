@@ -22,6 +22,8 @@ export default {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
             const input = interaction.options.getString('tournament')    
+            let b = 0
+            let e = 0
             console.log('input', input)
             const event = await Event.findOne({
                 where: { 
