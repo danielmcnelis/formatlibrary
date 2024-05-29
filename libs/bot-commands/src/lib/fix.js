@@ -22,6 +22,7 @@ export default {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
             const input = interaction.options.getString('tournament')    
+            console.log('input', input)
             const event = await Event.findOne({
                 where: { 
                     [Op.or]: {
@@ -32,9 +33,12 @@ export default {
                 include: [Format, Player, Tournament]
             })
 
+            if (!event) return await interaction.editReply('No event found.')
+            console.log('event.tournament?.serverId', event.tournament?.serverId)
+
             const server = await Server.findOne({
                 where: {
-                    id: event.serverId
+                    id: event.tournament?.serverId
                 }
             }) 
 
@@ -47,7 +51,7 @@ export default {
                 const deck = await Deck.findOne({
                     where: {
                         eventId: event.id,
-                        
+
                     }
                 })
                 const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
@@ -55,7 +59,6 @@ export default {
                     null
             }
             
-            return await interaction.editReply('🛠️')
 x
             
         // const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
