@@ -2250,8 +2250,6 @@ export const calculateStandings = async (tournament, matches, participants) => {
 
     }
 
-    console.log('data', data)
-
     for (let i = 0; i < matches.length; i++) {
         const match = matches[i].match
         if (match.state === 'pending') continue

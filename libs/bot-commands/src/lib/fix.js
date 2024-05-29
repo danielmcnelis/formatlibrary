@@ -46,8 +46,8 @@ export default {
 
             const matches = await getMatches(server, event.primaryTournamentId)
             const participants = await getParticipants(server, event.primaryTournamentId)
-            const standings = calculateStandings(event.tournament, matches, participants)
-            console.log('standings', standings)
+            const standings = await calculateStandings(event.tournament, matches, participants)
+            console.log('standings?.length', standings?.length)
 
             for (let i = 0; i < standings.length; i++) {
                 try {
