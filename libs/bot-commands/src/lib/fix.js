@@ -27,9 +27,12 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
-            const user = interaction.options.getUser('user')    
+            const user = interaction.options.getUser('user')   
+            console.log('user', user) 
+            console.log('user?.name', user?.name )
+            console.log('user?.name', user?.username)
             await updateSingleAvatar(user)
-            return await interaction.editReply(`Updated ${user?.name}'s avatar.`)
+            return await interaction.editReply(`Updated ${user?.name || user?.username}'s avatar.`)
 
             // const input = interaction.options.getString('tournament')    
             // let b = 0

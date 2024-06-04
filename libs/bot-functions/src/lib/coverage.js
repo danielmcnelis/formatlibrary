@@ -87,6 +87,7 @@ export const createDecks = async (event, participants, standings = []) => {
 
 // UPDATE SINGLE AVATAR
 export const updateSingleAvatar = async (user) => {
+    console.log('user', user)
     try {
         const avatar = user.avatar
         const player = await Player.findOne({ where: { discordId: user.id }})
