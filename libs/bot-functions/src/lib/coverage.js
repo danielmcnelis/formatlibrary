@@ -1,10 +1,11 @@
 
 const Canvas = require('canvas')
 import axios from 'axios'
+import * as sharp from 'sharp'
 import { S3 } from 'aws-sdk'
 import { Op } from 'sequelize'
-import { Alius, BlogPost, Card, Deck, DeckType, Entry, Match, Matchup, Player, Replay, Team, Tournament, Server, DeckThumb }  from '@fl/models'
-import { capitalize, dateToVerbose, urlize } from './utility'
+import { Alius, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Match, Matchup, Player, Replay, Team, Tournament, Server, Stats }  from '@fl/models'
+import { capitalize, dateToVerbose } from './utility'
 import { getDeckType } from './deck'
 import { config } from '@fl/config'
 import { checkExpiryDate, uploadDeckFolder } from './drive'
@@ -83,6 +84,46 @@ export const createDecks = async (event, participants, standings = []) => {
     console.log(`Uploaded ${b} decks for ${event.name}. Encountered ${e} errors. ${b + c} out of ${event.size} decks saved thus far.`)
     return (b + c === event.size) || (b + c === (event.size * 3))
 } 
+
+// UPDATE SINGLE AVATAR
+export const updateSingleAvatar = async (user) => {
+    try {
+        const avatar = user.avatar
+        const player = await Player.findOne({ where: { discordId: user.id }})
+        const isActive = player.email || await Deck.count({ where: { playerId: player.id }}) || await Stats.count({ where: { playerId: player.id }})
+        console.log('avatar', avatar)
+        console.log('player?.name', player?.name)
+        console.log('isActive', isActive)
+
+        if (player) {
+            await player.update({ discordPfp: avatar })
+            
+            const {data} = await axios.get(
+                `https://cdn.discordapp.com/avatars/${player.discordId}/${avatar}.webp`, {
+                    responseType: 'arraybuffer',
+                }
+            )
+
+            const buffer = await sharp(data).toFormat('png').toBuffer()
+
+            const s3 = new S3({
+                region: config.s3.region,
+                credentials: {
+                    accessKeyId: config.s3.credentials.accessKeyId,
+                    secretAccessKey: config.s3.credentials.secretAccessKey
+                }
+            })
+
+            const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/pfps/${player.discordId}.png`, Body: buffer, ContentType: `image/png` }).promise()
+            console.log('uri', uri)
+            console.log(`saved new pfp for ${player.globalName || player.discordName}`)
+        }
+    } catch (err) {
+        console.log(err)
+    } 
+
+    return console.log(`updated single avatar for user: ${user}`)
+}
 
 // FIX PLACEMENTS
 export const fixPlacements = async (event, participants, standings = []) => {

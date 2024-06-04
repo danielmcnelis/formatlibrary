@@ -147,6 +147,7 @@ export const updateAvatars = async (client) => {
     return console.log(`updateAvatars() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
+
 // CONDUCT CENSUS
 export const conductCensus = async (client) => {
     const start = Date.now()
