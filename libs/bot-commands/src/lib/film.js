@@ -68,7 +68,7 @@ export default {
                     ],
                     roundInt: match.round,
                     tournamentId: tournament.id,
-                    '$tournament.state$': 'underway'
+                    '$tournament.state$': {[Op.or]: ['underway', 'topcut']}
                 },
                 include: Tournament
             })

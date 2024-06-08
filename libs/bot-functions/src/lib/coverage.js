@@ -87,14 +87,9 @@ export const createDecks = async (event, participants, standings = []) => {
 
 // UPDATE SINGLE AVATAR
 export const updateSingleAvatar = async (user) => {
-    console.log('user', user)
     try {
         const avatar = user.avatar
         const player = await Player.findOne({ where: { discordId: user.id }})
-        const isActive = player.email || await Deck.count({ where: { playerId: player.id }}) || await Stats.count({ where: { playerId: player.id }})
-        console.log('avatar', avatar)
-        console.log('player?.name', player?.name)
-        console.log('isActive', isActive)
 
         if (player) {
             await player.update({ discordPfp: avatar })
@@ -123,7 +118,7 @@ export const updateSingleAvatar = async (user) => {
         console.log(err)
     } 
 
-    return console.log(`updated single avatar for user: ${user}`)
+    return console.log(`updated single avatar for:`, user)
 }
 
 // FIX PLACEMENTS
