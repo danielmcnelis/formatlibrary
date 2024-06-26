@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Entry, Player, Server, Tournament } from '@fl/models'
-import { isAdmin, isProgrammer, hasPartnerAccess } from '@fl/bot-functions'
+import { isMod, isProgrammer, hasPartnerAccess } from '@fl/bot-functions'
 import axios from 'axios'
 import { emojis } from '@fl/bot-emojis'
 
@@ -21,7 +21,7 @@ export default {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const query = interaction.options.getString('tournament')
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isAdmin(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
+        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
         const tournament = await Tournament.findByQuery(query, interaction.guildId)
         if (!tournament) return await interaction.reply({ content: `Could not find tournament: "${query}".`})
         if (tournament.state === 'complete' && !isProgrammer(interaction.member)) return await interaction.editReply({ content: `This tournament is complete, therefore it may only be deleted by the database manager.`})

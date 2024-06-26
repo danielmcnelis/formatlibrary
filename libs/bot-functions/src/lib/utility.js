@@ -670,9 +670,6 @@ export const isProgrammer = (member) => member?.user?.id === '194147938786738176
 //IS COMMUNITY PARTNER?
 export const isCommunityPartner = (member) => member?._roles.includes('1120540792654671973')
 
-//IS ADMIN?
-export const isAdmin = (server, member) => member?._roles.includes(server?.adminRole) || member?.user?.id === '194147938786738176'
-
 //IS MOD?
 export const isMod = (server, member) => member?._roles.includes(server?.modRole) || member?._roles.includes(server?.adminRole) || member?._roles.includes(server?.judgeRole) || member?.user?.id === '194147938786738176'
 
