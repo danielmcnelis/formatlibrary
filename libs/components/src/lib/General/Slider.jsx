@@ -1,7 +1,7 @@
 
 import { useState } from 'react'
 import { styled, alpha } from '@mui/system'
-import {Slider, SliderClasses } from '@mui/base/Slider'
+import {Slider, sliderClasses } from '@mui/base/Slider'
 import './Slider.css'
 
 const StyledSlider = styled(Slider)(
@@ -20,14 +20,14 @@ const StyledSlider = styled(Slider)(
     opacity: 1;
   }
 
-  &.${SliderClasses.disabled} { 
+  &.${sliderClasses.disabled} { 
     pointer-events: none;
     cursor: default;
     color: '#FC7A0E'
     opacity: 0.5;
   }
 
-  & .${SliderClasses.rail} {
+  & .${sliderClasses.rail} {
     display: block;
     position: absolute;
     width: 100%;
@@ -37,7 +37,7 @@ const StyledSlider = styled(Slider)(
     opacity: 0.4;
   }
 
-  & .${SliderClasses.track} {
+  & .${sliderClasses.track} {
     display: block;
     position: absolute;
     height: 4px;
@@ -45,7 +45,7 @@ const StyledSlider = styled(Slider)(
     background-color: currentColor;
   }
 
-  & .${SliderClasses.thumb} {
+  & .${sliderClasses.thumb} {
     position: absolute;
     width: 16px;
     height: 16px;
@@ -58,14 +58,14 @@ const StyledSlider = styled(Slider)(
     background-color: #fff;
 
     :hover,
-    &.${SliderClasses.focusVisible} {
+    &.${sliderClasses.focusVisible} {
       box-shadow: 0 0 0 0.25rem ${alpha(
         '#B5C0C8',
         0.15,
       )};
     }
 
-    &.${SliderClasses.active} {
+    &.${sliderClasses.active} {
       box-shadow: 0 0 0 0.25rem ${alpha(
         '#B5C0C8',
         0.3,
@@ -73,7 +73,7 @@ const StyledSlider = styled(Slider)(
     }
   }
   
-  & .${SliderClasses.valueLabel} {
+  & .${sliderClasses.valueLabel} {
     font-size: 14px;
     display: block;
     position: relative;
