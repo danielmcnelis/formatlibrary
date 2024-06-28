@@ -1,0 +1,55 @@
+{
+  "name": "iks",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "scripts/iks/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/scripts/iks",
+        "main": "scripts/iks/src/main.ts",
+        "tsConfig": "scripts/iks/tsconfig.app.json"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "scripts/iks/src/environments/environment.ts",
+              "with": "scripts/iks/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["scripts/iks/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/scripts/iks"],
+      "options": {
+        "jestConfig": "scripts/iks/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "script": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["./node_modules/.bin/nx run iks:build", "node dist/scripts/iks/main.js"],
+        "parallel": false
+      }
+    }
+  },
+  "tags": []
+}
