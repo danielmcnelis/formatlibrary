@@ -57,7 +57,7 @@ const routes = { auth }
 Object.values(routes).forEach((route) => {
   route.stack.forEach((route) => {
     const path = route.route.path
-    const methods = Object.entries(route.route.methods).reduce((reduced, [key, value]) => {
+    const methods = Object.entries(route.method).reduce((reduced, [key, value]) => {
       if (value) {
         reduced.push(key.toUpperCase())
       }

@@ -1,7 +1,7 @@
 
 import { useState } from 'react'
 import { styled, alpha } from '@mui/system'
-import Slider, { SliderClasses } from '@mui/base/Slider'
+import {Slider, SliderClasses } from '@mui/base/Slider'
 import './Slider.css'
 
 const StyledSlider = styled(Slider)(
