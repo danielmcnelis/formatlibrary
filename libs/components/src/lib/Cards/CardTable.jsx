@@ -6,7 +6,7 @@ import { MiniAdvButton } from './MiniAdvButton'
 import { CardRow } from './CardRow'
 import { CardImage } from './CardImage'
 import { MobileCardRow } from './MobileCardRow'
-import { Slider } from '../General/Slider'
+import { ModdedSlider } from '../General/Slider'
 import { Pagination } from '../General/Pagination'
 import { capitalize } from '@fl/utils'
 import { useMediaQuery } from 'react-responsive'
@@ -771,7 +771,7 @@ export const CardTable = () => {
         
                             <div className="slider-flexbox">
                                 <div className="slider-column">
-                                    <Slider
+                                    <ModdedSlider
                                         id="level"
                                         type="range-slider"
                                         symbol="https://cdn.formatlibrary.com/images/symbols/star.png"
@@ -784,7 +784,7 @@ export const CardTable = () => {
                                         defaultValue = {sliders.level}
                                     />
 
-                                    <Slider
+                                    <ModdedSlider
                                         id="atk"
                                         type="range-slider"
                                         symbol="https://cdn.formatlibrary.com/images/emojis/swords.png"
@@ -797,7 +797,7 @@ export const CardTable = () => {
                                         defaultValue = {sliders.atk}
                                     />
 
-                                    <Slider
+                                    <ModdedSlider
                                         id="def"
                                         type="range-slider"
                                         symbol="https://cdn.formatlibrary.com/images/emojis/shield.png"
@@ -812,7 +812,7 @@ export const CardTable = () => {
                                 </div>
                     
                                 <div className="slider-column desktop-only">
-                                    <Slider
+                                    <ModdedSlider
                                         id="year"
                                         type="continuous-slider"
                                         symbol="https://cdn.formatlibrary.com/images/emojis/calendar.png"
@@ -825,7 +825,7 @@ export const CardTable = () => {
                                         setSliders = {setSliders}
                                         defaultValue = {sliders.year}
                                     />
-                                    <Slider
+                                    <ModdedSlider
                                         id="month"
                                         type="continuous-slider"
                                         symbol="https://cdn.formatlibrary.com/images/emojis/calendar.png"
@@ -838,7 +838,7 @@ export const CardTable = () => {
                                         setSliders = {setSliders}
                                         defaultValue = {sliders.month}
                                     />
-                                    <Slider
+                                    <ModdedSlider
                                         id="day"
                                         type="continuous-slider"
                                         symbol="https://cdn.formatlibrary.com/images/emojis/calendar.png"

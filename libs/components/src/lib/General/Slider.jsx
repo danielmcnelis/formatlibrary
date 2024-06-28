@@ -1,10 +1,10 @@
 
 import { useState } from 'react'
 import { styled, alpha } from '@mui/system'
-import SliderUnstyled, { sliderUnstyledClasses } from '@mui/base/SliderUnstyled'
+import Slider, { SliderClasses } from '@mui/base/Slider'
 import './Slider.css'
 
-const StyledSlider = styled(SliderUnstyled)(
+const StyledSlider = styled(Slider)(
   ({ theme }) => `
   color: '#FC7A0E'
   height: 6px;
@@ -20,14 +20,14 @@ const StyledSlider = styled(SliderUnstyled)(
     opacity: 1;
   }
 
-  &.${sliderUnstyledClasses.disabled} { 
+  &.${SliderClasses.disabled} { 
     pointer-events: none;
     cursor: default;
     color: '#FC7A0E'
     opacity: 0.5;
   }
 
-  & .${sliderUnstyledClasses.rail} {
+  & .${SliderClasses.rail} {
     display: block;
     position: absolute;
     width: 100%;
@@ -37,7 +37,7 @@ const StyledSlider = styled(SliderUnstyled)(
     opacity: 0.4;
   }
 
-  & .${sliderUnstyledClasses.track} {
+  & .${SliderClasses.track} {
     display: block;
     position: absolute;
     height: 4px;
@@ -45,7 +45,7 @@ const StyledSlider = styled(SliderUnstyled)(
     background-color: currentColor;
   }
 
-  & .${sliderUnstyledClasses.thumb} {
+  & .${SliderClasses.thumb} {
     position: absolute;
     width: 16px;
     height: 16px;
@@ -58,14 +58,14 @@ const StyledSlider = styled(SliderUnstyled)(
     background-color: #fff;
 
     :hover,
-    &.${sliderUnstyledClasses.focusVisible} {
+    &.${SliderClasses.focusVisible} {
       box-shadow: 0 0 0 0.25rem ${alpha(
         '#B5C0C8',
         0.15,
       )};
     }
 
-    &.${sliderUnstyledClasses.active} {
+    &.${SliderClasses.active} {
       box-shadow: 0 0 0 0.25rem ${alpha(
         '#B5C0C8',
         0.3,
@@ -73,7 +73,7 @@ const StyledSlider = styled(SliderUnstyled)(
     }
   }
   
-  & .${sliderUnstyledClasses.valueLabel} {
+  & .${SliderClasses.valueLabel} {
     font-size: 14px;
     display: block;
     position: relative;
@@ -88,7 +88,7 @@ function valuetext(value) {
   return `${value}`;
 }
 
-export const Slider = (props) => {
+export const ModdedSlider = (props) => {
     const [sliders, setSliders] = useState([])
     const display = props.disabled ? 'on' : 'auto'
   

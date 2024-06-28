@@ -7,7 +7,7 @@ import { MiniAdvButton } from '../../../Cards/MiniAdvButton'
 import { CardRow } from '../../../Cards/CardRow'
 import { CardImage } from '../../../Cards/CardImage'
 import { MobileCardRow } from '../../../Cards/MobileCardRow'
-import { Slider } from '../../../General/Slider'
+import { ModdedSlider } from '../../../General/Slider'
 import { Pagination } from '../../../General/Pagination'
 import { useMediaQuery } from 'react-responsive'
 import { Helmet } from 'react-helmet'
@@ -651,7 +651,7 @@ export const CubeBrowser = () => {
     
                         <div className="slider-flexbox">
                             <div className="slider-column">
-                                <Slider
+                                <ModdedSlider
                                     id="level"
                                     type="range-slider"
                                     symbol="https://cdn.formatlibrary.com/images/symbols/star.png"
@@ -664,7 +664,7 @@ export const CubeBrowser = () => {
                                     defaultValue = {sliders.level}
                                 />
 
-                                <Slider
+                                <ModdedSlider
                                     id="atk"
                                     type="range-slider"
                                     symbol="https://cdn.formatlibrary.com/images/emojis/swords.png"
@@ -677,7 +677,7 @@ export const CubeBrowser = () => {
                                     defaultValue = {sliders.atk}
                                 />
 
-                                <Slider
+                                <ModdedSlider
                                     id="def"
                                     type="range-slider"
                                     symbol="https://cdn.formatlibrary.com/images/emojis/shield.png"
