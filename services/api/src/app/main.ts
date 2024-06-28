@@ -57,7 +57,7 @@ const routes = { banlists, blogposts, cards, cookies, cubes, decks, deckTypes, d
 Object.values(routes).forEach((route) => {
   route.stack.forEach((route) => {
     const path = route.route.path
-    const methods = Object.entries(route.method).reduce((reduced, [key, value]) => {
+    const methods = Object.entries(route.keys).reduce((reduced, [key, value]) => {
       if (value) {
         reduced.push(key.toUpperCase())
       }
