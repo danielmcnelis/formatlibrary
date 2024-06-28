@@ -14,6 +14,7 @@
   "private": true,
   "dependencies": {
     "@aws-sdk/client-s3": "^3.201.0",
+    "@discordjs/rest": "^2.3.0",
     "@dnd-kit/core": "^6.0.8",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
