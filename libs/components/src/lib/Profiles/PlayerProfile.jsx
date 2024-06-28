@@ -81,7 +81,6 @@ export const PlayerProfile = () => {
 
   if (player === null) return <NotFound />
   if (!player.id) return <div />
-  const regionNames = new Intl.DisplayNames(['en'], {type: 'region'})
 
   return (
     <>
@@ -114,7 +113,7 @@ export const PlayerProfile = () => {
                         <div className="profile-line"><b>Discord:</b> {player.globalName || player.discordName && player.discriminator && player.discriminator !== '0' ? (<><span>{player.discordName}</span><span style={{ color: 'gray' }}>#{player.discriminator}</span></>) : player.discordName || 'N/A'}</div>
                         {
                             player.country ? (
-                                <div className="profile-line"><b>Country:</b> {regionNames.of(countries[player.country]?.iso2) || player.country} <img className="country" src={`https://www.worldometers.info/img/flags/${(countries[player.country].fips).toLowerCase()}-flag.gif`} alt="flag"/></div>
+                                <div className="profile-line"><b>Country:</b> {player.country} <img className="country" src={`https://www.worldometers.info/img/flags/${(countries[player.country].fips).toLowerCase()}-flag.gif`} alt="flag"/></div>
                             ) : ''
                         }
                         {

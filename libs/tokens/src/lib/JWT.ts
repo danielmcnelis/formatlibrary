@@ -49,9 +49,13 @@ export class JWT {
     }
   
     async verify(token) {
+        console.log('verify() -> this.jwks', this.jwks)
+
         const [protectedHeader] = token.split('.')
 		const { alg, kid } = JSON.parse(Buffer.from(protectedHeader, 'base64').toString())
 
+        console.log('alg', alg)
+        console.log('kid', kid)
         if (alg !== this.algorithm) {
             throw new Error('Wrong algorithm!')
         }
