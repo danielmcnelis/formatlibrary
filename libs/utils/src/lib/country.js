@@ -4314,6 +4314,6 @@ export const timezones = {
 
 export const getCountry = (timezone) => {
 	if (timezone === "" || !timezone) return null
-	const country = timezones[timezone].c[0]
+	const country = iso2ToCountries(timezones[timezone].c[0])
 	return country
 }
