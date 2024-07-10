@@ -244,7 +244,7 @@ export default {
                 if (!count) {
                     return interaction.channel.send(`<@${winningPlayer.discordId}>, reminder: you are required to share the replay of your match against ${losingPlayer.globalName || losingPlayer.discordName} (use the **/replay** command). ${emojis.one_week}`)
                 }
-            }, 2 * 60 * 1000)
+            }, 5 * 60 * 1000)
         }
 
         return await interaction.editReply({ content: `A manual ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournament ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss by <@${losingPlayer.discordId}>${tournament?.pointsEligible && challongeMatch?.round ? ` (+1 TP)` : ''} to <@${winningPlayer.discordId}>${tournament?.pointsEligible ? ` (+${challongeMatch.round + 1} TP)` : ''} has been recorded.`})		
