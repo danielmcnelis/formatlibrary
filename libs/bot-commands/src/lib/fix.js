@@ -45,6 +45,10 @@ export default {
                 include: [Format, Player, Tournament]
             })
 
+            const topCutTournament = await Tournament.findOne({ where: {
+                id: event.topCutTournamentId
+            }})
+
             if (!event) return await interaction.editReply('No event found.')
             console.log('event.tournament?.serverId', event.tournament?.serverId)
 
@@ -56,7 +60,7 @@ export default {
 
             const matches = await getMatches(server, event.primaryTournamentId)
             const participants = await getParticipants(server, event.primaryTournamentId)
-            const standings = await calculateStandings(event.tournament, matches, participants)
+            const standings = await calculateStandings(event.tournament, matches, participants, topCutTournament)
             console.log('standings?.length', standings?.length)
 
             for (let i = 0; i < standings.length; i++) {

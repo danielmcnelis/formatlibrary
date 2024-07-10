@@ -53,16 +53,16 @@ export default {
         if (type === 'SW') {
             const tieBreakerOne = new TextInputBuilder()
                 .setCustomId('tb1')
-                .setLabel('Tie breaker #1? (MB, WVT, PD, OWP, OOWP)')
+                .setLabel('Tie breaker #1? (OWP, OOWP, MB, WVT, PD)')
                 .setStyle(TextInputStyle.Short)
-                .setPlaceholder('Median-Buchholz (MB)')
+                .setPlaceholder('Opponents\' Win Percentage (OWP)')
                 .setRequired(false)
 
             const tieBreakerTwo = new TextInputBuilder()
                 .setCustomId('tb2')
-                .setLabel('Tie breaker #2? (MB, WVT, PD, OWP, OOWP)')
+                .setLabel('Tie breaker #2? (OWP, OOWP, MB, WVT, PD)')
                 .setStyle(TextInputStyle.Short)
-                .setPlaceholder('Wins vs Tied Participants (WVT)')
+                .setPlaceholder('Opponents\' Opponents\' Win Percentage (OOWP)')
                 .setRequired(false)
             
             const tb1Row = new ActionRowBuilder().addComponents(tieBreakerOne)

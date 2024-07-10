@@ -34,7 +34,7 @@ export default {
                 return 'PD'
             } else if (tb === 'opponents win percentage') {
                 return 'OWP'
-            } else if (tb === 'opponents opponent win percentage') {
+            } else if (tb === 'opponents opponents win percentage') {
                 return 'OOWP'
             } else {
                 return ''
@@ -46,7 +46,7 @@ export default {
                 str === 'match wins vs tied' ? 'winsVsTied' :
                 str === 'points difference' ? 'pointsDifference' :
                 str === 'opponents win percentage' ? 'opponentsWinPercentage' :
-                str === 'opponents opponent win percentage' ? 'opponentsOpponentWinPercentage' :
+                str === 'opponents opponents win percentage' ? 'opponentsOpponentWinPercentage' :
                 ''
         }
         
@@ -61,7 +61,7 @@ export default {
             const getAndStylizeTBVal = (obj, tb) => {
                 return tb === 'median buchholz' ? obj[camelizeTieBreaker(tb)].toFixed(1) :
                     tb === 'match wins vs tied' || tb === 'points difference' ?  obj[camelizeTieBreaker(tb)] : 
-                    tb === 'opponents win percentage' || tb === 'opponents opponent win percentage' ? obj[camelizeTieBreaker(tb)].toFixed(3) :
+                    tb === 'opponents win percentage' || tb === 'opponents opponents win percentage' ? obj[camelizeTieBreaker(tb)].toFixed(3) :
                     obj[camelizeTieBreaker(tb)]
             }
             

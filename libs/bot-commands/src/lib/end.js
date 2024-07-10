@@ -54,12 +54,12 @@ export default {
                 if (status === 200) {   
                     interaction.channel.send({ content: `Congrats! The results of ${tournament.name} ${tournament.logo} have been finalized on Challonge.com.`})
                 } else {
-                    interaction.channel.send({ content: `Unable to finalize ${tournament.name} ${tournament.logo} on Challonge.com.`})
+                    return await interaction.editReply({ content: `Unable to finalize ${tournament.name} ${tournament.logo} on Challonge.com.`})
                 }
             }
         } catch (err) {
             console.log(err)
-            interaction.channel.send({ content: `Unable to connect to Challonge.com.`})
+            return await interaction.editReply({ content: `Unable to finalize ${tournament.name} ${tournament.logo} on Challonge.com.`})
         }
 
         if (tournament.type === 'swiss' && !tournament.assocTournamentId) {

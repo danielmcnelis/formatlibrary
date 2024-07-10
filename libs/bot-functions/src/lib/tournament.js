@@ -2172,7 +2172,7 @@ export const calculateStandings = async (tournament, matches, participants) => {
             str === 'match wins vs tied' ? 'winsVsTied' :
             str === 'points difference' ? 'pointsDifference' :
             str === 'opponents win percentage' ? 'opponentsWinPercentage' :
-            str === 'opponents opponent win percentage' ? 'opponentsOpponentWinPercentage' :
+            str === 'opponents opponents win percentage' ? 'opponentsOpponentWinPercentage' :
             ''
     }
 
@@ -2247,7 +2247,6 @@ export const calculateStandings = async (tournament, matches, participants) => {
                 opponentsOpponentWinPercentage: 0
             }
         }
-
     }
 
     for (let i = 0; i < matches.length; i++) {
@@ -3170,7 +3169,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         }
     } catch (err) {
         console.log(err)
-        interaction.channel.send({ content: `Unable to connect to Challonge.com.`})
+        interaction.channel.send({ content: `Unable to finalize ${tournament.name} ${tournament.logo} on Challonge.com.`})
     }
 
     if (tournament.type === 'swiss' && !tournament.assocTournamentId) {
@@ -3500,12 +3499,12 @@ export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId
             if (status === 200) {   
                 interaction.channel.send({ content: `Congrats! The results of ${tournament.name} ${tournament.logo} have been finalized on Challonge.com.`})
             } else {
-                interaction.channel.send({ content: `Unable to finalize ${tournament.name} ${tournament.logo} on Challonge.com.`})
+                return await interaction.editReply({ content: `Unable to finalize ${tournament.name} ${tournament.logo} on Challonge.com.`})
             }
         }
     } catch (err) {
         console.log(err)
-        interaction.channel.send({ content: `Unable to connect to Challonge.com.`})
+        return await interaction.editReply({ content: `Unable to finalize on Challonge.com.`})
     }
 
    // Find or create an event
@@ -3721,7 +3720,7 @@ export const postStandings = async (interaction, tournamentId) => {
             return 'PD'
         } else if (tb === 'opponents win percentage') {
             return 'OWP'
-        } else if (tb === 'opponents opponent win percentage') {
+        } else if (tb === 'opponents opponents win percentage') {
             return 'OOWP'
         } else {
             return ''
@@ -3733,7 +3732,7 @@ export const postStandings = async (interaction, tournamentId) => {
             str === 'match wins vs tied' ? 'winsVsTied' :
             str === 'points difference' ? 'pointsDifference' :
             str === 'opponents win percentage' ? 'opponentsWinPercentage' :
-            str === 'opponents opponent win percentage' ? 'opponentsOpponentWinPercentage' :
+            str === 'opponents opponents win percentage' ? 'opponentsOpponentWinPercentage' :
             ''
     }
     
@@ -3748,7 +3747,7 @@ export const postStandings = async (interaction, tournamentId) => {
         const getAndStylizeTBVal = (obj, tb) => {
             return tb === 'median buchholz' ? obj[camelizeTieBreaker(tb)].toFixed(1) :
                 tb === 'match wins vs tied' || tb === 'points difference' ?  obj[camelizeTieBreaker(tb)] : 
-                tb === 'opponents win percentage' || tb === 'opponents opponent win percentage' ? obj[camelizeTieBreaker(tb)].toFixed(3) :
+                tb === 'opponents win percentage' || tb === 'opponents opponents win percentage' ? obj[camelizeTieBreaker(tb)].toFixed(3) :
                 obj[camelizeTieBreaker(tb)]
         }
         

@@ -2,7 +2,7 @@
 import { SlashCommandBuilder } from 'discord.js'    
 import { createPlayer, getDeckType, postStory, isMod, isNewUser, hasPartnerAccess, isIronPlayer, lookForPotentialPairs, checkPairing, getMatches, processMatchResult, processTeamResult, selectTournament } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
-import { Entry, Format, Iron, Match, Matchup, Pairing, Player, Pool, Server, Stats, Tournament } from '@fl/models'
+import { Entry, Format, Iron, Match, Matchup, Pairing, Player, Pool, Replay, Server, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import { client } from '../client'
 
@@ -231,6 +231,20 @@ export default {
             const rPTU = poolsToUpdate[d]
             await rPTU.update({ status: 'pending' })
             lookForPotentialPairs(client, interaction, rPTU, rPTU.player, rPTU.format)
+        }
+
+        if (isTournament) {
+            setTimeout(async () => {
+                const count = await Replay.count({
+                    where: {
+                        matchId: match.id
+                    }
+                })
+
+                if (!count) {
+                    return interaction.channel.send(`<@${winningPlayer.discordId}>, reminder: you are required to share the replay of your match against ${losingPlayer.globalName || losingPlayer.discordName} (use the **/replay** command). ${emojis.one_week}`)
+                }
+            }, 60000)
         }
 
         return await interaction.editReply({ content: `A manual ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournament ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss by <@${losingPlayer.discordId}>${tournament?.pointsEligible && challongeMatch?.round ? ` (+1 TP)` : ''} to <@${winningPlayer.discordId}>${tournament?.pointsEligible ? ` (+${challongeMatch.round + 1} TP)` : ''} has been recorded.`})		

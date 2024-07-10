@@ -270,7 +270,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 } else if (input.includes('pd') || input.includes('point')) {
                     return 'points difference'
                 } else if (input.includes('oowp') || input.includes('s opp')) {
-                    return `opponents opponent win percentage`
+                    return `opponents opponents win percentage`
                 } else if (input.includes('owp') || input.includes('opp')) {
                     return `opponents win percentage`
                 } else {
@@ -318,7 +318,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 } else if (input.includes('pd') || input.includes('point')) {
                     return 'points difference'
                 } else if (input.includes('oowp') || input.includes('s opp')) {
-                    return `opponents opponent win percentage`
+                    return `opponents opponents win percentage`
                 } else if (input.includes('owp') || input.includes('opp')) {
                     return `opponents win percentage`
                 } else {
