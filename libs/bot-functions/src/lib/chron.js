@@ -997,7 +997,7 @@ export const downloadOriginalArtworks = async () => {
     
     const artworks = await Artwork.findAll({
         where: {
-            isOriginal: false
+            isOriginal: true
         },
         include: Card
     })
@@ -1087,7 +1087,6 @@ export const downloadNewCards = async () => {
                         {ypdId: id},
                         {name: name}
                     ]
-                    
                 }
             })
     
@@ -1187,7 +1186,6 @@ export const downloadNewCards = async () => {
                     name: name,
                     cleanName: cleanName,
                     ypdId: id,
-                    konamiCode: konamiCode,
                     description: datum.desc,
                     tcgLegal: tcgLegal,
                     ocgLegal: ocgLegal,

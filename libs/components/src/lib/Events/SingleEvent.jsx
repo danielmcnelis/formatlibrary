@@ -290,7 +290,7 @@ export const SingleEvent = () => {
                 </table>
                 <br/>
                 <li>
-                    <a href="#bracket">Bracket</a>
+                    <a href={`/events/${event?.name}#bracket`}>Bracket</a>
                 </li>
                 {
                     topDecks?.length ? (
