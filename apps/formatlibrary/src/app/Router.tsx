@@ -33,10 +33,10 @@ import {
   UserPortal
 } from '@fl/components'
 
-// import { SocketProvider } from '@fl/context'
-// import {config} from '@fl/config'
-// import io from 'socket.io-client'
-// const socket = io(config.siteUrl, { transports: ["websocket"] })
+import { SocketProvider } from '@fl/context'
+import {config} from '@fl/config'
+import io from 'socket.io-client'
+const socket = io(config.siteUrl, { transports: ["websocket"] })
 
 export const Router = () => {
   return (
@@ -54,7 +54,7 @@ export const Router = () => {
 					<Route path="/cube-maker" element=<Page element=<CubeMaker /> /> />
 					<Route path="/rated-lobby" element=<Page element=<RatedLobby /> /> />
 					<Route path="/cubes/:id" element=<Page element=<CubeBrowser /> /> />
-					<Route path="/drafts/:id" element=<Page element= <DraftLobby/> /> />
+					<Route path="/drafts/:id" element=<Page element= <SocketProvider value={socket}><DraftLobby/></SocketProvider> /> />
 					<Route path="/sealed/:id" element=<Page element= <SealedLobby/> /> />
 					<Route path="/format-maker" element=<Page element=<FormatMaker /> /> />
 					<Route path="/great-library.html" element=<Page element= <CardTable /> /> />
@@ -89,7 +89,7 @@ export const Router = () => {
 					<Route path="/formats/:id" element=<Page element= <FormatIntro /> /> />
 					<Route path="/leaderboards/:id" element=<Page element= <LeaderBoard /> /> />
 					<Route path="/replays/" element=<Page element= <ReplayTable /> /> />
-					<Route path="/start-draft/" element=<Page element= <DraftLauncher /> /> />
+                    <Route path="/start-draft/" element=<Page element= <SocketProvider value={socket}><DraftLauncher/></SocketProvider> /> />
 					<Route path="/start-sealed/" element=<Page element= <SealedLauncher /> /> />
 					<Route path="/banlists/:id" element=<Page element= <SingleBanList /> /> />
 					<Route path="/players/:id" element=<Page element= <PlayerProfile /> /> />

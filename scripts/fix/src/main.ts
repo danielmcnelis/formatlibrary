@@ -1627,3 +1627,58 @@ const shuffleArray = (arr) => {
 //     return console.log('Fin.')
 // })()
 
+
+
+;(async () => { 
+    // find latest prints for all tengu cards
+    const cards = await Card.findAll({
+        where: {
+            tcgDate: {
+                [Op.lte]: '2011-09-17'
+            }
+        }
+    })
+
+    const prints = []
+
+    for (let i = 0; i < cards.length; i++) {
+        const card = cards[i]
+        try {
+            const print = await Print.findOne({
+                where: {
+                    cardId: card.id,
+                    description: {[Op.not]: null},
+                    '$set.tcgDate$': {[Op.lte]: '2011-09-17'}
+                },
+                include: Set,
+                order: [[Set, 'tcgDate', 'DESC']] 
+            }) || await Print.findOne({
+                where: {
+                    cardId: card.id,
+                    original: true
+                }
+            })
+    
+            if (!print) {
+                console.log(`no print found for ${card.name}`)
+                continue
+            }
+
+            if (!print.description) {
+                await print.update({ description: card.description })
+            }    
+
+            prints.push(print)
+        } catch (err) {
+            console.log(`Error !!! ${card.name}`, err)
+        }
+    }
+
+    fs.writeFile('./tengu-prints.json', JSON.stringify(prints), (err) => {
+        if (err) return console.error(err)
+        console.log('Tengu prints stored to', './tengu-prints.json')
+    })
+
+    return console.log('Fin.')
+})()
+
