@@ -25,9 +25,8 @@ export const Builder = () => {
         extra: []
     })
 
-    const [cuts, setCuts] = useState([])
+    // const [cuts, setCuts] = useState([])
     const [card, setCard] = useState({})
-    console.log('card', card)
     const [format, setFormat] = useState({})
     const [controlPanelDeckType, setControlPanelDeckType] = useState(null)
     const [controlPanelFormat, setControlPanelFormat] = useState(null)
@@ -337,7 +336,7 @@ export const Builder = () => {
                 const side = [...deck.side, card].sort((a, b) => {if (b === null) { return -1 } else { return 1}}).filter((e, index) => !!e || index <= 14)
                 setDeck({...deck, side})
                 setEdited(true)
-            }  else if (locale === 'extra' || card.extraDeck) {
+            }  else if (locale === 'extra') {
                 if (format.date > '2008-08-05' && deck.extra.length >= 15) return
                 const extra = [...deck.extra, card].sort((a, b) => {if (b === null) { return -1 } else { return 1}}).filter((e, index) => !!e || index <= 14)
                 setDeck({...deck, extra})
