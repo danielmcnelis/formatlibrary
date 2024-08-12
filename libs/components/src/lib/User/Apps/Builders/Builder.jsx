@@ -27,6 +27,7 @@ export const Builder = () => {
 
     const [cuts, setCuts] = useState([])
     const [card, setCard] = useState({})
+    console.log('card', card)
     const [format, setFormat] = useState({})
     const [controlPanelDeckType, setControlPanelDeckType] = useState(null)
     const [controlPanelFormat, setControlPanelFormat] = useState(null)

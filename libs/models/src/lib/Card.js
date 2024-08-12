@@ -222,7 +222,7 @@ Card.find = async (filter = {}, booster, limit = 10, page = 1, sort = []) => {
         offset: (page - 1) * limit,
         limit: limit,
         subQuery: false,
-        attributes: { exclude: ['tcgLegal', 'ocgLegal', 'speedLegal', 'extraDeck', 'createdAt', 'updatedAt'] },
+        attributes: { exclude: ['tcgLegal', 'ocgLegal', 'speedLegal', 'createdAt', 'updatedAt'] },
         include: [{ model: Print, separate: !booster, attributes: ['id'] }],
         order: sort
     })
