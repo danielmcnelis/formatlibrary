@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes, Link } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import {
   AdminPortal,
   Builder,
@@ -39,7 +39,7 @@ import {
 // const socket = io(config.siteUrl, { transports: ["websocket"] })
 
 const AdsTxtRedirect = () => {
-    window.location.href = 'https://example.com/1234';
+    window.location.href = 'https://ads.adthrive.com/sites/66e1eae5fdcedc15a412ead6/ads.txt';
     return null;
 }
 
