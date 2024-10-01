@@ -20,8 +20,7 @@
             "apps/formatlibrary/src/favicon.ico", 
             "apps/formatlibrary/src/assets", 
             "apps/formatlibrary/src/privacy.html", 
-            "apps/formatlibrary/src/terms.html", 
-            "apps/formatlibrary/src/ads.txt"
+            "apps/formatlibrary/src/terms.html" 
         ],
         "styles": ["apps/formatlibrary/src/styles.css"],
         "scripts": [],
