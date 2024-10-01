@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes, Link } from 'react-router-dom'
 import {
   AdminPortal,
   Builder,
@@ -38,11 +38,17 @@ import {
 // import io from 'socket.io-client'
 // const socket = io(config.siteUrl, { transports: ["websocket"] })
 
+const AdsTxtRedirect = () => {
+    window.location.href = 'https://example.com/1234';
+    return null;
+}
+
 export const Router = () => {
   return (
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element=<Page element=<Home /> /> />
+                    <Route path='/ads.txt' element=<AdsTxtRedirect /> />
 					<Route path="/home" element=<Page element=<Home /> /> />
                     <Route path="/auth/"/>
 					<Route path="/apps" element=<Page element=<UserPortal /> /> />
