@@ -63,7 +63,13 @@ export const getIssues = async (deckArr, format) => {
         format.category === 'Speed' ? ['speedDate', 'speedLegal'] :
         ['tcgDate', 'tcgLegal']
 
-    const cardIds = format.category === 'Custom' ? [...await Card.findAll()].map(c => c.konamiCode) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: format.date } }})].map(c => c.konamiCode)
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = (now.getMonth() + 1).toString().padStart(2, '0')
+    const day = now.getDate().toString().padStart(2, '0')
+    const formatDate = format.name === 'Current' || format.name === 'Traditional' ? `${year}-${month}-${day}` : format.date
+
+    const cardIds = format.category === 'Custom' ? [...await Card.findAll()].map(c => c.konamiCode) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: formatDate } }})].map(c => c.konamiCode)
     const forbiddenIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'forbidden' }, include: Card })].map(s => s.card.konamiCode)
     const limitedIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited' }, include: Card })].map(s => s.card.konamiCode)
     const semiIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'semi-limited' }, include: Card })].map(s => s.card.konamiCode)
