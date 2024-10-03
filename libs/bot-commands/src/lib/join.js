@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Server, Team, Tournament } from '@fl/models'
-import { askForSimName, getDeckList, getOPDeckList, getSpeedDeckList, postParticipant, selectTournament } from '@fl/bot-functions'
+import { askForSimName, createPlayer, getDeckList, getOPDeckList, getSpeedDeckList, isNewUser, postParticipant, selectTournament } from '@fl/bot-functions'
 import { drawDeck, drawOPDeck, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
@@ -17,9 +17,11 @@ export default {
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         let format = await Format.findByServerOrChannelId(server, interaction.channelId)
         const tournaments = await Tournament.findByState('pending', format, interaction.guildId, 'ASC')
+        const member = await interaction.guild?.members.fetch(interaction.user?.id)
+        if (await isNewUser(interaction.user?.id)) await createPlayer(member)
         const player = await Player.findOne({ where: { discordId: interaction.user?.id }})    
-        if (!player) return await interaction.editReply({ content: `You are not in the database. Please try again.`})
-
+        if (!player) { return await interaction.editReply({ content: `You are not in the database. Please try again.`})}
+        
         const tournament = await selectTournament(interaction, tournaments, 'ASC')
         if (!tournament) return
 
