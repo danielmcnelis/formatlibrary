@@ -999,13 +999,15 @@ export const removeParticipant = async (server, interaction, member, entry, tour
     const playerId = entry.playerId
     const playerName = member?.user?.username || entry.playerName
     const initialState = tournament.state
+    const matches = await getMatches(server, tournament.id, 'open')
+    let openMatch, opponentEntry
 
     const swissAndUnderway = await Tournament.count({ where: { id: tournament.id, type: 'swiss', state: 'underway' }})
-    if (swissAndUnderway) {
-        const matches = await getMatches(server, tournament.id, 'open')
-        if (!matches?.length) {
-            return await interaction.editReply({ content: `Error: Cannot ${drop ? 'drop' : 'remove participants'} while generating pairings for the next round. Please try again in a moment.`})
-        }
+    if (swissAndUnderway && !matches?.length) {
+        return await interaction.editReply({ content: `Error: Cannot ${drop ? 'drop' : 'remove participants'} while generating pairings for the next round. Please try again in a moment.`})
+    } else {
+        openMatch = findOpenMatch(matches, entry.participantId)
+        opponentEntry = await findNextOpponent(tournament.id, matches, openMatch, entry.participantId)
     }
  
     const processing = await Tournament.count({ where: { id: tournament.id, state: 'processing' }})
@@ -1039,7 +1041,22 @@ export const removeParticipant = async (server, interaction, member, entry, tour
 
         // REMOVE TOURNAMENT PARTICIPANT ROLE IF NOT IN ANY OTHER TOURNAMENTS ON THE SERVER
         if (!count) member.roles.remove(server.tourRole).catch((err) => console.log(err))
-    
+
+        // NOTIFY OPPONENT IF MATCH WAS OPEN
+        if (opponentEntry) {
+            const opposingMember = await interaction.guild?.members.fetch(opponentEntry.player.discordId)
+            const participants_count = await Entry.count({
+                where: {
+                    tournamentId: tournament.id
+                }
+            })
+
+            const roundName = getRoundName(tournament, openMatch.round, participants_count)
+            opposingMember.user.send(
+                `Pairing update: Your opponent for ${roundName} of ${tournament.name} ${tournament.logo} (${entry.name}) dropped. ${emojis.woe} Enjoy the free win! ${emojis.koolaid}`
+            )
+        }
+        
         // REPLY WITH AN AFFIRMATIVE RESPONSE
         if (drop && tournament.state !== 'underway') {
             return await interaction.editReply({ content: `I removed you from ${tournament.name}. We hope to see you next time! ${tournament.emoji}`})
@@ -1213,6 +1230,20 @@ export const findNextMatch = (matchesArr = [], matchId, participantId) => {
             } else {
                 return match.id
             }
+        }
+    }
+
+    return false
+}
+
+//FIND NEXT MATCH
+export const findOpenMatch = (matchesArr = [], participantId) => {
+    for (let i = 0; i < matchesArr.length; i++) {
+        const match = matchesArr[i].match
+        if (match.state === 'open' && (match?.player1_id === participantId || match?.player2_id === participantId)) {
+            return match.id
+        } else {
+            continue
         }
     }
 

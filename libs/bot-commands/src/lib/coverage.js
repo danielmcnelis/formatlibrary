@@ -24,8 +24,8 @@ export default {
         const event = await Event.findOne({
             where: { 
                 [Op.or]: {
-                    name: input,
-                    abbreviation: input
+                    name: {[Op.iLike]: input},
+                    abbreviation: {[Op.iLike]: input}
                 }
             },
             include: [Format, Player, Tournament]

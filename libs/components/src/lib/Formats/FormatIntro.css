@@ -38,6 +38,57 @@
   }
 
 
+#spotlight-toggle-true {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: rgb(124, 198, 124);
+    padding: 2px;
+    margin: 0px 0.2vw;
+    border-radius: 24px;
+    width: 48px;
+    height: 24px;
+}
+
+#spotlight-toggle-false {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    background-color: rgb(132, 46, 46);
+    padding: 2px;
+    margin: 0px 0.2vw;
+    border-radius: 24px;
+    width: 48px;
+    height: 24px;
+}
+
+#spotlight-toggle-inner-circle-true {
+    background: url("https://cdn.formatlibrary.com/images/emojis/white-checkmark.png") no-repeat center;
+    background-size: 16px;
+    background-color: rgb(124, 200, 40);
+    border-radius: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+#theme-toggle-inner-circle-false {
+    background: url("https://cdn.formatlibrary.com/images/emojis/black-x.png") no-repeat center;
+    background-size: 16px;
+    background-color: rgb(172, 57, 57);
+    border-radius: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+#theme-toggle-light:hover {
+    cursor: pointer;
+}
+
+#theme-toggle-dark:hover {
+    cursor: pointer;
+}
+
 
 
   @media only screen and (max-width: 1000px) {

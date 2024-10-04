@@ -85,7 +85,7 @@ export const Settings = () => {
             console.log(err)
             if (!document.getElementById('name').value || !document.getElementById('name').value.length) {
                 alert('Display Name cannot be blank.')
-            } else if (document.getElementById('youtube').value && document.getElementById('youtube').value.length && !document.getElementById('youtube').value.includes('youtube.com/channel/')) {
+            } else if (document.getElementById('youtube').value && document.getElementById('youtube').value.length && !document.getElementById('youtube').value.includes('youtube.com/')) {
                 alert('Invalid YouTube channel link.')
             } else {
                 alert('Error Saving Profile.')

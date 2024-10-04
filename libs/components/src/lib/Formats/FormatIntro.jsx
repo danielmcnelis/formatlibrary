@@ -7,17 +7,36 @@ import { NotFound } from '../General/NotFound'
 import { PopularDecks } from './PopularDecks'
 import { RecentEvents } from '../Events/RecentEvents'
 import { useParams } from 'react-router-dom'
-import { urlize } from '@fl/utils'
+import { getCookie, urlize } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import './FormatIntro.css'
+
+const playerId = getCookie('playerId')
 
 export const FormatIntro = () => {
     const [format, setFormat] = useState({})
     const [deckCount, setDeckCount] = useState(0)
     const [eventCount, setEventCount] = useState(0)
     const [statsCount, setStatsCount] = useState(0)
+    const [isAdmin, setIsAdmin] = useState(false)
+    const [isSpotlight, setIsSpotlight] = useState(false)
     const { id } = useParams()
   
+    // SWITCH SPOTLIGHT
+    const switchSpotlight = async () => {
+        try {
+            if (isSpotlight) {
+                await axios.post(`/api/cards/update?id=${format.id}`, { ...format, spotlight: false })
+                setIsSpotlight(false) 
+              } else {
+                  await axios.post(`/api/cards/update?id=${format.id}`, { ...format, spotlight: true })
+                  setIsSpotlight(true) 
+              }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+            
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0))
   
@@ -39,6 +58,26 @@ export const FormatIntro = () => {
       fetchData()
     }, [id])
   
+    // USE EFFECT
+    useEffect(() => {
+        const checkRoles = async () => {
+            try {
+                const accessToken = getCookie('access')
+                const { data: player } = await axios.get(`/api/players/roles`, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
+
+                if (player.admin) setIsAdmin(true)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        if (playerId) checkRoles()
+    }, [])
+
     if (!format) return <NotFound/>
     if (!format.id) return <div />
   
@@ -56,7 +95,17 @@ export const FormatIntro = () => {
             <div className="format-icon-flexbox">
             <div className="format-text">
                 <h1>{format.name} Format</h1>
-                <h2>{format.event}</h2>
+                {
+                    isAdmin ? (
+                        <div className='horizontal-space-between-flexbox'>
+                            <h2>{format.event}</h2>
+                            <h2>Spotlight</h2>
+                            <div id={`theme-spotlight-${isSpotlight}`} onClick={() => switchSpotlight()}>
+                                <div id={`theme-spotlight-inner-circle-${isSpotlight}`}></div>
+                            </div>
+                        </div>
+                    ) : <h2>{format.event}</h2>
+                }
                 {
                 format.description ? (
                     <div className="desktop-only">

@@ -281,7 +281,13 @@
     flex-direction: row;
     justify-content: center;
   }
-  
+
+  .horizontal-space-between-flexbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
   .perks {
     list-style-position: inside;
     margin: 0px auto;

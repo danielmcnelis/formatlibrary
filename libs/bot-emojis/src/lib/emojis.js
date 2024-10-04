@@ -130,6 +130,7 @@ export const emojis = {
     WIND: "<:WIND:935749315064914020>",
     WingedBeast: "<:WingedBeast:935749315857633291>",
     WISDOM: "<:WISDOM:1113716246102417469>",
+    woe: "<:woe:934002816148734002>",
     Wyrm: "<:Wyrm:935749316281266176>",
     yellow: "<:yellow:833604958732419098>",
     yes: "<:yes:897001608817295421>",

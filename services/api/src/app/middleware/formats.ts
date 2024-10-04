@@ -65,3 +65,18 @@ export const formatsAll = async (req, res, next) => {
     next(err)
   }
 }
+
+export const updateFormatInfo = async (req, res, next) => {
+    try {
+        const format = await Format.findOne({
+            where: {
+                id: req.query.id
+            }
+        })
+
+        await format.update({ ...req.body })
+        res.json(format)
+    } catch (err) {
+    next(err)
+    }
+}

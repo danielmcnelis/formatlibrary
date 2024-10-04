@@ -20,15 +20,14 @@ import { config } from '@fl/config'
 import { Match, Membership, Player, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
-import { assignTourRoles, checkIfEndOfMonth, conductCensus, createTopCut, downloadNewCards, editTieBreakers, getMidnightCountdown, markInactives, 
-    purgeEntries, purgeLocalsAndInternalDecks, purgeTourRoles, updateAvatars, updateDeckThumbs, updateDeckTypes, updateMarketPrices,
-    updateSets, updateServers, fixDeckFolder, postStandings, checkTimer, closeTournament, createTournament, 
+import { createTopCut, editTieBreakers, getMidnightCountdown, getRemainingDaysInMonth, 
+    fixDeckFolder, postStandings, checkTimer, closeTournament, createTournament, 
     dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
-    startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, assignRoles, createMembership,
-    createPlayer, fetchCardNames, fetchOPCardNames, hasPartnerAccess, isMod, isNewMember, 
-    isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, editPointsSystem, refreshExpiredTokens, runNightlyTasks,
-    updateDecks, updateMatchups, updateReplays, downloadAltArtworks, getTournament
+    startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, 
+    assignRoles, createMembership, createPlayer, fetchCardNames, fetchOPCardNames, hasPartnerAccess, 
+    isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
+    editPointsSystem, runMonthlyTasks, runNightlyTasks, getTournament
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
@@ -147,7 +146,10 @@ client.on('ready', async() => {
         setTimeout(() => runNightlyTasks(client), midnightCountdown)
 
         // MONTHLY TASKS
-        checkIfEndOfMonth()
+        const remainingDaysInMonth = getRemainingDaysInMonth()
+        console.log('remainingDaysInMonth', remainingDaysInMonth)
+        console.log('remainingDays *  24 * 60 * 60 * 1000 + midnightCountdown', remainingDays *  24 * 60 * 60 * 1000 + midnightCountdown)
+        setTimeout(() => runMonthlyTasks(client), remainingDays *  24 * 60 * 60 * 1000 + midnightCountdown)
     } catch (err) {
         console.log(err)
     }

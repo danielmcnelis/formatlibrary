@@ -18,17 +18,12 @@ export const getMidnightCountdown = () => {
     return ( remainingHours * 60 + remainingMinutes ) * 60 * 1000
 }
 
-// CHECK IF END OF MONTH
-export const checkIfEndOfMonth = () => {
+// GET REMAINING DAYS IN MONTH
+export const getRemainingDaysInMonth = () => {
 	const date = new Date()
     const daysInMonth = (new Date(date.getFullYear(), date.getMonth() + 1, 0)).getDate()
 	const remainingDays = daysInMonth - date.getDate()
-    
-    if (remainingDays < 1) {
-        setTimeout(() => updateGlobalNames(), getMidnightCountdown())
-    } else {
-        setTimeout(() => checkIfEndOfMonth(), 24 * 60 * 60 * 1000)
-    }
+    return remainingDays
 }
 
 // RUN NIGHTLY TASKS
@@ -53,6 +48,15 @@ export const runNightlyTasks = async (client) => {
     await updateMatchups()
 
     return setTimeout(() => runNightlyTasks(client), getMidnightCountdown())
+}
+
+// RUN MONTHLY TASKS
+export const runMonthlyTasks = async (client) => {
+    await updateGlobalNames(client)
+
+    const remainingDaysInMonth = getRemainingDaysInMonth()
+    const midnightCountdown = getMidnightCountdown()
+    return setTimeout(() => runMonthlyTasks(client), remainingDaysInMonth *  24 * 60 * 60 * 1000 + midnightCountdown)
 }
 
 // REFRESH EXPIRED TOKENS
