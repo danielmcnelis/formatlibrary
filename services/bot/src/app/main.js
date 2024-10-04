@@ -148,8 +148,8 @@ client.on('ready', async() => {
         // MONTHLY TASKS
         const remainingDaysInMonth = getRemainingDaysInMonth()
         console.log('remainingDaysInMonth', remainingDaysInMonth)
-        console.log('remainingDays *  24 * 60 * 60 * 1000 + midnightCountdown', remainingDays *  24 * 60 * 60 * 1000 + midnightCountdown)
-        setTimeout(() => runMonthlyTasks(client), remainingDays *  24 * 60 * 60 * 1000 + midnightCountdown)
+        console.log('remainingDaysInMonth *  24 * 60 * 60 * 1000 + midnightCountdown', remainingDaysInMonth *  24 * 60 * 60 * 1000 + midnightCountdown)
+        setTimeout(() => runMonthlyTasks(client), remainingDaysInMonth *  24 * 60 * 60 * 1000 + midnightCountdown)
     } catch (err) {
         console.log(err)
     }
