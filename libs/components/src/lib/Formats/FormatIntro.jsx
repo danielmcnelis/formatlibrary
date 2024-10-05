@@ -102,7 +102,7 @@ export const FormatIntro = () => {
                             <div>
                                 <div>
                                     <h2>Spotlight</h2>
-                                <div>
+                                </div>
                                 <div 
                                     id={`spotlight-toggle-${format?.spotlight}`} 
                                     className='horizontal-space-between-flexbox' 
