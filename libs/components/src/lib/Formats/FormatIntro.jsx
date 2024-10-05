@@ -20,18 +20,17 @@ export const FormatIntro = () => {
     const [eventCount, setEventCount] = useState(0)
     const [statsCount, setStatsCount] = useState(0)
     const [isAdmin, setIsAdmin] = useState(false)
-    const [isSpotlight, setIsSpotlight] = useState(false)
     const { id } = useParams()
   
     // SWITCH SPOTLIGHT
     const switchSpotlight = async () => {
         try {
-            if (isSpotlight) {
-                await axios.post(`/api/formats/update?id=${format.id}`, { ...format, spotlight: false })
-                setIsSpotlight(false) 
+            if (format.spotlight) {
+                const {data} = await axios.post(`/api/formats/update?id=${format.id}`, { ...format, spotlight: false })
+                setFormat(data) 
               } else {
-                  await axios.post(`/api/formats/update?id=${format.id}`, { ...format, spotlight: true })
-                  setIsSpotlight(true) 
+                const {data} = await axios.post(`/api/formats/update?id=${format.id}`, { ...format, spotlight: true })
+                setFormat(data) 
               }
         } catch (err) {
             console.log(err)
@@ -103,11 +102,11 @@ export const FormatIntro = () => {
                             <div>
                                 <h2>Spotlight</h2>
                                 <div 
-                                    id={`spotlight-toggle-${isSpotlight}`} 
+                                    id={`spotlight-toggle-${format?.spotlight}`} 
                                     className='horizontal-space-between-flexbox' 
                                     onClick={() => switchSpotlight()}
                                 >
-                                    <div id={`spotlight-toggle-inner-circle-${isSpotlight}`}></div>
+                                    <div id={`spotlight-toggle-inner-circle-${format?.spotlight}`}></div>
                                 </div>
                             </div>
                             
