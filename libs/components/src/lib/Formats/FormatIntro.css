@@ -72,7 +72,7 @@
     height: 24px;
 }
 
-#theme-toggle-inner-circle-false {
+#spotlight-toggle-inner-circle-false {
     background: url("https://cdn.formatlibrary.com/images/emojis/black-x.png") no-repeat center;
     background-size: 16px;
     background-color: rgb(172, 57, 57);
@@ -81,11 +81,11 @@
     height: 24px;
 }
 
-#theme-toggle-light:hover {
+#spotlight-toggle-true:hover {
     cursor: pointer;
 }
 
-#theme-toggle-dark:hover {
+#spotlight-toggle-false:hover {
     cursor: pointer;
 }
 
