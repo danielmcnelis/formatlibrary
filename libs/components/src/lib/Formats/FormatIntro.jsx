@@ -15,6 +15,7 @@ const playerId = getCookie('playerId')
 
 export const FormatIntro = () => {
     const [format, setFormat] = useState({})
+    console.log('format', format)
     const [deckCount, setDeckCount] = useState(0)
     const [eventCount, setEventCount] = useState(0)
     const [statsCount, setStatsCount] = useState(0)
@@ -26,10 +27,10 @@ export const FormatIntro = () => {
     const switchSpotlight = async () => {
         try {
             if (isSpotlight) {
-                await axios.post(`/api/cards/update?id=${format.id}`, { ...format, spotlight: false })
+                await axios.post(`/api/formats/update?id=${format.id}`, { ...format, spotlight: false })
                 setIsSpotlight(false) 
               } else {
-                  await axios.post(`/api/cards/update?id=${format.id}`, { ...format, spotlight: true })
+                  await axios.post(`/api/formats/update?id=${format.id}`, { ...format, spotlight: true })
                   setIsSpotlight(true) 
               }
         } catch (err) {
@@ -96,13 +97,16 @@ export const FormatIntro = () => {
             <div className="format-text">
                 <h1>{format.name} Format</h1>
                 {
-                    isAdmin ? (
+                    isAdmin && format.popular === false ? (
                         <div className='horizontal-space-between-flexbox'>
                             <h2>{format.event}</h2>
-                            <h2>Spotlight</h2>
-                            <div id={`spotlight-toggle-${isSpotlight}`} onClick={() => switchSpotlight()}>
-                                <div id={`spotlight-toggle-inner-circle-${isSpotlight}`}></div>
+                            <div>
+                                <h2>Spotlight</h2>
+                                <div id={`spotlight-toggle-${isSpotlight}`} onClick={() => switchSpotlight()}>
+                                    <div id={`spotlight-toggle-inner-circle-${isSpotlight}`}></div>
+                                </div>
                             </div>
+                            
                         </div>
                     ) : <h2>{format.event}</h2>
                 }
