@@ -54,7 +54,7 @@ export const runNightlyTasks = async (client) => {
 export const runMonthlyTasks = async (client) => {
     await updateGlobalNames(client)
 
-    const remainingDaysInMonth = getRemainingDaysInMonth()
+    const remainingDaysInMonth = getRemainingDaysInMonth() - 5
     const midnightCountdown = getMidnightCountdown()
     return setTimeout(() => runMonthlyTasks(client), remainingDaysInMonth *  24 * 60 * 60 * 1000 + midnightCountdown)
 }
