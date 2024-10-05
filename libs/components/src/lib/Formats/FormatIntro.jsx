@@ -102,7 +102,11 @@ export const FormatIntro = () => {
                             <h2>{format.event}</h2>
                             <div>
                                 <h2>Spotlight</h2>
-                                <div id={`spotlight-toggle-${isSpotlight}`} onClick={() => switchSpotlight()}>
+                                <div 
+                                    id={`spotlight-toggle-${isSpotlight}`} 
+                                    className='horizontal-space-between-flexbox' 
+                                    onClick={() => switchSpotlight()}
+                                >
                                     <div id={`spotlight-toggle-inner-circle-${isSpotlight}`}></div>
                                 </div>
                             </div>
