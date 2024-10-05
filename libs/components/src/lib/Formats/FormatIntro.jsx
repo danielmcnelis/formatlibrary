@@ -99,13 +99,10 @@ export const FormatIntro = () => {
                     isAdmin && format.popular === false ? (
                         <div className='horizontal-space-between-flexbox'>
                             <h2>{format.event}</h2>
-                            <div>
-                                <div>
-                                    <h2>Spotlight</h2>
-                                </div>
+                            <div className='horizontal-space-between-flexbox' >
+                                <h2>Spotlight</h2>
                                 <div 
                                     id={`spotlight-toggle-${format?.spotlight}`} 
-                                    className='horizontal-space-between-flexbox' 
                                     onClick={() => switchSpotlight()}
                                 >
                                     <div id={`spotlight-toggle-inner-circle-${format?.spotlight}`}></div>
