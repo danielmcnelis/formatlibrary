@@ -27,98 +27,98 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
-            const user = interaction.options.getUser('user')   
-            await updateSingleAvatar(user)
-            return await interaction.editReply(`Updated ${user?.username}'s avatar.`)
+            // const user = interaction.options.getUser('user')   
+            // await updateSingleAvatar(user)
+            // return await interaction.editReply(`Updated ${user?.username}'s avatar.`)
 
-            // const input = interaction.options.getString('tournament')    
-            // let b = 0
-            // let e = 0
-            // console.log('input', input)
-            // const event = await Event.findOne({
-            //     where: { 
-            //         [Op.or]: {
-            //             name: input,
-            //             abbreviation: input
-            //         }
-            //     },
-            //     include: [Format, Player, Tournament]
-            // })
+            const input = interaction.options.getString('tournament')    
+            let b = 0
+            let e = 0
+            console.log('input', input)
+            const event = await Event.findOne({
+                where: { 
+                    [Op.or]: {
+                        name: input,
+                        abbreviation: input
+                    }
+                },
+                include: [Format, Player, Tournament]
+            })
 
-            // const topCutTournament = await Tournament.findOne({ where: {
-            //     id: event.topCutTournamentId
-            // }})
+            const topCutTournament = await Tournament.findOne({ where: {
+                id: event.topCutTournamentId
+            }})
 
-            // if (!event) return await interaction.editReply('No event found.')
-            // console.log('event.tournament?.serverId', event.tournament?.serverId)
+            if (!event) return await interaction.editReply('No event found.')
+            console.log('event.tournament?.serverId', event.tournament?.serverId)
 
-            // const server = await Server.findOne({
-            //     where: {
-            //         id: event.tournament?.serverId
-            //     }
-            // }) 
+            const server = await Server.findOne({
+                where: {
+                    id: event.tournament?.serverId
+                }
+            }) 
 
-            // const matches = await getMatches(server, event.primaryTournamentId)
-            // const participants = await getParticipants(server, event.primaryTournamentId)
-            // const standings = await calculateStandings(event.tournament, matches, participants, topCutTournament)
-            // console.log('standings?.length', standings?.length)
+            const matches = await getMatches(server, event.primaryTournamentId)
+            const participants = await getParticipants(server, event.primaryTournamentId)
+            const standings = await calculateStandings(event.tournament, matches, participants, topCutTournament)
+            console.log('standings?.length', standings?.length)
 
-            // for (let i = 0; i < standings.length; i++) {
-            //     try {
-            //         const standing = standings[i] 
-            //         console.log('standing', standing)
-            //         const player = await Player.findOne({
-            //             where: {
-            //                 [Op.or]: {
-            //                     name: standing.name,
-            //                     globalName: standing.name,
-            //                     discordName: standing.name,
-            //                 }
-            //             }
-            //         })
+            for (let i = 0; i < standings.length; i++) {
+                try {
+                    const standing = standings[i] 
+                    console.log('standing', standing)
+                    const player = await Player.findOne({
+                        where: {
+                            [Op.or]: {
+                                name: standing.name,
+                                globalName: standing.name,
+                                discordName: standing.name,
+                            }
+                        }
+                    })
     
-            //         if (!player) {
-            //             console.log(`no player found: ${standing.name}`)
-            //             continue
-            //         }
+                    if (!player) {
+                        console.log(`no player found: ${standing.name}`)
+                        continue
+                    }
     
-            //         const deck = await Deck.findOne({
-            //             where: {
-            //                 eventId: event.id,
-            //                 playerId: player?.id
-            //             }
-            //         })
+                    const deck = await Deck.findOne({
+                        where: {
+                            eventId: event.id,
+                            playerId: player?.id
+                        }
+                    })
     
-            //         if (!deck) {
-            //             console.log(`no deck found: ${player.name}`)
-            //             continue
-            //         } else if (deck.display === true) {
-            //             console.log(`deck topped: ${player.name}`)
-            //             continue
-            //         }
+                    if (!deck) {
+                        console.log(`no deck found: ${player.name}`)
+                        continue
+                    } else if (deck.display === true) {
+                        console.log(`deck topped: ${player.name}`)
+                        continue
+                    }
     
-            //         const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
-            //             participant.final_rank ? parseInt(participant.final_rank) :
-            //             null
+                    const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
+                        participant.final_rank ? parseInt(participant.final_rank) :
+                        null
                     
-            //         if (!placement) {
-            //             console.log(`no placement found: ${player.name}`)
-            //             continue
-            //         } else if (placement === deck.placement) {
-            //             console.log(`${player.name}'s deck already has the correct placement (${placement})`)
-            //         }
+                    if (!placement) {
+                        console.log(`no placement found: ${player.name}`)
+                        continue
+                    } else if (placement === deck.placement) {
+                        console.log(`${player.name}'s deck already has the correct placement (${placement})`)
+                    }
     
-            //         console.log(`updating deck placement: ${deck.placement} -> ${placement}`)
-            //         await deck.update({ placement })
-            //         b++
-            //     } catch (err) {
-            //         e++
-            //         console.log(err)
-            //     }
-            // }
+                    console.log(`updating deck placement: ${deck.placement} -> ${placement}`)
+                    await deck.update({ placement })
+                    b++
+                } catch (err) {
+                    e++
+                    console.log(err)
+                }
+            }
             
-            // console.log(`updated placements for ${b} decks; encountered ${e} errors`)
-            // return await interaction.editReply(`Updated placements for ${b} decks associated with ${event.name}.`)
+            console.log(`updated placements for ${b} decks; encountered ${e} errors`)
+            return await interaction.editReply(`Updated placements for ${b} decks associated with ${event.name}.`)
 
             
         // const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)

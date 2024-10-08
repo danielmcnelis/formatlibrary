@@ -3181,7 +3181,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
     const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})    
     if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `This tournament has not begun.`})
-    if (tournament.state === 'complete') return await interaction.editReply({ content: `This tournament has already ended.`})
+    if (tournament.state === 'complete' || tournament.state === 'topcut') return await interaction.editReply({ content: `This tournament has already ended.`})
 
     // Finalize tournament on Challonge.com if not yet finalized
     try {
@@ -3245,7 +3245,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         // If nobody is marked as a winner, find and mark a winner
         if (event && !event.playerId) {
             try {
-                const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${event.secondaryTournamentId || tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+                const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${event.topCutTournamentId || tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
                 let winnerParticipantId = null
                 for (let i = 0; i < data.length; i++) {
                     const participant = data[i].participant

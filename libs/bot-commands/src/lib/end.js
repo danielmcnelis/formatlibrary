@@ -31,6 +31,7 @@ export default {
             where: { 
                 [Op.or]: { 
                     name: { [Op.iLike]: name }, 
+                    abbreviation: { [Op.iLike]: name }, 
                     url: { [Op.iLike]: name }
                 },
                 serverId: interaction.guildId
