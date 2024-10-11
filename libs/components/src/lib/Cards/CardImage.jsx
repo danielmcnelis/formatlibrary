@@ -94,7 +94,7 @@ export const CardImage = (props) => {
                     className="SmallCardImages"
                     alt={card.name}
                   />
-                ) : (
+                ) : parseInt(width, 10) >= 48 && parseInt(width, 10) < 96 ? (
                   <Link to={`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
                     target="_blank" 
                     rel="noopener noreferrer"
@@ -125,7 +125,38 @@ export const CardImage = (props) => {
                         }
                       </div>
                 </Link>
-                )
+                ) : (
+                    <Link to={`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                        <div className="card-image-cell">
+                          {
+                            status && status !== 'no longer on list' ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.png`} alt={status} className="status-icon"/> : null
+                          }
+                          <img
+                            src={`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`}
+                            card={card}
+                            style={{width, margin, padding}}
+                            onContextMenu={(e)=> {
+                                e?.preventDefault()
+                                if (locale === 'main' || locale === 'side' || locale === 'extra') {
+                                    return removeCard(locale, index)
+                                } else if (e.shiftKey) {
+                                    return addCard(card, 'side')
+                                } else {
+                                    return addCard(card, 'main')
+                                }
+                            }}
+                            className="CardImages"
+                            alt={card.name}
+                          />
+                          {
+                            previous ? <img src={`https://cdn.formatlibrary.com/images/emojis/${previous === 'forbidden' ? 'from0' : previous === 'limited' ? 'from1' : previous === 'semi-limited' ? "from2" : 'new'}.png`} alt={card.name} className="remarks-icon"/> : null
+                          }
+                        </div>
+                  </Link>
+                  )
               }
             </div>
           )
