@@ -73,7 +73,7 @@ import {Artwork, Card} from '@fl/models'
                 .upload(
                     `https://cdn.formatlibrary.com/images/cards/${artwork.artworkId}.jpg`, {
                         width: 72,
-                        folder: 'small_cards',
+                        folder: 'small_cards_missing',
                         format: 'webp',
                         public_id: card.artworkId,
                     }
