@@ -83,6 +83,12 @@ export const config = {
        accessToken: process.env.TCGPLAYER_ACCESS_TOKEN,
        publicKey : process.env.TCGPLAYER_PUBLIC_KEY,
        privateKey : process.env.TCGPLAYER_PRIVATE_KEY
+    },
+    cloudinary: {
+        cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+        apiKey: process.env.CLOUDINARY_API_KEY,
+        apiSecret: process.env.CLOUDINARY_API_SECRET,
+        apiEnvar: process.env.CLOUDINARY_API_ENVAR
     }
   }
   

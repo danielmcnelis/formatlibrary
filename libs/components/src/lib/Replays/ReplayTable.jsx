@@ -85,8 +85,14 @@ export const ReplayTable = () => {
         if (community) filter += `,$event.community$:eq:${community}`
         if (format) filter += `,formatName:eq:${format}`
         if (filter.length) url += ('&filter=' + filter.slice(1))
-  
-        const { data } = await axios.get(url)
+            
+        const accessToken = getCookie('access')
+        const { data } = await axios.get(url, {
+            headers: {
+                ...(accessToken && {authorization: `Bearer ${accessToken}`})
+            }
+        })
+        
         setReplays(data)
     }
   

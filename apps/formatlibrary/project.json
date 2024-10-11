@@ -17,11 +17,11 @@
         "polyfills": "apps/formatlibrary/src/polyfills.ts",
         "tsConfig": "apps/formatlibrary/tsconfig.app.json",
         "assets": [
-            "apps/formatlibrary/src/favicon.ico", 
-            "apps/formatlibrary/src/assets", 
-            "apps/formatlibrary/src/privacy.html", 
-            "apps/formatlibrary/src/terms.html",
-            "apps/formatlibrary/src/raptive.js" 
+          "apps/formatlibrary/src/favicon.ico",
+          "apps/formatlibrary/src/assets",
+          "apps/formatlibrary/src/privacy.html",
+          "apps/formatlibrary/src/terms.html",
+          "apps/formatlibrary/src/raptive.js"
         ],
         "styles": ["apps/formatlibrary/src/styles.css"],
         "scripts": [],
