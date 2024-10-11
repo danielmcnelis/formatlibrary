@@ -14,7 +14,7 @@ export const DeckThumbnail = (props) => {
           <div className="deckThumbnail-flexbox">
               <img 
                 className="deckThumbnail-image" 
-                src={`https://cdn.formatlibrary.com/images/artworks/${deck.leftCardYpdId}.jpg`} 
+                src={`https://cdn.formatlibrary.com/images/artworks/${deck.leftCardArtworkId}.jpg`} 
                 onError={(e) => {
                   e.target.onerror = null
                   e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"
@@ -23,7 +23,7 @@ export const DeckThumbnail = (props) => {
               />
               <img 
                 className="deckThumbnail-image" 
-                src={`https://cdn.formatlibrary.com/images/artworks/${deck.centerCardYpdId}.jpg`}
+                src={`https://cdn.formatlibrary.com/images/artworks/${deck.centerCardArtworkId}.jpg`}
                 onError={(e) => {
                   e.target.onerror = null
                   e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"
@@ -32,7 +32,7 @@ export const DeckThumbnail = (props) => {
               />
               <img 
                 className="deckThumbnail-image" 
-                src={`https://cdn.formatlibrary.com/images/artworks/${deck.rightCardYpdId}.jpg`}
+                src={`https://cdn.formatlibrary.com/images/artworks/${deck.rightCardArtworkId}.jpg`}
                 onError={(e) => {
                   e.target.onerror = null
                   e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"

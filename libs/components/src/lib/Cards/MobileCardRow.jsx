@@ -68,7 +68,7 @@ export const MobileCardRow = (props) => {
   
     const symbol3 = category === 'Monster' && card.type ? symbols[card.type.replace(/[\s-]/g, '')] : null
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
-    const filePath = `https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`
+    const filePath = `https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`
     
     return (
         <tr className={`${evenOrOdd}-search-results-row`}>

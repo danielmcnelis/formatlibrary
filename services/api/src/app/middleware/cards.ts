@@ -8,7 +8,7 @@ export const cardsQuery = async (req, res, next) => {
       where: {
         name: { [Op.substring]: req.params.query }
       },
-      attributes: ['name', 'cleanName', 'ypdId'],
+      attributes: ['name', 'cleanName', 'artworkId'],
       order: [['name', 'ASC']]
     })
 
@@ -171,7 +171,7 @@ export const cardsCreate = async (req, res, next) => {
             .replace(/^data:image\/jpg;base64,/, '')
             .replace(/^data:image\/jpeg;base64,/, '')
             .replace(/^data:image\/png;base64,/, '')            
-            fs.writeFileSync(`https://cdn.formatlibrary.com/images/cards/${req.body.ypdId}.jpg`, buffer, 'base64')
+            fs.writeFileSync(`https://cdn.formatlibrary.com/images/cards/${req.body.artworkId}.jpg`, buffer, 'base64')
         }
 
         const alreadyExists = await Card.count({
@@ -179,7 +179,8 @@ export const cardsCreate = async (req, res, next) => {
                 [Op.or]: [
                     { name: req.body.name },
                     { konamiCode: req.body.konamiCode },
-                    { ypdId: req.body.ypdId.toString() }
+                    { ypdId: req.body.ypdId.toString() },
+                    { artworkId: req.body.artworkId.toString() }
                 ]
             }
         })
@@ -192,6 +193,7 @@ export const cardsCreate = async (req, res, next) => {
             description: req.body.description,
             konamiCode: req.body.konamiCode,
             ypdId: req.body.ypdId.toString(),
+            artworkId: req.body.artworkId.toString(),
             tcgDate: req.body.tcgDate,
             ocgDate: req.body.ocgDate,
             tcgLegal: req.body.tcgLegal,

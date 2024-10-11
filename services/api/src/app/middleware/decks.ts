@@ -34,7 +34,7 @@ export const decksReadYdk = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'cleanName', 'id', 'konamiCode', 'ypdId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id', 'konamiCode', 'artworkId', 'sortPriority'],
             })
 
             if (!card) continue
@@ -48,7 +48,7 @@ export const decksReadYdk = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'cleanName', 'id', 'konamiCode', 'ypdId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id', 'konamiCode', 'artworkId', 'sortPriority'],
             })
 
             if (!card) continue
@@ -62,7 +62,7 @@ export const decksReadYdk = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'cleanName', 'id', 'konamiCode', 'ypdId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id', 'konamiCode', 'artworkId', 'sortPriority'],
             })
             
             if (!card) continue
@@ -222,7 +222,7 @@ export const decksBuilderId = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'cleanName', 'id',  'konamiCode', 'ypdId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id',  'konamiCode', 'artworkId', 'sortPriority'],
             })
 
             if (!card) continue
@@ -236,7 +236,7 @@ export const decksBuilderId = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'cleanName', 'id',  'konamiCode', 'ypdId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id',  'konamiCode', 'artworkId', 'sortPriority'],
             })
 
             if (!card) continue
@@ -250,7 +250,7 @@ export const decksBuilderId = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'cleanName', 'id',  'konamiCode', 'ypdId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id',  'konamiCode', 'artworkId', 'sortPriority'],
             })
             
             if (!card) continue
@@ -340,20 +340,20 @@ export const decksPopular = async (req, res, next) => {
                 formatId: format.id,
                 deckTypeId: deckType.id
             },
-            attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           })) ||
           (await DeckThumb.findOne({
             where: {
               primary: true,
               deckTypeId: deckType.id
             },
-            attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           })) ||
           (await DeckThumb.findOne({
             where: {
               deckTypeId: deckType.id
             },
-            attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           }))
 
         data.push({ ...deckType.dataValues, ...deckThumb.dataValues })
@@ -411,20 +411,20 @@ export const decksGallery = async (req, res, next) => {
               format: { [Op.iLike]: req.params.format },
               deckTypeId: deckType.id
             },
-            attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           })) ||
           (await DeckThumb.findOne({
             where: {
               primary: true,
               deckTypeId: deckType.id
             },
-            attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           })) ||
           (await DeckThumb.findOne({
             where: {
               deckTypeId: deckType.id
             },
-            attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           }))
 
         data.push({ ...deckType.dataValues, ...deckThumb.dataValues })
@@ -490,14 +490,14 @@ export const decksFrequent = async (req, res, next) => {
               deckTypeId: deckType.id,
               format: format
             },
-            attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           })) ||
           (await DeckThumb.findOne({
             where: {
               deckTypeId: deckType.id,
               primary: true
             },
-            attributes: ['id', 'name', 'leftCardYpdId', 'centerCardYpdId', 'rightCardYpdId']
+            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           }))
 
         types.push(deckType.id)
@@ -826,7 +826,7 @@ export const decksId = async (req, res, next) => {
         where: {
           konamiCode: konamiCode
         },
-        attributes: ['name', 'cleanName', 'id', 'ypdId', 'sortPriority']
+        attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']
       })
 
       if (!card) continue
@@ -856,7 +856,7 @@ export const decksId = async (req, res, next) => {
         where: {
           konamiCode: konamiCode
         },
-        attributes: ['name', 'cleanName', 'id', 'ypdId', 'sortPriority']
+        attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']
       })
 
       if (!card) continue
@@ -872,7 +872,7 @@ export const decksId = async (req, res, next) => {
         where: {
           konamiCode: konamiCode
         },
-        attributes: ['name', 'cleanName', 'id', 'ypdId', 'sortPriority']
+        attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']
       })
 
       if (!card) continue
@@ -942,7 +942,7 @@ export const decksCreate = async (req, res, next) => {
         } else {
             const count = await Artwork.count({
                 where: {
-                    ypdId: parseInt(raw[i]).toString(),
+                    artworkId: parseInt(raw[i]).toString(),
                     isOriginal: false
                 }
             })
@@ -952,7 +952,7 @@ export const decksCreate = async (req, res, next) => {
             } else  {
                 const artwork = await Artwork.findOne({
                     where: {
-                        ypdId: parseInt(raw[i]).toString(),
+                        artworkId: parseInt(raw[i]).toString(),
                         isOriginal: false
                     },
                     include: Card

@@ -104,7 +104,7 @@ export const cubesReadYdk = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'cleanName', 'id', 'konamiCode', 'ypdId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id', 'konamiCode', 'artworkId', 'sortPriority'],
             })
 
             if (!card) continue
@@ -281,7 +281,7 @@ export const unpublishCube = async (req, res, next) => {
     
         for (let i = 0; i < main.length; i++) {
             const card = main[i]
-            const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`) 
+            const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`) 
             context.drawImage(image, card_width * i, 0, card_width, card_height)
         }
     

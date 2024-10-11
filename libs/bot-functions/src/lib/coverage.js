@@ -255,9 +255,9 @@ export const composeBlogPost = async (interaction, event) => {
                     `<div class="deckThumbnail">` +
                         `<h3>${capitalize(winningDeck.type, true)}</h3>` +
                         `<div class="deckThumbnail-flexbox">` +
-                            `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardYpdId}.jpg" alt="${deckThumb.leftCard}"/>` +
-                            `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardYpdId}.jpg" alt="${deckThumb.centerCard}"/>` +
-                            `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardYpdId}.jpg" alt="${deckThumb.rightCard}"/>` +
+                            `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardArtworkId}.jpg" alt="${deckThumb.leftCard}"/>` +
+                            `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardArtworkId}.jpg" alt="${deckThumb.centerCard}"/>` +
+                            `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardArtworkId}.jpg" alt="${deckThumb.rightCard}"/>` +
                         `</div>` +
                     `</div>`
                 )
@@ -374,7 +374,7 @@ export const composeBlogPost = async (interaction, event) => {
                 const card = main[i]
                 const row = Math.floor(i / 10)
                 const col = i % 10
-                const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`) 
+                const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`) 
                 context.drawImage(image, (card_width + 1) * col, row * (card_height + 1), card_width, card_height)
             }
         
@@ -506,7 +506,7 @@ export const composeThumbnails = async (interaction, event) => {
                 const card = main[i]
                 const row = Math.floor(i / 10)
                 const col = i % 10
-                const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`) 
+                const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`) 
                 context.drawImage(image, card_width * col, row * card_height, card_width, card_height)
             }
             

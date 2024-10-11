@@ -19,6 +19,9 @@ export const Card = db.define('cards', {
   ypdId: {
     type: Sequelize.STRING
   },
+  artworkId: {
+    type: Sequelize.STRING
+  },
   tcgLegal: {
     type: Sequelize.BOOLEAN
   },

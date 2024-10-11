@@ -214,8 +214,8 @@ export const getCard = async (query, fuzzyCards, format) => {
 			` ${!card.link ? `DEF: ${card.def === null ? '?' : card.def} ${emojis.DEF}` : ''}` :
 			null
 	
-	const attachment = new AttachmentBuilder(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`, { name: `${card.ypdId}.jpg` })
-	const thumbnail = attachment ? `attachment://${card.ypdId}.jpg` : `https://ygoprodeck.com/pics/${card.ypdId}.jpg`    
+	const attachment = new AttachmentBuilder(`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`, { name: `${card.artworkId}.jpg` })
+	const thumbnail = attachment ? `attachment://${card.artworkId}.jpg` : `https://ygoprodeck.com/pics/${card.artworkId}.jpg`    
     
     const cardEmbed = new EmbedBuilder()
         .setColor(color)
@@ -450,7 +450,7 @@ export const makeCanvasAttachment = async (cardsArr = [], width = 57, height = 8
                 const card = cardsArr[i]
                 const row = Math.floor(i / cardsPerRow)
                 const col = i % cardsPerRow
-                const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`)
+                const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`)
                 context.drawImage(image, width * col, row * height, width, height)
             } catch (err) {
                 console.log(err)

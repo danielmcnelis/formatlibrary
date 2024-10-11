@@ -19,19 +19,19 @@ export const DeckThumb = db.define('deckThumbs', {
   leftCard: {
     type: Sequelize.STRING
   },
-  leftCardYpdId: {
+  leftCardArtworkId: {
     type: Sequelize.STRING
   },
   centerCard: {
     type: Sequelize.STRING
   },
-  centerCardYpdId: {
+  centerCardArtworkId: {
     type: Sequelize.STRING
   },
   rightCard: {
     type: Sequelize.STRING
   },
-  rightCardYpdId: {
+  rightCardArtworkId: {
     type: Sequelize.STRING
   }
 })

@@ -50,33 +50,42 @@ import {Artwork, Card} from '@fl/models'
         order: [["id", "DESC"]]
     })
 
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < cards.length; i++) {
         const card = cards[i]
-        // const artworks = await Artwork.findAll({
-        //     where: {
-        //         cardId: card.id,
-        //         ypdId: {[Op.not]: card.ypdId}
-        //     }
-        // })
 
-        // for (let j = 0; j < artworks.length; j++) {
-            // Upload an image
-            // const artwork = artworks[j]
-            const uploadResult = await cloudinary.uploader
-            .upload(
-                `https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`, {
-                    width: 72,
-                    folder: 'small_cards',
-                    format: 'webp',
-                    public_id: card.ypdId,
+        const count = await Artwork.count({
+            where: {
+                cardId: card.id
+            }
+        })
+
+        if (count < 2) {
+            continue 
+        } else {
+            const artwork = await Artwork.findOne({
+                where: {
+                    cardId: card.id,
+                    isOriginal: true
                 }
-            )
-            .catch((error) => {
-                console.log(error);
-            });
-        
-            console.log(uploadResult);
-        // }
+            })
+    
+                const uploadResult = await cloudinary.uploader
+                .upload(
+                    `https://cdn.formatlibrary.com/images/cards/${artwork.artworkId}.jpg`, {
+                        width: 72,
+                        folder: 'small_cards',
+                        format: 'webp',
+                        public_id: card.artworkId,
+                    }
+                )
+                .catch((error) => {
+                    console.log(error);
+                });
+            
+                console.log(uploadResult);
+            // }
+        }
+
     }
     
 })();

@@ -56,8 +56,8 @@ export const SingleCard = () => {
     // DOWNLOAD CARD IMAGE
     const downloadCardImage = async () => {
         try {
-            const {data:{success}} = await axios.post(`/api/images/update-card?ypdId=${card.ypdId}`)
-            if (success) alert(`Success! New Image: /images/cards/${card.ypdId}`)
+            const {data:{success}} = await axios.post(`/api/images/update-card?artworkId=${card.artworkId}`)
+            if (success) alert(`Success! New Image: /images/cards/${card.artworkId}`)
         } catch (err) {
             console.log(err)
         }
@@ -162,12 +162,12 @@ export const SingleCard = () => {
                 <meta name="og:title" content={`${card.name} - Yu-Gi-Oh! Card - Format Library`} />
                 <meta name="description" content={card.description}/>
                 <meta name="og:description" content={card.description}/>
-                <meta name="image" content={`https://cdn.formatlibrary.com/images/artworks/${card.ypdId}.jpg`}/>
-                <meta name="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${card.ypdId}.jpg`}/>
+                <meta name="image" content={`https://cdn.formatlibrary.com/images/artworks/${card.artworkId}.jpg`}/>
+                <meta name="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${card.artworkId}.jpg`}/>
             </Helmet>
             <div className="body">
                 <div className="single-card">
-                    <img className="single-card-image" src={`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`} alt={card.name}/>
+                    <img className="single-card-image" src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`} alt={card.name}/>
                     {
                         !inEditMode ? (
                             card.category === 'Monster' ? (

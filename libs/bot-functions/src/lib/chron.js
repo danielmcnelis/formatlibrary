@@ -920,25 +920,25 @@ export const downloadAltArtworks = async () => {
 
             for (let i = 0; i < images.length; i++) {
                 const image = images[i]
-                const ypdId = image.id.toString()
+                const artworkId = image.id.toString()
 
                 const count = await Artwork.count({
                     where: {
-                        ypdId: ypdId
+                        artworkId: artworkId
                     }
                 })
 
                 if (count) {
-                    console.log(`artwork is already saved, ypdId: ${image.id}`)
-                } else if (ypdId === card.ypdId) {
+                    console.log(`artwork is already saved, id: ${image.id}`)
+                } else if (artworkId === card.artworkId) {
                     await Artwork.create({
                         cardName: card.name,
                         cardId: card.id,
-                        ypdId: card.ypdId,
+                        artworkId: card.artworkId,
                         isOriginal: true
                     })
 
-                    console.log(`saved new original artwork data, ypdId: ${image.id}`)
+                    console.log(`saved new original artwork data, id: ${image.id}`)
                     b++
                 } else {
                     try {
@@ -948,7 +948,7 @@ export const downloadAltArtworks = async () => {
                             responseType: 'stream'
                         })
                     
-                        const { Location: imageUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${ypdId}.jpg`, Body: fullCardImage, ContentType: `image/jpg` }).promise()
+                        const { Location: imageUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${artworkId}.jpg`, Body: fullCardImage, ContentType: `image/jpg` }).promise()
                         console.log('imageUri', imageUri)
 
                         const {data: croppedCardImage} = await axios({
@@ -957,17 +957,17 @@ export const downloadAltArtworks = async () => {
                             responseType: 'stream'
                         })
                     
-                        const { Location: artworkUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/artworks/${ypdId}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` }).promise()
+                        const { Location: artworkUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/artworks/${artworkId}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` }).promise()
                         console.log('artworkUri', artworkUri)
 
                         if (imageUri && artworkUri) {
                             await Artwork.create({
                                 cardName: card.name,
                                 cardId: card.id,
-                                ypdId: ypdId
+                                artworkId: artworkId
                             })
 
-                            console.log(`saved new alternate artwork data, ypdId: ${ypdId}`)
+                            console.log(`saved new alternate artwork data, artworkId: ${artworkId}`)
                             c++
                         }
                     } catch (err) {
@@ -1012,20 +1012,20 @@ export const downloadOriginalArtworks = async () => {
         try {
             const {data: fullCardImage} = await axios({
                 method: 'GET',
-                url: `https://images.ygoprodeck.com/images/cards/${artwork.card.ypdId}.jpg`,
+                url: `https://images.ygoprodeck.com/images/cards/${artwork.card.artworkId}.jpg`,
                 responseType: 'stream'
             })
         
-            const { Location: imageUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${artwork.card.ypdId}.jpg`, Body: fullCardImage, ContentType: `image/jpg` }).promise()
+            const { Location: imageUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${artwork.card.artworkId}.jpg`, Body: fullCardImage, ContentType: `image/jpg` }).promise()
             console.log('imageUri', imageUri)
 
             const {data: croppedCardImage} = await axios({
                 method: 'GET',
-                url: `https://images.ygoprodeck.com/images/cards_cropped/${artwork.card.ypdId}.jpg`,
+                url: `https://images.ygoprodeck.com/images/cards_cropped/${artwork.card.artworkId}.jpg`,
                 responseType: 'stream'
             })
         
-            const { Location: artworkUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/artworks/${artwork.card.ypdId}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` }).promise()
+            const { Location: artworkUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/artworks/${artwork.card.artworkId}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` }).promise()
             console.log('artworkUri', artworkUri)
 
             b++
@@ -1045,7 +1045,7 @@ export const downloadCardArtworks = async () => {
 
     for (let i = 0; i < cards.length; i++) {
         try {
-            const {ypdId: id} = cards[i]
+            const {artworkId: id} = cards[i]
             const {data} = await axios({
                 method: 'GET',
                 url: `https://images.ygoprodeck.com/images/cards_cropped/${id}.jpg`,
@@ -1134,6 +1134,7 @@ export const downloadNewCards = async () => {
                     cleanName: cleanName,
                     konamiCode: konamiCode,
                     ypdId: id,
+                    artworkId: id,
                     tcgLegal: tcgLegal,
                     ocgLegal: ocgLegal,
                     speedLegal: speedLegal,
@@ -1182,15 +1183,16 @@ export const downloadNewCards = async () => {
                 console.log(`New card: ${name} (TCG Date: ${datum.misc_info[0]?.tcg_date}, OCG Date: ${datum.misc_info[0]?.ocg_date})`)
                 await downloadCardImage(id)
                 console.log(`Image saved (${name})`)
-            } else if (card && (card.name !== name || (card.ypdId !== id && card.konamiCode !== id) || card.cleanName !== cleanName)) {
+            } else if (card && (card.name !== name || card.ypdId !== id || card.cleanName !== cleanName)) {
                 c++
                 console.log(`New name and/or ID: ${card.name} (${card.ypdId}) is now: ${name} (${id})`)
                 
                 await card.update({
                     name: name,
                     cleanName: cleanName,
-                    konamiCode: id,
+                    konamiCode: konamiCode,
                     ypdId: id,
+                    artworkId: id,
                     description: datum.desc,
                     tcgLegal: tcgLegal,
                     ocgLegal: ocgLegal,
@@ -1447,7 +1449,7 @@ export const drawSetBanner = async (set) => {
 
     for (let i = 0; i < main.length; i++) {
         const card = main[i]
-        const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`) 
+        const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`) 
         context.drawImage(image, card_width * i, 0, card_width, card_height)
     }
 

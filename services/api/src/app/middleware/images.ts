@@ -8,7 +8,7 @@ export const imagesUpdateCard = async (req, res, next) => {
     try {
         const {data: fullCardImage} = await axios({
             method: 'GET',
-            url: `https://images.ygoprodeck.com/images/cards/${req.query.ypdId}.jpg`,
+            url: `https://images.ygoprodeck.com/images/cards/${req.query.artworkId}.jpg`,
             responseType: 'stream'
         })
 
@@ -22,7 +22,7 @@ export const imagesUpdateCard = async (req, res, next) => {
     
         const { Location: fullCardImageUri} = await s3.upload({ 
             Bucket: 'formatlibrary', 
-            Key: `images/cards/${req.query.ypdId}.jpg`, 
+            Key: `images/cards/${req.query.artworkId}.jpg`, 
             Body: fullCardImage, 
             ContentType: `image/jpg`
         }).promise()
@@ -31,13 +31,13 @@ export const imagesUpdateCard = async (req, res, next) => {
 
         const {data: croppedCardImage} = await axios({
             method: 'GET',
-            url: `https://images.ygoprodeck.com/images/cards_cropped/${req.query.ypdId}.jpg`,
+            url: `https://images.ygoprodeck.com/images/cards_cropped/${req.query.artworkId}.jpg`,
             responseType: 'stream'
         })
 
         const { Location: croppedCardImageUri} = await s3.upload({ 
             Bucket: 'formatlibrary', 
-            Key: `images/cards/${req.query.ypdId}.jpg`, 
+            Key: `images/cards/${req.query.artworkId}.jpg`, 
             Body: croppedCardImage, 
             ContentType: `image/jpg`
         }).promise()

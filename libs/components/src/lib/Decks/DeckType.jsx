@@ -217,7 +217,7 @@ export const DeckType = () => {
                             ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
         
                         return (
-                            <div className="popular-main" key={'m' + data.card.ypdId}>
+                            <div className="popular-main" key={'m' + data.card.artworkId}>
                             <CardImage className="popular-main-card" width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
                             <div onClick={() => toggle('main-monsters', index)}>
                                 <div id={'main-monsters-info-' + index} className="deckType-info">{info}</div>
@@ -239,7 +239,7 @@ export const DeckType = () => {
                             ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
         
                         return (
-                            <div className="popular-main" key={'m' + data.card.ypdId} >
+                            <div className="popular-main" key={'m' + data.card.artworkId} >
                             <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
                             <div onClick={() => toggle('main-spells', index)}>
                                 <div id={'main-spells-info-' + index} className="deckType-info">{info}</div>
@@ -261,7 +261,7 @@ export const DeckType = () => {
                             ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
         
                         return (
-                            <div className="popular-main" key={'m' + data.card.ypdId} >
+                            <div className="popular-main" key={'m' + data.card.artworkId} >
                             <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
                             <div onClick={() => toggle('main-traps', index)}>
                                 <div id={'main-traps-info-' + index} className="deckType-info">{info}</div>
@@ -293,7 +293,7 @@ export const DeckType = () => {
                                 ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
             
                                 return (
-                                <div className="popular-side" key={'e' + data.card.ypdId} >
+                                <div className="popular-side" key={'e' + data.card.artworkId} >
                                     <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
                                     <div onClick={() => toggle('extra', index)}>
                                     <div id={'extra-info-' + index} className="deckType-info">{info}</div>
@@ -325,7 +325,7 @@ export const DeckType = () => {
                             ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
         
                         return (
-                            <div className="popular-side" key={'s' + data.card.ypdId} >
+                            <div className="popular-side" key={'s' + data.card.artworkId} >
                             <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
                             <div onClick={() => toggle('side-monsters', index)}>
                                 <div id={'side-monsters-info-' + index} className="deckType-info">{info}</div>
@@ -347,7 +347,7 @@ export const DeckType = () => {
                             ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
         
                         return (
-                            <div className="popular-side" key={'s' + data.card.ypdId}>
+                            <div className="popular-side" key={'s' + data.card.artworkId}>
                             <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
                             <div onClick={() => toggle('side-spells', index)}>
                                 <div id={'side-spells-info-' + index} className="deckType-info">{info}</div>
@@ -369,7 +369,7 @@ export const DeckType = () => {
                             ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
         
                         return (
-                            <div className="popular-side" key={'s' + data.card.ypdId}>
+                            <div className="popular-side" key={'s' + data.card.artworkId}>
                             <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
                                 <div onClick={() => toggle('side-traps', index)}>
                                 <div id={'side-traps-info-' + index} className="deckType-info">{info}</div>

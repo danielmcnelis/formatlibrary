@@ -1,4 +1,4 @@
-import { Alius, Card, Cube, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Print, Replay, Ruling, Set, Server, Stats, Status, Team, Tournament } from '@fl/models'
+import { Artwork, Alius, Card, Cube, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Print, Replay, Ruling, Set, Server, Stats, Status, Team, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { config } from '@fl/config' 
@@ -879,7 +879,7 @@ const shuffleArray = (arr) => {
     
 //         for (let i = 0; i < main.length; i++) {
 //             const card = main[i]
-//             const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`) 
+//             const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`) 
 //             context.drawImage(image, card_width * i, 0, card_width, card_height)
 //         }
     
@@ -921,7 +921,7 @@ const shuffleArray = (arr) => {
             
 //             for (let i = 0; i < prints.length; i++) {
 //                 const card = prints[i].card
-//                 if (!card || !card.ypdId) continue
+//                 if (!card || !card.artworkId) continue
 //                 const filtered = main.filter((c) => c.id === card.id)
 //                 if (!filtered.length) main.push(card)
 //             }
@@ -949,7 +949,7 @@ const shuffleArray = (arr) => {
         
 //             for (let i = 0; i < main.length; i++) {
 //                 const card = main[i]
-//                 const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.ypdId}.jpg`) 
+//                 const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`) 
 //                 context.drawImage(image, card_width * i, 0, card_width, card_height)
 //             }
         
@@ -1148,7 +1148,7 @@ const shuffleArray = (arr) => {
 
 //             const {data} = await axios({
 //                 method: 'GET',
-//                 url: `https://images.ygoprodeck.com/images/cards/${card.ypdId}.jpg`,
+//                 url: `https://images.ygoprodeck.com/images/cards/${card.artworkId}.jpg`,
 //                 responseType: 'stream'
 //             })
         
@@ -1681,4 +1681,24 @@ const shuffleArray = (arr) => {
 
 //     return console.log('Fin.')
 // })()
+
+;(async () => { 
+    const cards = await Card.findAll()
+    for (let i = 0; i < cards.length; i++) {
+        const card = cards[i]
+        const artwork = await Artwork.findOne({
+            where: {
+                cardId: card.id,
+                isOriginal: true
+            }
+        })
+
+        if (artwork) {
+            await card.update({ artworkId: artwork.artworkId })
+        } else {
+            console.log(`hmm no original artwork for ${card.name}?`)
+            await card.update({ artworkId: card.ypdId })
+        }
+    }
+})()
 

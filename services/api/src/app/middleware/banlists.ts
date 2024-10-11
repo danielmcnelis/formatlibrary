@@ -28,7 +28,7 @@ export const banlistsDate = async (req, res, next) => {
         restriction: 'forbidden'
       },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
-      include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'ypdId', 'sortPriority'] }],
+      include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'artworkId', 'sortPriority'] }],
       order: [
         [Card, 'sortPriority', 'ASC'],
         ['name', 'ASC']
@@ -42,7 +42,7 @@ export const banlistsDate = async (req, res, next) => {
         restriction: 'limited'
       },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
-      include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'ypdId', 'sortPriority'] }],
+      include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'artworkId', 'sortPriority'] }],
       order: [
         [Card, 'sortPriority', 'ASC'],
         ['name', 'ASC']
@@ -56,7 +56,7 @@ export const banlistsDate = async (req, res, next) => {
             restriction: 'semi-limited'
         },
         attributes: { exclude: ['createdAt', 'updatedAt'] },
-        include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'ypdId', 'sortPriority'] }],
+        include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'artworkId', 'sortPriority'] }],
         order: [
           [Card, 'sortPriority', 'ASC'],
           ['name', 'ASC']
@@ -70,7 +70,7 @@ export const banlistsDate = async (req, res, next) => {
         restriction: 'no longer on list'
       },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
-      include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'ypdId', 'sortPriority'] }],
+      include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'artworkId', 'sortPriority'] }],
       order: [
         [Card, 'sortPriority', 'ASC'],
         ['name', 'ASC']
@@ -84,7 +84,7 @@ export const banlistsDate = async (req, res, next) => {
             restriction: 'limited-1'
         },
         attributes: { exclude: ['createdAt', 'updatedAt'] },
-        include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'ypdId', 'sortPriority'] }],
+        include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'artworkId', 'sortPriority'] }],
         order: [
           [Card, 'sortPriority', 'ASC'],
           ['name', 'ASC']
@@ -99,7 +99,7 @@ export const banlistsDate = async (req, res, next) => {
             restriction: 'limited-2'
         },
         attributes: { exclude: ['createdAt', 'updatedAt'] },
-        include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'ypdId', 'sortPriority'] }],
+        include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'artworkId', 'sortPriority'] }],
         order: [
           [Card, 'sortPriority', 'ASC'],
           ['name', 'ASC']
@@ -114,7 +114,7 @@ export const banlistsDate = async (req, res, next) => {
             restriction: 'limited-3'
         },
         attributes: { exclude: ['createdAt', 'updatedAt'] },
-        include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'ypdId', 'sortPriority'] }],
+        include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'artworkId', 'sortPriority'] }],
         order: [
           [Card, 'sortPriority', 'ASC'],
           ['name', 'ASC']

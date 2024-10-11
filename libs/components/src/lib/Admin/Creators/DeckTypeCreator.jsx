@@ -44,11 +44,11 @@ export const DeckTypeCreator = () => {
                 formatName: format.name,
                 formatId: format.id,
                 leftCardName: leftCard.name,
-                leftCardYpdId: leftCard.ypdId,
+                leftCardArtworkId: leftCard.artworkId,
                 centerCardName: centerCard.name,
-                centerCardYpdId: centerCard.ypdId,
+                centerCardArtworkId: centerCard.artworkId,
                 rightCardName: rightCard.name,
-                rightCardYpdId: rightCard.ypdId,
+                rightCardArtworkId: rightCard.artworkId,
             })
 
             alert(`Success! New DeckType: ${data.name}`)

@@ -40,7 +40,7 @@ export const UpdatePlayer = () => {
                 firstName: firstName,
                 lastName: lastName,
                 pfp: pfp,
-                cardYpdId: card.ypdId,
+                cardArtworkId: card.artworkId,
                 country: country
             })
 

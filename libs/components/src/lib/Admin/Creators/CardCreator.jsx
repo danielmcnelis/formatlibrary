@@ -123,6 +123,7 @@ export const CardCreator = () => {
                 description: description,
                 konamiCode: konamiCode,
                 ypdId: parseInt(konamiCode),
+                artworkId: parseInt(konamiCode),
                 tcgDate: tcgDate,
                 ocgDate: ocgDate,
                 tcgLegal: !!tcgDate,

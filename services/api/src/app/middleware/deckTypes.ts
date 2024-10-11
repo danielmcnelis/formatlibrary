@@ -167,7 +167,7 @@ export const deckTypesDownload = async (req, res, next) => {
               where: {
                 konamiCode
               },
-              attributes: ['id', 'name', 'cleanName', 'category', 'ypdId', 'konamiCode', 'sortPriority']
+              attributes: ['id', 'name', 'cleanName', 'category', 'artworkId', 'konamiCode', 'sortPriority']
             })) || {}
   
           data.main[e[0]].card = card
@@ -188,7 +188,7 @@ export const deckTypesDownload = async (req, res, next) => {
               where: {
                 konamiCode
               },
-              attributes: ['id', 'name', 'cleanName', 'category', 'ypdId', 'konamiCode', 'sortPriority']
+              attributes: ['id', 'name', 'cleanName', 'category', 'artworkId', 'konamiCode', 'sortPriority']
             })) || {}
   
           data.extra[e[0]].card = card
@@ -209,7 +209,7 @@ export const deckTypesDownload = async (req, res, next) => {
               where: {
                 konamiCode
               },
-              attributes: ['id', 'name', 'cleanName', 'category', 'ypdId', 'konamiCode', 'sortPriority']
+              attributes: ['id', 'name', 'cleanName', 'category', 'artworkId', 'konamiCode', 'sortPriority']
             })) || {}
   
           data.side[e[0]].card = card
@@ -442,7 +442,7 @@ export const deckTypesSummary = async (req, res, next) => {
             where: {
               konamiCode
             },
-            attributes: ['id', 'name', 'cleanName', 'category', 'ypdId']
+            attributes: ['id', 'name', 'cleanName', 'category', 'artworkId']
           })) || {}
 
         if (!card) console.log(`no card: ${konamiCode}`)
@@ -464,7 +464,7 @@ export const deckTypesSummary = async (req, res, next) => {
             where: {
               konamiCode
             },
-            attributes: ['id', 'name', 'cleanName', 'category', 'ypdId']
+            attributes: ['id', 'name', 'cleanName', 'category', 'artworkId']
           })) || {}
 
         if (!card) console.log(`no card: ${konamiCode}`)
@@ -486,7 +486,7 @@ export const deckTypesSummary = async (req, res, next) => {
             where: {
               konamiCode
             },
-            attributes: ['id', 'name', 'cleanName', 'category', 'ypdId']
+            attributes: ['id', 'name', 'cleanName', 'category', 'artworkId']
           })) || {}
 
         if (!card) console.log(`no card: ${konamiCode}`)
@@ -552,58 +552,58 @@ export const deckTypesCreate = async (req, res, next) => {
       }))
 
     ;(deckThumb.leftCard = req.body.leftCardName),
-      (deckThumb.leftCardYpdId = req.body.leftCardYpdId),
+      (deckThumb.leftCardArtworkId = req.body.leftCardArtworkId),
       (deckThumb.centerCard = req.body.centerCardName),
-      (deckThumb.centerCardYpdId = req.body.centerCardYpdId),
+      (deckThumb.centerCardArtworkId = req.body.centerCardArtworkId),
       (deckThumb.rightCard = req.body.rightCardName),
-      (deckThumb.rightCardYpdId = req.body.rightCardYpdId),
+      (deckThumb.rightCardArtworkId = req.body.rightCardArtworkId),
       await deckThumb.save()
 
-    if (!fs.existsSync(`https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardYpdId}.jpg`)) {
+    if (!fs.existsSync(`https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardArtworkId}.jpg`)) {
       try {
         const { data } = await axios({
           method: 'GET',
-          url: `https://storage.googleapis.com/ygoprodeck.com/pics_artgame/${deckThumb.leftCardYpdId}.jpg`,
+          url: `https://storage.googleapis.com/ygoprodeck.com/pics_artgame/${deckThumb.leftCardArtworkId}.jpg`,
           responseType: 'stream'
         })
 
-        data.pipe(fs.createWriteStream(`https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardYpdId}.jpg`))
+        data.pipe(fs.createWriteStream(`https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardArtworkId}.jpg`))
         console.log(
-          `saved ${deckThumb.leftCard} artwork to ${`https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardYpdId}.jpg`}`
+          `saved ${deckThumb.leftCard} artwork to ${`https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardArtworkId}.jpg`}`
         )
       } catch (err) {
         console.log(err)
       }
     }
 
-    if (!fs.existsSync(`https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardYpdId}.jpg`)) {
+    if (!fs.existsSync(`https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardArtworkId}.jpg`)) {
       try {
         const { data } = await axios({
           method: 'GET',
-          url: `https://storage.googleapis.com/ygoprodeck.com/pics_artgame/${deckThumb.centerCardYpdId}.jpg`,
+          url: `https://storage.googleapis.com/ygoprodeck.com/pics_artgame/${deckThumb.centerCardArtworkId}.jpg`,
           responseType: 'stream'
         })
 
-        data.pipe(fs.createWriteStream(`https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardYpdId}.jpg`))
+        data.pipe(fs.createWriteStream(`https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardArtworkId}.jpg`))
         console.log(
-          `saved ${deckThumb.centerCard} artwork to ${`https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardYpdId}.jpg`}`
+          `saved ${deckThumb.centerCard} artwork to ${`https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardArtworkId}.jpg`}`
         )
       } catch (err) {
         console.log(err)
       }
     }
 
-    if (!fs.existsSync(`https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardYpdId}.jpg`)) {
+    if (!fs.existsSync(`https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardArtworkId}.jpg`)) {
       try {
         const { data } = await axios({
           method: 'GET',
-          url: `https://storage.googleapis.com/ygoprodeck.com/pics_artgame/${deckThumb.rightCardYpdId}.jpg`,
+          url: `https://storage.googleapis.com/ygoprodeck.com/pics_artgame/${deckThumb.rightCardArtworkId}.jpg`,
           responseType: 'stream'
         })
 
-        data.pipe(fs.createWriteStream(`https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardYpdId}.jpg`))
+        data.pipe(fs.createWriteStream(`https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardArtworkId}.jpg`))
         console.log(
-          `saved ${deckThumb.rightCard} artwork to ${`https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardYpdId}.jpg`}`
+          `saved ${deckThumb.rightCard} artwork to ${`https://cdn.formatlibrary.com/images/artworks/${deckThumb.rightCardArtworkId}.jpg`}`
         )
       } catch (err) {
         console.log(err)

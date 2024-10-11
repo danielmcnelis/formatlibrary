@@ -5,7 +5,7 @@ export const Artwork = db.define('artworks', {
   cardName: {
     type: Sequelize.STRING
   },
-  ypdId: {
+  artworkId: {
     type: Sequelize.STRING,
     unique: true
   },
