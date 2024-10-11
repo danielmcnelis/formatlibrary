@@ -1182,13 +1182,14 @@ export const downloadNewCards = async () => {
                 console.log(`New card: ${name} (TCG Date: ${datum.misc_info[0]?.tcg_date}, OCG Date: ${datum.misc_info[0]?.ocg_date})`)
                 await downloadCardImage(id)
                 console.log(`Image saved (${name})`)
-            } else if (card && (card.name !== name || card.ypdId !== id || card.cleanName !== cleanName)) {
+            } else if (card && (card.name !== name || (card.ypdId !== id && card.konamiCode !== id) || card.cleanName !== cleanName)) {
                 c++
                 console.log(`New name and/or ID: ${card.name} (${card.ypdId}) is now: ${name} (${id})`)
                 
                 await card.update({
                     name: name,
                     cleanName: cleanName,
+                    konamiCode: id,
                     ypdId: id,
                     description: datum.desc,
                     tcgLegal: tcgLegal,
