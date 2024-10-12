@@ -55,7 +55,7 @@ import {Artwork, Card} from '@fl/models'
         .upload(
             `https://cdn.formatlibrary.com/images/cards/${artwork.artworkId}.jpg`, {
                 width: 144,
-                folder: `medium_cards_${folderExtension}`,
+                folder: `medium/cards_${folderExtension}`,
                 format: 'jpg',
                 public_id: `${artwork.artworkId}`,
             }
