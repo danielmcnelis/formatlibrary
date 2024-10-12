@@ -14,7 +14,7 @@ export const CardImage = (props) => {
                     rarity ? <img src={`https://cdn.formatlibrary.com/images/rarities/${camelize(rarity)}.png`} alt={rarity} className="rarity-icon"/> : null
                 }
                 <img
-                    src={`https://cdn.formatlibrary.com/images/small_cards/${card.artworkId}.webp`}
+                    src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`}
                     card={card}
                     onMouseOver={() => setCard(card)}
                     onClick={()=> disableLink ? '' : selectCard(card)}
@@ -37,7 +37,7 @@ export const CardImage = (props) => {
                         rarity ? <img src={`https://cdn.formatlibrary.com/images/rarities/${camelize(rarity)}.png`} alt={rarity} className="rarity-icon"/> : null
                     }
                     <img
-                        src={`https://cdn.formatlibrary.com/images/small_cards/${card.artworkId}.webp`}
+                        src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`}
                         card={card}
                         onMouseOver={() => setCard(card)}
                         onClick={()=> disableLink ? '' : addCard(card)}
@@ -57,7 +57,7 @@ export const CardImage = (props) => {
                     status && status !== 'no longer on list' ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.png`} alt={status} className="status-icon"/> : null
                 }
                 <img
-                    src={`https://cdn.formatlibrary.com/images/small_cards/${card.artworkId}.webp`}
+                    src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`}
                     card={card}
                     onMouseOver={() => setCard(card)}
                     onContextMenu={(e)=> {
@@ -88,7 +88,7 @@ export const CardImage = (props) => {
               {
                 parseInt(width, 10) < 48 ? (
                   <img
-                    src={`https://cdn.formatlibrary.com/images/small_cards/${card.artworkId}.webp`}
+                    src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`}
                     card={card}
                     style={{width, margin, padding}}
                     className="SmallCardImages"
@@ -104,7 +104,7 @@ export const CardImage = (props) => {
                           status && status !== 'no longer on list' ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.png`} alt={status} className="status-icon"/> : null
                         }
                         <img
-                          src={`https://cdn.formatlibrary.com/images/small_cards/${card.artworkId}.webp`}
+                          src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`}
                           card={card}
                           style={{width, margin, padding}}
                           onContextMenu={(e)=> {

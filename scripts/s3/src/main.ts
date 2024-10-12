@@ -50,32 +50,33 @@ import {Artwork, Card} from '@fl/models'
         order: [["id", "DESC"]]
     })
 
-    for (let i = 0; i < cards.length; i++) {
-        const card = cards[i]
+    // for (let i = 0; i < cards.length; i++) {
+    //     const card = cards[i]
 
-        const count = await Artwork.count({
-            where: {
-                cardId: card.id
-            }
-        })
+    //     const count = await Artwork.count({
+    //         where: {
+    //             cardId: card.id
+    //         }
+    //     })
 
-        if (count < 2) {
-            continue 
-        } else {
-            const artwork = await Artwork.findOne({
-                where: {
-                    cardId: card.id,
-                    isOriginal: true
-                }
-            })
+    //     if (count < 2) {
+    //         continue 
+    //     } else {
+    //         const artwork = await Artwork.findOne({
+    //             where: {
+    //                 cardId: card.id,
+    //                 isOriginal: true
+    //             }
+    //         })
     
                 const uploadResult = await cloudinary.uploader
                 .upload(
-                    `https://cdn.formatlibrary.com/images/cards/${artwork.artworkId}.jpg`, {
+                    `https://i.imgur.com/MsGeIhU.jpeg`,{
+                    // `https://cdn.formatlibrary.com/images/cards/${57728570}.jpg`, {
                         width: 72,
                         folder: 'small_cards_missing',
                         format: 'webp',
-                        public_id: card.artworkId,
+                        public_id: '57728570',
                     }
                 )
                 .catch((error) => {
@@ -84,8 +85,8 @@ import {Artwork, Card} from '@fl/models'
             
                 console.log(uploadResult);
             // }
-        }
+    //     }
 
-    }
+    // }
     
 })();

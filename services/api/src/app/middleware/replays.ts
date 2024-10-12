@@ -1,6 +1,6 @@
 
 import { Replay } from '@fl/models'
-import { getCookie } from '@fl/utils'
+// import { getCookie } from '@fl/utils'
 
 export const countReplays = async (req, res, next) => {
     try {
@@ -26,7 +26,7 @@ export const countReplays = async (req, res, next) => {
 
 export const getReplays = async (req, res, next) => {
     try {
-        const accessToken = getCookie('access')
+        // const accessToken = getCookie('access')
         const isAdmin = req.query.isAdmin
         const isSubscriber = req.query.isSubscriber
         const limit = parseInt(req.query.limit || 10)
