@@ -43,50 +43,27 @@ import {Artwork, Card} from '@fl/models'
         api_secret: config.cloudinary.apiSecret
     });
 
-    const cards = await Card.findAll({
-        where: {
-            ypdId: {[Op.not]: null},
-        },
-        order: [["id", "DESC"]]
+    const artworks = await Artwork.findAll({
+        order: [["artworkId", "ASC"]]
     })
 
-    // for (let i = 0; i < cards.length; i++) {
-    //     const card = cards[i]
+    for (let i = 0; i < artworks.length; i++) {
+        const artwork = artworks[i]
+        const folderExtension = Math.floor((i+1)/1000)
 
-    //     const count = await Artwork.count({
-    //         where: {
-    //             cardId: card.id
-    //         }
-    //     })
-
-    //     if (count < 2) {
-    //         continue 
-    //     } else {
-    //         const artwork = await Artwork.findOne({
-    //             where: {
-    //                 cardId: card.id,
-    //                 isOriginal: true
-    //             }
-    //         })
+        const uploadResult = await cloudinary.uploader
+        .upload(
+            `https://cdn.formatlibrary.com/images/cards/${artwork.artworkId}.jpg`, {
+                width: 144,
+                folder: `medium_cards_${folderExtension}`,
+                format: 'jpg',
+                public_id: `${artwork.artworkId}`,
+            }
+        )
+        .catch((error) => {
+            console.log(error);
+        });
     
-                const uploadResult = await cloudinary.uploader
-                .upload(
-                    `https://i.imgur.com/MsGeIhU.jpeg`,{
-                    // `https://cdn.formatlibrary.com/images/cards/${57728570}.jpg`, {
-                        width: 72,
-                        folder: 'small_cards_missing',
-                        format: 'webp',
-                        public_id: '57728570',
-                    }
-                )
-                .catch((error) => {
-                    console.log(error);
-                });
-            
-                console.log(uploadResult);
-            // }
-    //     }
-
-    // }
-    
+        console.log(uploadResult);
+    }
 })();
