@@ -49,7 +49,7 @@ import {Artwork, Card} from '@fl/models'
 
     for (let i = 0; i < artworks.length; i++) {
         const artwork = artworks[i]
-        const folderExtension = Math.floor((i+1)/1000)
+        const folderExtension = Math.floor((i+1)/1000) + 1
 
         const uploadResult = await cloudinary.uploader
         .upload(
