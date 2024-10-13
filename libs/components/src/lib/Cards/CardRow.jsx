@@ -42,7 +42,7 @@ export const CardRow = (props) => {
   
     const symbol3 = category === 'Monster' && card.type ? `https://cdn.formatlibrary.com/images/symbols/${card.type.toLowerCase().replaceAll(' ', '-')}.png` : null
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
-    const filePath = `https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`
+    const filePath = `https://cdn.formatlibrary.com/images/medium_cards/${card.artworkId}.jpg`
     
     return (
         <tr className={`${evenOrOdd}-search-results-row`}>

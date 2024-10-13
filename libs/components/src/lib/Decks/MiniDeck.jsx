@@ -16,7 +16,7 @@ export const MiniDeck = (props) => {
             main.map((kc, index) => (
                 <img
                     key={`main-${deck.id}-${index}`}
-                    src={`https://cdn.formatlibrary.com/images/cards/${kc}.jpg`}
+                    src={`https://cdn.formatlibrary.com/images/medium_cards/${kc}.jpg`}
                     style={{width: '36px', margin: '0px', padding: '0px'}}
                     alt={kc}
                 />
@@ -30,7 +30,7 @@ export const MiniDeck = (props) => {
                     side.map((kc, index) => (
                         <img
                             key={`side-${deck.id}-${index}`}
-                            src={`https://cdn.formatlibrary.com/images/cards/${kc}.jpg`}
+                            src={`https://cdn.formatlibrary.com/images/medium_cards/${kc}.jpg`}
                             style={{width: '24px', margin: '0px', padding: '0px'}}
                             alt={kc}
                         />
@@ -46,7 +46,7 @@ export const MiniDeck = (props) => {
                     extra.map((kc, index) => (
                         <img
                             key={`extra-${deck.id}-${index}`}
-                            src={`https://cdn.formatlibrary.com/images/cards/${kc}.jpg`}
+                            src={`https://cdn.formatlibrary.com/images/medium_cards/${kc}.jpg`}
                             style={{width: '24px', margin: '0px', padding: '0px'}}
                             alt={kc}
                         />

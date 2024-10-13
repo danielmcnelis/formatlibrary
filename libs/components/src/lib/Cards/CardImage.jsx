@@ -94,7 +94,7 @@ export const CardImage = (props) => {
                     className="SmallCardImages"
                     alt={card.name}
                   />
-                ) : parseInt(width, 10) >= 48 && parseInt(width, 10) < 96 ? (
+                ) : parseInt(width) >= 48 && parseInt(width, 10) < 96 ? (
                   <Link to={`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
                     target="_blank" 
                     rel="noopener noreferrer"
@@ -104,7 +104,7 @@ export const CardImage = (props) => {
                           status && status !== 'no longer on list' ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.png`} alt={status} className="status-icon"/> : null
                         }
                         <img
-                          src={`https://cdn.formatlibrary.com/images/medium_cards/${card.artworkId}.jpg`}
+                          src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`}
                           card={card}
                           style={{width, margin, padding}}
                           onContextMenu={(e)=> {
@@ -135,7 +135,7 @@ export const CardImage = (props) => {
                             status && status !== 'no longer on list' ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.png`} alt={status} className="status-icon"/> : null
                           }
                           <img
-                            src={`https://cdn.formatlibrary.com/images/medium_cards/${card.artworkId}.jpg`}
+                            src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`}
                             card={card}
                             style={{width, margin, padding}}
                             onContextMenu={(e)=> {
