@@ -46,7 +46,7 @@ export const Navigation = (props) => {
         <div className="nav-bar">
             <Link to="/" state={{ page: 1 }}>
                 <div id="logo">
-                    <img src={'https://cdn.formatlibrary.com/images/logos/Format Library.png'} alt="logo"/>
+                    <img src={'https://cdn.formatlibrary.com/images/logos/Format Library.svg'} alt="logo"/>
                     <h1>Format Library</h1>
                 </div>
             </Link>
