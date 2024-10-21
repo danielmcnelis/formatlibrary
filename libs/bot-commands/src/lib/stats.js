@@ -22,6 +22,7 @@ export default {
         const user = interaction.options.getUser('player') || interaction.user
         const player = await Player.findOne({ where: { discordId: user?.id } })
         if (!player) return await interaction.reply({ content: `That user is not in the database.`})
+        if (player.hidden) return await interaction.reply({ content: `That user's stats are not available at this time.`})
         const serverId = server.internalLadder ? server.id : '414551319031054346'
 
         if (interaction.channel?.name === 'trivia') {

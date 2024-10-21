@@ -151,6 +151,10 @@ export const updateAvatars = async (client) => {
     return console.log(`updateAvatars() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
+// UPDATE BLOGPOSTS
+export const updateBlogPosts = async () => {
+    
+}
 
 // CONDUCT CENSUS
 export const conductCensus = async (client) => {

@@ -38,6 +38,7 @@ import { Pool } from './Pool'
 import { Replay } from './Replay'
 import { Role } from './Role'
 import { Ruling } from './Ruling'
+import { Series } from './Series'
 import { Server } from './Server'
 import { Set } from './Set'
 import { Stats } from './Stats'
@@ -307,6 +308,10 @@ Format.hasMany(Ruling)
 Ruling.belongsTo(Card)
 Card.hasMany(Ruling)
 
+//SERIES
+Series.belongsTo(Server)
+Server.hasMany(Series)
+
 //STATS
 Stats.belongsTo(Player)
 Player.hasMany(Stats)
@@ -329,6 +334,9 @@ Subscription.belongsTo(Player)
 Player.hasMany(Subscription)
 
 //TOURNAMENT
+Tournament.belongsTo(Series)
+Series.hasMany(Tournament)
+
 Tournament.belongsTo(Server)
 Server.hasMany(Tournament)
 
@@ -409,6 +417,7 @@ export {
   Replay,
   Role,
   Ruling,
+  Series,
   Server,
   Set,
   Stats,

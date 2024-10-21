@@ -21,7 +21,8 @@ export default {
         if (await isNewUser(interaction.user?.id)) await createPlayer(member)
         const player = await Player.findOne({ where: { discordId: interaction.user?.id }})    
         if (!player) { return await interaction.editReply({ content: `You are not in the database. Please try again.`})}
-        
+        if (player.hidden) return await interaction.reply(`You are not allowed to play in Format Library sanctioned tournaments.`)
+
         const tournament = await selectTournament(interaction, tournaments, 'ASC')
         if (!tournament) return
 

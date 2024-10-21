@@ -42,7 +42,9 @@ export default {
 
         if (winningUser.bot) return await interaction.editReply({ content: `Sorry, Bots do not play ${format.name} Format... *yet*.`})
         if (!losingPlayer || !loserStats) return await interaction.editReply({ content: `You are not in the database.`})
+        if (losingPlayer.hidden) return await interaction.reply(`You are not allowed to play in the Format Library rated system.`)
         if (!winningPlayer || !winnerStats) return await interaction.editReply({ content: `That user is not in the database.`})
+        if (winningPlayer.hidden) return await interaction.reply(`That user is not allowed to play in the Format Library rated system.`)
 
         const activeTournament = await Tournament.count({ where: { state: 'underway', serverId: interaction.guildId, formatName: {[Op.or]: [format.name, 'Multiple']} }}) 
         let isTournament

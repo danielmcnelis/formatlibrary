@@ -112,8 +112,8 @@ export default {
     async execute(interaction) {
         if (interaction.guildId) return await interaction.reply(`Try using **/rated** by DM'ing it to me.`)
         const player = await Player.findOne({ where: { discordId: interaction.user.id } })
-        if (player.hidden) return await interaction.reply(`You are not allowed to play rated at this time.`)
         if (!player) return await interaction.reply(`You are not in the database. Please join the Format Library Discord server to register.`)
+        if (player.hidden) return await interaction.reply(`You are not allowed is not allowed to play in the Format Library rated system.`)
         interaction.reply('🥸')
         return getRatedInformation(interaction, player)
     }

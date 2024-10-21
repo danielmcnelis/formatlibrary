@@ -54,7 +54,10 @@ export default {
         const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, formatId: format.id, serverId: serverId } })
 
         if (!losingPlayer || !loserStats) return await interaction.editReply({ content: `Sorry, <@${loserDiscordId}> is not in the database.`})
+        if (!losingPlayer) return await interaction.reply(`Sorry, <@${loserDiscordId}> is not allowed to play in the Format Library rated system.`)
+        
         if (!winningPlayer || !winnerStats) return await interaction.editReply({ content: `Sorry, <@${winnerDiscordId}> is not in the database.`})
+        if (!winningPlayer) return await interaction.reply(`Sorry, <@${winnerDiscordId}> is not allowed to play in the Format Library rated system.`)
 
         const activeTournament = await Tournament.count({ where: { state: 'underway', serverId: interaction.guildId, formatName: {[Op.or]: [format.name, 'Multiple']} }}) 
         let isTournament

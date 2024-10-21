@@ -22,6 +22,7 @@ export default {
         const discordId = user.id	
         const player = await Player.findOne({ where: { discordId: discordId } })
         if (!player) return await interaction.reply({ content: "That user is not in the database."})
+        if (player.hidden) return await interaction.reply({ content: `That user's profile is not available at this time.`})
 
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         

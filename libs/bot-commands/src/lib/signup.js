@@ -28,7 +28,8 @@ export default {
         const member = await interaction.guild?.members.fetch(user.id)
         const player = await Player.findOne({ where: { discordId: user.id }})
         if (!player) return await interaction.editReply({ content: `That player is not in the database.`})
-        
+        if (player.hidden) return await interaction.reply(`That player is not allowed to play in Format Library sanctioned tournaments.`)
+
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
 

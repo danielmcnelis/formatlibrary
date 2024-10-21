@@ -253,6 +253,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await interaction.deferReply()
     
         if (interaction.customId?.includes('create')) {
+            // REMOVE ALL # SYMBOLS.
             const name = interaction.fields.getTextInputValue('name')
     
             const tournament_type = interaction.customId?.includes('SW') ? 'swiss' :
@@ -260,7 +261,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 interaction.customId?.includes('DE') ? 'double elimination' :
                 'round robin'
         
-            const abbreviation = interaction.fields.getTextInputValue('abbreviation')
+            // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
+            const abbreviation = interaction.fields.getTextInputValue('abbreviation')?.replaceAll('')
             const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
             const channelName = interaction.fields.fields.get('channelName') ? interaction.fields.getTextInputValue('channelName') : null
         
@@ -285,6 +287,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         
             return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, tieBreaker1, tieBreaker2)
         } else if (interaction.customId?.includes('edit')) {
+            // REMOVE ALL # SYMBOLS.
             const name = interaction.fields.getTextInputValue('name')
     
             const decipherTournamentTypeInput = (input = '') => {
@@ -305,6 +308,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const decipherRankedInput = (input = '') => !!input.toLowerCase()?.includes('u')
     
             const tournament_type = interaction.fields.fields.get('type') ? decipherTournamentTypeInput(interaction.fields.getTextInputValue('type')) : null
+            // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
             const abbreviation = interaction.fields.fields.get('abbreviation') ? interaction.fields.getTextInputValue('abbreviation') : null
             const url = interaction.fields.fields.get('url') ? interaction.fields.getTextInputValue('url') : null
             const isUnranked = interaction.fields.fields.get('ranked') ? decipherRankedInput(interaction.fields.getTextInputValue('ranked')) : null
