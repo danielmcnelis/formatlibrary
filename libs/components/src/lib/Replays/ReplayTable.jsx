@@ -60,6 +60,7 @@ export const ReplayTable = () => {
   
     // COUNT
     const count = async () => {
+        const accessToken = getCookie('access')
         let url = `/api/replays/count?isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`
         let filter = ''
   
@@ -70,7 +71,12 @@ export const ReplayTable = () => {
         if (format) filter += `,formatName:eq:${format}`
         if (filter.length) url += ('?filter=' + filter.slice(1))
   
-        const { data } = await axios.get(url)
+        const { data } = await axios.get(url, {
+            headers: {
+                ...(accessToken && {authorization: `Bearer ${accessToken}`})
+            }
+        })
+        
         setTotal(data)
     }
 
