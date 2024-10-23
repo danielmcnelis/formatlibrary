@@ -21,7 +21,6 @@ export const authenticate = async (req, res, next) => {
         if (tokenType === 'Bearer') {
             accessToken = tokenValue
         }
-
     }
 
     if (accessToken) {
@@ -32,7 +31,7 @@ export const authenticate = async (req, res, next) => {
             console.error(err)
             res.status(401).send("Unauthenticated")
             return
-        } 
+        }
         
         const { sub: playerId, email } = claims.payload
     
