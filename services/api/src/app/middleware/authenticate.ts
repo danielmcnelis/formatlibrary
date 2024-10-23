@@ -38,6 +38,9 @@ export const authenticate = async (req, res, next) => {
         if (playerId) {
             req.user = { playerId, email }
         }
+    } else {
+        res.status(401).send("Unauthenticated")
+        return
     }
 
     next()
