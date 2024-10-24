@@ -691,7 +691,7 @@ export const isNewUser = async (discordId) => !await Player.count({ where: { dis
 export const isTourPlayer = (server, member) => member?._roles.includes(server?.tourRole)
 
 // PAD ZERO MID STRING
-export const padZeroMidStrin = (str) => {
+export const padZeroMidString = (str) => {
     const index = str?.search(/[1-9]/)
   
     if (index >= 0) {
