@@ -255,7 +255,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
         if (interaction.customId?.includes('create')) {
             // REMOVE ALL WEIRD SYMBOLS.
             const name = capitalize(interaction.fields.getTextInputValue('name')
-                ?.replaceAll(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=]/g, ''), true)
+                ?.replace(/\s+/g, ' ')
+                ?.replace(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=]/g, ''), true)
     
             const tournament_type = interaction.customId?.includes('SW') ? 'swiss' :
                 interaction.customId?.includes('SE') ? 'single elimination' :
@@ -264,7 +265,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
         
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
             const abbreviation = padZeroMidString(interaction.fields.getTextInputValue('abbreviation')
-                ?.replace(/[^\w]/g, ''))?.toUpperCase()
+                ?.replace(/[^\w]/g, ''))
+                ?.toUpperCase()
             
             const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
             const channelName = interaction.fields.fields.get('channelName') ? interaction.fields.getTextInputValue('channelName') : null
@@ -292,7 +294,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
         } else if (interaction.customId?.includes('edit')) {
             // REMOVE ALL WEIRD SYMBOLS.
             const name = capitalize(interaction.fields.getTextInputValue('name')
-                ?.replaceAll(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=]/g, ''), true)
+                ?.replace(/\s+/g, ' ')
+                ?.replace(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=]/g, ''), true)
     
             const decipherTournamentTypeInput = (input = '') => {
                 input = input.toLowerCase()
