@@ -692,6 +692,7 @@ export const isTourPlayer = (server, member) => member?._roles.includes(server?.
 
 // PAD ZERO MID STRING
 export const padZeroMidString = (str) => {
+    if (parseInt('str'.replace(/[^\d]/g, '')) >= 10) return str    
     const index = str?.search(/[1-9]/)
   
     if (index >= 0 && (index === 0 || str[index - 1] !== '0')) {
