@@ -7,7 +7,6 @@ export const camelize = (str) =>
 
 //CAPITALIZE
 export const capitalize = (str = '', eachWord = false) => {
-    console.log('utils lib eachWord', eachWord)
     if (!str) return
 
     if (eachWord) {

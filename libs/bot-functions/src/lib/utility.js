@@ -484,7 +484,6 @@ export const assignRoles = async (guild, member) => {
 
 //CAPITALIZE
 export const capitalize = (str = '', eachWord = false) => {
-    console.log('bot fn eachWord', eachWord)
     if (!str) return
 
     if (eachWord) {
@@ -695,7 +694,7 @@ export const isTourPlayer = (server, member) => member?._roles.includes(server?.
 export const padZeroMidString = (str) => {
     const index = str?.search(/[1-9]/)
   
-    if (index >= 0 && str[index - 1] !== '0') {
+    if (index >= 0 && (index === 0 || str[index - 1] !== '0')) {
         return str.slice(0, index) + '0' + str.slice(index)
     } else {        
         return str
