@@ -7,7 +7,10 @@ export const camelize = (str) =>
 
 //CAPITALIZE
 export const capitalize = (str = '', eachWord = false) => {
+    console.log('utils lib eachWord', eachWord)
     if (!str) return
+    str = str.toLowerCase()
+
     if (eachWord) {
       return str.split(' ')
         .map((s) => capitalize(s))

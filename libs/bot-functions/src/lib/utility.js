@@ -484,8 +484,10 @@ export const assignRoles = async (guild, member) => {
 
 //CAPITALIZE
 export const capitalize = (str = '', eachWord = false) => {
+    console.log('bot fn eachWord', eachWord)
     if (!str) return
     str = str.toLowerCase()
+
     if (eachWord) {
       return str.split(' ')
         .map((s) => capitalize(s))
