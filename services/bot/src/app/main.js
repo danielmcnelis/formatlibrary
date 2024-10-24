@@ -254,9 +254,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
     
         if (interaction.customId?.includes('create')) {
             // REMOVE ALL WEIRD SYMBOLS.
-            const name = capitalize(interaction.fields.getTextInputValue('name')
-                ?.replace(/\s+/g, ' ')
-                ?.replace(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=]/g, ''), true)
+            const name = capitalize(
+                interaction.fields.getTextInputValue('name')
+                    ?.replace(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=]/g, '')
+                    ?.replace(/\s+/g, ' ')
+                , true)
     
             const tournament_type = interaction.customId?.includes('SW') ? 'swiss' :
                 interaction.customId?.includes('SE') ? 'single elimination' :
@@ -265,7 +267,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
             const abbreviation = padZeroMidString(interaction.fields.getTextInputValue('abbreviation')
-                ?.replace(/[^\w]/g, ''))
+                ?.replace(/[^\w]|_/g, ''))
                 ?.toUpperCase()
             
             const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
@@ -293,9 +295,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
             return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, tieBreaker1, tieBreaker2)
         } else if (interaction.customId?.includes('edit')) {
             // REMOVE ALL WEIRD SYMBOLS.
-            const name = capitalize(interaction.fields.getTextInputValue('name')
-                ?.replace(/\s+/g, ' ')
-                ?.replace(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=]/g, ''), true)
+            const name = capitalize(
+                interaction.fields.getTextInputValue('name')
+                    ?.replace(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=]/g, '')
+                    ?.replace(/\s+/g, ' ')
+                , true)
     
             const decipherTournamentTypeInput = (input = '') => {
                 input = input.toLowerCase()
@@ -318,7 +322,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
             const abbreviation = interaction.fields.fields.get('abbreviation') ? padZeroMidString(interaction.fields.getTextInputValue('abbreviation')
-                ?.replace(/[^\w]/g, ''))
+                ?.replace(/[^\w|_]/g, ''))
                 ?.toUpperCase() : null
             
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
