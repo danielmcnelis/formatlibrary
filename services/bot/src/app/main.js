@@ -256,7 +256,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             // REMOVE ALL WEIRD SYMBOLS.
             const name = capitalize(
                 interaction.fields.getTextInputValue('name')
-                    ?.replace(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=]/g, '')
+                    ?.replace(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=0]/g, '')
                     ?.replace(/\s+/g, ' ')
                     ?.toLowerCase()
                 , true)
@@ -299,7 +299,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             // REMOVE ALL WEIRD SYMBOLS.
             const name = capitalize(
                 interaction.fields.getTextInputValue('name')
-                    ?.replace(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=]/g, '')
+                    ?.replace(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=0]/g, '')
                     ?.replace(/\s+/g, ' ')
                     ?.toLowerCase()
                 , true)
