@@ -264,7 +264,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
             const abbreviation = padZeroMidString(interaction.fields.getTextInputValue('abbreviation')
-                ?.replace(/[\w\s]/g, ''))?.toUpperCase()
+                ?.replace(/[^\w\s]/g, ''))?.toUpperCase()
             
             const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
             const channelName = interaction.fields.fields.get('channelName') ? interaction.fields.getTextInputValue('channelName') : null
@@ -315,12 +315,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
             const abbreviation = interaction.fields.fields.get('abbreviation') ? padZeroMidString(interaction.fields.getTextInputValue('abbreviation')
-                ?.replace(/[\w\s]/g, ''))
+                ?.replace(/[^\w\s]/g, ''))
                 ?.toUpperCase() : null
             
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
             const url = interaction.fields.fields.get('url') ? padZeroMidString(interaction.fields.getTextInputValue('url')
-                ?.replace(/[\w\s]/g, ''))
+                ?.replace(/[^\w\s]/g, ''))
                 ?.toUpperCase() : null
 
             const isUnranked = interaction.fields.fields.get('ranked') ? decipherRankedInput(interaction.fields.getTextInputValue('ranked')) : null
