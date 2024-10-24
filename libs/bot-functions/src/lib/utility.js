@@ -9,6 +9,7 @@ import axios from 'axios'
 import { Card, OPCard, Membership, Player, Print, Role, Set, Status, Tournament } from '@fl/models'
 import { emojis, rarities } from '@fl/bot-emojis'
 import { config } from '@fl/config'
+import e from 'express'
 
 //DATE TO SIMPLE
 export const dateToSimple = (date = 'N/A') => {
@@ -484,6 +485,7 @@ export const assignRoles = async (guild, member) => {
 //CAPITALIZE
 export const capitalize = (str = '', eachWord = false) => {
     if (!str) return
+    str = str.toLowerCase()
     if (eachWord) {
       return str.split(' ')
         .map((s) => capitalize(s))
@@ -687,6 +689,17 @@ export const isNewUser = async (discordId) => !await Player.count({ where: { dis
 
 //IS TOURNAMENT PLAYER?
 export const isTourPlayer = (server, member) => member?._roles.includes(server?.tourRole)
+
+// PAD ZERO MID STRING
+export const padZeroMidStrin = (str) => {
+    const index = str?.search(/[1-9]/)
+  
+    if (index >= 0) {
+        return str.slice(0, index) + '0' + str.slice(index)
+    } else {        
+        return str
+    }
+}
 
 // SELECT MATCH
 export const selectMatch = async (interaction, matches, replayExtension = '') => {

@@ -27,7 +27,7 @@ import { createTopCut, editTieBreakers, getMidnightCountdown, getRemainingDaysIn
     startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, 
     assignRoles, createMembership, createPlayer, fetchCardNames, fetchOPCardNames, hasPartnerAccess, 
     isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
-    editPointsSystem, runMonthlyTasks, runNightlyTasks, getTournament
+    editPointsSystem, runMonthlyTasks, runNightlyTasks, getTournament, padZeroMidString, capitalize
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
@@ -253,8 +253,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await interaction.deferReply()
     
         if (interaction.customId?.includes('create')) {
-            // REMOVE ALL # SYMBOLS.
-            const name = interaction.fields.getTextInputValue('name')
+            // REMOVE ALL WEIRD SYMBOLS.
+            const name = capitalize(interaction.fields.getTextInputValue('name')
+                ?.replaceAll(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=]/g, ''), true)
     
             const tournament_type = interaction.customId?.includes('SW') ? 'swiss' :
                 interaction.customId?.includes('SE') ? 'single elimination' :
@@ -262,7 +263,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 'round robin'
         
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
-            const abbreviation = interaction.fields.getTextInputValue('abbreviation')?.replaceAll('')
+            const abbreviation = padZeroMidString(interaction.fields.getTextInputValue('abbreviation')
+                ?.replace(/[\w\s]/g, ''))?.toUpperCase()
+            
             const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
             const channelName = interaction.fields.fields.get('channelName') ? interaction.fields.getTextInputValue('channelName') : null
         
@@ -287,8 +290,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
         
             return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, tieBreaker1, tieBreaker2)
         } else if (interaction.customId?.includes('edit')) {
-            // REMOVE ALL # SYMBOLS.
-            const name = interaction.fields.getTextInputValue('name')
+            // REMOVE ALL WEIRD SYMBOLS.
+            const name = capitalize(interaction.fields.getTextInputValue('name')
+                ?.replaceAll(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=]/g, ''), true)
     
             const decipherTournamentTypeInput = (input = '') => {
                 input = input.toLowerCase()
@@ -308,9 +312,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const decipherRankedInput = (input = '') => !!input.toLowerCase()?.includes('u')
     
             const tournament_type = interaction.fields.fields.get('type') ? decipherTournamentTypeInput(interaction.fields.getTextInputValue('type')) : null
+
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
-            const abbreviation = interaction.fields.fields.get('abbreviation') ? interaction.fields.getTextInputValue('abbreviation') : null
-            const url = interaction.fields.fields.get('url') ? interaction.fields.getTextInputValue('url') : null
+            const abbreviation = interaction.fields.fields.get('abbreviation') ? padZeroMidString(interaction.fields.getTextInputValue('abbreviation')
+                ?.replace(/[\w\s]/g, ''))
+                ?.toUpperCase() : null
+            
+            // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
+            const url = interaction.fields.fields.get('url') ? padZeroMidString(interaction.fields.getTextInputValue('url')
+                ?.replace(/[\w\s]/g, ''))
+                ?.toUpperCase() : null
+
             const isUnranked = interaction.fields.fields.get('ranked') ? decipherRankedInput(interaction.fields.getTextInputValue('ranked')) : null
             const tournamentId = interaction.customId?.split('-')[1]
     
