@@ -95,7 +95,7 @@ export const FormatIntro = () => {
             <div className="format-text">
                 <h1>{format.name} Format</h1>
                 {
-                    isAdmin && format.popular === false ? (
+                    isContentManager && format.popular === false ? (
                         <div className='horizontal-space-between-flexbox'>
                             <h2>{format.event}</h2>
                             <div className='horizontal-space-between-flexbox' >
