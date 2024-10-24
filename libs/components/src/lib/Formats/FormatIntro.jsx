@@ -15,11 +15,10 @@ const playerId = getCookie('playerId')
 
 export const FormatIntro = () => {
     const [format, setFormat] = useState({})
-    console.log('format', format)
     const [deckCount, setDeckCount] = useState(0)
     const [eventCount, setEventCount] = useState(0)
     const [statsCount, setStatsCount] = useState(0)
-    const [isAdmin, setIsAdmin] = useState(false)
+    const [isContentManager, setIsContentManager] = useState(false)
     const { id } = useParams()
   
     // SWITCH SPOTLIGHT
@@ -69,7 +68,7 @@ export const FormatIntro = () => {
                     }
                 })
 
-                if (player.admin) setIsAdmin(true)
+                if (player.contentManager) setIsContentManager(true)
             } catch (err) {
                 console.log(err)
             }
