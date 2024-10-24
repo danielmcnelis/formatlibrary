@@ -268,8 +268,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
         
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT EXACTLY ONE ZERO AT FRONT OF NUMBERS.
             const abbreviation = padZeroMidString(interaction.fields.getTextInputValue('abbreviation')
-                ?.replace(/[^\w]|_/g, ''))
-                ?.replaceAll('00', '0')
+                ?.replace(/[^\w]|_/g, '')
+                ?.replaceAll('00', '0'))
                 ?.toUpperCase()
             
             const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
@@ -325,8 +325,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT EXACTLY ONE ZERO AT FRONT OF NUMBERS.
             const abbreviation = interaction.fields.fields.get('abbreviation') ? padZeroMidString(interaction.fields.getTextInputValue('abbreviation')
-                ?.replace(/[^\w|_]/g, ''))
-                ?.replaceAll('00', '0')
+                ?.replace(/[^\w|_]/g, '')
+                ?.replaceAll('00', '0'))
                 ?.toUpperCase() : null
             
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
