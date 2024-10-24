@@ -266,9 +266,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 interaction.customId?.includes('DE') ? 'double elimination' :
                 'round robin'
         
-            // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
+            // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT EXACTLY ONE ZERO AT FRONT OF NUMBERS.
             const abbreviation = padZeroMidString(interaction.fields.getTextInputValue('abbreviation')
                 ?.replace(/[^\w]|_/g, ''))
+                ?.replaceAll('00', '0')
                 ?.toUpperCase()
             
             const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
@@ -322,9 +323,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
     
             const tournament_type = interaction.fields.fields.get('type') ? decipherTournamentTypeInput(interaction.fields.getTextInputValue('type')) : null
 
-            // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
+            // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT EXACTLY ONE ZERO AT FRONT OF NUMBERS.
             const abbreviation = interaction.fields.fields.get('abbreviation') ? padZeroMidString(interaction.fields.getTextInputValue('abbreviation')
                 ?.replace(/[^\w|_]/g, ''))
+                ?.replaceAll('00', '0')
                 ?.toUpperCase() : null
             
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
