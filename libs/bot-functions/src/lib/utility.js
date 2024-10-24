@@ -490,10 +490,10 @@ export const capitalize = (str = '', eachWord = false) => {
 
     if (eachWord) {
       return str.split(' ')
-        .map((s) => capitalize(s))
+        .map((s) => capitalize(s, true))
         .join(' ')
         .split('-')
-        .map((s) => capitalize(s))
+        .map((s) => capitalize(s, true))
         .join('-')
     } else {
       const charZero = str.charAt(0) || ''
