@@ -9,14 +9,13 @@ export const camelize = (str) =>
 export const capitalize = (str = '', eachWord = false) => {
     console.log('utils lib eachWord', eachWord)
     if (!str) return
-    str = str.toLowerCase()
 
     if (eachWord) {
       return str.split(' ')
-        .map((s) => capitalize(s, true))
+        .map((s) => capitalize(s))
         .join(' ')
         .split('-')
-        .map((s) => capitalize(s, true))
+        .map((s) => capitalize(s))
         .join('-')
     } else {
       const charZero = str.charAt(0) || ''

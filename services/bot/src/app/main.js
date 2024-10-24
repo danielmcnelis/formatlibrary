@@ -258,6 +258,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 interaction.fields.getTextInputValue('name')
                     ?.replace(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=]/g, '')
                     ?.replace(/\s+/g, ' ')
+                    ?.toLowerCase()
                 , true)
     
             const tournament_type = interaction.customId?.includes('SW') ? 'swiss' :
@@ -299,6 +300,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 interaction.fields.getTextInputValue('name')
                     ?.replace(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=]/g, '')
                     ?.replace(/\s+/g, ' ')
+                    ?.toLowerCase()
                 , true)
     
             const decipherTournamentTypeInput = (input = '') => {
