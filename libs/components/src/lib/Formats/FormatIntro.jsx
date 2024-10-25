@@ -9,6 +9,7 @@ import { RecentEvents } from '../Events/RecentEvents'
 import { useParams } from 'react-router-dom'
 import { getCookie, urlize } from '@fl/utils'
 import { Helmet } from 'react-helmet'
+import parse from 'html-react-parser'
 import './FormatIntro.css'
 
 const playerId = getCookie('playerId')
@@ -156,7 +157,7 @@ export const FormatIntro = () => {
                 <a href={`/formats/${urlize(format.name)}#banlist`}>Ban List</a>
                 </li>
                 {
-                    format.videoEmbed || ''
+                    format.videoEmbed ? parse(format.videoEmbed) : ''
                 }
             </div>
             <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} alt={format.icon}/>
