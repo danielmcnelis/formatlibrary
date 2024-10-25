@@ -31,6 +31,9 @@ export const Format = db.define('formats', {
   blurb: {
     type: Sequelize.TEXT
   },
+  videoEmbed: {
+    type: Sequelize.TEXT
+  },
   channel: {
     type: Sequelize.STRING
   },
