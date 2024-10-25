@@ -20,11 +20,14 @@ export const Placement = (props) => {
     deck.placement === 1 ? First : deck.placement === 2 ? Second : deck.placement === 3 ? Third : Consolation
 
   return (
-    <Link className="link" to={`/events/${deck.eventName}`}>
+    <div 
+        className="link" 
+        onClick={() => {window.location.href=`/events/${deck.eventName}`}}
+    >
         <div className="badge">
             <img src={placementImage} alt={ordinalize(deck.placemenent) + ' place'}/>
             <div className="badge-label">{deck.eventName}</div>
         </div>
-    </Link>
+    </div>
   )
 }

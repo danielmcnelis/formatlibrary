@@ -13,8 +13,8 @@ export const StatusBox = (props) => {
       '#e8e8e8'
   
       return (
-          <Link to={`/banlists/${banlist?.toLowerCase()?.replaceAll(' ', '-')}`} key={banlist} className="status-cell" style={{backgroundColor}}>
+          <div onClick={() => {window.location.href=`/banlists/${banlist?.toLowerCase()?.replaceAll(' ', '-')}`}} key={banlist} className="status-cell" style={{backgroundColor}}>
              <p>{`${capitalize(banlist.slice(0, 3))} '${banlist.slice(-2)}`}</p>
-          </Link>
+          </div>
       )
   } 

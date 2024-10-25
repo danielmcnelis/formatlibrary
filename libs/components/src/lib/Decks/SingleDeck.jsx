@@ -176,9 +176,11 @@ export const SingleDeck = () => {
                         />
                     </div>
                 </a>
-                <Link to={`/decktypes/${deck.type.toLowerCase().replace(/\s/g, '-')}?format=${deck.formatName.toLowerCase().replace(/\s/g, '_')}`}>
+                <div 
+                    onClick={() => {window.location.href=`/decktypes/${deck.type.toLowerCase().replace(/\s/g, '-')}?format=${deck.formatName.toLowerCase().replace(/\s/g, '_')}`}}
+                >
                     <div className="single-deck-title">{deck.type || deck.name}</div>
-                </Link>
+                </div>
                 <Link to="/deck-builder" state={{ deck: deck }} className="desktop-only">                                    
                     <div className="deck-button">
                         <b style={{padding: '0px 6px'}}>Open Deck</b>

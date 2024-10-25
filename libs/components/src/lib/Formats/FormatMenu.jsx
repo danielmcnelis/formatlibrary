@@ -37,7 +37,7 @@ export const FormatMenu = () => {
                 <h1 className="format-menu-title">Popular Formats</h1>
                 <div className="format-menu">
                     {
-                        formats.filter((f) => f.popular).map((format) => <FormatButton key={format.id} format={format}/>)
+                        formats.filter((f) => f.popular).map((format) => <FormatButton key={format.id} format={format}  />)
                     }
                 </div>
                 
@@ -46,7 +46,7 @@ export const FormatMenu = () => {
                 <h1 className="format-menu-title">Spotlight Formats</h1>
                 <div className="format-menu">
                     {
-                    formats.filter((f) => f.spotlight).map((format) => <FormatButton key={format.id} format={format}/>)
+                    formats.filter((f) => f.spotlight).map((format) => <FormatButton key={format.id} format={format}  />)
                     }
                 </div>
                 
@@ -55,7 +55,7 @@ export const FormatMenu = () => {
                 <h1 className="format-menu-title">Other Formats</h1>
                 <div className="format-menu">
                     {
-                    formats.filter((f) => !f.popular && !f.spotlight).map((format) => <FormatButton key={format.id} format={format}/>)
+                    formats.filter((f) => !f.popular && !f.spotlight).map((format) => <FormatButton key={format.id} format={format}  />)
                     }
                 </div>
                 <br/>

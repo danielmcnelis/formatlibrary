@@ -23,21 +23,21 @@ export const Footer = () => (
     </div>
     <div>
       <div id="footer-menu">
-        <Link to="/cards/">
+        <div onClick={() => {window.location.href="/cards/"}}>
           <p className="footer-item">Card Database</p>
-        </Link>
-        <Link to="/decks/">
+        </div>
+        <div onClick={() => {window.location.href="/decks/"}}>
           <p className="footer-item">Deck Database</p>
-        </Link>
-        <Link to="/events/">
+        </div>
+        <div onClick={() => {window.location.href="/events/"}}>
           <p className="footer-item">Event Coverage</p>
-        </Link>
-        <Link to="/replays/">
+        </div>
+        <div onClick={() => {window.location.href="/replays/"}}>
           <p className="footer-item">Replay Database</p>
-        </Link>
-        <Link to="/formats/">
+        </div>
+        <div onClick={() => {window.location.href="/formats/"}}>
           <p className="footer-item">Format Intros</p>
-        </Link>
+        </div>
       </div>
       <p className="disclaimer">
         Format Library is a public resource for learning about the Yu-Gi-Oh! Trading Card Game and its history.
@@ -45,17 +45,17 @@ export const Footer = () => (
         affiliated with 4K Media or Konami Digital Entertainment.
       </p>
       <div id="footer-menu">
-        <Link to="/terms.html" target="_blank" rel="noopener noreferrer">
+        <div to="/terms.html" target="_blank" rel="noopener noreferrer">
           <p className="footer-item">Terms & Conditions</p>
-        </Link>
-        <Link to="/privacy.html" target="_blank" rel="noopener noreferrer">
+        </div>
+        <div to="/privacy.html" target="_blank" rel="noopener noreferrer">
           <p className="footer-item">Privacy Policy</p>
-        </Link>
+        </div>
       </div>
     </div>
 
     <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-      <Link to="/">
+      <Link to="/" state={{page:1}} >
         <div className="footer-logo" />
       </Link>
       <br />

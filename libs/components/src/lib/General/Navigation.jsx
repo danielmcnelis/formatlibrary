@@ -44,36 +44,36 @@ export const Navigation = (props) => {
     
     return (
         <div className="nav-bar">
-            <Link to="/" state={{ page: 1 }}>
+            <Link to="/" state={{ page: 1 }}  >
                 <div id="logo">
                     <img src={'https://cdn.formatlibrary.com/images/logos/Format Library.png'} alt="logo"/>
                     <h1>Format Library</h1>
                 </div>
             </Link>
             <div id="nav-menu">
-                <Link to="/cards/">
+                <div onClick={() => {window.location.href="/cards/"}}>
                     <h2 className="nav-header">CARDS</h2>
-                </Link>
-                <Link to="/decks/">
+                </div>
+                <div onClick={() => {window.location.href="/decks/"}}>
                     <h2 className="nav-header">DECKS</h2>
-                </Link>
-                <Link to="/events/">
+                </div>
+                <div onClick={() => {window.location.href="/events/"}}>
                     <h2 className="nav-header">EVENTS</h2>
-                </Link>
-                <Link to="/replays/">
+                </div>
+                <div onClick={() => {window.location.href="/replays/"}}>
                     <h2 className="nav-header">REPLAYS</h2>
-                </Link>
-                <Link to="/formats/">
+                </div>
+                <div onClick={() => {window.location.href="/formats/"}}>
                     <h2 className="nav-header">FORMATS</h2>
-                </Link>
-                <Link to="/apps/">
+                </div>
+                <div onClick={() => {window.location.href="/apps/"}}>
                     <h2 className="nav-header">APPS</h2>
-                </Link>
+                </div>
                 {
                     isContentManager ? (
-                        <Link to="/admin-portal/">
+                        <div onClick={() => {window.location.href="/admin-portal/"}}>
                             <h2 className="nav-header">ADMIN</h2>
-                        </Link>
+                        </div>
                     ) : ''
                 }
                 <div id={`theme-toggle-${theme}`} onClick={() => switchTheme()}>
@@ -110,29 +110,29 @@ export const Navigation = (props) => {
                 <div id="hamburger-button" className="open-menu" style={{fontSize: '44px'}}>
                     ⌄
                 </div>
-                <Link to="/cards/">
+                <div onClick={() => {window.location.href="/cards/"}} >
                     <h3 className="hamburger-header">Cards</h3>
-                </Link>
-                <Link to="/decks/">
+                </div>
+                <div onClick={() => {window.location.href="/decks/"}}>
                     <h3 className="hamburger-header">Decks</h3>
-                </Link>
-                <Link to="/events/">
+                </div>
+                <div onClick={() => {window.location.href="/events/"}}>
                     <h3 className="hamburger-header">Events</h3>
-                </Link>
-                <Link to="/replays/">
+                </div>
+                <div onClick={() => {window.location.href="/replays/"}}>
                     <h3 className="hamburger-header">Replays</h3>
-                </Link>
-                <Link to="/formats/">
+                </div>
+                <div onClick={() => {window.location.href="/formats/"}}>
                     <h3 className="hamburger-header">Formats</h3>
-                </Link>
-                <Link to="/apps/">
+                </div>
+                <div onClick={() => {window.location.href="/apps/"}}>
                     <h3 className="hamburger-header">Apps</h3>
-                </Link>
+                </div>
                 {
                     isContentManager ? (
-                        <Link to="/admin-portal/">
+                        <div onClick={() => {window.location.href="/admin-portal/"}}>
                             <h3 className="hamburger-header">Admin</h3>
-                        </Link>
+                        </div>
                     ) : ''
                 }
                 {

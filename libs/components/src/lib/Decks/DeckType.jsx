@@ -181,7 +181,7 @@ export const DeckType = () => {
                 <tbody>
                     <tr className="single-deck-info-1">
                     <td>
-                        <div onClick={() => goToFormat()} className="single-deck-cell">
+                        <div onClick={() => {window.location.href=`/formats/${summary.format ? summary.format.name : ''}`}} className="single-deck-cell">
                         <div className="single-deck-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {summary.format.name}</div>
                         <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/${summary.format.icon}.png`} alt="format-icon"/>
                         </div>       

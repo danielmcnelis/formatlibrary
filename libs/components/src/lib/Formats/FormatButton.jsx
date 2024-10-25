@@ -1,5 +1,5 @@
 
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import { capitalize, urlize } from '@fl/utils'
 import './FormatButton.css'
 
@@ -12,8 +12,9 @@ export const FormatButton = (props) => {
     const year = `20${format.banlist.slice(-2)}`
   
     return (
-      <Link 
-        to={urlize(`/formats/${format.name}`)} 
+      <div 
+        // to={urlize(`/formats/${format.name}`)}
+        onClick={() => {window.location.href=`${urlize(`/formats/${format.name}`)}`}}
         className="format-link" 
         style={{ backgroundImage: `url(https://cdn.formatlibrary.com/images/emojis/${format.icon}.png)`}}
       >
@@ -21,6 +22,6 @@ export const FormatButton = (props) => {
           <div>{format.name}</div>
           <div>{`${month}${period} ${year}`}</div>
         </div>
-      </Link>
+      </div>
     )
 }

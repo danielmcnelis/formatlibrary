@@ -17,8 +17,13 @@ export const Matchup = (props) => {
         '#6aa84f'
 
       return (
-          <Link to={`/decktypes/${deckType.toLowerCase().replace(/\s/g, '-')}?format=${format}`} key={deckType} className="matchup-cell" style={{backgroundColor}}>
+        <div 
+            onClick={() => {window.location.href=`/decktypes/${deckType.toLowerCase().replace(/\s/g, '-')}?format=${format}`}}
+            key={deckType} 
+            className="matchup-cell" 
+            style={{backgroundColor}}
+        >
             <p>{wins}-{losses} ({(fraction * 100).toFixed(1)}%) vs {capitalize(deckType)}</p>
-          </Link>
+        </div>
       )
   } 

@@ -10,22 +10,31 @@ export const EventRow = (props) => {
     return (
         <tr className={`${evenOrOdd}-search-results-row`}>
           <td className="no-padding">
-            <Link className="search-results-link" to={`/events/${event.abbreviation}`}>
+            <div 
+                className="search-results-link" 
+                onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
+            >
               <div className="format-cell-flexbox">
                 <img src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`}/>
                 <div>{format.name}</div>
               </div>
-            </Link>
+            </div>
           </td>
           <td className="no-padding">
-            <Link className="search-results-link" to={`/events/${event.abbreviation}`}>
+            <div 
+                className="search-results-link" 
+                onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
+            >
               <div className="event-name-cell">
                 {event.name}
               </div>
-            </Link>
+            </div>
           </td>
           <td className="no-padding">
-            <Link className="search-results-link" to={`/events/${event.abbreviation}`}>
+            <div 
+                className="search-results-link"                 
+                onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
+            >
               <div className="player-cell">
                 <img 
                     className="player-cell-pfp"
@@ -39,29 +48,38 @@ export const EventRow = (props) => {
                 />
                 <div>{event.winner || 'N/A'}</div>
               </div>
-            </Link>
+            </div>
           </td>
           <td className="no-padding">
-            <Link className="search-results-link" to={`/events/${event.abbreviation}`}>
+            <div 
+                className="search-results-link" 
+                onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
+            >
               <div className="community-cell-flexbox">
                 <img src={`https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png`}/>
                 <div>{event.community}</div>
               </div>
-            </Link>
+            </div>
           </td>
           <td className="no-padding">
-            <Link className="search-results-link" to={`/events/${event.abbreviation}`}>
+            <div 
+                className="search-results-link" 
+                onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
+            >
               <div className="size-cell">
                 {event.size} 👤
               </div>
-            </Link>
+            </div>
           </td>
           <td className="no-padding">
-              <Link className="search-results-link" to={`/events/${event.abbreviation}`}>
+            <div 
+                className="search-results-link" 
+                onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
+            >
                 <div className="date-cell">
                     {event.startDate ? event.startDate.substring(0, 10) : ''}
                 </div>
-              </Link>
+            </div>
           </td>
         </tr>
     )

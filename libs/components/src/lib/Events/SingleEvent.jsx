@@ -274,9 +274,11 @@ export const SingleEvent = () => {
                         </td>
                         <td className="desktop-only">
                         <div className="single-event-cell">
-                            <Link to={`/decktypes/${topDecks[0]?.type?.toLowerCase()?.replace(/\s/g, '-')}?format=${event.format.name}`}>
+                            <div 
+                                onClick={() => {window.location.href=`/decktypes/${topDecks[0]?.type?.toLowerCase()?.replace(/\s/g, '-')}?format=${event.format.name}`}}                                 
+                            >
                                 <div className="winning-deck-link" style={{paddingRight:'7px'}}><b>Winning Deck:</b> {capitalize(topDecks[0] ? topDecks[0].type : '', true)}</div> 
-                            </Link>
+                            </div>
                         </div>   
                         </td>
                         <td>

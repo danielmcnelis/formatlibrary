@@ -166,15 +166,15 @@ export const FormatIntro = () => {
                 </div>
             ) : ''
             }
-            {
-                format.videoEmbed ? <div style={{"margin":"0px auto"}}>parse(format.videoEmbed)</div> : ''
-            }
             <PopularDecks id="popular-decks" format={format}/>
             <RecentEvents id="recent-events" format={format}/>
             <MiniBoard limit={10} format={format}/>
             <div className="divider"/>
             <BanList id="banlist" format={format}/>
         </div>
+            {
+                format.videoEmbed ? parse(format.videoEmbed) : ''
+            }
         </>
 
     )

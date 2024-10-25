@@ -8,7 +8,10 @@ export const EventThumbnail = (props = {}) => {
     if (!event || !winner) return <div/>
 
   return (
-        <Link className='link' to={`/events/${event.abbreviation}`}>
+        <div 
+            className='link' 
+            onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
+        >
           <div className="eventThumbnail">  
               <h3>{capitalize(event.abbreviation, true)}</h3>
               <div className="eventThumbnail-flexbox">
@@ -34,6 +37,6 @@ export const EventThumbnail = (props = {}) => {
                   />
               </div>
           </div>
-        </Link>
+        </div>
   )
 }

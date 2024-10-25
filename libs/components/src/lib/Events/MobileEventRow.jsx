@@ -10,35 +10,44 @@ export const MobileEventRow = (props) => {
     return (
         <tr className={`${evenOrOdd}-search-results-row`}>
           <td className="no-padding">
-            <Link className="search-results-link" to={`/events/${event.abbreviation}`}>
+            <div 
+                className="search-results-link" 
+                onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
+            >
               <div className="format-cell-flexbox">
                 <img src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`}/>
               </div>
-            </Link>
+            </div>
           </td>
           <td className="no-padding">
-              <Link className="search-results-link" to={`/events/${event.abbreviation}`}>
+                <div 
+                    className="search-results-link" 
+                    onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
+                >
               <div className="community-cell-flexbox">
                   <img src={`https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png`}/>
                   <div>{event.name}</div>
               </div>
-              </Link>
+              </div>
           </td>
           <td className="no-padding">
-              <Link className="search-results-link" to={`/events/${event.abbreviation}`}>
-              <div className="player-cell">
-                  <img 
-                      className="player-cell-pfp"
-                      src={`https://cdn.formatlibrary.com/images/pfps/${event.player.discordId || event.player.name}.png`}
-                      onError={(e) => {
-                              e.target.onerror = null
-                              e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
-                          }
-                      }
-                      alt={event.player.name}
-                  />
-              </div>
-              </Link>
+                <div 
+                    className="search-results-link" 
+                    onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
+                >
+                    <div className="player-cell">
+                        <img 
+                            className="player-cell-pfp"
+                            src={`https://cdn.formatlibrary.com/images/pfps/${event.player.discordId || event.player.name}.png`}
+                            onError={(e) => {
+                                    e.target.onerror = null
+                                    e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
+                                }
+                            }
+                            alt={event.player.name}
+                        />
+                    </div>
+                </div>
           </td>
         </tr>
     )
