@@ -155,6 +155,9 @@ export const FormatIntro = () => {
                 <li>
                 <a href={`/formats/${urlize(format.name)}#banlist`}>Ban List</a>
                 </li>
+                {
+                    format.videoEmbed || ''
+                }
             </div>
             <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} alt={format.icon}/>
             </div>
