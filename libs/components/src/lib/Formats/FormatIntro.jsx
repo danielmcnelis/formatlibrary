@@ -156,9 +156,6 @@ export const FormatIntro = () => {
                 <li>
                 <a href={`/formats/${urlize(format.name)}#banlist`}>Ban List</a>
                 </li>
-                {
-                    format.videoEmbed ? parse(format.videoEmbed) : ''
-                }
             </div>
             <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} alt={format.icon}/>
             </div>
@@ -168,6 +165,9 @@ export const FormatIntro = () => {
                 <p className="format-desc">{format.description}</p>
                 </div>
             ) : ''
+            }
+            {
+                format.videoEmbed ? <div style={{"margin":"0px auto"}}>parse(format.videoEmbed)</div> : ''
             }
             <PopularDecks id="popular-decks" format={format}/>
             <RecentEvents id="recent-events" format={format}/>
