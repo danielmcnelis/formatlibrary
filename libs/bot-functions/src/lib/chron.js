@@ -113,7 +113,8 @@ export const updateAvatars = async (client) => {
                     if (!player) continue
                     const isActive = player.email || await Deck.count({ where: { playerId: player.id }}) || await Stats.count({ where: { playerId: player.id }})
 
-                    if (player && isActive && player.discordPfp && player.discordPfp !== avatar) {
+                    // if (player && isActive && player.discordPfp && player.discordPfp !== avatar) {
+                    if (player && isActive && player.discordPfp) {
                         await player.update({ discordPfp: avatar })
                         
                         const {data} = await axios.get(

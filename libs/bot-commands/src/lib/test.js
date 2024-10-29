@@ -1,6 +1,6 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
-import { isProgrammer, runMonthlyTasks, runNightlyTasks } from '@fl/bot-functions'
+import { isProgrammer, runMonthlyTasks, runNightlyTasks, updateAvatars } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { Match, Tournament, Server, TriviaQuestion } from '@fl/models'
@@ -17,7 +17,8 @@ export default {
         if (isProgrammer(interaction.member)) {
             await interaction.editReply(emojis.yellow)
             // return runNightlyTasks(client)
-            return runMonthlyTasks(client)
+            // return runMonthlyTasks(client)
+            return await updateAvatars(client)
         } else {
             await interaction.editReply('🧪')
         }
