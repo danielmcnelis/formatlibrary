@@ -16,8 +16,8 @@ export default {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
             await interaction.editReply(emojis.yellow)
-            return runNightlyTasks(client)
-            // return runMonthlyTasks(client)
+            // return runNightlyTasks(client)
+            return runMonthlyTasks(client)
         } else {
             await interaction.editReply('🧪')
         }

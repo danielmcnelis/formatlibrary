@@ -46,6 +46,12 @@ export const runNightlyTasks = async (client) => {
     await updateDecks()
     await updateReplays()
     await updateMatchups()
+     
+    // MONTHLY TASKS
+    const remainingDaysInMonth = getRemainingDaysInMonth()
+    if (remainingDaysInMonth === 1) {
+        await runMonthlyTasks(client)
+    }
 
     return setTimeout(() => runNightlyTasks(client), getMidnightCountdown())
 }
@@ -53,10 +59,6 @@ export const runNightlyTasks = async (client) => {
 // RUN MONTHLY TASKS
 export const runMonthlyTasks = async (client) => {
     await updateGlobalNames(client)
-
-    const remainingDaysInMonth = getRemainingDaysInMonth() - 5
-    const midnightCountdown = getMidnightCountdown()
-    return setTimeout(() => runMonthlyTasks(client), remainingDaysInMonth *  24 * 60 * 60 * 1000 + midnightCountdown)
 }
 
 // REFRESH EXPIRED TOKENS

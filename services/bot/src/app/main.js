@@ -20,14 +20,14 @@ import { config } from '@fl/config'
 import { Match, Membership, Player, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
-import { createTopCut, editTieBreakers, getMidnightCountdown, getRemainingDaysInMonth, 
+import { createTopCut, editTieBreakers, getMidnightCountdown, 
     fixDeckFolder, postStandings, checkTimer, closeTournament, createTournament, 
     dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
     startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, 
     assignRoles, createMembership, createPlayer, fetchCardNames, fetchOPCardNames, hasPartnerAccess, 
     isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
-    editPointsSystem, runMonthlyTasks, runNightlyTasks, getTournament, padZeroMidString, capitalize
+    editPointsSystem, runNightlyTasks, getTournament, padZeroMidString, capitalize
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
@@ -144,12 +144,6 @@ client.on('ready', async() => {
         // NIGHTLY TASKS
         const midnightCountdown = getMidnightCountdown()
         setTimeout(() => runNightlyTasks(client), midnightCountdown)
-
-        // MONTHLY TASKS
-        const remainingDaysInMonth = getRemainingDaysInMonth() - 5
-        console.log('remainingDaysInMonth', remainingDaysInMonth)
-        console.log('remainingDaysInMonth *  24 * 60 * 60 * 1000 + midnightCountdown', remainingDaysInMonth *  24 * 60 * 60 * 1000 + midnightCountdown)
-        setTimeout(() => runMonthlyTasks(client), remainingDaysInMonth *  24 * 60 * 60 * 1000 + midnightCountdown)
     } catch (err) {
         console.log(err)
     }
