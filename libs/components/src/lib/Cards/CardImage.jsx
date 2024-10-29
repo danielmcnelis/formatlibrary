@@ -104,7 +104,7 @@ export const CardImage = (props) => {
                           status && status !== 'no longer on list' ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.png`} alt={status} className="status-icon"/> : null
                         }
                         <img
-                          src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`}
+                          src={`https://cdn.formatlibrary.com/images/medium_cards/${card.artworkId}.jpg`}
                           card={card}
                           style={{width, margin, padding}}
                           onContextMenu={(e)=> {
