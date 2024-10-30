@@ -335,7 +335,10 @@ export const composeBlogPost = async (interaction, event, server) => {
                 title: title,
                 content: content,
                 publishDate: publishDate,
-                format: event.formatName,
+                formatName: event.formatName,
+                formatId: event.formatId,
+                teamId: event.teamId,
+                serverId: event.tournament?.serverId,
                 eventDate: event.endDate,
                 eventId: event.id
             })
@@ -458,6 +461,10 @@ export const composeBlogPost = async (interaction, event, server) => {
                 content: content,
                 publishDate: publishDate,
                 format: event.formatName,
+                formatId: event.formatId,
+                playerId: event.playerId,
+                serverId: event.tournament?.serverId,
+                winningDeckId: event.deckId,
                 eventDate: event.endDate,
                 eventId: event.id
             })

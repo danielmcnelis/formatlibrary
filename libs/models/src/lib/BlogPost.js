@@ -9,7 +9,7 @@ export const BlogPost = db.define('blogposts', {
   content: {
     type: Sequelize.TEXT
   },
-  format: {
+  formatName: {
     type: Sequelize.STRING
   },
   formatId: {
