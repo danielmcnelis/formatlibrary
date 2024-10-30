@@ -9,7 +9,7 @@ import axios from 'axios'
 import { Card, OPCard, Membership, Player, Print, Role, Set, Status, Tournament } from '@fl/models'
 import { emojis, rarities } from '@fl/bot-emojis'
 import { config } from '@fl/config'
-import e from 'express'
+import { HeadObjectCommand, S3 } from '@aws-sdk/client-s3'
 
 //DATE TO SIMPLE
 export const dateToSimple = (date = 'N/A') => {
@@ -775,4 +775,30 @@ export const shuffleArray = (arr) => {
     }
 
     return arr
+}
+
+//S3 FILE EXISTS
+export const s3FileExists = async (filePath) => {
+    const command = new HeadObjectCommand({
+        Bucket: 'formatlibrary',
+        Key: filePath,
+    })
+
+    const s3 = new S3({
+        region: config.s3.region,
+        credentials: {
+            accessKeyId: config.s3.credentials.accessKeyId,
+            secretAccessKey: config.s3.credentials.secretAccessKey
+        },
+    })
+
+    try {
+        await s3.send(command)
+        console.log(`File exists: ${filePath}`)
+        return true
+    } catch (err) {
+        console.log(err)
+        console.log(`File does not exist: ${filePath}`)
+        return false
+    }
 }

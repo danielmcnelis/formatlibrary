@@ -1,6 +1,7 @@
 import { Player } from '@fl/models'
 import { Op } from 'sequelize'
-import { S3 } from 'aws-sdk'
+import { Upload } from '@aws-sdk/lib-storage';
+import { S3 } from '@aws-sdk/client-s3';
 import { config } from '@fl/config'
 import * as bcrypt from 'bcrypt'
 
@@ -99,7 +100,7 @@ export const playersPassword = async (req, res, next) => {
         const salt = newPassword ? await bcrypt.genSalt(10) : null
         const hash = salt ? await bcrypt.hash(newPassword, salt) : null
 
-        if (!player.hash || (player.hash && await bcrypt.compare(oldPassword, player.hash))) {
+        if (!player.hash || (player.hash && (await bcrypt.compare(oldPassword, player.hash)))) {
             player.hash = hash
             await player.save()
             res.sendStatus(200)
@@ -189,15 +190,19 @@ export const playersCreate = async (req, res, next) => {
                 credentials: {
                     accessKeyId: config.s3.credentials.accessKeyId,
                     secretAccessKey: config.s3.credentials.secretAccessKey
-                }
+                },
             })
         
-            const { Location: uri} = await s3.upload({ 
-                Bucket: 'formatlibrary', 
-                Key: `images/pfps/${req.body.name}.png`, 
-                Body: buffer,
-                ContentType: 'image/png'
-            }).promise()
+            const { Location: uri} = await new Upload({
+                client: s3,
+
+                params: { 
+                    Bucket: 'formatlibrary', 
+                    Key: `images/pfps/${req.body.name}.png`, 
+                    Body: buffer,
+                    ContentType: 'image/png'
+                },
+            }).done()
         
             console.log('uri', uri)
         }

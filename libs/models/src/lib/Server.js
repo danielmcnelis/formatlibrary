@@ -67,6 +67,15 @@ export const Server = db.define('servers', {
   },
   tourRole: {
       type: Sequelize.STRING
+  },
+  inviteLink: {
+    type: Sequelize.STRING
+  },
+  discordIconId: {
+    type: Sequelize.STRING
+  },
+  preferredLogoUrl: {
+    type: Sequelize.STRING
   }
 })
 

@@ -2,10 +2,11 @@
 import axios from 'axios'
 import * as fs from 'fs'
 import * as sharp from 'sharp'
-import { Artwork, Card, Deck, DeckThumb, DeckType, Entry, Event, Tournament, Match, Matchup, Membership, Player, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
-import { createMembership, createPlayer } from './utility'
+import { Artwork, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Event, Tournament, Match, Matchup, Membership, Player, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
+import { createMembership, createPlayer, dateToVerbose, s3FileExists } from './utility'
 import { Op } from 'sequelize'
-import { S3 } from 'aws-sdk'
+import { Upload } from '@aws-sdk/lib-storage'
+import { S3 } from '@aws-sdk/client-s3'
 import { config } from '@fl/config'
 import * as tcgPlayer from '../../../../tokens/tcgplayer.json'
 const Canvas = require('canvas')
@@ -46,6 +47,7 @@ export const runNightlyTasks = async (client) => {
     await updateDecks()
     await updateReplays()
     await updateMatchups()
+    await updateBlogPosts()
      
     // MONTHLY TASKS
     const remainingDaysInMonth = getRemainingDaysInMonth()
@@ -111,7 +113,7 @@ export const updateAvatars = async (client) => {
                     if (!avatar) continue
                     const player = await Player.findOne({ where: { discordId: memberId }})
                     if (!player) continue
-                    const isActive = player.email || await Deck.count({ where: { playerId: player.id }}) || await Stats.count({ where: { playerId: player.id }})
+                    const isActive = player.email || (await Deck.count({ where: { playerId: player.id }})) || (await Stats.count({ where: { playerId: player.id }}))
 
                     // if (player && isActive && player.discordPfp && player.discordPfp !== avatar) {
                     if (player && isActive && player.discordPfp) {
@@ -130,10 +132,13 @@ export const updateAvatars = async (client) => {
                             credentials: {
                                 accessKeyId: config.s3.credentials.accessKeyId,
                                 secretAccessKey: config.s3.credentials.secretAccessKey
-                            }
+                            },
                         })
     
-                        const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/pfps/${player.discordId}.png`, Body: buffer, ContentType: `image/png` }).promise()
+                        const { Location: uri} = await new Upload({
+                            client: s3,
+                            params: { Bucket: 'formatlibrary', Key: `images/pfps/${player.discordId}.png`, Body: buffer, ContentType: `image/png` },
+                        }).done()
                         console.log('uri', uri)
                         console.log(`saved new pfp for ${player.globalName || player.discordName}`)
                         count++
@@ -154,10 +159,6 @@ export const updateAvatars = async (client) => {
     return console.log(`updateAvatars() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
-// UPDATE BLOGPOSTS
-export const updateBlogPosts = async () => {
-    
-}
 
 // CONDUCT CENSUS
 export const conductCensus = async (client) => {
@@ -238,7 +239,7 @@ export const conductCensus = async (client) => {
             }
 
             const memberIds = members.map((m) => m.user.id) || []
-            const memberships = await Membership.findAll({ where: { serverId: guild.id }, include: Player }) || []
+            const memberships = (await Membership.findAll({ where: { serverId: guild.id }, include: Player })) || []
             for (let i = 0; i < memberships.length; i++) {
                 try {
                     const m = memberships[i]
@@ -393,7 +394,7 @@ export const purgeEntries = async () => {
 
     console.log(`Purged ${count} old tournament entries from the database.`)
     return console.log(`purgeEntries() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-} 
+}
 
 // PURGE TOURNAMENT PARTICIPANT ROLES
 export const purgeTourRoles = async (client) => {
@@ -857,7 +858,7 @@ export const downloadCardImage = async (id) => {
         credentials: {
             accessKeyId: config.s3.credentials.accessKeyId,
             secretAccessKey: config.s3.credentials.secretAccessKey
-        }
+        },
     })
 
     try {
@@ -867,7 +868,10 @@ export const downloadCardImage = async (id) => {
             responseType: 'stream'
         })
     
-        const { Location: imageUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${id}.jpg`, Body: fullCardImage, ContentType: `image/jpg` }).promise()
+        const { Location: imageUri} = await new Upload({
+            client: s3,
+            params: { Bucket: 'formatlibrary', Key: `images/cards/${id}.jpg`, Body: fullCardImage, ContentType: `image/jpg` },
+        }).done()
         console.log('imageUri', imageUri)
     } catch (err) {
         console.log(err)
@@ -880,7 +884,10 @@ export const downloadCardImage = async (id) => {
             responseType: 'stream'
         })
     
-        const { Location: artworkUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/artworks/${id}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` }).promise()
+        const { Location: artworkUri} = await new Upload({
+            client: s3,
+            params: { Bucket: 'formatlibrary', Key: `images/artworks/${id}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` },
+        }).done()
         console.log('artworkUri', artworkUri)
     } catch (err) {
         console.log(err)
@@ -899,7 +906,7 @@ export const downloadAltArtworks = async () => {
         credentials: {
             accessKeyId: config.s3.credentials.accessKeyId,
             secretAccessKey: config.s3.credentials.secretAccessKey
-        }
+        },
     })
 
     const { data } = await axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?misc=yes')
@@ -955,7 +962,10 @@ export const downloadAltArtworks = async () => {
                             responseType: 'stream'
                         })
                     
-                        const { Location: imageUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${artworkId}.jpg`, Body: fullCardImage, ContentType: `image/jpg` }).promise()
+                        const { Location: imageUri} = await new Upload({
+                            client: s3,
+                            params: { Bucket: 'formatlibrary', Key: `images/cards/${artworkId}.jpg`, Body: fullCardImage, ContentType: `image/jpg` },
+                        }).done()
                         console.log('imageUri', imageUri)
 
                         const {data: croppedCardImage} = await axios({
@@ -964,7 +974,10 @@ export const downloadAltArtworks = async () => {
                             responseType: 'stream'
                         })
                     
-                        const { Location: artworkUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/artworks/${artworkId}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` }).promise()
+                        const { Location: artworkUri} = await new Upload({
+                            client: s3,
+                            params: { Bucket: 'formatlibrary', Key: `images/artworks/${artworkId}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` },
+                        }).done()
                         console.log('artworkUri', artworkUri)
 
                         if (imageUri && artworkUri) {
@@ -1003,7 +1016,7 @@ export const downloadOriginalArtworks = async () => {
         credentials: {
             accessKeyId: config.s3.credentials.accessKeyId,
             secretAccessKey: config.s3.credentials.secretAccessKey
-        }
+        },
     })
     
     const artworks = await Artwork.findAll({
@@ -1023,7 +1036,10 @@ export const downloadOriginalArtworks = async () => {
                 responseType: 'stream'
             })
         
-            const { Location: imageUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/cards/${artwork.card.artworkId}.jpg`, Body: fullCardImage, ContentType: `image/jpg` }).promise()
+            const { Location: imageUri} = await new Upload({
+                client: s3,
+                params: { Bucket: 'formatlibrary', Key: `images/cards/${artwork.card.artworkId}.jpg`, Body: fullCardImage, ContentType: `image/jpg` },
+            }).done()
             console.log('imageUri', imageUri)
 
             const {data: croppedCardImage} = await axios({
@@ -1032,7 +1048,10 @@ export const downloadOriginalArtworks = async () => {
                 responseType: 'stream'
             })
         
-            const { Location: artworkUri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/artworks/${artwork.card.artworkId}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` }).promise()
+            const { Location: artworkUri} = await new Upload({
+                client: s3,
+                params: { Bucket: 'formatlibrary', Key: `images/artworks/${artwork.card.artworkId}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` },
+            }).done()
             console.log('artworkUri', artworkUri)
 
             b++
@@ -1064,10 +1083,13 @@ export const downloadCardArtworks = async () => {
                 credentials: {
                     accessKeyId: config.s3.credentials.accessKeyId,
                     secretAccessKey: config.s3.credentials.secretAccessKey
-                }
+                },
             })
         
-            const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/artworks/${id}.jpg`, Body: data, ContentType: `image/jpg` }).promise()
+            const { Location: uri} = await new Upload({
+                client: s3,
+                params: { Bucket: 'formatlibrary', Key: `images/artworks/${id}.jpg`, Body: data, ContentType: `image/jpg` },
+            }).done()
             console.log('uri', uri)
         } catch (err) {
             console.log(err)
@@ -1466,10 +1488,13 @@ export const drawSetBanner = async (set) => {
         credentials: {
             accessKeyId: config.s3.credentials.accessKeyId,
             secretAccessKey: config.s3.credentials.secretAccessKey
-        }
+        },
     })
 
-    const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/sets/slideshows/${set.setCode}.png`, Body: buffer, ContentType: `image/png` }).promise()
+    const { Location: uri} = await new Upload({
+        client: s3,
+        params: { Bucket: 'formatlibrary', Key: `images/sets/slideshows/${set.setCode}.png`, Body: buffer, ContentType: `image/png` },
+    }).done()
     console.log('uri', uri)
 }
 
@@ -1516,6 +1541,18 @@ export const updateServers = async (client) => {
             if (server.size !== guild.memberCount) {
                 console.log(`updating server size from ${server.size} => ${guild.memberCount}`)
                 server.size = guild.memberCount
+                await server.save()
+            }
+
+            if (server.vanityUrl !== guild.vanityUrl) {
+                console.log(`updating server vanity url from ${server.vanityUrl} => ${guild.vanityUrl}`)
+                server.vanityUrl = guild.vanityUrl
+                await server.save()
+            }
+
+            if (server.discordIconId !== guild.icon) {
+                console.log(`updating server discord icon id from ${server.discordIconId} => ${guild.icon}`)
+                server.discordIconId = guild.icon
                 await server.save()
             }
 
@@ -1679,4 +1716,192 @@ export const updateMatchups = async () => {
 
     console.log(`updated ${b} matchups, encountered ${e} errors`)
     return console.log(`updateMatchups() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+}
+
+
+// UPDATE BLOG POSTS
+export const updateBlogPosts = async () => {
+    const start = Date.now()
+    let b = 0
+    let e = 0
+    const blogposts = await BlogPost.findAll({ 
+        where: {
+            eventId: {[Op.not]: null}
+        },
+        include: [Event, Server, Deck, Player]
+    })
+
+    for (let i = 0; i < blogposts.length; i++) {
+        try {
+            const blogpost = blogposts[i]
+            let { event, server, player } = blogpost
+
+            if (!event || event.isTeamEvent) continue
+
+            if (!server) {
+                const tournament = await Tournament.findOne({
+                    where: {
+                        id: event.tournamentId
+                    },
+                    include: Server
+                })
+
+                server = tournament?.server
+            }
+
+            if (!player) {
+                player = await Player.findOne({
+                    where: {
+                        id: event.playerId
+                    }
+                })
+            }
+            
+            const deck = await Deck.findOne({
+                where: {
+                    eventId: event.id,
+                    placement: 1
+                }
+            })
+
+            if (!blogpost.winningDeckId) await blogpost.update({ winningDeckId: deck.id })
+        
+            const decks = await Deck.findAll({ 
+                where: {
+                    formatId: event.formatId
+                }
+            })
+                                
+            const freqs = decks.reduce((acc, curr) => (acc[curr.type] ? acc[curr.type]++ : acc[curr.type] = 1, acc), {})
+            const popularDecks = Object.entries(freqs).sort((a, b) => b[1] - a[1]).map((e) => e[0]).slice(0, 6)
+            const title = `Congrats to ${event.winner} on winning ${event.abbreviation}!`
+            const blogTitleDate = dateToVerbose(event.endDate, false, false, true)
+            const publishDate = dateToVerbose(event.endDate, true, true, false)
+            const playerPfpUrl = await s3FileExists(`/images/pfps/${player.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.discordId}.png` :
+                await s3FileExists(`/images/pfps/${player.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.globalName}.png` :
+                await s3FileExists(`/images/pfps/${player.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.discordName}.png` :
+                await s3FileExists(`/images/pfps/${player.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.name}.png` :
+                player.discordId ? `https://discord.com/assets/887bc8fac6c9878f058a.png` :
+                `https://cdn.formatlibrary.com/images/pfps/human-default.png`
+            
+            const serverLogoUrl = server?.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${server.preferredLogoUrl.replaceAll('+', '%2B')}` :
+                server?.discordIconId ? `https://cdn.discordapp.com/icons/${server.id}/${server.discordIconId}.webp?size=240` :
+                server?.id ? `https://cdn.formatlibrary.com/images/logos/Discord.png` :
+                `https://cdn.formatlibrary.com/images/logos/${event.community}.png`
+
+            if (blogpost.winningDeckId !== deck.id) {
+                const main = []
+                const mainKonamiCodes = deck.ydk
+                    .split('#main')[1]
+                    .split('#extra')[0]
+                    .split(/[\s]+/)
+                    .filter((e) => e.length)
+                    .map((e) => e.trim())
+        
+                for (let i = 0; i < mainKonamiCodes.length; i++) {
+                    let konamiCode = mainKonamiCodes[i]
+                    while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+                    const card = await Card.findOne({ where: { konamiCode }})
+                    if (!card) continue
+                    main.push(card)
+                }
+        
+                main.sort((a, b) => {
+                    if (a.sortPriority > b.sortPriority) {
+                        return 1
+                    } else if (b.sortPriority > a.sortPriority) {
+                        return -1
+                    } else if (a.name > b.name) {
+                        return 1
+                    } else if (b.name > a.name) {
+                        return -1
+                    } else {
+                        return false
+                    }
+                })
+        
+                const rows = Math.ceil(main.length / 10)
+                const card_width = 72
+                const card_height = 105
+                const canvas = Canvas.createCanvas((card_width * 10) + 9, (card_height * rows) + rows - 1)
+                const context = canvas.getContext('2d')
+            
+                for (let i = 0; i < main.length; i++) {
+                    const card = main[i]
+                    const row = Math.floor(i / 10)
+                    const col = i % 10
+                    const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`) 
+                    context.drawImage(image, (card_width + 1) * col, row * (card_height + 1), card_width, card_height)
+                }
+
+                const buffer = canvas.toBuffer('image/png')
+                const s3 = new S3({
+                    region: config.s3.region,
+                    credentials: {
+                        accessKeyId: config.s3.credentials.accessKeyId,
+                        secretAccessKey: config.s3.credentials.secretAccessKey
+                    },
+                })
+        
+                const { Location: uri} = await new Upload({
+                    client: s3,
+                    params: { Bucket: 'formatlibrary', Key: `images/decks/previews/${deck.id}.png`, Body: buffer, ContentType: `image/png` },
+                }).done()
+                console.log('uri', uri)
+            }
+        
+            const conclusion = server ? `Join the ${event.community} Discord community to compete in similar events!` : ''
+        
+            const content = 
+                `<div class="blogpost-title-flexbox">` +
+                        `<div class="blogpost-title-text">` +
+                            `<a href="/events/${event.abbreviation}">` +
+                                `<h1 class="blogpost-title">${title}</h1>` +
+                            `</a>` +
+                            `<p class="blogpost-date">${blogTitleDate}</p>` +
+                        `</div>` +
+                    `<div class="blogpost-title-emojis">` +
+                        `<img class="blogpost-format-icon" src="https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png"/>` +
+                        `<img class="blogpost-event-icon" src="https://cdn.formatlibrary.com/images/emojis/event.png"/>` +
+                    `</div>` +
+                `</div>` +
+                `<div class="blogpost-content-flexbox">` +
+                    `<p class="blogpost-paragraph">` +
+                        `${event.winner} won <a class="blogpost-event-link" href="/events/${event.abbreviation}">${event.name}</a> on ${publishDate} with a ${popularDecks.includes(deck.type) ? 'popular' : 'rogue'} deck, ${capitalize(deck.type, true)}!` +
+                    `</p>` +
+                    `<div class="blogpost-images-flexbox">` +
+                        `<div class="blogpost-pfp-community-flexbox">` +
+                            `<img class="blogpost-pfp" src="${playerPfpUrl}" />` +
+                            `<img class="blogpost-community"  src="${(serverLogoUrl)}" />` +
+                        `</div>` +
+                        `<div class="blogpost-deck-box">` + 
+                            `<a class="blogpost-deck-link" href="/decks/${deck.id}">` +
+                                `<img class="blogpost-deck" src="https://cdn.formatlibrary.com/images/decks/previews/${deck.id}.png" />` +
+                            `</a>` +
+                        `</div>` +
+                    `</div>` +
+                    `${conclusion}` +
+                `</div>`
+        
+            await BlogPost.update({
+                title: title,
+                content: content,
+                publishDate: publishDate,
+                format: event.formatName,
+                eventDate: event.endDate,
+                eventId: event.id,
+                playerId: player.id,
+                serverId: server.id
+            })
+        
+            b++
+            console.log(`Updated blogpost for ${event.name}.`)
+        } catch (err) {
+            e++
+            console.log(err)
+        }
+    }
+
+    console.log(`updated ${b} blogposts, encountered ${e} errors`)
+    return console.log(`updateBlogPosts() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }

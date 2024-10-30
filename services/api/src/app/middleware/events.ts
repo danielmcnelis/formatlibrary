@@ -1,7 +1,8 @@
 import { Card, Deck, Event, Format, Player, Replay, Tournament } from '@fl/models'
 import { arrayToObject, capitalize } from '@fl/utils'
 import { Op } from 'sequelize'
-import { S3 } from 'aws-sdk'
+import { Upload } from '@aws-sdk/lib-storage';
+import { S3 } from '@aws-sdk/client-s3';
 import { config } from '@fl/config'
 
 export const eventsGallery = async (req, res, next) => {
@@ -323,19 +324,23 @@ export const eventsCreate = async (req, res, next) => {
         const buffer = Buffer.from(req.body.bracket.replace(/^data:image\/\w+;base64,/, ''), 'base64')
 
         const s3 = new S3({
-            region: config.s3.region,
-            credentials: {
-                accessKeyId: config.s3.credentials.accessKeyId,
-                secretAccessKey: config.s3.credentials.secretAccessKey
-            }
+          region: config.s3.region,
+          credentials: {
+              accessKeyId: config.s3.credentials.accessKeyId,
+              secretAccessKey: config.s3.credentials.secretAccessKey
+          }
         })
     
-        const { Location: uri} = await s3.upload({ 
-            Bucket: 'formatlibrary', 
-            Key: `images/brackets/${req.body.abbreviation}.png`, 
-            Body: buffer,
-            ContentType: 'image/png'
-        }).promise()
+        const { Location: uri} = await new Upload({
+          client: s3,
+
+          params: { 
+              Bucket: 'formatlibrary', 
+              Key: `images/brackets/${req.body.abbreviation}.png`, 
+              Body: buffer,
+              ContentType: 'image/png'
+          }
+        }).done()
     
         console.log('uri', uri)
     }

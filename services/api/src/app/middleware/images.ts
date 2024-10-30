@@ -1,6 +1,7 @@
 
 import axios from 'axios'
-import { S3 } from 'aws-sdk'
+import { Upload } from '@aws-sdk/lib-storage';
+import { S3 } from '@aws-sdk/client-s3';
 import { config } from '@fl/config'
 
 // IMAGES UPDATE CARD
@@ -20,12 +21,16 @@ export const imagesUpdateCard = async (req, res, next) => {
             }
         })
     
-        const { Location: fullCardImageUri} = await s3.upload({ 
-            Bucket: 'formatlibrary', 
-            Key: `images/cards/${req.query.artworkId}.jpg`, 
-            Body: fullCardImage, 
-            ContentType: `image/jpg`
-        }).promise()
+        const { Location: fullCardImageUri} = await new Upload({
+            client: s3,
+
+            params: { 
+                Bucket: 'formatlibrary', 
+                Key: `images/cards/${req.query.artworkId}.jpg`, 
+                Body: fullCardImage, 
+                ContentType: `image/jpg`
+            }
+        }).done()
 
         console.log('fullCardImageUri', fullCardImageUri)
 
@@ -35,12 +40,16 @@ export const imagesUpdateCard = async (req, res, next) => {
             responseType: 'stream'
         })
 
-        const { Location: croppedCardImageUri} = await s3.upload({ 
-            Bucket: 'formatlibrary', 
-            Key: `images/cards/${req.query.artworkId}.jpg`, 
-            Body: croppedCardImage, 
-            ContentType: `image/jpg`
-        }).promise()
+        const { Location: croppedCardImageUri} = await new Upload({
+            client: s3,
+
+            params: { 
+                Bucket: 'formatlibrary', 
+                Key: `images/cards/${req.query.artworkId}.jpg`, 
+                Body: croppedCardImage, 
+                ContentType: `image/jpg`
+            }
+        }).done()
 
         console.log('croppedCardImageUri', croppedCardImageUri)
         res.json({success: true})
@@ -64,12 +73,16 @@ export const imagesCreate = async (req, res, next) => {
         }
     })
 
-    const { Location: uri} = await s3.upload({ 
-        Bucket: 'formatlibrary', 
-        Key: `images/${req.body.folder}/${req.body.fileName}`, 
-        Body: buffer,
-        ContentType: mimeType
-    }).promise()
+    const { Location: uri} = await new Upload({
+        client: s3,
+
+        params: { 
+            Bucket: 'formatlibrary', 
+            Key: `images/${req.body.folder}/${req.body.fileName}`, 
+            Body: buffer,
+            ContentType: mimeType
+        }
+    }).done()
 
     console.log('uri', uri)
     res.json({ success: true })

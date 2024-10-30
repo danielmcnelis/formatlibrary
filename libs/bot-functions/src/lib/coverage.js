@@ -2,10 +2,11 @@
 const Canvas = require('canvas')
 import axios from 'axios'
 import * as sharp from 'sharp'
-import { S3 } from 'aws-sdk'
+import { Upload } from '@aws-sdk/lib-storage';
+import { S3 } from '@aws-sdk/client-s3';
 import { Op } from 'sequelize'
 import { Alius, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Match, Matchup, Player, Replay, Team, Tournament, Server, Stats }  from '@fl/models'
-import { capitalize, dateToVerbose } from './utility'
+import { capitalize, dateToVerbose, s3FileExists } from './utility'
 import { getDeckType } from './deck'
 import { config } from '@fl/config'
 import { checkExpiryDate, uploadDeckFolder } from './drive'
@@ -83,7 +84,7 @@ export const createDecks = async (event, participants, standings = []) => {
     
     console.log(`Uploaded ${b} decks for ${event.name}. Encountered ${e} errors. ${b + c} out of ${event.size} decks saved thus far.`)
     return (b + c === event.size) || (b + c === (event.size * 3))
-} 
+}
 
 // UPDATE SINGLE AVATAR
 export const updateSingleAvatar = async (user) => {
@@ -107,10 +108,13 @@ export const updateSingleAvatar = async (user) => {
                 credentials: {
                     accessKeyId: config.s3.credentials.accessKeyId,
                     secretAccessKey: config.s3.credentials.secretAccessKey
-                }
+                },
             })
 
-            const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/pfps/${player.discordId}.png`, Body: buffer, ContentType: `image/png` }).promise()
+            const { Location: uri} = await new Upload({
+                client: s3,
+                params: { Bucket: 'formatlibrary', Key: `images/pfps/${player.discordId}.png`, Body: buffer, ContentType: `image/png` },
+            }).done()
             console.log('uri', uri)
             console.log(`saved new pfp for ${player.globalName || player.discordName}`)
         }
@@ -177,7 +181,7 @@ export const fixPlacements = async (event, participants, standings = []) => {
 
 
 // COMPOSE BLOG POST
-export const composeBlogPost = async (interaction, event) => {
+export const composeBlogPost = async (interaction, event, server) => {
     const count = await BlogPost.count({
         where: {
             title: {
@@ -262,12 +266,34 @@ export const composeBlogPost = async (interaction, event) => {
                     `</div>`
                 )
             }
+
+            const playerAPfpUrl = await s3FileExists(`/images/pfps/${team.playerA.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerA.discordId}.png` :
+                await s3FileExists(`/images/pfps/${team.playerA.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerA.globalName}.png` :
+                await s3FileExists(`/images/pfps/${team.playerA.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerA.discordName}.png` :
+                await s3FileExists(`/images/pfps/${team.playerA.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerA.name}.png` :
+                team.playerA.discordId ? 'discord default pfp url' :
+                `https://cdn.formatlibrary.com/images/pfps/human-default.png`
+
+            const playerBPfpUrl = await s3FileExists(`/images/pfps/${team.playerB.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerB.discordId}.png` :
+                await s3FileExists(`/images/pfps/${team.playerB.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerB.globalName}.png` :
+                await s3FileExists(`/images/pfps/${team.playerB.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerB.discordName}.png` :
+                await s3FileExists(`/images/pfps/${team.playerB.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerB.name}.png` :
+                team.playerB.discordId ? 'discord default pfp url' :
+                `https://cdn.formatlibrary.com/images/pfps/human-default.png`
+                
+            const playerCPfpUrl = await s3FileExists(`/images/pfps/${team.playerC.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerC.discordId}.png` :
+                await s3FileExists(`/images/pfps/${team.playerC.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerC.globalName}.png` :
+                await s3FileExists(`/images/pfps/${team.playerC.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerC.discordName}.png` :
+                await s3FileExists(`/images/pfps/${team.playerC.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerC.name}.png` :
+                team.playerC.discordId ? 'discord default pfp url' :
+                `https://cdn.formatlibrary.com/images/pfps/human-default.png`
         
-            const conclusion = event.series ? `Enter the next <i>${event.name.replace(/[0-9]/g, '').trim()}</i> to see if you can knock out the reigning champ!` :
-                event.name.includes('Format World Championship') ? `And so the ${event.startDate.getFullYear()} ${capitalize(event.formatName, true)} Format season comes to a close. Be sure to enter next year's qualifiers for your chance to compete in the World Championship!` :
-                event.name.includes('Last Chance') ? `And so the ${event.startDate.getFullYear()} ${capitalize(event.formatName, true)} Format qualifying season comes to a close. Tune in to find out who wins the World Championship!` :
-                event.name.includes('Obelisk') || event.name.includes('Ra') || event.name.includes('Slifer') ? `Join the Goat Format Europe Discord community to compete in the <i>Academy series</i>!` :
-                `Join the ${event.community} Discord community to compete in similar events!`
+            const serverLogoUrl = server?.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${server.preferredLogoUrl.replaceAll('+', '%2B')}` :
+                server?.discordIconId ? `https://cdn.discordapp.com/icons/${server.id}/${server.discordIconId}.webp?size=240` :
+                server?.id ? `https://cdn.formatlibrary.com/images/logos/discord.png` :
+                `https://cdn.formatlibrary.com/images/logos/${event.community}.png`
+                
+            const conclusion = server ? `<p class="blogpost-paragraph"><a class="blogpost-event-link" href="${server.vanityUrl || server.inviteLink}">Join the ${event.community} Discord community to compete in similar events!</a></p>` : ''
         
             const content = 
                 `<div class="blogpost-title-flexbox">` +
@@ -286,7 +312,7 @@ export const composeBlogPost = async (interaction, event) => {
                     `<p class="blogpost-paragraph"> ${event.winner} won <a class="blogpost-event-link" href="/events/${event.abbreviation}">${event.name}</a> on ${publishDate}!</p>` +
                     `<div class="blogpost-images-flexbox">` +
                         `<div class="blogpost-pfp-community-flexbox">` +
-                            `<img class="blogpost-community"  src="https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png" />` +
+                            `<img class="blogpost-community"  src="${serverLogoUrl}" />` +
                         `</div>` +
                         `<div class="blogpost-deck-box">` + 
                             `${deckThumbnails[0]}` +
@@ -294,12 +320,12 @@ export const composeBlogPost = async (interaction, event) => {
                             `${deckThumbnails[2]}` +
                         `</div>` +
                         `<div class="blogpost-pfp-community-flexbox">` +
-                            `<img class="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${team.playerA.discordId || team.playerA.globalName || team.playerA.discordName || team.playerA.name}.png" />` +
-                            `<img class="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${team.playerB.discordId || team.playerB.globalName || team.playerB.discordName || team.playerB.name}.png" />` +
-                            `<img class="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${team.playerC.discordId || team.playerC.globalName || team.playerC.discordName || team.playerC.name}.png" />` +
+                            `<img class="blogpost-pfp" src="${playerAPfpUrl}" />` +
+                            `<img class="blogpost-pfp" src="${playerBPfpUrl}" />` +
+                            `<img class="blogpost-pfp" src="${playerCPfpUrl}" />` +
                         `</div>` +
                     `</div>` +
-                    `<p class="blogpost-paragraph">${conclusion}</p>` +
+                    `${conclusion}` +
                 `</div>`
         
             await BlogPost.create({
@@ -333,7 +359,17 @@ export const composeBlogPost = async (interaction, event) => {
             const title = `Congrats to ${event.winner} on winning ${event.abbreviation}!`
             const blogTitleDate = dateToVerbose(event.endDate, false, false, true)
             const publishDate = dateToVerbose(event.endDate, true, true, false)
-        
+            const playerPfpUrl = await s3FileExists(`/images/pfps/${event.winner.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.discordId}.png` :
+                await s3FileExists(`/images/pfps/${event.winner.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.globalName}.png` :
+                await s3FileExists(`/images/pfps/${event.winner.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.discordName}.png` :
+                await s3FileExists(`/images/pfps/${event.winner.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.name}.png` :
+                'discord default url'
+            
+            const serverLogoUrl = server.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${server.preferredLogoUrl.replaceAll('+', '%2B')}` :
+                server.discordIconId ? `https://cdn.discordapp.com/icons/${server.id}/${server.discordIconId}.webp?size=240` :
+                `https://cdn.formatlibrary.com/images/logos/discord.png`
+
+                
             const main = []
             const mainKonamiCodes = deck.ydk
                 .split('#main')[1]
@@ -378,12 +414,8 @@ export const composeBlogPost = async (interaction, event) => {
                 context.drawImage(image, (card_width + 1) * col, row * (card_height + 1), card_width, card_height)
             }
         
-            const conclusion = event.series ? `Enter the next <i>${event.name.replace(/[0-9]/g, '').trim()}</i> to see if you can knock out the reigning champ!` :
-                event.name.includes('Format World Championship') ? `And so the ${event.startDate.getFullYear()} ${capitalize(event.formatName, true)} Format season comes to a close. Be sure to enter next year's qualifiers for your chance to compete in the World Championship!` :
-                event.name.includes('Last Chance') ? `And so the ${event.startDate.getFullYear()} ${capitalize(event.formatName, true)} Format qualifying season comes to a close. Tune in to find out who wins the World Championship!` :
-                event.name.includes('Obelisk') || event.name.includes('Ra') || event.name.includes('Slifer') ? `Join the Goat Format Europe Discord community to compete in the <i>Academy series</i>!` :
-                `Join the ${event.community} Discord community to compete in similar events!`
-        
+            const conclusion = server ? `<p class="blogpost-paragraph"><a class="blogpost-event-link" href="${server.vanityUrl || server.inviteLink}">Join the ${event.community} Discord community to compete in similar events!</a></p>` : ''
+
             const content = 
                 `<div class="blogpost-title-flexbox">` +
                         `<div class="blogpost-title-text">` +
@@ -403,8 +435,8 @@ export const composeBlogPost = async (interaction, event) => {
                     `</p>` +
                     `<div class="blogpost-images-flexbox">` +
                         `<div class="blogpost-pfp-community-flexbox">` +
-                            `<img class="blogpost-pfp" src="https://cdn.formatlibrary.com/images/pfps/${event.player.discordId || event.player.globalName || event.player.discordName || event.player.name}.png" />` +
-                            `<img class="blogpost-community"  src="https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png" />` +
+                            `<img class="blogpost-pfp" src="${playerPfpUrl}" />` +
+                            `<img class="blogpost-community"  src="${serverLogoUrl}" />` +
                         `</div>` +
                         `<div class="blogpost-deck-box">` + 
                             `<a class="blogpost-deck-link" href="/decks/${deck.id}">` +
@@ -412,7 +444,7 @@ export const composeBlogPost = async (interaction, event) => {
                             `</a>` +
                         `</div>` +
                     `</div>` +
-                    `<p class="blogpost-paragraph">${conclusion}</p>` +
+                    `${conclusion}` +
                 `</div>`
         
             await BlogPost.create({
@@ -430,10 +462,13 @@ export const composeBlogPost = async (interaction, event) => {
                 credentials: {
                     accessKeyId: config.s3.credentials.accessKeyId,
                     secretAccessKey: config.s3.credentials.secretAccessKey
-                }
+                },
             })
     
-            const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/decks/previews/${deck.id}.png`, Body: buffer, ContentType: `image/png` }).promise()
+            const { Location: uri} = await new Upload({
+                client: s3,
+                params: { Bucket: 'formatlibrary', Key: `images/decks/previews/${deck.id}.png`, Body: buffer, ContentType: `image/png` },
+            }).done()
             console.log('uri', uri)
             return await interaction.channel.send(`Composed blogpost for ${event.name}.`)
         }
@@ -442,7 +477,6 @@ export const composeBlogPost = async (interaction, event) => {
         return await interaction.channel.send(`Error composing blogpost for ${event.name}.`)
     }
 }
-
 
 // COMPOSE THUMBNAILS
 export const composeThumbnails = async (interaction, event) => {
@@ -459,7 +493,7 @@ export const composeThumbnails = async (interaction, event) => {
         credentials: {
             accessKeyId: config.s3.credentials.accessKeyId,
             secretAccessKey: config.s3.credentials.secretAccessKey
-        }
+        },
     })
 
     for (let i = 0; i < decks.length; i++) {
@@ -511,7 +545,10 @@ export const composeThumbnails = async (interaction, event) => {
             }
             
             const buffer = canvas.toBuffer('image/png')
-            const { Location: uri} = await s3.upload({ Bucket: 'formatlibrary', Key: `images/decks/thumbnails/${deck.id}.png`, Body: buffer, ContentType: `image/png` }).promise()
+            const { Location: uri} = await new Upload({
+                client: s3,
+                params: { Bucket: 'formatlibrary', Key: `images/decks/thumbnails/${deck.id}.png`, Body: buffer, ContentType: `image/png` },
+            }).done()
             console.log('uri', uri)
         } catch (err) {
             console.log(`Error composing ${deck.builder}'s deck thumbnail`, err)
@@ -521,7 +558,7 @@ export const composeThumbnails = async (interaction, event) => {
     return await interaction.channel.send(`Composed deck thumbnails for ${event.name}.`)
 }
 
-            
+
 // DISPLAY DECKS
 export const displayDecks = async (interaction, event) => {
     const minPlacement = event.tournament?.topCut ? event.tournament?.topCut :
@@ -746,19 +783,19 @@ export const generateMatchupData = async (interaction, server, event, tournament
             deckMap[participant.id] = deck
         } else {
             const [discordName,] = participant.name.split('#')
-            const players = [...await Player.findAll({
+            const players = [...(await Player.findAll({
                 where: {
                     [Op.or]: {
                         discordName: {[Op.iLike]: discordName},
                         globalName: {[Op.iLike]: discordName}
                     }
                 }
-            }), ...[...await Alius.findAll({
+            })), ...[...(await Alius.findAll({
                 where: {
                     formerName: {[Op.iLike]: discordName}
                 },
                 include: Player
-            })].map((a) => a.player)]
+            }))].map((a) => a.player)]
 
             if (!players.length) {
                 console.log(`CANNOT FIND PLAYER matching participant: ${participant.name} (${participant.id})`)

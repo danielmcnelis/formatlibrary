@@ -53,7 +53,7 @@ export default {
             await generateMatchupData(interaction, server, event, event.tournament)
         }
 
-        await composeBlogPost(interaction, event) 
+        await composeBlogPost(interaction, event, server) 
         return
     }
 }

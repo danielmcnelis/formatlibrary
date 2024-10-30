@@ -1,4 +1,3 @@
-import { S3 } from 'aws-sdk'
 import { config } from '@fl/config'
 import axios from 'axios'
 import { v2 as cloudinary } from 'cloudinary'

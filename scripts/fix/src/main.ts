@@ -1,9 +1,8 @@
 import { Artwork, Alius, Card, Cube, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Print, Replay, Ruling, Set, Server, Stats, Status, Team, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
-import { config } from '@fl/config' 
+import { config } from '@fl/config'
 import Canvas = require('canvas')
-import { S3 } from 'aws-sdk'
 import { capitalize } from '@fl/utils'
 import * as fs from 'fs'
 import { parse } from 'csv-parse'

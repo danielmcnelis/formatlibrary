@@ -63,6 +63,22 @@ Player.hasMany(Article)
 Artwork.belongsTo(Card)
 Card.hasMany(Artwork)
 
+//BLOGPOST
+Player.hasMany(BlogPost)
+BlogPost.belongsTo(Player)
+
+Team.hasOne(BlogPost)
+BlogPost.belongsTo(Team)
+
+Deck.hasOne(BlogPost)
+BlogPost.belongsTo(Deck)
+
+Event.hasOne(BlogPost)
+BlogPost.belongsTo(Event)
+
+Server.hasMany(BlogPost)
+BlogPost.belongsTo(Server)
+
 //CardDeckType
 // CardDeckType.hasOne(Card)
 // Card.hasMany(CardDeckType)
@@ -131,9 +147,6 @@ Errata.belongsTo(Card)
 Card.hasMany(Errata)
 
 //EVENT
-Event.hasMany(BlogPost)
-BlogPost.belongsTo(Event)
-
 Event.hasMany(Deck)
 Deck.belongsTo(Event)
 
