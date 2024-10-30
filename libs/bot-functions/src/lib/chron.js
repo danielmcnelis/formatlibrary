@@ -1545,9 +1545,9 @@ export const updateServers = async (client) => {
                 await server.save()
             }
 
-            if (server.vanityUrl !== guild.vanity_url_code) {
-                console.log(`updating server vanity url from ${server.vanityUrl} => ${guild.vanity_url_code}`)
-                server.vanityUrl = guild.vanity_url_code
+            if (server.vanityUrl !== guild.vanityURLCode) {
+                console.log(`updating server vanity url from ${server.vanityUrl} => ${guild.vanityURLCode}`)
+                server.vanityUrl = guild.vanityURLCode
                 await server.save()
             }
 
