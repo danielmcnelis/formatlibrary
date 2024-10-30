@@ -1906,8 +1906,8 @@ export const updateBlogPosts = async () => {
                 formatId: event.formatId,
                 eventDate: event.endDate,
                 eventId: event.id,
-                playerId: player.id,
-                serverId: server.id
+                playerId: event.playerId,
+                serverId: server?.id
             })
         
             b++
