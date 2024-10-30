@@ -128,8 +128,8 @@ export default {
                     include: Tournament
                 })
 
-                if (alreadyEntered) {
-                    return interaction.member.send({ content: `Sorry, you may only enter one Premium Tournament per month with your current subscription.`})
+                if (alreadyEntered > 2) {
+                    return interaction.member.send({ content: `Sorry, you may only enter two (2) Premium Tournaments this month with your current subscription.`})
                 }
             }
     
