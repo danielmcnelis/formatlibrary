@@ -64,13 +64,10 @@ Artwork.belongsTo(Card)
 Card.hasMany(Artwork)
 
 //BLOGPOST
-Player.hasMany(BlogPost)
 BlogPost.belongsTo(Player)
 
-Team.hasOne(BlogPost)
 BlogPost.belongsTo(Team)
 
-Deck.hasOne(BlogPost)
 BlogPost.belongsTo(Deck, {
     as: 'winningDeck',
     id: 'winningDeckId'
@@ -79,7 +76,6 @@ BlogPost.belongsTo(Deck, {
 Event.hasOne(BlogPost)
 BlogPost.belongsTo(Event)
 
-Server.hasMany(BlogPost)
 BlogPost.belongsTo(Server)
 
 //CardDeckType
