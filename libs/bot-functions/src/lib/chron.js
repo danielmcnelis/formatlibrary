@@ -1565,7 +1565,7 @@ export const updateServers = async (client) => {
             }
 
             if (server.access !== 'free' && !server.preferredLogoUrl) {
-                if (await s3FileExists(`https://cdn.formatlibrary.com/images/logos/${server.name.replaceAll('+', '%2B')}.png`)) {
+                if (await s3FileExists(`images/logos/${server.name.replaceAll('+', '%2B')}.png`)) {
                     await server.update({ preferredLogoUrl: server.name })
                 }
             }
@@ -1783,10 +1783,10 @@ export const updateBlogPosts = async () => {
             const title = `Congrats to ${event.winner} on winning ${event.abbreviation}!`
             const blogTitleDate = dateToVerbose(event.endDate, false, false, true)
             const publishDate = dateToVerbose(event.endDate, true, true, false)
-            const playerPfpUrl = await s3FileExists(`/images/pfps/${player.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.discordId}.png` :
-                await s3FileExists(`/images/pfps/${player.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.globalName}.png` :
-                await s3FileExists(`/images/pfps/${player.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.discordName}.png` :
-                await s3FileExists(`/images/pfps/${player.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.name}.png` :
+            const playerPfpUrl = await s3FileExists(`images/pfps/${player.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.discordId}.png` :
+                await s3FileExists(`images/pfps/${player.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.globalName}.png` :
+                await s3FileExists(`images/pfps/${player.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.discordName}.png` :
+                await s3FileExists(`images/pfps/${player.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.name}.png` :
                 player.discordId ? `https://discord.com/assets/887bc8fac6c9878f058a.png` :
                 `https://cdn.formatlibrary.com/images/pfps/human-default.png`
             
