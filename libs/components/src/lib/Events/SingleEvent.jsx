@@ -45,6 +45,13 @@ export const SingleEvent = () => {
   const goToFormat = () => navigate(`/formats/${event.format ? event.format.name : null}`)
   const goToPlayer = () => navigate(`/players/${extension}`)
   
+  const communityLink = event.server?.inviteLink || event.server?.vanityUrl ? `https://discord.com/invite/${event.server.vanityUrl}` : 
+    event.communtiy === 'Konami' ? 'https://www.yugioh-card.com/en/events/' :
+    event.community === 'Upper Deck Entertainment' ? 'https://upperdeck.com/entertainment/' :
+    'https://formatlibrary.com/cards/lost-world'
+
+  const goToCommunity = () => window.open(communityLink, "_blank")
+
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0), [])
 
@@ -241,7 +248,7 @@ export const SingleEvent = () => {
                         </td>
                         <td className="desktop-only">
                         <div className="single-event-cell">
-                            <div style={{paddingRight:'7px'}}><b>Community:</b> {event.community}</div> 
+                            <div onClick={() => goToCommunity()} className="single-event-community-link" style={{paddingRight:'7px'}}><b>Community:</b> {event.community}</div> 
                             <img 
                                 style={{width:'32px'}} 
                                 src={`https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png`}

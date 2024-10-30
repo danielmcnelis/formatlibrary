@@ -95,11 +95,11 @@
   }
   
   
-  .single-event-format-link, .single-event-winner-link {
+  .single-event-format-link, .single-event-winner-link, .single-event-community-link {
     color: var(--text-primary);
   }
   
-  .single-event-format-link:hover, .single-event-winner-link:hover, .winning-deck-link:hover {
+  .single-event-format-link:hover, .single-event-winner-link:hover, .winning-deck-link:hover, .single-event-community-link:hover{
     cursor: pointer;
     color: #34AD5A;
   }
