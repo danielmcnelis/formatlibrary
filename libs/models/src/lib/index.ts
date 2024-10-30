@@ -71,7 +71,10 @@ Team.hasOne(BlogPost)
 BlogPost.belongsTo(Team)
 
 Deck.hasOne(BlogPost)
-BlogPost.belongsTo(Deck)
+BlogPost.belongsTo(Deck, {
+    as: 'winningDeck',
+    id: 'winningDeckId'
+})
 
 Event.hasOne(BlogPost)
 BlogPost.belongsTo(Event)
