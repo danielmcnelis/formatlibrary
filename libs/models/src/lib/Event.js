@@ -57,6 +57,9 @@ export const Event = db.define('events', {
   community: {
     type: Sequelize.STRING
   },
+  serverId: {
+    type: Sequelize.STRING
+  },
   startDate: {
     type: Sequelize.DATE
   },

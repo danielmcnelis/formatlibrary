@@ -154,6 +154,9 @@ Deck.belongsTo(Event)
 Event.belongsTo(Tournament)
 Tournament.hasOne(Event)
 
+Event.belongsTo(Server)
+Server.hasMany(Event)
+
 //FORMAT
 Format.hasMany(Deck)
 Deck.belongsTo(Format)

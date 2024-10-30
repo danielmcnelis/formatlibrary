@@ -1681,24 +1681,40 @@ const shuffleArray = (arr) => {
 //     return console.log('Fin.')
 // })()
 
-;(async () => { 
-    const cards = await Card.findAll()
-    for (let i = 0; i < cards.length; i++) {
-        const card = cards[i]
-        const artwork = await Artwork.findOne({
-            where: {
-                cardId: card.id,
-                isOriginal: true
-            }
-        })
+// ;(async () => { 
+//     const cards = await Card.findAll()
+//     for (let i = 0; i < cards.length; i++) {
+//         const card = cards[i]
+//         const artwork = await Artwork.findOne({
+//             where: {
+//                 cardId: card.id,
+//                 isOriginal: true
+//             }
+//         })
 
-        if (artwork) {
-            await card.update({ artworkId: artwork.artworkId })
-        } else {
-            console.log(`hmm no original artwork for ${card.name}?`)
-            await card.update({ artworkId: card.ypdId })
-        }
+//         if (artwork) {
+//             await card.update({ artworkId: artwork.artworkId })
+//         } else {
+//             console.log(`hmm no original artwork for ${card.name}?`)
+//             await card.update({ artworkId: card.ypdId })
+//         }
+//     }
+// })()
+
+;(async () => { 
+    const events = await Event.findAll({ 
+        where: {
+            tournamentId: {[Op.not]: null }
+        },
+        include: Tournament
+     })
+
+    for (let i = 0; i < events.length; i++) {
+        const event = events[i]
+        await event.update({ serverId: event.tournament.serverId})
     }
+
+    return console.log('done')
 })()
 
 
