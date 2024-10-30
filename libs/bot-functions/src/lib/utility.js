@@ -9,7 +9,7 @@ import axios from 'axios'
 import { Card, OPCard, Membership, Player, Print, Role, Set, Status, Tournament } from '@fl/models'
 import { emojis, rarities } from '@fl/bot-emojis'
 import { config } from '@fl/config'
-import { HeadObjectCommand, s3Client } from '@aws-sdk/client-s3'
+import { HeadObjectCommand, S3Client } from '@aws-sdk/client-s3'
 
 //DATE TO SIMPLE
 export const dateToSimple = (date = 'N/A') => {
@@ -784,7 +784,7 @@ export const s3FileExists = async (filePath) => {
         Key: filePath,
     })
 
-    const s3 = new s3Client({
+    const s3 = new S3Client({
         region: config.s3.region,
         credentials: {
             accessKeyId: config.s3.credentials.accessKeyId,
