@@ -1898,7 +1898,7 @@ export const updateBlogPosts = async () => {
                     `${conclusion}` +
                 `</div>`
         
-            await BlogPost.update({
+            await blogpost.update({
                 title: title,
                 content: content,
                 publishDate: publishDate,
