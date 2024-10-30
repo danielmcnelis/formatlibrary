@@ -1734,7 +1734,7 @@ export const updateBlogPosts = async () => {
         where: {
             eventId: {[Op.not]: null}
         },
-        include: [Event, Server, Deck, Player]
+        include: [Event, Server, { model: Deck, as: 'winningDeck' }, Player]
     })
 
     for (let i = 0; i < blogposts.length; i++) {
