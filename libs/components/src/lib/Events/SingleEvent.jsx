@@ -45,7 +45,8 @@ export const SingleEvent = () => {
   const goToFormat = () => navigate(`/formats/${event.format ? event.format.name : null}`)
   const goToPlayer = () => navigate(`/players/${extension}`)
   
-  const communityLink = event.server?.inviteLink || event.server?.vanityUrl ? `https://discord.com/invite/${event.server.vanityUrl}` : 
+  const communityLink = event.server?.vanityUrl ? `https://discord.com/invite/${event.server.vanityUrl}` :
+    event.server?.inviteLink ? event.server?.inviteLink :
     event.communtiy === 'Konami' ? 'https://www.yugioh-card.com/en/events/' :
     event.community === 'Upper Deck Entertainment' ? 'https://upperdeck.com/entertainment/' :
     'https://formatlibrary.com/cards/lost-world'
