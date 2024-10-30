@@ -797,8 +797,7 @@ export const s3FileExists = async (filePath) => {
         console.log(`File exists: ${filePath}`)
         return true
     } catch (err) {
-        console.log(err)
-        console.log(`File does not exist: ${filePath}`)
+        console.log(`File DOES NOT exist: ${filePath}`)
         return false
     }
 }
