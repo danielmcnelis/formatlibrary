@@ -1,4 +1,4 @@
-import { Card, Deck, Event, Format, Player, Replay, Tournament } from '@fl/models'
+import { Card, Deck, Event, Format, Player, Replay, Server, Tournament } from '@fl/models'
 import { arrayToObject, capitalize } from '@fl/utils'
 import { Op } from 'sequelize'
 import { Upload } from '@aws-sdk/lib-storage';
@@ -171,6 +171,7 @@ export const eventsId = async (req, res, next) => {
         'endDate'
       ],
       include: [
+        { model: Server, attributes: ['id', 'inviteLink', 'vanityUrl'] },
         { model: Format, attributes: ['id', 'name', 'icon'] },
         { model: Player, attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp'] }
       ]
