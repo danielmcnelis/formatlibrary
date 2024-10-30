@@ -12,6 +12,9 @@ export const BlogPost = db.define('blogposts', {
   format: {
     type: Sequelize.STRING
   },
+  formatId: {
+    type: Sequelize.STRING
+  },
   publishDate: {
     type: Sequelize.STRING
   },
@@ -19,6 +22,18 @@ export const BlogPost = db.define('blogposts', {
     type: Sequelize.DATE
   },
   eventId: {
+    type: Sequelize.INTEGER
+  },
+  winningDeckId: {
+    type: Sequelize.INTEGER
+  },
+  teamId: {
+    type: Sequelize.INTEGER
+  },
+  playerId: {
+    type: Sequelize.STRING
+  },
+  serverId: {
     type: Sequelize.INTEGER
   }
 })

@@ -2,7 +2,7 @@
 import axios from 'axios'
 import * as fs from 'fs'
 import * as sharp from 'sharp'
-import { Artwork, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Event, Tournament, Match, Matchup, Membership, Player, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
+import { Artwork, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Event, Format, Tournament, Match, Matchup, Membership, Player, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
 import { createMembership, createPlayer, dateToVerbose, s3FileExists } from './utility'
 import { Op } from 'sequelize'
 import { Upload } from '@aws-sdk/lib-storage'
@@ -1744,6 +1744,12 @@ export const updateBlogPosts = async () => {
 
             if (!event || event.isTeamEvent) continue
 
+            const format = await Format.findOne({
+                where: {
+                    id: event.formatId
+                }
+            })
+
             if (!server) {
                 const tournament = await Tournament.findOne({
                     where: {
@@ -1870,7 +1876,7 @@ export const updateBlogPosts = async () => {
                             `<p class="blogpost-date">${blogTitleDate}</p>` +
                         `</div>` +
                     `<div class="blogpost-title-emojis">` +
-                        `<img class="blogpost-format-icon" src="https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png"/>` +
+                        `<img class="blogpost-format-icon" src="https://cdn.formatlibrary.com/images/emojis/${format.icon}.png"/>` +
                         `<img class="blogpost-event-icon" src="https://cdn.formatlibrary.com/images/emojis/event.png"/>` +
                     `</div>` +
                 `</div>` +
@@ -1897,6 +1903,7 @@ export const updateBlogPosts = async () => {
                 content: content,
                 publishDate: publishDate,
                 format: event.formatName,
+                formatId: event.formatId,
                 eventDate: event.endDate,
                 eventId: event.id,
                 playerId: player.id,
