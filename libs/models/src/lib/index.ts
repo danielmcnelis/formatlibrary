@@ -68,6 +68,8 @@ BlogPost.belongsTo(Player)
 
 BlogPost.belongsTo(Team)
 
+BlogPost.belongsTo(Format)
+
 BlogPost.belongsTo(Deck, {
     as: 'winningDeck',
     id: 'winningDeckId'
