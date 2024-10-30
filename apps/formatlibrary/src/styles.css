@@ -584,6 +584,7 @@
   
     .blogpost-pfp, .blogpost-community {
       display: none;
+      border-radius: 50%;
     }
     
     .blogpost-deck-link {

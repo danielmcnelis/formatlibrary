@@ -271,27 +271,27 @@ export const composeBlogPost = async (interaction, event, server) => {
                 await s3FileExists(`images/pfps/${team.playerA.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerA.globalName}.png` :
                 await s3FileExists(`images/pfps/${team.playerA.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerA.discordName}.png` :
                 await s3FileExists(`images/pfps/${team.playerA.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerA.name}.png` :
-                team.playerA.discordId ? 'discord default pfp url' :
+                team.playerA.discordId ? 'https://cdn.formatlibrary.com/images/pfps/discord-default-red.png' :
                 `https://cdn.formatlibrary.com/images/pfps/human-default.png`
 
             const playerBPfpUrl = await s3FileExists(`images/pfps/${team.playerB.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerB.discordId}.png` :
                 await s3FileExists(`images/pfps/${team.playerB.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerB.globalName}.png` :
                 await s3FileExists(`images/pfps/${team.playerB.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerB.discordName}.png` :
                 await s3FileExists(`images/pfps/${team.playerB.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerB.name}.png` :
-                team.playerB.discordId ? 'discord default pfp url' :
+                team.playerB.discordId ? 'https://cdn.formatlibrary.com/images/pfps/discord-default-red.png' :
                 `https://cdn.formatlibrary.com/images/pfps/human-default.png`
                 
             const playerCPfpUrl = await s3FileExists(`images/pfps/${team.playerC.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerC.discordId}.png` :
                 await s3FileExists(`images/pfps/${team.playerC.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerC.globalName}.png` :
                 await s3FileExists(`images/pfps/${team.playerC.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerC.discordName}.png` :
                 await s3FileExists(`images/pfps/${team.playerC.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${team.playerC.name}.png` :
-                team.playerC.discordId ? 'discord default pfp url' :
+                team.playerC.discordId ? 'https://cdn.formatlibrary.com/images/pfps/discord-default-red.png' :
                 `https://cdn.formatlibrary.com/images/pfps/human-default.png`
         
-            const serverLogoUrl = server?.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${server.preferredLogoUrl.replaceAll('+', '%2B')}` :
+            const serverLogoUrl = server?.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${server.preferredLogoUrl.replaceAll('+', '%2B')}.png` :
                 server?.discordIconId ? `https://cdn.discordapp.com/icons/${server.id}/${server.discordIconId}.webp?size=240` :
-                server?.id ? `https://cdn.formatlibrary.com/images/logos/discord.png` :
-                `https://cdn.formatlibrary.com/images/logos/${event.community}.png`
+                await s3FileExists(`images/logos/${event.community}.png`) ? `https://cdn.formatlibrary.com/images/logos/${event.community}.png` :
+                'https://cdn.formatlibrary.com/images/artworks/71625222.jpg'
             
             const serverInviteUrl = server && server.vanityUrl ? `https://discord.com/invite/${server.vanityUrl}` : server?.inviteLink
             const conclusion = server && serverInviteUrl ? `<p class="blogpost-paragraph"><a class="blogpost-event-link" href="${serverInviteUrl}">Join the ${event.community} Discord community to compete in similar events!</a></p>` :
@@ -365,15 +365,17 @@ export const composeBlogPost = async (interaction, event, server) => {
             const title = `Congrats to ${event.winner} on winning ${event.abbreviation}!`
             const blogTitleDate = dateToVerbose(event.endDate, false, false, true)
             const publishDate = dateToVerbose(event.endDate, true, true, false)
+
             const playerPfpUrl = await s3FileExists(`images/pfps/${event.winner.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.discordId}.png` :
                 await s3FileExists(`images/pfps/${event.winner.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.globalName}.png` :
                 await s3FileExists(`images/pfps/${event.winner.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.discordName}.png` :
                 await s3FileExists(`images/pfps/${event.winner.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.name}.png` :
-                'discord default url'
+                `https://cdn.formatlibrary.com/images/pfps/discord-default-red.png`
             
-            const serverLogoUrl = server.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${server.preferredLogoUrl.replaceAll('+', '%2B')}` :
+            const serverLogoUrl = server.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${server.preferredLogoUrl.replaceAll('+', '%2B')}.png` :
                 server.discordIconId ? `https://cdn.discordapp.com/icons/${server.id}/${server.discordIconId}.webp?size=240` :
-                `https://cdn.formatlibrary.com/images/logos/discord.png`
+                await s3FileExists(`images/logos/${event.community}.png`) ? `https://cdn.formatlibrary.com/images/logos/${event.community}.png` :
+                'https://cdn.formatlibrary.com/images/artworks/71625222.jpg'
 
                 
             const main = []

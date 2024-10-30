@@ -1544,9 +1544,9 @@ export const updateServers = async (client) => {
                 await server.save()
             }
 
-            if (server.vanityUrl !== guild.vanityUrl) {
-                console.log(`updating server vanity url from ${server.vanityUrl} => ${guild.vanityUrl}`)
-                server.vanityUrl = guild.vanityUrl
+            if (server.vanityUrl !== guild.vanity_url_code) {
+                console.log(`updating server vanity url from ${server.vanityUrl} => ${guild.vanity_url_code}`)
+                server.vanityUrl = guild.vanity_url_code
                 await server.save()
             }
 
@@ -1793,13 +1793,17 @@ export const updateBlogPosts = async () => {
                 await s3FileExists(`images/pfps/${player.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.globalName}.png` :
                 await s3FileExists(`images/pfps/${player.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.discordName}.png` :
                 await s3FileExists(`images/pfps/${player.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.name}.png` :
-                player.discordId ? `https://discord.com/assets/887bc8fac6c9878f058a.png` :
+                player.discordId ? `https://cdn.formatlibrary.com/images/pfps/discord-default-red.png` :
                 `https://cdn.formatlibrary.com/images/pfps/human-default.png`
+
+            console.log('playerPfpUrl', playerPfpUrl)
             
-            const serverLogoUrl = server?.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${server.preferredLogoUrl.replaceAll('+', '%2B')}` :
+            const serverLogoUrl = server?.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${server.preferredLogoUrl.replaceAll('+', '%2B')}.png` :
                 server?.discordIconId ? `https://cdn.discordapp.com/icons/${server.id}/${server.discordIconId}.webp?size=240` :
-                server?.id ? `https://cdn.formatlibrary.com/images/logos/Discord.png` :
-                `https://cdn.formatlibrary.com/images/logos/${event.community}.png`
+                await s3FileExists(`images/logos/${event.community}.png`) ? `https://cdn.formatlibrary.com/images/logos/${event.community}.png` :
+                'https://cdn.formatlibrary.com/images/artworks/71625222.jpg'
+
+            console.log('serverLogoUrl', serverLogoUrl)
 
             if (blogpost.winningDeckId !== deck.id) {
                 const main = []
@@ -1887,7 +1891,7 @@ export const updateBlogPosts = async () => {
                     `<div class="blogpost-images-flexbox">` +
                         `<div class="blogpost-pfp-community-flexbox">` +
                             `<img class="blogpost-pfp" src="${playerPfpUrl}" />` +
-                            `<img class="blogpost-community"  src="${(serverLogoUrl)}" />` +
+                            `<img class="blogpost-community" src="${(serverLogoUrl)}" />` +
                         `</div>` +
                         `<div class="blogpost-deck-box">` + 
                             `<a class="blogpost-deck-link" href="/decks/${deck.id}">` +

@@ -1281,6 +1281,7 @@
     width: 92%;
     height: auto;
     margin: 10px;
+    border-radius: 50%;
   }
   
   /* BLOGPOST */
@@ -2600,6 +2601,7 @@
   
     .blogpost-pfp, .blogpost-community {
       display: none;
+      border-radius: 50%;
     }
     
     .blogpost-deck-link {

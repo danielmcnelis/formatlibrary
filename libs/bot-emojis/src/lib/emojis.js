@@ -14,6 +14,7 @@ export const emojis = {
     chadward: "<:chadward:934002441869996032>",
     character: "<:character:1113867518327656540>",
     check: "<:check:934002600964157470>",
+    cheers: "<:cheers:1220044963996373174>",
     cultured: "<:cultured:860033595431583764>",
     Continuous: "<:Continuous:935749312112107610>",
     Counter: "<:Counter:935749312170827877>",
