@@ -1563,6 +1563,12 @@ export const updateServers = async (client) => {
                 server.ownerId = owner.id
                 await server.save()
             }
+
+            if (server.access !== 'free' && !server.preferredLogoUrl) {
+                if (await s3FileExists(`https://cdn.formatlibrary.com/images/logos/${server.name.replaceAll('+', '%2B')}.png`)) {
+                    await server.update({ preferredLogoUrl: server.name })
+                }
+            }
         } catch (err) {
             console.log(err)
         }
@@ -1850,8 +1856,11 @@ export const updateBlogPosts = async () => {
                 console.log('uri', uri)
             }
         
-            const conclusion = server ? `Join the ${event.community} Discord community to compete in similar events!` : ''
-        
+            const serverInviteUrl = server && server.vanityUrl ? `https://discord.com/invite/${server.vanityUrl}` : server?.inviteLink
+            const conclusion = server && serverInviteUrl ? `<p class="blogpost-paragraph"><a class="blogpost-event-link" href="${serverInviteUrl}">Join the ${event.community} Discord community to compete in similar events!</a></p>` :
+                server && !serverInviteUrl ? `<p class="blogpost-paragraph">Join the ${event.community} Discord community to compete in similar events!</p>` :
+                ''
+
             const content = 
                 `<div class="blogpost-title-flexbox">` +
                         `<div class="blogpost-title-text">` +

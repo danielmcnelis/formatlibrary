@@ -1,11 +1,10 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
-import { isProgrammer, runMonthlyTasks, runNightlyTasks, updateAvatars, updateServers } from '@fl/bot-functions'
+import { updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateAvatars, updateServers } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { Match, Tournament, Server, TriviaQuestion } from '@fl/models'
 import axios from 'axios'
-import { updateBlogPosts } from '../../../bot-functions/src'
 // import { config } from '@fl/config'
 
 export default {
@@ -20,7 +19,7 @@ export default {
             // return runNightlyTasks(client)
             // return runMonthlyTasks(client)
             await updateServers(client)
-            return await updateBlogPosts(client)
+            return await updateBlogPosts()
         } else {
             await interaction.editReply('🧪')
         }

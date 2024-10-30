@@ -292,9 +292,12 @@ export const composeBlogPost = async (interaction, event, server) => {
                 server?.discordIconId ? `https://cdn.discordapp.com/icons/${server.id}/${server.discordIconId}.webp?size=240` :
                 server?.id ? `https://cdn.formatlibrary.com/images/logos/discord.png` :
                 `https://cdn.formatlibrary.com/images/logos/${event.community}.png`
+            
+            const serverInviteUrl = server && server.vanityUrl ? `https://discord.com/invite/${server.vanityUrl}` : server?.inviteLink
+            const conclusion = server && serverInviteUrl ? `<p class="blogpost-paragraph"><a class="blogpost-event-link" href="${serverInviteUrl}">Join the ${event.community} Discord community to compete in similar events!</a></p>` :
+                server && !serverInviteUrl ? `<p class="blogpost-paragraph">Join the ${event.community} Discord community to compete in similar events!</p>` :
+                ''
                 
-            const conclusion = server ? `<p class="blogpost-paragraph"><a class="blogpost-event-link" href="${server.vanityUrl || server.inviteLink}">Join the ${event.community} Discord community to compete in similar events!</a></p>` : ''
-        
             const content = 
                 `<div class="blogpost-title-flexbox">` +
                     `<div class="blogpost-title-text">` +
@@ -414,7 +417,10 @@ export const composeBlogPost = async (interaction, event, server) => {
                 context.drawImage(image, (card_width + 1) * col, row * (card_height + 1), card_width, card_height)
             }
         
-            const conclusion = server ? `<p class="blogpost-paragraph"><a class="blogpost-event-link" href="${server.vanityUrl || server.inviteLink}">Join the ${event.community} Discord community to compete in similar events!</a></p>` : ''
+            const serverInviteUrl = server && server.vanityUrl ? `https://discord.com/invite/${server.vanityUrl}` : server?.inviteLink
+            const conclusion = server && serverInviteUrl ? `<p class="blogpost-paragraph"><a class="blogpost-event-link" href="${serverInviteUrl}">Join the ${event.community} Discord community to compete in similar events!</a></p>` :
+                server && !serverInviteUrl ? `<p class="blogpost-paragraph">Join the ${event.community} Discord community to compete in similar events!</p>` :
+                ''
 
             const content = 
                 `<div class="blogpost-title-flexbox">` +
