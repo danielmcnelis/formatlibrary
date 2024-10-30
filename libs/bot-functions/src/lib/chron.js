@@ -1524,6 +1524,7 @@ export const updateServers = async (client) => {
         try {
             const server = servers[i]
             const guild = client.guilds.cache.get(server.id)
+            console.log('guild:', guild)
             if (!guild) {
                 console.log(`${server.name} cannot be found in the client cache`)
                 await server.destroy()
