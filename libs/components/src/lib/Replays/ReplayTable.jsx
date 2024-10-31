@@ -257,12 +257,12 @@ export const ReplayTable = () => {
                             style={{width: '230px'}}
                             onChange={(e) => {setSortBy(e.target.value); setPage(1)}}
                         >
-                            <option value="publishDate:desc,matchId:desc,roundInt:desc,suggestedOrder:desc nulls last">Date: New ⮕ Old</option>
-                            <option value="publishDate:asc,matchId:desc,roundInt:desc,suggestedOrder:desc nulls last">Date: Old ⮕ New</option>
-                            <option value="winnerName:asc,matchId:desc,roundInt:desc,suggestedOrder:desc nulls last">Winner: A ⮕ Z</option>
-                            <option value="winnerName:desc,matchId:desc,roundInt:desc,suggestedOrder:desc nulls last">Winner: Z ⮕ A</option>
-                            <option value="winningDeckType:asc,matchId:desc,roundInt:desc,suggestedOrder:desc nulls last">Winning Deck: A ⮕ Z</option>
-                            <option value="winningDeckType:desc,matchId:desc,roundInt:desc,suggestedOrder:desc nulls last">Winning Deck: Z ⮕ A</option>
+                            <option value="publishDate:desc,display:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc">Date: New ⮕ Old</option>
+                            <option value="publishDate:asc,display:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc">Date: Old ⮕ New</option>
+                            <option value="winnerName:asc,display:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc">Winner: A ⮕ Z</option>
+                            <option value="winnerName:desc,display:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc">Winner: Z ⮕ A</option>
+                            <option value="winningDeckType:asc,display:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc">Winning Deck: A ⮕ Z</option>
+                            <option value="winningDeckType:desc,display:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc">Winning Deck: Z ⮕ A</option>
                         </select>
             
                         <div
