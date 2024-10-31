@@ -16,7 +16,10 @@ export default {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
             await interaction.editReply(emojis.yellow)
-            return runNightlyTasks(client)
+            const guilds = client.guilds.cache
+            return console.log('guilds', guilds)
+
+            // return runNightlyTasks(client)
             // return runMonthlyTasks(client)
             // await updateServers(client)
             // return await updateBlogPosts()

@@ -690,16 +690,107 @@ export const isNewUser = async (discordId) => !await Player.count({ where: { dis
 //IS TOURNAMENT PLAYER?
 export const isTourPlayer = (server, member) => member?._roles.includes(server?.tourRole)
 
-// PAD ZERO MID STRING
-export const padZeroMidString = (str) => {
-    if (parseInt('str'.replace(/[^\d]/g, '')) >= 10) return str    
-    const index = str?.search(/[1-9]/)
-  
-    if (index >= 0 && (index === 0 || str[index - 1] !== '0')) {
-        return str.slice(0, index) + '0' + str.slice(index)
-    } else {        
-        return str
+// PAD ZEROS MID STRING
+export const padZerosMidString = (str) => {
+    let digits =  str.replace(/[^\d]/g, '')
+
+    if (digits.length < 3) {
+      const index = str?.search(/[1-9]/)
+      return padZerosMidString(str.slice(0, index) + '0' + str.slice(index))
+    } else {
+      return str
     }
+}
+
+// GET ALPHAS
+export const getAlphas = (str) => str.replace(/[\d]/g, '')
+
+// GET KNOWN ABBREVIATION
+export const getKnownAbbreviation = (name) => {
+    name = name.toLowerCase()
+    const knownAbbreviation = name.includes('abyssgaios gigachads') ? 'AGGC' :
+        name.includes('battle at the ravine') ? 'BATR' :
+        name.includes('beastmode circuit series championship') ? 'BCSC' :
+        name.includes('beastmode circuit series') ? 'BCS' :
+        name.includes('blazing cheaters') ? 'BLCH' :
+        name.includes('charleston cookoff') ? 'COOK' :
+        name.includes('chaos cup') ? 'CHAOS' :
+        name.includes('clash of champions') ? 'CLASH' :
+        name.includes('clown showdown') ? 'CLSD' :
+        name.includes('cyber goat showdown') ? 'CYGS' :
+        name.includes('disk commander classic') ? 'DCC' :
+        name.includes('duelist crown tournament') ? 'DCT' :
+        name.includes('deck devastators') ? 'DDEV' :
+        name.includes('digbick dig series') ? 'DDS' :
+        name.includes('drama llama classic') ? 'DLC' :
+        name.includes('digital link odyssey') ? 'DLO' :
+        name.includes('dark side cup') ? 'DSC' :
+        name.includes('edison grinders qualifier') ? 'EGQ' :
+        name.includes('ellietincan cup') ? 'ETC' :
+        name.includes('edison unchained') ? 'EDUC' :
+        name.includes('edison world championship qualifier') ? 'EWCQ' :
+        name.includes('exciton elimination') ? 'EXEL' :
+        name.includes('format library championship') ? 'FLC' :
+        name.includes('france championship international') ? 'FCI' :
+        name.includes('fiber format monthly') ? 'FFM' :
+        name.includes('food bowl') ? 'FOOD' :
+        name.includes('2003 time capsule') ? 'TICA' :
+        name.includes('follow the white rabbit') ? 'FTWR' :
+        name.includes('genesis card gaming online') ? 'GCG' :
+        name.includes('goat format european championship') ? 'GFCEU' :
+        name.includes('team goat format championship') ? 'TGFC' :
+        name.includes('goat format championship') ? 'GFC' :
+        name.includes('goat format world championship') ? 'GFWC' :
+        name.includes('goat grinders invitational') ? 'GGI' :
+        name.includes('gigachad sneak peek') ? 'GSP' :
+        name.includes('goat world war') ? 'GWW' :
+        name.includes('hat championship') ? 'HWC' :
+        name.includes('high five vegas') ? 'HFV' :
+        name.includes('treasure hunt') ? 'HUNT' :
+        name.includes('jinzo jackers') ? 'JACK' :
+        name.includes('joey-pegasus') ? 'JOPE' :
+        name.includes('ke$ha klash') ? 'KEKL' :
+        name.includes('ke$ha grand prix') ? 'KGP' :
+        name.includes('masters of mammals') ? 'MAMA' :               
+        name.includes('monster mash') ? 'MASH' :
+        name.includes('meadowlands melee') ? 'MLM' :
+        name.includes('miami meltdown') ? 'MIME' :
+        name.includes('moralltach monthly') ? 'MOMO' :
+        name.includes('obelisk') ? 'OBEL' :
+        name.includes('patreon world championship qualifier') ? 'PWCQ' :
+        name.includes('patron battle royale') ? 'PBR' :
+        name.includes('peak beak') ? 'BEAK' :
+        name.includes('premium world championship qualifier') ? 'PWCQ' :
+        name.includes('prophecy cup') ? 'PROC' :
+        name.includes('pumpking of games') ? 'PKOG' :
+        name.includes('reaper monthly') ? 'REAP' :
+        name.includes('science sackers') ? 'SACK' :
+        name.includes('electroshock therapy') ? 'SHOCK' :
+        name.includes('stardust dragon series') ? 'SDS' :
+        name.includes('scuffle at the forum') ? 'SCUF' :
+        name.includes('skill charge cup') ? 'SCC' :
+        name.includes('tengu rumble') ? 'TERU' :
+        name.includes('tengu tussle') ? 'TETU' :
+        name.includes('tiger king takedown') ? 'TKT' :
+        name.includes('tengumania') ? 'TMAN' :
+        name.includes('tengu plant takeover') ? 'TPT' :
+        name.includes('toronto summer championship') ? 'TSC' :
+        name.includes('toronto time capsule summit') ? 'TTCS' :
+        name.includes('toronto time capsule') ? 'TTC' :
+        name.includes('vegas monthly') ? 'VEGAS' :
+        name.includes('vegas online tournament') ? 'VOT' :
+        name.includes('wizards of wind-up') ? 'WIZ' :
+        name.includes('wolfbark open') ? 'WOLF' :
+        name.includes('warriors of warrior') ? 'WOW' :
+        name.includes('woawa world cup') ? 'WWC' :
+        name.includes('ygofrom0 retro tournament') ? 'YFZ' :
+        name.includes('yugi-kaibaland') ? 'YKL' :
+        name.includes('yu-gi-oh! legacy tournament') ? 'YLT' :
+        name.includes('yu-gi-oh! retro series') ? 'YRS' :
+        name.includes('virtual world') ? 'VWOR' :
+        null
+
+    return knownAbbreviation
 }
 
 // SELECT MATCH

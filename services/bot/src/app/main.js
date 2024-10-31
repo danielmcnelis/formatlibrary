@@ -27,7 +27,7 @@ import { createTopCut, editTieBreakers, getMidnightCountdown,
     startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, 
     assignRoles, createMembership, createPlayer, fetchCardNames, fetchOPCardNames, hasPartnerAccess, 
     isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
-    editPointsSystem, runNightlyTasks, getTournament, padZeroMidString, capitalize
+    editPointsSystem, runNightlyTasks, getTournament, padZerosMidString, getKnownAbbreviation, getAlphas, capitalize
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
@@ -250,7 +250,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             // REMOVE ALL WEIRD SYMBOLS.
             const name = capitalize(
                 interaction.fields.getTextInputValue('name')
-                    ?.replace(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=0]/g, '')
+                    ?.replace(/[/|\\()[\]{}<>~^%&?@#,;"'`_*+=0]/g, '')
                     ?.replace(/\s+/g, ' ')
                     ?.toLowerCase()
                 , true)
@@ -259,12 +259,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 interaction.customId?.includes('SE') ? 'single elimination' :
                 interaction.customId?.includes('DE') ? 'double elimination' :
                 'round robin'
+                
+            const knownAbbreviation = getKnownAbbreviation(name)
         
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT EXACTLY ONE ZERO AT FRONT OF NUMBERS.
-            const abbreviation = padZeroMidString(interaction.fields.getTextInputValue('abbreviation')
+            const alphas = knownAbbreviation || getAlphas(interaction.fields.getTextInputValue('abbreviation')) || null
+            const digits = padZerosMidString(interaction.fields.getTextInputValue('abbreviation')
                 ?.replace(/[^\w]|_/g, ''))
                 ?.replaceAll('00', '')
                 ?.toUpperCase()
+            
+            const abbreviation = alphas + digits
             
             const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
             const channelName = interaction.fields.fields.get('channelName') ? interaction.fields.getTextInputValue('channelName') : null
@@ -293,7 +298,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             // REMOVE ALL WEIRD SYMBOLS.
             const name = capitalize(
                 interaction.fields.getTextInputValue('name')
-                    ?.replace(/[./|\\()[\]{}<>~^%&!?@#,;"'`_*+=0]/g, '')
+                    ?.replace(/[/|\\()[\]{}<>~^%&?@#,;"'`_*+=0]/g, '')
                     ?.replace(/\s+/g, ' ')
                     ?.toLowerCase()
                 , true)
@@ -317,17 +322,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
     
             const tournament_type = interaction.fields.fields.get('type') ? decipherTournamentTypeInput(interaction.fields.getTextInputValue('type')) : null
 
+            const knownAbbreviation = getKnownAbbreviation(name)
+        
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT EXACTLY ONE ZERO AT FRONT OF NUMBERS.
-            const abbreviation = interaction.fields.fields.get('abbreviation') ? padZeroMidString(interaction.fields.getTextInputValue('abbreviation')
-                ?.replace(/[^\w|_]/g, ''))
+            const alphas = knownAbbreviation || getAlphas(interaction.fields.getTextInputValue('abbreviation')) || null
+            const digits = padZerosMidString(interaction.fields.getTextInputValue('abbreviation')
+                ?.replace(/[^\w]|_/g, ''))
                 ?.replaceAll('00', '')
-                ?.toUpperCase() : null
+                ?.toUpperCase()
             
-            // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT A ZERO AT FRONT OF NUMBERS.
-            const url = interaction.fields.fields.get('url') ? padZeroMidString(interaction.fields.getTextInputValue('url')
-                ?.replace(/[^\w]/g, ''))
-                ?.toUpperCase() : null
-
+            const abbreviation = alphas + digits
+            const url = abbreviation
             const isUnranked = interaction.fields.fields.get('ranked') ? decipherRankedInput(interaction.fields.getTextInputValue('ranked')) : null
             const tournamentId = interaction.customId?.split('-')[1]
     
