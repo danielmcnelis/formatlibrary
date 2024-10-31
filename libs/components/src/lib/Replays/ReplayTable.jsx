@@ -18,7 +18,7 @@ export const ReplayTable = () => {
     const [format, setFormat] = useState(null)
     const [formats, setFormats] = useState([])
     const [page, setPage] = useState(1)
-    const [sortBy, setSortBy] = useState('publishDate:desc,display:desc,suggestedOrder:desc')
+    const [sortBy, setSortBy] = useState('publishDate:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc,display:desc')
     const [total, setTotal] = useState(0)
     const [isAdmin, setIsAdmin] = useState(false)
     const [isSubscriber, setIsSubscriber] = useState(false)
@@ -253,16 +253,16 @@ export const ReplayTable = () => {
             
                         <select
                             id="sortSelector"
-                            defaultValue="publishDate:desc,display:desc,suggestedOrder:desc"
+                            defaultValue="publishDate:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc,display:desc"
                             style={{width: '230px'}}
                             onChange={(e) => {setSortBy(e.target.value); setPage(1)}}
                         >
-                            <option value="publishDate:desc,display:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc">Date: New ⮕ Old</option>
-                            <option value="publishDate:asc,display:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc">Date: Old ⮕ New</option>
-                            <option value="winnerName:asc,display:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc">Winner: A ⮕ Z</option>
-                            <option value="winnerName:desc,display:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc">Winner: Z ⮕ A</option>
-                            <option value="winningDeckType:asc,display:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc">Winning Deck: A ⮕ Z</option>
-                            <option value="winningDeckType:desc,display:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc">Winning Deck: Z ⮕ A</option>
+                            <option value="publishDate:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc,display:desc,">Date: New ⮕ Old</option>
+                            <option value="publishDate:asc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc,display:desc">Date: Old ⮕ New</option>
+                            <option value="winnerName:asc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc,display:desc">Winner: A ⮕ Z</option>
+                            <option value="winnerName:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc,display:desc">Winner: Z ⮕ A</option>
+                            <option value="winningDeckType:asc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc,display:desc">Winning Deck: A ⮕ Z</option>
+                            <option value="winningDeckType:desc,suggestedOrder:desc nulls last,roundInt:desc,matchId:desc,display:desc">Winning Deck: Z ⮕ A</option>
                         </select>
             
                         <div
