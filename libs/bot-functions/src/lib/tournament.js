@@ -2193,7 +2193,7 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
 }
 
 // CALCULATE STANDINGS 
-export const calculateStandings = async (tournament, matches, participants) => {
+export const calculateStandings = async (tournament, matches, participants, topCutTournamentParticipants) => {
     if (tournament.type !== 'swiss') return null
     const data = {}
     let currentRound = 1
@@ -2231,6 +2231,7 @@ export const calculateStandings = async (tournament, matches, participants) => {
                 ties: 0,
                 byes: 0,
                 score: 0,
+                topCutResult: 0,
                 active: p.participant.active,
                 roundDropped: null,
                 roundsWithoutBye: [],
@@ -2257,6 +2258,7 @@ export const calculateStandings = async (tournament, matches, participants) => {
                 ties: 0,
                 byes: 0,
                 score: 0,
+                topCutResult: 0,
                 active: entry.active,
                 roundDropped: entry.roundDropped,
                 roundsWithoutBye: [],
@@ -2370,7 +2372,9 @@ export const calculateStandings = async (tournament, matches, participants) => {
     })
 
     const standings = shuffleArray(Object.values(data)).sort((a, b) => {
-        if (a.score > b.score) {
+        if (a.topCutResult > b.topCutResult) {
+            return -1
+        } if (a.score > b.score) {
             return -1
         } else if (a.score < b.score) {
             return 1

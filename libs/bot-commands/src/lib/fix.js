@@ -56,7 +56,7 @@ export default {
                 where: {
                     id: event.tournament?.serverId
                 }
-            }) 
+            })
 
             const matches = await getMatches(server, event.primaryTournamentId)
             const participants = await getParticipants(server, event.primaryTournamentId)

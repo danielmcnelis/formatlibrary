@@ -19,6 +19,11 @@ export default {
             const guilds = [...client.guilds.cache.values()]
             console.log('guilds', guilds)
             await updateServers(client)
+            await updateDecks()
+            await updateReplays()
+            await updateMatchups()
+            await updateBlogPosts()
+        
             return await updateBlogPosts()
 
             // return runNightlyTasks(client)
