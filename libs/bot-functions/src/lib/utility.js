@@ -694,7 +694,7 @@ export const isTourPlayer = (server, member) => member?._roles.includes(server?.
 export const padZerosMidString = (str) => {
     let digits =  str.replace(/[^\d]/g, '')
 
-    if (digits.length < 3) {
+    if (digits.length < 2) {
       const index = str?.search(/[1-9]/)
       return padZerosMidString(str.slice(0, index) + '0' + str.slice(index))
     } else {

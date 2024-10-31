@@ -266,7 +266,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const alphas = knownAbbreviation || getAlphas(interaction.fields.getTextInputValue('abbreviation')) || null
             const digits = padZerosMidString(interaction.fields.getTextInputValue('abbreviation')
                 ?.replace(/[^\w]|_/g, ''))
-                ?.replaceAll('00', '')
                 ?.toUpperCase()
             
             const abbreviation = alphas + digits
@@ -328,7 +327,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const alphas = knownAbbreviation || getAlphas(interaction.fields.getTextInputValue('abbreviation')) || null
             const digits = padZerosMidString(interaction.fields.getTextInputValue('abbreviation')
                 ?.replace(/[^\w]|_/g, ''))
-                ?.replaceAll('00', '')
                 ?.toUpperCase()
             
             const abbreviation = alphas + digits
