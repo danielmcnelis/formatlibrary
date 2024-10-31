@@ -16,13 +16,13 @@ export default {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
             await interaction.editReply(emojis.yellow)
-            const guilds = client.guilds.cache
-            return console.log('guilds', guilds)
+            const guilds = [...client.guilds.cache.values()]
+            console.log('guilds', guilds)
+            await updateServers(client)
+            return await updateBlogPosts()
 
             // return runNightlyTasks(client)
             // return runMonthlyTasks(client)
-            // await updateServers(client)
-            // return await updateBlogPosts()
         } else {
             await interaction.editReply('🧪')
         }

@@ -1867,10 +1867,10 @@ export const updateBlogPosts = async () => {
             }
         
             const serverInviteUrl = server && server.vanityUrl ? `https://discord.com/invite/${server.vanityUrl}` : server?.inviteLink
-            const conclusion = server && serverInviteUrl ? `<p class="blogpost-paragraph"><a class="blogpost-event-link" href="${serverInviteUrl}">Join the ${event.community} Discord community to compete in similar events!</a></p>` :
+            const conclusion = server && serverInviteUrl ? `<p class="blogpost-paragraph">Join the <a class="blogpost-event-link" href="${serverInviteUrl}">${event.community} Discord community</a> to compete in similar events!</p>` :
                 server && !serverInviteUrl ? `<p class="blogpost-paragraph">Join the ${event.community} Discord community to compete in similar events!</p>` :
                 ''
-
+                
             const content = 
                 `<div class="blogpost-title-flexbox">` +
                         `<div class="blogpost-title-text">` +
