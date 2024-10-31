@@ -45,8 +45,7 @@ export const getReplays = async (req, res, next) => {
         const sort = req.query.sort ? req.query.sort.split(',').reduce((reduced, val) => {
             reduced.push(val.split(':'))
             return reduced
-        }, [['publishDate', 'desc'], ['matchId', 'desc'], ['roundInt', 'desc'], ['suggestedOrder', 'desc nulls last']]) : 
-        [['publishDate', 'desc'], ['matchId', 'desc'], ['roundInt', 'desc'], ['suggestedOrder', 'desc nulls last']]
+        }, []) : [['publishDate', 'desc'], ['matchId', 'desc'], ['roundInt', 'desc'], ['suggestedOrder', 'desc nulls last']]
 
         const replays = await Replay.find(filter, limit, page, sort)
         res.json(replays)
