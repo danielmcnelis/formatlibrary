@@ -307,14 +307,14 @@ export const getDropFormats = async (interaction, pools) => {
 export const getRatedFormat = async (interaction) => {
     const filter = m => m.author.id === interaction.user.id
     const message = await interaction.user.send({ content: `What do you want to play?`})
+    console.log('message.created_at.timestamp()', message.created_at?.timestamp().catch((err) => console.log(err)))
 
     return await message.channel.awaitMessages({
         filter,
         max: 1,
         time: 15000
     }).then(async (collected) => {
-        const now = new Date()
-        console.log('now.getTimezoneOffset(collected)', now.getTimezoneOffset(collected))
+        console.log('collected?.created_at?.timestamp()', collected.created_at?.timestamp().catch((err) => console.log(err)))
         const response = collected.first().content.toLowerCase()
 
         const format = await Format.findOne({
