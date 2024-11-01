@@ -73,7 +73,7 @@ export default {
             .setRequired(false)
 
         const duration = new TextInputBuilder()
-            .setCustomId('ranked')
+            .setCustomId('duration')
             .setLabel('Live or Multi-Day? (L, M)')
             .setStyle(TextInputStyle.Short)
             .setPlaceholder(tournament.isLive ? 'live' : 'multi-day')

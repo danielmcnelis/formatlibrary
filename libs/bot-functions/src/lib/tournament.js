@@ -2702,7 +2702,6 @@ export const updateTournament = async (interaction, tournamentId, name, tourname
             return await interaction.editReply({ content: 
                 `Updated tournament settings:` + 
                 `\nName: ${data.tournament.name} ${tournament.logo}` + 
-                `\nAbbreviation: ${tournament.abbreviation} ${server.emoji || tournament.emoji}` + 
                 `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${tournament.isUnranked ? ' (Unranked)' : ''}` +
                 `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
             })
