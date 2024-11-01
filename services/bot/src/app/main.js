@@ -278,7 +278,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
         
             return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, isUnranked, isLive)
         } else if (interaction.customId?.includes('settings')) {
-            // REMOVE ALL WEIRD SYMBOLS.
             const name = capitalize(interaction.fields.getTextInputValue('name'))
     
             const decipherTournamentTypeInput = (input = '') => {
@@ -300,17 +299,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const decipherDurationInput = (input = '') => !input.toLowerCase()?.includes('m')
     
             const tournament_type = interaction.fields.fields.get('type') ? decipherTournamentTypeInput(interaction.fields.getTextInputValue('type')) : null
-
-            const knownAbbreviation = getKnownAbbreviation(name)
-        
-            // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT EXACTLY ONE ZERO AT FRONT OF NUMBERS.
-            const alphas = knownAbbreviation || getAlphas(interaction.fields.getTextInputValue('abbreviation')) || null
-            const digits = extractDigitsAndPadZeros(interaction.fields.getTextInputValue('abbreviation')
-                ?.replace(/[^\w]|_/g, ''))
-                ?.toUpperCase()
             
-            const abbreviation = alphas + digits
-            const url = abbreviation
+            const url = interaction.fields.getTextInputValue('url')
             const isUnranked = interaction.fields.fields.get('ranked') ? decipherRankedInput(interaction.fields.getTextInputValue('ranked')) : null
             const isLive = interaction.fields.fields.get('duration') ? decipherDurationInput(interaction.fields.getTextInputValue('duration')) : null
             const tournamentId = interaction.customId?.split('-')[1]

@@ -706,7 +706,7 @@ export const extractDigitsAndPadZeros = (str, len = 2) => {
 export const getAlphas = (str) => str.replace(/[\d]/g, '')
 
 // GET KNOWN ABBREVIATION
-export const getKnownAbbreviation = (name) => {
+export const getKnownAbbreviation = (name = '') => {
     name = name.toLowerCase()
     const knownAbbreviation = name.includes('abyssgaios gigachads') ? 'AGGC' :
         name.includes('battle at the ravine') ? 'BATR' :
