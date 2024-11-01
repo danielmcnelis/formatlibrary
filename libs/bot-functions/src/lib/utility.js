@@ -691,14 +691,14 @@ export const isNewUser = async (discordId) => !await Player.count({ where: { dis
 export const isTourPlayer = (server, member) => member?._roles.includes(server?.tourRole)
 
 // PAD ZEROS MID STRING
-export const padZerosMidString = (str) => {
+export const extractDigitsAndPadZeros = (str, len = 2) => {
     let digits =  str.replace(/[^\d]/g, '')
 
-    if (digits.length < 2) {
+    if (digits.length < len) {
       const index = str?.search(/[1-9]/)
-      return padZerosMidString(str.slice(0, index) + '0' + str.slice(index))
+      return extractDigitsAndPadZeros(str.slice(0, index) + '0' + str.slice(index))
     } else {
-      return str
+      return digits
     }
 }
 
@@ -792,6 +792,9 @@ export const getKnownAbbreviation = (name) => {
 
     return knownAbbreviation
 }
+
+// GET SUGGESTED ABBREVIATION
+export const getSuggestedAbbreviation = (str) => str.match(/\b([A-Z])/g).join('')
 
 // SELECT MATCH
 export const selectMatch = async (interaction, matches, replayExtension = '') => {

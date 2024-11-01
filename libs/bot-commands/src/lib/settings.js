@@ -48,7 +48,7 @@ export default {
         if (!tournament) return await interaction.reply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
 
 		const modal = new ModalBuilder()
-            .setCustomId(`edit-${tournamentId}`)
+            .setCustomId(`settings-${tournamentId}`)
             .setTitle('Edit Tournament Settings')
 
         const name = new TextInputBuilder()
@@ -58,16 +58,9 @@ export default {
             .setPlaceholder(tournament.name)
             .setRequired(false)
 
-        const abbreviation = new TextInputBuilder()
-            .setCustomId('abbreviation')
-            .setLabel('Abbreviation for the tournament?')
-            .setStyle(TextInputStyle.Short)
-            .setPlaceholder(tournament.abbreviation)
-            .setRequired(false)
-
         const url = new TextInputBuilder()
             .setCustomId('url')
-            .setLabel('URL for the tournament?')
+            .setLabel('Challonge URL for the tournament?')
             .setStyle(TextInputStyle.Short)
             .setPlaceholder(tournament.url)
             .setRequired(false)
@@ -79,6 +72,13 @@ export default {
             .setPlaceholder(tournament.type)
             .setRequired(false)
 
+        const duration = new TextInputBuilder()
+            .setCustomId('ranked')
+            .setLabel('Live or Multi-Day? (L, M)')
+            .setStyle(TextInputStyle.Short)
+            .setPlaceholder(tournament.isLive ? 'live' : 'multi-day')
+            .setRequired(false)
+
         const ranked = new TextInputBuilder()
             .setCustomId('ranked')
             .setLabel('Ranked or Unranked? (R, U)')
@@ -88,14 +88,14 @@ export default {
         
         const nameRow = new ActionRowBuilder().addComponents(name)
         const urlRow = new ActionRowBuilder().addComponents(url)
-        const abbreviationRow = new ActionRowBuilder().addComponents(abbreviation)
+        const durationRow = new ActionRowBuilder().addComponents(duration)
         
         if (tournament.state === 'underway') {
-            modal.addComponents(nameRow, urlRow, abbreviationRow)
+            modal.addComponents(nameRow, urlRow)
         } else {
             const tournamentTypeRow = new ActionRowBuilder().addComponents(tournamentType)
             const rankedRow = new ActionRowBuilder().addComponents(ranked)
-            modal.addComponents(nameRow, urlRow, abbreviationRow, tournamentTypeRow, rankedRow)
+            modal.addComponents(nameRow, urlRow, tournamentTypeRow, durationRow, rankedRow)
         }
 
         return await interaction.showModal(modal)        

@@ -39,47 +39,27 @@ export default {
             .setLabel('Full name of the tournament?')
             .setStyle(TextInputStyle.Short)
             .setRequired(true)
-
-        const abbreviation = new TextInputBuilder()
+        
+        const duration = new TextInputBuilder()
             .setCustomId('abbreviation')
-            .setLabel('Abbreviation for the tournament?')
+            .setLabel('Live or Multi-Day? (L, M)')
             .setStyle(TextInputStyle.Short)
+            .setPlaceholder('Live')
             .setRequired(true)
 
+        const ranked = new TextInputBuilder()
+            .setCustomId('ranked')
+            .setLabel('Ranked or Unranked? (R, U)')
+            .setStyle(TextInputStyle.Short)
+            .setPlaceholder('Ranked')
+            .setRequired(false)
+
         const nameRow = new ActionRowBuilder().addComponents(name)
-        const abbreviationRow = new ActionRowBuilder().addComponents(abbreviation)
-        modal.addComponents(nameRow, abbreviationRow)
+        const durationRow = new ActionRowBuilder().addComponents(duration)
+        const rankedRow = new ActionRowBuilder().addComponents(ranked)
+        modal.addComponents(nameRow, durationRow, rankedRow)
         
-        if (type === 'SW') {
-            const tieBreakerOne = new TextInputBuilder()
-                .setCustomId('tb1')
-                .setLabel('Tie breaker #1? (OWP, OOWP, MB, WVT, PD)')
-                .setStyle(TextInputStyle.Short)
-                .setPlaceholder('Opponents\' Win Percentage (OWP)')
-                .setRequired(false)
-
-            const tieBreakerTwo = new TextInputBuilder()
-                .setCustomId('tb2')
-                .setLabel('Tie breaker #2? (OWP, OOWP, MB, WVT, PD)')
-                .setStyle(TextInputStyle.Short)
-                .setPlaceholder('Opponents\' Opponents\' Win Percentage (OOWP)')
-                .setRequired(false)
-            
-            const tb1Row = new ActionRowBuilder().addComponents(tieBreakerOne)
-            const tb2Row = new ActionRowBuilder().addComponents(tieBreakerTwo)
-            modal.addComponents(tb1Row, tb2Row)
-        }
-
-        if (!format) {
-            const formatName = new TextInputBuilder()
-                .setCustomId('formatName')
-                .setLabel('What format will be played?')
-                .setStyle(TextInputStyle.Short)
-                .setRequired(true)
-                
-            const formatRow = new ActionRowBuilder().addComponents(formatName)
-            modal.addComponents(formatRow)  
-        } else if (interaction.guildId !== '414551319031054346') {
+        if (interaction.guildId !== '414551319031054346') {
             const channelName = new TextInputBuilder()
                 .setCustomId('channelName')
                 .setLabel('What channel will host this event?')
@@ -90,6 +70,15 @@ export default {
             channelName.setPlaceholder(interaction.channel.name)
             const channelRow = new ActionRowBuilder().addComponents(channelName)
             modal.addComponents(channelRow)
+        } else if (!format) {
+            const formatName = new TextInputBuilder()
+                .setCustomId('formatName')
+                .setLabel('What format will be played?')
+                .setStyle(TextInputStyle.Short)
+                .setRequired(true)
+                
+            const formatRow = new ActionRowBuilder().addComponents(formatName)
+            modal.addComponents(formatRow)  
         }
     
         return await interaction.showModal(modal)        

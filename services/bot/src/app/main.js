@@ -27,7 +27,7 @@ import { createTopCut, editTieBreakers, getMidnightCountdown,
     startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, 
     assignRoles, createMembership, createPlayer, fetchCardNames, fetchOPCardNames, hasPartnerAccess, 
     isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
-    editPointsSystem, runNightlyTasks, getTournament, padZerosMidString, getKnownAbbreviation, getAlphas, capitalize
+    editPointsSystem, runNightlyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, getKnownAbbreviation, getAlphas, capitalize
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
@@ -261,46 +261,25 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 'round robin'
                 
             const knownAbbreviation = getKnownAbbreviation(name)
+            const suggestedAbbreviation = knownAbbreviation ? getSuggestedAbbreviation(name) : null
         
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT EXACTLY ONE ZERO AT FRONT OF NUMBERS.
-            const alphas = knownAbbreviation || getAlphas(interaction.fields.getTextInputValue('abbreviation')) || null
-            const digits = padZerosMidString(interaction.fields.getTextInputValue('abbreviation')
-                ?.replace(/[^\w]|_/g, ''))
-                ?.toUpperCase()
-            
+            const alphas = knownAbbreviation || suggestedAbbreviation
+            const digits = extractDigitsAndPadZeros(interaction.fields.getTextInputValue('name'))
             const abbreviation = alphas + digits
+            
+            const decipherRankedInput = (input = '') => !!input.toLowerCase()?.includes('u')
+            const decipherDurationInput = (input = '') => !input.toLowerCase()?.includes('m')
+            const isUnranked = interaction.fields.fields.get('ranked') ? decipherRankedInput(interaction.fields.getTextInputValue('ranked')) : null
+            const isLive = interaction.fields.fields.get('duration') ? decipherDurationInput(interaction.fields.getTextInputValue('duration')) : null
             
             const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
             const channelName = interaction.fields.fields.get('channelName') ? interaction.fields.getTextInputValue('channelName') : null
         
-            const decipherTieBreakerInput = (input) => {
-                if (input.includes('mb') || input.includes('med')) {
-                    return 'median buchholz'
-                } else if (input.includes('wvt') || input.includes('wins vs')) {
-                    return 'match wins vs tied'
-                } else if (input.includes('pd') || input.includes('point')) {
-                    return 'points difference'
-                } else if (input.includes('oowp') || input.includes('s opp')) {
-                    return `opponents opponents win percentage`
-                } else if (input.includes('owp') || input.includes('opp')) {
-                    return `opponents win percentage`
-                } else {
-                    return null
-                }
-            }
-        
-            const tieBreaker1 = interaction.fields.fields.get('tb1') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase()) || 'median buchholz' : 'median buchholz'
-            const tieBreaker2 = interaction.fields.fields.get('tb2') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) || 'match wins vs tied' : 'match wins vs tied'
-        
-            return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, tieBreaker1, tieBreaker2)
-        } else if (interaction.customId?.includes('edit')) {
+            return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, isUnranked, isLive)
+        } else if (interaction.customId?.includes('settings')) {
             // REMOVE ALL WEIRD SYMBOLS.
-            const name = capitalize(
-                interaction.fields.getTextInputValue('name')
-                    ?.replace(/[/|\\()[\]{}<>~^%&?@#,;"'`_*+=0]/g, '')
-                    ?.replace(/\s+/g, ' ')
-                    ?.toLowerCase()
-                , true)
+            const name = capitalize(interaction.fields.getTextInputValue('name'))
     
             const decipherTournamentTypeInput = (input = '') => {
                 input = input.toLowerCase()
@@ -318,6 +297,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             }
     
             const decipherRankedInput = (input = '') => !!input.toLowerCase()?.includes('u')
+            const decipherDurationInput = (input = '') => !input.toLowerCase()?.includes('m')
     
             const tournament_type = interaction.fields.fields.get('type') ? decipherTournamentTypeInput(interaction.fields.getTextInputValue('type')) : null
 
@@ -325,16 +305,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
         
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT EXACTLY ONE ZERO AT FRONT OF NUMBERS.
             const alphas = knownAbbreviation || getAlphas(interaction.fields.getTextInputValue('abbreviation')) || null
-            const digits = padZerosMidString(interaction.fields.getTextInputValue('abbreviation')
+            const digits = extractDigitsAndPadZeros(interaction.fields.getTextInputValue('abbreviation')
                 ?.replace(/[^\w]|_/g, ''))
                 ?.toUpperCase()
             
             const abbreviation = alphas + digits
             const url = abbreviation
             const isUnranked = interaction.fields.fields.get('ranked') ? decipherRankedInput(interaction.fields.getTextInputValue('ranked')) : null
+            const isLive = interaction.fields.fields.get('duration') ? decipherDurationInput(interaction.fields.getTextInputValue('duration')) : null
             const tournamentId = interaction.customId?.split('-')[1]
     
-            return updateTournament(interaction, tournamentId, name, abbreviation, tournament_type, url, isUnranked)
+            return updateTournament(interaction, tournamentId, name, tournament_type, url, isUnranked, isLive)
         } else if (interaction.customId?.includes('tiebreakers')) {
             const decipherTieBreakerInput = (input) => {
                 if (input.includes('mb') || input.includes('med')) {

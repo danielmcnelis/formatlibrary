@@ -53,6 +53,11 @@ export const askForSimName = async (member, player, simulator, override = false,
     })
 }
 
+//ASK FOR TIME ZONE
+export const askForTimeZone = async (member, player, override = false, error = false, attempt = 1) => {
+    return
+}
+
 //GET DECK LIST
 export const getDeckList = async (member, player, format, override = false, unranked = false) => {            
     const filter = m => m.author.id === member.user.id
@@ -2483,7 +2488,7 @@ export const autoRegisterTopCut = async (server, tournament, topCutTournament, s
 }
 
 // CREATE TOURNAMENT
-export const createTournament = async (interaction, formatName, name, abbreviation, tournament_type, channelName, tieBreaker1, tieBreaker2) => {
+export const createTournament = async (interaction, formatName, name, abbreviation, tournament_type, channelName, isUnranked, isLive) => {
     const server = !interaction.guildId ? {} : 
         await Server.findOne({ where: { id: interaction.guildId }}) || 
         await Server.create({ id: interaction.guildId, name: interaction.guild.name })
@@ -2521,12 +2526,6 @@ export const createTournament = async (interaction, formatName, name, abbreviati
         name.toLowerCase().includes('future world') ? emojis.farqred :
         name.toLowerCase().includes('blazing cheaters') ? emojis.speeder :
         server.logo || emojis.legend
-
-    const tie_breaks = [
-        !tieBreaker1?.includes('opponent') ? tieBreaker1 : null,
-        !tieBreaker2?.includes('opponent') ? tieBreaker2 : null,
-        null
-    ]
     
     try {
         const tournament = server.challongeSubdomain ? {
@@ -2538,8 +2537,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             game_name: game_name,
             pts_for_match_win: "1.0",
             pts_for_match_tie: "0.0",
-            pts_for_bye: "1.0",
-            tie_breaks: tie_breaks
+            pts_for_bye: "1.0"
         } : {
             name: name,
             url: abbreviation || name,
@@ -2548,8 +2546,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             game_name: game_name,
             pts_for_match_win: "1.0",
             pts_for_match_tie: "0.0",
-            pts_for_bye: "1.0",
-            tie_breaks: tie_breaks
+            pts_for_bye: "1.0"
         }
         
         const { status, data } = await axios({
@@ -2575,11 +2572,13 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 channelId: channelId,
                 serverId: interaction.guildId,
                 community: server.name,
+                isLive: isLive,
+                isUnranked: isUnranked,
                 pointsPerMatchWin: '1.0',
                 pointsPerMatchTie: '0.0',
                 pointsPerBye: '1.0',
-                tieBreaker1: tieBreaker1,
-                tieBreaker2: tieBreaker2,
+                tieBreaker1: 'opponents win percentage',
+                tieBreaker2: 'opponents opponents win percentage',
                 tieBreaker3: null
             })
 
@@ -2588,7 +2587,8 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 `You created a new tournament:` + 
                 `\nName: ${name} ${logo}` + 
                 `\nFormat: ${format.name} ${server.emoji || format.emoji}` + 
-                `\nType: ${capitalize(data.tournament.tournament_type, true)}${tournament.isUnranked ? ' (Unranked)' : ''}` +
+                `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${tournament.isUnranked ? ' (Unranked)' : ''}` +
+                tournament_type === 'swiss' ? `\nTie Breakers: TB1: OWP, TB2: OOWP, TB3: N/A` : '' +
                 `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
             })
         } 
@@ -2604,8 +2604,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 game_name: game_name,
                 pts_for_match_win: "1.0",
                 pts_for_match_tie: "0.0",
-                pts_for_bye: "1.0",
-                tie_breaks: tie_breaks
+                pts_for_bye: "1.0"
             } : {
                 name: name,
                 url: str,
@@ -2614,8 +2613,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 game_name: game_name,
                 pts_for_match_win: "1.0",
                 pts_for_match_tie: "0.0",
-                pts_for_bye: "1.0",
-                tie_breaks: tie_breaks
+                pts_for_bye: "1.0"
             }
             
             const { status, data } = await axios({
@@ -2644,9 +2642,9 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     pointsPerMatchWin: '1.0',
                     pointsPerMatchTie: '0.0',
                     pointsPerBye: '1.0',
-                    tieBreaker1: tieBreaker1,
-                    tieBreaker2: tieBreaker2,
-                    tieBreaker3: 'points difference'
+                    tieBreaker1: 'opponents win percentage',
+                    tieBreaker2: 'opponents opponents win percentage',
+                    tieBreaker3: null
                 })
 
                 const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
@@ -2654,7 +2652,8 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     `You created a new tournament:` + 
                     `\nName: ${data.tournament.name} ${logo}` + 
                     `\nFormat: ${format.name} ${server.emoji || format.emoji}` + 
-                    `\nType: ${capitalize(data.tournament.tournament_type, true)}${tournament.isUnranked ? ' (Unranked)' : ''}` +
+                    `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${tournament.isUnranked ? ' (Unranked)' : ''}` +
+                    tournament_type === 'swiss' ? `\nTie Breakers: TB1: OWP, TB2: OOWP, TB3: N/A` : '' +
                     `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
                 })
             } 
@@ -2666,7 +2665,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
 }
 
 // UPDATE TOURNAMENT
-export const updateTournament = async (interaction, tournamentId, name, abbreviation, tournament_type, url, isUnranked) => {
+export const updateTournament = async (interaction, tournamentId, name, tournament_type, url, isUnranked, isLive) => {
     const server = !interaction.guildId ? {} : 
         await Server.findOne({ where: { id: interaction.guildId }}) || 
         await Server.create({ id: interaction.guildId, name: interaction.guild.name })
@@ -2677,7 +2676,7 @@ export const updateTournament = async (interaction, tournamentId, name, abbrevia
         }
     })
 
-    await tournament.update({ isUnranked: isUnranked })
+    await tournament.update({ isUnranked: isUnranked, isLive: isLive })
 
     try {
         const { status, data } = await axios({
@@ -2695,9 +2694,8 @@ export const updateTournament = async (interaction, tournamentId, name, abbrevia
         if (status === 200 && data) {
             await tournament.update({ 
                 name: data.tournament.name,
-                abbreviation: abbreviation || tournament.abbreviation,
                 url: data.tournament.url,
-                type: data.tournament.tournament_type,
+                type: data.tournament.tournament_type
             })
 
             const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
@@ -2705,7 +2703,7 @@ export const updateTournament = async (interaction, tournamentId, name, abbrevia
                 `Updated tournament settings:` + 
                 `\nName: ${data.tournament.name} ${tournament.logo}` + 
                 `\nAbbreviation: ${tournament.abbreviation} ${server.emoji || tournament.emoji}` + 
-                `\nType: ${capitalize(data.tournament.tournament_type, true)}${tournament.isUnranked ? ' (Unranked)' : ''}` +
+                `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${tournament.isUnranked ? ' (Unranked)' : ''}` +
                 `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
             })
         } else {
