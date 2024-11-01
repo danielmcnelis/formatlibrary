@@ -315,11 +315,11 @@ export const getRatedFormat = async (interaction) => {
         max: 1,
         time: 15000
     }).then(async (collected) => {
-        console.log('collected.createdAt', collected.createdAt)
-        console.log('collected?.createdAt?.getTimezoneOffset()', collected.createdAt?.getTimezoneOffset())
+        // console.log('collected.createdAt', collected.createdAt)
+        // console.log('collected?.createdAt?.getTimezoneOffset()', collected.createdAt?.getTimezoneOffset())
         const response = collected.first().content.toLowerCase()
-        console.log('response.createdAt', response.createdAt)
-        console.log('response?.createdAt?.getTimezoneOffset()', response.createdAt?.getTimezoneOffset())
+        // console.log('response.createdAt', response.createdAt)
+        // console.log('response?.createdAt?.getTimezoneOffset()', response.createdAt?.getTimezoneOffset())
 
         const format = await Format.findOne({
             where: {
