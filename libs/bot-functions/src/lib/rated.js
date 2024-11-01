@@ -315,7 +315,9 @@ export const getRatedFormat = async (interaction) => {
         time: 15000
     }).then(async (collected) => {
         console.log('collected getRatedFormat()', collected)
+        console.log(Date.getTimezoneOffset(collected))
         const response = collected.first().content.toLowerCase()
+
         const format = await Format.findOne({
             where: {
                 [Op.or]: [
