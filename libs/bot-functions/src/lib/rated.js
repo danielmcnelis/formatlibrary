@@ -308,14 +308,15 @@ export const getRatedFormat = async (interaction) => {
     const filter = m => m.author.id === interaction.user.id
     const message = await interaction.user.send({ content: `What do you want to play?`})
     console.log('message.createdAt', message.createdAt)
-    console.log('message.createdAt.getTimezoneOffset()', message.createdAt?.getTimezoneOffset().catch((err) => console.log(err)))
+    console.log('message.createdAt.getTimezoneOffset()', message.createdAt?.getTimezoneOffset())
 
     return await message.channel.awaitMessages({
         filter,
         max: 1,
         time: 15000
     }).then(async (collected) => {
-        console.log('collected?.createdAt?.getTimezoneOffset()', collected.createdAt?.getTimezoneOffset().catch((err) => console.log(err)))
+        console.log('collected.createdAt', collected.createdAt)
+        console.log('collected?.createdAt?.getTimezoneOffset()', collected.createdAt?.getTimezoneOffset())
         const response = collected.first().content.toLowerCase()
 
         const format = await Format.findOne({
