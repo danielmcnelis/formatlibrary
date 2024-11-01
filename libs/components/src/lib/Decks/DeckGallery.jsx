@@ -10,6 +10,7 @@ export const DeckGallery = () => {
     const [decks, setDecks] = useState([])
     const [format, setFormat] = useState({})
     const { id } = useParams()
+    const videoPlaylistId = format?.videoPlaylistId
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0))
@@ -39,6 +40,10 @@ export const DeckGallery = () => {
                 <meta name="description" content={`A complete list of Yu-Gi-Oh! decks played in ${format?.name} Format. Includes example decklists and breakdowns of card choices, popularity, and performance.`}/>
                 <meta name="og:description" content={`A complete list of Yu-Gi-Oh! decks played in ${format?.name} Format. Includes example decklists and breakdowns of card choices, popularity, and performance.`}/>
             </Helmet>
+            {
+                videoPlaylistId ? <div class="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
+                <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+            }
             <div className="body">
                 <div id="popular-decks" className="popular-decks">
                     <div className="subcategory-title-flexbox">

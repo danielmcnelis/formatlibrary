@@ -21,6 +21,7 @@ export const FormatIntro = () => {
     const [statsCount, setStatsCount] = useState(0)
     const [isContentManager, setIsContentManager] = useState(false)
     const { id } = useParams()
+    const videoPlaylistId = format?.videoPlaylistId
   
     // SWITCH SPOTLIGHT
     const switchSpotlight = async () => {
@@ -91,6 +92,10 @@ export const FormatIntro = () => {
                 <meta name="image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
                 <meta name="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
             </Helmet>
+            {
+                videoPlaylistId ? <div class="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
+                <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+            }
             <div className="body">
             <div className="format-icon-flexbox">
             <div className="format-text">
@@ -172,9 +177,6 @@ export const FormatIntro = () => {
             <div className="divider"/>
             <BanList id="banlist" format={format}/>
         </div>
-            {
-                format.videoEmbed ? parse(format.videoEmbed) : ''
-            }
         </>
 
     )

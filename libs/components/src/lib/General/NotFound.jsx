@@ -8,6 +8,8 @@ export const NotFound = () => {
 
   return (
     <div className="body">
+    {/* Default Gaming Playlist */}
+    <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
       <div className="not-found-flexbox">
         <h1>404 - Not Found</h1>
         <img id="dig" src="https://cdn.formatlibrary.com/images/artworks/dig.jpg" alt="Fossil Dig" />

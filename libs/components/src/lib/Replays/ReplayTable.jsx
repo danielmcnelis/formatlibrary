@@ -181,6 +181,8 @@ export const ReplayTable = () => {
                     <meta name="description" content={`Search an interactive database of recorded Yu-Gi-Oh! matches in the form of DuelingBook replays.`}/>
                     <meta name="og:description" content={`Search an interactive database of recorded Yu-Gi-Oh! matches in the form of DuelingBook replays.`}/>
                 </Helmet>
+                {/* Default Gaming Playlist */}
+                <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
                 <div className="body">
                     <div className="replay-database-flexbox">
                     <h1>Replay Database</h1>

@@ -48,6 +48,8 @@ export const Home = () => {
   
     return (
         <div className="blog" id="blog">
+        {/* Default Gaming Playlist */}
+        <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             {
                 blogPosts.map((bp, index) => {
                 return (

@@ -38,7 +38,8 @@ export const SingleDeck = () => {
     const [isSubscriber, setIsSubscriber] = useState(false)
     const navigate = useNavigate()
     const { id } = useParams()
-
+    const videoPlaylistId = deck?.format?.videoPlaylistId
+    
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0), [])
 
@@ -159,6 +160,10 @@ export const SingleDeck = () => {
                 }
             />
         </Helmet>
+        {
+            videoPlaylistId ? <div class="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
+            <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+        }
         <div className="body">
             <div className="single-deck-title-flexbox">
                 <a
@@ -327,7 +332,7 @@ export const SingleDeck = () => {
                         download={`${deck.builder}-${deck.type || deck.name}.ydk`}
                         onClick={()=> addDownload()}
                         >
-                        <img style={{width:'28px'}} src={Disk}/>
+                        <img style={{width:'28px'}} alt="download" src={Disk}/>
                         </a>
                     </div>   
                     </td>

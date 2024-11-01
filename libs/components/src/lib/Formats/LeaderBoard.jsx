@@ -11,6 +11,7 @@ export const LeaderBoard = () => {
     const [format, setFormat] = useState({})
     const [leaderboard, setLeaderboard] = useState([])
     const { id } = useParams()
+    const videoPlaylistId = format?.videoPlaylistId
   
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
@@ -54,6 +55,10 @@ export const LeaderBoard = () => {
                 <meta name="description" content={`Live rankings of online ${format?.name} Format Yu-Gi-Oh! players.`}/>
                 <meta name="og:description" content={`Live rankings of online ${format?.name} Format Yu-Gi-Oh! players.`}/>
             </Helmet>
+            {
+                videoPlaylistId ? <div class="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
+                <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+            }
             <div className="body">
                 <div id="leaderboard" className="leaderboard">
                 <div className="subcategory-title-flexbox">

@@ -36,6 +36,16 @@ export const arrayToObject = (arr = []) => {
   return obj
 }
 
+//GET ERA VIDEO PLAYLIST ID
+export const getEraVideoPlaylistId = (date) => {
+    if ('2002-01-01' <= date && date <= '2005-05-31') {
+        //DM FORMATS PLAYLIST ID
+        return 'nLP6Pr2C'
+    } else {
+        return null
+    }
+  }
+
 //DATE TO SIMPLE
 export const dateToSimple = (date) => {
   if (!date) return ''

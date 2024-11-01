@@ -7,7 +7,7 @@ import { useMediaQuery } from 'react-responsive'
 import { NotFound } from '../General/NotFound'
 import { PrintRow } from './PrintRow'
 import { StatusBox } from './StatusBar'
-import { capitalize, dateToSimple, dateToVerbose, getCookie } from '@fl/utils'
+import { capitalize, dateToSimple, dateToVerbose, getCookie, getEraVideoPlaylistId } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import './SingleCard.css'
 import banlists from '../../data/banlists.json'
@@ -28,6 +28,7 @@ export const SingleCard = () => {
     })
     const { card, statuses, prints, rulings } = data || {}
     const { id } = useParams()
+    const videoPlaylistId = getEraVideoPlaylistId(card?.tcgDate)
 
     // USE EFFECT
     useEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop), [inEditMode])
@@ -165,6 +166,10 @@ export const SingleCard = () => {
                 <meta name="image" content={`https://cdn.formatlibrary.com/images/artworks/${card.artworkId}.jpg`}/>
                 <meta name="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${card.artworkId}.jpg`}/>
             </Helmet>
+            {
+                videoPlaylistId ? <div class="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
+                <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+            }
             <div className="body">
                 <div className="single-card">
                     <img className="single-card-image" src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`} alt={card.name}/>

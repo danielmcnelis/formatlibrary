@@ -11,7 +11,7 @@ export const eventsGallery = async (req, res, next) => {
         where: {
           name: { [Op.iLike]: req.params.format }
         },
-        attributes: ['id', 'name', 'icon']
+        attributes: ['id', 'name', 'icon', 'videoPlaylistId']
       })
   
       if (!format) return false
@@ -172,7 +172,7 @@ export const eventsId = async (req, res, next) => {
       ],
       include: [
         { model: Server, attributes: ['id', 'inviteLink', 'vanityUrl'] },
-        { model: Format, attributes: ['id', 'name', 'icon'] },
+        { model: Format, attributes: ['id', 'name', 'icon', 'videoPlaylistId'] },
         { model: Player, attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp'] }
       ]
     })

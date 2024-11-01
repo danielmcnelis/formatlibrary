@@ -63,6 +63,8 @@ export const AdminPortal = () => {
   if (isContentManager) {
     return (
         <div className="body">
+            {/* Default Gaming Playlist */}
+            <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             <h1>Admin Portal</h1>
             <div className="admin-menu">
                 <div onClick={() => setView('events')} className={view === 'events' ? 'clicked-admin-button' : 'admin-button'}>New Event</div>

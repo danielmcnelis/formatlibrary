@@ -374,7 +374,7 @@ export const decksGallery = async (req, res, next) => {
       where: {
         cleanName: { [Op.iLike]: req.params.format.replaceAll(' ', '_').replaceAll('-', '_') }
       },
-      attributes: ['id', 'name', 'icon']
+      attributes: ['id', 'name', 'icon', 'videoPlaylistId']
     })
 
     const decks = await Deck.findAll({
@@ -789,7 +789,7 @@ export const decksId = async (req, res, next) => {
             'rating'
         ],
         include: [
-            { model: Format, attributes: ['id', 'name', 'icon', 'banlist'] },
+            { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'videoPlaylistId'] },
             { model: Player, attributes: ['id', 'name', 'discriminator', 'discordName', 'discordId', 'discordPfp'] }
         ]
     })
