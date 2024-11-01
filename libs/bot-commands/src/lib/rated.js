@@ -11,6 +11,7 @@ import { client } from '../client'
 import { emojis } from '@fl/bot-emojis'
 
 const getRatedInformation = async (interaction, player) => {
+    console.log('interaction getRatedInformation()', interaction)
     const format = await getRatedFormat(interaction)
     if (!format) return await interaction.user.send({ content: `Please specify a valid format.`})
     const access = format.channel ? 'full' : 'partner'

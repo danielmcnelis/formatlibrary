@@ -307,11 +307,14 @@ export const getDropFormats = async (interaction, pools) => {
 export const getRatedFormat = async (interaction) => {
     const filter = m => m.author.id === interaction.user.id
     const message = await interaction.user.send({ content: `What do you want to play?`})
+    console.log('message getRatedFormat()', message)
+
     return await message.channel.awaitMessages({
         filter,
         max: 1,
         time: 15000
     }).then(async (collected) => {
+        console.log('collected getRatedFormat()', collected)
         const response = collected.first().content.toLowerCase()
         const format = await Format.findOne({
             where: {

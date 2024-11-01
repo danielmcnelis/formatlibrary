@@ -55,7 +55,42 @@ export const askForSimName = async (member, player, simulator, override = false,
 
 //ASK FOR TIME ZONE
 export const askForTimeZone = async (member, player, override = false, error = false, attempt = 1) => {
-    return
+    const filter = m => m.author.id === member.id || member.user.id
+    const pronoun = override ? `${player.globalName || player.discordName}'s` : 'your'
+    const greeting = override ? '' : 'Hi! '
+    const prompt = error ? `I think you're getting ahead of yourself. First, I need ${pronoun} ${simulator} name.`
+    : `${greeting}This appears to be ${pronoun} first time using our system. Can you please provide ${pronoun} ${simulator} name?`
+	const message = await member.send({ content: prompt.toString() }).catch((err) => console.log(err))
+    if (!message || !message.channel) return false
+    
+    return await message.channel.awaitMessages({
+        filter,
+		max: 1,
+        time: 15000
+    }).then(async (collected) => {
+        const name = collected.first().content
+        if (name.toLowerCase().includes("duelingbook.com") || name.toLowerCase().includes("imgur.com")) {
+            if (attempt >= 3) {
+                member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))
+                return false
+            } else {
+                return askForSimName(member, player, simulator, override, true, attempt++)
+            }
+        } else {
+            if (simulator === 'DuelingBook') {
+                await player.update({ duelingBook: name })
+            } else if (simulator === 'OPTCGSim') {
+                await player.update({ opTcgSim: name })
+            }
+
+            member.send({ content: `Thanks! I saved ${pronoun} ${simulator} name as: ${name}. If that's wrong, go back to the server and type **/username**.`}).catch((err) => console.log(err))
+            return name
+        }
+    }).catch((err) => {
+        console.log(err)
+        member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))
+        return false
+    })
 }
 
 //GET DECK LIST
