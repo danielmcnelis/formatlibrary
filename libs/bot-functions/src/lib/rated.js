@@ -307,6 +307,7 @@ export const getDropFormats = async (interaction, pools) => {
 export const getRatedFormat = async (interaction) => {
     const filter = m => m.author.id === interaction.user.id
     const message = await interaction.user.send({ content: `What do you want to play?`})
+    console.log('message.createdAt', message.createdAt)
     console.log('message.createdAt.getTimezoneOffset()', message.createdAt?.getTimezoneOffset().catch((err) => console.log(err)))
 
     return await message.channel.awaitMessages({
