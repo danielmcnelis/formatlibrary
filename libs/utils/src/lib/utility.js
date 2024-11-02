@@ -44,7 +44,7 @@ export const getEraVideoPlaylistId = (date) => {
     } else {
         return null
     }
-  }
+}
 
 //DATE TO SIMPLE
 export const dateToSimple = (date) => {

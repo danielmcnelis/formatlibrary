@@ -33,6 +33,8 @@ export const FormatMenu = () => {
                 <meta name="description" content={`Learn more about any Yu-Gi-Oh! format from 2002 to today.`}/>
                 <meta name="og:description" content={`Learn more about any Yu-Gi-Oh! format from 2002 to today.`}/>
             </Helmet>
+            {/* Default Gaming Playlist */}
+            <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             <div className="body">
                 <h1 className="format-menu-title">Popular Formats</h1>
                 <div className="format-menu">
