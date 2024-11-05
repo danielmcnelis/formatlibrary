@@ -226,11 +226,11 @@ export default {
             lookForPotentialPairs(client, interaction, rPTU, rPTU.player, rPTU.format)
         }
 
-        if (isTournament) {
+        if (isTournament && !tournament.isUnranked) {
             setTimeout(async () => {
                 const count = await Replay.count({
                     where: {
-                        matchId: match.id
+                        matchId: match?.id
                     }
                 })
 

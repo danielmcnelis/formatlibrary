@@ -97,8 +97,7 @@ export default {
                     type: tournament.type,
                     isTeamEvent: tournament.isTeamTournament,
                     community: tournament.community,
-                    logo: tournament.logo,
-                    emoji: tournament.emoji
+                    serverId: tournament.serverId
                 })
             }
     
@@ -221,8 +220,8 @@ export default {
                 event = await Event.create({
                     name: primaryTournament.name,
                     abbreviation: primaryTournament.abbreviation,
-                    formatName: primaryTournament.formatName,
-                    formatId: primaryTournament.formatId,
+                    formatName: tournament.formatName,
+                    formatId: tournament.formatId,
                     referenceUrl: `https://challonge.com/${primaryTournament.url}`,
                     display: false,
                     tournamentId: primaryTournament.id,
@@ -230,9 +229,8 @@ export default {
                     topCutTournamentId: tournament.id,
                     type: primaryTournament.type,
                     isTeamEvent: primaryTournament.isTeamTournament,
-                    community: primaryTournament.community,
-                    logo: primaryTournament.logo,
-                    emoji: primaryTournament.emoji
+                    community: tournament.community,
+                    serverId: tournament.serverId
                 })
             }
     

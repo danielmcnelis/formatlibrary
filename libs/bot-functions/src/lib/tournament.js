@@ -105,7 +105,7 @@ export const getDeckList = async (member, player, format, override = false, unra
         time: 180000
     }).then(async (collected) => {
         const url = collected.first()?.attachments?.first()?.url
-        const ydke = collected.first().content
+        const ydke = collected.first()?.content
         let ydk
 
         if (url) {
@@ -3273,8 +3273,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
                 type: tournament.type,
                 isTeamEvent: tournament.isTeamTournament,
                 community: tournament.community,
-                logo: tournament.logo,
-                emoji: tournament.emoji
+                serverId: tournament.serverId
             })
         }
 
@@ -3405,8 +3404,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
                 type: primaryTournament.type,
                 isTeamEvent: primaryTournament.isTeamTournament,
                 community: primaryTournament.community,
-                logo: primaryTournament.logo,
-                emoji: primaryTournament.emoji
+                serverId: tournament.serverId
             })
         }
 
@@ -3591,8 +3589,7 @@ export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId
             type: tournament.type,
             isTeamEvent: tournament.isTeamTournament,
             community: tournament.community,
-            logo: tournament.logo,
-            emoji: tournament.emoji
+            serverId: tournament.serverId
         })
     }
 
