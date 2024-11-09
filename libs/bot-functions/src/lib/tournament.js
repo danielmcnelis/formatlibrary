@@ -2565,7 +2565,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
     try {
         const tournament = server.challongeSubdomain ? {
             name: name,
-            url: abbreviation || name,
+            url: abbreviation || str,
             subdomain: server.challongeSubdomain,
             tournament_type: tournament_type,
             description: description,
@@ -2575,7 +2575,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             pts_for_bye: "1.0"
         } : {
             name: name,
-            url: abbreviation || name,
+            url: abbreviation || str,
             tournament_type: tournament_type,
             description: description,
             game_name: game_name,
@@ -3087,13 +3087,13 @@ export const createTopCut = async(interaction, tournamentId) => {
     const description = primaryTournament.format?.category === 'OP' ? 'One Piece TCG' : `${primaryTournament.format?.name} Format`
     const str = generateRandomString(10, '0123456789abcdefghijklmnopqrstuvwxyz')
     const name = `${primaryTournament.name} - Top ${primaryTournament.topCut}`
-    const abbreviation = `${primaryTournament.abbreviation}_Top${primaryTournament.topCut}`
+    const abbreviation = primaryTournament.abbreviation ? `${primaryTournament.abbreviation}_Top${primaryTournament.topCut}` : null
     let topCutTournament
 
     try {
         const tournament = server.challongeSubdomain ? {
             name: name,
-            url: abbreviation,
+            url: abbreviation || str,
             subdomain: server.challongeSubdomain,
             tournament_type: 'single elimination',
             description: description,
@@ -3101,7 +3101,7 @@ export const createTopCut = async(interaction, tournamentId) => {
             pts_for_match_tie: "0.0"
         } :  {
             name: name,
-            url: abbreviation,
+            url: abbreviation || str,
             tournament_type: 'single elimination',
             description: description,
             game_name: game_name,

@@ -266,7 +266,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT EXACTLY ONE ZERO AT FRONT OF NUMBERS.
             const alphas = knownAbbreviation || suggestedAbbreviation
             const digits = extractDigitsAndPadZeros(interaction.fields.getTextInputValue('name'))
-            const abbreviation = alphas + digits
+            const abbreviation = alphas ? alphas + digits : null
             
             const decipherRankedInput = (input = '') => !!input.toLowerCase()?.includes('u')
             const decipherDurationInput = (input = '') => !input.toLowerCase()?.includes('m')
