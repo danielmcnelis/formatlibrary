@@ -171,7 +171,7 @@ export const SingleDeck = () => {
                     href={`/api/decks/download/${deck.id}`} 
                     download={`${deck.builder}-${deck.type || deck.name}.ydk`}
                     onClick={()=> addDownload()}
-                >                                    
+                >                                     
                     <div className="deck-button">
                         <b style={{padding: '0px 6px'}}>Download</b>
                         <img 
