@@ -13,6 +13,7 @@ const discordPfp = getCookie('discordPfp')
 const googlePfp = getCookie('googlePfp')  
 
 export const Settings = () => {
+    console.log('window.adthrive', window.adthrive)
   const [player, setPlayer] = useState({})
   const [detectedCountry, setDetectedCountry] = useState(null)
   const [detectedTimeZone, setDetectedTimeZone] = useState(null)
