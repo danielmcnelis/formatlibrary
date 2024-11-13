@@ -32,8 +32,13 @@ export const DeckTable = () => {
     })
   
     // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, 0), [page])
+    useLayoutEffect(() => window.scrollTo(0, 0), [page]) 
   
+    // USE LAYOUT EFFECT
+    useLayoutEffect(() => {
+        // if (!isMounted.current) return
+        window.scrollTo(0, document.getElementById('sortSelector')?.offsetTop - 10)
+    }, [page])
 
     // USE EFFECT
     useEffect(() => {
@@ -175,61 +180,63 @@ export const DeckTable = () => {
                 <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/deckbox.png'} alt="deck-box"/>
                 </div>
         
-                <div className="searchWrapper">
-                <input
-                    id="searchBar"
-                    className="filter"
-                    type="text"
-                    placeholder="🔍"
-                    onChange={() => runQuery()}
-                    onKeyDown={(e) => {
-                    if (e.key === 'Enter') search()
-                    }}
-                />
-        
-                <div className="buttonWrapper">
-                    <select
-                    id="searchTypeSelector"
-                    defaultValue="name"
-                    className="filter"
-                    onChange={() => runQuery()}
-                    >
-                    <option value="type">Deck Type</option>
-                    <option value="builder">Builder</option>
-                    <option value="eventName">Event</option>
-                    </select>
-        
-                    <select
-                    id="origin"
-                    defaultValue="event"
-                    className="filter desktop-only"
-                    onChange={(e) => setOrigin(e.target.value || null)}
-                    >
-                    <option value="event">Event Decks</option>
-                    <option value="user">User Decks</option>
-                    <option value="">All Decks</option>
-                    </select>
-        
-                    <select
-                    id="format"
-                    defaultValue=""
-                    className="filter"
-                    onChange={(e) => setFormat(e.target.value || null)}
-                    >
-                    <option key={'All Formats'} value={''}>All Formats</option>
-                    {
-                        formats.map((f) => <option key={f.id} value={f.name}>{f.name}</option>)
-                    }
-                    </select>
-        
-                    <div
-                    className="searchButton desktop-only"
-                    type="submit"
-                    onClick={() => search()}
-                    >
-                    Search
+                <div className="search-component">
+                    <div className="searchWrapper">
+                        <input
+                            id="searchBar"
+                            className="filter"
+                            type="text"
+                            placeholder="🔍"
+                            onChange={() => runQuery()}
+                            onKeyDown={(e) => {
+                            if (e.key === 'Enter') search()
+                            }}
+                        />
+                
+                        <div className="buttonWrapper">
+                            <select
+                            id="searchTypeSelector"
+                            defaultValue="name"
+                            className="filter"
+                            onChange={() => runQuery()}
+                            >
+                            <option value="type">Deck Type</option>
+                            <option value="builder">Builder</option>
+                            <option value="eventName">Event</option>
+                            </select>
+                
+                            <select
+                            id="origin"
+                            defaultValue="event"
+                            className="filter desktop-only"
+                            onChange={(e) => setOrigin(e.target.value || null)}
+                            >
+                            <option value="event">Event Decks</option>
+                            <option value="user">User Decks</option>
+                            <option value="">All Decks</option>
+                            </select>
+                
+                            <select
+                            id="format"
+                            defaultValue=""
+                            className="filter"
+                            onChange={(e) => setFormat(e.target.value || null)}
+                            >
+                            <option key={'All Formats'} value={''}>All Formats</option>
+                            {
+                                formats.map((f) => <option key={f.id} value={f.name}>{f.name}</option>)
+                            }
+                            </select>
+                
+                            <div
+                            className="searchButton desktop-only"
+                            type="submit"
+                            onClick={() => search()}
+                            >
+                            Search
+                            </div>
+                        </div>
                     </div>
-                </div>
                 </div>
         
                 <div id="resultsWrapper0" className="resultsWrapper0 desktop-only">
@@ -292,66 +299,68 @@ export const DeckTable = () => {
                 </div>
                 </div>
         
-                <div className="paginationWrapper desktop-only">
-                <div className="pagination">
-                    <Pagination
-                    setPage={setPage}
-                    itemCount={total}
-                    page={page}
-                    itemsPerPage={decksPerPage}
-                    />
-                </div>
-                </div>
-        
-                { isTabletOrMobile ? (
-                <div id="deck-table">
-                    <table id="decks">
-                    <thead>
-                        <tr>
-                        <th>Format</th>
-                        <th>Deck</th>
-                        <th>Builder</th>
-                        <th>Place</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {decks.map((deck, index) => <MobileDeckRow key={deck.id} index={index} deck={deck}/>)}
-                    </tbody>
-                    </table>
-                </div>
-                ) : (view === 'table') ? (
-                <div id="deck-table">
-                    <table id="decks">
-                    <thead>
-                        <tr>
-                        <th>Format</th>
-                        <th>Deck Type</th>
-                        <th>Builder</th>
-                        <th>Place</th>
-                        <th>Event</th>
-                        <th>Likes</th>
-                        <th>Downloads</th>
-                        <th>Uploaded</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {decks.map((deck, index) => <DeckRow key={deck.id} index={index} deck={deck}/>)}
-                    </tbody>
-                    </table>
-                </div>
-                ) : (
-                <div id="deckGalleryFlexBox">
-                    {decks.map((deck, index) => <DeckImage key={deck.id} index={index} deck={deck} width="360px" margin="10px 5px" padding="5px"/>)}
+                <div className="results-component">
+                    <div className="paginationWrapper desktop-only">
+                        <div className="pagination">
+                            <Pagination
+                            setPage={setPage}
+                            itemCount={total}
+                            page={page}
+                            itemsPerPage={decksPerPage}
+                            />
+                        </div>
+                        </div>
+                
+                        { isTabletOrMobile ? (
+                        <div id="deck-table">
+                            <table id="decks">
+                            <thead>
+                                <tr>
+                                <th>Format</th>
+                                <th>Deck</th>
+                                <th>Builder</th>
+                                <th>Place</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {decks.map((deck, index) => <MobileDeckRow key={deck.id} index={index} deck={deck}/>)}
+                            </tbody>
+                            </table>
+                        </div>
+                        ) : (view === 'table') ? (
+                        <div id="deck-table">
+                            <table id="decks">
+                            <thead>
+                                <tr>
+                                <th>Format</th>
+                                <th>Deck Type</th>
+                                <th>Builder</th>
+                                <th>Place</th>
+                                <th>Event</th>
+                                <th>Likes</th>
+                                <th>Downloads</th>
+                                <th>Uploaded</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {decks.map((deck, index) => <DeckRow key={deck.id} index={index} deck={deck}/>)}
+                            </tbody>
+                            </table>
+                        </div>
+                        ) : (
+                        <div id="deckGalleryFlexBox">
+                            {decks.map((deck, index) => <DeckImage key={deck.id} index={index} deck={deck} width="360px" margin="10px 5px" padding="5px"/>)}
+                            </div>
+                        )}
+                
+                        <div className="pagination">
+                        <Pagination
+                            setPage={setPage}
+                            itemCount={total}
+                            page={page}
+                            itemsPerPage={decksPerPage}
+                        />
                     </div>
-                )}
-        
-                <div className="pagination">
-                <Pagination
-                    setPage={setPage}
-                    itemCount={total}
-                    page={page}
-                    itemsPerPage={decksPerPage}
-                />
                 </div>
             </div>
         </>

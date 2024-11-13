@@ -286,65 +286,68 @@ export const SingleDeck = () => {
                 }
                 </tbody>
             </table>
-            <div id="main" className="deck-bubble">
-                <div id="main" className="deck-flexbox">
+
+            <div className="deck-component">
+                <div id="main" className="deck-bubble">
+                    <div id="main" className="deck-flexbox">
+                    {
+                        deck.main.map((card, index) => <CardImage className="card-image" width='72px' padding='1px' margin='0px' key={`${deck.id}-${index}-${card.id}`} card={card} status={banlist[card.id]}/>)
+                    }
+                    </div>
+                </div>
                 {
-                    deck.main.map((card, index) => <CardImage className="card-image" width='72px' padding='1px' margin='0px' key={`${deck.id}-${index}-${card.id}`} card={card} status={banlist[card.id]}/>)
+                    deck.side.length ? (
+                    <div id="side" className="deck-bubble">
+                        <div id="side" className="deck-flexbox">
+                        {
+                            deck.side.map((card, index) => <CardImage className="card-image" width='48px' padding='0.5px' margin='0px' key={`${deck.id}-${index}-${card.id}`} card={card} status={banlist[card.id]}/>)
+                        }
+                        </div>
+                    </div>
+                    ) : ''
                 }
-                </div>
+                {
+                    deck.extra.length ? (
+                    <div id="extra" className="deck-bubble">
+                        <div id="extra" className="deck-flexbox">
+                        {
+                            deck.extra.map((card, index) => <CardImage className="card-image"f width='48px' padding='0.5px' margin='0px' key={`${deck.id}-${index}-${card.id}`} card={card} status={banlist[card.id]}/>)
+                        }
+                        </div>
+                    </div>
+                    ) : ''
+                }
+                <table className='deck-stats-table'>
+                    <tbody>
+                        <tr>
+                            <td>
+                            <div className="deck-stats-cell">
+                                <div style={{paddingRight:'7px'}}><b className="deck-stats-label">Likes: </b>{deck.rating}</div>
+                                <img className="likeImg" alt="heart" onClick={() => addLike()} style={{width:'28px'}} src={Heart}/>
+                            </div>   
+                            </td>
+                            <td>
+                            <div className="deck-stats-cell">
+                                <div style={{paddingRight:'7px'}}><b className="deck-stats-label">Downloads: </b>{deck.downloads}</div> 
+                                <a
+                                    href={`/api/decks/download/${id}`} 
+                                    download={`${deck.builder}-${deck.type || deck.name}.ydk`}
+                                    onClick={()=> addDownload()}
+                                >
+                                <img style={{width:'28px'}} alt="download" src={Disk}/>
+                                </a>
+                            </div>   
+                            </td>
+                            <td>
+                            <div className="deck-stats-cell">
+                                <div style={{paddingRight:'7px'}}><b className="deck-stats-label">Views: </b>{deck.views}</div> 
+                                <img style={{width:'28px'}} src={Eye} alt="eye"/>
+                            </div>   
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            {
-                deck.side.length ? (
-                <div id="side" className="deck-bubble">
-                    <div id="side" className="deck-flexbox">
-                    {
-                        deck.side.map((card, index) => <CardImage className="card-image" width='48px' padding='0.5px' margin='0px' key={`${deck.id}-${index}-${card.id}`} card={card} status={banlist[card.id]}/>)
-                    }
-                    </div>
-                </div>
-                ) : ''
-            }
-            {
-                deck.extra.length ? (
-                <div id="extra" className="deck-bubble">
-                    <div id="extra" className="deck-flexbox">
-                    {
-                        deck.extra.map((card, index) => <CardImage className="card-image"f width='48px' padding='0.5px' margin='0px' key={`${deck.id}-${index}-${card.id}`} card={card} status={banlist[card.id]}/>)
-                    }
-                    </div>
-                </div>
-                ) : ''
-            }
-            <table className='deck-stats-table'>
-                <tbody>
-                <tr>
-                    <td>
-                    <div className="deck-stats-cell">
-                        <div style={{paddingRight:'7px'}}><b className="deck-stats-label">Likes: </b>{deck.rating}</div>
-                        <img className="likeImg" onClick={() => addLike()} style={{width:'28px'}} src={Heart}/>
-                    </div>   
-                    </td>
-                    <td>
-                    <div className="deck-stats-cell">
-                        <div style={{paddingRight:'7px'}}><b className="deck-stats-label">Downloads: </b>{deck.downloads}</div> 
-                        <a
-                        href={`/api/decks/download/${id}`} 
-                        download={`${deck.builder}-${deck.type || deck.name}.ydk`}
-                        onClick={()=> addDownload()}
-                        >
-                        <img style={{width:'28px'}} alt="download" src={Disk}/>
-                        </a>
-                    </div>   
-                    </td>
-                    <td>
-                    <div className="deck-stats-cell">
-                        <div style={{paddingRight:'7px'}}><b className="deck-stats-label">Views: </b>{deck.views}</div> 
-                        <img style={{width:'28px'}} src={Eye} alt="eye"/>
-                    </div>   
-                    </td>
-                </tr>
-                </tbody>
-            </table>
         </div>
     </>
   )

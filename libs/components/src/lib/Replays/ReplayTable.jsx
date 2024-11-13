@@ -29,8 +29,11 @@ export const ReplayTable = () => {
     })
   
     // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, 0), [page])
-  
+    useLayoutEffect(() => {
+        // if (!isMounted.current) return
+        window.scrollTo(0, document.getElementById('sortSelector')?.offsetTop - 10)
+    }, [page])
+
     // USE EFFECT
     useEffect(() => {
         const checkRoles = async () => {
@@ -188,7 +191,8 @@ export const ReplayTable = () => {
                     <h1>Replay Database</h1>
                     <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/film.png'} alt="trophy"/>
                     </div>
-            
+
+                    <div className="search-component">
                     <div className="searchWrapper">
                     <input
                         id="searchBar"
@@ -231,6 +235,7 @@ export const ReplayTable = () => {
                         onClick={() => search()}
                         >
                         Search
+                        </div>
                         </div>
                     </div>
                     </div>
@@ -276,30 +281,32 @@ export const ReplayTable = () => {
                         </div>
                     </div>
                     </div>
-            
-                    <div id="replay-table">
-                    <table id="replays">
-                        <thead>
-                        <tr>
-                            <th>Format</th>
-                            <th>Event</th>
-                            <th>Round</th>
-                            <th>Players</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {replays.map((replay, index) =>  <MobileReplayRow key={replay.id} index={index} replay={replay} />)}
-                        </tbody>
-                    </table>
-                    </div>
-            
-                    <div className="pagination">
-                    <Pagination
-                        setPage={setPage}
-                        itemCount={total}
-                        page={page}
-                        itemsPerPage={replaysPerPage}
-                    />
+
+                    <div className="results-component">
+                        <div id="replay-table">
+                        <table id="replays">
+                            <thead>
+                            <tr>
+                                <th>Format</th>
+                                <th>Event</th>
+                                <th>Round</th>
+                                <th>Players</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {replays.map((replay, index) =>  <MobileReplayRow key={replay.id} index={index} replay={replay} />)}
+                            </tbody>
+                        </table>
+                        </div>
+                
+                        <div className="pagination">
+                        <Pagination
+                            setPage={setPage}
+                            itemCount={total}
+                            page={page}
+                            itemsPerPage={replaysPerPage}
+                        />
+                        </div>
                     </div>
                 </div>
             </>

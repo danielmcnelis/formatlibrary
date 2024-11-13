@@ -1,0 +1,22 @@
+[NX Daemon Server] - 2024-11-11T22:58:09.420Z - Started listening on: /var/folders/6q/_n8l68nd6dggddr9s16shd600000gn/T/d8438979ebcb6fe05893/d.sock
+[NX Daemon Server] - 2024-11-11T22:58:09.473Z - [WATCHER]: Subscribed to changes within: /Users/danielmcnelis/Desktop/projects/formatlibrary (native)
+[NX Daemon Server] - 2024-11-11T22:58:09.518Z - Established a connection. Number of open connections: 1
+[NX Daemon Server] - 2024-11-11T22:58:09.519Z - Established a connection. Number of open connections: 2
+[NX Daemon Server] - 2024-11-11T22:58:09.521Z - Closed a connection. Number of open connections: 1
+[NX Daemon Server] - 2024-11-11T22:58:09.539Z - [REQUEST]: Responding to the client. Shutdown initiated
+[NX Daemon Server] - 2024-11-11T22:58:09.551Z - Done responding to the client Shutdown initiated
+[NX Daemon Server] - 2024-11-11T22:58:09.551Z - Handled FORCE_SHUTDOWN. Handling time: 1. Response time: 28.
+[NX Daemon Server] - 2024-11-11T22:58:09.552Z - Closed a connection. Number of open connections: 0
+[NX Daemon Server] - 2024-11-11T22:58:09.552Z - [WATCHER]: Stopping the watcher for /Users/danielmcnelis/Desktop/projects/formatlibrary (sources)
+[NX Daemon Server] - 2024-11-11T22:58:09.570Z - [WATCHER]: Stopping the watcher for /Users/danielmcnelis/Desktop/projects/formatlibrary (outputs)
+[NX Daemon Server] - 2024-11-11T23:51:41.893Z - Started listening on: /var/folders/6q/_n8l68nd6dggddr9s16shd600000gn/T/d8438979ebcb6fe05893/d.sock
+[NX Daemon Server] - 2024-11-11T23:51:41.896Z - [WATCHER]: Subscribed to changes within: /Users/danielmcnelis/Desktop/projects/formatlibrary (native)
+[NX Daemon Server] - 2024-11-11T23:51:41.904Z - Established a connection. Number of open connections: 1
+[NX Daemon Server] - 2024-11-11T23:51:41.905Z - Established a connection. Number of open connections: 2
+[NX Daemon Server] - 2024-11-11T23:51:41.907Z - Closed a connection. Number of open connections: 1
+[NX Daemon Server] - 2024-11-11T23:51:41.909Z - [REQUEST]: Responding to the client. Shutdown initiated
+[NX Daemon Server] - 2024-11-11T23:51:41.909Z - Done responding to the client Shutdown initiated
+[NX Daemon Server] - 2024-11-11T23:51:41.909Z - Handled FORCE_SHUTDOWN. Handling time: 1. Response time: 0.
+[NX Daemon Server] - 2024-11-11T23:51:41.910Z - [WATCHER]: Stopping the watcher for /Users/danielmcnelis/Desktop/projects/formatlibrary (sources)
+[NX Daemon Server] - 2024-11-11T23:51:41.910Z - Closed a connection. Number of open connections: 0
+[NX Daemon Server] - 2024-11-11T23:51:41.910Z - [WATCHER]: Stopping the watcher for /Users/danielmcnelis/Desktop/projects/formatlibrary (outputs)

@@ -506,6 +506,7 @@ export const CardTable = () => {
     }
   
     const advancedButtonKeys = Object.keys(advancedButtons)
+
   
     // RENDER
     return (
@@ -527,6 +528,7 @@ export const CardTable = () => {
                     </div>
                     <img src={`https://cdn.formatlibrary.com/images/artworks/${format.icon ? `${format.icon}.jpg` : 'nibiru.jpg'}`} alt={format.icon} className="format-icon-medium"/>
                 </div>
+                <div className="search-component">
                 {
                     isTabletOrMobile ? (
                         <>
@@ -709,7 +711,6 @@ export const CardTable = () => {
                         </>      
                     )
                 }
-        
                 {
                     !advanced ? (
                         <div className="advanced-search">
@@ -858,6 +859,7 @@ export const CardTable = () => {
                         </div>
                     )
                 }
+                </div>
         
                 <div id="resultsWrapper0" className="resultsWrapper0">
                     <div className="results desktop-only" style={{width: '360px'}}>
@@ -933,6 +935,7 @@ export const CardTable = () => {
                     </div>
                 </div>
         
+                <div className="results-component">
                 <div className="paginationWrapper desktop-only">
                 <div className="pagination desktop-only">
                     <Pagination
@@ -989,6 +992,7 @@ export const CardTable = () => {
                     page={page}
                     itemsPerPage={cardsPerPage}
                 />
+                </div>
                 </div>
             </div>
         </>

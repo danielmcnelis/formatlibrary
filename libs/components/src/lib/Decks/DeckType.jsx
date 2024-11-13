@@ -207,183 +207,185 @@ export const DeckType = () => {
                 </tbody>
                 </table>
         
-                <h2>Popular Main Deck Cards</h2>
-                <div id="main" className="deck-bubble">
-                    <div id="main" className="deck-flexbox">
-                    {
-                    summary.mainMonsters.map((data, index) => {
-                        const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
-                        data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
-                        `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
-        
-                        const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
-        
-                        return (
-                            <div className="popular-main" key={'m' + data.card.artworkId}>
-                            <CardImage className="popular-main-card" width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
-                            <div onClick={() => toggle('main-monsters', index)}>
-                                <div id={'main-monsters-info-' + index} className="deckType-info">{info}</div>
-                                <div id={'main-monsters-details-' + index} className="expanded-info">{details}</div>
-                            </div>
-                            </div>
-                        )
-                    })
-                    }
-                    {
-                    summary.mainSpells.map((data, index) => {
-                        const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
-                        data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
-                        `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
-        
-                        const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
-        
-                        return (
-                            <div className="popular-main" key={'m' + data.card.artworkId} >
-                            <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
-                            <div onClick={() => toggle('main-spells', index)}>
-                                <div id={'main-spells-info-' + index} className="deckType-info">{info}</div>
-                                <div id={'main-spells-details-' + index} className="expanded-info">{details}</div>
-                            </div>
-                            </div>
-                        )
-                    })
-                    }
-                    {
-                    summary.mainTraps.map((data, index) => {
-                        const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
-                        data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
-                        `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
-        
-                        const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
-        
-                        return (
-                            <div className="popular-main" key={'m' + data.card.artworkId} >
-                            <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
-                            <div onClick={() => toggle('main-traps', index)}>
-                                <div id={'main-traps-info-' + index} className="deckType-info">{info}</div>
-                                <div id={'main-traps-details-' + index} className="expanded-info">{details}</div>
-                            </div>
-                            </div>
-                        )
-                    })
-                    }
-                    </div>
-                </div>
-        
-                {
-                summary.extraMonsters?.length ? (
-                    <>
-                    <br/>
-                    <h2>Popular Extra Deck Cards</h2>
-                    <div id="extra" className="deck-bubble">
-                        <div id="extra" className="deck-flexbox">
+                <div className="popular-cards">
+                    <h2>Popular Main Deck Cards</h2>
+                    <div id="main" className="deck-bubble">
+                        <div id="main" className="deck-flexbox">
                         {
-                            summary.extraMonsters.map((data, index) => {
+                        summary.mainMonsters.map((data, index) => {
                             const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
-                                data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
-                                `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
-        
-                                const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                            data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
+                            `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
+            
+                            const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
                                 (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
                                 (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
                                 ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
             
-                                return (
-                                <div className="popular-side" key={'e' + data.card.artworkId} >
-                                    <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
-                                    <div onClick={() => toggle('extra', index)}>
-                                    <div id={'extra-info-' + index} className="deckType-info">{info}</div>
-                                    <div id={'extra-details-' + index} className="expanded-info">{details}</div>
-                                    </div>
+                            return (
+                                <div className="popular-main" key={'m' + data.card.artworkId}>
+                                <CardImage className="popular-main-card" width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
+                                <div onClick={() => toggle('main-monsters', index)}>
+                                    <div id={'main-monsters-info-' + index} className="deckType-info">{info}</div>
+                                    <div id={'main-monsters-details-' + index} className="expanded-info">{details}</div>
                                 </div>
-                                )
-                            })
+                                </div>
+                            )
+                        })
+                        }
+                        {
+                        summary.mainSpells.map((data, index) => {
+                            const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
+                            data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
+                            `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
+            
+                            const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
+            
+                            return (
+                                <div className="popular-main" key={'m' + data.card.artworkId} >
+                                <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
+                                <div onClick={() => toggle('main-spells', index)}>
+                                    <div id={'main-spells-info-' + index} className="deckType-info">{info}</div>
+                                    <div id={'main-spells-details-' + index} className="expanded-info">{details}</div>
+                                </div>
+                                </div>
+                            )
+                        })
+                        }
+                        {
+                        summary.mainTraps.map((data, index) => {
+                            const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
+                            data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
+                            `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
+            
+                            const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
+            
+                            return (
+                                <div className="popular-main" key={'m' + data.card.artworkId} >
+                                <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
+                                <div onClick={() => toggle('main-traps', index)}>
+                                    <div id={'main-traps-info-' + index} className="deckType-info">{info}</div>
+                                    <div id={'main-traps-details-' + index} className="expanded-info">{details}</div>
+                                </div>
+                                </div>
+                            )
+                        })
                         }
                         </div>
                     </div>
-                    </>
-                ) : ''
-                }
-        
-                <br/>
-                <h2>Popular Side Deck Cards</h2>
-                <div id="side" className="deck-bubble">
-                    <div id="side" className="deck-flexbox">
+            
                     {
-                    summary.sideMonsters.map((data, index) => {
-                        const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
-                        data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
-                        `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
-        
-                        const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
-        
-                        return (
-                            <div className="popular-side" key={'s' + data.card.artworkId} >
-                            <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
-                            <div onClick={() => toggle('side-monsters', index)}>
-                                <div id={'side-monsters-info-' + index} className="deckType-info">{info}</div>
-                                <div id={'side-monsters-details-' + index} className="expanded-info">{details}</div>
+                    summary.extraMonsters?.length ? (
+                        <>
+                        <br/>
+                        <h2>Popular Extra Deck Cards</h2>
+                        <div id="extra" className="deck-bubble">
+                            <div id="extra" className="deck-flexbox">
+                            {
+                                summary.extraMonsters.map((data, index) => {
+                                const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
+                                    data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
+                                    `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
+            
+                                    const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
+                
+                                    return (
+                                    <div className="popular-side" key={'e' + data.card.artworkId} >
+                                        <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
+                                        <div onClick={() => toggle('extra', index)}>
+                                        <div id={'extra-info-' + index} className="deckType-info">{info}</div>
+                                        <div id={'extra-details-' + index} className="expanded-info">{details}</div>
+                                        </div>
+                                    </div>
+                                    )
+                                })
+                            }
                             </div>
-                            </div>
-                        )
-                    })
+                        </div>
+                        </>
+                    ) : ''
                     }
-                    {
-                    summary.sideSpells.map((data, index) => {
-                        const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
-                        data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
-                        `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
-        
-                        const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
-        
-                        return (
-                            <div className="popular-side" key={'s' + data.card.artworkId}>
-                            <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
-                            <div onClick={() => toggle('side-spells', index)}>
-                                <div id={'side-spells-info-' + index} className="deckType-info">{info}</div>
-                                <div id={'side-spells-details-' + index} className="expanded-info">{details}</div>
-                            </div>
-                            </div>
-                        )
-                    })
-                    }
-                    {
-                    summary.sideTraps.map((data, index) => {
-                        const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
-                        data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
-                        `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
-        
-                        const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                            ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
-        
-                        return (
-                            <div className="popular-side" key={'s' + data.card.artworkId}>
-                            <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
-                                <div onClick={() => toggle('side-traps', index)}>
-                                <div id={'side-traps-info-' + index} className="deckType-info">{info}</div>
-                                <div id={'side-traps-details-' + index} className="expanded-info">{details}</div>
+            
+                    <br/>
+                    <h2>Popular Side Deck Cards</h2>
+                    <div id="side" className="deck-bubble">
+                        <div id="side" className="deck-flexbox">
+                        {
+                        summary.sideMonsters.map((data, index) => {
+                            const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
+                            data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
+                            `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
+            
+                            const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
+            
+                            return (
+                                <div className="popular-side" key={'s' + data.card.artworkId} >
+                                <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
+                                <div onClick={() => toggle('side-monsters', index)}>
+                                    <div id={'side-monsters-info-' + index} className="deckType-info">{info}</div>
+                                    <div id={'side-monsters-details-' + index} className="expanded-info">{details}</div>
                                 </div>
-                            </div>
-                        )
-                    })
-                    }
+                                </div>
+                            )
+                        })
+                        }
+                        {
+                        summary.sideSpells.map((data, index) => {
+                            const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
+                            data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
+                            `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
+            
+                            const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
+            
+                            return (
+                                <div className="popular-side" key={'s' + data.card.artworkId}>
+                                <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
+                                <div onClick={() => toggle('side-spells', index)}>
+                                    <div id={'side-spells-info-' + index} className="deckType-info">{info}</div>
+                                    <div id={'side-spells-details-' + index} className="expanded-info">{details}</div>
+                                </div>
+                                </div>
+                            )
+                        })
+                        }
+                        {
+                        summary.sideTraps.map((data, index) => {
+                            const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
+                            data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
+                            `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
+            
+                            const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
+                                ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
+            
+                            return (
+                                <div className="popular-side" key={'s' + data.card.artworkId}>
+                                <CardImage width='72px' padding='1px' margin='0px' card={data.card} status={banlist[data.card.id]}/>
+                                    <div onClick={() => toggle('side-traps', index)}>
+                                    <div id={'side-traps-info-' + index} className="deckType-info">{info}</div>
+                                    <div id={'side-traps-details-' + index} className="expanded-info">{details}</div>
+                                    </div>
+                                </div>
+                            )
+                        })
+                        }
+                        </div>
                     </div>
                 </div>
                 {
