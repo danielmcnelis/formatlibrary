@@ -39,7 +39,7 @@ router.put('/api/decks/unpublish/:id', decksUnpublishId)
 
 router.put('/api/decks/share/:id', decksShareId)
 
-router.get('/api/decks/builder/:id', decksBuilderId)
+router.get('/api/decks/deck-builder/:id', decksBuilderId)
 
 router.get('/api/decks/my-decks', [authenticate, decksMyDecks])
 

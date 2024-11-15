@@ -52,19 +52,29 @@ const App = () => {
         if (playerId) checkRoles()
     }, [])
 
+    // let disableAds = false
+
+    // if (playerId && !checkedSubscription) {
+    //     console.log('do nothing')
+    // } else if (!isSubscriber) {
+    //     disableAds = false
+    // }
+
+    const disableAds = playerId && (!checkedSubscription || (checkedSubscription && isSubscriber))
+
   return (
     <div>
-        <Helmet>
-            {
+        {/* <Helmet>
+             {
                 playerId && !checkedSubscription ? '' : 
                     !isSubscriber ? (
                         <script data-no-optimize="1" data-cfasync="false" src="https://formatlibrary.com/raptive.js"></script>
                     ) : ''
             }
-        </Helmet>
+        </Helmet> */}
         <div className="app">
             {
-                playerId && !checkedSubscription ? (<Router/>) :
+                playerId && !checkedSubscription ? (<Router disableAds={disableAds}/>) :
                     adBlockDetected && showReminder ? (
                         <div className="ad-block-detected">
                             <h2>Reminder: Please allow cookies and disable your ad-blocker.</h2>
@@ -91,7 +101,7 @@ const App = () => {
                                 </div>
                             </div>
                         </div>
-                    ) : (<Router/>)
+                    ) : (<Router disableAds={disableAds}/>)
             }
         </div>
     </div>

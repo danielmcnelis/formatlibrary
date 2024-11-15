@@ -2,9 +2,10 @@
 import { useState, useEffect, useLayoutEffect } from 'react'
 import axios from 'axios'
 import { NotFound } from '../General/NotFound'
-import { getCookie, getCountry, countries } from '@fl/utils'
+import { getCookie, getCountry, countries, appendScript } from '@fl/utils'
 import {Button, Form, Modal} from 'react-bootstrap'
-import { Helmet } from 'react-helmet'
+import { Helmet, HelmetProvider } from 'react-helmet-async'
+// import { Helmet } from 'react-helmet'
 import './Settings.css'
 
 const playerId = getCookie('playerId')
@@ -13,7 +14,7 @@ const discordPfp = getCookie('discordPfp')
 const googlePfp = getCookie('googlePfp')  
 
 export const Settings = () => {
-    const [isMounted, setIsMounted] = useState(false)
+//   const [isMounted, setIsMounted] = useState(false)
   const [player, setPlayer] = useState({})
   const [detectedCountry, setDetectedCountry] = useState(null)
   const [detectedTimeZone, setDetectedTimeZone] = useState(null)
@@ -121,49 +122,40 @@ export const Settings = () => {
     fetchData()
   }, [])
 
-  // USE EFFECT DELAY
-  useEffect(() => {
-    return setTimeout(() => {
-        setIsMounted(true)
-    }, 1000)
-  }, [])
+//   // USE EFFECT DELAY MOUNT
+//   useEffect(() => {
+//         setTimeout(() => {
+//             setIsMounted(true)
+//         }, 200)
+//   }, [])
+  
 
-
-
-  // USE EFFECT ATTACHED SCRIPT
-  useEffect(() => {
-    if (!isMounted) return
-    const script = document.createElement('script');
-    script.src = 'https://formatlibrary.com/disable-ads.js'; 
-    script.async = true; 
-
-    document.head.appendChild(script)
-
-    return () => {
-      document.head.removeChild(script)
-    }
-  }, [isMounted])
-
-
+//   // USE EFFECT ATTACH SCRIPT
+//   useEffect(() => {
+//     if (isMounted) {
+//         appendScript('http://localhost:8080/disable-all-ads.js', document)     
+//     }
+//   }, [isMounted])
 
   if (player === null) return <NotFound /> 
   const {id, name, firstName, lastName, discordName, discriminator, country, timeZone, youtube, twitch, twitter, duelingBook, email} = player
   if (!id) return <div/>
   return (
     <>
-        <Helmet>
-            <title>{`Settings - Format Library`}</title>
-            <meta name="og:title" content={`Settings - Format Library`}/>    
-            <meta name="description" content={`View and edit your account settings for FormatLibrary.com.`}/>    
-            <meta name="og:description" content={`View and edit your account settings for FormatLibrary.com.`}/> 
-
-        </Helmet>
+        <HelmetProvider>
+            <Helmet>
+                <title>{`Settings - Format Library`}</title>
+                <meta name="og:title" content={`Settings - Format Library`}/>    
+                <meta name="description" content={`View and edit your account settings for FormatLibrary.com.`}/>    
+                <meta name="og:description" content={`View and edit your account settings for FormatLibrary.com.`}/> 
+            </Helmet>
+        </HelmetProvider>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossOrigin="anonymous"/>
-        <link rel="stylesheet" href="/styles.css" />
+        <link rel="stylesheet" href="/assets/css/styles.css" />
         {/* Default Gaming Playlist */}
         <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
         <div className="body">
-                <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+                <Modal style={{height: '90%'}} show={showEditModal} onHide={() => setShowEditModal(false)}>
                     <Modal.Header closeButton>
                     <Modal.Title>Edit Profile:</Modal.Title>
                     </Modal.Header>

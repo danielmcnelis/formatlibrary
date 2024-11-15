@@ -29,6 +29,15 @@ export const getCookie = (name) => {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+//APPEND SCRIPT
+export const appendScript = (src, document) => {
+    const script = document.createElement('script')
+    script.src = src
+    script.async = true
+
+    document.head.appendChild(script)
+}
+
 //ARRAY TO OBJECT
 export const arrayToObject = (arr = []) => {
   const obj = {}

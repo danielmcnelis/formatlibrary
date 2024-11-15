@@ -2,10 +2,11 @@
 import { Navigation } from './Navigation'
 import { Footer } from './Footer'
 import useLocalStorage from 'use-local-storage'
+import { Helmet } from 'react-helmet'
 
 // PAGE
 export const Page = (props) => {
-  const { element } = props
+  const { element, disableAds } = props
   const defaultDark = window.matchMedia('(prefers-color-scheme: dark)').matches
   const [theme, setTheme] = useLocalStorage('theme', defaultDark ? 'dark' : 'light')  
 
@@ -18,12 +19,28 @@ export const Page = (props) => {
         }
     }
 
-    
   return (
-    <div id="theme" data-theme={theme}>
-      <Navigation switchTheme={switchTheme} theme={theme}/>
-      {element}
-      <Footer/>
+    <div>
+    {
+        disableAds ? (
+            <div id="theme" data-theme={theme}>
+                <Navigation switchTheme={switchTheme} theme={theme}/>
+                {element}
+                <Footer/>
+            </div>
+        ) : (
+            <>
+                <Helmet>
+                    <script data-no-optimize="1" data-cfasync="false" src="https://formatlibrary.com/raptive.js"></script>
+                </Helmet>
+                <div id="theme" data-theme={theme}>
+                    <Navigation switchTheme={switchTheme} theme={theme}/>
+                    {element}
+                    <Footer/>
+                </div>
+            </>
+        )
+    }
     </div>
-  )
+)
 }

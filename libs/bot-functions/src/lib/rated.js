@@ -345,7 +345,7 @@ export const getRatedFormat = async (interaction) => {
 //GET PREVIOUS RATED DECK
 export const getPreviousRatedDeck = async (user, yourRatedDecks, format) => {   
     if (!yourRatedDecks || !yourRatedDecks.length) return false
-    const options = yourRatedDecks.map((yRD, index) => `(${index + 1}) - ${yRD.name} - <https://formatlibrary.com/builder/${yRD.id}>`)
+    const options = yourRatedDecks.map((yRD, index) => `(${index + 1}) - ${yRD.name} - <https://formatlibrary.com/deck-builder/${yRD.id}>`)
     options.push(`(${options.length + 1}) - Submit a New Deck`)
 
     const filter = m => m.author.id === user.id

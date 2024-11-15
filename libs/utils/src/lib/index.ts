@@ -1,4 +1,5 @@
 import {
+  appendScript,
   camelize,
   capitalize,
   arrayToObject,
@@ -22,6 +23,7 @@ import {
 } from './country'
 
 export {
+  appendScript,
   camelize,
   capitalize,
   countries,

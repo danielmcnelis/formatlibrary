@@ -375,7 +375,7 @@ export const Builder = () => {
     // GET DECK
     const getDeck = async (id) => {
         try {
-            const {data} = await axios.get(`/api/decks/builder/${id}`)
+            const {data} = await axios.get(`/api/decks/deck-builder/${id}`)
             setDeck(data)
             setFormat(data.format)
             setShowOpenModal(false)
