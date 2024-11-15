@@ -13,7 +13,7 @@ const discordPfp = getCookie('discordPfp')
 const googlePfp = getCookie('googlePfp')  
 
 export const Settings = () => {
-    console.log('window.adthrive', window.adthrive)
+    const [isMounted, setIsMounted] = useState(false)
   const [player, setPlayer] = useState({})
   const [detectedCountry, setDetectedCountry] = useState(null)
   const [detectedTimeZone, setDetectedTimeZone] = useState(null)
@@ -121,6 +121,31 @@ export const Settings = () => {
     fetchData()
   }, [])
 
+  // USE EFFECT DELAY
+  useEffect(() => {
+    return setTimeout(() => {
+        setIsMounted(true)
+    }, 1000)
+  }, [])
+
+
+
+  // USE EFFECT ATTACHED SCRIPT
+  useEffect(() => {
+    if (!isMounted) return
+    const script = document.createElement('script');
+    script.src = 'https://formatlibrary.com/disable-ads.js'; 
+    script.async = true; 
+
+    document.head.appendChild(script)
+
+    return () => {
+      document.head.removeChild(script)
+    }
+  }, [isMounted])
+
+
+
   if (player === null) return <NotFound /> 
   const {id, name, firstName, lastName, discordName, discriminator, country, timeZone, youtube, twitch, twitter, duelingBook, email} = player
   if (!id) return <div/>
@@ -130,7 +155,8 @@ export const Settings = () => {
             <title>{`Settings - Format Library`}</title>
             <meta name="og:title" content={`Settings - Format Library`}/>    
             <meta name="description" content={`View and edit your account settings for FormatLibrary.com.`}/>    
-            <meta name="og:description" content={`View and edit your account settings for FormatLibrary.com.`}/>    
+            <meta name="og:description" content={`View and edit your account settings for FormatLibrary.com.`}/> 
+
         </Helmet>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossOrigin="anonymous"/>
         <link rel="stylesheet" href="/styles.css" />
