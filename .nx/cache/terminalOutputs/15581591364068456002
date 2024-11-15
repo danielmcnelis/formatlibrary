@@ -1,0 +1,15 @@
+
+[0m[7m[1m[31m NX [39m[22m[27m[0m  [31mCannot read properties of undefined (reading 'projects')[39m
+
+TypeError: Cannot read properties of undefined (reading 'projects')
+    at webpackExecutor_1 (/Users/danielmcnelis/Desktop/projects/formatlibrary/node_modules/@nrwl/webpack/src/executors/webpack/webpack.impl.js:68:44)
+    at webpackExecutor_1.next (<anonymous>)
+    at resume (/Users/danielmcnelis/Desktop/projects/formatlibrary/node_modules/tslib/tslib.js:282:48)
+    at /Users/danielmcnelis/Desktop/projects/formatlibrary/node_modules/tslib/tslib.js:281:130
+    at new Promise (<anonymous>)
+    at i.<computed> [as next] (/Users/danielmcnelis/Desktop/projects/formatlibrary/node_modules/tslib/tslib.js:281:72)
+    at getLastValueFromAsyncIterableIterator (/Users/danielmcnelis/Desktop/projects/formatlibrary/node_modules/nx/src/utils/async-iterator.js:15:34)
+    at iteratorToProcessStatusCode (/Users/danielmcnelis/Desktop/projects/formatlibrary/node_modules/nx/src/command-line/run/run.js:39:90)
+    at /Users/danielmcnelis/Desktop/projects/formatlibrary/node_modules/nx/src/command-line/run/run.js:176:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+

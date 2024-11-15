@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useLayoutEffect } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import axios from 'axios'
 import { ReplayRow } from './ReplayRow.jsx'
 import { MobileReplayRow } from './MobileReplayRow.jsx'
@@ -12,6 +12,7 @@ import './ReplayTable.css'
 const playerId = getCookie('playerId')
 
 export const ReplayTable = () => {
+    const isMounted = useRef(false)
     const [community, setCommunity] = useState(null)
     const [replays, setReplays] = useState([])
     const [replaysPerPage, setReplaysPerPage] = useState(10)
@@ -30,7 +31,7 @@ export const ReplayTable = () => {
   
     // USE LAYOUT EFFECT
     useLayoutEffect(() => {
-        // if (!isMounted.current) return
+        if (!isMounted.current) return
         window.scrollTo(0, document.getElementById('sortSelector')?.offsetTop - 10)
     }, [page])
 
@@ -168,7 +169,8 @@ export const ReplayTable = () => {
 
     // USE EFFECT SEARCH
     useEffect(() => {
-      search()
+        if (!isMounted.current) return
+        search()
     }, [isAdmin, isSubscriber, page, replaysPerPage, format, community, queryParams, sortBy])
   
 

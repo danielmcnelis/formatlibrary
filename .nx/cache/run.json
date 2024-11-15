@@ -1,0 +1,21 @@
+{
+  "run": {
+    "command": "nx serve site",
+    "startTime": "2024-11-14T03:12:29.790Z",
+    "endTime": "2024-11-14T03:12:30.371Z",
+    "inner": false
+  },
+  "tasks": [
+    {
+      "taskId": "site:serve",
+      "target": "serve",
+      "projectName": "site",
+      "hash": "10305111982581397476",
+      "startTime": "2024-11-14T03:12:29.796Z",
+      "endTime": "2024-11-14T03:12:30.371Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 1
+    }
+  ]
+}

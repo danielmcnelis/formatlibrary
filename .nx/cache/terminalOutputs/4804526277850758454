@@ -1,0 +1,15 @@
+
+[0m[7m[1m[31m NX [39m[22m[27m[0m  [31mCannot set properties of undefined (setting 'filename')[39m
+
+TypeError: Cannot set properties of undefined (setting 'filename')
+    at module.exports (/Users/danielmcnelis/Desktop/projects/formatlibrary/apps/formatlibrary/webpack.config.js:21:28)
+    at getWebpackConfigs (/Users/danielmcnelis/Desktop/projects/formatlibrary/node_modules/@nx/webpack/src/executors/webpack/webpack.impl.js:37:22)
+    at webpackExecutor (/Users/danielmcnelis/Desktop/projects/formatlibrary/node_modules/@nx/webpack/src/executors/webpack/webpack.impl.js:98:27)
+    at webpackExecutor.next (<anonymous>)
+    at getLastValueFromAsyncIterableIterator (/Users/danielmcnelis/Desktop/projects/formatlibrary/node_modules/nx/src/utils/async-iterator.js:15:34)
+    at iteratorToProcessStatusCode (/Users/danielmcnelis/Desktop/projects/formatlibrary/node_modules/nx/src/command-line/run/run.js:39:90)
+    at /Users/danielmcnelis/Desktop/projects/formatlibrary/node_modules/nx/src/command-line/run/run.js:176:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async handleErrors (/Users/danielmcnelis/Desktop/projects/formatlibrary/node_modules/nx/src/utils/handle-errors.js:8:24)
+    at async process.<anonymous> (/Users/danielmcnelis/Desktop/projects/formatlibrary/node_modules/nx/bin/run-executor.js:59:28)
+

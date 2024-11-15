@@ -1,0 +1,4645 @@
+{
+  "version": "6.0",
+  "nxVersion": "19.8.4",
+  "deps": {
+    "@aws-sdk/client-s3": "^3.201.0",
+    "@aws-sdk/lib-storage": "^3.682.0",
+    "@discordjs/rest": "^2.3.0",
+    "@dnd-kit/core": "^6.0.8",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/base": "^5.0.0-alpha.109",
+    "@mui/system": "^5.10.17",
+    "adblock-detect-react": "^1.1.0",
+    "aws-sdk": "^2.1691.0",
+    "axios": "^0.27.2",
+    "bcrypt": "^5.0.1",
+    "canvas": "^2.11.2",
+    "chalk": "^4.1.2",
+    "chart.js": "^3.9.1",
+    "cloudinary": "^2.5.1",
+    "compression": "^1.7.4",
+    "connect-session-sequelize": "^7.1.5",
+    "cookie-session": "^2.0.0",
+    "core-js": "^3.6.5",
+    "csv-parse": "^5.5.3",
+    "discord.js": "^14.15.3",
+    "express": "^4.18.1",
+    "express-ejs-layouts": "^2.5.1",
+    "fuzzyset": "^1.0.7",
+    "googleapis": "^110.0.0",
+    "html-react-parser": "^3.0.4",
+    "http-proxy-middleware": "^2.0.6",
+    "jose": "^5.6.2",
+    "lts": "^1.2.0",
+    "minimist": "^1.2.6",
+    "morgan": "^1.10.0",
+    "n": "^9.2.3",
+    "nanoid": "^3.3.4",
+    "openid-client": "^5.1.10",
+    "pg": "^8.8.0",
+    "pg-hstore": "^2.3.4",
+    "quickchart-js": "^3.1.1",
+    "react": "18.2.0",
+    "react-bootstrap": "^2.5.0",
+    "react-chartjs-2": "^4.3.1",
+    "react-countdown-clock": "^2.10.0",
+    "react-dom": "18.2.0",
+    "react-helmet": "^6.1.0",
+    "react-responsive": "^9.0.0",
+    "react-router-dom": "^6.4.1",
+    "react-toggle": "^4.1.3",
+    "regenerator-runtime": "0.13.7",
+    "sequelize": "^6.23.2",
+    "sequelize-cli": "^6.6.2",
+    "sharp": "^0.31.3",
+    "simple-oauth2": "^4.3.0",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2",
+    "tslib": "^2.3.0",
+    "undici": "^6.19.2",
+    "use-local-storage": "^3.0.0",
+    "util": "^0.12.5",
+    "@nrwl/cli": "14.8.0",
+    "@nrwl/cypress": "14.8.0",
+    "@nrwl/eslint-plugin-nx": "14.8.0",
+    "@nrwl/express": "14.8.0",
+    "@nrwl/jest": "14.8.0",
+    "@nrwl/linter": "14.8.0",
+    "@nrwl/node": "14.8.0",
+    "@nrwl/react": "14.8.0",
+    "@nrwl/web": "14.8.0",
+    "@nrwl/workspace": "14.8.0",
+    "@testing-library/react": "13.4.0",
+    "@types/express": "4.17.13",
+    "@types/jest": "28.1.1",
+    "@types/node": "16.11.7",
+    "@types/react": "18.0.20",
+    "@types/react-dom": "18.0.6",
+    "@types/react-helmet": "^6.1.6",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
+    "babel-jest": "28.1.1",
+    "cypress": "^10.7.0",
+    "eslint": "~8.15.0",
+    "eslint-config-prettier": "8.1.0",
+    "eslint-plugin-cypress": "^2.10.3",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-jsx-a11y": "6.6.1",
+    "eslint-plugin-react": "7.31.8",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "jest": "28.1.1",
+    "jest-environment-jsdom": "28.1.1",
+    "nx": "14.8.0",
+    "prettier": "^2.6.2",
+    "react-test-renderer": "18.2.0",
+    "ts-jest": "28.0.5",
+    "ts-node": "10.9.1",
+    "typescript": "~4.8.2"
+  },
+  "pathMappings": {
+    "@fl/bot-commands": [
+      "libs/bot-commands/src/index.ts"
+    ],
+    "@fl/bot-emojis": [
+      "libs/bot-emojis/src/index.ts"
+    ],
+    "@fl/bot-functions": [
+      "libs/bot-functions/src/index.ts"
+    ],
+    "@fl/components": [
+      "libs/components/src/index.ts"
+    ],
+    "@fl/config": [
+      "libs/config/src/index.ts"
+    ],
+    "@fl/context": [
+      "libs/context/src/index.ts"
+    ],
+    "@fl/errors": [
+      "libs/errors/src/index.ts"
+    ],
+    "@fl/hooks": [
+      "libs/hooks/src/index.ts"
+    ],
+    "@fl/logging": [
+      "libs/logging/src/index.ts"
+    ],
+    "@fl/middleware": [
+      "libs/middleware/src/index.ts"
+    ],
+    "@fl/middleware-auth": [
+      "libs/middleware-auth/src/index.ts"
+    ],
+    "@fl/models": [
+      "libs/models/src/index.ts"
+    ],
+    "@fl/tokens": [
+      "libs/tokens/src/index.ts"
+    ],
+    "@fl/utils": [
+      "libs/utils/src/index.ts"
+    ]
+  },
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "nonProjectFiles": [
+      {
+        "file": "tools/tsconfig.tools.json",
+        "hash": "16088922570277978783"
+      },
+      {
+        "file": "services/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "519497877080104655"
+      },
+      {
+        "file": "jest.preset.js",
+        "hash": "2772139696069860212"
+      },
+      {
+        "file": "migrations/20220929232947-playerId-to-uuid.js",
+        "hash": "1399781995503675575"
+      },
+      {
+        "file": "libs/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "migrations/20220929233506-add-foreign-keys.js",
+        "hash": "3191913608472950181"
+      },
+      {
+        "file": "migrations/20221004221318-matchIds-to-uuids.js",
+        "hash": "6093749262307779051"
+      },
+      {
+        "file": "package.json",
+        "hash": "5255799393116443637"
+      },
+      {
+        "file": ".vscode/extensions.json",
+        "hash": "235626400633494639"
+      },
+      {
+        "file": "formatlibrary.code-workspace",
+        "hash": "4744976641321839637"
+      },
+      {
+        "file": "migrations/20221004205546-change-colnames.js",
+        "hash": "5285406645945251654"
+      },
+      {
+        "file": "runhub",
+        "hash": "3001432259646874506"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "11504485101114674202"
+      },
+      {
+        "file": ".prettierrc",
+        "hash": "7730542839551816081"
+      },
+      {
+        "file": "migrations/20220929233353-uuid-to-primary-key.js",
+        "hash": "9116396159287894183"
+      },
+      {
+        "file": ".editorconfig",
+        "hash": "3027969290653431020"
+      },
+      {
+        "file": "jest.config.ts",
+        "hash": "2950215254536237782"
+      },
+      {
+        "file": "tools/generators/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": ".eslintrc.json",
+        "hash": "1659929058009100827"
+      },
+      {
+        "file": "apps/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "babel.config.json",
+        "hash": "5546405625092116747"
+      },
+      {
+        "file": "runapi",
+        "hash": "25789206292796625"
+      },
+      {
+        "file": "README.md",
+        "hash": "11401936240712959707"
+      },
+      {
+        "file": "migrations/20221026223738-cleanup-blogposts.js",
+        "hash": "895606414266940936"
+      },
+      {
+        "file": "runsite",
+        "hash": "17900793761142990652"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "16497647729484011452"
+      },
+      {
+        "file": "migrations.json",
+        "hash": "2698652435634417566"
+      },
+      {
+        "file": "migrations/20220929232029-drop-foreign-keys.js",
+        "hash": "10999115721993899307"
+      },
+      {
+        "file": "migrations/20220929003353-generate-uuids.js",
+        "hash": "14190384239383775686"
+      },
+      {
+        "file": "migrations/20220930211303-fix-asset-paths.js",
+        "hash": "153132467928015354"
+      },
+      {
+        "file": ".nvmrc",
+        "hash": "12252492123664741256"
+      },
+      {
+        "file": "runauth",
+        "hash": "4580842089285881781"
+      },
+      {
+        "file": "nx.json",
+        "hash": "17525867341499212349"
+      },
+      {
+        "file": "scripts/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "config/config.js",
+        "hash": "1062378733976905667"
+      },
+      {
+        "file": ".prettierignore",
+        "hash": "17733650430415207254"
+      },
+      {
+        "file": "runbot",
+        "hash": "16325220074831203558"
+      }
+    ],
+    "projectFileMap": {
+      "s3": [
+        {
+          "file": "scripts/s3/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "scripts/s3/jest.config.ts",
+          "hash": "5475893056801948099"
+        },
+        {
+          "file": "scripts/s3/project.json",
+          "hash": "8564905905794820704"
+        },
+        {
+          "file": "scripts/s3/src/main.ts",
+          "hash": "12954180505846398068",
+          "deps": [
+            "config",
+            "npm:axios",
+            "npm:cloudinary",
+            "npm:sequelize",
+            "models"
+          ]
+        },
+        {
+          "file": "scripts/s3/tsconfig.app.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "scripts/s3/tsconfig.json",
+          "hash": "9214820933160915425"
+        },
+        {
+          "file": "scripts/s3/tsconfig.script.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "scripts/s3/tsconfig.spec.json",
+          "hash": "10595040461224341030"
+        }
+      ],
+      "config": [
+        {
+          "file": "libs/config/.babelrc",
+          "hash": "2685020516260856122"
+        },
+        {
+          "file": "libs/config/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "libs/config/README.md",
+          "hash": "14584286102621135528"
+        },
+        {
+          "file": "libs/config/jest.config.ts",
+          "hash": "11398530262589901213"
+        },
+        {
+          "file": "libs/config/project.json",
+          "hash": "5054866059462742071"
+        },
+        {
+          "file": "libs/config/src/index.ts",
+          "hash": "8271313076750532541"
+        },
+        {
+          "file": "libs/config/src/lib/config.spec.ts",
+          "hash": "14639371182181182986"
+        },
+        {
+          "file": "libs/config/src/lib/config.ts",
+          "hash": "12954295091558698442"
+        },
+        {
+          "file": "libs/config/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/config/tsconfig.lib.json",
+          "hash": "8044021312735567114"
+        },
+        {
+          "file": "libs/config/tsconfig.spec.json",
+          "hash": "2406015174838385060"
+        }
+      ],
+      "formatlibrary": [
+        {
+          "file": "apps/formatlibrary/.babelrc",
+          "hash": "7338834004944326044"
+        },
+        {
+          "file": "apps/formatlibrary/.browserslistrc",
+          "hash": "2888533144288818662"
+        },
+        {
+          "file": "apps/formatlibrary/.eslintrc.json",
+          "hash": "10075191527724852300"
+        },
+        {
+          "file": "apps/formatlibrary/jest.config.ts",
+          "hash": "7845863107974349742"
+        },
+        {
+          "file": "apps/formatlibrary/project.json",
+          "hash": "4952349545449271581"
+        },
+        {
+          "file": "apps/formatlibrary/proxy.conf.json",
+          "hash": "4651383781950068783"
+        },
+        {
+          "file": "apps/formatlibrary/src/app/App.module.css",
+          "hash": "8887387885984320532"
+        },
+        {
+          "file": "apps/formatlibrary/src/app/App.spec.tsx",
+          "hash": "17214981892092151833",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "apps/formatlibrary/src/app/App.tsx",
+          "hash": "2638804177662274870",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "utils",
+            "npm:react-helmet",
+            "npm:adblock-detect-react"
+          ]
+        },
+        {
+          "file": "apps/formatlibrary/src/app/Router.tsx",
+          "hash": "18188008356037488298",
+          "deps": [
+            "npm:react-router-dom",
+            "components"
+          ]
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/css/auth.css",
+          "hash": "11658813883271787369"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/css/normalize.css",
+          "hash": "14673912957225079454"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/css/skeleton.css",
+          "hash": "5775903273209615437"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/css/styles.css",
+          "hash": "11803990651360346527"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/css/theme.css",
+          "hash": "13915379323717559722"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/fonts/Roboto/LICENSE.txt",
+          "hash": "9630801356268031432"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/fonts/Roboto/Roboto-Black.ttf",
+          "hash": "7098489094626776778"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/fonts/Roboto/Roboto-BlackItalic.ttf",
+          "hash": "12887255479854995061"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/fonts/Roboto/Roboto-Bold.ttf",
+          "hash": "6194916879809304257"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/fonts/Roboto/Roboto-BoldItalic.ttf",
+          "hash": "3886157797841064982"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/fonts/Roboto/Roboto-Italic.ttf",
+          "hash": "12026101387486997960"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/fonts/Roboto/Roboto-Light.ttf",
+          "hash": "16388568598246561355"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/fonts/Roboto/Roboto-LightItalic.ttf",
+          "hash": "4684876534979972403"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/fonts/Roboto/Roboto-Medium.ttf",
+          "hash": "537698885139850531"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/fonts/Roboto/Roboto-MediumItalic.ttf",
+          "hash": "14311659991589988110"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/fonts/Roboto/Roboto-Regular.ttf",
+          "hash": "10014479040137218438"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/fonts/Roboto/Roboto-Thin.ttf",
+          "hash": "10615261922502669764"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/fonts/Roboto/Roboto-ThinItalic.ttf",
+          "hash": "11065708631349971669"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/js/cash.min.js",
+          "hash": "4307059902992711588"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/js/login.js",
+          "hash": "7249137428677909564"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Ban-List.jpg",
+          "hash": "12821212651721316470"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Card-Database-Results-Gallery.jpg",
+          "hash": "7722270596743701138"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Card-Database-Results-Table.jpg",
+          "hash": "1702574944773311568"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Card-Database-Search.jpg",
+          "hash": "3151313761312855135"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Deck-Database-Results-Gallery.jpg",
+          "hash": "1078296894289716636"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Deck-Database-Results-Table.jpg",
+          "hash": "884643558391571934"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Deck-Profile.jpg",
+          "hash": "13946801919835901355"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Event-Database-Table.jpg",
+          "hash": "17436070035619820013"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Event-Summary-1.jpg",
+          "hash": "12619505403601222555"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Event-Summary-2.jpg",
+          "hash": "7072122688268168670"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Event-Summary-3.jpg",
+          "hash": "8240483509616006824"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Format-Menu.jpg",
+          "hash": "13823020466695140328"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Format-Overview-1.jpg",
+          "hash": "8526927458171588975"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Format-Overview-2.jpg",
+          "hash": "18303237829651998875"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Home.jpg",
+          "hash": "13260528682218744863"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Leaderboard.jpg",
+          "hash": "13002761482017545104"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Player-Profile.jpg",
+          "hash": "5903258852134601252"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/Single-Card-Details.jpg",
+          "hash": "15516138336423293266"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/screenshots/waah.jpeg",
+          "hash": "7032241271449934185"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/sounds/chime.mp3",
+          "hash": "13649131526485730840"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/sounds/draw.mp3",
+          "hash": "1634074093836801379"
+        },
+        {
+          "file": "apps/formatlibrary/src/assets/sounds/horn.mp3",
+          "hash": "17429186733658860582"
+        },
+        {
+          "file": "apps/formatlibrary/src/disable-content-ads.js",
+          "hash": "5122911532057248757"
+        },
+        {
+          "file": "apps/formatlibrary/src/environments/environment.prod.ts",
+          "hash": "10220522844224226756"
+        },
+        {
+          "file": "apps/formatlibrary/src/environments/environment.ts",
+          "hash": "11309522437153898482"
+        },
+        {
+          "file": "apps/formatlibrary/src/favicon.ico",
+          "hash": "11055058581133160312"
+        },
+        {
+          "file": "apps/formatlibrary/src/index.html",
+          "hash": "5026257019649803570"
+        },
+        {
+          "file": "apps/formatlibrary/src/main.tsx",
+          "hash": "15562713335617006740",
+          "deps": [
+            "npm:react-dom"
+          ]
+        },
+        {
+          "file": "apps/formatlibrary/src/polyfills.ts",
+          "hash": "3605444650927540957",
+          "deps": [
+            "npm:core-js",
+            "npm:regenerator-runtime"
+          ]
+        },
+        {
+          "file": "apps/formatlibrary/src/privacy.html",
+          "hash": "5926216181840626083"
+        },
+        {
+          "file": "apps/formatlibrary/src/raptive.js",
+          "hash": "2679635441215770766"
+        },
+        {
+          "file": "apps/formatlibrary/src/styles.css",
+          "hash": "14917952824059388392"
+        },
+        {
+          "file": "apps/formatlibrary/src/terms.html",
+          "hash": "17818489418374144564"
+        },
+        {
+          "file": "apps/formatlibrary/tsconfig.app.json",
+          "hash": "6859247106828182436"
+        },
+        {
+          "file": "apps/formatlibrary/tsconfig.json",
+          "hash": "8045429758106901613"
+        },
+        {
+          "file": "apps/formatlibrary/tsconfig.spec.json",
+          "hash": "18221553742812191035"
+        },
+        {
+          "file": "apps/formatlibrary/webpack.config.js",
+          "hash": "8566886113409482742",
+          "deps": [
+            "npm:@nrwl/react"
+          ]
+        }
+      ],
+      "errors": [
+        {
+          "file": "libs/errors/.babelrc",
+          "hash": "2685020516260856122"
+        },
+        {
+          "file": "libs/errors/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "libs/errors/README.md",
+          "hash": "15762969962881295898"
+        },
+        {
+          "file": "libs/errors/jest.config.ts",
+          "hash": "1735344286713034073"
+        },
+        {
+          "file": "libs/errors/project.json",
+          "hash": "11602479178126839243"
+        },
+        {
+          "file": "libs/errors/src/index.ts",
+          "hash": "17003875337395920500"
+        },
+        {
+          "file": "libs/errors/src/lib/errors.ts",
+          "hash": "405920678164271297"
+        },
+        {
+          "file": "libs/errors/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/errors/tsconfig.lib.json",
+          "hash": "8044021312735567114"
+        },
+        {
+          "file": "libs/errors/tsconfig.spec.json",
+          "hash": "2406015174838385060"
+        }
+      ],
+      "deploy-commands": [
+        {
+          "file": "scripts/deploy-commands/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "scripts/deploy-commands/jest.config.ts",
+          "hash": "161943061693322473"
+        },
+        {
+          "file": "scripts/deploy-commands/project.json",
+          "hash": "16934521244082947108"
+        },
+        {
+          "file": "scripts/deploy-commands/src/config.ts",
+          "hash": "17132379786384418857",
+          "deps": [
+            "npm:dotenv"
+          ]
+        },
+        {
+          "file": "scripts/deploy-commands/src/main.ts",
+          "hash": "15089138918043089313",
+          "deps": [
+            "npm:discord.js",
+            "config",
+            "bot-commands"
+          ]
+        },
+        {
+          "file": "scripts/deploy-commands/tsconfig.app.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "scripts/deploy-commands/tsconfig.json",
+          "hash": "9214820933160915425"
+        },
+        {
+          "file": "scripts/deploy-commands/tsconfig.script.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "scripts/deploy-commands/tsconfig.spec.json",
+          "hash": "10595040461224341030"
+        }
+      ],
+      "bot-emojis": [
+        {
+          "file": "libs/bot-emojis/.babelrc",
+          "hash": "2685020516260856122"
+        },
+        {
+          "file": "libs/bot-emojis/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "libs/bot-emojis/README.md",
+          "hash": "1118759518739137134"
+        },
+        {
+          "file": "libs/bot-emojis/jest.config.ts",
+          "hash": "7923148142986013660"
+        },
+        {
+          "file": "libs/bot-emojis/project.json",
+          "hash": "4075052584175905157"
+        },
+        {
+          "file": "libs/bot-emojis/src/index.ts",
+          "hash": "4341453400851050347"
+        },
+        {
+          "file": "libs/bot-emojis/src/lib/emojis.js",
+          "hash": "17231825798990341533"
+        },
+        {
+          "file": "libs/bot-emojis/src/lib/rarities.js",
+          "hash": "13090615053242049779"
+        },
+        {
+          "file": "libs/bot-emojis/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/bot-emojis/tsconfig.lib.json",
+          "hash": "8044021312735567114"
+        },
+        {
+          "file": "libs/bot-emojis/tsconfig.spec.json",
+          "hash": "2406015174838385060"
+        }
+      ],
+      "site": [
+        {
+          "file": "services/site/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "services/site/jest.config.ts",
+          "hash": "11875669107629648720"
+        },
+        {
+          "file": "services/site/project.json",
+          "hash": "10564815032708721549"
+        },
+        {
+          "file": "services/site/src/environments/environment.prod.ts",
+          "hash": "8072527521455167073"
+        },
+        {
+          "file": "services/site/src/environments/environment.ts",
+          "hash": "9070707211506994727"
+        },
+        {
+          "file": "services/site/src/main.ts",
+          "hash": "10358683795672334937",
+          "deps": [
+            "npm:express",
+            "npm:compression",
+            "npm:http-proxy-middleware",
+            "npm:morgan",
+            "npm:chalk",
+            "config"
+          ]
+        },
+        {
+          "file": "services/site/src/middleware/error.ts",
+          "hash": "12994162684936297996",
+          "deps": [
+            "npm:express",
+            "errors"
+          ]
+        },
+        {
+          "file": "services/site/src/middleware/index.ts",
+          "hash": "653863403836260533"
+        },
+        {
+          "file": "services/site/src/proxies/api.ts",
+          "hash": "9615630547439217534",
+          "deps": [
+            "config"
+          ]
+        },
+        {
+          "file": "services/site/src/proxies/auth.ts",
+          "hash": "1602540152669981013",
+          "deps": [
+            "config"
+          ]
+        },
+        {
+          "file": "services/site/src/proxies/bot.ts",
+          "hash": "7408025420119019790",
+          "deps": [
+            "config"
+          ]
+        },
+        {
+          "file": "services/site/src/proxies/index.ts",
+          "hash": "14808878948681441455"
+        },
+        {
+          "file": "services/site/src/proxies/socketio.ts",
+          "hash": "1316617293316316305",
+          "deps": [
+            "config"
+          ]
+        },
+        {
+          "file": "services/site/src/routes/index.ts",
+          "hash": "11104622809057260450"
+        },
+        {
+          "file": "services/site/tsconfig.app.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "services/site/tsconfig.json",
+          "hash": "9214820933160915425"
+        },
+        {
+          "file": "services/site/tsconfig.spec.json",
+          "hash": "10595040461224341030"
+        }
+      ],
+      "one-piece": [
+        {
+          "file": "scripts/one-piece/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "scripts/one-piece/jest.config.ts",
+          "hash": "12018887526789990292"
+        },
+        {
+          "file": "scripts/one-piece/project.json",
+          "hash": "9988538188745506840"
+        },
+        {
+          "file": "scripts/one-piece/src/cards.json",
+          "hash": "632659982457197138"
+        },
+        {
+          "file": "scripts/one-piece/src/main.ts",
+          "hash": "1005486461952747928",
+          "deps": [
+            "models",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "scripts/one-piece/tsconfig.app.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "scripts/one-piece/tsconfig.json",
+          "hash": "9214820933160915425"
+        },
+        {
+          "file": "scripts/one-piece/tsconfig.script.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "scripts/one-piece/tsconfig.spec.json",
+          "hash": "10595040461224341030"
+        }
+      ],
+      "api": [
+        {
+          "file": "services/api/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "services/api/jest.config.ts",
+          "hash": "17877515886473547822"
+        },
+        {
+          "file": "services/api/project.json",
+          "hash": "4521359686348152319"
+        },
+        {
+          "file": "services/api/src/app/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "services/api/src/app/main.ts",
+          "hash": "8449396255898546521",
+          "deps": [
+            "npm:express",
+            "npm:compression",
+            "npm:morgan",
+            "npm:chalk",
+            "middleware",
+            "config"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/authenticate.ts",
+          "hash": "10740251820546779756",
+          "deps": [
+            "tokens",
+            "config"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/banlists.ts",
+          "hash": "17112711691551258",
+          "deps": [
+            "models",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/blogposts.ts",
+          "hash": "10481383065950092093",
+          "deps": [
+            "models"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/cards.ts",
+          "hash": "2876818232739023315",
+          "deps": [
+            "models",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/cookies.ts",
+          "hash": "5902384515894473639"
+        },
+        {
+          "file": "services/api/src/app/middleware/cubes.ts",
+          "hash": "8397033699837574779",
+          "deps": [
+            "models",
+            "npm:canvas",
+            "npm:@aws-sdk/lib-storage",
+            "npm:@aws-sdk/client-s3",
+            "config"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/deckTypes.ts",
+          "hash": "4677817088529577646",
+          "deps": [
+            "models",
+            "npm:sequelize",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/decks.ts",
+          "hash": "13020537624484936346",
+          "deps": [
+            "models",
+            "npm:sequelize",
+            "npm:fuzzyset"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/drafts.ts",
+          "hash": "4314478775583310930",
+          "deps": [
+            "models"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/events.ts",
+          "hash": "4305257435110436006",
+          "deps": [
+            "models",
+            "utils",
+            "npm:sequelize",
+            "npm:@aws-sdk/lib-storage",
+            "npm:@aws-sdk/client-s3",
+            "config"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/formats.ts",
+          "hash": "15886006076847762628",
+          "deps": [
+            "models",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/images.ts",
+          "hash": "1265972700819827527",
+          "deps": [
+            "npm:axios",
+            "npm:@aws-sdk/lib-storage",
+            "npm:@aws-sdk/client-s3",
+            "config"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/index.ts",
+          "hash": "14315790808482184047"
+        },
+        {
+          "file": "services/api/src/app/middleware/matchups.ts",
+          "hash": "949023742654067849",
+          "deps": [
+            "models",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/players.ts",
+          "hash": "12894575612116338483",
+          "deps": [
+            "models",
+            "npm:sequelize",
+            "npm:@aws-sdk/lib-storage",
+            "npm:@aws-sdk/client-s3",
+            "config",
+            "npm:bcrypt"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/rated.ts",
+          "hash": "12562476797235431916",
+          "deps": [
+            "models",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/replays.ts",
+          "hash": "16349756355968216390",
+          "deps": [
+            "models"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/rulings.ts",
+          "hash": "14294950930662131807",
+          "deps": [
+            "models"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/sealed.ts",
+          "hash": "15657583382691285646",
+          "deps": [
+            "models"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/sets.ts",
+          "hash": "14817307022070116249",
+          "deps": [
+            "bot-commands",
+            "models",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/stats.ts",
+          "hash": "11082361803468578739",
+          "deps": [
+            "models",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/statuses.ts",
+          "hash": "6849499187234804094",
+          "deps": [
+            "models"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/teams.ts",
+          "hash": "10939722845117099886",
+          "deps": [
+            "models"
+          ]
+        },
+        {
+          "file": "services/api/src/app/middleware/tournaments.ts",
+          "hash": "16298087796750991825",
+          "deps": [
+            "npm:axios",
+            "config"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/banlists.ts",
+          "hash": "9356175778814355012",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/blogposts.ts",
+          "hash": "13459776402319812803",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/cards.ts",
+          "hash": "320943222808521361",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/cookies.ts",
+          "hash": "14582770683826501619",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/cubes.ts",
+          "hash": "12022866663180162688",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/deckTypes.ts",
+          "hash": "16200587672758808975",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/decks.ts",
+          "hash": "14873228089290914100",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/drafts.ts",
+          "hash": "1826904915530650116",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/events.ts",
+          "hash": "13913112363282677334",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/formats.ts",
+          "hash": "4068382516293714244",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/images.ts",
+          "hash": "185190737397317063",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/index.ts",
+          "hash": "7360133161884558397"
+        },
+        {
+          "file": "services/api/src/app/routes/matchups.ts",
+          "hash": "8336495996114324350",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/players.ts",
+          "hash": "14902966548945891370",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/rated.ts",
+          "hash": "15204181418619760379",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/replays.ts",
+          "hash": "5284578848262904880",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/rulings.ts",
+          "hash": "9857115134590289865",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/sealed.ts",
+          "hash": "13328104947055131886",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/sets.ts",
+          "hash": "16205411108559032589",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/stats.ts",
+          "hash": "6007981022834106414",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/statuses.ts",
+          "hash": "3976002124859742955",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/teams.ts",
+          "hash": "15400747743109615375",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/app/routes/tournaments.ts",
+          "hash": "3083252883063286800",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/api/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "services/api/src/environments/environment.prod.ts",
+          "hash": "8072527521455167073"
+        },
+        {
+          "file": "services/api/src/environments/environment.ts",
+          "hash": "9070707211506994727"
+        },
+        {
+          "file": "services/api/src/main.ts",
+          "hash": "134055392405328402"
+        },
+        {
+          "file": "services/api/tsconfig.app.json",
+          "hash": "8215327477477615784"
+        },
+        {
+          "file": "services/api/tsconfig.json",
+          "hash": "9214820933160915425"
+        },
+        {
+          "file": "services/api/tsconfig.spec.json",
+          "hash": "10595040461224341030"
+        }
+      ],
+      "components": [
+        {
+          "file": "libs/components/.babelrc",
+          "hash": "11855890993922274285"
+        },
+        {
+          "file": "libs/components/.eslintrc.json",
+          "hash": "10075191527724852300"
+        },
+        {
+          "file": "libs/components/README.md",
+          "hash": "17764656877035248431"
+        },
+        {
+          "file": "libs/components/jest.config.ts",
+          "hash": "13768707364806034418"
+        },
+        {
+          "file": "libs/components/project.json",
+          "hash": "237680864055971738"
+        },
+        {
+          "file": "libs/components/src/data/banlists.json",
+          "hash": "16333407378124780656"
+        },
+        {
+          "file": "libs/components/src/index.ts",
+          "hash": "3552240282930762949"
+        },
+        {
+          "file": "libs/components/src/lib/Admin/AdminPortal.css",
+          "hash": "9580436741083997827"
+        },
+        {
+          "file": "libs/components/src/lib/Admin/AdminPortal.jsx",
+          "hash": "9203154304946619623",
+          "deps": [
+            "npm:react",
+            "utils",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Admin/Creators/BanListCreator.jsx",
+          "hash": "7612976487357447204",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Admin/Creators/BracketCreator.jsx",
+          "hash": "14628847248374933685",
+          "deps": [
+            "npm:react",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Admin/Creators/CardCreator.jsx",
+          "hash": "15342894662273583173",
+          "deps": [
+            "npm:react",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Admin/Creators/DeckCreator.jsx",
+          "hash": "3762509496026755772",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Admin/Creators/DeckTypeCreator.jsx",
+          "hash": "11830263505365113268",
+          "deps": [
+            "npm:react",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Admin/Creators/EventCreator.jsx",
+          "hash": "15262034346145446485",
+          "deps": [
+            "npm:react",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Admin/Creators/ImageCreator.jsx",
+          "hash": "11559469064226250373",
+          "deps": [
+            "npm:react",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Admin/Creators/PlayerCreator.jsx",
+          "hash": "7106164813116914659",
+          "deps": [
+            "npm:react",
+            "utils",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Admin/Creators/TeamCreator.jsx",
+          "hash": "1112684921657063926",
+          "deps": [
+            "npm:react",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Admin/Creators/UpdatePlayer.jsx",
+          "hash": "1415242471853846770",
+          "deps": [
+            "npm:react",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Admin/Creators/YDKCreator.jsx",
+          "hash": "9453455984700816119",
+          "deps": [
+            "npm:react",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Admin/Creators/index.js",
+          "hash": "10381062290404772783"
+        },
+        {
+          "file": "libs/components/src/lib/Cards/AdvButton.css",
+          "hash": "4777304522518525753"
+        },
+        {
+          "file": "libs/components/src/lib/Cards/AdvButton.jsx",
+          "hash": "2590040615789907994",
+          "deps": [
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Cards/CardImage.css",
+          "hash": "11084190798586903743"
+        },
+        {
+          "file": "libs/components/src/lib/Cards/CardImage.jsx",
+          "hash": "14548236841658756878",
+          "deps": [
+            "npm:react-router-dom",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Cards/CardRow.css",
+          "hash": "8035985529333995833"
+        },
+        {
+          "file": "libs/components/src/lib/Cards/CardRow.jsx",
+          "hash": "13554371221914361020",
+          "deps": [
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Cards/CardTable.css",
+          "hash": "2371434514839546011"
+        },
+        {
+          "file": "libs/components/src/lib/Cards/CardTable.jsx",
+          "hash": "17777368374472172528",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "utils",
+            "npm:react-responsive",
+            "npm:react-router-dom",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Cards/MiniAdvButton.css",
+          "hash": "3058839015378720002"
+        },
+        {
+          "file": "libs/components/src/lib/Cards/MiniAdvButton.jsx",
+          "hash": "16331013555115507681",
+          "deps": [
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Cards/MobileCardRow.css",
+          "hash": "10311074257557421990"
+        },
+        {
+          "file": "libs/components/src/lib/Cards/MobileCardRow.jsx",
+          "hash": "9341953955507982972",
+          "deps": [
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Cards/PrintRow.css",
+          "hash": "13381613425930606781"
+        },
+        {
+          "file": "libs/components/src/lib/Cards/PrintRow.jsx",
+          "hash": "16131287593554170085",
+          "deps": [
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Cards/SingleCard.css",
+          "hash": "8662485483976562455"
+        },
+        {
+          "file": "libs/components/src/lib/Cards/SingleCard.jsx",
+          "hash": "9391116363848413657",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios",
+            "npm:react-responsive",
+            "utils",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Cards/StatusBar.css",
+          "hash": "11491414246081455059"
+        },
+        {
+          "file": "libs/components/src/lib/Cards/StatusBar.jsx",
+          "hash": "6174359211635430901",
+          "deps": [
+            "npm:react-router-dom",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Decks/DeckGallery.css",
+          "hash": "8547392947690253178"
+        },
+        {
+          "file": "libs/components/src/lib/Decks/DeckGallery.jsx",
+          "hash": "17886343335684266405",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-router-dom",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Decks/DeckImage.css",
+          "hash": "8126010661503767089"
+        },
+        {
+          "file": "libs/components/src/lib/Decks/DeckImage.jsx",
+          "hash": "11241834061055382231",
+          "deps": [
+            "npm:react-router-dom",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Decks/DeckRow.css",
+          "hash": "4698598188710319643"
+        },
+        {
+          "file": "libs/components/src/lib/Decks/DeckRow.jsx",
+          "hash": "3928047301990794438",
+          "deps": [
+            "npm:react-router-dom",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Decks/DeckTable.css",
+          "hash": "14297779478844680587"
+        },
+        {
+          "file": "libs/components/src/lib/Decks/DeckTable.jsx",
+          "hash": "16818932268964834233",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-responsive",
+            "utils",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Decks/DeckThumbnail.css",
+          "hash": "11835416242733573790"
+        },
+        {
+          "file": "libs/components/src/lib/Decks/DeckThumbnail.jsx",
+          "hash": "2498731462080033763",
+          "deps": [
+            "npm:react-router-dom",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Decks/DeckType.css",
+          "hash": "15379873570201917052"
+        },
+        {
+          "file": "libs/components/src/lib/Decks/DeckType.jsx",
+          "hash": "17812685425823651604",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios",
+            "utils",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Decks/MatchupBar.css",
+          "hash": "12137947713776028602"
+        },
+        {
+          "file": "libs/components/src/lib/Decks/MatchupBar.jsx",
+          "hash": "15886228883231704430",
+          "deps": [
+            "npm:react-router-dom",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Decks/MiniDeck.css",
+          "hash": "13951428640882813372"
+        },
+        {
+          "file": "libs/components/src/lib/Decks/MiniDeck.jsx",
+          "hash": "7963902235712131520"
+        },
+        {
+          "file": "libs/components/src/lib/Decks/MobileDeckRow.css",
+          "hash": "10489973382791191587"
+        },
+        {
+          "file": "libs/components/src/lib/Decks/MobileDeckRow.jsx",
+          "hash": "14533291676522136487",
+          "deps": [
+            "npm:react-router-dom",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Decks/SingleDeck.css",
+          "hash": "4427481710827422758"
+        },
+        {
+          "file": "libs/components/src/lib/Decks/SingleDeck.jsx",
+          "hash": "10510171533480380081",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios",
+            "utils",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Events/EventGallery.css",
+          "hash": "11845538744180567442"
+        },
+        {
+          "file": "libs/components/src/lib/Events/EventGallery.jsx",
+          "hash": "8095187404702778503",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-router-dom",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Events/EventRow.css",
+          "hash": "15431896489305413341"
+        },
+        {
+          "file": "libs/components/src/lib/Events/EventRow.jsx",
+          "hash": "4007918916747292333",
+          "deps": [
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Events/EventTable.css",
+          "hash": "7854496015217540528"
+        },
+        {
+          "file": "libs/components/src/lib/Events/EventTable.jsx",
+          "hash": "517587118763040191",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-responsive",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Events/EventThumbnail.css",
+          "hash": "13488972335938251373"
+        },
+        {
+          "file": "libs/components/src/lib/Events/EventThumbnail.jsx",
+          "hash": "5777885514158736579",
+          "deps": [
+            "npm:react-router-dom",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Events/MobileEventRow.css",
+          "hash": "740062118675677740"
+        },
+        {
+          "file": "libs/components/src/lib/Events/MobileEventRow.jsx",
+          "hash": "922162309394335946",
+          "deps": [
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Events/RecentEvents.css",
+          "hash": "11845538744180567442"
+        },
+        {
+          "file": "libs/components/src/lib/Events/RecentEvents.jsx",
+          "hash": "1938086504313824201",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Events/ReplayThumbnail.css",
+          "hash": "10980600881322152366"
+        },
+        {
+          "file": "libs/components/src/lib/Events/ReplayThumbnail.jsx",
+          "hash": "16459725825068699537"
+        },
+        {
+          "file": "libs/components/src/lib/Events/SingleEvent.css",
+          "hash": "8970657741138745342"
+        },
+        {
+          "file": "libs/components/src/lib/Events/SingleEvent.jsx",
+          "hash": "14045282211487222323",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios",
+            "utils",
+            "npm:chart.js",
+            "npm:react-chartjs-2",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Formats/BanList.css",
+          "hash": "10494292256426099222"
+        },
+        {
+          "file": "libs/components/src/lib/Formats/BanList.jsx",
+          "hash": "16518217817705272069",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Formats/FormatButton.css",
+          "hash": "7210932967712003997"
+        },
+        {
+          "file": "libs/components/src/lib/Formats/FormatButton.jsx",
+          "hash": "2608725117981060597",
+          "deps": [
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Formats/FormatIntro.css",
+          "hash": "11720412650526478992"
+        },
+        {
+          "file": "libs/components/src/lib/Formats/FormatIntro.jsx",
+          "hash": "8744961727953537692",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-router-dom",
+            "utils",
+            "npm:react-helmet",
+            "npm:html-react-parser"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Formats/FormatMenu.css",
+          "hash": "12649240097835625566"
+        },
+        {
+          "file": "libs/components/src/lib/Formats/FormatMenu.jsx",
+          "hash": "10515889690561780419",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Formats/LeaderBoard.css",
+          "hash": "1411768650334893917"
+        },
+        {
+          "file": "libs/components/src/lib/Formats/LeaderBoard.jsx",
+          "hash": "6899941543981814956",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "utils",
+            "npm:react-router-dom",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Formats/MiniBoard.css",
+          "hash": "11493641155506997710"
+        },
+        {
+          "file": "libs/components/src/lib/Formats/MiniBoard.jsx",
+          "hash": "8634932971338553731",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Formats/PopularDecks.css",
+          "hash": "8547392947690253178"
+        },
+        {
+          "file": "libs/components/src/lib/Formats/PopularDecks.jsx",
+          "hash": "6119016730351759010",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Formats/SingleBanList.jsx",
+          "hash": "9353864234213307190",
+          "deps": [
+            "npm:react",
+            "npm:react-helmet",
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Formats/StatsRow.css",
+          "hash": "14995576671924149903"
+        },
+        {
+          "file": "libs/components/src/lib/Formats/StatsRow.jsx",
+          "hash": "9598212179257031152",
+          "deps": [
+            "npm:react-router-dom",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/General/Draggable.jsx",
+          "hash": "5994084581298792431",
+          "deps": [
+            "npm:@dnd-kit/core"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/General/Droppable.jsx",
+          "hash": "13579771783404993812",
+          "deps": [
+            "npm:@dnd-kit/core"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/General/Footer.css",
+          "hash": "9405042485893983470"
+        },
+        {
+          "file": "libs/components/src/lib/General/Footer.jsx",
+          "hash": "13588627468831359174",
+          "deps": [
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/General/MiniPagination.css",
+          "hash": "3663423111072983380"
+        },
+        {
+          "file": "libs/components/src/lib/General/MiniPagination.jsx",
+          "hash": "8898824738916961626"
+        },
+        {
+          "file": "libs/components/src/lib/General/Navigation.css",
+          "hash": "16291199040369275937"
+        },
+        {
+          "file": "libs/components/src/lib/General/Navigation.jsx",
+          "hash": "15498479598113079831",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "utils",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/General/NotFound.css",
+          "hash": "13896642644667292403"
+        },
+        {
+          "file": "libs/components/src/lib/General/NotFound.jsx",
+          "hash": "14425286030325246520",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/General/Page.jsx",
+          "hash": "6234424667820957008",
+          "deps": [
+            "npm:use-local-storage"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/General/Pagination.css",
+          "hash": "6732691735244010230"
+        },
+        {
+          "file": "libs/components/src/lib/General/Pagination.jsx",
+          "hash": "2494046898173027736"
+        },
+        {
+          "file": "libs/components/src/lib/General/Slider.css",
+          "hash": "15440579878292564087"
+        },
+        {
+          "file": "libs/components/src/lib/General/Slider.jsx",
+          "hash": "5325536987897389816",
+          "deps": [
+            "npm:react",
+            "npm:@mui/system",
+            "npm:@mui/base"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Home/BlogPost.css",
+          "hash": "18036205813420790454"
+        },
+        {
+          "file": "libs/components/src/lib/Home/BlogPost.jsx",
+          "hash": "7752784437773021267",
+          "deps": [
+            "npm:html-react-parser",
+            "npm:react-responsive"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Home/Home.css",
+          "hash": "2447915338686475252"
+        },
+        {
+          "file": "libs/components/src/lib/Home/Home.jsx",
+          "hash": "8567867175245760808",
+          "deps": [
+            "npm:axios",
+            "npm:react",
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Profiles/Badge.css",
+          "hash": "1361040926469657872"
+        },
+        {
+          "file": "libs/components/src/lib/Profiles/Badge.jsx",
+          "hash": "4772846184272860588",
+          "deps": [
+            "utils",
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Profiles/Placement.css",
+          "hash": "14794950654895082310"
+        },
+        {
+          "file": "libs/components/src/lib/Profiles/Placement.jsx",
+          "hash": "10864393290185787219",
+          "deps": [
+            "utils",
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Profiles/PlayerProfile.css",
+          "hash": "16716362052950509308"
+        },
+        {
+          "file": "libs/components/src/lib/Profiles/PlayerProfile.jsx",
+          "hash": "3526520801260381599",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-router-dom",
+            "npm:react-helmet",
+            "utils"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Profiles/Settings.css",
+          "hash": "7463292275349030902"
+        },
+        {
+          "file": "libs/components/src/lib/Profiles/Settings.jsx",
+          "hash": "10729566375975122817",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "utils",
+            "npm:react-bootstrap",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/Replays/MobileReplayRow.css",
+          "hash": "16303838668770843931"
+        },
+        {
+          "file": "libs/components/src/lib/Replays/MobileReplayRow.jsx",
+          "hash": "8461936013213099335"
+        },
+        {
+          "file": "libs/components/src/lib/Replays/ReplayRow.css",
+          "hash": "2871863901272243405"
+        },
+        {
+          "file": "libs/components/src/lib/Replays/ReplayRow.jsx",
+          "hash": "14460185195798318762"
+        },
+        {
+          "file": "libs/components/src/lib/Replays/ReplayTable.css",
+          "hash": "829024766641653777"
+        },
+        {
+          "file": "libs/components/src/lib/Replays/ReplayTable.jsx",
+          "hash": "4852442922361494902",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-responsive",
+            "utils",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Builders/Builder.css",
+          "hash": "12643160975619912474"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Builders/Builder.jsx",
+          "hash": "6035533931596025423",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios",
+            "npm:react-bootstrap",
+            "utils",
+            "npm:@dnd-kit/core",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Builders/CubeMaker.css",
+          "hash": "10046000074684067524"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Builders/CubeMaker.jsx",
+          "hash": "11850021100311157124",
+          "deps": [
+            "npm:react",
+            "utils",
+            "npm:axios",
+            "npm:react-bootstrap",
+            "npm:@dnd-kit/core",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Builders/EmptySlot.jsx",
+          "hash": "3346238267685440774"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Builders/FocalCard.css",
+          "hash": "14047292000621996361"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Builders/FocalCard.jsx",
+          "hash": "14814970883173545185"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Builders/FormatMaker.css",
+          "hash": "1253120105795146494"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Builders/FormatMaker.jsx",
+          "hash": "11146644106025156635",
+          "deps": [
+            "npm:react",
+            "utils",
+            "npm:axios",
+            "npm:react-bootstrap",
+            "npm:@dnd-kit/core",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Builders/SearchPanel.jsx",
+          "hash": "18408869893876316874",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "utils",
+            "npm:react-responsive"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Drafts/CubeBrowser.css",
+          "hash": "2371434514839546011"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Drafts/CubeBrowser.jsx",
+          "hash": "17287036048541305576",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios",
+            "npm:react-responsive",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Drafts/DraftLauncher.css",
+          "hash": "7501187386992172638"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Drafts/DraftLauncher.jsx",
+          "hash": "13551771403050879024",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "utils",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Drafts/DraftLobby.css",
+          "hash": "12035333238892767668"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Drafts/DraftLobby.jsx",
+          "hash": "9013954301692963818",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios",
+            "utils",
+            "npm:react-countdown-clock",
+            "npm:react-helmet",
+            "hooks"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Rated/PairingRow.css",
+          "hash": "14236988147210182965"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Rated/PairingRow.jsx",
+          "hash": "17342928858911438902"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Rated/PoolRow.css",
+          "hash": "1447833808936825292"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Rated/PoolRow.jsx",
+          "hash": "446715811910360666"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Rated/RatedLobby.css",
+          "hash": "18179672598986806058"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Rated/RatedLobby.jsx",
+          "hash": "9675013922805053996",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios",
+            "utils",
+            "npm:react-helmet",
+            "npm:react-bootstrap",
+            "hooks"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Sealed/PackSimulator.css",
+          "hash": "16595590031435144630"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Sealed/PackSimulator.jsx",
+          "hash": "5059821316710959442",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Sealed/SealedLauncher.css",
+          "hash": "7098469579416201111"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Sealed/SealedLauncher.jsx",
+          "hash": "7651709897410061029",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "utils",
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Sealed/SealedLobby.css",
+          "hash": "13003528025539916581"
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/Sealed/SealedLobby.jsx",
+          "hash": "5168544281709966113",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios",
+            "utils",
+            "npm:react-helmet",
+            "hooks"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/User/Apps/index.js",
+          "hash": "1090727412721265650"
+        },
+        {
+          "file": "libs/components/src/lib/User/PortalButton.css",
+          "hash": "10198250639088445270"
+        },
+        {
+          "file": "libs/components/src/lib/User/PortalButton.jsx",
+          "hash": "5225964908882416857",
+          "deps": [
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/User/UserPortal.css",
+          "hash": "16762324780072819820"
+        },
+        {
+          "file": "libs/components/src/lib/User/UserPortal.jsx",
+          "hash": "4237441559439313588",
+          "deps": [
+            "npm:react-helmet"
+          ]
+        },
+        {
+          "file": "libs/components/src/lib/index.ts",
+          "hash": "4883998812805837989"
+        },
+        {
+          "file": "libs/components/tsconfig.json",
+          "hash": "11477590071370859811"
+        },
+        {
+          "file": "libs/components/tsconfig.lib.json",
+          "hash": "6859247106828182436"
+        },
+        {
+          "file": "libs/components/tsconfig.spec.json",
+          "hash": "2406015174838385060"
+        }
+      ],
+      "tokens": [
+        {
+          "file": "libs/tokens/.babelrc",
+          "hash": "2685020516260856122"
+        },
+        {
+          "file": "libs/tokens/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "libs/tokens/README.md",
+          "hash": "11977193047640748481"
+        },
+        {
+          "file": "libs/tokens/jest.config.ts",
+          "hash": "15365855189744939099"
+        },
+        {
+          "file": "libs/tokens/project.json",
+          "hash": "2544219330534181881"
+        },
+        {
+          "file": "libs/tokens/src/index.ts",
+          "hash": "17776858758954689337"
+        },
+        {
+          "file": "libs/tokens/src/lib/JWT.spec.ts",
+          "hash": "7735454452346291978"
+        },
+        {
+          "file": "libs/tokens/src/lib/JWT.ts",
+          "hash": "3402934751397263729",
+          "deps": [
+            "npm:jose"
+          ]
+        },
+        {
+          "file": "libs/tokens/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/tokens/tsconfig.lib.json",
+          "hash": "8044021312735567114"
+        },
+        {
+          "file": "libs/tokens/tsconfig.spec.json",
+          "hash": "2406015174838385060"
+        }
+      ],
+      "logging": [
+        {
+          "file": "libs/logging/.babelrc",
+          "hash": "2685020516260856122"
+        },
+        {
+          "file": "libs/logging/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "libs/logging/README.md",
+          "hash": "17357923109984440218"
+        },
+        {
+          "file": "libs/logging/jest.config.ts",
+          "hash": "3937962560882074900"
+        },
+        {
+          "file": "libs/logging/project.json",
+          "hash": "6406813593003414925"
+        },
+        {
+          "file": "libs/logging/src/index.ts",
+          "hash": "3552240282930762949"
+        },
+        {
+          "file": "libs/logging/src/lib/index.ts",
+          "hash": "17890624100317376097"
+        },
+        {
+          "file": "libs/logging/src/lib/inspect.ts",
+          "hash": "2544040125871327120"
+        },
+        {
+          "file": "libs/logging/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/logging/tsconfig.lib.json",
+          "hash": "8044021312735567114"
+        },
+        {
+          "file": "libs/logging/tsconfig.spec.json",
+          "hash": "2406015174838385060"
+        }
+      ],
+      "formatlibrary-e2e": [
+        {
+          "file": "apps/formatlibrary-e2e/.eslintrc.json",
+          "hash": "15523834149352881398"
+        },
+        {
+          "file": "apps/formatlibrary-e2e/cypress.config.ts",
+          "hash": "212614215478757206",
+          "deps": [
+            "npm:cypress",
+            "npm:@nrwl/cypress"
+          ]
+        },
+        {
+          "file": "apps/formatlibrary-e2e/project.json",
+          "hash": "11797549018570679283"
+        },
+        {
+          "file": "apps/formatlibrary-e2e/src/e2e/app.cy.ts",
+          "hash": "11015749574577993475"
+        },
+        {
+          "file": "apps/formatlibrary-e2e/src/fixtures/example.json",
+          "hash": "11614668686582597233"
+        },
+        {
+          "file": "apps/formatlibrary-e2e/src/support/app.po.ts",
+          "hash": "11157016311132186162"
+        },
+        {
+          "file": "apps/formatlibrary-e2e/src/support/commands.ts",
+          "hash": "7314691991044890572"
+        },
+        {
+          "file": "apps/formatlibrary-e2e/src/support/e2e.ts",
+          "hash": "3666078656922506009"
+        },
+        {
+          "file": "apps/formatlibrary-e2e/tsconfig.json",
+          "hash": "1788248097864730386"
+        }
+      ],
+      "utils": [
+        {
+          "file": "libs/utils/.babelrc",
+          "hash": "2685020516260856122"
+        },
+        {
+          "file": "libs/utils/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "libs/utils/README.md",
+          "hash": "10282993753073018259"
+        },
+        {
+          "file": "libs/utils/jest.config.ts",
+          "hash": "7118905188527364724"
+        },
+        {
+          "file": "libs/utils/project.json",
+          "hash": "9710319919097878718"
+        },
+        {
+          "file": "libs/utils/src/index.ts",
+          "hash": "3552240282930762949"
+        },
+        {
+          "file": "libs/utils/src/lib/country.js",
+          "hash": "9777403006122654912"
+        },
+        {
+          "file": "libs/utils/src/lib/index.ts",
+          "hash": "16307701119671748584"
+        },
+        {
+          "file": "libs/utils/src/lib/sort.js",
+          "hash": "4989698709013568091"
+        },
+        {
+          "file": "libs/utils/src/lib/utility.js",
+          "hash": "7454588127089826204"
+        },
+        {
+          "file": "libs/utils/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/utils/tsconfig.lib.json",
+          "hash": "3139671689036429968"
+        },
+        {
+          "file": "libs/utils/tsconfig.spec.json",
+          "hash": "2406015174838385060"
+        }
+      ],
+      "context": [
+        {
+          "file": "libs/context/.babelrc",
+          "hash": "11855890993922274285"
+        },
+        {
+          "file": "libs/context/.eslintrc.json",
+          "hash": "10075191527724852300"
+        },
+        {
+          "file": "libs/context/README.md",
+          "hash": "9079420328331477316"
+        },
+        {
+          "file": "libs/context/jest.config.ts",
+          "hash": "8044008548034037576"
+        },
+        {
+          "file": "libs/context/project.json",
+          "hash": "10002733893151996554"
+        },
+        {
+          "file": "libs/context/src/index.ts",
+          "hash": "3552240282930762949"
+        },
+        {
+          "file": "libs/context/src/lib/SocketContext.ts",
+          "hash": "16479912291935589143",
+          "deps": [
+            "npm:react",
+            "npm:socket.io-client"
+          ]
+        },
+        {
+          "file": "libs/context/src/lib/index.ts",
+          "hash": "4620600142479969748"
+        },
+        {
+          "file": "libs/context/tsconfig.json",
+          "hash": "11477590071370859811"
+        },
+        {
+          "file": "libs/context/tsconfig.lib.json",
+          "hash": "6859247106828182436"
+        },
+        {
+          "file": "libs/context/tsconfig.spec.json",
+          "hash": "2406015174838385060"
+        }
+      ],
+      "middleware": [
+        {
+          "file": "libs/middleware/.babelrc",
+          "hash": "2685020516260856122"
+        },
+        {
+          "file": "libs/middleware/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "libs/middleware/README.md",
+          "hash": "17357923109984440218"
+        },
+        {
+          "file": "libs/middleware/jest.config.ts",
+          "hash": "3937962560882074900"
+        },
+        {
+          "file": "libs/middleware/project.json",
+          "hash": "967020195111288613"
+        },
+        {
+          "file": "libs/middleware/src/index.ts",
+          "hash": "3552240282930762949"
+        },
+        {
+          "file": "libs/middleware/src/lib/error.ts",
+          "hash": "12994162684936297996",
+          "deps": [
+            "npm:express",
+            "errors"
+          ]
+        },
+        {
+          "file": "libs/middleware/src/lib/index.ts",
+          "hash": "653863403836260533"
+        },
+        {
+          "file": "libs/middleware/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/middleware/tsconfig.lib.json",
+          "hash": "8044021312735567114"
+        },
+        {
+          "file": "libs/middleware/tsconfig.spec.json",
+          "hash": "2406015174838385060"
+        }
+      ],
+      "rulings": [
+        {
+          "file": "scripts/rulings/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "scripts/rulings/jest.config.ts",
+          "hash": "6607124797732539697"
+        },
+        {
+          "file": "scripts/rulings/project.json",
+          "hash": "2989921814102005796"
+        },
+        {
+          "file": "scripts/rulings/src/main.ts",
+          "hash": "11721783835841681137",
+          "deps": [
+            "models",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "scripts/rulings/tsconfig.app.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "scripts/rulings/tsconfig.json",
+          "hash": "9214820933160915425"
+        },
+        {
+          "file": "scripts/rulings/tsconfig.script.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "scripts/rulings/tsconfig.spec.json",
+          "hash": "10595040461224341030"
+        }
+      ],
+      "hub": [
+        {
+          "file": "services/hub/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "services/hub/jest.config.ts",
+          "hash": "4697307058939470882"
+        },
+        {
+          "file": "services/hub/project.json",
+          "hash": "10898824836498697578"
+        },
+        {
+          "file": "services/hub/src/app/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "services/hub/src/app/events/drafts.ts",
+          "hash": "17703876060484385357",
+          "deps": [
+            "models",
+            "npm:axios",
+            "config"
+          ]
+        },
+        {
+          "file": "services/hub/src/app/events/index.ts",
+          "hash": "7991499954975782507"
+        },
+        {
+          "file": "services/hub/src/app/events/sealed.ts",
+          "hash": "1307333134117810025",
+          "deps": [
+            "models",
+            "npm:axios",
+            "config"
+          ]
+        },
+        {
+          "file": "services/hub/src/app/main.ts",
+          "hash": "18138193973999851159",
+          "deps": [
+            "npm:express",
+            "npm:morgan",
+            "npm:chalk",
+            "npm:socket.io",
+            "config"
+          ]
+        },
+        {
+          "file": "services/hub/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "services/hub/src/environments/environment.prod.ts",
+          "hash": "8072527521455167073"
+        },
+        {
+          "file": "services/hub/src/environments/environment.ts",
+          "hash": "9070707211506994727"
+        },
+        {
+          "file": "services/hub/src/main.ts",
+          "hash": "134055392405328402"
+        },
+        {
+          "file": "services/hub/tsconfig.app.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "services/hub/tsconfig.json",
+          "hash": "9214820933160915425"
+        },
+        {
+          "file": "services/hub/tsconfig.spec.json",
+          "hash": "10595040461224341030"
+        }
+      ],
+      "jwt": [
+        {
+          "file": "scripts/jwt/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "scripts/jwt/jest.config.ts",
+          "hash": "161943061693322473"
+        },
+        {
+          "file": "scripts/jwt/project.json",
+          "hash": "16412086401701966591"
+        },
+        {
+          "file": "scripts/jwt/src/config.ts",
+          "hash": "17132379786384418857",
+          "deps": [
+            "npm:dotenv"
+          ]
+        },
+        {
+          "file": "scripts/jwt/src/main.ts",
+          "hash": "7560620358509370928",
+          "deps": [
+            "npm:minimist",
+            "config",
+            "tokens"
+          ]
+        },
+        {
+          "file": "scripts/jwt/tsconfig.app.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "scripts/jwt/tsconfig.json",
+          "hash": "9214820933160915425"
+        },
+        {
+          "file": "scripts/jwt/tsconfig.script.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "scripts/jwt/tsconfig.spec.json",
+          "hash": "10595040461224341030"
+        }
+      ],
+      "bot-commands": [
+        {
+          "file": "libs/bot-commands/.babelrc",
+          "hash": "2685020516260856122"
+        },
+        {
+          "file": "libs/bot-commands/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "libs/bot-commands/README.md",
+          "hash": "8514434140117023607"
+        },
+        {
+          "file": "libs/bot-commands/jest.config.ts",
+          "hash": "13093628744742455506"
+        },
+        {
+          "file": "libs/bot-commands/project.json",
+          "hash": "5840558452507879443"
+        },
+        {
+          "file": "libs/bot-commands/src/client.js",
+          "hash": "2741700660146886394",
+          "deps": [
+            "npm:discord.js",
+            "config"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/index.ts",
+          "hash": "8172499194247642621"
+        },
+        {
+          "file": "libs/bot-commands/src/lib/activity.js",
+          "hash": "3372760712516185195",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "npm:sequelize",
+            "npm:quickchart-js"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/bracket.js",
+          "hash": "17143410722129747091",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-emojis",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/card.js",
+          "hash": "5886616454499444633",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/close.js",
+          "hash": "11194252296581389120",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/coin.js",
+          "hash": "13589133380381137773",
+          "deps": [
+            "npm:discord.js"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/combine.js",
+          "hash": "5682133146322257932",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "models",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/coverage.js",
+          "hash": "8909070812925228468",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/create.js",
+          "hash": "13090413557059934884",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-emojis",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/deck.js",
+          "hash": "5373780795813233770",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions",
+            "bot-emojis",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/destroy.js",
+          "hash": "16017453249200015523",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions",
+            "npm:axios",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/dice.js",
+          "hash": "6377418933922151722",
+          "deps": [
+            "npm:discord.js"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/drop.js",
+          "hash": "13495790909880306312",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions",
+            "npm:sequelize",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/end.js",
+          "hash": "7986087028484754188",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions",
+            "npm:sequelize",
+            "npm:axios",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/exit.js",
+          "hash": "6097637314235138105",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/film.js",
+          "hash": "10649767200989789719",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions",
+            "npm:sequelize",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/fix.js",
+          "hash": "5476679255573040281",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "models",
+            "npm:sequelize",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/flair.js",
+          "hash": "3409516034471249304",
+          "deps": [
+            "npm:discord.js",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/format.js",
+          "hash": "11303221604474154357",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "models",
+            "bot-emojis",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/h2h.js",
+          "hash": "17321922216275538697",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "bot-emojis",
+            "models"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/help.js",
+          "hash": "15465783925564209351",
+          "deps": [
+            "npm:discord.js"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/history.js",
+          "hash": "16014324538643530790",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "npm:quickchart-js",
+            "bot-functions",
+            "npm:sequelize",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/info.js",
+          "hash": "13525971349664902412",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/iron.js",
+          "hash": "15256963461791910312",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/join.js",
+          "hash": "3928063666383749039",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions",
+            "npm:sequelize",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/leaderboard.js",
+          "hash": "16009664751559598149",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "bot-emojis",
+            "models",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/legal.js",
+          "hash": "2138952822719472473",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/lobby.js",
+          "hash": "11351403373232608548",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-emojis",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/loss.js",
+          "hash": "15381688443503370698",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "bot-emojis",
+            "models",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/manual.js",
+          "hash": "1359020289566577296",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "bot-emojis",
+            "models",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/mod.js",
+          "hash": "14172415275714085668",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/noshow.js",
+          "hash": "13139159105048917769",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "bot-emojis",
+            "models"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/open.js",
+          "hash": "858494088342582721",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/ping.js",
+          "hash": "18002196339295632421",
+          "deps": [
+            "npm:discord.js"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/points.js",
+          "hash": "4315355955195125257",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-emojis",
+            "npm:sequelize",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/pools.js",
+          "hash": "11922124333557772192",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/profile.js",
+          "hash": "3459032397289913581",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "bot-emojis",
+            "models",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/queue.js",
+          "hash": "17155651424566073767",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/rated.js",
+          "hash": "17501286538543535966",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "npm:sequelize",
+            "bot-functions",
+            "npm:axios",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/recalculate.js",
+          "hash": "12404023725866281215",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "bot-emojis",
+            "models"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/records.js",
+          "hash": "18027497165646251175",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions",
+            "npm:sequelize",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/remove.js",
+          "hash": "4175025631324192831",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions",
+            "npm:sequelize",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/replay.js",
+          "hash": "14029300320004192346",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "models",
+            "npm:sequelize",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/reset.js",
+          "hash": "6636335826448306073",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "bot-emojis",
+            "models"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/rng.js",
+          "hash": "7134824805163817897",
+          "deps": [
+            "npm:discord.js"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/role.js",
+          "hash": "17922226596259447981",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "bot-emojis",
+            "models"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/settimer.js",
+          "hash": "7295398524097379340",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-emojis",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/settings.js",
+          "hash": "15266510749864116973",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-emojis",
+            "npm:sequelize",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/signup.js",
+          "hash": "14980725610418234422",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions",
+            "npm:sequelize",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/standings.js",
+          "hash": "10569786078077717375",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-emojis",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/start.js",
+          "hash": "2236465499519752008",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions",
+            "npm:sequelize",
+            "npm:axios",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/stats.js",
+          "hash": "9059335566891821349",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "bot-emojis",
+            "models",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/team.js",
+          "hash": "10607697422259399120",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-emojis",
+            "bot-functions",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/teams.js",
+          "hash": "11385447624680572457",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-emojis",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/test.js",
+          "hash": "16404323270608353691",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "bot-emojis",
+            "models",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/tiebreakers.js",
+          "hash": "12117724291322745299",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-emojis",
+            "npm:sequelize",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/timer.js",
+          "hash": "16150618536484099369",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-emojis",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/trivia.js",
+          "hash": "4899762273411235047",
+          "deps": [
+            "npm:discord.js",
+            "models",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/undo.js",
+          "hash": "14541649093573709356",
+          "deps": [
+            "npm:discord.js",
+            "bot-functions",
+            "bot-emojis",
+            "models"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/src/lib/username.js",
+          "hash": "9787095456802893599",
+          "deps": [
+            "npm:discord.js",
+            "models"
+          ]
+        },
+        {
+          "file": "libs/bot-commands/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/bot-commands/tsconfig.lib.json",
+          "hash": "8044021312735567114"
+        },
+        {
+          "file": "libs/bot-commands/tsconfig.spec.json",
+          "hash": "2406015174838385060"
+        }
+      ],
+      "fix": [
+        {
+          "file": "scripts/fix/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "scripts/fix/jest.config.ts",
+          "hash": "7000431124073419136"
+        },
+        {
+          "file": "scripts/fix/project.json",
+          "hash": "17644876726630923567"
+        },
+        {
+          "file": "scripts/fix/src/main.ts",
+          "hash": "5646820447912718560",
+          "deps": [
+            "models",
+            "npm:sequelize",
+            "npm:axios",
+            "config",
+            "npm:canvas",
+            "utils",
+            "npm:csv-parse"
+          ]
+        },
+        {
+          "file": "scripts/fix/tsconfig.app.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "scripts/fix/tsconfig.json",
+          "hash": "9214820933160915425"
+        },
+        {
+          "file": "scripts/fix/tsconfig.script.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "scripts/fix/tsconfig.spec.json",
+          "hash": "10595040461224341030"
+        }
+      ],
+      "bot": [
+        {
+          "file": "services/bot/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "services/bot/jest.config.ts",
+          "hash": "10050342785034932406"
+        },
+        {
+          "file": "services/bot/project.json",
+          "hash": "3633650696410759368"
+        },
+        {
+          "file": "services/bot/src/app/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "services/bot/src/app/README.md",
+          "hash": "18051789653024329701"
+        },
+        {
+          "file": "services/bot/src/app/auth.js",
+          "hash": "3741378298789292203",
+          "deps": [
+            "npm:googleapis"
+          ]
+        },
+        {
+          "file": "services/bot/src/app/client.js",
+          "hash": "2741700660146886394",
+          "deps": [
+            "npm:discord.js",
+            "config"
+          ]
+        },
+        {
+          "file": "services/bot/src/app/delete-commands.js",
+          "hash": "11439541575645830249",
+          "deps": [
+            "npm:@discordjs/rest",
+            "npm:discord-api-types",
+            "config"
+          ]
+        },
+        {
+          "file": "services/bot/src/app/deploy-commands.js",
+          "hash": "14772419319337017137",
+          "deps": [
+            "npm:discord.js"
+          ]
+        },
+        {
+          "file": "services/bot/src/app/main.js",
+          "hash": "8721767772491640981",
+          "deps": [
+            "npm:discord.js",
+            "npm:fuzzyset",
+            "npm:express",
+            "npm:compression",
+            "npm:morgan",
+            "npm:chalk",
+            "npm:axios",
+            "config",
+            "models",
+            "bot-functions",
+            "bot-emojis",
+            "bot-commands"
+          ]
+        },
+        {
+          "file": "services/bot/src/app/middleware/authenticate.js",
+          "hash": "5780086469631043529",
+          "deps": [
+            "tokens",
+            "config"
+          ]
+        },
+        {
+          "file": "services/bot/src/app/middleware/index.js",
+          "hash": "11153865952014837419"
+        },
+        {
+          "file": "services/bot/src/app/middleware/rated.js",
+          "hash": "13916602220420345598",
+          "deps": [
+            "models",
+            "npm:sequelize",
+            "bot-functions"
+          ]
+        },
+        {
+          "file": "services/bot/src/app/public/Bot-Profile.png",
+          "hash": "16534665023412212314"
+        },
+        {
+          "file": "services/bot/src/app/public/Card-Search.png",
+          "hash": "4424351925038525471"
+        },
+        {
+          "file": "services/bot/src/app/public/History.png",
+          "hash": "7123414745767233320"
+        },
+        {
+          "file": "services/bot/src/app/public/Join-Rated.png",
+          "hash": "15780059987767181700"
+        },
+        {
+          "file": "services/bot/src/app/public/Legality-Check.png",
+          "hash": "8645698239530215350"
+        },
+        {
+          "file": "services/bot/src/app/public/Rated-Pairing.png",
+          "hash": "9079738564233382782"
+        },
+        {
+          "file": "services/bot/src/app/public/Stats.png",
+          "hash": "13376212913801790820"
+        },
+        {
+          "file": "services/bot/src/app/public/Tournament-Hosting.png",
+          "hash": "923434539672452868"
+        },
+        {
+          "file": "services/bot/src/app/public/Tournament-Registration.png",
+          "hash": "2345890825836726715"
+        },
+        {
+          "file": "services/bot/src/app/routes/index.js",
+          "hash": "8982062004175827574"
+        },
+        {
+          "file": "services/bot/src/app/routes/rated.js",
+          "hash": "17469402535306000379",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "services/bot/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "services/bot/src/environments/environment.prod.ts",
+          "hash": "8072527521455167073"
+        },
+        {
+          "file": "services/bot/src/environments/environment.ts",
+          "hash": "9070707211506994727"
+        },
+        {
+          "file": "services/bot/src/main.ts",
+          "hash": "1041442094733369133"
+        },
+        {
+          "file": "services/bot/tsconfig.app.json",
+          "hash": "7547651491091504879"
+        },
+        {
+          "file": "services/bot/tsconfig.json",
+          "hash": "9214820933160915425"
+        },
+        {
+          "file": "services/bot/tsconfig.spec.json",
+          "hash": "10595040461224341030"
+        }
+      ],
+      "models": [
+        {
+          "file": "libs/models/.babelrc",
+          "hash": "2685020516260856122"
+        },
+        {
+          "file": "libs/models/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "libs/models/README.md",
+          "hash": "17357923109984440218"
+        },
+        {
+          "file": "libs/models/jest.config.ts",
+          "hash": "3937962560882074900"
+        },
+        {
+          "file": "libs/models/project.json",
+          "hash": "10709238879286867475"
+        },
+        {
+          "file": "libs/models/src/index.ts",
+          "hash": "3552240282930762949"
+        },
+        {
+          "file": "libs/models/src/lib/Alius.js",
+          "hash": "15631417757842058614",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Archetype.js",
+          "hash": "359107877455711573",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Article.js",
+          "hash": "12246886152787355696",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Artwork.js",
+          "hash": "1804499902830068453",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/BlogPost.js",
+          "hash": "10032050507172738713",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Card.js",
+          "hash": "10026813216091494247",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/CardDeckType.js",
+          "hash": "1122244990637300728",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Cube.js",
+          "hash": "17317636555214217245",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Deck.js",
+          "hash": "6696292509122564610",
+          "deps": [
+            "npm:sequelize",
+            "utils",
+            [
+              "npm:nanoid",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/DeckThumb.js",
+          "hash": "76428756643461491",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/DeckType.js",
+          "hash": "16256983648838057138",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/DeckTypeArchetype.js",
+          "hash": "17025461444053356453",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Draft.js",
+          "hash": "4580624252490587570",
+          "deps": [
+            "npm:sequelize",
+            [
+              "npm:nanoid",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/DraftEntry.js",
+          "hash": "9847562002912551719",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Entry.js",
+          "hash": "10868732853633921325",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Errata.js",
+          "hash": "12133541244915192096",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Event.js",
+          "hash": "9049566879466690483",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Format.js",
+          "hash": "16050723512741259459",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Inventory.js",
+          "hash": "16631168501328626812",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Iron.js",
+          "hash": "7907488020849086903",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/LikedArticle.js",
+          "hash": "2536448086478043323",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/LikedCube.js",
+          "hash": "8221651652050058772",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/LikedDeck.js",
+          "hash": "11215446796735612543",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/LikedFormat.js",
+          "hash": "5603757923344572907",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/LikedVideo.js",
+          "hash": "10997541784229669706",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Match.js",
+          "hash": "9714680435985005245",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Matchup.js",
+          "hash": "13885754797468761819",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Membership.js",
+          "hash": "11713160347071925066",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/OPCard.js",
+          "hash": "15686690828825471634",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/OPDeck.js",
+          "hash": "7279680894513927814",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/PackContent.js",
+          "hash": "12990811027540090722",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Pairing.js",
+          "hash": "1751183401449375064",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Player.js",
+          "hash": "6915427311054120986",
+          "deps": [
+            "npm:sequelize",
+            "npm:bcrypt",
+            "npm:nanoid",
+            "tokens",
+            "config"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Pool.js",
+          "hash": "3780617536037202168",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Price.js",
+          "hash": "9819951916927134626",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Print.js",
+          "hash": "1239059475132531998",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Replay.js",
+          "hash": "9934795970477258622",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Role.js",
+          "hash": "5988278725297124084",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Ruling.js",
+          "hash": "12417640317202168863",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Series.js",
+          "hash": "7512142366923105835",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Server.js",
+          "hash": "6309491418352792847",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Set.js",
+          "hash": "766203835842389548",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Stats.js",
+          "hash": "11313301517009447207",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Status.js",
+          "hash": "3044325779485438999",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Subscription.js",
+          "hash": "9691167930523279542",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Team.js",
+          "hash": "12101014228340510113",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Tournament.js",
+          "hash": "7148523405822248218",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/TriviaEntry.js",
+          "hash": "5986695369028959498",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/TriviaKnowledge.js",
+          "hash": "12584751461287233143",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/TriviaQuestion.js",
+          "hash": "4939146349429692211",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/Video.js",
+          "hash": "5682951431132362393",
+          "deps": [
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/db.js",
+          "hash": "18230072509971572784",
+          "deps": [
+            "npm:sequelize",
+            "config"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/index.ts",
+          "hash": "1856441176096393027"
+        },
+        {
+          "file": "libs/models/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/models/tsconfig.lib.json",
+          "hash": "8044021312735567114"
+        },
+        {
+          "file": "libs/models/tsconfig.spec.json",
+          "hash": "2406015174838385060"
+        }
+      ],
+      "auth": [
+        {
+          "file": "services/auth/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "services/auth/jest.config.ts",
+          "hash": "13038012168464317293"
+        },
+        {
+          "file": "services/auth/project.json",
+          "hash": "1012534274407867614"
+        },
+        {
+          "file": "services/auth/src/app/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "services/auth/src/app/main.ts",
+          "hash": "6455083852354839821",
+          "deps": [
+            "npm:express",
+            "npm:express-ejs-layouts",
+            "npm:compression",
+            "npm:cookie-session",
+            "npm:morgan",
+            "npm:chalk",
+            "middleware",
+            "config"
+          ]
+        },
+        {
+          "file": "services/auth/src/app/middleware/error.ts",
+          "hash": "12994162684936297996",
+          "deps": [
+            "npm:express",
+            "errors"
+          ]
+        },
+        {
+          "file": "services/auth/src/app/middleware/index.ts",
+          "hash": "7511663744907739006"
+        },
+        {
+          "file": "services/auth/src/app/middleware/login.ts",
+          "hash": "4207367164109941435",
+          "deps": [
+            "models",
+            "config"
+          ]
+        },
+        {
+          "file": "services/auth/src/app/middleware/logout.ts",
+          "hash": "17573198538054095932",
+          "deps": [
+            "config"
+          ]
+        },
+        {
+          "file": "services/auth/src/app/middleware/signup.ts",
+          "hash": "6600338350094187204",
+          "deps": [
+            "models",
+            "npm:bcrypt",
+            "config"
+          ]
+        },
+        {
+          "file": "services/auth/src/app/routes/auth.ts",
+          "hash": "16418718655198940645",
+          "deps": [
+            "npm:express",
+            "middleware-auth",
+            "config"
+          ]
+        },
+        {
+          "file": "services/auth/src/app/routes/index.ts",
+          "hash": "18412967443543234282"
+        },
+        {
+          "file": "services/auth/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "services/auth/src/assets/css/auth.css",
+          "hash": "11658813883271787369"
+        },
+        {
+          "file": "services/auth/src/assets/css/normalize.css",
+          "hash": "14673912957225079454"
+        },
+        {
+          "file": "services/auth/src/assets/css/skeleton.css",
+          "hash": "5775903273209615437"
+        },
+        {
+          "file": "services/auth/src/assets/css/theme.css",
+          "hash": "13915379323717559722"
+        },
+        {
+          "file": "services/auth/src/assets/js/cash.min.js",
+          "hash": "4307059902992711588"
+        },
+        {
+          "file": "services/auth/src/assets/js/login.js",
+          "hash": "7249137428677909564"
+        },
+        {
+          "file": "services/auth/src/assets/views/auth/login.ejs",
+          "hash": "6247550354151634427"
+        },
+        {
+          "file": "services/auth/src/assets/views/auth/signup.ejs",
+          "hash": "15251415739672311136"
+        },
+        {
+          "file": "services/auth/src/assets/views/layout.ejs",
+          "hash": "2523153910662748402"
+        },
+        {
+          "file": "services/auth/src/environments/environment.prod.ts",
+          "hash": "8072527521455167073"
+        },
+        {
+          "file": "services/auth/src/environments/environment.ts",
+          "hash": "9070707211506994727"
+        },
+        {
+          "file": "services/auth/src/main.ts",
+          "hash": "134055392405328402"
+        },
+        {
+          "file": "services/auth/tsconfig.app.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "services/auth/tsconfig.json",
+          "hash": "9214820933160915425"
+        },
+        {
+          "file": "services/auth/tsconfig.spec.json",
+          "hash": "10595040461224341030"
+        }
+      ],
+      "middleware-auth": [
+        {
+          "file": "libs/middleware-auth/.babelrc",
+          "hash": "2685020516260856122"
+        },
+        {
+          "file": "libs/middleware-auth/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "libs/middleware-auth/README.md",
+          "hash": "17357923109984440218"
+        },
+        {
+          "file": "libs/middleware-auth/jest.config.ts",
+          "hash": "3937962560882074900"
+        },
+        {
+          "file": "libs/middleware-auth/project.json",
+          "hash": "6823552191267345258"
+        },
+        {
+          "file": "libs/middleware-auth/src/index.ts",
+          "hash": "3552240282930762949"
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/authenticate/authenticate.ts",
+          "hash": "4362874406692767190"
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/authenticate/index.ts",
+          "hash": "2932638797348792286"
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/discord/discordResponse.ts",
+          "hash": "17476956446013506516",
+          "deps": [
+            "npm:simple-oauth2",
+            "npm:axios",
+            "models"
+          ]
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/discord/index.ts",
+          "hash": "12027015557838322846"
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/index.ts",
+          "hash": "13124293264172778089"
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/login/index.ts",
+          "hash": "681728120720534872"
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/login/login.ts",
+          "hash": "3755400763680756546"
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/logout/index.ts",
+          "hash": "18089294195579621742"
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/logout/logout.ts",
+          "hash": "14398182628751633218"
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/oauth2/index.ts",
+          "hash": "8602401266609107354"
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/oauth2/oauth2Authorize.ts",
+          "hash": "8204685574517591120",
+          "deps": [
+            "npm:simple-oauth2",
+            "npm:openid-client"
+          ]
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/oauth2/oauth2Response.ts",
+          "hash": "17990547410171999460",
+          "deps": [
+            "npm:simple-oauth2",
+            "npm:axios",
+            "models"
+          ]
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/oidc/index.ts",
+          "hash": "403115349346774591"
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/oidc/oidcAuthorize.ts",
+          "hash": "2065047882958551995",
+          "deps": [
+            "npm:openid-client"
+          ]
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/oidc/oidcResponse.ts",
+          "hash": "16887708436604792002",
+          "deps": [
+            "npm:openid-client",
+            "npm:jose",
+            "models"
+          ]
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/signup/index.js",
+          "hash": "5427788458283050596"
+        },
+        {
+          "file": "libs/middleware-auth/src/lib/signup/signup.js",
+          "hash": "2276908450829732022"
+        },
+        {
+          "file": "libs/middleware-auth/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/middleware-auth/tsconfig.lib.json",
+          "hash": "8044021312735567114"
+        },
+        {
+          "file": "libs/middleware-auth/tsconfig.spec.json",
+          "hash": "2406015174838385060"
+        }
+      ],
+      "hooks": [
+        {
+          "file": "libs/hooks/.babelrc",
+          "hash": "11855890993922274285"
+        },
+        {
+          "file": "libs/hooks/.eslintrc.json",
+          "hash": "10075191527724852300"
+        },
+        {
+          "file": "libs/hooks/README.md",
+          "hash": "3701425405971344161"
+        },
+        {
+          "file": "libs/hooks/jest.config.ts",
+          "hash": "15906313470495636604"
+        },
+        {
+          "file": "libs/hooks/project.json",
+          "hash": "7846692460705946951"
+        },
+        {
+          "file": "libs/hooks/src/index.ts",
+          "hash": "3552240282930762949"
+        },
+        {
+          "file": "libs/hooks/src/lib/index.ts",
+          "hash": "14338732420776196123"
+        },
+        {
+          "file": "libs/hooks/src/lib/useSocket.ts",
+          "hash": "8964261918404728042",
+          "deps": [
+            "npm:react",
+            "context"
+          ]
+        },
+        {
+          "file": "libs/hooks/tsconfig.json",
+          "hash": "11477590071370859811"
+        },
+        {
+          "file": "libs/hooks/tsconfig.lib.json",
+          "hash": "6859247106828182436"
+        },
+        {
+          "file": "libs/hooks/tsconfig.spec.json",
+          "hash": "2406015174838385060"
+        }
+      ],
+      "bot-functions": [
+        {
+          "file": "libs/bot-functions/.babelrc",
+          "hash": "2685020516260856122"
+        },
+        {
+          "file": "libs/bot-functions/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "libs/bot-functions/README.md",
+          "hash": "14689645104739597275"
+        },
+        {
+          "file": "libs/bot-functions/jest.config.ts",
+          "hash": "2314842627220125816"
+        },
+        {
+          "file": "libs/bot-functions/project.json",
+          "hash": "13755332733667307016"
+        },
+        {
+          "file": "libs/bot-functions/src/client.js",
+          "hash": "2741700660146886394",
+          "deps": [
+            "npm:discord.js",
+            "config"
+          ]
+        },
+        {
+          "file": "libs/bot-functions/src/index.ts",
+          "hash": "639336762920959540"
+        },
+        {
+          "file": "libs/bot-functions/src/lib/chron.js",
+          "hash": "10341635028435484991",
+          "deps": [
+            "npm:axios",
+            "npm:sharp",
+            "models",
+            "npm:sequelize",
+            "npm:@aws-sdk/lib-storage",
+            "npm:@aws-sdk/client-s3",
+            "config",
+            "npm:canvas"
+          ]
+        },
+        {
+          "file": "libs/bot-functions/src/lib/coverage.js",
+          "hash": "6173455099718437050",
+          "deps": [
+            "npm:canvas",
+            "npm:axios",
+            "npm:sharp",
+            "npm:@aws-sdk/lib-storage",
+            "npm:@aws-sdk/client-s3",
+            "npm:sequelize",
+            "models",
+            "config"
+          ]
+        },
+        {
+          "file": "libs/bot-functions/src/lib/deck.js",
+          "hash": "10327784931143378420",
+          "deps": [
+            "npm:axios",
+            "npm:fuzzyset",
+            "npm:sequelize",
+            "models"
+          ]
+        },
+        {
+          "file": "libs/bot-functions/src/lib/drive.js",
+          "hash": "1478770462242541845",
+          "deps": [
+            "npm:googleapis",
+            "config",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/bot-functions/src/lib/iron.js",
+          "hash": "3578002888546160381",
+          "deps": [
+            "npm:sequelize",
+            "models",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-functions/src/lib/rated.js",
+          "hash": "4495496317378067912",
+          "deps": [
+            "npm:axios",
+            "npm:sequelize",
+            "models",
+            "bot-emojis",
+            "npm:discord.js"
+          ]
+        },
+        {
+          "file": "libs/bot-functions/src/lib/sheets.js",
+          "hash": "13420621046106059674",
+          "deps": [
+            "npm:googleapis"
+          ]
+        },
+        {
+          "file": "libs/bot-functions/src/lib/test.js",
+          "hash": "14769238573055557912",
+          "deps": [
+            "models",
+            "npm:sequelize",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/bot-functions/src/lib/tournament.js",
+          "hash": "3018298896651149230",
+          "deps": [
+            "npm:axios",
+            "npm:sequelize",
+            "npm:discord.js",
+            "models",
+            "bot-emojis"
+          ]
+        },
+        {
+          "file": "libs/bot-functions/src/lib/trivia.js",
+          "hash": "11423067996535477352",
+          "deps": [
+            "models",
+            "npm:fuzzyset",
+            "bot-emojis",
+            "npm:discord.js"
+          ]
+        },
+        {
+          "file": "libs/bot-functions/src/lib/undo.js",
+          "hash": "12920889754065582266",
+          "deps": [
+            "models",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/bot-functions/src/lib/utility.js",
+          "hash": "10300036323957422352",
+          "deps": [
+            "npm:canvas",
+            "npm:discord.js",
+            "npm:sequelize",
+            "npm:axios",
+            "models",
+            "bot-emojis",
+            "config",
+            "npm:@aws-sdk/client-s3"
+          ]
+        },
+        {
+          "file": "libs/bot-functions/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/bot-functions/tsconfig.lib.json",
+          "hash": "4995791200369120443"
+        },
+        {
+          "file": "libs/bot-functions/tsconfig.spec.json",
+          "hash": "2406015174838385060"
+        }
+      ],
+      "player": [
+        {
+          "file": "scripts/player/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "scripts/player/jest.config.ts",
+          "hash": "274345350888637293"
+        },
+        {
+          "file": "scripts/player/project.json",
+          "hash": "9626516201644436373"
+        },
+        {
+          "file": "scripts/player/src/main.ts",
+          "hash": "11721783835841681137",
+          "deps": [
+            "models",
+            "npm:sequelize"
+          ]
+        },
+        {
+          "file": "scripts/player/tsconfig.app.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "scripts/player/tsconfig.json",
+          "hash": "9214820933160915425"
+        },
+        {
+          "file": "scripts/player/tsconfig.script.json",
+          "hash": "9090779640219499351"
+        },
+        {
+          "file": "scripts/player/tsconfig.spec.json",
+          "hash": "10595040461224341030"
+        }
+      ]
+    }
+  }
+}

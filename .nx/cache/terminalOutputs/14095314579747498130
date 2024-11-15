@@ -1,0 +1,21 @@
+node:fs:1658
+  const stats = binding.stat(
+                        ^
+
+Error: ENOENT: no such file or directory, stat '/Users/danielmcnelis/Desktop/projects/formatlibrary/services/site/src/assets'
+[90m    at statSync (node:fs:1658:25)[39m
+    at [90m/Users/danielmcnelis/Desktop/projects/formatlibrary/[39mnode_modules/[4m@nx[24m/webpack/src/plugins/nx-webpack-plugin/lib/normalize-options.js:99:51
+    at Array.map (<anonymous>)
+    at normalizeAssets [90m(/Users/danielmcnelis/Desktop/projects/formatlibrary/[39mnode_modules/[4m@nx[24m/webpack/src/plugins/nx-webpack-plugin/lib/normalize-options.js:91:19[90m)[39m
+    at normalizeOptions [90m(/Users/danielmcnelis/Desktop/projects/formatlibrary/[39mnode_modules/[4m@nx[24m/webpack/src/executors/webpack/lib/normalize-options.js:25:76[90m)[39m
+    at webpackExecutor [90m(/Users/danielmcnelis/Desktop/projects/formatlibrary/[39mnode_modules/[4m@nx[24m/webpack/src/executors/webpack/webpack.impl.js:62:62[90m)[39m
+    at webpackExecutor.next (<anonymous>)
+    at [90m/Users/danielmcnelis/Desktop/projects/formatlibrary/[39mnode_modules/[4m@nx[24m/js/src/executors/node/node.impl.js:225:44
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m {
+  errno: [33m-2[39m,
+  code: [32m'ENOENT'[39m,
+  syscall: [32m'stat'[39m,
+  path: [32m'/Users/danielmcnelis/Desktop/projects/formatlibrary/services/site/src/assets'[39m
+}
+
+Node.js v20.15.0

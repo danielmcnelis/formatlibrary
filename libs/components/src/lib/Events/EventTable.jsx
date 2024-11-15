@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useLayoutEffect } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import axios from 'axios'
 import { EventRow } from './EventRow.jsx'
 import { MobileEventRow } from './MobileEventRow'
@@ -10,6 +10,7 @@ import { Helmet } from 'react-helmet'
 import './EventTable.css' 
 
 export const EventTable = (props) => {
+    const isMounted = useRef(false)
     const [community, setCommunity] = useState(null)
     const [events, setEvents] = useState([])
     const [eventsPerPage, setEventsPerPage] = useState(10)
@@ -27,7 +28,7 @@ export const EventTable = (props) => {
   
     // USE LAYOUT EFFECT
     useLayoutEffect(() => {
-        // if (!isMounted.current) return
+        if (!isMounted.current) return
         window.scrollTo(0, document.getElementById('sortSelector')?.offsetTop - 10)
     }, [page])
 
@@ -128,7 +129,8 @@ export const EventTable = (props) => {
 
     // USE EFFECT SEARCH
     useEffect(() => {
-      search()
+        if (!isMounted.current) return
+        search()
     }, [page, eventsPerPage, format, community, queryParams, sortBy])
   
 

@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useLayoutEffect } from 'react'
+import { useState, useEffect, useLayoutEffec, useRef } from 'react'
 import axios from 'axios'
 import { DeckImage } from './DeckImage.jsx'
 import { DeckRow } from './DeckRow.jsx'
@@ -13,6 +13,7 @@ import './DeckTable.css'
 const playerId = getCookie('playerId')
 
 export const DeckTable = () => {
+    const isMounted = useRef(false)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const [decks, setDecks] = useState([])
@@ -36,7 +37,7 @@ export const DeckTable = () => {
   
     // USE LAYOUT EFFECT
     useLayoutEffect(() => {
-        // if (!isMounted.current) return
+        if (!isMounted.current) return
         window.scrollTo(0, document.getElementById('sortSelector')?.offsetTop - 10)
     }, [page])
 
@@ -152,7 +153,8 @@ export const DeckTable = () => {
   
     // USE EFFECT SEARCH
     useEffect(() => {
-      search()
+        if (!isMounted.current) return
+        search()
     }, [isAdmin, isSubscriber, format, origin, queryParams, page, decksPerPage, sortBy])
   
     // USE EFFECT COUNT
