@@ -105,19 +105,18 @@ export const EventTable = (props) => {
 
     // USE EFFECT
     useEffect(() => {
-        const fetchEvents = async () => {
-          const {data} = await axios.get(`/api/events?page=1&limit=10&sortBy=startDate:desc`)
-          setEvents(data)
-        }
-  
-        const fetchFormats = async () => {
-          const {data} = await axios.get(`/api/formats/`)
-          setFormats(data)
+        const fetchData = async () => {
+            const {data: eventData} = await axios.get(`/api/events?page=1&limit=10&sortBy=startDate:desc`)
+            setEvents(eventData)
+        
+            const {data: formatData} = await axios.get(`/api/formats/`)
+            setFormats(formatData)  
+              
+            isMounted.current = true
         }
   
         count()
-        fetchEvents()
-        fetchFormats()
+        fetchData()
     }, [])
   
 
@@ -129,7 +128,6 @@ export const EventTable = (props) => {
 
     // USE EFFECT SEARCH
     useEffect(() => {
-        if (!isMounted.current) return
         search()
     }, [page, eventsPerPage, format, community, queryParams, sortBy])
   

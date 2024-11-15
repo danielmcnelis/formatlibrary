@@ -145,19 +145,18 @@ export const ReplayTable = () => {
 
     // USE EFFECT
     useEffect(() => {
-        const fetchReplays = async () => {
-          const {data} = await axios.get(`/api/replays?page=1&limit=10&sortBy=publishDate:desc,display:desc,suggestedOrder:desc`)
-          setReplays(data)
+        const fetchData = async () => {
+            const {data: replayData} = await axios.get(`/api/replays?page=1&limit=10&sortBy=publishDate:desc,display:desc,suggestedOrder:desc`)
+            setReplays(replayData)
+        
+            const {data: formatData} = await axios.get(`/api/formats/`)
+            setFormats(formatData)  
+
+            isMounted.current = true
         }
-  
-        const fetchFormats = async () => {
-          const {data} = await axios.get(`/api/formats/`)
-          setFormats(data)
-        }
-  
+
         count()
-        fetchReplays()
-        fetchFormats()
+        fetchData()
     }, [])
   
 
@@ -169,7 +168,6 @@ export const ReplayTable = () => {
 
     // USE EFFECT SEARCH
     useEffect(() => {
-        if (!isMounted.current) return
         search()
     }, [isAdmin, isSubscriber, page, replaysPerPage, format, community, queryParams, sortBy])
   
@@ -332,7 +330,8 @@ export const ReplayTable = () => {
                     </div>
                     
                     <br />
-            
+
+                    <div className="search-component">
                     <div className="searchWrapper">
                     <input
                         id="searchBar"
@@ -467,7 +466,8 @@ export const ReplayTable = () => {
                         />
                     </div>
                     </div>
-            
+
+                    <div className="results-component">
                     <div id="replay-table">
                         <table id="replays">
                             <thead>
@@ -487,6 +487,7 @@ export const ReplayTable = () => {
                             </tbody>
                         </table>
                     </div>
+
             
                     <div className="pagination">
                     <Pagination
@@ -497,6 +498,8 @@ export const ReplayTable = () => {
                     />
                     </div>
                 </div>
+                </div>
+            </div>
             </>
         )
     }

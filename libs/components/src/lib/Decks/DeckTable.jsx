@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useLayoutEffec, useRef } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import axios from 'axios'
 import { DeckImage } from './DeckImage.jsx'
 import { DeckRow } from './DeckRow.jsx'
@@ -135,25 +135,23 @@ export const DeckTable = () => {
   
     // USE EFFECT
     useEffect(() => {
-        const fetchDecks = async () => {
-          const {data} = await axios.get(`/api/decks?page=1&limit=12&sortBy=publishDate:desc&filter=origin:eq:event`)
-          setDecks(data)
-        }
-  
-        const fetchFormats = async () => {
-          const {data} = await axios.get(`/api/formats/`)
-          setFormats(data)
+        const fetchData = async () => {
+            const {data: deckData} = await axios.get(`/api/decks?page=1&limit=12&sortBy=publishDate:desc&filter=origin:eq:event`)
+            setDecks(deckData)
+        
+            const {data: formatData} = await axios.get(`/api/formats/`)
+            setFormats(formatData)  
+              
+            isMounted.current = true
         }
   
         count()
-        fetchDecks()
-        fetchFormats()
+        fetchData()
     }, [])
   
   
     // USE EFFECT SEARCH
     useEffect(() => {
-        if (!isMounted.current) return
         search()
     }, [isAdmin, isSubscriber, format, origin, queryParams, page, decksPerPage, sortBy])
   

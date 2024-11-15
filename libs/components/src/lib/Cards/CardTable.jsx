@@ -439,7 +439,7 @@ export const CardTable = () => {
         if (!isMounted.current) return
         count()
         search()
-    }, [isMounted.current, page, cardsPerPage, sortBy, cutoff, format, booster, sliders.atk, sliders.def, sliders.level, queryParams, groupParams, iconParams, attributeParams, typeParams, count, search])
+    }, [isMounted, page, cardsPerPage, sortBy, cutoff, format, booster, sliders.atk, sliders.def, sliders.level, queryParams, groupParams, iconParams, attributeParams, typeParams, count, search])
 
     const advancedButtons = {
       icon: [
