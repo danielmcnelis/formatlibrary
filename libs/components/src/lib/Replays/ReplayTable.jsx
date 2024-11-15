@@ -185,7 +185,7 @@ export const ReplayTable = () => {
                     <meta name="og:description" content={`Search an interactive database of recorded Yu-Gi-Oh! matches in the form of DuelingBook replays.`}/>
                 </Helmet>
                 {/* Default Gaming Playlist */}
-                <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+                <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
                 <div className="body">
                     <div className="replay-database-flexbox">
                     <h1>Replay Database</h1>
@@ -321,7 +321,7 @@ export const ReplayTable = () => {
                     <meta name="og:description" content={`Search through an interactive database of recorded Yu-Gi-Oh! matches in the form of DuelingBook replays.`}/>
                 </Helmet>
                 {/* Default Gaming Playlist */}
-                <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+                <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
                 <div className="body">
                     <div className="replay-database-flexbox">
                     <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/film.png'} alt="film"/>

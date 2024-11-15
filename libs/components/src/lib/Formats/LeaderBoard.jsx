@@ -56,8 +56,8 @@ export const LeaderBoard = () => {
                 <meta name="og:description" content={`Live rankings of online ${format?.name} Format Yu-Gi-Oh! players.`}/>
             </Helmet>
             {
-                videoPlaylistId ? <div class="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
-                <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+                videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
+                <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             }
             <div className="body">
                 <div id="leaderboard" className="leaderboard">

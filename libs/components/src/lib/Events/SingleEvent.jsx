@@ -210,8 +210,8 @@ export const SingleEvent = () => {
             <meta name="og:description" content={`Coverage of ${event?.name} - ${event?.formatName} Format hosted by ${event?.community}. Includes decklists, metagame stats, and match replays.`}/>
         </Helmet>
         {
-            videoPlaylistId ? <div class="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
-            <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+            videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
+            <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
         }
         <div className="body">
             <div className="event-title-flexbox">

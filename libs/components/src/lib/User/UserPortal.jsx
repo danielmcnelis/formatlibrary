@@ -13,7 +13,7 @@ export const UserPortal = () => {
                 <meta name="og:description" content={`Featuring a variety of useful web apps for Yu-Gi-Oh! players. Deck Builder • Cube Draft • Pack Simulator • Text-YDK Converter`}/>
             </Helmet>
             {/* Default Gaming Playlist */}
-            <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+            <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             <div className="body">
                 <h1>Applications</h1>
                 <div className="user-menu">

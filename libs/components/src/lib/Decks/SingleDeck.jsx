@@ -161,8 +161,8 @@ export const SingleDeck = () => {
             />
         </Helmet>
         {
-            videoPlaylistId ? <div class="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
-            <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+            videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
+            <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
         }
         <div className="body">
             <div className="single-deck-title-flexbox">

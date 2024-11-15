@@ -41,8 +41,8 @@ export const DeckGallery = () => {
                 <meta name="og:description" content={`A complete list of Yu-Gi-Oh! decks played in ${format?.name} Format. Includes example decklists and breakdowns of card choices, popularity, and performance.`}/>
             </Helmet>
             {
-                videoPlaylistId ? <div class="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
-                <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+                videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
+                <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             }
             <div className="body">
                 <div id="popular-decks" className="popular-decks">

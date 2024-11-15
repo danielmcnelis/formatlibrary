@@ -91,7 +91,7 @@ export const PlayerProfile = () => {
             <meta name="og:description" content={`Profile page for ${player?.name}. View public info, tournament achievements, favorite decks, etc.`}/>
         </Helmet>
         {/* Default Gaming Playlist */}
-        <div class="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+        <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
         <div className="body">
             <div className="player-profile-flexbox">
                 <div className="player-info">
