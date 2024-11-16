@@ -146,11 +146,26 @@ export const ReplayTable = () => {
     // USE EFFECT
     useEffect(() => {
         const fetchData = async () => {
-            const {data: replayData} = await axios.get(`/api/replays?page=1&limit=10&sortBy=publishDate:desc,display:desc,suggestedOrder:desc`)
-            setReplays(replayData)
-        
-            const {data: formatData} = await axios.get(`/api/formats/`)
-            setFormats(formatData)  
+            try {
+                const accessToken = getCookie('access')
+                const url = `/api/replays?page=1&limit=10&sortBy=publishDate:desc,display:desc,suggestedOrder:desc`
+                const { data: replayData } = await axios.get(url, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
+                
+                setReplays(replayData)
+            } catch (err) {
+                console.log(err)
+            }
+
+            try {
+                const {data: formatData} = await axios.get(`/api/formats/`)
+                setFormats(formatData)  
+            } catch (err) {
+                console.log(err)
+            }
 
             isMounted.current = true
         }
