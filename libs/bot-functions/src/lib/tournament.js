@@ -2171,63 +2171,111 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
 
 // SEND PAIRINGS
 export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
-    const matches = [...await getMatches(server, tournament.id)].map((el) => el.match).filter((match) => match.state === 'open')
+    const openMatches = [...await getMatches(server, tournament.id)].map((el) => el.match).filter((match) => match.state === 'open')
+    const participantIds = []
+    const firstOpenMatchFound = openMatches[0]
 
-    for (let i = 0; i < matches.length; i++) {
-        const match = matches[i]
+    const round = tournament.type === 'double elimination' && firstOpenMatchFound.round < 0 ? `Losers Round ${Math.abs(firstOpenMatchFound.round)}` :
+            tournament.type === 'double elimination' && firstOpenMatchFound.round > 0 ? `Winners Round ${Math.abs(firstOpenMatchFound.round)}` :
+            `Round ${firstOpenMatchFound.round}`
+            
+    for (let i = 0; i < openMatches.length; i++) {
+        const match = openMatches[i]
+        participantIds.push(match.player1_id, match.player2_id)
         if (ignoreRound1 && match.round === 1) continue
-        const round = tournament.type === 'double elimination' && match.round < 0 ? `Losers Round ${Math.abs(match.round)}` :
-            tournament.type === 'double elimination' && match.round > 0 ? `Winners Round ${Math.abs(match.round)}` :
-            `Round ${match.round}`
+        
+        // try {
+        //     const { player: player1 } = await Entry.findOne({
+        //         where: {
+        //             tournamentId: tournament.id,
+        //             participantId: match.player1_id
+        //         },
+        //         include: Player
+        //     })
+    
+        //     const { player: player2 } = await Entry.findOne({
+        //         where: {
+        //             tournamentId: tournament.id,
+        //             participantId: match.player2_id
+        //         },
+        //         include: Player
+        //     })
+    
+        //     try {
+        //         const p1Member = await guild.members.fetch(player1.discordId)
+        //         const p2DiscordUsername = player2.discriminator === '0' ? player2.discordName : `${player2.discordName}#${player2.discriminator}`
+        //         p1Member.user.send(
+        //             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+        //             `\nServer: ${server.name} ${server.logo}` +
+        //             `\nChannel: <#${tournament.channelId}>` +
+        //             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+        //             `\nDiscord: ${player2.globalName ? `${player2.globalName} (${p2DiscordUsername})` : p2DiscordUsername}` +
+        //             `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${player2.opTcgSim}` : `DuelingBook: ${player2.duelingBook}`}`
+        //         )
+        //     } catch (err) {
+        //         console.log(err)
+        //     }
+    
+        //     try {
+        //         const p2Member = await guild.members.fetch(player2.discordId)
+        //         const p1DiscordUsername = player1.discriminator === '0' ? player1.discordName : `${player1.discordName}#${player1.discriminator}`
+        //         p2Member.user.send(
+        //             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+        //             `\nServer: ${server.name} ${server.logo}` +
+        //             `\nChannel: <#${tournament.channelId}>` +
+        //             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+        //             `\nDiscord: ${player1.globalName ? `${player1.globalName} (${p1DiscordUsername})` : p1DiscordUsername}` +
+        //             `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${player1.opTcgSim}` : `DuelingBook: ${player1.duelingBook}`}`
+        //         )
+        //     } catch (err) {
+        //         console.log(err)
+        //     }
+        // } catch (err) {
+        //     console.log(err)
+        // }
+    }
 
-        try {
-            const { player: player1 } = await Entry.findOne({
-                where: {
-                    tournamentId: tournament.id,
-                    participantId: match.player1_id
-                },
-                include: Player
-            })
-    
-            const { player: player2 } = await Entry.findOne({
-                where: {
-                    tournamentId: tournament.id,
-                    participantId: match.player2_id
-                },
-                include: Player
-            })
-    
+    if (tournament.type === 'swiss') {
+        const completedMatches = [...await getMatches(server, tournament.id)].map((el) => el.match).filter((match) => match.round === firstOpenMatchFound.round && match.state === 'complete')
+        
+        for (let i = 0; i < completedMatches.length; i++) {
+            const match = completedMatches[i]
+            participantIds.push(match.player1_id, match.player2_id)
+        }
+
+        const playersWithByes = [...await Entry.findAll({
+            where: {
+                tournamentId: tournament.id,
+                active: true
+            },
+            include: Player
+        })].filter((e) => !participantIds.includes(e.particpantId)).map((e) => e.player)
+
+        console.log('playersWithByes', playersWithByes)
+
+        // SEND MESSAGE TO INFORM PLAYERS THEY HAVE A BYE
+        for (let i = 0; i < playersWithByes.length; i++) {
+            const player = playersWithByes[i]
+            console.log('player', player)
+
             try {
-                const p1Member = await guild.members.fetch(player1.discordId)
-                const p2DiscordUsername = player2.discriminator === '0' ? player2.discordName : `${player2.discordName}#${player2.discriminator}`
-                p1Member.user.send(
-                    `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
+                const member = await guild.members.fetch(player.discordId)
+                console.log('member', member)
+
+                console.log(`Congrats! ${emojis.casablanca} You have a Bye for ${round} of ${tournament.name}! ${tournament.logo}` +
                     `\nServer: ${server.name} ${server.logo}` +
                     `\nChannel: <#${tournament.channelId}>` +
-                    `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                    `\nDiscord: ${player2.globalName ? `${player2.globalName} (${p2DiscordUsername})` : p2DiscordUsername}` +
-                    `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${player2.opTcgSim}` : `DuelingBook: ${player2.duelingBook}`}`
-                )
+                    `\nFormat: ${tournament.formatName} ${tournament.emoji}`)
+
+                // member.user.send(
+                //     `Congrats! ${emojis.casablanca} You have a Bye for ${round} of ${tournament.name}! ${tournament.logo}` +
+                //     `\nServer: ${server.name} ${server.logo}` +
+                //     `\nChannel: <#${tournament.channelId}>` +
+                //     `\nFormat: ${tournament.formatName} ${tournament.emoji}`
+                // )
             } catch (err) {
                 console.log(err)
-            }
-    
-            try {
-                const p2Member = await guild.members.fetch(player2.discordId)
-                const p1DiscordUsername = player1.discriminator === '0' ? player1.discordName : `${player1.discordName}#${player1.discriminator}`
-                p2Member.user.send(
-                    `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                    `\nServer: ${server.name} ${server.logo}` +
-                    `\nChannel: <#${tournament.channelId}>` +
-                    `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                    `\nDiscord: ${player1.globalName ? `${player1.globalName} (${p1DiscordUsername})` : p1DiscordUsername}` +
-                    `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${player1.opTcgSim}` : `DuelingBook: ${player1.duelingBook}`}`
-                )
-            } catch (err) {
-                console.log(err)
-            }
-        } catch (err) {
-            console.log(err)
+            }        
         }
     }
 }
