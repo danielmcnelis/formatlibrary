@@ -2252,19 +2252,22 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
         console.log('line 2252: participantIds.length', participantIds.length)
         console.log('line 2253: participantIds', participantIds)
 
+        console.log(`participantIds.includes('246212895')`, participantIds.includes('246212895'))
+        console.log(`participantIds.includes(246212895)`, participantIds.includes(246212895))
+
         const playersWithByes = [...await Entry.findAll({
             where: {
                 tournamentId: tournament.id,
                 active: true
             },
             include: Player
-        })].filter((e) => !participantIds.includes(e.particpantId)).map((e) => e.player)
+        })].filter((e) => !participantIds.includes(e.particpantId))
 
         console.log('playersWithByes.length', playersWithByes.length)
 
         // SEND MESSAGE TO INFORM PLAYERS THEY HAVE A BYE
         for (let i = 0; i < playersWithByes.length; i++) {
-            const player = playersWithByes[i]
+            const player = playersWithByes[i]?.player
             console.log('player with bye: player?.name', player?.name)
 
             try {
