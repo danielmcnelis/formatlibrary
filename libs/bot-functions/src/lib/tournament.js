@@ -2172,8 +2172,10 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
 // SEND PAIRINGS
 export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
     const openMatches = [...await getMatches(server, tournament.id)].map((el) => el.match).filter((match) => match.state === 'open')
+    console.log('openMatches.length', openMatches.length)
     const participantIds = []
     const firstOpenMatchFound = openMatches[0]
+    console.log('firstOpenMatchFound', firstOpenMatchFound)
 
     const round = tournament.type === 'double elimination' && firstOpenMatchFound.round < 0 ? `Losers Round ${Math.abs(firstOpenMatchFound.round)}` :
             tournament.type === 'double elimination' && firstOpenMatchFound.round > 0 ? `Winners Round ${Math.abs(firstOpenMatchFound.round)}` :
@@ -2235,13 +2237,20 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
         // }
     }
 
+    console.log('line 2240: participantIds.length', participantIds.length)
+    console.log('line 2241: participantIds', participantIds)
+
     if (tournament.type === 'swiss') {
         const completedMatches = [...await getMatches(server, tournament.id)].map((el) => el.match).filter((match) => match.round === firstOpenMatchFound.round && match.state === 'complete')
-        
+        console.log('completedMatches.length', completedMatches.length)
+
         for (let i = 0; i < completedMatches.length; i++) {
             const match = completedMatches[i]
             participantIds.push(match.player1_id, match.player2_id)
         }
+
+        console.log('line 2252: participantIds.length', participantIds.length)
+        console.log('line 2253: participantIds', participantIds)
 
         const playersWithByes = [...await Entry.findAll({
             where: {
@@ -2251,16 +2260,16 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
             include: Player
         })].filter((e) => !participantIds.includes(e.particpantId)).map((e) => e.player)
 
-        console.log('playersWithByes', playersWithByes)
+        console.log('playersWithByes.length', playersWithByes.length)
 
         // SEND MESSAGE TO INFORM PLAYERS THEY HAVE A BYE
         for (let i = 0; i < playersWithByes.length; i++) {
             const player = playersWithByes[i]
-            console.log('player', player)
+            console.log('player with bye: player?.name', player?.name)
 
             try {
                 const member = await guild.members.fetch(player.discordId)
-                console.log('member', member)
+                console.log('player with bye: member?.user?.username', member?.user?.username)
 
                 console.log(`Congrats! ${emojis.casablanca} You have a Bye for ${round} of ${tournament.name}! ${tournament.logo}` +
                     `\nServer: ${server.name} ${server.logo}` +
