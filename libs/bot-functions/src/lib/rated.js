@@ -119,16 +119,16 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
                 `New pairing for Rated ${format.name}${format.category !== 'OP' ? ' Format' : ''} ${format.emoji}!` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${channelId}>` +
-                `\nDiscord: ${player.globalName ? `${player.globalName} (${playerDiscordUsername})` : playerDiscordUsername}` +
-                `\n${format.category !== 'OP' ? `DuelingBook: ${player.duelingBook}` : `OPTCGSim: ${player.opTcgSim}`}`
+                `\nDiscord Name: ${player.globalName ? `${player.globalName} (${playerDiscordUsername})` : playerDiscordUsername}` +
+                `\n${format.category !== 'OP' ? `Duelingbook Name: ${player.duelingBook}` : `OPTCGSim: ${player.opTcgSim}`}`
             ).catch((err) => console.log(err))
 
             interaction.user.send(
                 `New pairing for Rated ${format.name}${format.category !== 'OP' ? ' Format' : ''} ${format.emoji}!` + 
                 `\nServer: ${server.name} ${server.logo}` + 
                 `\nChannel: <#${channelId}>` +
-                `\nDiscord: ${opponent.globalName ? `${opponent.globalName} (${opponentDiscordUsername})` : opponentDiscordUsername}` +
-                `\n${format.category !== 'OP' ? `DuelingBook: ${opponent.duelingBook}` : `OPTCGSim: ${opponent.opTcgSim}`}`
+                `\nDiscord Name: ${opponent.globalName ? `${opponent.globalName} (${opponentDiscordUsername})` : opponentDiscordUsername}` +
+                `\n${format.category !== 'OP' ? `Duelingbook Name: ${opponent.duelingBook}` : `OPTCGSim: ${opponent.opTcgSim}`}`
             ).catch((err) => console.log(err))
 
             await Pairing.create({
@@ -210,16 +210,16 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
                 `New pairing for Rated ${format.name}${format.category !== 'OP' ? ` Format` : ''} ${format.emoji}!` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${channelId}>` +
-                `\nDiscord: ${player.globalName ? `${player.globalName} (${playerDiscordUsername})` : playerDiscordUsername}` +
-                `\n${format.category !== 'OP' ? `DuelingBook: ${player.duelingBook}` : `OPTCGSim: ${player.opTcgSim}`}`
+                `\nDiscord Name: ${player.globalName ? `${player.globalName} (${playerDiscordUsername})` : playerDiscordUsername}` +
+                `\n${format.category !== 'OP' ? `Duelingbook Name: ${player.duelingBook}` : `OPTCGSim: ${player.opTcgSim}`}`
             ).catch((err) => console.log(err))
             
             interaction.user.send(
                 `New pairing for Rated ${format.name}${format.category !== 'OP' ? ` Format` : ''} ${format.emoji}!` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${channelId}>` +
-                `\nDiscord: ${opponent.globalName ? `${opponent.globalName} (${opponentDiscordUsername})` : opponentDiscordUsername}` +
-                `\n${format.category !== 'OP' ? `DuelingBook: ${opponent.duelingBook}` : `OPTCGSim: ${opponent.opTcgSim}`}`
+                `\nDiscord Name: ${opponent.globalName ? `${opponent.globalName} (${opponentDiscordUsername})` : opponentDiscordUsername}` +
+                `\n${format.category !== 'OP' ? `Duelingbook Name: ${opponent.duelingBook}` : `OPTCGSim: ${opponent.opTcgSim}`}`
             ).catch((err) => console.log(err))
      
             await Pairing.create({
@@ -604,16 +604,16 @@ export const sendRatedPairingAnnouncement = async (client, player, opponent, for
             `New pairing for Rated ${format.name} Format! ${format.emoji}` + 
             `\nServer: Format Library ${emojis.FL}` + 
             `\nChannel: <#${format.channel}}>` +
-            `\nDiscord: ${opponent.globalName ? `${opponent.globalName} (${opponentDiscordUsername})` : opponentDiscordUsername}` +
-            `\nDuelingBook: ${opponent.duelingBook}`
+            `\nDiscord Name: ${opponent.globalName ? `${opponent.globalName} (${opponentDiscordUsername})` : opponentDiscordUsername}` +
+            `\nDuelingbook Name: ${opponent.duelingBook}`
         ).catch((err) => console.log(err))
     
         user2.send(
             `New pairing for Rated ${format.name} Format! ${format.emoji}` +
             `\nServer: Format Library ${emojis.FL}` +
             `\nChannel: <#${format.channel}>` +
-            `\nDiscord: ${player.globalName ? `${player.globalName} (${playerDiscordUsername})` : playerDiscordUsername}` +
-            `\nDuelingBook: ${player.duelingBook}`
+            `\nDiscord Name: ${player.globalName ? `${player.globalName} (${playerDiscordUsername})` : playerDiscordUsername}` +
+            `\nDuelingbook Name: ${player.duelingBook}`
         ).catch((err) => console.log(err))  
     } catch (err) {
         console.log(err)
