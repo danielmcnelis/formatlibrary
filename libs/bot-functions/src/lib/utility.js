@@ -559,7 +559,7 @@ export const createMembership = async (guild, member) => {
 // GET ROUND NAME
 export const getRoundName = (tournament, roundInt, count) => {
     let roundName
-    if (tournament.type === 'single elimination') {
+    if (tournament?.type === 'single elimination') {
         const totalRounds = Math.ceil(Math.log2(count))
         const roundsRemaining = totalRounds - roundInt
         roundName = roundsRemaining === 0 ? 'Finals' :
@@ -571,7 +571,7 @@ export const getRoundName = (tournament, roundInt, count) => {
             roundsRemaining === 6 ? 'Round of 128' :
             roundsRemaining === 7 ? 'Round of 256' :
             null
-    } else if (tournament.type === 'double elimination') {
+    } else if (tournament?.type === 'double elimination') {
         const totalWinnersRounds = Math.ceil(Math.log2(count)) + 1
         const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(count)))
         const correction = (count - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0

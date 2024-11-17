@@ -3,7 +3,7 @@ import { Op } from 'sequelize'
 import axios from 'axios'
 import { config } from '@fl/config'
 import Canvas = require('canvas')
-import { capitalize } from '@fl/utils'
+import { capitalize, getRoundName } from '@fl/utils'
 import * as fs from 'fs'
 import { parse } from 'csv-parse'
 import { iso2ToCountries } from '@fl/utils'
@@ -1738,13 +1738,15 @@ const shuffleArray = (arr) => {
 // })()
 
 ;(async () => { 
-    const replays = await Replay.findAll()
+    const replays = await Replay.findAll({ include: Tournament })
 
     let b = 0
     for (let i = 0; i < replays.length; i++) {
         const replay = replays[i]
+
         await replay.update({ 
             display: false, 
+            roundName: getRoundName(replay?.tournament, replay.roundInt, replay?.tournament?.size) || replay.roundName,
             roundAbs: Math.abs(replay.roundInt)
         })
         b++

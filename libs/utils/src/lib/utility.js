@@ -38,6 +38,51 @@ export const appendScript = (src, document) => {
     document.head.appendChild(script)
 }
 
+// GET ROUND NAME
+export const getRoundName = (tournament, roundInt, count) => {
+    let roundName
+    if (tournament?.type === 'single elimination') {
+        const totalRounds = Math.ceil(Math.log2(count))
+        const roundsRemaining = totalRounds - roundInt
+        roundName = roundsRemaining === 0 ? 'Finals' :
+            roundsRemaining === 1 ? 'Semi Finals' :
+            roundsRemaining === 2 ? 'Quarter Finals' :
+            roundsRemaining === 3 ? 'Round of 16' :
+            roundsRemaining === 4 ? 'Round of 32' :
+            roundsRemaining === 5 ? 'Round of 64' :
+            roundsRemaining === 6 ? 'Round of 128' :
+            roundsRemaining === 7 ? 'Round of 256' :
+            null
+    } else if (tournament?.type === 'double elimination') {
+        const totalWinnersRounds = Math.ceil(Math.log2(count)) + 1
+        const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(count)))
+        const correction = (count - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
+        const totalLosersRounds = (totalWinnersRounds - 2) * 2 + correction
+        if (roundInt > 0) {
+            const roundsRemaining = totalWinnersRounds - roundInt
+            roundName = roundsRemaining <= 0 ? 'Grand Finals' :
+                roundsRemaining === 1 ? `Winner's Finals` :
+                roundsRemaining === 2 ? `Winner's Semis` :
+                roundsRemaining === 3 ? `Winner's Quarters` :
+                isNaN(roundsRemaining) ? null :
+                `Winner's Round of ${Math.pow(2, roundsRemaining)}`
+        } else {
+            const roundsRemaining = totalLosersRounds - Math.abs(roundInt)
+            roundName = roundsRemaining === 0 ? `Loser's Finals` :
+                roundsRemaining === 1 ? `Loser's Semis` :
+                roundsRemaining === 2 ? `Loser's Thirds` :
+                roundsRemaining === 3 ? `Loser's Fifths` :
+                roundsRemaining === 3 ? `Loser's Sevenths` :
+                isNaN(roundsRemaining) ? null :
+                `Loser's Round ${Math.abs(roundInt)}`
+        }
+    } else {
+        roundName = roundInt ? `Round ${roundInt}` : null
+    }
+
+    return roundName
+}
+
 //ARRAY TO OBJECT
 export const arrayToObject = (arr = []) => {
   const obj = {}
