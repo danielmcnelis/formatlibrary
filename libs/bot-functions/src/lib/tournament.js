@@ -578,6 +578,7 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
                     roundsRemaining === 1 ? `Loser's Semis` :
                     roundsRemaining === 2 ? `Loser's Thirds` :
                     roundsRemaining === 3 ? `Loser's Fifths` :
+                    roundsRemaining === 3 ? `Loser's Sevenths` :
                     `Loser's Round ${Math.abs(round)}`
             }
         } else {

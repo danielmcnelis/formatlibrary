@@ -1701,20 +1701,144 @@ const shuffleArray = (arr) => {
 //     }
 // })()
 
-;(async () => { 
-    const events = await Event.findAll({ 
-        where: {
-            tournamentId: {[Op.not]: null }
-        },
-        include: Tournament
-     })
+// ;(async () => { 
+//     const events = await Event.findAll({ 
+//         where: {
+//             tournamentId: {[Op.not]: null }
+//         },
+//         include: Tournament
+//      })
 
-    for (let i = 0; i < events.length; i++) {
-        const event = events[i]
-        await event.update({ serverId: event.tournament.serverId})
+//     for (let i = 0; i < events.length; i++) {
+//         const event = events[i]
+//         await event.update({ serverId: event.tournament.serverId})
+//     }
+
+//     return console.log('done')
+// })()
+
+// ;(async () => { 
+//     const cards = await Card.findAll()
+//     for (let i = 0; i < cards.length; i++) {
+//         const card = cards[i]
+//         const artwork = await Artwork.findOne({
+//             where: {
+//                 cardId: card.id,
+//                 isOriginal: true
+//             }
+//         })
+
+//         if (artwork) {
+//             await card.update({ artworkId: artwork.artworkId })
+//         } else {
+//             console.log(`hmm no original artwork for ${card.name}?`)
+//             await card.update({ artworkId: card.ypdId })
+//         }
+//     }
+// })()
+
+;(async () => { 
+    const replays = await Replay.findAll()
+
+    let b = 0
+    for (let i = 0; i < replays.length; i++) {
+        const replay = replays[i]
+        await replay.update({ 
+            display: false, 
+            roundAbs: Math.abs(replay.roundInt)
+        })
+        b++
     }
 
-    return console.log('done')
-})()
+    console.log('updated replays:', b)
 
+    const events = await Event.findAll()
+    for (let i = 0; i < events.length; i++) {
+        const event = events[i]
+
+        if (event.primaryTournamentId && !event.topCutTournamentId) {
+            const primaryTournament = await Tournament.findOne({ where: { id: event.primaryTournamentId }})
+            const primaryReplays = await Replay.findAll({ 
+                where: {
+                    tournamentId: primaryTournament.id
+                }
+            })
+         
+            let b = 0
+            for (let i = 0; i < primaryReplays.length; i++) {
+                try {
+                    const replay = primaryReplays[i]
+                    const round = replay.roundInt
+                    let display = false
+            
+                    if (primaryTournament.type === 'single elimination') {
+                        const totalRounds = Math.ceil(Math.log2(event.size))
+                        const roundsRemaining = totalRounds - round
+                        display = roundsRemaining === 0 || 
+                            event.size > 8 && roundsRemaining <= 1 ||
+                            event.size > 16 && roundsRemaining <= 2 ||
+                            event.size > 32 && roundsRemaining <= 3
+                    } else if (primaryTournament.type === 'double elimination') {
+                        const totalWinnersRounds = Math.ceil(Math.log2(event.size)) + 1
+                        const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(event.size)))
+                        const correction = (event.size - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
+                        const totalLosersRounds = (totalWinnersRounds - 2) * 2 + correction
+
+                        if (round > 0) {
+                            const roundsRemaining = totalWinnersRounds - round
+                            display = roundsRemaining <= 0 || 
+                                event.size > 8 && roundsRemaining <= 1 ||
+                                event.size > 16 && roundsRemaining <= 2 ||
+                                event.size > 64 && roundsRemaining <= 3
+                        } else {
+                            const roundsRemaining = totalLosersRounds - Math.abs(round)
+                            display = event.size > 8 && roundsRemaining <= 0 ||
+                                event.size > 16 && roundsRemaining <= 2 ||
+                                event.size > 64 && roundsRemaining <= 4                            
+                        }
+                    }
+
+                    if (display && !replay.display) b++
+                    
+                    await replay.update({
+                        display: display
+                    })
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+    
+           console.log(`Displayed ${b} new replays for ${event.name}.`)
+        } else if (event.topCutTournamentId) {
+            const topCutReplays = await Replay.findAll({ 
+                where: {
+                    tournamentId: event.topCutTournamentId,
+                    display: false
+                }
+            })
+        
+            let b = 0
+            for (let i = 0; i < topCutReplays.length; i++) {
+                try {
+                    const replay = topCutReplays[i]
+                    if (!replay.display) b++
+    
+                    await replay.update({
+                        display: true
+                    })
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+        
+            if (b) {
+                console.log(`Displayed ${b} new top cut replays for ${event.name}.`)
+            } else {
+                console.log(`All top cut replays for ${event.name} were already published. 👏`)
+            }
+        } else {
+            console.log(`NO TOURNAMENT FOUND FOR: ${event.name}.`)
+        }
+    }
+})()
 

@@ -149,7 +149,6 @@ export const DeckTable = () => {
         fetchData()
     }, [])
   
-  
     // USE EFFECT SEARCH
     useEffect(() => {
         search()

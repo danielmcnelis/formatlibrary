@@ -428,7 +428,6 @@ export const CardTable = () => {
   
     // USE EFFECT IF DATE SLIDERS CHANGE
     useEffect(() => {
-        if (!isMounted.current) return
         const month = sliders.month >= 10 ? sliders.month : `0${sliders.month}`
         const day = sliders.day >= 10 ? sliders.day : `0${sliders.day}`
         setCutoff(`${sliders.year}-${month}-${day}`)
@@ -436,10 +435,9 @@ export const CardTable = () => {
   
     // USE EFFECT IF RELEVANT SEARCH PARAM STATES CHANGE
     useEffect(() => {
-        if (!isMounted.current) return
         count()
         search()
-    }, [isMounted, page, cardsPerPage, sortBy, cutoff, format, booster, sliders.atk, sliders.def, sliders.level, queryParams, groupParams, iconParams, attributeParams, typeParams, count, search])
+    }, [page, cardsPerPage, sortBy, cutoff, format, booster, sliders.atk, sliders.def, sliders.level, queryParams, groupParams, iconParams, attributeParams, typeParams, count, search])
 
     const advancedButtons = {
       icon: [
