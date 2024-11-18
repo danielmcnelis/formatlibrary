@@ -143,19 +143,22 @@ Player.generateId = async () => {
 
           return existingPlayer
       } else {
-          const newPlayer = await Player.create({
-              id: await Player.generateId(),
-              discordId: user.id,
-              name: user.username,
-              discordName: user.username,
-              discriminator: user.discriminator,
-              discordPfp: user.avatar,
-              email: user.email
-          })
+        try {
+            const newPlayer = await Player.create({
+                id: await Player.generateId(),
+                discordId: user.id,
+                name: user.username,
+                discordName: user.username,
+                discordPfp: user.avatar,
+                email: user.email
+            })
 
-          return newPlayer
-      }
-  }
+            return newPlayer
+        } catch (err) {
+            console.log(err)
+        }
+    }
+}
   
   Player.googleLogin = async (payload) => {
       const existingPlayer = await Player.findOne({ 
