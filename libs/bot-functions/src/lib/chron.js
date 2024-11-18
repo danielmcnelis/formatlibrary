@@ -289,19 +289,21 @@ export const updateGlobalNames = async () => {
     })]
     
     stats.forEach((s) => {
-        if (gamesPlayed[s.playerId]) {
-            gamesPlayed[s.playerId] += s.games
-        } else {
-            gamesPlayed[s.playerId] = s.games
+        if (!s.player.globalName) {
+            if (gamesPlayed[s.playerId]) {
+                gamesPlayed[s.playerId] += s.games
+            } else {
+                gamesPlayed[s.playerId] = s.games
+            }
         }
     })
 
     console.log('stats.length', stats.length)
     console.log('gamesPlayed', gamesPlayed)
 
-    const playerIdsSortedByGamesPlayed = Object.entries(gamesPlayed).filter((e) => e[1] < 19).sort((a, b) => b[1] - a[1])
-    console.log('playerIdsSortedByGamesPlayed (less than 19)', playerIdsSortedByGamesPlayed)
-    console.log('playerIdsSortedByGamesPlayed.length (less than 19)', playerIdsSortedByGamesPlayed.length)
+    const playerIdsSortedByGamesPlayed = Object.entries(gamesPlayed).sort((a, b) => b[1] - a[1])
+    console.log('playerIdsSortedByGamesPlayed', playerIdsSortedByGamesPlayed)
+    console.log('playerIdsSortedByGamesPlayed.length', playerIdsSortedByGamesPlayed.length)
 
     let updateCount = 0
     for (let i = 0; i < playerIdsSortedByGamesPlayed.length; i++) {
