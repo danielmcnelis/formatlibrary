@@ -299,9 +299,9 @@ export const updateGlobalNames = async () => {
     console.log('stats.length', stats.length)
     console.log('gamesPlayed', gamesPlayed)
 
-    const playerIdsSortedByGamesPlayed = Object.entries(gamesPlayed).sort((a, b) => b[1] - a[1])
-    console.log('playerIdsSortedByGamesPlayed', playerIdsSortedByGamesPlayed)
-    console.log('playerIdsSortedByGamesPlayed.length', playerIdsSortedByGamesPlayed.length)
+    const playerIdsSortedByGamesPlayed = Object.entries(gamesPlayed).filter((e) => e[1] < 20).sort((a, b) => b[1] - a[1])
+    console.log('playerIdsSortedByGamesPlayed (less than 20)', playerIdsSortedByGamesPlayed)
+    console.log('playerIdsSortedByGamesPlayed.length (less than 20)', playerIdsSortedByGamesPlayed.length)
 
     let updateCount = 0
     for (let i = 0; i < playerIdsSortedByGamesPlayed.length; i++) {
