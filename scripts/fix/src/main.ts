@@ -1852,20 +1852,7 @@ const shuffleArray = (arr) => {
     for (let i = 0; i < prints.length; i++) {
         try {
             const print = prints[i]
-            await print.update({ cardName: print.card.name })
-            b++
-        } catch (err) {
-            console.log('print error', err)
-        }
-    }
-    console.log('updated prints:', b)
-
-    b = 0
-    const sets = await Set.findAll()
-    for (let i = 0; i < sets.length; i++) {
-        try {
-            const set = sets[i]
-            await set.update({ setName: set.setName.replaceAll('membership promotional card', 'Membership Promotional Card').replaceAll('promotional card', 'Promotional Card') })
+            await print.update({ setName: print.setName.replaceAll('membership promotional card', 'Membership Promotional Card').replaceAll('promotional card', 'Promotional Card') })
             b++
         } catch (err) {
             console.log('print error', err)
