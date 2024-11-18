@@ -15,6 +15,7 @@ export const ReplayTable = () => {
     const isMounted = useRef(false)
     const [community, setCommunity] = useState(null)
     const [replays, setReplays] = useState([])
+    console.log('replays', replays)
     const [replaysPerPage, setReplaysPerPage] = useState(10)
     const [format, setFormat] = useState(null)
     const [formats, setFormats] = useState([])
