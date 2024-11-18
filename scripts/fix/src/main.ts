@@ -1974,7 +1974,7 @@ const shuffleArray = (arr) => {
                 {model: Player, as: 'winner' },
                 {model: Player, as: 'loser' }
             ],
-            order: ['id', 'asc'],
+            order: [['id', 'asc']],
             limit: 10000,
             offset: 10000 * z
         })
