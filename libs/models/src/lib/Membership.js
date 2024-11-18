@@ -6,6 +6,9 @@ export const Membership = db.define('memberships', {
     guildName: {
         type: Sequelize.STRING
     },
+    playerName: {
+        type: Sequelize.STRING, 
+    },
     active: {
         type: Sequelize.BOOLEAN,  
         defaultValue: true

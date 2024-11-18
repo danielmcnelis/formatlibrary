@@ -50,7 +50,7 @@ export default {
         for (let i = 0; i < matches.length; i++) {
             const match = matches[i]
             const outcome = match.winnerId === player.id ? 'Win' : 'Loss'
-            const opponent = match.winnerId === player.id ? match.loser : match.winner
+            const opponent = match.winnerId === player.id ? match.loserName : match.winnerName
             const emoji = match.winnerId === player.id ? emojis.legend : emojis.mad
             const difference = now - match.createdAt
             const timeAgo = difference < 1000 * 60 * 60 ?  `${Math.round(difference / (1000 * 60))}m ago` :

@@ -56,5 +56,8 @@ export const Stats = db.define('stats', {
   },
   playerId: {
       type: Sequelize.STRING
+  },
+  playerName: {
+      type: Sequelize.STRING
   }
 })

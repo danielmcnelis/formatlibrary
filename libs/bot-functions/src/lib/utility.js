@@ -812,7 +812,7 @@ export const selectMatch = async (interaction, matches, replayExtension = '') =>
             `${Math.round(difference / (1000 * 60 * 60 * 24 * 365))}y ago`
                         
         return {
-            label: `(${index + 1}) ${match.winner} > ${match.loser} (${timeAgo})`,
+            label: `(${index + 1}) ${match.winnerName} > ${match.loserName} (${timeAgo})`,
             value: `${matches[index].id}`,
         }
     })

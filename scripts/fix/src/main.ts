@@ -1,4 +1,4 @@
-import { Artwork, Alius, Card, Cube, Deck, DeckType, DeckThumb, Event, Format, Match, Membership, Player, Print, Replay, Ruling, Set, Server, Stats, Status, Team, Tournament } from '@fl/models'
+import { Artwork, Alius, Card, Cube, Deck, DeckType, DeckThumb, Entry, Event, Format, Match, Membership, Pairing, Player, Pool, Print, Replay, Ruling, Set, Server, Stats, Status, Team, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { config } from '@fl/config'
@@ -1251,8 +1251,8 @@ const shuffleArray = (arr) => {
 //                         formatName: 'Goat',
 //                         formatId: 8,
 //                         round: round,
-//                         winner: winningPlayer.name,
-//                         loser: losingPlayer.name,
+//                         winnerName: winningPlayer.name,
+//                         loserName: losingPlayer.name,
 //                         winnerId: winningPlayer.id,
 //                         loserId: losingPlayer.id,
 //                         isTournament: true,
@@ -1846,7 +1846,6 @@ const shuffleArray = (arr) => {
 
 
 ;(async () => { 
-    const players = await Player.findAll()
     let b = 0
 
     // for (let i = 0; i < players.length; i++) {
@@ -1879,20 +1878,171 @@ const shuffleArray = (arr) => {
 
     // console.log('updated players:', b)
 
-    const replays = await Replay.findAll({ include: [
-        {model: Player, as: 'winner' },
-        {model: Player, as: 'loser' }
-    ] })
+    // const replays = await Replay.findAll({ include: [
+    //     {model: Player, as: 'winner' },
+    //     {model: Player, as: 'loser' }
+    // ] })
 
-    for (let i = 0; i < replays.length; i++) {
+    // for (let i = 0; i < replays.length; i++) {
+    //     try {
+    //         const replay = replays[i]
+    //         await replay.update({ winnerName: replay.winner.name, loserName: replay.loser.name })
+    //         b++
+    //     } catch (err) {
+    //         console.log(err)
+    //     }
+    // }
+
+    // console.log('updated replays:', b)
+
+
+
+    b = 0
+    const aliuses = await Alius.findAll({ include: Player })
+    for (let i = 0; i < aliuses.length; i++) {
         try {
-            const replay = replays[i]
-            await replay.update({ winnerName: replay.winner.name, loserName: replay.loser.name })
+            const alius = aliuses[i]
+            await alius.update({ currentName: alius.player.name })
             b++
         } catch (err) {
             console.log(err)
         }
     }
+    console.log('updated aliuses:', b)
 
-    console.log('updated replays:', b)
+
+    b = 0
+    const cubes = await Cube.findAll({ include: Player })
+    for (let i = 0; i < cubes.length; i++) {
+        try {
+            const cube = cubes[i]
+            await cube.update({ builder: cube.player.name })
+            b++
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    console.log('updated aliuses:', b)
+
+
+
+    const decks = await Deck.findAll({ include: Player })
+    for (let i = 0; i < decks.length; i++) {
+        try {
+            const deck = decks[i]
+            await deck.update({ builder: deck.player.name })
+            b++
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    console.log('updated decks:', b)
+
+
+
+    const entries = await Entry.findAll({ include: Player })
+    for (let i = 0; i < entries.length; i++) {
+        try {
+            const entry = entries[i]
+            await entry.update({ playerName: entry.player.name })
+            b++
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    console.log('updated entries:', b)
+
+
+
+    const events = await Event.findAll({ include: Player })
+    for (let i = 0; i < events.length; i++) {
+        try {
+            const event = events[i]
+            await event.update({ winner: event.player.name })
+            b++
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    console.log('updated events:', b)
+
+
+
+    b = 0
+    const matches = await Match.findAll({ include: [
+            {model: Player, as: 'winner' },
+            {model: Player, as: 'loser' }
+        ] })
+    for (let i = 0; i < matches.length; i++) {
+        try {
+            const match = matches[i]
+            await match.update({ winnerName: match.winner.name, loserName: match.loser.name })
+            b++
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    console.log('updated matches:', b)
+
+
+    
+    b = 0
+    const memberships = await Membership.findAll({ include: Player })
+    for (let i = 0; i < memberships.length; i++) {
+        try {
+            const membership = memberships[i]
+            await membership.update({ playerName: membership.player.name})
+            b++
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    console.log('updated memberships:', b)
+
+
+
+    b = 0
+    const pairings = await Pairing.findAll({ include: [
+            {model: Player, as: 'playerA' },
+            {model: Player, as: 'playerB' }
+        ] })
+    for (let i = 0; i < pairings.length; i++) {
+        try {
+            const pairing = pairings[i]
+            await pairings.update({ playerAName: pairing.playerA.name, playerBName: pairing.playerB.name })
+            b++
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    console.log('updated pairings:', b)
+
+
+
+    b = 0
+    const pools = await Pool.findAll({ include: Player })
+    for (let i = 0; i < pools.length; i++) {
+        try {
+            const pool = pools[i]
+            await pool.update({ name: pool.player.name })
+            b++
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    console.log('updated pools:', b)
+
+
+    b = 0
+    const stats = await Stats.findAll({ include: Player })
+    for (let i = 0; i < stats.length; i++) {
+        try {
+            const stat = stats[i]
+            await stat.update({ playerName: stat.player.name })
+            b++
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    console.log('updated stats:', b)
 })()

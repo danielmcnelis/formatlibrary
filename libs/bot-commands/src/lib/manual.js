@@ -173,9 +173,9 @@ export default {
             await loserStats.save()
     
             match = await Match.create({
-                winner: winningPlayer.globalName || winningPlayer.discordName,
+                winnerName: winningPlayer.name,
                 winnerId: winningPlayer.id,
-                loser: losingPlayer.globalName || winningPlayer.discordName,
+                loserName: losingPlayer.name,
                 loserId: losingPlayer.id,
                 isTournament: isTournament,
                 tournamentId: tournamentId,
