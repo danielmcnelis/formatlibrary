@@ -1859,41 +1859,41 @@ const shuffleArray = (arr) => {
     //     }
     // }
 
-    for (let i = 0; i < players.length; i++) {
-        try {
-            const player = players[i]
-            if (player.discordId && player.discordName) {
-                await player.update({ name: null })
-            }
-
-            if (!player.name) {
-                await player.update({
-                    name: player.globalName || player.discordName || `${player.firstName} ${player.lastName}`
-                })
-                b++
-            }
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    console.log('updated players:', b)
-
-    // let b = 0
-    // const replays = await Replay.findAll({ include: [
-    //     {model: Player, as: 'winner' },
-    //     {model: Player, as: 'loser' }
-    // ] })
-
-    // for (let i = 0; i < replays.length; i++) {
+    // for (let i = 0; i < players.length; i++) {
     //     try {
-    //         const replay = replays[i]
-    //         await replay.update({ winnerName: replay.winner.discordName, loserName: replay.loser.discordName })
-    //         b++
+    //         const player = players[i]
+    //         if (player.discordId && player.discordName) {
+    //             await player.update({ name: null })
+    //         }
+
+    //         if (!player.name) {
+    //             await player.update({
+    //                 name: player.globalName || player.discordName || `${player.firstName} ${player.lastName}`
+    //             })
+    //             b++
+    //         }
     //     } catch (err) {
     //         console.log(err)
     //     }
     // }
 
-    // console.log('updated replays:', b)
+    // console.log('updated players:', b)
+
+    let b = 0
+    const replays = await Replay.findAll({ include: [
+        {model: Player, as: 'winner' },
+        {model: Player, as: 'loser' }
+    ] })
+
+    for (let i = 0; i < replays.length; i++) {
+        try {
+            const replay = replays[i]
+            await replay.update({ winnerName: replay.winner.name, loserName: replay.loser.name })
+            b++
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    console.log('updated replays:', b)
 })()
