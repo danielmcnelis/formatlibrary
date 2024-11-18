@@ -1852,7 +1852,7 @@ const shuffleArray = (arr) => {
     for (let i = 0; i < prints.length; i++) {
         try {
             const print = prints[i]
-            await print.update({ setName: print.setName.replaceAll('Ghosts From the Past', 'Ghosts from the Past') })
+            await print.update({ setName: print.setName.replaceAll('prize card', 'Prize Card') })
             b++
         } catch (err) {
             console.log('print error', err)
