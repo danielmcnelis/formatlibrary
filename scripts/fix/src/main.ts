@@ -1966,22 +1966,30 @@ const shuffleArray = (arr) => {
     }
     console.log('updated events:', b)
 
-
-
+    
     b = 0
-    const matches = await Match.findAll({ include: [
-            {model: Player, as: 'winner' },
-            {model: Player, as: 'loser' }
-        ] })
-    for (let i = 0; i < matches.length; i++) {
-        try {
-            const match = matches[i]
-            await match.update({ winnerName: match.winner.name, loserName: match.loser.name })
-            b++
-        } catch (err) {
-            console.log(err)
+    for (let z = 0; z < 10; z++) {
+        const matches = await Match.findAll({ 
+            include: [
+                {model: Player, as: 'winner' },
+                {model: Player, as: 'loser' }
+            ],
+            order: ['id', 'asc'],
+            limit: 10000,
+            offset: 10000 * z
+        })
+
+        for (let i = 0; i < matches.length; i++) {
+            try {
+                const match = matches[i]
+                await match.update({ winnerName: match.winner.name, loserName: match.loser.name })
+                b++
+            } catch (err) {
+                console.log(err)
+            }
         }
     }
+
     console.log('updated matches:', b)
 
 
