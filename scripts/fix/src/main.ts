@@ -1847,8 +1847,8 @@ const shuffleArray = (arr) => {
 
 ;(async () => { 
     const players = await Player.findAll()
-
     let b = 0
+
     // for (let i = 0; i < players.length; i++) {
     //     try {
     //         const player = players[i]
@@ -1879,7 +1879,6 @@ const shuffleArray = (arr) => {
 
     // console.log('updated players:', b)
 
-    let b = 0
     const replays = await Replay.findAll({ include: [
         {model: Player, as: 'winner' },
         {model: Player, as: 'loser' }
