@@ -210,12 +210,12 @@ Player.hasMany(LikedVideo)
 Match.belongsTo(Server)
 Server.hasMany(Match)
 
-Replay.belongsTo(Player, {
+Match.belongsTo(Player, {
     as: 'loser',
     id: 'loserId'
 })
 
-Replay.belongsTo(Player, {
+Match.belongsTo(Player, {
     as: 'winner',
     id: 'winnerId'
 })
