@@ -286,7 +286,9 @@ export const updateGlobalNames = async () => {
 
     const stats = [...await Stats.findAll({
         include: Player
-    })].forEach((s) => {
+    })]
+    
+    stats.forEach((s) => {
         if (gamesPlayed[s.playerId]) {
             gamesPlayed[s.playerId] += s.games
         } else {
