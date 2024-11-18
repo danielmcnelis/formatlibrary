@@ -45,7 +45,7 @@ export const Replay = db.define('replays', {
     tournamentId: {
         type: Sequelize.STRING,
     },
-    eventName: {
+    eventAbbreviation: {
         type: Sequelize.STRING,
     },
     eventId: {

@@ -17,7 +17,7 @@ export const MobileReplayRow = (props) => {
 
           <td className="no-padding">
               <div className="replay-event-cell">
-                {replay.eventName}
+                {replay.eventAbbreviation}
               </div>
           </td>
 

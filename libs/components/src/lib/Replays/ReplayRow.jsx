@@ -18,7 +18,7 @@ export const ReplayRow = (props) => {
 
         <td className="no-padding replay-row-event-flexbox">
               <div className="replay-event-cell">
-                {replay.eventName}
+                {replay.eventAbbreviation}
               </div>
               <img src={`https://cdn.formatlibrary.com/images/logos/${replay.event?.community?.replaceAll('+', '%2B')}.png`} alt={replay.event?.community}/>
         </td>

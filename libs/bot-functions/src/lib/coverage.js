@@ -698,7 +698,7 @@ export const displayReplays = async (interaction, event) => {
                     losingDeckType: losingDeck?.deckType?.name,
                     losingDeckId: losingDeck?.id,
                     losingDeckTypeId: losingDeck?.deckTypeId,
-                    eventName: event.abbreviation,
+                    eventAbbreviation: event.abbreviation,
                     eventId: event.id,
                     publishDate: event.endDate,
                     display: display
@@ -748,7 +748,7 @@ export const displayReplays = async (interaction, event) => {
                     losingDeckType: losingDeck?.deckType?.name,
                     losingDeckId: losingDeck?.id,
                     losingDeckTypeId: losingDeck?.deckTypeId,
-                    eventName: event.abbreviation,
+                    eventAbbreviation: event.abbreviation,
                     eventId: event.id,
                     publishDate: event.endDate,
                     display: true

@@ -69,7 +69,7 @@ export const ReplayTable = () => {
         let filter = ''
   
         if (queryParams.player) filter += `,player:or:${queryParams.player}`
-        if (queryParams.event) filter += `,eventName:inc:${queryParams.event}`
+        if (queryParams.event) filter += `,eventAbbreviation:inc:${queryParams.event}`
         if (queryParams.deckType) filter += `,deckType:or:${queryParams.deckType}`
         if (community) filter += `,$event.community$:eq:${community}`
         if (format) filter += `,formatName:eq:${format}`
@@ -90,7 +90,7 @@ export const ReplayTable = () => {
         let filter = ''
   
         if (queryParams.player) filter += `,player:or:${queryParams.player}`
-        if (queryParams.event) filter += `,eventName:inc:${queryParams.event}`
+        if (queryParams.event) filter += `,eventAbbreviation:inc:${queryParams.event}`
         if (queryParams.deckType) filter += `,deckType:or:${queryParams.deckType}`
         if (community) filter += `,$event.community$:eq:${community}`
         if (format) filter += `,formatName:eq:${format}`

@@ -1663,9 +1663,9 @@ export const updateReplays = async () => {
                 updated = true
             }
     
-            if (replay.event?.abbreviation && replay.eventName !== replay.event?.abbreviation) {
-                console.log(`updating replay ${replay.id} eventName:`, replay.eventName, '->', replay.event?.abbreviation)
-                await replay.update({ eventName: replay.event.abbreviation })
+            if (replay.event?.abbreviation && replay.eventAbbreviation !== replay.event?.abbreviation) {
+                console.log(`updating replay ${replay.id} eventAbbreviation:`, replay.eventAbbreviation, '->', replay.event?.abbreviation)
+                await replay.update({ eventAbbreviation: replay.event.abbreviation })
                 updated = true
             }
 
