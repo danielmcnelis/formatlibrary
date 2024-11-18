@@ -1846,38 +1846,38 @@ const shuffleArray = (arr) => {
 
 
 ;(async () => { 
-    const players = await Player.findAll({ 
-        where: { 
-            discriminator: {
-                [Op.and]: [
-                    {[Op.not]: '0'},
-                    {[Op.not]: null}
-                ]
-            } 
-        }
-    })
+    // const players = await Player.findAll({ 
+    //     where: { 
+    //         discriminator: {
+    //             [Op.and]: [
+    //                 {[Op.not]: '0'},
+    //                 {[Op.not]: null}
+    //             ]
+    //         } 
+    //     }
+    // })
 
-    let b = 0
-    for (let i = 0; i < players.length; i++) {
-        try {
-            const player = players[i]
-            const discordName = player.discordName.replace(/\s/g, "") + player.discriminator
-            await player.update({ discordName })
-            b++
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    console.log('updated players:', b)
-
-    // const replays = await Replay.findAll({ include: [
-    //     {model: Player, as: 'winner' },
-    //     {model: Player, as: 'loser' }
-    // ] })
-
-    // for (let i = 0; i < replays.length; i++) {
-    //     const replay = replays[i]
-    //     await replay.update({ winnerName:  })
+    // let b = 0
+    // for (let i = 0; i < players.length; i++) {
+    //     try {
+    //         const player = players[i]
+    //         const discordName = player.discordName.replace(/\s/g, "") + player.discriminator
+    //         await player.update({ discordName })
+    //         b++
+    //     } catch (err) {
+    //         console.log(err)
+    //     }
     // }
+
+    // console.log('updated players:', b)
+
+    const replays = await Replay.findAll({ include: [
+        {model: Player, as: 'winner' },
+        {model: Player, as: 'loser' }
+    ] })
+
+    for (let i = 0; i < replays.length; i++) {
+        const replay = replays[i]
+        await replay.update({ winnerName: replay.winner.discordName, loserName: replay.loser.discordName })
+    }
 })()
