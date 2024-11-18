@@ -15,8 +15,11 @@ export const Video = db.define('videos', {
   url: {
     type: Sequelize.STRING
   },
-  format: {
+  formatName: {
     type: Sequelize.STRING
+  },
+  formatId: {
+    type: Sequelize.INTEGER
   },
   publishDate: {
     type: Sequelize.STRING

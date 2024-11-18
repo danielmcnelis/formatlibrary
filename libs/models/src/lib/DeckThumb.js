@@ -6,7 +6,7 @@ export const DeckThumb = db.define('deckThumbs', {
   name: {
     type: Sequelize.STRING
   },
-  format: {
+  formatName: {
     type: Sequelize.STRING
   },
   formatId: {
@@ -33,5 +33,8 @@ export const DeckThumb = db.define('deckThumbs', {
   },
   rightCardArtworkId: {
     type: Sequelize.STRING
+  },
+  deckTypeId: {
+    type: Sequelize.INTEGER
   }
 })

@@ -8,6 +8,12 @@ export const Series = db.define('series', {
   abbreviation: {
     type: Sequelize.STRING
   },
+  emoji: {
+    type: Sequelize.STRING
+  },
+  serverName: {
+    type: Sequelize.STRING
+  },
   serverId: {
     type: Sequelize.STRING
   }

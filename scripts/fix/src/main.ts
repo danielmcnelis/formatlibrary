@@ -1848,15 +1848,15 @@ const shuffleArray = (arr) => {
 ;(async () => { 
     let b = 0
     b = 0
-    const artworks = await Artwork.findAll({ include: Card })
-    for (let i = 0; i < artworks.length; i++) {
+    const prints = await Print.findAll({ include: Card })
+    for (let i = 0; i < prints.length; i++) {
         try {
-            const artwork = artworks[i]
-            await artwork.update({ cardName: artwork.card.name })
+            const print = prints[i]
+            await print.update({ cardName: print.card.name })
             b++
         } catch (err) {
-            console.log('artwork error', err)
+            console.log('print error', err)
         }
     }
-    console.log('updated artworks:', b)
+    console.log('updated prints:', b)
 })()

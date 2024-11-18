@@ -60,6 +60,9 @@ export const Event = db.define('events', {
   serverId: {
     type: Sequelize.STRING
   },
+  seriesId: {
+    type: Sequelize.INTEGER
+  },
   startDate: {
     type: Sequelize.DATE
   },
