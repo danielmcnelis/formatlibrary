@@ -1905,7 +1905,7 @@ const shuffleArray = (arr) => {
             await alius.update({ currentName: alius.player.name })
             b++
         } catch (err) {
-            console.log(err)
+            console.log('alius error', err)
         }
     }
     console.log('updated aliuses:', b)
@@ -1919,10 +1919,10 @@ const shuffleArray = (arr) => {
             await cube.update({ builder: cube.player.name })
             b++
         } catch (err) {
-            console.log(err)
+            console.log('cube error', err)
         }
     }
-    console.log('updated aliuses:', b)
+    console.log('updated cubes:', b)
 
 
 
@@ -1933,7 +1933,7 @@ const shuffleArray = (arr) => {
             await deck.update({ builder: deck.player.name })
             b++
         } catch (err) {
-            console.log(err)
+            console.log('deck error', err)
         }
     }
     console.log('updated decks:', b)
@@ -1947,7 +1947,7 @@ const shuffleArray = (arr) => {
             await entry.update({ playerName: entry.player.name })
             b++
         } catch (err) {
-            console.log(err)
+            console.log('entry error', err)
         }
     }
     console.log('updated entries:', b)
@@ -1961,7 +1961,7 @@ const shuffleArray = (arr) => {
             await event.update({ winner: event.player.name })
             b++
         } catch (err) {
-            console.log(err)
+            console.log('event error', err)
         }
     }
     console.log('updated events:', b)
@@ -1985,7 +1985,7 @@ const shuffleArray = (arr) => {
                 await match.update({ winnerName: match.winner.name, loserName: match.loser.name })
                 b++
             } catch (err) {
-                console.log(err)
+                console.log('match error', err)
             }
         }
     }
@@ -2002,7 +2002,7 @@ const shuffleArray = (arr) => {
             await membership.update({ playerName: membership.player.name})
             b++
         } catch (err) {
-            console.log(err)
+            console.log('membership error', err)
         }
     }
     console.log('updated memberships:', b)
@@ -2020,7 +2020,7 @@ const shuffleArray = (arr) => {
             await pairings.update({ playerAName: pairing.playerA.name, playerBName: pairing.playerB.name })
             b++
         } catch (err) {
-            console.log(err)
+            console.log('pairing error', err)
         }
     }
     console.log('updated pairings:', b)
@@ -2035,7 +2035,7 @@ const shuffleArray = (arr) => {
             await pool.update({ name: pool.player.name })
             b++
         } catch (err) {
-            console.log(err)
+            console.log('pool error', err)
         }
     }
     console.log('updated pools:', b)
@@ -2049,7 +2049,7 @@ const shuffleArray = (arr) => {
             await stat.update({ playerName: stat.player.name })
             b++
         } catch (err) {
-            console.log(err)
+            console.log('stats error', err)
         }
     }
     console.log('updated stats:', b)
