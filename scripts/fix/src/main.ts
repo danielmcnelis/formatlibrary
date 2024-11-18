@@ -1871,13 +1871,21 @@ const shuffleArray = (arr) => {
 
     // console.log('updated players:', b)
 
+    let b = 0
     const replays = await Replay.findAll({ include: [
         {model: Player, as: 'winner' },
         {model: Player, as: 'loser' }
     ] })
 
     for (let i = 0; i < replays.length; i++) {
-        const replay = replays[i]
-        await replay.update({ winnerName: replay.winner.discordName, loserName: replay.loser.discordName })
+        try {
+            const replay = replays[i]
+            await replay.update({ winnerName: replay.winner.discordName, loserName: replay.loser.discordName })
+            b++
+        } catch (err) {
+            console.log(err)
+        }
     }
+
+    console.log('updated replays:', b)
 })()
