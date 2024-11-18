@@ -299,9 +299,9 @@ export const updateGlobalNames = async () => {
     console.log('stats.length', stats.length)
     console.log('gamesPlayed', gamesPlayed)
 
-    const playerIdsSortedByGamesPlayed = Object.entries(gamesPlayed).filter((e) => e[1] < 20).sort((a, b) => b[1] - a[1])
-    console.log('playerIdsSortedByGamesPlayed (less than 20)', playerIdsSortedByGamesPlayed)
-    console.log('playerIdsSortedByGamesPlayed.length (less than 20)', playerIdsSortedByGamesPlayed.length)
+    const playerIdsSortedByGamesPlayed = Object.entries(gamesPlayed).filter((e) => e[1] < 19).sort((a, b) => b[1] - a[1])
+    console.log('playerIdsSortedByGamesPlayed (less than 19)', playerIdsSortedByGamesPlayed)
+    console.log('playerIdsSortedByGamesPlayed.length (less than 19)', playerIdsSortedByGamesPlayed.length)
 
     let updateCount = 0
     for (let i = 0; i < playerIdsSortedByGamesPlayed.length; i++) {
@@ -336,6 +336,7 @@ export const updateGlobalNames = async () => {
             console.log(`error message:`, err?.message)
             const retryAfter = err?.response?.headers?.['retry-after']
             if (!retryAfter) continue
+            console.log(`retry after:`, retryAfter)
             const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
             await sleep(err.response.headers['retry-after'] * 1000)
             i--
