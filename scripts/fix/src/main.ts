@@ -1846,46 +1846,54 @@ const shuffleArray = (arr) => {
 
 
 ;(async () => { 
-    // const players = await Player.findAll({ 
-    //     where: { 
-    //         discriminator: {
-    //             [Op.and]: [
-    //                 {[Op.not]: '0'},
-    //                 {[Op.not]: null}
-    //             ]
-    //         } 
-    //     }
-    // })
-
-    // let b = 0
-    // for (let i = 0; i < players.length; i++) {
-    //     try {
-    //         const player = players[i]
-    //         const discordName = player.discordName.replace(/\s/g, "") + player.discriminator
-    //         await player.update({ discordName })
-    //         b++
-    //     } catch (err) {
-    //         console.log(err)
-    //     }
-    // }
-
-    // console.log('updated players:', b)
+    const players = await Player.findAll()
 
     let b = 0
-    const replays = await Replay.findAll({ include: [
-        {model: Player, as: 'winner' },
-        {model: Player, as: 'loser' }
-    ] })
-
-    for (let i = 0; i < replays.length; i++) {
+    for (let i = 0; i < players.length; i++) {
         try {
-            const replay = replays[i]
-            await replay.update({ winnerName: replay.winner.discordName, loserName: replay.loser.discordName })
+            const player = players[i]
+            await player.update({ globalName: null })
             b++
         } catch (err) {
             console.log(err)
         }
     }
 
-    console.log('updated replays:', b)
+    // for (let i = 0; i < players.length; i++) {
+    //     try {
+    //         const player = players[i]
+    //         if (player.discordId && player.discordName) {
+    //             await player.update({ name: null })
+    //         }
+
+    //         if (!player.name) {
+    //             await player.update({
+    //                 name: player.globalName || player.discordName || `${player.firstName} ${player.lastName}`
+    //             })
+    //             b++
+    //         }
+    //     } catch (err) {
+    //         console.log(err)
+    //     }
+    // }
+
+    console.log('updated players:', b)
+
+    // let b = 0
+    // const replays = await Replay.findAll({ include: [
+    //     {model: Player, as: 'winner' },
+    //     {model: Player, as: 'loser' }
+    // ] })
+
+    // for (let i = 0; i < replays.length; i++) {
+    //     try {
+    //         const replay = replays[i]
+    //         await replay.update({ winnerName: replay.winner.discordName, loserName: replay.loser.discordName })
+    //         b++
+    //     } catch (err) {
+    //         console.log(err)
+    //     }
+    // }
+
+    // console.log('updated replays:', b)
 })()

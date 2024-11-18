@@ -59,8 +59,8 @@ export const runNightlyTasks = async (client) => {
 }
 
 // RUN MONTHLY TASKS
-export const runMonthlyTasks = async (client) => {
-    await updateGlobalNames(client)
+export const runMonthlyTasks = async () => {
+    await updateGlobalNames()
 }
 
 // REFRESH EXPIRED TOKENS
@@ -276,72 +276,71 @@ export const conductCensus = async (client) => {
 
 
 // UPDATE GLOBAL NAMES
-export const updateGlobalNames = async (client) => {
+export const updateGlobalNames = async () => {
     const start = Date.now()
-    // Update active player's global names to match their Discord account.
+    // Update active player's global names to match their Discord account. 
+    // Prioritize by most active player.
+    // If global name is taken, do not update it.
 
-    const servers = await Server.findAll({
-        where: {
-            access: {[Op.not]: 'free'}
+    const gamesPlayed = {}
+
+    const stats = [...await Stats.findAll({
+        include: Player
+    })].forEach((s) => {
+        if (gamesPlayed[s.playerId]) {
+            gamesPlayed[s.playerId] += s.games
+        } else {
+            gamesPlayed[s.playerId] = s.games
         }
     })
 
-    const checkedDiscordIds = []
+    console.log('stats.length', stats.length)
+    console.log('gamesPlayed', gamesPlayed)
+
+    const playerIdsSortedByGamesPlayed = Object.entries(gamesPlayed).sort((a, b) => b[1] - a[1])
+    console.log('playerIdsSortedByGamesPlayed', playerIdsSortedByGamesPlayed)
+    console.log('playerIdsSortedByGamesPlayed.length', playerIdsSortedByGamesPlayed.length)
+
     let updateCount = 0
-    
-    for (let s = 0; s < servers.length; s++) {
+    for (let i = 0; i < playerIdsSortedByGamesPlayed.length; i++) {
         try {
-            const server = servers[s]
-            const guild = client.guilds.cache.get(server.id)
-            if (!guild) {
-                console.log(`cannot find cached guild for ${server.name}`)
-                continue
-            }
-            
-            const membersMap = await guild.members.fetch()
-            const members = [...membersMap.values()]
+            const playerId = playerIdsSortedByGamesPlayed[i][0]
+            const player = await Player.findOne({ where: { id: playerId } })
+            if (!player?.discordId) continue
 
-            for (let i = 0; i < members.length; i++) {
-                const member = members[i]
-                if (member.user.bot || checkedDiscordIds.includes(member.user.id)) continue
-                checkedDiscordIds.push(member.user.id)
+            const {data} = await axios.get(`https://discord.com/api/v9/users/${player.discordId}`, {
+                headers: {
+                    Authorization: `Bot ${config.services.bot.token}`
+                }
+            })
 
-                const player = await Player.findOne({ where: { discordId: member.user.id } })
-
-                if (player && player.duelingBook && (member.user.discriminator === '0' || !player.globalName)) {
-                    try {
-                        const {data} = await axios.get(`https://discord.com/api/v9/users/${member.user.id}`, {
-                            headers: {
-                              Authorization: `Bot ${config.services.bot.token}`
-                            }
-                        })
-
-                        if (
-                            player.globalName !== data.global_name
-                        ) {
-                            console.log(`updating ${member.user.username}`)
-                            updateCount++
-                            await player.update({
-                                globalName: data.global_name
-                            })
-                        }
-                    } catch (err) {
-                        console.log(`err`, err.response.headers['retry-after'])
-                        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-                        await sleep(err.response.headers['retry-after'] * 1000)
-                        i--
+            if (data.global_name) {
+                try {
+                    const count = await Player.count({ where: { globalName: data.global_name }})
+                    
+                    if (count) {
+                        console.log(`Sorry, ${player.discordName}, but ${data.global_name} is already taken by a player with a higher priority.`)
                         continue
+                    } else {
+                        console.log(`updating ${player.discordName}'s global name: ${player.globalName} -> ${data.global_name}`)
+                        await player.update({ globalName: data.global_name })
+                        updateCount++
                     }
+                } catch (err) {
+                    console.log(err)
                 }
             }
         } catch (err) {
-            console.log(err)
+            console.log(`err`, err.response.headers['retry-after'])
+            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+            await sleep(err.response.headers['retry-after'] * 1000)
+            i--
+            continue
         }
     }
 
     console.log(`Monthly Task Complete: Updated ${updateCount} global names.`)
-    console.log(`updateGlobalNames() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-    return setTimeout(() => checkIfEndOfMonth(), 24 * 60 * 60 * 1000)
+    return console.log(`updateGlobalNames() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 
