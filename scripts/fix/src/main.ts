@@ -1849,33 +1849,33 @@ const shuffleArray = (arr) => {
     const players = await Player.findAll()
 
     let b = 0
-    for (let i = 0; i < players.length; i++) {
-        try {
-            const player = players[i]
-            await player.update({ globalName: null })
-            b++
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
     // for (let i = 0; i < players.length; i++) {
     //     try {
     //         const player = players[i]
-    //         if (player.discordId && player.discordName) {
-    //             await player.update({ name: null })
-    //         }
-
-    //         if (!player.name) {
-    //             await player.update({
-    //                 name: player.globalName || player.discordName || `${player.firstName} ${player.lastName}`
-    //             })
-    //             b++
-    //         }
+    //         await player.update({ globalName: null })
+    //         b++
     //     } catch (err) {
     //         console.log(err)
     //     }
     // }
+
+    for (let i = 0; i < players.length; i++) {
+        try {
+            const player = players[i]
+            if (player.discordId && player.discordName) {
+                await player.update({ name: null })
+            }
+
+            if (!player.name) {
+                await player.update({
+                    name: player.globalName || player.discordName || `${player.firstName} ${player.lastName}`
+                })
+                b++
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     console.log('updated players:', b)
 
