@@ -1968,7 +1968,7 @@ const shuffleArray = (arr) => {
 
     
     b = 0
-    for (let z = 0; z < 10; z++) {
+    for (let z = 0; z < 11; z++) {
         const matches = await Match.findAll({ 
             include: [
                 {model: Player, as: 'winner' },
