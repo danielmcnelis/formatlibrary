@@ -333,7 +333,9 @@ export const updateGlobalNames = async () => {
                 }
             }
         } catch (err) {
-            console.log(`err`, err.response.headers['retry-after'])
+            console.log(`error message:`, err?.message)
+            const retryAfter = err?.response?.headers?.['retry-after']
+            if (!retryAfter) continue
             const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
             await sleep(err.response.headers['retry-after'] * 1000)
             i--
