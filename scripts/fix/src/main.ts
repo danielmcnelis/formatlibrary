@@ -1897,115 +1897,115 @@ const shuffleArray = (arr) => {
 
 
 
-    b = 0
-    const aliuses = await Alius.findAll({ include: Player })
-    for (let i = 0; i < aliuses.length; i++) {
-        try {
-            const alius = aliuses[i]
-            await alius.update({ currentName: alius.player.name })
-            b++
-        } catch (err) {
-            console.log('alius error', err)
-        }
-    }
-    console.log('updated aliuses:', b)
+    // b = 0
+    // const aliuses = await Alius.findAll({ include: Player })
+    // for (let i = 0; i < aliuses.length; i++) {
+    //     try {
+    //         const alius = aliuses[i]
+    //         await alius.update({ currentName: alius.player.name })
+    //         b++
+    //     } catch (err) {
+    //         console.log('alius error', err)
+    //     }
+    // }
+    // console.log('updated aliuses:', b)
 
 
-    b = 0
-    const cubes = await Cube.findAll({ include: Player })
-    for (let i = 0; i < cubes.length; i++) {
-        try {
-            const cube = cubes[i]
-            await cube.update({ builder: cube.player.name })
-            b++
-        } catch (err) {
-            console.log('cube error', err)
-        }
-    }
-    console.log('updated cubes:', b)
-
-
-
-    const decks = await Deck.findAll({ include: Player })
-    for (let i = 0; i < decks.length; i++) {
-        try {
-            const deck = decks[i]
-            await deck.update({ builder: deck.player.name })
-            b++
-        } catch (err) {
-            console.log('deck error', err)
-        }
-    }
-    console.log('updated decks:', b)
+    // b = 0
+    // const cubes = await Cube.findAll({ include: Player })
+    // for (let i = 0; i < cubes.length; i++) {
+    //     try {
+    //         const cube = cubes[i]
+    //         await cube.update({ builder: cube.player.name })
+    //         b++
+    //     } catch (err) {
+    //         console.log('cube error', err)
+    //     }
+    // }
+    // console.log('updated cubes:', b)
 
 
 
-    const entries = await Entry.findAll({ include: Player })
-    for (let i = 0; i < entries.length; i++) {
-        try {
-            const entry = entries[i]
-            await entry.update({ playerName: entry.player.name })
-            b++
-        } catch (err) {
-            console.log('entry error', err)
-        }
-    }
-    console.log('updated entries:', b)
+    // const decks = await Deck.findAll({ include: Player })
+    // for (let i = 0; i < decks.length; i++) {
+    //     try {
+    //         const deck = decks[i]
+    //         await deck.update({ builder: deck.player.name })
+    //         b++
+    //     } catch (err) {
+    //         console.log('deck error', err)
+    //     }
+    // }
+    // console.log('updated decks:', b)
 
 
 
-    const events = await Event.findAll({ include: Player })
-    for (let i = 0; i < events.length; i++) {
-        try {
-            const event = events[i]
-            await event.update({ winner: event.player.name })
-            b++
-        } catch (err) {
-            console.log('event error', err)
-        }
-    }
-    console.log('updated events:', b)
+    // const entries = await Entry.findAll({ include: Player })
+    // for (let i = 0; i < entries.length; i++) {
+    //     try {
+    //         const entry = entries[i]
+    //         await entry.update({ playerName: entry.player.name })
+    //         b++
+    //     } catch (err) {
+    //         console.log('entry error', err)
+    //     }
+    // }
+    // console.log('updated entries:', b)
 
-    
-    b = 0
-    for (let z = 0; z < 11; z++) {
-        const matches = await Match.findAll({ 
-            include: [
-                {model: Player, as: 'winner' },
-                {model: Player, as: 'loser' }
-            ],
-            order: [['id', 'asc']],
-            limit: 10000,
-            offset: 10000 * z
-        })
 
-        for (let i = 0; i < matches.length; i++) {
-            try {
-                const match = matches[i]
-                await match.update({ winnerName: match.winner.name, loserName: match.loser.name })
-                b++
-            } catch (err) {
-                console.log('match error', err)
-            }
-        }
-    }
 
-    console.log('updated matches:', b)
-
+    // const events = await Event.findAll({ include: Player })
+    // for (let i = 0; i < events.length; i++) {
+    //     try {
+    //         const event = events[i]
+    //         await event.update({ winner: event.player.name })
+    //         b++
+    //     } catch (err) {
+    //         console.log('event error', err)
+    //     }
+    // }
+    // console.log('updated events:', b)
 
     
-    b = 0
-    const memberships = await Membership.findAll({ include: Player })
-    for (let i = 0; i < memberships.length; i++) {
-        try {
-            const membership = memberships[i]
-            await membership.update({ playerName: membership.player.name})
-            b++
-        } catch (err) {
-            console.log('membership error', err)
-        }
-    }
-    console.log('updated memberships:', b)
+    // b = 0
+    // for (let z = 0; z < 11; z++) {
+    //     const matches = await Match.findAll({ 
+    //         include: [
+    //             {model: Player, as: 'winner' },
+    //             {model: Player, as: 'loser' }
+    //         ],
+    //         order: [['id', 'asc']],
+    //         limit: 10000,
+    //         offset: 10000 * z
+    //     })
+
+    //     for (let i = 0; i < matches.length; i++) {
+    //         try {
+    //             const match = matches[i]
+    //             await match.update({ winnerName: match.winner.name, loserName: match.loser.name })
+    //             b++
+    //         } catch (err) {
+    //             console.log('match error', err)
+    //         }
+    //     }
+    // }
+
+    // console.log('updated matches:', b)
+
+
+    
+    // b = 0
+    // const memberships = await Membership.findAll({ include: Player })
+    // for (let i = 0; i < memberships.length; i++) {
+    //     try {
+    //         const membership = memberships[i]
+    //         await membership.update({ playerName: membership.player.name})
+    //         b++
+    //     } catch (err) {
+    //         console.log('membership error', err)
+    //     }
+    // }
+    // console.log('updated memberships:', b)
 
 
 
@@ -2017,7 +2017,7 @@ const shuffleArray = (arr) => {
     for (let i = 0; i < pairings.length; i++) {
         try {
             const pairing = pairings[i]
-            await pairings.update({ playerAName: pairing.playerA.name, playerBName: pairing.playerB.name })
+            await pairing.update({ playerAName: pairing.playerA.name, playerBName: pairing.playerB.name })
             b++
         } catch (err) {
             console.log('pairing error', err)
