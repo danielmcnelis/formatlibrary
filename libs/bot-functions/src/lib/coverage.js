@@ -181,7 +181,7 @@ export const fixPlacements = async (event, participants, standings = []) => {
 
 
 // COMPOSE BLOG POST
-export const composeBlogPost = async (interaction, event, server) => {
+export const composeBlogPost = async (interaction, event) => {
     const count = await BlogPost.count({
         where: {
             title: {
@@ -288,14 +288,14 @@ export const composeBlogPost = async (interaction, event, server) => {
                 team.playerC.discordId ? 'https://cdn.formatlibrary.com/images/pfps/discord-default-red.png' :
                 `https://cdn.formatlibrary.com/images/pfps/human-default.png`
         
-            const serverLogoUrl = server?.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${server.preferredLogoUrl.replaceAll('+', '%2B')}.png` :
-                server?.discordIconId ? `https://cdn.discordapp.com/icons/${server.id}/${server.discordIconId}.webp?size=240` :
+            const serverLogoUrl = event.server?.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${server.preferredLogoUrl.replaceAll('+', '%2B')}.png` :
+            event.server?.discordIconId ? `https://cdn.discordapp.com/icons/${server.id}/${server.discordIconId}.webp?size=240` :
                 await s3FileExists(`images/logos/${event.community}.png`) ? `https://cdn.formatlibrary.com/images/logos/${event.community}.png` :
                 'https://cdn.formatlibrary.com/images/artworks/71625222.jpg'
             
-            const serverInviteUrl = server && server.vanityUrl ? `https://discord.com/invite/${server.vanityUrl}` : server?.inviteLink
-            const conclusion = server && serverInviteUrl ? `<p class="blogpost-paragraph">Join the <a class="blogpost-event-link" href="${serverInviteUrl}">${event.community} Discord community</a> to compete in similar events!</p>` :
-                server && !serverInviteUrl ? `<p class="blogpost-paragraph">Join the ${event.community} Discord community to compete in similar events!</p>` :
+            const serverInviteUrl = event.server && event.server.vanityUrl ? `https://discord.com/invite/${server.vanityUrl}` : event.server?.inviteLink
+            const conclusion = event.server && serverInviteUrl ? `<p class="blogpost-paragraph">Join the <a class="blogpost-event-link" href="${serverInviteUrl}">${event.community} Discord community</a> to compete in similar events!</p>` :
+                event.server && !event.serverInviteUrl ? `<p class="blogpost-paragraph">Join the ${event.community} Discord community to compete in similar events!</p>` :
                 ''
                 
             const content = 
@@ -315,7 +315,7 @@ export const composeBlogPost = async (interaction, event, server) => {
                     `<p class="blogpost-paragraph"> ${event.winner} won <a class="blogpost-event-link" href="/events/${event.abbreviation}">${event.name}</a> on ${publishDate}!</p>` +
                     `<div class="blogpost-images-flexbox">` +
                         `<div class="blogpost-pfp-community-flexbox">` +
-                            `<img class="blogpost-community"  src="${serverLogoUrl}" />` +
+                            `<img class="blogpost-community" src="${serverLogoUrl}" />` +
                         `</div>` +
                         `<div class="blogpost-deck-box">` + 
                             `${deckThumbnails[0]}` +
@@ -447,7 +447,7 @@ export const composeBlogPost = async (interaction, event, server) => {
                     `<div class="blogpost-images-flexbox">` +
                         `<div class="blogpost-pfp-community-flexbox">` +
                             `<img class="blogpost-pfp" src="${playerPfpUrl}" />` +
-                            `<img class="blogpost-community"  src="${serverLogoUrl}" />` +
+                            `<img class="blogpost-community" src="${serverLogoUrl}" />` +
                         `</div>` +
                         `<div class="blogpost-deck-box">` + 
                             `<a class="blogpost-deck-link" href="/decks/${deck.id}">` +
@@ -769,9 +769,9 @@ export const displayReplays = async (interaction, event) => {
 }
 
 // GENERATE MATCHUP DATA
-export const generateMatchupData = async (interaction, server, event, tournament) => {
-    const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
-    const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeAPIKey}`)
+export const generateMatchupData = async (interaction, event, tournament) => {
+    const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${event.server?.challongeAPIKey}`)
+    const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${event.server?.challongeAPIKey}`)
     const deckMap = {}
     let b = 0
     let c = 0

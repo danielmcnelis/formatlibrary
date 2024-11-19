@@ -546,7 +546,7 @@ export const deckTypesCreate = async (req, res, next) => {
       (await DeckThumb.create({
         name: deckType.name,
         deckTypeId: deckType.id,
-        format: req.body.formatName,
+        formatName: req.body.formatName,
         formatId: req.body.formatId,
         primary: !!count
       }))

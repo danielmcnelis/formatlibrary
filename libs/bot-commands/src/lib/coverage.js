@@ -17,8 +17,8 @@ export default {
         .setDMPermission(false),
     async execute(interaction) {
         await interaction.deferReply()
-        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!isMod(server, interaction.member) && !isCommunityPartner(interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.` })
+        const formatLibraryServer = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+        if (!isMod(formatLibraryServer, interaction.member) && !isCommunityPartner(interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.` })
         
         const input = interaction.options.getString('tournament')     
         const event = await Event.findOne({
@@ -28,7 +28,7 @@ export default {
                     abbreviation: {[Op.iLike]: input}
                 }
             },
-            include: [Format, Player, Tournament]
+            include: [Format, Player, Server, Tournament]
         })
 
         if (!event) return await interaction.editReply({ content: `No event found.` })
@@ -50,10 +50,10 @@ export default {
         await composeThumbnails(interaction, event)
 
         if (event.tournament) {
-            await generateMatchupData(interaction, server, event, event.tournament)
+            await generateMatchupData(interaction, event, event.tournament)
         }
 
-        await composeBlogPost(interaction, event, server) 
+        await composeBlogPost(interaction, event) 
         return
     }
 }
