@@ -1,11 +1,11 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Deck, Match, Membership, OPCard, OPDeck, Pairing, Player, Pool, Server, Stats } from '@fl/models'
+import { Deck, Match, Membership, Pairing, Player, Pool, Server, Stats } from '@fl/models'
 import { Op } from 'sequelize'
-import { lookForPotentialPairs, getRatedFormat, getNewRatedDeck, getNewOPRatedDeck, getRatedConfirmation, getPreviousRatedDeck } from '@fl/bot-functions'
+import { lookForPotentialPairs, getRatedFormat, getNewRatedDeck, getRatedConfirmation, getPreviousRatedDeck } from '@fl/bot-functions'
 import { getIssues } from '@fl/bot-functions'
 import { askForSimName } from '@fl/bot-functions'
-import { drawDeck, drawOPDeck } from '@fl/bot-functions'
+import { drawDeck } from '@fl/bot-functions'
 import axios from 'axios'
 import { client } from '../client'
 import { emojis } from '@fl/bot-emojis'
@@ -30,9 +30,7 @@ const getRatedInformation = async (interaction, player) => {
     const yourGuildIds = yourServers.map((s) => s.id) || []
 
     if (!yourGuildIds.length) return await interaction.user.send(`Sorry, you are not a member of a server that supports rated play for ${format.name} Format. ${format.emoji}`)
-    const simName = format.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.user, player, 'OPTCGSim') :
-        player.duelingBook || await askForSimName(interaction.user, player, 'DuelingBook')
-
+    const simName = player.duelingBook || await askForSimName(interaction.user, player, 'DuelingBook')
     if (!simName) return
 
     const yourRatedDecks = await Deck.findAll({
@@ -49,15 +47,11 @@ const getRatedInformation = async (interaction, player) => {
     ratedDeck = await getPreviousRatedDeck(interaction.user, yourRatedDecks, format)
     
     if (!ratedDeck) {
-        if (format.category !== 'OP') {
-            ratedDeck = await getNewRatedDeck(interaction.user, player, format)
-        } else {
-            ratedDeck = await getNewOPRatedDeck(interaction.user, player, format)
-        }
+        ratedDeck = await getNewRatedDeck(interaction.user, player, format)
     }
     
-    if (!ratedDeck || (!ratedDeck.ydk && !ratedDeck.opdk)) return
-    const deckAttachments = format.category === 'OP' ? await drawOPDeck(ratedDeck.opdk) || [] : await drawDeck(ratedDeck.ydk) || []
+    if (!ratedDeck || !ratedDeck.ydk) return
+    const deckAttachments = await drawDeck(ratedDeck.ydk) || []
 
     deckAttachments.forEach((attachment, index) => {
         if (index === 0) {
@@ -80,7 +74,7 @@ const getRatedInformation = async (interaction, player) => {
             playerId: player.id
         }
     }) : await Pool.create({
-        name: player.globalName || player.discordName,
+        name: player.name,
         formatName: format.name,
         formatId: format.id,
         status: 'pending',

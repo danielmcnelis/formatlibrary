@@ -1,17 +1,17 @@
-import { DeckType, OPCard, Set } from '@fl/models'
-import axios from 'axios'
+// import { DeckType, OPCard, Set } from '@fl/models'
+// import axios from 'axios'
 
-const colors = [
-    'red', '', '', 'purple', 'don', 
-    'blue', 'green', '', 'red-blue', 'red-green', 
-    'blue-purple', 'black', 'purple-black', 'red-black', 'green-blue', 
-    'yellow', 'green-yellow', 'black-yellow', 'blue-black', 'green-black',
-    'purple-yellow', '', 'blue-yellow', '', 'black-pink'
-]
+// const colors = [
+//     'red', '', '', 'purple', 'don', 
+//     'blue', 'green', '', 'red-blue', 'red-green', 
+//     'blue-purple', 'black', 'purple-black', 'red-black', 'green-blue', 
+//     'yellow', 'green-yellow', 'black-yellow', 'blue-black', 'green-black',
+//     'purple-yellow', '', 'blue-yellow', '', 'black-pink'
+// ]
 
-const categories = ['leader', 'character', 'event', 'stage', 'don']
-const attributes = ['slash', 'strike', 'ranged', 'wisdom', 'special']
-const rarities = ['L', 'C', 'UC', 'R', 'SR', 'SEC', 'P']
+// const categories = ['leader', 'character', 'event', 'stage', 'don']
+// const attributes = ['slash', 'strike', 'ranged', 'wisdom', 'special']
+// const rarities = ['L', 'C', 'UC', 'R', 'SR', 'SEC', 'P']
 
 // ;(async () => {
 //     const {data} = await axios.get('https://onepiece-cardgame.dev/cards.json')
@@ -49,29 +49,29 @@ const rarities = ['L', 'C', 'UC', 'R', 'SR', 'SEC', 'P']
 // })()
 
 
-;(async () => {
-    const opCards = await OPCard.findAll()
+// ;(async () => {
+//     const opCards = await OPCard.findAll()
 
-    for (let i = 0; i < opCards.length; i++) {
-        try {
-            const card = opCards[i]
-            const setCode = card.cardCode?.slice(0, card.cardCode.indexOf('-'))
-            const set = await Set.findOne({
-                where: {
-                    setCode: setCode,
-                    game: 'OP'
-                }
-            })
+//     for (let i = 0; i < opCards.length; i++) {
+//         try {
+//             const card = opCards[i]
+//             const setCode = card.cardCode?.slice(0, card.cardCode.indexOf('-'))
+//             const set = await Set.findOne({
+//                 where: {
+//                     setCode: setCode,
+//                     game: 'OP'
+//                 }
+//             })
 
-            if (!set) continue
-            await card.update({ 
-                westernDate: set.tcgDate,
-                westernLegal: set.tcgDate && set.tcgDate < '2023-06-01'
-            })
-        } catch (err) {
-            console.log(err)
-        }
-    }
+//             if (!set) continue
+//             await card.update({ 
+//                 westernDate: set.tcgDate,
+//                 westernLegal: set.tcgDate && set.tcgDate < '2023-06-01'
+//             })
+//         } catch (err) {
+//             console.log(err)
+//         }
+//     }
 
-    return console.log('complete')
-})()
+//     return console.log('complete')
+// })()

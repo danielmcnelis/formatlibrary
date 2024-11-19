@@ -23,7 +23,7 @@ export const ReplayThumbnail = (props = {}) => {
                                     e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                                 }
                             }
-                            alt={winner.discordName || winner.name}
+                            alt={winner.name}
                         />                
                         <p className="playerName">{winner.name}</p>
                     </div>
@@ -43,7 +43,7 @@ export const ReplayThumbnail = (props = {}) => {
                                     e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                                 }
                             }
-                            alt={loser.discordName || loser.name}
+                            alt={loser.name}
                         />
                         <p className="playerName">{loser.name}</p>
                     </div>

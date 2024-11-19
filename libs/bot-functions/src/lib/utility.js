@@ -6,7 +6,7 @@ const Canvas = require('canvas')
 import { ActionRowBuilder, EmbedBuilder, AttachmentBuilder, StringSelectMenuBuilder } from 'discord.js'
 import { Op } from 'sequelize'
 import axios from 'axios'
-import { Card, OPCard, Membership, Player, Print, Role, Set, Status, Tournament } from '@fl/models'
+import { Card, Membership, Player, Print, Role, Set, Status, Tournament } from '@fl/models'
 import { emojis, rarities } from '@fl/bot-emojis'
 import { config } from '@fl/config'
 import { HeadObjectCommand, S3Client } from '@aws-sdk/client-s3'
@@ -58,12 +58,6 @@ export const fetchCardNames = async () => {
 //FETCH SKILL CARD NAMES
 export const fetchSkillCardNames = async () => {
     const names = [...await Card.findAll({ where: { category: 'Skill' }})].map((card) => card.name)
-    return names
-}
-
-//FETCH OP CARD NAMES
-export const fetchOPCardNames = async () => {
-    const names = [...await OPCard.findAll()].map((card) => card.name)
     return names
 }
 
@@ -231,73 +225,6 @@ export const getCard = async (query, fuzzyCards, format) => {
 	return { cardEmbed, attachment }
 }
 
-// GET OP CARD
-export const getOPCard = async (query, fuzzyOPCards) => {
-	const card_name = await findCard(query, fuzzyOPCards)
-
-	const card = await OPCard.findOne({ 
-		where: { 
-            [Op.or]: {
-                name: {[Op.iLike]: card_name || '' },
-                cardCode: {[Op.iLike]: query }
-            }
-		},
-        order: [["westernDate", "DESC"]]
-	})
-
-	if (!card) return false
-
-	const color = card.color === "black" ? "#1c1c1c" :
-        card.color === "blue" ? "#0170b7" :
-		card.color === "blue-black" ? "#688db0" :
-		card.color === "blue-purple" ? "#6280b2" :
-		card.color === "blue-yellow" ? "#679b85" :
-		card.color === "don" ? "#010101" :
-		card.color === "green" ? "#188b66" :
-		card.color === "green-black" ? "#1a624c" :
-		card.color === "green-blue" ? "#66a6a6" :
-		card.color === "green-yellow" ? "#b1c482" :
-		card.color === "purple" ? "#8c1b7b" :
-		card.color === "purple-black" ? "#615265" :
-		card.color === "purple-yellow" ? "#bc9e9c" :
-		card.color === "red" ? "#b8051a" :
-		card.color === "red-black" ? "#855d5d" :
-		card.color === "red-blue" ? "#a3929d" :
-		card.color === "red-green" ? "#ab977b" :
-		card.color === "yellow" ? "#e5d631" :
-		null
-
-    const releaseDate = card.westernDate ? dateToVerbose(card.westernDate, true, false, true) : 
-        card.westernLegal ? 'Western Legal'
-        : 'Eastern Only'
-    
-    let labels = 
-        // `${card.color ? `\nColor: ${capitalize(card.color)}` : ''}` +
-        `${card.cost ? `\nCost: ${card.cost} ${emojis.DON}` : ''}` +
-        `${card.attribute ? `\nAttribute: ${card.attribute.toUpperCase()} ${emojis[card.attribute.toUpperCase()]}` : ''}` +
-        `\nRelease Date: ${releaseDate}` +
-        `\n**[** ${capitalize(card.category)} ${emojis[card.category]}${card.type ? ` - ${card.type}` : ''} **]**`
-
-	let stats =  
-        `${card.life ? `Life: ${card.life} ❤️ ` : ''}` +
-        `${card.power ? `Power: ${card.power} 🥊 ` : ''}` +
-        `${card.counter ? `Counter: +${card.counter} ⚡ ` : ''}`
-	
-	const attachment = new AttachmentBuilder(card.artwork, { name: `${card.cardCode}.jpg` })
-	const thumbnail = attachment ? `attachment://${card.cardCode}.jpg` : null   
-    
-    const cardEmbed = new EmbedBuilder()
-        .setColor(color)
-	    .setTitle(`${card.cardCode}${card.category !== 'DON' ? ` - ${card.name}` : ''}`)
-	    .setThumbnail(thumbnail)
-	    .setDescription(
-            labels + 
-            `\n\n${card.effect}` +
-            `${stats.length ? `\n\n${stats}` : ''}`
-        )
-	return { cardEmbed, attachment }
-}
-
 // DRAW DECK
 export const drawDeck = async (ydk) => {
     const mainArr = ydk.split('#main')[1].split('#extra')[0].split(/[\s]+/).filter((e) => e.length) || []
@@ -386,59 +313,6 @@ export const drawDeck = async (ydk) => {
     return attachments
 }
 
-// DRAW OP DECK
-export const drawOPDeck = async (opdk) => {
-    const splt = opdk.trim().split(/[\s]+/)
-    const leader = [splt[0].slice(2)]
-    const main = []
-    for (let i = 1; i < splt.length; i++) {
-        let s = splt[i]
-        let n = parseInt(s[0])
-        while (n > 0) {
-            main.push(s.slice(2))
-            n--
-        }
-    }
-
-    const leaderAttachment = await makeOPCanvasAttachment(leader, 114, 160, 1, 'leader')
-    const mainAttachment = main.length ? await makeOPCanvasAttachment(main, 57, 80, 10, 'main') : null
- 
-    const attachments = [
-        leaderAttachment,
-        mainAttachment
-    ].filter((e) => !!e)
-
-    return attachments
-}
-
-// MAKE OP CANVAS ATTACHMENT
-export const makeOPCanvasAttachment = async (cardsArr = [], width = 57, height = 80, cardsPerRow = 10, name = 'main') => {
-    try {
-        const rows = Math.ceil(cardsArr.length / cardsPerRow)
-        const canvas = Canvas.createCanvas(width * cardsPerRow, height * rows)
-        const context = canvas.getContext('2d')
-
-        for (let i = 0; i < cardsArr.length; i++) {
-            try {
-                const cardCode = cardsArr[i]
-                const opCard = await OPCard.findOne({ where: { cardCode }})
-                const row = Math.floor(i / cardsPerRow)
-                const col = i % cardsPerRow
-                const image = await Canvas.loadImage(opCard.artwork)
-                context.drawImage(image, width * col, row * height, width, height)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: `${name}.png` })
-        return attachment
-    } catch (err) {
-        console.log(err)
-        return null
-    }
-}
-
 // MAKE CANVAS ATTACHMENT
 export const makeCanvasAttachment = async (cardsArr = [], width = 57, height = 80, cardsPerRow = 10, name = 'main') => {
     try {
@@ -507,30 +381,15 @@ export const convertArrayToObject = (arr = []) => {
 }
 
 //CREATE PLAYER
-export const createPlayer = async (member, data) => {
+export const createPlayer = async (member) => {
     if (member && !member.user.bot) {
-        if (!data) {
-            try {
-                const res = await axios.get(`https://discord.com/api/v9/users/${member.user.id}`, {
-                    headers: {
-                      Authorization: `Bot ${config.services.bot.token}`
-                    }
-                })
-
-                if (res) data = res.data
-            } catch (err) {
-                return console.log(err)
-            }
-        }
-
         try {
             const id = await Player.generateId()
             await Player.create({
                 id: id,
-                name: data?.global_name || `${member.user?.username}`,
+                name: `${member.user?.username}`,
                 discordId: `${member.user?.id}`,
-                discordName: `${member.user?.username}`,
-                globalName: data.global_name
+                discordName: `${member.user?.username}`
             })
         } catch (err) {
             console.log(err)

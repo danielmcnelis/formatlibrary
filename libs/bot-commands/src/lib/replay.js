@@ -197,16 +197,16 @@ export default {
                     formatId: format.id,
                     tournamentId: tournament.id,
                     winnerId: winningPlayer.id,
-                    winnerName: winningPlayer.globalName || winningPlayer.discordName,
+                    winnerName: winningPlayer.name,
                     loserId: losingPlayer.id,
-                    loserName: losingPlayer.globalName || losingPlayer.discordName,
+                    loserName: losingPlayer.name,
                     matchId: match.id,
                     suggestedOrder: suggestedOrder,
                     roundInt: round,
                     roundName: roundName
                 })
                 
-                return await interaction.editReply({ content: `New replay saved for ${roundName} of ${tournament.name} ${tournament.logo}:\nMatch: ${winningPlayer.globalName || winningPlayer.discordName} vs ${losingPlayer.globalName || losingPlayer.discordName}\nURL: <${url}>`})	
+                return await interaction.editReply({ content: `New replay saved for ${roundName} of ${tournament.name} ${tournament.logo}:\nMatch: ${winningPlayer.name} vs ${losingPlayer.name}\nURL: <${url}>`})	
             } catch (err) {
                 console.log(err)
             }

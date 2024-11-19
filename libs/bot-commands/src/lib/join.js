@@ -1,8 +1,8 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Server, Team, Tournament } from '@fl/models'
-import { askForSimName, createPlayer, getDeckList, getOPDeckList, getSpeedDeckList, isNewUser, postParticipant, selectTournament } from '@fl/bot-functions'
-import { drawDeck, drawOPDeck, hasPartnerAccess } from '@fl/bot-functions'
+import { askForSimName, createPlayer, getDeckList, getSpeedDeckList, isNewUser, postParticipant, selectTournament } from '@fl/bot-functions'
+import { drawDeck, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
 
@@ -71,20 +71,18 @@ export default {
 
         interaction.editReply({ content: `Please check your DMs.` })
         
-        let simName = format.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.member, player, 'OPTCGSim') :
-            player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
+        let simName = player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
 
         if (!simName) return
 
-        const data = format.category === 'OP' ? await getOPDeckList(interaction.member, player) :
-            format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
+        const data = format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
             await getDeckList(interaction.member, player, format, false, tournament.isUnranked)
 
         if (!data) return
 
         if (entry) {
             if (!entry.participantId) {
-                const { participant } = await postParticipant(server, tournament, player).catch((err) => console.log(err))
+                const { participant } = await postParticipant(server, tournament, player.name).catch((err) => console.log(err))
         
                 if (!participant) {
                     await entry.destroy()
@@ -106,7 +104,7 @@ export default {
                 slot: slot
             }) 
 
-            const deckAttachments = format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
+            const deckAttachments = await drawDeck(data.ydk) || []
             interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have your updated deck list for ${tournament.name}! ${tournament.logo}`})
             deckAttachments.forEach((attachment, index) => {
@@ -135,7 +133,7 @@ export default {
     
             try {
                 entry = await Entry.create({
-                    playerName: player.globalName || player.discordName,
+                    playerName: player.name,
                     url: data.url,
                     ydk: data.ydk || data.opdk,
                     skillCardId: data.skillCard?.id,
@@ -148,7 +146,7 @@ export default {
                 return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
             }
                                         
-            const { participant } = await postParticipant(server, tournament, player).catch((err) => console.log(err))
+            const { participant } = await postParticipant(server, tournament, player.name).catch((err) => console.log(err))
         
             if (!participant) {
                 await entry.destroy()
@@ -159,7 +157,7 @@ export default {
             interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
             
-            const deckAttachments = format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
+            const deckAttachments = await drawDeck(data.ydk) || []
             deckAttachments.forEach((attachment, index) => {
                 if (index === 0) {
                     interaction.member.send({ content: `FYI, this is the deck you submitted:`, files: [attachment] }).catch((err) => console.log(err))
@@ -178,7 +176,7 @@ export default {
 
             try {
                 await Entry.create({
-                    playerName: player.globalName || player.discordName,
+                    playerName: player.name,
                     url: data.url,
                     ydk: data.ydk || data.opdk,
                     skillCardId: data.skillCard?.id,
@@ -194,7 +192,7 @@ export default {
                 return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
             }
 
-            const deckAttachments = format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
+            const deckAttachments = await drawDeck(data.ydk) || []
             interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
             deckAttachments.forEach((attachment, index) => {
@@ -209,7 +207,7 @@ export default {
         } else if (!entry && tournament.isTeamTournament && !team) {
             try { 
                 await Entry.create({
-                    playerName: player.globalName || player.discordName,
+                    playerName: player.name,
                     url: data.url,
                     ydk: data.ydk || data.opdk,
                     skillCardId: data.skillCard?.id,
@@ -222,7 +220,7 @@ export default {
                 return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
             }
 
-            const deckAttachments = format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
+            const deckAttachments = await drawDeck(data.ydk) || []
             interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
             deckAttachments.forEach((attachment, index) => {

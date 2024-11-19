@@ -20,6 +20,12 @@
     width: 300px;
 }
 
+.centered-vertical-flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .pwk-border-bottom {
     border-bottom: 2px solid #9ba9cc;
 }

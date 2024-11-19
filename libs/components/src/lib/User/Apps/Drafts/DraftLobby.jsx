@@ -313,7 +313,7 @@ export const DraftLobby = () => {
                                                 e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                                             }
                                         }
-                                        alt={p.player?.discordName || p.player?.name}
+                                        alt={p.player?.name}
                                     />
                                 ))
                             }

@@ -15,17 +15,17 @@ export const undoMatch = async (interaction, server, matchId, authorIsMod) => {
     
         if (!winnerStats.backupElo) {
             if (authorIsMod) {
-                interaction.channel.send({ content: `${winningPlayer.globalName || winningPlayer.discordName} has no backup stats: Remember to **/recalculate** when finished.`})
+                interaction.channel.send({ content: `${winningPlayer.name} has no backup stats: Remember to **/recalculate** when finished.`})
             } else {
-                return await interaction.editReply({ content: `Your last opponent, ${winningPlayer.globalName || winningPlayer.discordName}, has no backup stats. Please get a Moderator to help you.`})
+                return await interaction.editReply({ content: `Your last opponent, ${winningPlayer.name}, has no backup stats. Please get a Moderator to help you.`})
             }
         }
 
         if (!loserStats.backupElo) {
             if (authorIsMod) {
-                interaction.channel.send({ content: `${losingPlayer.globalName || losingPlayer.discordName} has no backup stats: Remember to **/recalculate** when finished.`})
+                interaction.channel.send({ content: `${losingPlayer.name} has no backup stats: Remember to **/recalculate** when finished.`})
             } else {
-                return await interaction.editReply({ content: `Your last opponent, ${losingPlayer.globalName || losingPlayer.discordName}, has no backup stats. Please get a Moderator to help you.`})
+                return await interaction.editReply({ content: `Your last opponent, ${losingPlayer.name}, has no backup stats. Please get a Moderator to help you.`})
             }
         }
 
@@ -53,7 +53,7 @@ export const undoMatch = async (interaction, server, matchId, authorIsMod) => {
         await loserStats.save()
     
         await match.destroy()
-        return interaction.channel.send({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${match.formatName} Format ${server.emoji || match.format?.emoji || ''} ${match.isTournament ? 'Tournament ' : ''}match in which ${winningPlayer.globalName || winningPlayer.discordName} defeated ${losingPlayer.globalName || losingPlayer.discordName} has been erased.`})	
+        return interaction.channel.send({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${match.formatName} Format ${server.emoji || match.format?.emoji || ''} ${match.isTournament ? 'Tournament ' : ''}match in which ${winningPlayer.name} defeated ${losingPlayer.name} has been erased.`})	
     } catch (err) {
         console.log(err)
     }

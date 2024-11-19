@@ -140,7 +140,7 @@ export const updateAvatars = async (client) => {
                             params: { Bucket: 'formatlibrary', Key: `images/pfps/${player.discordId}.png`, Body: buffer, ContentType: `image/png` },
                         }).done()
                         console.log('uri', uri)
-                        console.log(`saved new pfp for ${player.globalName || player.discordName}`)
+                        console.log(`saved new pfp for ${player.name}`)
                         count++
                     } else {
                         continue
@@ -201,13 +201,11 @@ export const conductCensus = async (client) => {
                     checkedDiscordIds.push(member.user.id)
                     const player = await Player.findOne({ where: { discordId: member.user.id } })
                     if (player && ( 
-                        player.discordName !== member.user.username || 
-                        player.discriminator !== member.user.discriminator 
+                        player.discordName !== member.user.username
                     )) {
                         updateCount++
                         await player.update({
-                            discordName: member.user.username,
-                            discriminator: member.user.discriminator
+                            discordName: member.user.username
                         })
                     } else if (!player && !member.user.bot) {
                         createCount++
@@ -298,12 +296,7 @@ export const updateGlobalNames = async () => {
         }
     })
 
-    console.log('stats.length', stats.length)
-    console.log('gamesPlayed', gamesPlayed)
-
     const playerIdsSortedByGamesPlayed = Object.entries(gamesPlayed).sort((a, b) => b[1] - a[1])
-    console.log('playerIdsSortedByGamesPlayed', playerIdsSortedByGamesPlayed)
-    console.log('playerIdsSortedByGamesPlayed.length', playerIdsSortedByGamesPlayed.length)
 
     let updateCount = 0
     for (let i = 0; i < playerIdsSortedByGamesPlayed.length; i++) {
@@ -372,7 +365,7 @@ export const markInactives = async () => {
         })
 
         if (!count) { 
-            console.log(`Inactivating ${s.player ? s.player.globalName || s.player.discordName : s.playerId}'s STATS IN ${s.formatName} FORMAT`)
+            console.log(`Inactivating ${s.player?.name || s.playerId}'s STATS IN ${s.formatName} FORMAT`)
             await s.update({ inactive: true })
             b++
         } else {

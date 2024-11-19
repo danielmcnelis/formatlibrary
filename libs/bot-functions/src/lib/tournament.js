@@ -5,10 +5,10 @@
 import axios from 'axios'
 import { Op } from 'sequelize'
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } from 'discord.js'
-import { Deck, Entry, Event, Format, Match, OPCard, Player, Replay, Stats, Server, Team, Tournament } from '@fl/models'
+import { Deck, Entry, Event, Format, Match, Player, Replay, Stats, Server, Team, Tournament } from '@fl/models'
 import { getIssues, getSkillCard } from './deck.js'
 import { createDecks } from './coverage.js'
-import { capitalize, drawDeck, drawOPDeck, generateRandomString, getRoundName, isMod, shuffleArray } from './utility.js'
+import { capitalize, drawDeck, generateRandomString, getRoundName, isMod, shuffleArray } from './utility.js'
 import { emojis } from '@fl/bot-emojis'
 
 ////// TOURNAMENT REGISTRATION FUNCTIONS ///////
@@ -16,7 +16,7 @@ import { emojis } from '@fl/bot-emojis'
 //ASK FOR DB NAME
 export const askForSimName = async (member, player, simulator, override = false, error = false, attempt = 1) => {
     const filter = m => m.author.id === member.id || member.user.id
-    const pronoun = override ? `${player.globalName || player.discordName}'s` : 'your'
+    const pronoun = override ? `${player.name}'s` : 'your'
     const greeting = override ? '' : 'Hi! '
     const prompt = error ? `I think you're getting ahead of yourself. First, I need ${pronoun} ${simulator} name.`
     : `${greeting}This appears to be ${pronoun} first time using our system. Can you please provide ${pronoun} ${simulator} name?`
@@ -39,8 +39,6 @@ export const askForSimName = async (member, player, simulator, override = false,
         } else {
             if (simulator === 'DuelingBook') {
                 await player.update({ duelingBook: name })
-            } else if (simulator === 'OPTCGSim') {
-                await player.update({ opTcgSim: name })
             }
 
             member.send({ content: `Thanks! I saved ${pronoun} ${simulator} name as: ${name}. If that's wrong, go back to the server and type **/username**.`}).catch((err) => console.log(err))
@@ -56,10 +54,10 @@ export const askForSimName = async (member, player, simulator, override = false,
 //ASK FOR TIME ZONE
 export const askForTimeZone = async (member, player, override = false, error = false, attempt = 1) => {
     const filter = m => m.author.id === member.id || member.user.id
-    const pronoun = override ? `${player.globalName || player.discordName}'s` : 'your'
+    const pronoun = override ? `${player.name}'s` : 'your'
     const greeting = override ? '' : 'Hi! '
-    const prompt = error ? `I think you're getting ahead of yourself. First, I need ${pronoun} ${simulator} name.`
-    : `${greeting}This appears to be ${pronoun} first time using our system. Can you please provide ${pronoun} ${simulator} name?`
+    const prompt = error ? `I think you're getting ahead of yourself. First, I need ${pronoun} DuelingBook name.`
+    : `${greeting}This appears to be ${pronoun} first time using our system. Can you please provide ${pronoun} DuelingBook name?`
 	const message = await member.send({ content: prompt.toString() }).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     
@@ -74,16 +72,11 @@ export const askForTimeZone = async (member, player, override = false, error = f
                 member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))
                 return false
             } else {
-                return askForSimName(member, player, simulator, override, true, attempt++)
+                return askForSimName(member, player, 'DuelingBook', override, true, attempt++)
             }
         } else {
-            if (simulator === 'DuelingBook') {
-                await player.update({ duelingBook: name })
-            } else if (simulator === 'OPTCGSim') {
-                await player.update({ opTcgSim: name })
-            }
-
-            member.send({ content: `Thanks! I saved ${pronoun} ${simulator} name as: ${name}. If that's wrong, go back to the server and type **/username**.`}).catch((err) => console.log(err))
+            await player.update({ duelingBook: name })
+            member.send({ content: `Thanks! I saved ${pronoun} DuelingBook name as: ${name}. If that's wrong, go back to the server and type **/username**.`}).catch((err) => console.log(err))
             return name
         }
     }).catch((err) => {
@@ -96,7 +89,7 @@ export const askForTimeZone = async (member, player, override = false, error = f
 //GET DECK LIST
 export const getDeckList = async (member, player, format, override = false, unranked = false) => {            
     const filter = m => m.author.id === member.user.id
-    const pronoun = override ? `${player.globalName || player.discordName}'s` : 'your'
+    const pronoun = override ? `${player.name}'s` : 'your'
     const message = await member.send({ content: `Please either (1) upload a **__YDK File__** or (2) copy and paste a **__YDKe Code__** for ${pronoun} tournament deck.`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     return await message.channel.awaitMessages({
@@ -187,7 +180,7 @@ export const getSpeedDeckList = async (member, player, format, override = false)
     if (!skillCard) return    
 
     const filter = m => m.author.id === member.user.id
-    const pronoun = override ? `${player.globalName || player.discordName}'s` : 'your'
+    const pronoun = override ? `${player.name}'s` : 'your'
     const message = await member.send({ content: `Please provide a **__YDK File__** for ${pronoun} tournament deck.`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     return await message.channel.awaitMessages({
@@ -273,102 +266,17 @@ export const getSpeedDeckList = async (member, player, format, override = false)
     })
 }
 
-
-//GET OP DECK LIST
-export const getOPDeckList = async (member, player, override = false) => {            
-    const filter = m => m.author.id === member.user.id
-    const pronoun = override ? `${player.globalName || player.discordName}'s` : 'your'
-    const message = await member.send({ content: `Please paste ${pronoun} OPTCGSim deck list from the clipboard.`}).catch((err) => console.log(err))
-    if (!message || !message.channel) return false
-    return await message.channel.awaitMessages({
-        filter,
-        max: 1,
-        time: 180000
-    }).then(async (collected) => {
-        const opdk = collected.first().content
-        const opdkArr = opdk.trim().split(/[\s]+/)
-        const cards = []
-        const wrongColorCards = []
-        const unrecognizedCards = []
-        const illegalCards = []
-        let deckSize = 0
-        let moreThanFour = false
-
-        for (let i = 0; i < opdkArr.length; i++) {
-            const str = opdkArr[i]
-            const copyNumber = parseInt(str[0])
-            if (copyNumber > 4) moreThanFour = true
-            deckSize += copyNumber
-            const cardCode = str.slice(str.indexOf('x') + 1)
-            const card = await OPCard.findOne({ where: { cardCode }})
-            if (!card) {
-                unrecognizedCards.push(cardCode)
-            } else if (!card.westernLegal) {
-                illegalCards.push(`${card.cardCode} - ${card.name}`)
-            } else {
-                cards.push([copyNumber, card])
-            }
-        }
-
-        if (unrecognizedCards.length) {
-            member.send(`The following cards are unrecognized:\n${unrecognizedCards.join('\n')}`)
-            return false
-        }
-
-        if (illegalCards.length) {
-            member.send(`The following cards are not Western legal:\n${illegalCards.join('\n')}`)
-            return false
-        }
-        
-        if (deckSize !== 51) {
-            member.send(`Your main deck is not 50 cards.`)
-            return false
-        }
-
-        if (moreThanFour) {
-            member.send(`You cannot use more than 4 copies of a card in your deck.`)
-            return false
-        }
-
-        const leader = cards[0][1]
-        const allowedColors = leader.color.split('-')
-
-        for (let i = 1; i < cards.length; i++) {
-            const card = cards[i][1]
-            if (!allowedColors.includes(card.color)) {
-                wrongColorCards.push(`${card.cardCode} - ${card.name} (${card.color})`)
-            }
-        }
-
-        if (wrongColorCards.length) {
-            member.send(`You cannot use the following cards in a deck led by ${leader.cardCode} ${leader.name} (${leader.color}):\n${wrongColorCards.join('\n')}`)
-            return false
-        }
-
-        if (override) {
-            member.send({ content: `Thanks, ${member.user.username}, I saved a copy of ${pronoun} deck. ${emojis.legend}`}).catch((err) => console.log(err))
-            return { leader, opdk }
-        } else {
-            return { leader, opdk }  
-        }
-    }).catch((err) => {
-        console.log(err)
-        member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))
-        return false
-    })
-}
-
 // SEND DECK
 export const sendDeck = async (interaction, id) => {
     if (id.startsWith('D')) {
         const deck = await Deck.findOne({ where: { id: id.slice(1) }, include: [Player, Event, Format] })
         interaction.editReply({ content: `Please check your DMs.` })
-        const deckAttachments = deck.format?.category === 'OP' ? await drawOPDeck(deck.ydk) || [] : await drawDeck(deck.ydk) || []
-        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${deck.player?.globalName || deck.player?.discordName}_${deck.event?.abbreviation || deck.event?.name}.ydk` })
+        const deckAttachments = await drawDeck(deck.ydk) || []
+        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${deck.player?.name}_${deck.event?.abbreviation || deck.event?.name}.ydk` })
         const isAuthor = interaction.user.id === deck.player.discordId
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
-                interaction.member.send({ content: `${isAuthor ? 'Your' : `${deck.player?.globalName || deck.player?.discordName}'s`} deck for ${deck.event?.name} is:`, files: [attachment] }).catch((err) => console.log(err))
+                interaction.member.send({ content: `${isAuthor ? 'Your' : `${deck.player?.name}'s`} deck for ${deck.event?.name} is:`, files: [attachment] }).catch((err) => console.log(err))
             } else {
                 interaction.member.send({ files: [attachment] }).catch((err) => console.log(err))
             }
@@ -378,13 +286,13 @@ export const sendDeck = async (interaction, id) => {
     } else {
         const entry = await Entry.findOne({ where: { id: id.slice(1) }, include: [Player, Tournament] })
         interaction.editReply({ content: `Please check your DMs.` })
-        const deckAttachments = entry.tournament.formatName === 'One Piece' ? await drawOPDeck(entry.ydk) || [] : await drawDeck(entry.ydk) || []
-        const ydkFile = new AttachmentBuilder(Buffer.from(entry.ydk), { name: `${entry.player.globalName || entry.player.discordName}_${entry.tournament.abbreviation || entry.tournament.name}.ydk` })
+        const deckAttachments = await drawDeck(entry.ydk) || []
+        const ydkFile = new AttachmentBuilder(Buffer.from(entry.ydk), { name: `${entry.player.name}_${entry.tournament.abbreviation || entry.tournament.name}.ydk` })
         const isAuthor = interaction.user.id === entry.player.discordId
 
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
-                interaction.member.send({ content: `${isAuthor ? 'Your' : `${entry.player.globalName || entry.player.discordName}'s`} deck for ${entry.tournament.name} is:`, files: [attachment] }).catch((err) => console.log(err))
+                interaction.member.send({ content: `${isAuthor ? 'Your' : `${entry.player.name}'s`} deck for ${entry.tournament.name} is:`, files: [attachment] }).catch((err) => console.log(err))
             } else {
                 interaction.member.send({ files: [attachment] }).catch((err) => console.log(err))
             }
@@ -397,7 +305,7 @@ export const sendDeck = async (interaction, id) => {
 // SELECT TOURNAMENT FOR DECK CHECK
 export const selectTournamentForDeckCheck = async (interaction, decks, format) => {
     if (!decks.length) {
-        interaction.editReply(`That player has not submitted a deck for any ${format.name}${format.category !== 'OP' ? ' format' : ''} ${format.emoji} tournaments in this server.`)
+        interaction.editReply(`That player has not submitted a deck for any ${format.name} Format ${format.emoji} tournaments in this server.`)
         return false
     } else if (decks.length === 1) {
         return decks[0]
@@ -522,9 +430,9 @@ export const getFilm = async (interaction, tournamentId, userId) => {
     }
 
     if (!replays.length) {
-        return await interaction.editReply(`No replays found featuring ${player.globalName || player.discordName} in ${tournament.name}. ${tournament.emoji}`)
+        return await interaction.editReply(`No replays found featuring ${player.name} in ${tournament.name}. ${tournament.emoji}`)
     } else {
-        return await interaction.editReply(`${player.globalName || player.discordName}'s ${tournament.name} ${tournament.emoji} replays:\n${replays.join('\n')}`)
+        return await interaction.editReply(`${player.name}'s ${tournament.name} ${tournament.emoji} replays:\n${replays.join('\n')}`)
     }
 }
 
@@ -604,16 +512,16 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
                 formatId: format.id,
                 tournamentId: tournament.id,
                 winnerId: winningPlayer.id,
-                winnerName: winningPlayer.globalName || winningPlayer.discordName,
+                winnerName: winningPlayer.name,
                 loserId: losingPlayer.id,
-                loserName: losingPlayer.globalName || losingPlayer.discordName,
+                loserName: losingPlayer.name,
                 matchId: match.id,
                 suggestedOrder: suggestedOrder,
                 roundInt: round,
                 roundName: roundName
             })
             
-            return await interaction.editReply({ content: `New replay saved for ${roundName} of ${tournament.name} ${tournament.logo}:\nMatch: ${winningPlayer.globalName || winningPlayer.discordName} vs ${losingPlayer.globalName || losingPlayer.discordName}\nURL: <${url}>`})	
+            return await interaction.editReply({ content: `New replay saved for ${roundName} of ${tournament.name} ${tournament.logo}:\nMatch: ${winningPlayer.name} vs ${losingPlayer.name}\nURL: <${url}>`})	
         } catch (err) {
             console.log(err)
         }
@@ -695,14 +603,10 @@ export const joinTournament = async (interaction, tournamentId) => {
         }
     }
 
-    const simName = tournament.format?.category === 'OP' || format?.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.member, player, 'OPTCGSim') :
-        player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
-
+    const simName = player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
-    const data = tournament.format?.category === 'OP' || format?.category === 'OP' ? await getOPDeckList(interaction.member, player) :
-        await getDeckList(interaction.member, player, tournament.format || format, false, tournament.isUnranked)
-
+    const data = await getDeckList(interaction.member, player, tournament.format || format, false, tournament.isUnranked)
     if (!data) return
 
     if (!entry && tournament.isTeamTournament && team) {
@@ -714,7 +618,7 @@ export const joinTournament = async (interaction, tournamentId) => {
                 
         try { 
             await Entry.create({
-                playerName: player.globalName || player.discordName,
+                playerName: player.name,
                 url: data.url,
                 ydk: data.ydk || data.opdk,
                 participantId: team.participantId,
@@ -729,7 +633,7 @@ export const joinTournament = async (interaction, tournamentId) => {
             return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
         }
 
-        const deckAttachments = tournament.format?.category === 'OP' || format?.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
+        const deckAttachments = await drawDeck(data.ydk) || []
         interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
@@ -758,7 +662,7 @@ export const joinTournament = async (interaction, tournamentId) => {
 
         try {
             entry = await Entry.create({
-                playerName: player.globalName || player.discordName,
+                playerName: player.name,
                 url: data.url,
                 ydk: data.ydk || data.opdk,
                 playerId: player.id,
@@ -770,7 +674,7 @@ export const joinTournament = async (interaction, tournamentId) => {
             return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
         }
                             
-        const { participant } = await postParticipant(server, tournament, player).catch((err) => console.log(err))
+        const { participant } = await postParticipant(server, tournament, player.name).catch((err) => console.log(err))
         
         if (!participant) {
             await entry.destroy()
@@ -779,7 +683,7 @@ export const joinTournament = async (interaction, tournamentId) => {
 
         await entry.update({ participantId: participant.id })
 
-        const deckAttachments = tournament.format.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
+        const deckAttachments = await drawDeck(data.ydk) || []
         interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
@@ -798,7 +702,7 @@ export const joinTournament = async (interaction, tournamentId) => {
             active: true
         })
 
-        const deckAttachments = tournament.format?.category === 'OP' || format?.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
+        const deckAttachments = await drawDeck(data.ydk) || []
         interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
@@ -812,7 +716,7 @@ export const joinTournament = async (interaction, tournamentId) => {
         return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else if (entry) {
         if (!entry.participantId) {
-            const { participant } = await postParticipant(server, tournament, player).catch((err) => console.log(err))
+            const { participant } = await postParticipant(server, tournament, player.name).catch((err) => console.log(err))
     
             if (!participant) {
                 await entry.destroy()
@@ -823,7 +727,7 @@ export const joinTournament = async (interaction, tournamentId) => {
         }
 
         await entry.update({ url: data.url, ydk: data.ydk || data.opdk })
-        const deckAttachments = tournament?.format?.category === 'OP' ? await drawOPDeck(data.opdk) || [] : await drawDeck(data.ydk) || []
+        const deckAttachments = await drawDeck(data.ydk) || []
         interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have your updated deck list for ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
@@ -867,20 +771,17 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
     entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournamentId }})
     interaction.editReply({ content: `Please check your DMs.` })
     
-    const simName = tournament.format?.category === 'OP' ? player.opTcgSim || await askForSimName(interaction.member, player, 'OPTCGSim') :
-        player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
-
+    const simName = player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
-    const data = tournament.format?.category === 'OP' ? await getOPDeckList(interaction.member, player, true) :
-        await getDeckList(interaction.member, player, tournament.format, true, tournament.isUnranked)
+    const data = await getDeckList(interaction.member, player, tournament.format, true, tournament.isUnranked)
 
     if (!data) return
 
     if (!entry) {
         try {
             entry = await Entry.create({
-                playerName: player.globalName || player.discordName,
+                playerName: player.name,
                 url: data.url,
                 ydk: data.ydk || data.opdk,
                 playerId: player.id,
@@ -892,15 +793,15 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
             return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
         }
                   
-        const { participant } = await postParticipant(server, tournament, player)
+        const { participant } = await postParticipant(server, tournament, player.name)
         if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})        
         await entry.update({ participantId: participant.id })
 
         member.roles.add(server.tourRole).catch((err) => console.log(err))
-        interaction.member.send({ content: `Thanks! I have all the information we need for ${player.globalName || player.discordName}.` }).catch((err) => console.log(err))
+        interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
         return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else if (entry && entry.active === false) {
-        const { participant } = await postParticipant(server, tournament, player)
+        const { participant } = await postParticipant(server, tournament, player.name)
         if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
         
         await entry.update({
@@ -911,11 +812,11 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
         })
 
         member.roles.add(server.tourRole).catch((err) => console.log(err))
-        interaction.member.send({ content: `Thanks! I have all the information we need for ${player.globalName || player.discordName}.` }).catch((err) => console.log(err))
+        interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
         return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else if (entry && entry.active === true) {
         await entry.update({ url: data.url, ydk: data.ydk || data.opdk })
-        interaction.member.send({ content: `Thanks! I have ${player.globalName || player.discordName}'s updated deck list for the tournament.` }).catch((err) => console.log(err))
+        interaction.member.send({ content: `Thanks! I have ${player.name}'s updated deck list for the tournament.` }).catch((err) => console.log(err))
         return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator resubmitted <@${player.discordId}>'s deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))   
     }
 }
@@ -1459,9 +1360,8 @@ export const getPairing = (matchesArr = [], matchId) => {
 }
 
 //POST PARTICIPANT
-export const postParticipant = async (server, tournament, player) => {
+export const postParticipant = async (server, tournament, name) => {
     try {
-        const name = player.discriminator === '0' ? player.discordName : player.discordName + '#' + player.discriminator
         const { data } = await axios({
             method: 'post',
             url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`,
@@ -1584,15 +1484,17 @@ export const processMatchResult = async (server, interaction, winner, winningPla
 
         setTimeout(async () => {
             if (loserEliminated) {
-                return await interaction.channel.send({ content: `${losingPlayer.globalName || losingPlayer.discordName}, You are eliminated from the tournament. Better luck next time!`})
+                return await interaction.channel.send({ content: `${losingPlayer.name}, You are eliminated from the tournament. Better luck next time!`})
             } else if (loserNextOpponent) {
+                const loserNextOpponentGlobalName = loserNextOpponent.globalName
+                const loserNextOpponentDiscordName = loserNextOpponent.discordName
                 try {
                     loser.send(
                         `New pairing for ${tournament.name}! ${tournament.logo}` +
                         `\nServer: ${server.name} ${server.logo}` +
                         `\nChannel: <#${tournament.channelId}>` +
                         `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                        `\nDiscord Name: ${loserNextOpponent.player.globalName || loserNextOpponent.player.discordName + '#' + loserNextOpponent.player.discriminator}` +
+                        `\nDiscord Name: ${loserNextOpponentGlobalName ? `${loserNextOpponentGlobalName} (${loserNextOpponentDiscordName})` : loserNextOpponentDiscordName}` +
                         `\nDuelingbook Name: ${loserNextOpponent.player.duelingBook}`
                     )
                 } catch (err) {
@@ -1601,29 +1503,24 @@ export const processMatchResult = async (server, interaction, winner, winningPla
 
                 try {
                     const member = await interaction.guild?.members.fetch(loserNextOpponent.player.discordId)
-                    const name = losingPlayer.globalName || `${losingPlayer.discordName}#${losingPlayer.discriminator}`
                     member.user.send(
                         `New Match for ${tournament.name}! ${tournament.logo}` +
                         `\nServer: ${server.name} ${server.logo}` +
                         `\nChannel: <#${tournament.channelId}>` +
                         `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                        `\nDiscord Name: ${name}` +
+                        `\nDiscord Name: ${losingPlayer.globalName ? `${losingPlayer.globalName} (${losingPlayer.discordName})` : losingPlayer.discordName}` +
                         `\nDuelingbook Name: ${losingPlayer.duelingBook}`
                     )
                 } catch (err) {
                     console.log(err)
                 }
 
-                const content = format?.category === 'OP' ? `New Match: <@${losingPlayer.discordId}> (DB: ${losingPlayer.opTcgSim}) vs. <@${loserNextOpponent.player.discordId}> (DB: ${loserNextOpponent.player.opTcgSim}). Good luck to both players.` : 
-                    `New Match: <@${losingPlayer.discordId}> (DB: ${losingPlayer.duelingBook}) vs. <@${loserNextOpponent.player.discordId}> (DB: ${loserNextOpponent.player.duelingBook}). Good luck to both duelists.`
-        
-                return await interaction.channel.send({ content: content })
+                return await interaction.channel.send(`New Match: <@${losingPlayer.discordId}> (DB: ${losingPlayer.duelingBook}) vs. <@${loserNextOpponent.player.discordId}> (DB: ${loserNextOpponent.player.duelingBook}). Good luck to both duelists.`)
             } else if (loserMatchWaitingOn && loserWaitingOnP1 && loserWaitingOnP2) {
-                const content = format?.category === 'OP' ? `${losingPlayer.globalName || losingPlayer.discordName}, You are waiting for the result of ${loserWaitingOnP1.player.globalName || loserWaitingOnP1.player.discordName} (OPTCGSim: ${loserWaitingOnP1.player.opTcgSim}) vs ${loserWaitingOnP2.player.globalName || loserWaitingOnP2.player.discordName} (OPTCGSim: ${loserWaitingOnP2.player.opTcgSim}).` :
-                    `${losingPlayer.globalName || losingPlayer.discordName}, You are waiting for the result of ${loserWaitingOnP1.player.globalName || loserWaitingOnP1.player.discordName} (DB: ${loserWaitingOnP1.player.duelingBook}) vs ${loserWaitingOnP2.player.globalName || loserWaitingOnP2.player.discordName} (DB: ${loserWaitingOnP2.player.duelingBook}).`
+                const content = `${losingPlayer.name}, You are waiting for the result of ${loserWaitingOnP1.player.name} (DB: ${loserWaitingOnP1.player.duelingBook}) vs ${loserWaitingOnP2.player.name} (DB: ${loserWaitingOnP2.player.duelingBook}).`
                 return await interaction.channel.send({ content: content })
             } else {
-                return await interaction.channel.send({ content: `${losingPlayer.globalName || losingPlayer.discordName}, You are waiting for multiple matches to finish. Grab a snack and stay hydrated.`})
+                return await interaction.channel.send({ content: `${losingPlayer.name}, You are waiting for multiple matches to finish. Grab a snack and stay hydrated.`})
             }
         }, 2000)
         
@@ -1633,9 +1530,8 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                     return await interaction.channel.send({ content: `<@${winningPlayer.discordId}>, You won the tournament! Congratulations on your stellar performance! ${emojis.legend}`})
                 } else if (winnerNextOpponent) {
                     try {
-                        const name = winnerNextOpponent.player.globalName || `${winnerNextOpponent.player.discordName}#${winnerNextOpponent.player.discriminator}`
-                        const content = format?.category === 'OP' ? `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord Name: ${name}\nOPTCGSim: ${winnerNextOpponent.player.opTcgSim}` :
-                            `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord Name: ${name}\nDuelingbook Name: ${winnerNextOpponent.player.duelingBook}`
+                        const name = winnerNextOpponent.player.name
+                        const content = `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord Name: ${name}\nDuelingbook Name: ${winnerNextOpponent.player.duelingBook}`
                         winner.send({ content: content })
                     } catch (err) {
                         console.log(err)
@@ -1643,24 +1539,21 @@ export const processMatchResult = async (server, interaction, winner, winningPla
 
                     try {
                         const member = await interaction.guild?.members.fetch(winnerNextOpponent.player.discordId)
-                        const name = winningPlayer.globalName || `${winningPlayer.discordName}#${winningPlayer.discriminator}`
-                        const content = format?.category === 'OP' ? `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord Name: ${name}\nOPTCGSim: ${winningPlayer.opTcgSim}` :
-                            `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord Name: ${name}\nDuelingbook Name: ${winningPlayer.duelingBook}`
+                        const name = winningPlayer.name
+                        const content = `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord Name: ${name}\nDuelingbook Name: ${winningPlayer.duelingBook}`
                             
                         member.user.send({ content: content })
                     } catch (err) {
                         console.log(err)
                     }
                     
-                    const content = format?.category === 'OP' ? `New Match: <@${winningPlayer.discordId}> (OPTCGSim: ${winningPlayer.opTcgSim}) vs. <@${winnerNextOpponent.player.discordId}> (OPTCGSim: ${winnerNextOpponent.player.opTcgSim}). Good luck to both duelists.` : 
-                        `New Match: <@${winningPlayer.discordId}> (DB: ${winningPlayer.duelingBook}) vs. <@${winnerNextOpponent.player.discordId}> (DB: ${winnerNextOpponent.player.duelingBook}). Good luck to both duelists.`
+                    const content = `New Match: <@${winningPlayer.discordId}> (DB: ${winningPlayer.duelingBook}) vs. <@${winnerNextOpponent.player.discordId}> (DB: ${winnerNextOpponent.player.duelingBook}). Good luck to both duelists.`
                     return await interaction.channel.send({ content: content })
                 } else if (winnerMatchWaitingOn && winnerWaitingOnP1 && winnerWaitingOnP2) {
-                    const content = format?.category === 'OP' ? `${winningPlayer.globalName || winningPlayer.discordName}, You are waiting for the result of ${winnerWaitingOnP1.player.globalName || winnerWaitingOnP1.player.discordName} (OPTCGSim: ${winnerWaitingOnP1.player.opTcgSim}) vs ${winnerWaitingOnP2.player.globalName || winnerWaitingOnP2.player.discordName} (OPTCGSim: ${winnerWaitingOnP2.player.opTcgSim}).` :
-                        `${winningPlayer.globalName || winningPlayer.discordName}, You are waiting for the result of ${winnerWaitingOnP1.player.globalName || winnerWaitingOnP1.player.discordName} (DB: ${winnerWaitingOnP1.player.duelingBook}) vs ${winnerWaitingOnP2.player.globalName || winnerWaitingOnP2.player.discordName} (DB: ${winnerWaitingOnP2.player.duelingBook}).`
+                    const content = `${winningPlayer.name}, You are waiting for the result of ${winnerWaitingOnP1.player.name} (DB: ${winnerWaitingOnP1.player.duelingBook}) vs ${winnerWaitingOnP2.player.name} (DB: ${winnerWaitingOnP2.player.duelingBook}).`
                     return await interaction.channel.send({ content: content})
                 } else {
-                    return await interaction.channel.send({ content: `${winningPlayer.globalName || winningPlayer.discordName}, You are waiting for multiple matches to finish. Grab a snack and stay hydrated.`})
+                    return await interaction.channel.send({ content: `${winningPlayer.name}, You are waiting for multiple matches to finish. Grab a snack and stay hydrated.`})
                 }
             }, 4000)
         }
@@ -1816,14 +1709,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pA1Member = await interaction.guild?.members.fetch(playerA1.discordId)
-                        const pA2DiscordUsername = playerA2.discriminator === '0' ? playerA2.discordName : `${playerA2.discordName}#${playerA2.discriminator}`
+                        const pA2DiscordUsername =  playerA2.discordName
                         pA1Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                             `\nDiscord Name: ${playerA2.globalName ? `${playerA2.globalName} (${pA2DiscordUsername})` : pA2DiscordUsername}` +
-                            `\n${format?.category === 'OP' ? `OPTCGSim: ${playerA2.opTcgSim}` : `Duelingbook Name: ${playerA2.duelingBook}`}`
+                            `\nDuelingbook Name: ${playerA2.duelingBook}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1831,14 +1724,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pA2Member = await interaction.guild?.members.fetch(playerA2.discordId)
-                        const pA1DiscordUsername = playerA1.discriminator === '0' ? playerA1.discordName : `${playerA1.discordName}#${playerA1.discriminator}`
+                        const pA1DiscordUsername = playerA1.discordName
                         pA2Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                             `\nDiscord Name: ${playerA1.globalName ? `${playerA1.globalName} (${pA1DiscordUsername})` : pA1DiscordUsername}` +
-                            `\n${format?.category === 'OP' ? `OPTCGSim: ${playerA1.opTcgSim}` : `Duelingbook Name: ${playerA1.duelingBook}`}`
+                            `\nDuelingbook Name: ${playerA1.duelingBook}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1851,14 +1744,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pB1Member = await interaction.guild?.members.fetch(playerB1.discordId)
-                        const pB2DiscordUsername = playerB2.discriminator === '0' ? playerB2.discordName : `${playerB2.discordName}#${playerB2.discriminator}`
+                        const pB2DiscordUsername = playerB2.discordName
                         pB1Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                             `\nDiscord Name: ${playerB2.globalName ? `${playerB2.globalName} (${pB2DiscordUsername})` : pB2DiscordUsername}` +
-                            `\n${format?.category === 'OP' ? `OPTCGSim: ${playerB2.opTcgSim}` : `Duelingbook Name: ${playerB2.duelingBook}`}`
+                            `\nDuelingbook Name: ${playerB2.duelingBook}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1866,14 +1759,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pB2Member = await interaction.guild?.members.fetch(playerB2.discordId)
-                        const pB1DiscordUsername =  playerB1.discriminator === '0' ? playerB1.discordName : `${playerB1.discordName}#${playerB1.discriminator}`
+                        const pB1DiscordUsername = playerB1.discordName
                         pB2Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                             `\nDiscord Name: ${playerB1.globalName ? `${playerB1.globalName} (${pB1DiscordUsername})` : pB1DiscordUsername}` +
-                            `\n${format?.category === 'OP' ? `OPTCGSim: ${playerB1.opTcgSim}` : `Duelingbook Name: ${playerB1.duelingBook}`}`
+                            `\nDuelingbook Name: ${playerB1.duelingBook}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1886,14 +1779,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pC1Member = await interaction.guild?.members.fetch(playerC1.discordId)
-                        const pC2DiscordUsername = playerC2.discriminator === '0' ? playerC2.discordName : `${playerC2.discordName}#${playerC2.discriminator}`
+                        const pC2DiscordUsername = playerC2.discordName
                         pC1Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                             `\nDiscord Name: ${playerC2.globalName ? `${playerC2.globalName} (${pC2DiscordUsername})` : pC2DiscordUsername}` +
-                            `\n${format?.category === 'OP' ? `OPTCGSim: ${playerC2.opTcgSim}` : `Duelingbook Name: ${playerC2.duelingBook}`}`
+                            `\nDuelingbook Name: ${playerC2.duelingBook}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1901,14 +1794,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pC2Member = await interaction.guild?.members.fetch(playerC2.discordId)
-                        const pC1DiscordUsername = playerC1.discriminator === '0' ? playerC1.discordName : `${playerC1.discordName}#${playerC1.discriminator}`
+                        const pC1DiscordUsername = playerC1.discordName
                         pC2Member.user.send(
                             `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                             `\nServer: ${server.name} ${server.logo}` +
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                             `\nDiscord Name: ${playerC1.globalName ? `${playerC1.globalName} (${pC1DiscordUsername})` : pC1DiscordUsername}` +
-                            `\n${format?.category === 'OP' ? `OPTCGSim: ${playerC1.opTcgSim}` : `Duelingbook Name: ${playerC1.duelingBook}`}`
+                            `\nDuelingbook Name: ${playerC1.duelingBook}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1945,14 +1838,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     
                         try {
                             const pA1Member = await interaction.guild?.members.fetch(playerA1.discordId)
-                            const pA2DiscordUsername = playerA2.discriminator === '0' ? playerA2.discordName : `${playerA2.discordName}#${playerA2.discriminator}`
+                            const pA2DiscordUsername = playerA2.discordName
                             pA1Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                                 `\nDiscord Name: ${playerA2.globalName ? `${playerA2.globalName} (${pA2DiscordUsername})` : pA2DiscordUsername}` +
-                                `\n${format?.category === 'OP' ? `OPTCGSim: ${playerA2.opTcgSim}` : `Duelingbook Name: ${playerA2.duelingBook}`}`
+                                `\nDuelingbook Name: ${playerA2.duelingBook}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1960,14 +1853,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     
                         try {
                             const pA2Member = await interaction.guild?.members.fetch(playerA2.discordId)
-                            const pA1DiscordUsername = playerA1.discriminator === '0' ? playerA1.discordName : `${playerA1.discordName}#${playerA1.discriminator}`
+                            const pA1DiscordUsername = playerA1.discordName
                             pA2Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                                 `\nDiscord Name: ${playerA1.globalName ? `${playerA1.globalName} (${pA1DiscordUsername})` : pA1DiscordUsername}` +
-                                `\n${format?.category === 'OP' ? `OPTCGSim: ${playerA1.opTcgSim}` : `Duelingbook Name: ${playerA1.duelingBook}`}`
+                                `\nDuelingbook Name: ${playerA1.duelingBook}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1980,14 +1873,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     
                         try {
                             const pB1Member = await interaction.guild?.members.fetch(playerB1.discordId)
-                            const pB2DiscordUsername = playerB2.discriminator === '0' ? playerB2.discordName : `${playerB2.discordName}#${playerB2.discriminator}`
+                            const pB2DiscordUsername = playerB2.discordName
                             pB1Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                                 `\nDiscord Name: ${playerB2.globalName ? `${playerB2.globalName} (${pB2DiscordUsername})` : pB2DiscordUsername}` +
-                                `\n${format?.category === 'OP' ? `OPTCGSim: ${playerB2.opTcgSim}` : `Duelingbook Name: ${playerB2.duelingBook}`}`
+                                `\nDuelingbook Name: ${playerB2.duelingBook}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1995,14 +1888,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     
                         try {
                             const pB2Member = await interaction.guild?.members.fetch(playerB2.discordId)
-                            const pB1DiscordUsername = playerB1.discriminator === '0' ? playerB1.discordName : `${playerB1.discordName}#${playerB1.discriminator}`
+                            const pB1DiscordUsername = playerB1.discordName
                             pB2Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                                 `\nDiscord Name: ${playerB1.globalName ? `${playerB1.globalName} (${pB1DiscordUsername})` : pB1DiscordUsername}` +
-                                `\n${format?.category === 'OP' ? `OPTCGSim: ${playerB1.opTcgSim}` : `Duelingbook Name: ${playerB1.duelingBook}`}`
+                                `\nDuelingbook Name: ${playerB1.duelingBook}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -2015,14 +1908,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     
                         try {
                             const pC1Member = await interaction.guild?.members.fetch(playerC1.discordId)
-                            const pC2DiscordUsername = playerC2.discriminator === '0' ? playerC2.discordName : `${playerC2.discordName}#${playerC2.discriminator}`
+                            const pC2DiscordUsername = playerC2.discordName
                             pC1Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                                 `\nDiscord Name: ${playerC2.globalName ? `${playerC2.globalName} (${pC2DiscordUsername})` : pC2DiscordUsername}` +
-                                `\n${format?.category === 'OP' ? `OPTCGSim: ${playerC2.opTcgSim}` : `Duelingbook Name: ${playerC2.duelingBook}`}`
+                                `\nDuelingbook Name: ${playerC2.duelingBook}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -2030,14 +1923,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     
                         try {
                             const pC2Member = await interaction.guild?.members.fetch(playerC2.discordId)
-                            const pC1DiscordUsername = playerC1.discriminator === '0' ? playerC1.discordName : `${playerC1.discordName}#${playerC1.discriminator}`
+                            const pC1DiscordUsername = playerC1.discordName
                             pC2Member.user.send(
                                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                                 `\nServer: ${server.name} ${server.logo}` +
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                                 `\nDiscord Name: ${playerC1.globalName ? `${playerC1.globalName} (${pC1DiscordUsername})` : pC1DiscordUsername}` +
-                                `\n${format?.category === 'OP' ? `OPTCGSim: ${playerC1.opTcgSim}` : `Duelingbook Name: ${playerC1.duelingBook}`}`
+                                `\nDuelingbook Name: ${playerC1.duelingBook}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -2084,14 +1977,14 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
 
         try {
             const pA1Member = await guild.members.fetch(playerA1.discordId)
-            const pA2DiscordUsername = playerA2.discriminator === '0' ? playerA2.discordName : `${playerA2.discordName}#${playerA2.discriminator}`
+            const pA2DiscordUsername = playerA2.discordName
             pA1Member.user.send(
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                 `\nDiscord Name: ${playerA2.globalName ? `${playerA2.globalName} (${pA2DiscordUsername})` : pA2DiscordUsername}` +
-                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerA2.opTcgSim}` : `Duelingbook Name: ${playerA2.duelingBook}`}`
+                `\nDuelingbook Name: ${playerA2.duelingBook}`
             )
         } catch (err) {
             console.log(err)
@@ -2099,14 +1992,14 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
 
         try {
             const pA2Member = await guild.members.fetch(playerA2.discordId)
-            const pA1DiscordUsername = playerA1.discriminator === '0' ? playerA1.discordName : `${playerA1.discordName}#${playerA1.discriminator}`
+            const pA1DiscordUsername = playerA1.discordName
             pA2Member.user.send(
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                 `\nDiscord Name: ${playerA1.globalName ? `${playerA1.globalName} (${pA1DiscordUsername})` : pA1DiscordUsername}` +
-                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerA1.opTcgSim}` : `Duelingbook Name: ${playerA1.duelingBook}`}`
+                `\nDuelingbook Name: ${playerA1.duelingBook}`
             )
         } catch (err) {
             console.log(err)
@@ -2119,14 +2012,14 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
 
         try {
             const pB1Member = await guild.members.fetch(playerB1.discordId)
-            const pB2DiscordUsername = playerB2.discriminator === '0' ? playerB2.discordName : `${playerB2.discordName}#${playerB2.discriminator}`
+            const pB2DiscordUsername = playerB2.discordName
             pB1Member.user.send(
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                 `\nDiscord Name: ${playerB2.globalName ? `${playerB2.globalName} (${pB2DiscordUsername})` : pB2DiscordUsername}` +
-                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerB2.opTcgSim}` : `Duelingbook Name: ${playerB2.duelingBook}`}`
+                `\nDuelingbook Name: ${playerB2.duelingBook}`
             )
         } catch (err) {
             console.log(err)
@@ -2134,14 +2027,14 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
 
         try {
             const pB2Member = await guild.members.fetch(playerB2.discordId)
-            const pB1DiscordUsername = playerB1.discriminator === '0' ? playerB1.discordName : `${playerB1.discordName}#${playerB1.discriminator}`
+            const pB1DiscordUsername = playerB1.discordName
             pB2Member.user.send(
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                 `\nDiscord Name: ${playerB1.globalName ? `${playerB1.globalName} (${pB1DiscordUsername})` : pB1DiscordUsername}` +
-                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerB1.opTcgSim}` : `Duelingbook Name: ${playerB1.duelingBook}`}`
+                `\nDuelingbook Name: ${playerB1.duelingBook}`
             )
         } catch (err) {
             console.log(err)
@@ -2154,14 +2047,14 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
 
         try {
             const pC1Member = await guild.members.fetch(playerC1.discordId)
-            const pC2DiscordUsername = playerC2.discriminator === '0' ? playerC2.discordName : `${playerC2.discordName}#${playerC2.discriminator}`
+            const pC2DiscordUsername = playerC2.discordName
             pC1Member.user.send(
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                 `\nDiscord Name: ${playerC2.globalName ? `${playerC2.globalName} (${pC2DiscordUsername})` : pC2DiscordUsername}` +
-                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerC2.opTcgSim}` : `Duelingbook Name: ${playerC2.duelingBook}`}`
+                `\nDuelingbook Name: ${playerC2.duelingBook}`
             )
         } catch (err) {
             console.log(err)
@@ -2169,14 +2062,14 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
 
         try {
             const pC2Member = await guild.members.fetch(playerC2.discordId)
-            const pC1DiscordUsername = playerC1.discriminator === '0' ? playerC1.discordName : `${playerC1.discordName}#${playerC1.discriminator}`
+            const pC1DiscordUsername = playerC1.discordName
             pC2Member.user.send(
                 `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                 `\nDiscord Name: ${playerC1.globalName ? `${playerC1.globalName} (${pC1DiscordUsername})` : pC1DiscordUsername}` +
-                `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${playerC1.opTcgSim}` : `Duelingbook Name: ${playerC1.duelingBook}`}`
+                `\nDuelingbook Name: ${playerC1.duelingBook}`
             )
         } catch (err) {
             console.log(err)
@@ -2218,14 +2111,14 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
     
             try {
                 const p1Member = await guild.members.fetch(player1.discordId)
-                const p2DiscordUsername = player2.discriminator === '0' ? player2.discordName : `${player2.discordName}#${player2.discriminator}`
+                const p2DiscordUsername = player2.discordName
                 p1Member.user.send(
                     `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                     `\nServer: ${server.name} ${server.logo}` +
                     `\nChannel: <#${tournament.channelId}>` +
                     `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                     `\nDiscord Name: ${player2.globalName ? `${player2.globalName} (${p2DiscordUsername})` : p2DiscordUsername}` +
-                    `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${player2.opTcgSim}` : `Duelingbook Name: ${player2.duelingBook}`}`
+                    `\nDuelingbook Name: ${player2.duelingBook}`
                 )
             } catch (err) {
                 console.log(err)
@@ -2233,14 +2126,14 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
     
             try {
                 const p2Member = await guild.members.fetch(player2.discordId)
-                const p1DiscordUsername = player1.discriminator === '0' ? player1.discordName : `${player1.discordName}#${player1.discriminator}`
+                const p1DiscordUsername = player1.discordName
                 p2Member.user.send(
                     `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
                     `\nServer: ${server.name} ${server.logo}` +
                     `\nChannel: <#${tournament.channelId}>` +
                     `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                     `\nDiscord Name: ${player1.globalName ? `${player1.globalName} (${p1DiscordUsername})` : p1DiscordUsername}` +
-                    `\n${tournament.format?.category === 'OP' ? `OPTCGSim: ${player1.opTcgSim}` : `Duelingbook Name: ${player1.duelingBook}`}`
+                    `\nDuelingbook Name: ${player1.duelingBook}`
                 )
             } catch (err) {
                 console.log(err)
@@ -2565,7 +2458,7 @@ export const autoRegisterTopCut = async (server, tournament, topCutTournament, s
                 ydk: entry.ydk
             })
             
-            const { participant } = await postParticipant(server, topCutTournament, entry.player)
+            const { participant } = await postParticipant(server, topCutTournament, entry.player.name)
             if (!participant) errors.push(`- ${entry.name} (${i + 1} seed`)        
             await topCutEntry.update({ participantId: participant.id })
         } catch (err) {
@@ -2591,8 +2484,8 @@ export const createTournament = async (interaction, formatName, name, abbreviati
         }
     })
 
-    const game_name = format.category === 'OP' ? 'One Piece TCG' : 'Yu-Gi-Oh!'
-    const description = format.category === 'OP' ? 'One Piece TCG' : `${format.name} Format`
+    const game_name = 'Yu-Gi-Oh!'
+    const description = `${format.name} Format`
     const channel = interaction.guild.name !== 'Format Library' ? await interaction.guild?.channels.cache.find((channel) => channel.name === channelName) : {}
     const channelId = interaction.guild.name === 'Format Library' ? format.channel : channel?.id
     if (!channelId) return
@@ -3137,8 +3030,8 @@ export const createTopCut = async(interaction, tournamentId) => {
 
     const server = await Server.findOne({ where: { id: interaction.guildId }})  
     const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
-    const game_name = primaryTournament.format?.category === 'OP' ? 'One Piece TCG' : 'Yu-Gi-Oh!'
-    const description = primaryTournament.format?.category === 'OP' ? 'One Piece TCG' : `${primaryTournament.format?.name} Format`
+    const game_name = 'Yu-Gi-Oh!'
+    const description = `${primaryTournament.format?.name} Format`
     const str = generateRandomString(10, '0123456789abcdefghijklmnopqrstuvwxyz')
     const name = `${primaryTournament.name} - Top ${primaryTournament.topCut}`
     const abbreviation = primaryTournament.abbreviation ? `${primaryTournament.abbreviation}_Top${primaryTournament.topCut}` : null

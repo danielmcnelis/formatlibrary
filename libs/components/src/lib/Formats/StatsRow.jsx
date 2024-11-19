@@ -62,7 +62,9 @@ export const StatsRow = (props) => {
     const {elo, wins, losses, player} = stats
     const navigate = useNavigate()
     
-    let extension =  (player?.discordName || '').replaceAll('%', '%25')
+    const evenOrOdd = props.index % 2 ? 'even' : 'odd'
+    const name = player.name || ''
+    const extension =  name.replaceAll('%', '%25')
         .replaceAll('/', '%2F')
         .replaceAll(' ', '_')
         .replaceAll('#', '%23')
@@ -70,10 +72,6 @@ export const StatsRow = (props) => {
         .replaceAll('&', '%26')
         .replaceAll('★', '_')
 
-    if (player?.discriminator && player?.discriminator !== '0') extension += `#${player.discriminator}`
-
-    const evenOrOdd = props.index % 2 ? 'even' : 'odd'
-    const name = player.globalName || player.discordName || ''
     const displayName = name.length <= 24 ? name : name.slice(0, 24).split(' ')[0] || ''
     const goToPlayer = () => navigate(`/players/${extension}`) 
 

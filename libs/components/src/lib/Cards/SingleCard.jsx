@@ -172,7 +172,25 @@ export const SingleCard = () => {
             }
             <div className="body">
                 <div className="single-card">
-                    <img className="single-card-image" src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`} alt={card.name}/>
+                    <div className="centered-vertical-flex">
+                        <img className="single-card-image" src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`} alt={card.name}/>
+                        <div className="space-apart" style={{margin: '24px 0px'}}>
+                        {
+                            isContentManager ? (
+                                !inEditMode ? (
+                                    <div className="downloadButton" style={{width: '150px'}} onClick={()=> setInEditMode(true)}>Edit Mode</div>
+                                ) : (
+                                    <div className="downloadButton" style={{width: '150px'}} onClick={()=> updateCardInfo()}>Save Changes</div>
+                                )
+                            ) : null
+                        }
+                        {
+                            isAdmin ? (
+                                <div className="downloadButton" style={{width: '150px'}} onClick={()=> downloadCardImage()}>Update Image</div>
+                            ) : null
+                        }
+                        </div>
+                    </div>
                     {
                         !inEditMode ? (
                             card.category === 'Monster' ? (
@@ -628,22 +646,6 @@ export const SingleCard = () => {
                         })
                     ) : null
                 }
-                <div className="space-apart">
-                {
-                    isContentManager ? (
-                        !inEditMode ? (
-                            <div className="downloadButton" style={{width: '200px'}} onClick={()=> setInEditMode(true)}>Edit Mode</div>
-                        ) : (
-                            <div className="downloadButton" style={{width: '200px'}} onClick={()=> updateCardInfo()}>Save Changes</div>
-                        )
-                    ) : null
-                }
-                {
-                    isAdmin ? (
-                        <div className="downloadButton" style={{width: '200px'}} onClick={()=> downloadCardImage()}>Update Image</div>
-                    ) : null
-                }
-                </div>
             </div>
         </>
     )

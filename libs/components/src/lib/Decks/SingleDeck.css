@@ -1,5 +1,17 @@
 
   
+
+    .suggestion {
+        color: black;
+        background-color: white;
+    }
+
+    .suggestion:hover {
+        cursor: pointer;
+        color: white;
+        background-color: black;
+    }
+
   .deck-bubble {
     width: 760px;
     margin-left: auto;

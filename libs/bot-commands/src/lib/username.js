@@ -13,7 +13,6 @@ export default {
                 .setRequired(true)
                 .addChoices(
 					{ name: 'DuelingBook', value: 'DuelingBook, duelingBook' },	
-					{ name: 'One Piece TCG Simulator', value: 'One Piece TCG Simulator, opTcgSim' },
 				)
         )
 		.addUserOption(user =>

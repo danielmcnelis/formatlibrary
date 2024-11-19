@@ -21,9 +21,6 @@ export const Player = db.define('players', {
   discordName: {
     type: Sequelize.STRING
   },
-  discriminator: {
-    type: Sequelize.STRING
-  },
   globalName: {
     type: Sequelize.STRING
   },
@@ -135,7 +132,6 @@ Player.generateId = async () => {
           await existingPlayer.update({
               name: existingPlayer.name || user.username,
               discordName: user.username,
-              discriminator: user.discriminator,
               discordPfp: user.avatar,
               email: existingPlayer.email || user.email,
               googleId: existingPlayer.googleId || googleId

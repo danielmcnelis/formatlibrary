@@ -50,7 +50,6 @@ export default {
             }})
 
             if (!event) return await interaction.editReply('No event found.')
-            console.log('event.tournament?.serverId', event.tournament?.serverId)
 
             const server = await Server.findOne({
                 where: {
@@ -61,12 +60,10 @@ export default {
             const matches = await getMatches(server, event.primaryTournamentId)
             const participants = await getParticipants(server, event.primaryTournamentId)
             const standings = await calculateStandings(event.tournament, matches, participants, topCutTournament)
-            console.log('standings?.length', standings?.length)
 
             for (let i = 0; i < standings.length; i++) {
                 try {
                     const standing = standings[i] 
-                    console.log('standing', standing)
                     const player = await Player.findOne({
                         where: {
                             [Op.or]: {

@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Format, Server } from '@fl/models'
-import { getCard, getOPCard } from '@fl/bot-functions'
+import { getCard } from '@fl/bot-functions'
 
 export default {
 	data: new SlashCommandBuilder()
@@ -14,13 +14,12 @@ export default {
                 .setRequired(true)
         )
         .setDMPermission(false),
-	async execute(interaction, fuzzyCards, fuzzyOPCards) {
+	async execute(interaction, fuzzyCards) {
         const query = interaction.options.getString('name')
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (server?.name === 'Format Library' && interaction.member.roles.cache.some(role => role.id === '1085310457126060153')) return interaction.reply({ content: `Sorry, you cannot look up cards while playing trivia. 📚 🐛` })
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const { cardEmbed, attachment } = format?.category === 'OP' ? await getOPCard(query, fuzzyOPCards, format)
-            : await getCard(query, fuzzyCards, format)
+        const { cardEmbed, attachment } = await getCard(query, fuzzyCards, format)
 
         if (!cardEmbed) {
             interaction.reply({ content: `Could not find: "${query}".`})

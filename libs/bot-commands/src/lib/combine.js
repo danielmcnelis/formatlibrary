@@ -99,12 +99,12 @@ export default {
             if (replay.winnerId === oldPlayer.id) {     
                 await replay.update({
                     winnerId: newPlayer.id,
-                    winner: newPlayer.discordName
+                    winnerName: newPlayer.name
                 })
             } else if (replay.loserId === oldPlayer.id) {
                 await replay.update({
                     loserId: newPlayer.id,
-                    loser: newPlayer.discordName
+                    loserName: newPlayer.name
                 })
             }
         }
@@ -124,12 +124,12 @@ export default {
             if (pairing.playerAId === oldPlayer.id) {     
                 await pairing.update({
                     playerAId: newPlayer.id,
-                    playerAName: newPlayer.discordName
+                    playerAName: newPlayer.name
                 })
             } else if (pairing.playerBId === oldPlayer.id) {
                 await pairing.update({
                     playerBId: newPlayer.id,
-                    playerBName: newPlayer.discordName
+                    playerBName: newPlayer.name
                 })
             }
         }

@@ -20,8 +20,7 @@ export default {
         const focusedValue = interaction.options.getFocused()
         const formats = await Format.findAll({ 
             where: { 
-                cleanName: {[Op.iLike]: '%' + focusedValue.toLowerCase() + '%'},
-                category: {[Op.not]: 'OP'}
+                cleanName: {[Op.iLike]: '%' + focusedValue.toLowerCase() + '%'}
             },
             limit: 5,
             order: [["popular", "DESC"], ["name", "ASC"]]

@@ -26,7 +26,7 @@ export const PairingRow = (props = {}) => {
                                 e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                             }
                         }
-                        alt={playerA.discordName || playerA.name}
+                        alt={playerA.name}
                     />                
                     <p className="playerName">{playerA.name}</p>
                 </div>
@@ -46,7 +46,7 @@ export const PairingRow = (props = {}) => {
                                 e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                             }
                         }
-                        alt={playerB.discordName || playerB.name}
+                        alt={playerB.name}
                     />
                     <p className="playerName">{playerB.name}</p>
                 </div>

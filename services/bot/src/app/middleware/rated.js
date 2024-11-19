@@ -24,7 +24,7 @@ export const joinRatedPool = async (req, res, next) => {
                 playerId: req.body.playerId
             }
         }) : await Pool.create({
-            name: player.globalName || player.discordName,
+            name: player.name,
             formatName: format.name,
             formatId: format.id,
             status: 'pending',

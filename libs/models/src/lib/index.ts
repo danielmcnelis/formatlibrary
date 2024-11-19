@@ -27,8 +27,6 @@ import { LikedVideo } from './LikedVideo'
 import { Match } from './Match'
 import { Matchup } from './Matchup'
 import { Membership } from './Membership'
-import { OPCard } from './OPCard'
-import { OPDeck } from './OPDeck'
 import { PackContent } from './PackContent'
 import { Pairing } from './Pairing'
 import { Player } from './Player'
@@ -433,8 +431,6 @@ export {
   Match,
   Matchup,
   Membership,
-  OPCard,
-  OPDeck,
   PackContent,
   Pairing,
   Player,

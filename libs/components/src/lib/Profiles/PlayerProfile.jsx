@@ -15,7 +15,7 @@ export const PlayerProfile = () => {
   const [stats, setStats] = useState([])
   const [decks, setDecks] = useState([])
   const [deckTypes, setDeckTypes] = useState([])
-  const { id, discriminator } = useParams()
+  const { id } = useParams()
 
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0))
@@ -25,7 +25,6 @@ export const PlayerProfile = () => {
     const fetchData = async () => {
       try {
         let route = `/api/players/${id}`
-        if (discriminator) route += `?discriminator=${discriminator}`
         const { data } = await axios.get(route)
         setPlayer(data)
       } catch (err) {
@@ -35,7 +34,7 @@ export const PlayerProfile = () => {
     }
 
     fetchData()
-  }, [id, discriminator])
+  }, [id])
 
   // USE EFFECT SET STATS
   useEffect(() => {
@@ -112,7 +111,7 @@ export const PlayerProfile = () => {
                             ) : ''
                         }
                         <div className="profile-line"><b>DuelingBook:</b> {player.duelingBook || 'N/A'}</div>   
-                        <div className="profile-line"><b>Discord:</b> {player.globalName || player.discordName && player.discriminator && player.discriminator !== '0' ? (<><span>{player.discordName}</span><span style={{ color: 'gray' }}>#{player.discriminator}</span></>) : player.discordName || 'N/A'}</div>
+                        <div className="profile-line"><b>Discord:</b> {player.discordName}</div>
                         {
                             player.country ? (
                                 <div className="profile-line"><b>Country:</b> {player.country} <img className="country" src={`https://www.worldometers.info/img/flags/${(countries[player.country].fips).toLowerCase()}-flag.gif`} alt="flag"/></div>

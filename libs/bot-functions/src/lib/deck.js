@@ -5,7 +5,7 @@
 import axios from 'axios'
 const FuzzySet = require('fuzzyset')
 import { Op } from 'sequelize'
-import { Card, OPCard, Format, Status, Deck, DeckType } from '@fl/models'
+import { Card, Format, Status, Deck, DeckType } from '@fl/models'
 import { convertArrayToObject, fetchSkillCardNames, findCard } from './utility.js'
 
 // COMPARE DECKS
@@ -331,87 +331,8 @@ export const getSkillCard = async (member, format, returnCard = false) => {
     })
 }
 
-//CHECK OP DECK LIST
-export const checkOPDeckList = async (member, format) => {  
-    const filter = m => m.author.id === member.user.id
-    const message = await member.send({ content: `Please paste your OPTCGSim deck list from the clipboard.`}).catch((err) => console.log(err))
-    if (!message || !message.channel) return {}
-    return await message.channel.awaitMessages({
-        filter,
-        max: 1,
-        time: 30000
-    }).then(async collected => {
-        const opdk = collected.first().content
-        const opdkArr = opdk.trim().split(/[\s]+/)
-        const cards = []
-        const wrongColorCards = []
-        const unrecognizedCards = []
-        const illegalCards = []
-        let deckSize = 0
-        let moreThanFour = false
-
-        for (let i = 0; i < opdkArr.length; i++) {
-            const str = opdkArr[i]
-            const copyNumber = parseInt(str[0])
-            if (copyNumber > 4) moreThanFour = true
-            deckSize += copyNumber
-            const cardCode = str.slice(str.indexOf('x') + 1)
-            const card = await OPCard.findOne({ where: { cardCode }})
-            if (!card) {
-                unrecognizedCards.push(cardCode)
-            } else if (!card.westernLegal) {
-                illegalCards.push(`${card.cardCode} - ${card.name}`)
-            } else {
-                cards.push([copyNumber, card])
-            }
-        }
-
-        if (unrecognizedCards.length) return member.send(`The following cards are unrecognized:\n${unrecognizedCards.join('\n')}`)
-        if (illegalCards.length) return member.send(`The following cards are not Western legal:\n${illegalCards.join('\n')}`)
-        if (deckSize !== 51) return member.send(`Your main deck is not 50 cards.`)
-        if (moreThanFour) return member.send(`You cannot use more than 4 copies of a card in your deck.`)
-
-        const leader = cards[0][1]
-        const allowedColors = leader.color.split('-')
-
-        for (let i = 1; i < cards.length; i++) {
-            const card = cards[i][1]
-            if (!allowedColors.includes(card.color)) {
-                wrongColorCards.push(`${card.cardCode} - ${card.name} (${card.color})`)
-            }
-        }
-
-        if (wrongColorCards.length) return member.send(`You cannot use the following cards in a deck led by ${leader.cardCode} ${leader.name} (${leader.color}):\n${wrongColorCards.join('\n')}`)
-        return await member.send({ content: `Congrats, your ${format.name} deck is perfectly legal! ${format.emoji}`}).catch((err) => console.log(err))
-    }).catch(err => {
-        console.log(err)
-        member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))
-        return false
-    })
-}
-
-// GET OP DECK TYPE
-export const getOPDeckType = async (opdk) => {
-    const str = opdk.trim().split(/[\s]+/)[0]
-    const cardCode = str.slice(str.indexOf('x') + 1)
-    const leader = await OPCard.findOne({ where: { cardCode }})
-    let deckType = await DeckType.findOne({
-        name: leader.name,
-        category: leader.color
-    })
-
-    if (!deckType) deckType = await DeckType.create({
-        name: leader.name,
-        category: leader.color
-    })
-
-    return deckType
-}
-
 //GET DECK TYPE
 export const getDeckType = async (deckfile, formatName) => {
-    if (formatName === 'One Piece') return getOPDeckType(deckfile)
-
     const main = deckfile?.split('#extra')[0]
     if (!main) return
     const primaryDeckArr = main.split(/[\s]+/).filter(el => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '').sort()

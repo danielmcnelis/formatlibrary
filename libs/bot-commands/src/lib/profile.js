@@ -90,8 +90,7 @@ export default {
                         `${player.timeZone ? `\nTime Zone: ${player.timeZone}` : ''}`
                     ) : 'N/A'
                 },
-                { name: `Profile Link`, value: `https://formatlibrary.com/players/${user.username.replaceAll(' ', '_')}${user.discriminator 
-!== '0' ? `?discriminator=${user.discriminator}` : ''}` }
+                { name: `Profile Link`, value: `https://formatlibrary.com/players/${player.name.replaceAll(' ', '_')}` }
             )
 
             return await interaction.reply({ embeds: [embed] })
@@ -158,8 +157,7 @@ export default {
                         `${player.timeZone ? `\nTime Zone: ${player.timeZone}` : ''}`
                     ) : 'N/A'
                 },
-                { name: `Profile Link`, value: `https://formatlibrary.com/players/${user.username.replaceAll(' ', '_')}${user.discriminator 
-!== '0' ? `?discriminator=${user.discriminator}` : ''}` }
+                { name: `Profile Link`, value: `https://formatlibrary.com/players/${player.name.replaceAll(' ', '_')}`}
             )
             
             return await interaction.reply({ embeds: [embed] })

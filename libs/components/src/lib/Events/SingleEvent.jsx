@@ -33,15 +33,13 @@ export const SingleEvent = () => {
   const [labelColor, gridColor] = JSON.parse(localStorage.getItem('theme')) === 'dark' ? ['#ccc', '#313131'] : ['#666', '#e1e1e1']
   const videoPlaylistId = event?.format?.videoPlaylistId
 
-  let extension =  (winner?.discordName || winner?.name || '').replaceAll('%', '%25')
+  let extension =  (winner?.name || '').replaceAll('%', '%25')
     .replaceAll('/', '%2F')
     .replaceAll(' ', '_')
     .replaceAll('#', '%23')
     .replaceAll('?', '%3F')
     .replaceAll('&', '%26')
     .replaceAll('★', '_')
-
-  if (winner?.discordName && winner?.discriminator !== '0') extension += `#${winner.discriminator}`
 
   const goToFormat = () => navigate(`/formats/${event.format ? event.format.name : null}`)
   const goToPlayer = () => navigate(`/players/${extension}`)

@@ -140,7 +140,7 @@ export default {
                 await ironPersonA.save()
                 setTimeout(() => postStory(interaction.channel, format), 5000)
             } else {
-                return await interaction.editReply({ content: `Sorry, ${winningPlayer.globalName || winningPlayer.discordName} is not ${losingPlayer.globalName || losingPlayer.discordName}'s ${format.name} Iron opponent. ${server.emoji || format.emoji} ${emojis.iron}`})
+                return await interaction.editReply({ content: `Sorry, ${winningPlayer.name} is not ${losingPlayer.name}'s ${format.name} Iron opponent. ${server.emoji || format.emoji} ${emojis.iron}`})
             }
         }
 
@@ -245,7 +245,7 @@ export default {
                 })
 
                 if (!count) {
-                    return interaction.channel.send(`<@${winningPlayer.discordId}>, reminder: you are required to share the replay of your match against ${losingPlayer.globalName || losingPlayer.discordName} (use the **/replay** command). ${emojis.one_week}`)
+                    return interaction.channel.send(`<@${winningPlayer.discordId}>, reminder: you are required to share the replay of your match against ${losingPlayer.name} (use the **/replay** command). ${emojis.one_week}`)
                 }
             }, 5 * 60 * 1000)
         }

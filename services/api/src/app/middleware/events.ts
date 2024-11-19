@@ -22,7 +22,7 @@ export const eventsGallery = async (req, res, next) => {
           display: true
         },
         include: [
-          { model: Player, attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp'] }
+          { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp'] }
         ],
         attributes: { exclude: ['createdAt', 'updatedAt'] },
         order: [['endDate', 'DESC']]
@@ -107,7 +107,7 @@ export const eventsCommunity = async (req, res, next) => {
       ],
       include: [
         { model: Format, attributes: ['id', 'name', 'icon'] },
-        { model: Player, attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp'] }
+        { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp'] }
       ],
       order: [['startDate', 'DESC']]
     })
@@ -128,7 +128,7 @@ export const eventsRecent = async (req, res, next) => {
       // attributes: ['id', 'name', 'abbreviation', 'winner', 'playerId', 'community', 'startDate', 'endDate'],
       include: [
         { model: Format, attributes: ['id', 'name', 'icon'] },
-        { model: Player, attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp'] }
+        { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp'] }
       ],
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       order: [['startDate', 'DESC']],
@@ -173,7 +173,7 @@ export const eventsId = async (req, res, next) => {
       include: [
         { model: Server, attributes: ['id', 'inviteLink', 'vanityUrl'] },
         { model: Format, attributes: ['id', 'name', 'icon', 'videoPlaylistId'] },
-        { model: Player, attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp'] }
+        { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp'] }
       ]
     })
     

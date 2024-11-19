@@ -28,7 +28,7 @@ export const EventThumbnail = (props = {}) => {
                             e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                         }
                     }
-                    alt={winner.discordName || winner.name}
+                    alt={winner.name}
                   />
                   <img 
                     className="eventThumbnail-image" 

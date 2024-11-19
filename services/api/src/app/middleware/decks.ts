@@ -97,6 +97,45 @@ export const decksDeleteId = async (req, res, next) => {
     }
 }
 
+export const updateDeckLabels = async (req, res, next) => {
+    try {
+        const deck = await Deck.findOne({
+            where: {
+                id: req.query.id
+            },
+            attributes: [
+                'id',
+                'name',
+                'ydk',
+                'builder',
+                'playerId',
+                'type',
+                'category',
+                'formatName',
+                'formatId',
+                'community',
+                'eventName',
+                'eventId',
+                'publishDate',
+                'placement',
+                'downloads',
+                'views',
+                'rating'
+            ],
+            include: [
+                { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'videoPlaylistId'] },
+                { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp'] }
+            ]
+        })
+
+        await deck.update({ ...deck, ...req.body })
+        res.json(deck)
+    } catch (err) {
+        next(err)
+    }
+}
+
+
 export const decksUpdateId = async (req, res, next) => {
     try {
         const deck = await Deck.findOne({ 
@@ -189,7 +228,7 @@ export const decksBuilderId = async (req, res, next) => {
             attributes: ['id', 'name', 'url', 'ydk', 'builder', 'playerId', 'type', 'deckTypeId', 'suggestedType', 'formatName', 'formatId', 'display', 'shareLink', 'linkExpiration'],            
             include: [
                 { model: Format, attributes: ['id', 'name', 'date', 'banlist', 'icon']},
-                { model: Player, attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp']}
+                { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp']}
             ],
         })
 
@@ -790,7 +829,7 @@ export const decksId = async (req, res, next) => {
         ],
         include: [
             { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'videoPlaylistId'] },
-            { model: Player, attributes: ['id', 'name', 'discriminator', 'discordName', 'discordId', 'discordPfp'] }
+            { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp'] }
         ]
     })
 

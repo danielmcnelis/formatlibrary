@@ -2,7 +2,7 @@
 import { AttachmentBuilder, SlashCommandBuilder } from 'discord.js'
 import { Deck, Entry, Event, Format, Player, Server, Tournament } from '@fl/models'
 import { hasPartnerAccess, selectTournamentForDeckCheck } from '@fl/bot-functions'
-import { drawDeck, drawOPDeck, isMod } from '@fl/bot-functions'
+import { drawDeck, isMod } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Op } from 'sequelize'
 
@@ -88,11 +88,11 @@ export default {
         if (!deck) return
 
         interaction.editReply({ content: `Please check your DMs.` })
-        const deckAttachments = format.category === 'OP' ? await drawOPDeck(deck.ydk) || [] : await drawDeck(deck.ydk) || []
-        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${player.globale || player.discordName}_${deck.tournamentAbbreviation || deck.tournamentName}.ydk` })
+        const deckAttachments = await drawDeck(deck.ydk) || []
+        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${player.name}_${deck.tournamentAbbreviation || deck.tournamentName}.ydk` })
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
-                interaction.member.send({ content: `${player.globalName || player.discordName}'s deck for ${deck.tournamentName}:`, files: [attachment] }).catch((err) => console.log(err))
+                interaction.member.send({ content: `${player.name}'s deck for ${deck.tournamentName}:`, files: [attachment] }).catch((err) => console.log(err))
             } else {
                 interaction.member.send({ files: [attachment] }).catch((err) => console.log(err))
             }

@@ -35,7 +35,14 @@ export const SingleDeck = () => {
     const [deck, setDeck] = useState({})
     const [banlist, setBanlist] = useState({})
     const [isAdmin, setIsAdmin] = useState(false)
+    const [isContentManager, setIsContentManager] = useState(false)
+    const [inEditMode, setInEditMode] = useState(false)
     const [isSubscriber, setIsSubscriber] = useState(false)
+    const [suggestions, setSuggestions] = useState([])
+    const [input, setInput] = useState('')
+    const [selectedDeckType, setSelectedDeckType] = useState({})
+    const [deckTypes, setDeckTypes] = useState([])
+
     const navigate = useNavigate()
     const { id } = useParams()
     const videoPlaylistId = deck?.format?.videoPlaylistId
@@ -55,6 +62,7 @@ export const SingleDeck = () => {
                 })
 
                 if (player.admin) setIsAdmin(true)
+                if (player.contentManager) setIsContentManager(true)
                 if (player.subscriber) setIsSubscriber(true)
             } catch (err) {
                 console.log(err)
@@ -63,6 +71,29 @@ export const SingleDeck = () => {
 
         if (playerId) checkRoles()
     }, [])
+
+
+    // UPDATE DECK INFO
+    const updateDeckInfo = async () => {
+        try {
+            const accessToken = getCookie('access')
+            const {data} = await axios.post(`/api/decks/labels?id=${deck.id}`, { 
+                ...deck, 
+                type: selectedDeckType.name, 
+                deckTypeId: selectedDeckType.id,
+                category: selectedDeckType.category
+            }, {
+                headers: {
+                    ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                }
+            })
+
+            setInEditMode(false)
+            setDeck({...deck, ...data})
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     
   // USE EFFECT SET DECK
@@ -85,33 +116,78 @@ export const SingleDeck = () => {
     fetchData()
   }, [id, isAdmin, isSubscriber])
 
-  // USE EFFECT SET DECK
+
+  // USE EFFECT SET DECKTYPES
   useEffect(() => {
-    if (!deck || !deck.format) return
-    const fetchData = async () => {
+    const fetchDeckTypes = async () => {
       try {
-        const {data} = await axios.get(`/api/banlists/simple/${deck.format.banlist}?category=${deck.format.category || 'TCG'}`)
-        setBanlist(data)
+        const {data} = await axios.get(`/api/decktypes/`)
+        setDeckTypes(data)
       } catch (err) {
         console.log(err)
       }
     }
 
-    fetchData()
-  }, [deck])
+    fetchDeckTypes()
+  }, [inEditMode])
+
+  
+    // USE EFFECT SET BANLIST
+    useEffect(() => {
+        if (!deck || !deck.format) return
+        const fetchData = async () => {
+        try {
+            const {data} = await axios.get(`/api/banlists/simple/${deck.format.banlist}?category=${deck.format.category || 'TCG'}`)
+            setBanlist(data)
+        } catch (err) {
+            console.log(err)
+        }
+        }
+
+        fetchData()
+    }, [deck])
+    
+    // USE EFFECT HANDLE AUTOCOMPLETE
+    useEffect(() => {
+        if (!input || !input.length || input.length < 3) {
+            if (suggestions.length) {
+                return setSuggestions([])
+            } else {
+                return
+            }
+        }
+
+        const newSuggestions = []
+
+        //Iterate through all entries in the list and find matches
+        for (let i = 0; i < deckTypes.length; i++) {
+            if (deckTypes[i].name?.toLowerCase().includes(input.toLowerCase())) {
+                newSuggestions.push(deckTypes[i]?.name)
+            }
+        }
+
+        setSuggestions(newSuggestions.sort())
+    }, [input, deckTypes])
+
+
+    // HANDLE SUGGESTION CLICK
+    const handleSuggestionClick = (str) => {
+        document.getElementById("decktype-input").value = str
+        const matchesInput = (e) => e.name?.toLowerCase() === str.toLowerCase()
+        setSelectedDeckType(deckTypes[deckTypes.findIndex(matchesInput)])
+        setSuggestions([])
+    }
 
   if (!deck) return <NotFound/>
   if (!deck.id) return <div/>
 
-  let extension =  (deck.player?.discordName || deck.player?.name || '').replaceAll('%', '%25')
+  let extension =  (deck.player?.name || '').replaceAll('%', '%25')
     .replaceAll('/', '%2F')
     .replaceAll(' ', '_')
     .replaceAll('#', '%23')
     .replaceAll('?', '%3F')
     .replaceAll('&', '%26')
     .replaceAll('★', '_')
-
-  if (deck.player?.discriminator && deck?.player?.discriminator !== '0') extension += `#${deck.player.discriminator}`
 
   const goToEvent = () => navigate(`/events/${deck.eventName}`)
   const goToFormat = () => navigate(`/formats/${deck.formatName}`)
@@ -145,7 +221,7 @@ export const SingleDeck = () => {
     setDeck({downloads, ...deck})
   }
 
-  const fullName = deck.player?.globalName || deck.player?.discordName || deck.player?.name || deck.builder || ''
+  const fullName = deck.player?.name || deck.builder || ''
   const displayName = fullName.length <= 24 ? fullName : fullName.slice(0, 24).split(' ')[0] || ''
 
   return (
@@ -181,11 +257,43 @@ export const SingleDeck = () => {
                         />
                     </div>
                 </a>
-                <div 
-                    onClick={() => {window.location.href=`/decktypes/${deck.type.toLowerCase().replace(/\s/g, '-')}?format=${deck.formatName.toLowerCase().replace(/\s/g, '_')}`}}
-                >
-                    <div className="single-deck-title">{deck.type || deck.name}</div>
-                </div>
+                {
+
+                !inEditMode ? (
+                        <div 
+                            onClick={() => {window.location.href=`/decktypes/${deck.type.toLowerCase().replace(/\s/g, '-')}?format=${deck.formatName.toLowerCase().replace(/\s/g, '_')}`}}
+                        >
+                            <div className="single-deck-title">{deck.type || deck.name}</div>
+                        </div>
+                    ) : (
+                        <div>
+                            <form autoComplete='on'>
+                            <input
+                                id="decktype-input"
+                                className="large-input"
+                                defaultValue={deck.type || deck.name}
+                                type="text"
+                                onChange={(e) => {
+                                    setInput(e.target.value)
+                                }}
+                            />
+                            </form>
+                            <div className="suggestions-flex">
+                                {
+                                    suggestions.map((s) => {
+                                        return (
+                                            <div 
+                                                className="suggestion" 
+                                                key={s} 
+                                                onClick={() => handleSuggestionClick(s)}
+                                            >{s}</div>
+                                        )
+                                })
+                                }
+                            </div>
+                        </div>
+                    )
+                }
                 <Link to="/deck-builder" state={{ deck: deck }} className="desktop-only">                                    
                     <div className="deck-button">
                         <b style={{padding: '0px 6px'}}>Open Deck</b>
@@ -196,6 +304,17 @@ export const SingleDeck = () => {
                         />
                     </div>
                 </Link>
+                <div className="space-apart" style={{margin: '24px 0px'}}>
+                {
+                    isContentManager ? (
+                        !inEditMode ? (
+                            <div className="downloadButton" style={{width: '150px'}} onClick={()=> setInEditMode(true)}>Edit Mode</div>
+                        ) : (
+                            <div className="downloadButton" style={{width: '150px'}} onClick={()=> updateDeckInfo()}>Save Changes</div>
+                        )
+                    ) : null
+                }
+                </div>
             </div>
             <table className="single-deck-table">
                 <tbody>
@@ -213,7 +332,7 @@ export const SingleDeck = () => {
                                         e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                                     }
                                 }
-                                alt={deck.player.discordName || deck.player.name}
+                                alt={deck.player.name}
                             />
                         </div>
                     </div>       

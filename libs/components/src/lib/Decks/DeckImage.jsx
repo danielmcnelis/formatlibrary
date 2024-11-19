@@ -6,7 +6,7 @@ import './DeckImage.css'
 export const DeckImage = (props) => {
     const {deck, width, margin, padding, coverage} = props
     if (!deck) return <div/>
-    const fullName = deck.player?.globalName || deck.player?.discordName || deck.player?.name || deck.builder || ''
+    const fullName = deck.player?.name || deck.builder || ''
     const displayName = fullName.length <= 17 ? fullName : fullName.slice(0, 17).split(' ')[0] || ''
     const placement = ordinalize(deck.placement)
     const title = coverage ? `${deck.type} - ${displayName} - ${placement}` :

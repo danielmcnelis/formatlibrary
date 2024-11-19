@@ -19,6 +19,7 @@ import {
   countDecks,
   decksId,
   decksCreate,
+  updateDeckLabels,
   convertTextToYDK,
   convertYDKeToYDK
 } from '../middleware'
@@ -62,6 +63,8 @@ router.get('/api/decks/count', countDecks)
 router.get('/api/decks/:id', decksId)
 
 router.get('/api/decks/', getDecks)
+
+router.post('/api/decks/labels', [authenticate, updateDeckLabels])
 
 router.post('/api/decks/create', decksCreate)
 

@@ -43,7 +43,8 @@
 }
   
 .blogpost-title:hover {
-    color: #34AD5A;
+    color: var(--text-link-no-hover);
+    text-decoration: underline;
 }
   
 .blogpost-date {
@@ -102,12 +103,14 @@
 }
   
 .blogpost-event-link {
-    color: var(--text-secondary);
+    font-weight: 600;
+    color: var(--text-link-no-hover);
     display: inline;
 }
   
 .blogpost-event-link:hover {
-    color: #34AD5A;
+    color: var(--text-link-hover);
+    text-decoration: underline;
 }
   
 .blogpost-deck-box {

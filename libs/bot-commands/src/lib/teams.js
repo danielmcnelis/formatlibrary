@@ -71,7 +71,7 @@ export default {
                     'Player'
 
                 const isCaptain = player.id === captain.id
-                results.push(`${slot}: ${player.globalName || player.discordName} ${isCaptain ? '(Captain) ' : ' '}${entry ? emojis.check : emojis.nope}`)
+                results.push(`${slot}: ${player.name} ${isCaptain ? '(Captain) ' : ' '}${entry ? emojis.check : emojis.nope}`)
             }
         }
 

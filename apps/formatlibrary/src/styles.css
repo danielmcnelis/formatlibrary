@@ -21,6 +21,8 @@
     --text-primary: black;
     --text-secondary: #151414;
     --text-tertiary: #2e2215;
+    --text-link-hover: #00aeff;
+    --text-link-no-hover: #355aa4;
     --text-mild: #e1e1e1;
     --text-opposite: white;
     --accent-1: #a0a3d8; 
@@ -64,6 +66,8 @@
     --text-primary: white;
     --text-secondary: #f7f7f7;
     --text-tertiary: #e8e4e1;
+    --text-link-hover: #40cd6d;
+    --text-link-no-hover: #34AD5A;
     --text-mild: #efefef;
     --text-opposite: black;
     --accent-1: #373a82; 

@@ -39,7 +39,7 @@ export const ReplayRow = (props) => {
                             e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                         }
                     }
-                    alt={replay.winner.discordName || replay.winner.name}
+                    alt={replay.winnerName}
                 />
                 <div>{!replay.winnerName ? '' : replay.winnerName?.length <= 17 ? replay.winnerName : replay.winnerName?.slice(0, 17)?.split(' ')[0] || ''}</div>
               </div>
@@ -59,7 +59,7 @@ export const ReplayRow = (props) => {
                             e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                         }
                     }
-                    alt={replay.loser.discordName || replay.loser.name}
+                    alt={replay.loserName}
                 />
                 <div>{!replay.loserName ? '' : replay.loserName?.length <= 17 ? replay.loserName : replay.loserName?.slice(0, 17)?.split(' ')[0] || ''}</div>
               </div>

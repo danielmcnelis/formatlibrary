@@ -36,7 +36,7 @@ export default {
             : results[0] = `${server.emoji || format.emoji} --- Top ${stats.length} ${server.internalLadder ? 'Internal ' : ''}${format.name} Players --- ${server.emoji || format.emoji}`
         
         for (let i = 0; i < stats.length; i++) {
-            results[i+1] = `${(i+1)}. ${getMedal(stats[i].elo)} ${stats[i].player.globalName || stats[i].player.discordName}`
+            results[i+1] = `${(i+1)}. ${getMedal(stats[i].elo)} ${stats[i].player.name}`
         }
         
         if (!server.internalLadder) results.push(`\nFull Leaderboard: https://formatlibrary.com/leaderboards/${urlize(format.name)}`)

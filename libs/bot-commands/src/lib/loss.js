@@ -130,7 +130,7 @@ export default {
                 await ironPersonA.save()
                 setTimeout(() => postStory(interaction.channel, format), 5000)
             } else {
-                return await interaction.editReply({ content: `Sorry, ${winningPlayer.globalName || winningPlayer.discordName} is not your ${format.name} Iron opponent. ${server.emoji || format.emoji} ${emojis.iron}`})
+                return await interaction.editReply({ content: `Sorry, ${winningPlayer.name} is not your ${format.name} Iron opponent. ${server.emoji || format.emoji} ${emojis.iron}`})
             }
         }
 
@@ -235,12 +235,12 @@ export default {
                 })
 
                 if (!count) {
-                    return interaction.channel.send(`<@${winningPlayer.discordId}>, reminder: you are required to share the replay of your match against ${losingPlayer.globalName || losingPlayer.discordName} (use the **/replay** command). ${emojis.one_week}`)
+                    return interaction.channel.send(`<@${winningPlayer.discordId}>, reminder: you are required to share the replay of your match against ${losingPlayer.name} (use the **/replay** command). ${emojis.one_week}`)
                 }
             }, 5 * 60 * 1000)
         }
 
-        return await interaction.editReply({ content: `${losingPlayer.globalName || losingPlayer.discordName}${tournament?.pointsEligible && challongeMatch?.round === 1 ? ` (+1 TP)` : ''}, your ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournament ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss to <@${winningPlayer.discordId}>${tournament?.pointsEligible ? ` (+${challongeMatch.round + 1} TP)` : ''} has been recorded.`})
+        return await interaction.editReply({ content: `${losingPlayer.name}${tournament?.pointsEligible && challongeMatch?.round === 1 ? ` (+1 TP)` : ''}, your ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournament ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss to <@${winningPlayer.discordId}>${tournament?.pointsEligible ? ` (+${challongeMatch.round + 1} TP)` : ''} has been recorded.`})
     }
 }
 

@@ -60,7 +60,7 @@ export default {
                 const freeAgentC = freeAgents[i*3+2]
                 const teamName = `Free Agents ${i+1}`
                 
-                const data = await postParticipant(server, tournament, { discordName: teamName, discriminator: '0' })
+                const data = await postParticipant(server, tournament, teamName)
                 if (!data) return await interaction.editReply({ content: `Error: Unable to register ${teamName} on Challonge for ${tournament.name}. ${tournament.logo}`})
                 
                 const team = await Team.create({

@@ -12,7 +12,7 @@ export const statsLeaders = async (req, res, next) => {
         '$player.hidden$': false
       },
       attributes: ['id', 'formatName', 'formatId', 'elo', 'wins', 'losses', 'playerId'],
-      include: [{ model: Player, attributes: ['id', 'name', 'discordId', 'discordName', 'discriminator', 'discordPfp', 'globalName']}],
+      include: [{ model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp']}],
       limit: parseInt(req.params.limit) || 10,
       order: [['elo', 'DESC']]
     })

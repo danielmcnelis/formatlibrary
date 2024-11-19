@@ -27,7 +27,7 @@ export const playersQuery = async (req, res, next) => {
       where: {
         name: { [Op.substring]: req.params.query }
       },
-      attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp', 'firstName', 'lastName'],
+      attributes: ['id', 'name', 'discordId', 'discordPfp', 'firstName', 'lastName'],
       order: [['name', 'ASC']]
     })
 
@@ -40,24 +40,15 @@ export const playersQuery = async (req, res, next) => {
 export const playersId = async (req, res, next) => {
   try {
     const player = await Player.findOne({
-        where: req.query && req.query.discriminator ? {
-            discordName: { [Op.iLike]: req.params.id },
-            discriminator: req.query.discriminator,
-            hidden: false
-        } : {
+        where: {
             [Op.or]: [
                 { id: { [Op.iLike]: req.params.id }},
                 { name: { [Op.iLike]: req.params.id }},
-                {
-                    [Op.and]: [
-                        { discordName: { [Op.iLike]: req.params.id }}, 
-                        { discriminator: {[Op.or]: ['0', null]}}
-                    ]
-                },
+                { discordName: { [Op.iLike]: req.params.id }}
             ],
             hidden: false            
         },
-        attributes: ['id', 'name', 'discordId', 'discordPfp', 'discordName', 'discriminator', 'firstName', 'lastName', 'googlePfp', 'duelingBook', 'duelingBookPfp', 'country', 'timeZone', 'youtube', 'twitch', 'twitter']
+        attributes: ['id', 'name', 'discordId', 'discordPfp', 'discordName', 'firstName', 'lastName', 'googlePfp', 'duelingBook', 'duelingBookPfp', 'country', 'timeZone', 'youtube', 'twitch', 'twitter']
     })
 
     const hasPassword = await Player.count({
@@ -76,7 +67,7 @@ export const playersId = async (req, res, next) => {
 export const playersAll = async (req, res, next) => {
   try {
     const players = await Player.findAll({
-      attributes: ['id', 'name', 'discordId', 'discordPfp', 'discriminator', 'firstName', 'lastName', 'duelingBook'],
+      attributes: ['id', 'name', 'discordId', 'discordPfp', 'firstName', 'lastName', 'duelingBook'],
       order: [['name', 'ASC']]
     })
 
@@ -118,7 +109,7 @@ export const playersUpdateId = async (req, res, next) => {
             where: {
                 id: req.params.id
             },
-            attributes: ['id', 'email', 'name', 'discordId', 'discordPfp', 'discordName', 'discriminator', 'firstName', 'lastName', 'googleId', 'googlePfp', 'duelingBook', 'duelingBookPfp', 'country', 'timeZone', 'youtube', 'twitch', 'twitter']
+            attributes: ['id', 'email', 'name', 'discordId', 'discordPfp', 'discordName', 'firstName', 'lastName', 'googleId', 'googlePfp', 'duelingBook', 'duelingBookPfp', 'country', 'timeZone', 'youtube', 'twitch', 'twitter']
         })
 
         if (!req.body.name || !req.body.name.length) {
@@ -215,8 +206,7 @@ export const playersCreate = async (req, res, next) => {
                         lastName: {[Op.and]: [req.body.lastName, {[Op.not]: null}]}
                     },
                     {
-                        discordName: {[Op.and]: [req.body.discordName, {[Op.not]: null}]},
-                        discriminator: {[Op.and]: [req.body.discriminator, {[Op.not]: null}]}
+                        discordName: {[Op.and]: [req.body.discordName, {[Op.not]: null}]}
                     }
                 ]
             }
@@ -231,8 +221,7 @@ export const playersCreate = async (req, res, next) => {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             country: req.body.country,
-            discordName: req.body.discordName,
-            discriminator: req.body.discriminator
+            discordName: req.body.discordName
         })
 
         res.json(player)

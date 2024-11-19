@@ -116,7 +116,7 @@ export const updateSingleAvatar = async (user) => {
                 params: { Bucket: 'formatlibrary', Key: `images/pfps/${player.discordId}.png`, Body: buffer, ContentType: `image/png` },
             }).done()
             console.log('uri', uri)
-            console.log(`saved new pfp for ${player.globalName || player.discordName}`)
+            console.log(`saved new pfp for ${player.name}`)
         }
     } catch (err) {
         console.log(err)
@@ -138,7 +138,7 @@ export const fixPlacements = async (event, participants, standings = []) => {
 
             const player = await Player.findOne({
                 where: {
-                    discordName: participant.name,
+                    name: participant.name,
                 }
             })
 
@@ -831,7 +831,7 @@ export const generateMatchupData = async (interaction, server, event, tournament
                 })
 
                 if (!deck) {
-                    console.log(`NO DECK FOUND for ${player.globalName || player.discordName}`)
+                    console.log(`NO DECK FOUND for ${player.name}`)
                     continue   
                 }                 
 

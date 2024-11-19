@@ -9,7 +9,6 @@ export const PlayerCreator = () => {
     const [country, setCountry] = useState(null)
     const [pfp, setPfp] = useState(null)
     const [discordName, setDiscordName] = useState(null)
-    const [discriminator, setDiscriminator] = useState(null)
 
     //RESET
     const reset = async () => {
@@ -18,18 +17,16 @@ export const PlayerCreator = () => {
         setCountry(null)
         setPfp(null)
         setDiscordName(null)
-        setDiscriminator(null)
         document.getElementById('firstName').value = null
         document.getElementById('lastName').value = null
         document.getElementById('country-select').value = null
         document.getElementById('pfp').value = null
         document.getElementById('discordName').value = null
-        document.getElementById('discriminator').value = null
     }
 
     //CREATE IMAGE
     const createPlayer = async () => {
-        if ((!firstName || !lastName) && (!discordName || !discriminator)) return alert('Please provide either a First & Last Name or a Discord Name & Discriminator.')
+        if ((!firstName || !lastName) && !discordName) return alert('Please provide either a First & Last Name or a Discord Name.')
         try {
             const {data} = await axios.post('/api/players/create', {
                 name: discordName || `${firstName} ${lastName}`,
@@ -38,7 +35,6 @@ export const PlayerCreator = () => {
                 country: country,
                 pfp: pfp,
                 discordName: discordName,
-                discriminator: discriminator
             })
 
             if (data.name) {
@@ -102,14 +98,6 @@ export const PlayerCreator = () => {
                     value={discordName || ''}
                     type="text"
                     onChange={(e) => setDiscordName(e.target.value)}
-                />
-            </label>
-            <label>Discord Discriminator:
-                <input
-                    id="discriminator"
-                    value={discriminator || ''}
-                    type="text"
-                    onChange={(e) => setDiscriminator(e.target.value)}
                 />
             </label>
             <div

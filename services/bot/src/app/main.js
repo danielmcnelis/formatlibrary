@@ -25,7 +25,7 @@ import { createTopCut, editTieBreakers, getMidnightCountdown,
     dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
     startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, 
-    assignRoles, createMembership, createPlayer, fetchCardNames, fetchOPCardNames, hasPartnerAccess, 
+    assignRoles, createMembership, createPlayer, fetchCardNames, hasPartnerAccess, 
     isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
     editPointsSystem, runNightlyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, getKnownAbbreviation, getAlphas, capitalize
 } from '@fl/bot-functions'
@@ -41,8 +41,6 @@ Object.values(commands.globalCommands).forEach((command) => client.commands.set(
 
 // GLOBAL VARIABLES
 const fuzzyCards = FuzzySet([], false)
-const fuzzyOPCards = FuzzySet([], false)
-
 const app = express()
   
 // rewrite
@@ -114,14 +112,6 @@ client.on('ready', async() => {
     }
 
     try {
-        // FETCH ONE PIECE CARD NAMES
-        const names = await fetchOPCardNames()
-        names.forEach((card) => fuzzyOPCards.add(card))
-    } catch (err) {
-        console.log(err)
-    }
-
-    try {
         // RESTORE TOURNAMENT STATES
         const server = await Server.findOne({
             where: {
@@ -158,7 +148,7 @@ client.on(Events.InteractionCreate, async interaction => {
         if (!command) return console.error(`No command matching ${interaction.commandName} was found.`)
     
         if (command.data.name === 'card') {
-            return command.execute(interaction, fuzzyCards, fuzzyOPCards)
+            return command.execute(interaction, fuzzyCards)
         } else {
             return command.execute(interaction)
         }
