@@ -242,6 +242,13 @@ export const SingleDeck = () => {
         }
         <div className="body">
             <div className="single-deck-title-flexbox">
+                <div>
+                    {
+                        isContentManager ? (
+                            <div style={{width: '80px'}}></div>
+                        ) : null
+                    }
+                </div>
                 <a
                     className="link desktop-only"
                     href={`/api/decks/download/${deck.id}`} 
@@ -304,16 +311,16 @@ export const SingleDeck = () => {
                         />
                     </div>
                 </Link>
-                <div className="space-apart" style={{margin: '24px 0px'}}>
-                {
-                    isContentManager ? (
-                        !inEditMode ? (
-                            <div className="downloadButton" style={{width: '150px'}} onClick={()=> setInEditMode(true)}>Edit Mode</div>
-                        ) : (
-                            <div className="downloadButton" style={{width: '150px'}} onClick={()=> updateDeckInfo()}>Save Changes</div>
-                        )
-                    ) : null
-                }
+                <div>
+                    {
+                        isContentManager ? (
+                            !inEditMode ? (
+                                <div className="downloadButton" style={{width: '80px'}} onClick={()=> setInEditMode(true)}>Edit</div>
+                            ) : (
+                                <div className="downloadButton" style={{width: '80px'}} onClick={()=> updateDeckInfo()}>Save</div>
+                            )
+                        ) : null
+                    }
                 </div>
             </div>
             <table className="single-deck-table">
