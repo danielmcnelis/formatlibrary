@@ -57,13 +57,8 @@ export const Home = () => {
                         key={`blog-${index}`} 
                         index={index}
                         id={bp.id} 
-                        title={bp.title} 
-                        content={bp.content}
-                        images={bp.images}
-                        components={bp.components}
-                        format={bp.format}
-                        views={bp.views}
-                        rating={bp.rating}
+                        blogpost={bp} 
+                        // content={bp.content}
                     />)
                 })
             }

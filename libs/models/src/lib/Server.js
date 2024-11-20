@@ -71,9 +71,6 @@ export const Server = db.define('servers', {
   inviteLink: {
     type: Sequelize.STRING
   },
-  vanityUrl: {
-    type: Sequelize.STRING
-  },
   discordIconId: {
     type: Sequelize.STRING
   },

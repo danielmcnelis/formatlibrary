@@ -1,6 +1,7 @@
 
 import parse from 'html-react-parser'
 import { useMediaQuery } from 'react-responsive'
+import { BlogPostContent } from './BlogPostContent'
 import './BlogPost.css'
 
 // BLOGPOST
@@ -19,7 +20,20 @@ export const BlogPost = (props) => {
             <>
                 <div className="blogpost">
                     <div className="content">
-                        {parse(props.content)}
+                        <BlogPostContent
+                            eventLink, 
+                            eventAbbreviation, 
+                            eventWinnerName, 
+                            eventWinnerPfp, 
+                            eventWinningDeckId, 
+                            eventWinningDeckType, 
+                            eventDate, 
+                            eventName,
+                            formatIcon,
+                            serverCommunityName,
+                            serverInviteLink,
+                            eventWinningDeckIsPopular
+                        />
                     </div>
                     {
                         props.index === 0 ? (

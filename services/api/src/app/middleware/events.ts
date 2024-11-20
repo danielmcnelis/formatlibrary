@@ -171,7 +171,7 @@ export const eventsId = async (req, res, next) => {
         'endDate'
       ],
       include: [
-        { model: Server, attributes: ['id', 'inviteLink', 'vanityUrl'] },
+        { model: Server, attributes: ['id', 'inviteLink'] },
         { model: Format, attributes: ['id', 'name', 'icon', 'videoPlaylistId'] },
         { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp'] }
       ]

@@ -1543,12 +1543,6 @@ export const updateServers = async (client) => {
                 await server.save()
             }
 
-            if (server.vanityUrl !== guild.vanityURLCode) {
-                console.log(`updating server vanity url from ${server.vanityUrl} => ${guild.vanityURLCode}`)
-                server.vanityUrl = guild.vanityURLCode
-                await server.save()
-            }
-
             if (server.discordIconId !== guild.icon) {
                 console.log(`updating server discord icon id from ${server.discordIconId} => ${guild.icon}`)
                 server.discordIconId = guild.icon
@@ -1865,10 +1859,7 @@ export const updateBlogPosts = async () => {
                 console.log('uri', uri)
             }
         
-            const serverInviteUrl = server && server.vanityUrl ? `https://discord.com/invite/${server.vanityUrl}` : server?.inviteLink
-            const conclusion = server && serverInviteUrl ? `<p class="blogpost-paragraph">Join the <a class="blogpost-event-link" href="${serverInviteUrl}">${event.community} Discord community</a> to compete in similar events!</p>` :
-                server && !serverInviteUrl ? `<p class="blogpost-paragraph">Join the ${event.community} Discord community to compete in similar events!</p>` :
-                ''
+            const conclusion = `<p class="blogpost-paragraph">Join the <a class="blogpost-event-link" href="${server?.inviteLink}">${event.community} Discord community</a> to compete in similar events!</p>`
                 
             const content = 
                 `<div class="blogpost-title-flexbox">` +

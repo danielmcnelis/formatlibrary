@@ -288,15 +288,12 @@ export const composeBlogPost = async (interaction, event) => {
                 team.playerC.discordId ? 'https://cdn.formatlibrary.com/images/pfps/discord-default-red.png' :
                 `https://cdn.formatlibrary.com/images/pfps/human-default.png`
         
-            const serverLogoUrl = event.server?.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${server.preferredLogoUrl.replaceAll('+', '%2B')}.png` :
-            event.server?.discordIconId ? `https://cdn.discordapp.com/icons/${server.id}/${server.discordIconId}.webp?size=240` :
+            const serverLogoUrl = event.server?.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${event.server.preferredLogoUrl.replaceAll('+', '%2B')}.png` :
+            event.server?.discordIconId ? `https://cdn.discordapp.com/icons/${event.serverId}/${event.server.discordIconId}.webp?size=240` :
                 await s3FileExists(`images/logos/${event.community}.png`) ? `https://cdn.formatlibrary.com/images/logos/${event.community}.png` :
                 'https://cdn.formatlibrary.com/images/artworks/71625222.jpg'
             
-            const serverInviteUrl = event.server && event.server.vanityUrl ? `https://discord.com/invite/${server.vanityUrl}` : event.server?.inviteLink
-            const conclusion = event.server && serverInviteUrl ? `<p class="blogpost-paragraph">Join the <a class="blogpost-event-link" href="${serverInviteUrl}">${event.community} Discord community</a> to compete in similar events!</p>` :
-                event.server && !event.serverInviteUrl ? `<p class="blogpost-paragraph">Join the ${event.community} Discord community to compete in similar events!</p>` :
-                ''
+            const conclusion = `<p class="blogpost-paragraph">Join the <a class="blogpost-event-link" href="${event.server?.inviteLink}">${event.community} Discord community</a> to compete in similar events!</p>`
                 
             const content = 
                 `<div class="blogpost-title-flexbox">` +
@@ -372,8 +369,8 @@ export const composeBlogPost = async (interaction, event) => {
                 await s3FileExists(`images/pfps/${event.player.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.player.name}.png` :
                 `https://cdn.formatlibrary.com/images/pfps/discord-default-red.png`
             
-            const serverLogoUrl = server.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${server.preferredLogoUrl.replaceAll('+', '%2B')}.png` :
-                server.discordIconId ? `https://cdn.discordapp.com/icons/${server.id}/${server.discordIconId}.webp?size=240` :
+            const serverLogoUrl = event.server?.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${event.server?.preferredLogoUrl.replaceAll('+', '%2B')}.png` :
+                event.server?.discordIconId ? `https://cdn.discordapp.com/icons/${event.server?.id}/${event.server.discordIconId}.webp?size=240` :
                 await s3FileExists(`images/logos/${event.community}.png`) ? `https://cdn.formatlibrary.com/images/logos/${event.community}.png` :
                 'https://cdn.formatlibrary.com/images/artworks/71625222.jpg'
 
@@ -422,10 +419,7 @@ export const composeBlogPost = async (interaction, event) => {
                 context.drawImage(image, (card_width + 1) * col, row * (card_height + 1), card_width, card_height)
             }
         
-            const serverInviteUrl = server && server.vanityUrl ? `https://discord.com/invite/${server.vanityUrl}` : server?.inviteLink
-            const conclusion = server && serverInviteUrl ? `<p class="blogpost-paragraph">Join the <a class="blogpost-event-link" href="${serverInviteUrl}">${event.community} Discord community</a> to compete in similar events!</p>` :
-                server && !serverInviteUrl ? `<p class="blogpost-paragraph">Join the ${event.community} Discord community to compete in similar events!</p>` :
-                ''
+            const conclusion = `<p class="blogpost-paragraph">Join the <a class="blogpost-event-link" href="${event.server?.inviteLink}">${event.community} Discord community</a> to compete in similar events!</p>`
                 
             const content = 
                 `<div class="blogpost-title-flexbox">` +
