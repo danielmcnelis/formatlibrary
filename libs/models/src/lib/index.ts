@@ -156,7 +156,8 @@ Event.belongsTo(Player, {
     as: 'winner',
     id: 'winnerId'
 })
-Player.hasMany(Event)
+
+Player.hasMany(Event, {as: 'winner'})
 
 Event.hasMany(Deck)
 Deck.belongsTo(Event)

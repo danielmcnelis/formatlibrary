@@ -19,7 +19,7 @@ export const getMatchupH2H = async (req, res, next) => {
 
         const format = await Format.findOne({
             where: {
-                cleanName: {[Op.iLike]: req.query.format.replaceAll('-', '_')}
+                cleanName: {[Op.iLike]: req.query.format?.replaceAll('-', '_')}
             }
         })
 
@@ -27,7 +27,7 @@ export const getMatchupH2H = async (req, res, next) => {
             where: {
                 winningDeckTypeId: deckType1.id,
                 losingDeckTypeId: deckType2.id,
-                formatId: format.id
+                formatId: format?.id
             }
         })
     
@@ -35,7 +35,7 @@ export const getMatchupH2H = async (req, res, next) => {
             where: {
                 winningDeckTypeId: deckType2.id,
                 losingDeckTypeId: deckType1.id,
-                formatId: format.id
+                formatId: format?.id
             }
         })
     
