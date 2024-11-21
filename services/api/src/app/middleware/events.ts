@@ -1,4 +1,4 @@
-import { Card, Deck, Event, Format, Player, Replay, Server, Tournament } from '@fl/models'
+import { Card, Deck, Event, Format, Player, Replay, Server, Team, Tournament } from '@fl/models'
 import { arrayToObject, capitalize } from '@fl/utils'
 import { Op } from 'sequelize'
 import { Upload } from '@aws-sdk/lib-storage';
@@ -135,7 +135,7 @@ export const eventsRecent = async (req, res, next) => {
       limit: 6
     })
 
-    const winners = events.map((e) => e.player)
+    const winners = events.map((e) => e.winner)
 
     const data = {
       events,
@@ -173,9 +173,10 @@ export const eventsId = async (req, res, next) => {
         'endDate'
       ],
       include: [
+        { model: Player, as: 'winner'},
+        { model: Team, as: 'winningTeam'},
         { model: Server, attributes: ['id', 'inviteLink'] },
         { model: Format, attributes: ['id', 'name', 'icon', 'videoPlaylistId'] },
-        { model: Player, as: 'winner'}
       ]
     })
     

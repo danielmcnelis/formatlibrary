@@ -7,7 +7,9 @@ import './RecentEvents.css'
 
 export const RecentEvents = (props) => {
     const [recentEvents, setRecentEvents] = useState([])
+    console.log('recentEvents', recentEvents)
     const [winners, setWinners] = useState([])
+    console.log('winners', winners)
     const navigate = useNavigate()
     const goToEventGallery = () => navigate(`/event-gallery/${props.format.name}`)
   
