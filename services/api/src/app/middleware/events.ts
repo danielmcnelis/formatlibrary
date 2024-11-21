@@ -22,7 +22,7 @@ export const eventsGallery = async (req, res, next) => {
           display: true
         },
         include: [
-            { model: Player, as: 'winner', through:{ attributes: ['id', 'name', 'discordId', 'discordPfp']} }
+            { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp'] }
         ],
         attributes: { exclude: ['createdAt', 'updatedAt'] },
         order: [['endDate', 'DESC']]
@@ -100,14 +100,14 @@ export const eventsCommunity = async (req, res, next) => {
         'formatId',
         'size',
         'winnerName',
-        'playerId',
+        'winnerId',
         'community',
         'startDate',
         'endDate'
       ],
       include: [
         { model: Format, attributes: ['id', 'name', 'icon'] },
-        { model: Player, as: 'winner', through:{ attributes: ['id', 'name', 'discordId', 'discordPfp']} }
+        { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp']}
       ],
       order: [['startDate', 'DESC']]
     })
@@ -125,10 +125,10 @@ export const eventsRecent = async (req, res, next) => {
         display: true,
         formatName: { [Op.iLike]: req.params.format }
       },
-      // attributes: ['id', 'name', 'abbreviation', 'winnerName', 'playerId', 'community', 'startDate', 'endDate'],
+      // attributes: ['id', 'name', 'abbreviation', 'winnerName', 'winnerId', 'community', 'startDate', 'endDate'],
       include: [
         { model: Format, attributes: ['id', 'name', 'icon'] },
-        { model: Player, as: 'winner', through:{ attributes: ['id', 'name', 'discordId', 'discordPfp']} }
+        { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp']}
       ],
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       order: [['startDate', 'DESC']],
@@ -165,7 +165,7 @@ export const eventsId = async (req, res, next) => {
         'winnerName',
         'winningTeamId',
         'isTeamEvent',
-        'playerId',
+        'winnerId',
         'community',
         'startDate',
         'endDate'
