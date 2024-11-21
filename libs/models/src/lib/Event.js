@@ -178,7 +178,7 @@ Event.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
         subQuery: false,
         attributes: { exclude: ['type', 'series', 'createdAt', 'updatedAt'] },        
         include: [
-            {model: {Player, as: 'winner', id: 'winnerId'}, attributes: ['id', 'name', 'discordId', 'discordPfp']}, 
+            {model: {Player, as: 'winner', id: 'winnerId'}}, 
             {model: Format, attributes: ['name', 'icon']}
         ],
         order: sort
