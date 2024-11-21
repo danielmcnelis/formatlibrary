@@ -62,7 +62,10 @@ Artwork.belongsTo(Card)
 Card.hasMany(Artwork)
 
 //BLOGPOST
-BlogPost.belongsTo(Player)
+BlogPost.belongsTo(Player, {
+    as: 'winner',
+    id: 'winnerId'
+})
 
 BlogPost.belongsTo(Team)
 
