@@ -173,7 +173,7 @@ export const eventsId = async (req, res, next) => {
       include: [
         { model: Server, attributes: ['id', 'inviteLink'] },
         { model: Format, attributes: ['id', 'name', 'icon', 'videoPlaylistId'] },
-        { model: Player, as: 'winner', through: {attributes: ['id', 'name', 'discordId', 'discordPfp']} }
+        { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp'] }
       ]
     })
     
