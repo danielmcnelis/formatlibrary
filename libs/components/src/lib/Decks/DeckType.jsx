@@ -32,7 +32,7 @@ export const DeckType = () => {
     const [isAdmin, setIsAdmin] = useState(false)
     const [isSubscriber, setIsSubscriber] = useState(false)
     const navigate = useNavigate()
-    const goToFormat = () => navigate(`/formats/${summary.format ? summary.format.name : ''}`)
+    const goToFormat = () => navigate(`/formats/${summary.formatName ? summary.format?.name : ''}`)
     const { id } = useParams()
     const location = useLocation()
     const format = location?.search?.slice(8)
@@ -186,9 +186,9 @@ export const DeckType = () => {
                 <tbody>
                     <tr className="single-deck-info-1">
                     <td>
-                        <div onClick={() => {window.location.href=`/formats/${summary.format ? summary.format.name : ''}`}} className="single-deck-cell">
-                        <div className="single-deck-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {summary.format.name}</div>
-                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/${summary.format.icon}.png`} alt="format-icon"/>
+                        <div onClick={() => {window.location.href=`/formats/${summary.formatName ? summary.format?.name : ''}`}} className="single-deck-cell">
+                        <div className="single-deck-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {summary.format?.name}</div>
+                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/${summary.format?.icon}.png`} alt="format-icon"/>
                         </div>       
                     </td>
                     <td>
