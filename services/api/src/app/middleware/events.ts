@@ -107,7 +107,7 @@ export const eventsCommunity = async (req, res, next) => {
       ],
       include: [
         { model: Format, attributes: ['id', 'name', 'icon'] },
-        { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp']}
+        { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp']}
       ],
       order: [['startDate', 'DESC']]
     })
@@ -128,7 +128,7 @@ export const eventsRecent = async (req, res, next) => {
       // attributes: ['id', 'name', 'abbreviation', 'winnerName', 'winnerId', 'community', 'startDate', 'endDate'],
       include: [
         { model: Format, attributes: ['id', 'name', 'icon'] },
-        { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp']}
+        { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp']}
       ],
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       order: [['startDate', 'DESC']],
