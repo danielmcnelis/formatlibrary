@@ -11,6 +11,7 @@ export const Home = () => {
     const [page, setPage] = useState(1)
     const [count, setCount] = useState(0)
     const [blogPosts, setBlogPosts] = useState([])
+    console.log('blogPosts', blogPosts)
     const location = useLocation()
   
     // USE LAYOUT EFFECT

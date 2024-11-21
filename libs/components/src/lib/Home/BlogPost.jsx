@@ -7,6 +7,7 @@ import './BlogPost.css'
 // BLOGPOST
 export const BlogPost = (props) => {
     const isMobile = useMediaQuery({ query: '(max-width: 1000px)' })
+    console.log('props.blogpost', props.blogpost)
     
     if (isMobile) {
         return (
