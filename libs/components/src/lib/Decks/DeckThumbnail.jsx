@@ -10,7 +10,7 @@ export const DeckThumbnail = (props) => {
     return (
         <div 
             className='link' 
-            onClick={() => {window.location.href=`${urlize(`/decktypes/${deck.name}${props.formatName ? `?format=${props.formatName}` : ''}`)}`}} 
+            onClick={() => {window.location.href=`${urlize(`/decktypes/${deck.name}${props.format?.name ? `?format=${props.format.name}` : ''}`)}`}} 
         >
             <div className="deckThumbnail">
                 <h3>{capitalize(deck.name, true)}</h3>

@@ -61,7 +61,7 @@ export const getMatchupMatrix = async (req, res, next) => {
 
             const format = await Format.findOne({
                 where: {
-                    cleanName: {[Op.iLike]: req.query.format.replaceAll('-', '_')}
+                    cleanName: {[Op.iLike]: req.query.format?.replaceAll('-', '_')}
                 }
             })
 
@@ -109,7 +109,7 @@ export const getMatchupMatrix = async (req, res, next) => {
         
             res.json(matrix)
         } else {
-            res.json(false)
+            res.json({})
         }
     } catch (err) {
       next(err)
