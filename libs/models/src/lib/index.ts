@@ -156,6 +156,7 @@ Event.belongsTo(Player, {
     as: 'winner',
     id: 'winnerId'
 })
+Player.hasMany(Event)
 
 Event.hasMany(Deck)
 Deck.belongsTo(Event)
@@ -166,12 +167,13 @@ Tournament.hasOne(Event)
 Event.belongsTo(Server)
 Server.hasMany(Event)
 
+Event.belongsTo(Format)
+Format.hasMany(Event)
+
 //FORMAT
 Format.hasMany(Deck)
 Deck.belongsTo(Format)
 
-Format.hasMany(Event)
-Event.belongsTo(Format)
 
 Format.hasMany(Match)
 Match.belongsTo(Format)
