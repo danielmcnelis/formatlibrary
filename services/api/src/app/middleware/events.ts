@@ -22,7 +22,7 @@ export const eventsGallery = async (req, res, next) => {
           display: true
         },
         include: [
-            { model: Player, as: 'winner', id: 'winnerId'}
+            { model: Player, as: 'winner'}
         ],
         attributes: { exclude: ['createdAt', 'updatedAt'] },
         order: [['endDate', 'DESC']]
@@ -107,7 +107,7 @@ export const eventsCommunity = async (req, res, next) => {
       ],
       include: [
         { model: Format, attributes: ['id', 'name', 'icon'] },
-        { model: Player, as: 'winner', id: 'winnerId'}
+        { model: Player, as: 'winner'}
       ],
       order: [['startDate', 'DESC']]
     })
@@ -128,7 +128,7 @@ export const eventsRecent = async (req, res, next) => {
       // attributes: ['id', 'name', 'abbreviation', 'winnerName', 'winnerId', 'community', 'startDate', 'endDate'],
       include: [
         { model: Format, attributes: ['id', 'name', 'icon'] },
-        { model: Player, as: 'winner', id: 'winnerId'}
+        { model: Player, as: 'winner'}
       ],
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       order: [['startDate', 'DESC']],
@@ -175,7 +175,7 @@ export const eventsId = async (req, res, next) => {
       include: [
         { model: Server, attributes: ['id', 'inviteLink'] },
         { model: Format, attributes: ['id', 'name', 'icon', 'videoPlaylistId'] },
-        { model: Player, as: 'winner', id: 'winnerId'}
+        { model: Player, as: 'winner'}
       ]
     })
     
