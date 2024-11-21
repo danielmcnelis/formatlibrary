@@ -1624,7 +1624,7 @@ export const updateReplays = async () => {
     let b = 0
     let e = 0
     const replays = await Replay.findAll({ 
-        include: [{ model: Deck, as: 'losingDeck' }, { model: Deck, as: 'winningDeck' }, Event, { model: Player, as: 'loser' }, { model: Player, as: 'winner' }] 
+        include: [{ model: Deck, as: 'losingDeck' }, { model: Deck, as: 'winningDeck' }, Event, { model: Player, as: 'loser' }, { model: {Player, as: 'winner'} }] 
     })
 
     for (let i = 0; i < replays.length; i++) {
