@@ -447,7 +447,7 @@ export const decksGallery = async (req, res, next) => {
         const deckThumb =
           (await DeckThumb.findOne({
             where: {
-              format: { [Op.iLike]: req.params.format },
+              formatName: { [Op.iLike]: req.params.format },
               deckTypeId: deckType.id
             },
             attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
@@ -527,7 +527,7 @@ export const decksFrequent = async (req, res, next) => {
           (await DeckThumb.findOne({
             where: {
               deckTypeId: deckType.id,
-              format: format
+              formatName: format
             },
             attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           })) ||

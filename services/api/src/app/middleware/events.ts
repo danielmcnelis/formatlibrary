@@ -99,7 +99,7 @@ export const eventsCommunity = async (req, res, next) => {
         'formatName',
         'formatId',
         'size',
-        'winner',
+        'winnerName',
         'playerId',
         'community',
         'startDate',
@@ -125,7 +125,7 @@ export const eventsRecent = async (req, res, next) => {
         display: true,
         formatName: { [Op.iLike]: req.params.format }
       },
-      // attributes: ['id', 'name', 'abbreviation', 'winner', 'playerId', 'community', 'startDate', 'endDate'],
+      // attributes: ['id', 'name', 'abbreviation', 'winnerName', 'playerId', 'community', 'startDate', 'endDate'],
       include: [
         { model: Format, attributes: ['id', 'name', 'icon'] },
         { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp'] }
@@ -162,7 +162,7 @@ export const eventsId = async (req, res, next) => {
         'formatName',
         'formatId',
         'size',
-        'winner',
+        'winnerName',
         'teamId',
         'isTeamEvent',
         'playerId',
