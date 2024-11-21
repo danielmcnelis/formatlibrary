@@ -157,6 +157,11 @@ Event.belongsTo(Player, {
     id: 'winnerId'
 })
 
+Event.belongsTo(Team, {
+    as: 'winningTeam',
+    id: 'winningTeamId'
+})
+
 Event.hasMany(Deck)
 Deck.belongsTo(Event)
 
@@ -378,9 +383,6 @@ Format.hasMany(Tournament)
 //TEAM
 Team.belongsTo(Tournament)
 Tournament.hasMany(Team)
-
-Team.belongsTo(Event)
-Event.hasOne(Team)
 
 Team.belongsTo(Player, {
     as: 'captain',
