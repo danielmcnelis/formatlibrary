@@ -16,13 +16,13 @@ export const getBlogPosts = async (req, res, next) => {
     const blogposts = await BlogPost.findAll({
       attributes: [
         'eventName', 'eventAbbreviation', 'eventDate', 'winnerName', 
-        'winnerPfp', 'teamName', 'winningTeamId', 'formatName', 'formatIcon', 
+        'winnerPfp', 'teamName', 'winningTeamId',  'formatName', 'formatIcon', 
         'winningDeckType', 'winningDeckTypeIsPopular', 'winningDeckId',
         'communityName', 'serverInviteLink'
       ],
       offset: (req.query.page - 1) * 10,
       limit: 10,
-      include: Team,
+      include: {mode: Team, as: 'winningTeam'},
       order: [['eventDate', 'DESC']]
     })
 

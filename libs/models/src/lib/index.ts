@@ -67,7 +67,10 @@ BlogPost.belongsTo(Player, {
     id: 'winnerId'
 })
 
-BlogPost.belongsTo(Team)
+BlogPost.belongsTo(Team, {
+    as: 'winningTeam',
+    id: 'winningTeamId'
+})
 
 BlogPost.belongsTo(Format)
 
