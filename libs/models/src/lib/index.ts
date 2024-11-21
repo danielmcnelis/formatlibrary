@@ -157,11 +157,6 @@ Event.belongsTo(Player, {
     id: 'winnerId'
 })
 
-Player.hasMany(Event, {
-    as: 'winner', 
-    id: 'winnerId'
-})
-
 Event.hasMany(Deck)
 Deck.belongsTo(Event)
 
