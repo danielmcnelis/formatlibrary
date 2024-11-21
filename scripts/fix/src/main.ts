@@ -1891,7 +1891,7 @@ const shuffleArray = (arr) => {
                 formatName: blogpost.format?.name,
                 formatIcon: blogpost.format?.icon, 
                 communityName: blogpost.server?.communityName,
-                serverInviteLink: blogpost.server?.InviteLink,
+                serverInviteLink: blogpost.server?.inviteLink,
             })
             b++
         } catch (err) {
