@@ -39,7 +39,6 @@ export const runNightlyTasks = async (client) => {
     await updateSets()
     await downloadNewCards()
     await downloadAltArtworks()
-    await updateMarketPrices()
     await conductCensus(client)
     await updateAvatars(client)
     await updateDeckThumbs()
@@ -48,6 +47,7 @@ export const runNightlyTasks = async (client) => {
     await updateReplays()
     await updateMatchups()
     // await updateBlogPosts()
+    await updateMarketPrices()
      
     // MONTHLY TASKS
     const remainingDaysInMonth = getRemainingDaysInMonth()
@@ -383,12 +383,12 @@ export const purgeEntries = async () => {
     let count = 0
     const entries = await Entry.findAll({ include: Tournament })
     for (let i = 0; i < entries.length; i++) {
-    const entry = entries[i]
-    const tournament = entry.tournament
-    if (tournament.state === 'complete') {
-            await entry.destroy()
-            count++
-        }
+        const entry = entries[i]
+        const tournament = entry.tournament
+        if (tournament.state === 'complete') {
+                await entry.destroy()
+                count++
+            }
     }
 
     console.log(`Purged ${count} old tournament entries from the database.`)

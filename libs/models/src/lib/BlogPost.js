@@ -27,7 +27,7 @@ export const BlogPost = db.define('blogposts', {
   teamName: {
     type: Sequelize.STRING
   },
-  teamId: {
+  winningTeamId: {
     type: Sequelize.INTEGER
   },
   formatName: {

@@ -203,7 +203,7 @@ export const composeBlogPost = async (interaction, event) => {
         if (event.isTeamEvent) {
             const team = await Team.findOne({
                 where: {
-                    id: event.teamId
+                    id: event.winningTeamId
                 },
                 include: [{ model: Player, as: 'playerA' }, { model: Player, as: 'playerB' }, { model: Player, as: 'playerC' }]
             })
@@ -334,7 +334,7 @@ export const composeBlogPost = async (interaction, event) => {
                 eventDate: event.endDate,
                 eventId: event.id,
                 teamName: team.name,
-                teamId: team.id,
+                winningTeamId: team.id,
                 formatName: event.format?.name,
                 formatIcon: event.format?.icon, 
                 formatId: event.formatId,

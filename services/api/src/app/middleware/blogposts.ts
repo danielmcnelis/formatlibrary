@@ -16,7 +16,7 @@ export const getBlogPosts = async (req, res, next) => {
     const blogposts = await BlogPost.findAll({
       attributes: [
         'eventName', 'eventAbbreviation', 'eventDate', 'winnerName', 
-        'winnerPfp', 'teamName', 'teamId', 'formatName', 'formatIcon', 
+        'winnerPfp', 'teamName', 'winningTeamId', 'formatName', 'formatIcon', 
         'winningDeckType', 'winningDeckTypeIsPopular', 'winningDeckId',
         'communityName', 'serverInviteLink'
       ],

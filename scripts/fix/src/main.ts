@@ -1850,7 +1850,7 @@ const shuffleArray = (arr) => {
     b = 0
     const blogposts = await BlogPost.findAll({ 
         where: { 
-            teamId: null
+            winningTeamId: null
         },
         include: [Event, Format, Server, { model: {Player, as: 'winner'} }]
     })
