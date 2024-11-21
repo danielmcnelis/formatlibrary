@@ -180,7 +180,7 @@ export const eventsId = async (req, res, next) => {
       ]
     })
 
-    console.log('event', event)
+    console.log('event?.winner?.name', event?.winner?.name)
     
     const replays = await Replay.findAll({
         where: {
@@ -190,6 +190,8 @@ export const eventsId = async (req, res, next) => {
         include: [{ model: Player, as: 'loser' }, { model: {Player, as: 'winner'} }],
         order: [['display', 'DESC'], ['suggestedOrder', 'DESC']]
     })
+
+    console.log('replays?.length', replays?.length)
 
     const topDecks = await Deck.findAll({
       where: {
@@ -206,6 +208,8 @@ export const eventsId = async (req, res, next) => {
       ]
     })
 
+    console.log('topDecks?.length', topDecks?.length)
+
     const allDecks = await Deck.findAll({
       where: {
         [Op.or]: {
@@ -215,6 +219,8 @@ export const eventsId = async (req, res, next) => {
       },
       attributes: ['id', 'type', 'category', 'builder', 'ydk', 'placement']
     })
+
+    console.log('allDecks?.length', allDecks?.length)
 
     const deckTypes =
       allDecks.length >= event.size / 2
