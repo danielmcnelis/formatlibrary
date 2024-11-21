@@ -22,7 +22,7 @@ export const eventsGallery = async (req, res, next) => {
           display: true
         },
         include: [
-            { model: Player, as: 'winner'}
+            { model: Player, as: 'winner', attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp']}
         ],
         attributes: { exclude: ['createdAt', 'updatedAt'] },
         order: [['endDate', 'DESC']]
@@ -107,7 +107,7 @@ export const eventsCommunity = async (req, res, next) => {
       ],
       include: [
         { model: Format, attributes: ['id', 'name', 'icon'] },
-        { model: Player, as: 'winner'}
+        { model: Player, as: 'winner', attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp']}
       ],
       order: [['startDate', 'DESC']]
     })
@@ -128,7 +128,7 @@ export const eventsRecent = async (req, res, next) => {
       // attributes: ['id', 'name', 'abbreviation', 'winnerName', 'winnerId', 'community', 'startDate', 'endDate'],
       include: [
         { model: Format, attributes: ['id', 'name', 'icon'] },
-        { model: Player, as: 'winner'}
+        { model: Player, as: 'winner', attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp']}
       ],
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       order: [['startDate', 'DESC']],
@@ -173,7 +173,7 @@ export const eventsId = async (req, res, next) => {
         'endDate'
       ],
       include: [
-        { model: Player, as: 'winner'},
+        { model: Player, as: 'winner', attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp']},
         // { model: Team, as: 'winningTeam'},
         { model: Server, attributes: ['id', 'inviteLink'] },
         { model: Format, attributes: ['id', 'name', 'icon', 'videoPlaylistId'] },
@@ -187,7 +187,10 @@ export const eventsId = async (req, res, next) => {
             display: (req.query.isAdmin === 'true' || req.query.isSubscriber === 'true') ? {[Op.or]: [true, false]} : true,
             eventId: event.id
         },
-        include: [{ model: Player, as: 'loser' }, { model: {Player, as: 'winner'} }],
+        include: [
+            { model: Player, as: 'loser' }, 
+            { model: Player, as: 'winner'}
+        ],
         order: [['display', 'DESC'], ['suggestedOrder', 'DESC']]
     })
 
