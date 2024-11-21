@@ -7,12 +7,11 @@ import './BlogPost.css'
 // BLOGPOST
 export const BlogPost = (props) => {
     const isMobile = useMediaQuery({ query: '(max-width: 1000px)' })
-    console.log('props.blogpost', props.blogpost)
     
     if (isMobile) {
         return (
             <div className="blogpost">
-                {parse(props.blogpost)}
+                <BlogPostContent blogpost={props.blogpost}/>
                 <div className="blog-divider"/>
             </div>
         )

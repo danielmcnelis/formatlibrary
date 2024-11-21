@@ -22,7 +22,8 @@ export const eventsGallery = async (req, res, next) => {
           display: true
         },
         include: [
-            { model: Player, as: 'winner', attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp']}
+            { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp', 'pfp']},
+            { model: Team, as: 'winningTeam', attributes: ['id', 'name', 'captainId', 'playerAId', 'playerBId', 'playerCId']}
         ],
         attributes: { exclude: ['createdAt', 'updatedAt'] },
         order: [['endDate', 'DESC']]
@@ -107,7 +108,8 @@ export const eventsCommunity = async (req, res, next) => {
       ],
       include: [
         { model: Format, attributes: ['id', 'name', 'icon'] },
-        { model: Player, as: 'winner', attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp']}
+        { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp', 'pfp']},
+        { model: Team, as: 'winningTeam', attributes: ['id', 'name', 'captainId', 'playerAId', 'playerBId', 'playerCId']}
       ],
       order: [['startDate', 'DESC']]
     })
@@ -128,7 +130,8 @@ export const eventsRecent = async (req, res, next) => {
       // attributes: ['id', 'name', 'abbreviation', 'winnerName', 'winnerId', 'community', 'startDate', 'endDate'],
       include: [
         { model: Format, attributes: ['id', 'name', 'icon'] },
-        { model: Player, as: 'winner', attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp']}
+        { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp', 'pfp']},
+        { model: Team, as: 'winningTeam', attributes: ['id', 'name', 'captainId', 'playerAId', 'playerBId', 'playerCId']}
       ],
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       order: [['startDate', 'DESC']],
@@ -173,14 +176,12 @@ export const eventsId = async (req, res, next) => {
         'endDate'
       ],
       include: [
-        { model: Player, as: 'winner', attributes: ['id', 'name', 'discriminator', 'discordId', 'discordPfp']},
-        // { model: Team, as: 'winningTeam'},
+        { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp', 'pfp']},
+        { model: Team, as: 'winningTeam', attributes: ['id', 'name', 'captainId', 'playerAId', 'playerBId', 'playerCId']},
         { model: Server, attributes: ['id', 'inviteLink'] },
         { model: Format, attributes: ['id', 'name', 'icon', 'videoPlaylistId'] },
       ]
     })
-
-    console.log('event?.winner?.name', event?.winner?.name)
     
     const replays = await Replay.findAll({
         where: {
@@ -193,8 +194,6 @@ export const eventsId = async (req, res, next) => {
         ],
         order: [['display', 'DESC'], ['suggestedOrder', 'DESC']]
     })
-
-    console.log('replays?.length', replays?.length)
 
     const topDecks = await Deck.findAll({
       where: {
@@ -211,8 +210,6 @@ export const eventsId = async (req, res, next) => {
       ]
     })
 
-    console.log('topDecks?.length', topDecks?.length)
-
     const allDecks = await Deck.findAll({
       where: {
         [Op.or]: {
@@ -222,8 +219,6 @@ export const eventsId = async (req, res, next) => {
       },
       attributes: ['id', 'type', 'category', 'builder', 'ydk', 'placement']
     })
-
-    console.log('allDecks?.length', allDecks?.length)
 
     const deckTypes =
       allDecks.length >= event.size / 2
@@ -326,9 +321,7 @@ export const eventsId = async (req, res, next) => {
         topSideDeckCards
       }
     }
-
-    console.log('data', data)
-
+    
     res.json(data)
   } catch (err) {
     next(err)

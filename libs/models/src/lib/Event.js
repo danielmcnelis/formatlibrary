@@ -1,6 +1,7 @@
 import { Op, Sequelize } from 'sequelize'
 import { Format } from './Format'
 import { Player } from './Player'
+import { Team } from './Team'
 import { db } from './db'
 
 export const Event = db.define('events', {
@@ -178,7 +179,8 @@ Event.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
         subQuery: false,
         attributes: { exclude: ['type', 'series', 'createdAt', 'updatedAt'] },        
         include: [
-            {model: Player, as: 'winner'}, 
+            {model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp', 'pfp']}, 
+            {model: Team, as: 'winningTeam', attributes: ['id', 'name', 'captainId', 'playerAId', 'playerBId', 'playerCId']},
             {model: Format, attributes: ['name', 'icon']}
         ],
         order: sort
