@@ -22,7 +22,7 @@ export const getBlogPosts = async (req, res, next) => {
       ],
       offset: (req.query.page - 1) * 10,
       limit: 10,
-      include: {mode: Team, as: 'winningTeam'},
+      include: {model: Team, as: 'winningTeam'},
       order: [['eventDate', 'DESC']]
     })
 
