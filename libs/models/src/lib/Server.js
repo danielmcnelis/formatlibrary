@@ -10,21 +10,24 @@ export const Server = db.define('servers', {
     type: Sequelize.STRING,
     allowNull: false
   },
-  size: {
-    type: Sequelize.INTEGER
-  },
-  format: {
+  communityName: {
     type: Sequelize.STRING
   },
-  ownerId: {
+  access: {
+    type: Sequelize.STRING,
+    defaultValue: 'free'
+  },
+  format: {
     type: Sequelize.STRING
   },
   internalLadder: {
     type: Sequelize.BOOLEAN
   },
-  access: {
-    type: Sequelize.STRING,
-    defaultValue: 'free'
+  size: {
+    type: Sequelize.INTEGER
+  },
+  ownerId: {
+    type: Sequelize.STRING
   },
   logo: {
     type: Sequelize.STRING
@@ -41,16 +44,10 @@ export const Server = db.define('servers', {
   challongePremium: {
       type: Sequelize.BOOLEAN
   },
-  googleToken: {
-      type: Sequelize.TEXT
+  welcomeChannel: {
+      type: Sequelize.STRING
   },
   botSpamChannel: {
-      type: Sequelize.STRING
-  },
-  ratedChannel: {
-      type: Sequelize.STRING
-  },
-  welcomeChannel: {
       type: Sequelize.STRING
   },
   adminRole: {
@@ -62,9 +59,6 @@ export const Server = db.define('servers', {
   judgeRole: {
       type: Sequelize.STRING
   },
-  rankedRole: {
-      type: Sequelize.STRING
-  },
   tourRole: {
       type: Sequelize.STRING
   },
@@ -74,7 +68,7 @@ export const Server = db.define('servers', {
   discordIconId: {
     type: Sequelize.STRING
   },
-  preferredLogoUrl: {
+  logoUrl: {
     type: Sequelize.STRING
   }
 })

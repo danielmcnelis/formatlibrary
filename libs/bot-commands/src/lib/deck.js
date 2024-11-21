@@ -56,7 +56,6 @@ export default {
                     const event = await Event.findOne({
                         where: {
                             [Op.or]: {
-                                tournamentId: tournament.id,
                                 primaryTournamentId: tournament.id,
                                 topCutTournamentId: tournament.id
                             }

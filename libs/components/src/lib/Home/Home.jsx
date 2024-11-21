@@ -57,8 +57,7 @@ export const Home = () => {
                         key={`blog-${index}`} 
                         index={index}
                         id={bp.id} 
-                        blogpost={bp} 
-                        // content={bp.content}
+                        blogpost={bp}
                     />)
                 })
             }

@@ -3,19 +3,10 @@ import { Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const BlogPost = db.define('blogposts', {
-  title: {
+  eventName: {
     type: Sequelize.STRING
   },
-  content: {
-    type: Sequelize.TEXT
-  },
-  formatName: {
-    type: Sequelize.STRING
-  },
-  formatId: {
-    type: Sequelize.STRING
-  },
-  publishDate: {
+  eventAbbreviation: {
     type: Sequelize.STRING
   },
   eventDate: {
@@ -24,13 +15,43 @@ export const BlogPost = db.define('blogposts', {
   eventId: {
     type: Sequelize.INTEGER
   },
-  winningDeckId: {
-    type: Sequelize.INTEGER
+  winnerName: {
+    type: Sequelize.STRING
+  },
+  winnerPfp: {
+    type: Sequelize.STRING
+  },
+  winnerId: {
+    type: Sequelize.STRING
+  },
+  teamName: {
+    type: Sequelize.STRING
   },
   teamId: {
     type: Sequelize.INTEGER
   },
-  playerId: {
+  formatName: {
+    type: Sequelize.STRING
+  },
+  formatIcon: {
+    type: Sequelize.STRING
+  },
+  formatId: {
+    type: Sequelize.STRING
+  },
+  winningDeckType: {
+    type: Sequelize.STRING
+  },
+  winningDeckTypeIsPopular: {
+    type: Sequelize.BOOLEAN
+  },
+  winningDeckId: {
+    type: Sequelize.INTEGER
+  },
+  communityName: {
+    type: Sequelize.STRING
+  },
+  serverInviteLink: {
     type: Sequelize.STRING
   },
   serverId: {

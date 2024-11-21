@@ -44,7 +44,7 @@ export const EventTable = (props) => {
         let filter = ''
   
         if (queryParams.name) filter += `,name:inc:${queryParams.name}`
-        if (queryParams.winner) filter += `,winner:inc:${queryParams.winner}`
+        if (queryParams.winner) filter += `,winnerName:inc:${queryParams.winner}`
         if (community) filter += `,community:eq:${community}`
         if (format) filter += `,formatName:eq:${format}`
         if (filter.length) url += ('?filter=' + filter.slice(1))
@@ -59,7 +59,7 @@ export const EventTable = (props) => {
         let filter = ''
   
         if (queryParams.name) filter += `,name:inc:${queryParams.name}`
-        if (queryParams.winner) filter += `,winner:inc:${queryParams.winner}`
+        if (queryParams.winner) filter += `,winnerName:inc:${queryParams.winner}`
         if (community) filter += `,community:eq:${community}`
         if (format) filter += `,formatName:eq:${format}`
         if (filter.length) url += ('&filter=' + filter.slice(1))

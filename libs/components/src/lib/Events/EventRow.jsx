@@ -46,7 +46,7 @@ export const EventRow = (props) => {
                     }
                     alt={event.player.name}
                 />
-                <div>{event.winner || 'N/A'}</div>
+                <div>{event.winnerName || 'N/A'}</div>
               </div>
             </div>
           </td>

@@ -1,5 +1,5 @@
 
-import { BlogPost } from '@fl/models'
+import { BlogPost, Team } from '@fl/models'
 
 export const countBlogPosts = async (req, res, next) => {
     try {
@@ -14,9 +14,15 @@ export const countBlogPosts = async (req, res, next) => {
 export const getBlogPosts = async (req, res, next) => {
   try {
     const blogposts = await BlogPost.findAll({
-      attributes: ['content', 'publishDate'],
+      attributes: [
+        'eventName', 'eventAbbreviation', 'eventDate', 'winnerName', 
+        'winnerPfp', 'teamName', 'teamId', 'formatName', 'formatIcon', 
+        'winningDeckType', 'winningDeckTypeIsPopular', 
+        'communityName', 'serverInviteLink'
+      ],
       offset: (req.query.page - 1) * 10,
       limit: 10,
+      include: Team,
       order: [['eventDate', 'DESC']]
     })
 

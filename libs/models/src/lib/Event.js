@@ -29,13 +29,22 @@ export const Event = db.define('events', {
   topCutTournamentId: {
     type: Sequelize.STRING
   },
-  winner: {
+  winnerName: {
     type: Sequelize.STRING
   },
-  playerId: {
+  winnerId: {
     type: Sequelize.STRING
   },
-  teamId: {
+  winningDeckType: {
+    type: Sequelize.INTEGER
+  },
+  winningDeckId: {
+    type: Sequelize.INTEGER
+  },
+  winningTeamName: {
+    type: Sequelize.STRING
+  },
+  winningTeamId: {
     type: Sequelize.INTEGER
   },
   size: {
@@ -77,7 +86,7 @@ Event.countResults = async (filter = {}) => {
         if (typeof value === 'string') value.replaceAll('%20', ' ')
         let operator = by.operator
         if (['display', 'series'].includes(key)) { value = value.toLowerCase() === 'true' }
-        if (['size', 'tournamentId', 'formatId'].includes(key)) { value = parseInt(value) }
+        if (['size', 'primaryTournamentId', 'formatId'].includes(key)) { value = parseInt(value) }
         
         if (operator === 'eq') {
             operator = Op.eq
@@ -167,7 +176,7 @@ Event.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
         offset: (page - 1) * limit,
         limit: limit,
         subQuery: false,
-        attributes: { exclude: ['tournamentId', 'type', 'series', 'createdAt', 'updatedAt'] },        
+        attributes: { exclude: ['type', 'series', 'createdAt', 'updatedAt'] },        
         include: [
             {model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp']}, 
             {model: Format, attributes: ['name', 'icon']}

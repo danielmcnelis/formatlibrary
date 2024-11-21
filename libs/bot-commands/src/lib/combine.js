@@ -67,13 +67,13 @@ export default {
 
         const events = await Event.findAll({
             where: {
-                playerId: oldPlayer.id
+                winnerId: oldPlayer.id
             }
         })
 
         for (let i = 0; i < events.length; i++) {
             const event = events[i]
-            await event.update({ playerId: newPlayer.id })
+            await event.update({ winnerId: newPlayer.id })
         }
 
         const membership = await Membership.findOne({

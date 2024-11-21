@@ -11,7 +11,7 @@ export const BlogPost = (props) => {
     if (isMobile) {
         return (
             <div className="blogpost">
-                {parse(props.content)}
+                {parse(props.blogpost)}
                 <div className="blog-divider"/>
             </div>
         )
@@ -20,20 +20,7 @@ export const BlogPost = (props) => {
             <>
                 <div className="blogpost">
                     <div className="content">
-                        <BlogPostContent
-                            eventLink, 
-                            eventAbbreviation, 
-                            eventWinnerName, 
-                            eventWinnerPfp, 
-                            eventWinningDeckId, 
-                            eventWinningDeckType, 
-                            eventDate, 
-                            eventName,
-                            formatIcon,
-                            serverCommunityName,
-                            serverInviteLink,
-                            eventWinningDeckIsPopular
-                        />
+                        <BlogPostContent blogpost={props.blogpost}/>
                     </div>
                     {
                         props.index === 0 ? (

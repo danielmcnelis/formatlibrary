@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Event, Format, Player, Server, Team, Tournament } from '@fl/models'
+import { Deck, Event, Format, Player, Server, Team, Tournament } from '@fl/models'
 import { composeBlogPost, composeThumbnails, displayDecks, displayReplays, generateMatchupData, publishDecks, isCommunityPartner, isMod } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 
@@ -28,7 +28,7 @@ export default {
                     abbreviation: {[Op.iLike]: input}
                 }
             },
-            include: [Format, Player, Server, Tournament]
+            include: [Format, Player, Server, Team, Tournament]
         })
 
         if (!event) return await interaction.editReply({ content: `No event found.` })

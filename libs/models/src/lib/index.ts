@@ -146,6 +146,11 @@ Errata.belongsTo(Card)
 Card.hasMany(Errata)
 
 //EVENT
+Event.belongsTo(Player, {
+    as: 'winner',
+    id: 'winnerId'
+})
+
 Event.hasMany(Deck)
 Deck.belongsTo(Event)
 
@@ -252,9 +257,6 @@ Cube.belongsTo(Player)
 Player.hasMany(Deck)
 Deck.belongsTo(Player)
 
-Player.hasMany(Event)
-Event.belongsTo(Player)
-
 //PRICE
 Price.belongsTo(Print)
 Print.hasMany(Price)
@@ -319,8 +321,6 @@ Replay.belongsTo(Deck, {
     as: 'winningDeck',
     id: 'winningDeckId'
 })
-
-Player.hasMany(Replay)
 
 //ROLE
 Role.belongsTo(Membership)

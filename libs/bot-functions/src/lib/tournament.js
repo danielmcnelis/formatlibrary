@@ -3214,7 +3214,6 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
                 formatId: tournament.formatId,
                 referenceUrl: `https://challonge.com/${tournament.url}`,
                 display: false,
-                tournamentId: tournament.id,
                 primaryTournamentId: tournament.id,
                 topCutTournamentId: tournament.assocTournamentId,
                 type: tournament.type,
@@ -3239,13 +3238,16 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
 
                 if (event.isTeamEvent) {
                     const winningTeam = await Team.findOne({ where: { participantId: parseInt(winnerParticipantId) }})
-                    await event.update({ winner: winningTeam.name })
+                    await event.update({ 
+                        winningTeamName: winningTeam.name,
+                        winningTeamId: winningTeam.id
+                     })
                     console.log(`Marked ${winningTeam.name} as the winner of ${event.name}.`)
                 } else {
                     const winningEntry = await Entry.findOne({ where: { participantId: parseInt(winnerParticipantId) }})
                     await event.update({
-                        winner: winningEntry.playerName,
-                        playerId: winningEntry.playerId
+                        winnerName: winningEntry.playerName,
+                        winnerId: winningEntry.playerId
                     })
                     console.log(`Marked ${winningEntry.playerName} as the winner of ${event.name}.`)
                 }
@@ -3345,7 +3347,6 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
                 formatId: primaryTournament.formatId,
                 referenceUrl: `https://challonge.com/${primaryTournament.url}`,
                 display: false,
-                tournamentId: primaryTournament.id,
                 primaryTournamentId: primaryTournament.id,
                 topCutTournamentId: tournament.id,
                 type: primaryTournament.type,
@@ -3370,13 +3371,16 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
 
                 if (event.isTeamEvent) {
                     const winningTeam = await Team.findOne({ where: { participantId: parseInt(winnerParticipantId) }})
-                    await event.update({ winner: winningTeam.name })
+                    await event.update({ 
+                        winningTeamName: winningTeam.name,
+                        winningTeamId: winningTeam.id
+                     })
                     console.log(`Marked ${winningTeam.name} as the winner of ${event.name}.`)
                 } else {
                     const winningEntry = await Entry.findOne({ where: { participantId: parseInt(winnerParticipantId) }})
                     await event.update({
-                        winner: winningEntry.playerName,
-                        playerId: winningEntry.playerId
+                        winnerName: winningEntry.playerName,
+                        winnerId: winningEntry.playerId
                     })
 
                     console.log(`Marked ${winningEntry.playerName} as the winner of ${event.name}.`)
@@ -3530,7 +3534,6 @@ export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId
             formatId: tournament.formatId,
             referenceUrl: `https://challonge.com/${tournament.url}`,
             display: false,
-            tournamentId: tournament.id,
             primaryTournamentId: tournament.id,
             topCutTournamentId: tournament.assocTournamentId, 
             type: tournament.type,
@@ -3555,13 +3558,16 @@ export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId
 
             if (event.isTeamEvent) {
                 const winningTeam = await Team.findOne({ where: { participantId: parseInt(winnerParticipantId) }})
-                await event.update({ winner: winningTeam.name })
+                await event.update({
+                    winningTeamName: winningTeam.name,
+                    winningTeamId: winningTeam.id
+                 })
                 console.log(`Marked ${winningTeam.name} as the winner of ${event.name}.`)
             } else {
                 const winningEntry = await Entry.findOne({ where: { participantId: parseInt(winnerParticipantId) }})
                 await event.update({
-                    winner: winningEntry.playerName,
-                    playerId: winningEntry.playerId
+                    winnerName: winningEntry.playerName,
+                    winnerId: winningEntry.playerId
                 })
                 console.log(`Marked ${winningEntry.playerName} as the winner of ${event.name}.`)
             }

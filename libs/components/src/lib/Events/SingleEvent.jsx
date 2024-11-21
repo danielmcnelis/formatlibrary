@@ -222,11 +222,11 @@ export const SingleEvent = () => {
                             {
                                 event.isTeamEvent ? (
                                     <div className="single-event-cell">
-                                        <b>Winner: </b>{event.winner}
+                                        <b>Winner: </b>{event.winnerName}
                                     </div>
                                 ) : (
                                     <div onClick={() => goToPlayer()} className="single-event-winner-link">
-                                        <b>Winner: </b>{event.winner}
+                                        <b>Winner: </b>{event.winnerName}
                                         <img 
                                             className="single-event-winner-cell-pfp"
                                             src={

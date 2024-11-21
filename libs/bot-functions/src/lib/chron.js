@@ -47,7 +47,7 @@ export const runNightlyTasks = async (client) => {
     await updateDecks()
     await updateReplays()
     await updateMatchups()
-    await updateBlogPosts()
+    // await updateBlogPosts()
      
     // MONTHLY TASKS
     const remainingDaysInMonth = getRemainingDaysInMonth()
@@ -1557,9 +1557,9 @@ export const updateServers = async (client) => {
                 await server.save()
             }
 
-            if (server.access !== 'free' && !server.preferredLogoUrl) {
+            if (server.access !== 'free' && !server.logoUrl) {
                 if (await s3FileExists(`images/logos/${server.name.replaceAll('+', '%2B')}.png`)) {
-                    await server.update({ preferredLogoUrl: server.name })
+                    await server.update({ logoUrl: server.name })
                 }
             }
         } catch (err) {
@@ -1746,7 +1746,7 @@ export const updateBlogPosts = async () => {
             if (!server) {
                 const tournament = await Tournament.findOne({
                     where: {
-                        id: event.tournamentId
+                        id: event.primaryTournamentId
                     },
                     include: Server
                 })
@@ -1779,7 +1779,7 @@ export const updateBlogPosts = async () => {
                                 
             const freqs = decks.reduce((acc, curr) => (acc[curr.type] ? acc[curr.type]++ : acc[curr.type] = 1, acc), {})
             const popularDecks = Object.entries(freqs).sort((a, b) => b[1] - a[1]).map((e) => e[0]).slice(0, 6)
-            const title = `Congrats to ${event.winner} on winning ${event.abbreviation}!`
+            const title = `Congrats to ${event.winnerName} on winning ${event.abbreviation}!`
             const blogTitleDate = dateToVerbose(event.endDate, false, false, true)
             const publishDate = dateToVerbose(event.endDate, true, true, false)
             const playerPfpUrl = await s3FileExists(`images/pfps/${player.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${player.discordId}.png` :
@@ -1791,7 +1791,7 @@ export const updateBlogPosts = async () => {
 
             console.log('playerPfpUrl', playerPfpUrl)
             
-            const serverLogoUrl = server?.preferredLogoUrl ? `https://cdn.formatlibrary.com/images/logos/${server.preferredLogoUrl.replaceAll('+', '%2B')}.png` :
+            const serverLogoUrl = server?.logoUrl ? `https://cdn.formatlibrary.com/images/logos/${server.logoUrl.replaceAll('+', '%2B')}.png` :
                 server?.discordIconId ? `https://cdn.discordapp.com/icons/${server.id}/${server.discordIconId}.webp?size=240` :
                 await s3FileExists(`images/logos/${event.community}.png`) ? `https://cdn.formatlibrary.com/images/logos/${event.community}.png` :
                 'https://cdn.formatlibrary.com/images/artworks/71625222.jpg'
@@ -1876,7 +1876,7 @@ export const updateBlogPosts = async () => {
                 `</div>` +
                 `<div class="blogpost-content-flexbox">` +
                     `<p class="blogpost-paragraph">` +
-                        `${event.winner} won <a class="blogpost-event-link" href="/events/${event.abbreviation}">${event.name}</a> on ${publishDate} with a ${popularDecks.includes(deck.type) ? 'popular' : 'rogue'} deck, ${capitalize(deck.type, true)}!` +
+                        `${event.winnerName} won <a class="blogpost-event-link" href="/events/${event.abbreviation}">${event.name}</a> on ${publishDate} with a ${popularDecks.includes(deck.type) ? 'popular' : 'rogue'} deck, ${capitalize(deck.type, true)}!` +
                     `</p>` +
                     `<div class="blogpost-images-flexbox">` +
                         `<div class="blogpost-pfp-community-flexbox">` +
