@@ -164,9 +164,11 @@ export const eventsId = async (req, res, next) => {
         'size',
         'winnerName',
         'winningTeamId',
+        'winnerId',
         'isTeamEvent',
         'winnerId',
         'community',
+        'serverId',
         'startDate',
         'endDate'
       ],
