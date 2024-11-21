@@ -26,7 +26,7 @@ export const cubesId = async (req, res, next) => {
               'rating'
           ],
           include: [
-              { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp'] }
+              { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp'] }
           ]
       })
   

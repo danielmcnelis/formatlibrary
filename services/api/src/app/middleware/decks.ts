@@ -124,7 +124,7 @@ export const updateDeckLabels = async (req, res, next) => {
             ],
             include: [
                 { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'videoPlaylistId'] },
-                { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp'] }
+                { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp'] }
             ]
         })
 
@@ -829,7 +829,7 @@ export const decksId = async (req, res, next) => {
         ],
         include: [
             { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'videoPlaylistId'] },
-            { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp'] }
+            { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp'] }
         ]
     })
 
