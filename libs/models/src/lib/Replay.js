@@ -201,7 +201,7 @@ Replay.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
         subQuery: false,
         // attributes: { exclude: ['tournamentId', 'type', 'series', 'createdAt', 'updatedAt'] },        
         include: [
-            {model: {Player, as: 'winner'}, attributes: ['id', 'name', 'discordId', 'discordPfp'] },
+            {model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp'] },
             {model: Player, as: 'loser', attributes: ['id', 'name', 'discordId', 'discordPfp'] },
             {model: Format, attributes: ['name', 'icon']},
             {model: Event, attributes: ['community']}
