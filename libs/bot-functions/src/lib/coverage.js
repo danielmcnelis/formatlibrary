@@ -366,10 +366,10 @@ export const composeBlogPost = async (interaction, event) => {
             // const blogTitleDate = dateToVerbose(event.endDate, false, false, true)
             // const publishDate = dateToVerbose(event.endDate, true, true, false)
 
-            // const playerPfpUrl = await s3FileExists(`images/pfps/${event.player.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.player.discordId}.png` :
-            //     await s3FileExists(`images/pfps/${event.player.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.player.globalName}.png` :
-            //     await s3FileExists(`images/pfps/${event.player.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.player.discordName}.png` :
-            //     await s3FileExists(`images/pfps/${event.player.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.player.name}.png` :
+            // const playerPfpUrl = await s3FileExists(`images/pfps/${event.winner.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.discordId}.png` :
+            //     await s3FileExists(`images/pfps/${event.winner.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.globalName}.png` :
+            //     await s3FileExists(`images/pfps/${event.winner.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.discordName}.png` :
+            //     await s3FileExists(`images/pfps/${event.winner.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.name}.png` :
             //     `https://cdn.formatlibrary.com/images/pfps/discord-default-red.png`
             
             // const serverLogoUrl = event.server?.logoUrl ? `https://cdn.formatlibrary.com/images/logos/${event.server?.logoUrl.replaceAll('+', '%2B')}.png` :
@@ -461,7 +461,7 @@ export const composeBlogPost = async (interaction, event) => {
                 eventDate: event.endDate,
                 eventId: event.id,
                 winnerName: event.winnerName,
-                winnerPfp: event.player?.pfp,
+                winnerPfp: event.winner?.pfp,
                 winnerId: event.winnerId,
                 winningDeckType: deck.type,
                 winningDeckTypeIsPopular: popularDecks.includes(deck.type),

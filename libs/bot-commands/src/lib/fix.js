@@ -42,7 +42,7 @@ export default {
                         abbreviation: input
                     }
                 },
-                include: [Format, Player, Tournament]
+                include: [Format, { model: Player, as: 'winner' }, Tournament]
             })
 
             const topCutTournament = await Tournament.findOne({ where: {

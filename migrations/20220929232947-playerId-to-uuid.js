@@ -37,7 +37,7 @@ module.exports = {
     // const events = await Event.findAll()
     // for (let i = 0; i < events.length; i++) {
     //     const event = events[i]
-    //     const player = await Player.findOne({ where: { id: event.playerId }})
+    //     const player = await Player.findOne({ where: { id: event.winnerId }})
     //     if (!player || !player.uuid) continue
     //     await event.update({ playerId: player.uuid })
     // }

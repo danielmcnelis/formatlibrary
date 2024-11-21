@@ -28,7 +28,7 @@ export default {
                     abbreviation: {[Op.iLike]: input}
                 }
             },
-            include: [Format, Player, Server, Team, Tournament]
+            include: [Format, { model: Player, as: 'winner' }, Server, Team, Tournament]
         })
 
         if (!event) return await interaction.editReply({ content: `No event found.` })

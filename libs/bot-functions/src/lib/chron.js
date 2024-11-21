@@ -1757,7 +1757,7 @@ export const updateBlogPosts = async () => {
             if (!player) {
                 player = await Player.findOne({
                     where: {
-                        id: event.playerId
+                        id: event.winnerId
                     }
                 })
             }
@@ -1900,7 +1900,7 @@ export const updateBlogPosts = async () => {
                 formatId: event.formatId,
                 eventDate: event.endDate,
                 eventId: event.id,
-                playerId: event.playerId,
+                playerId: event.winnerId,
                 serverId: server?.id
             })
         

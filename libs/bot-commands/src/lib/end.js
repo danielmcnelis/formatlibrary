@@ -101,7 +101,7 @@ export default {
             }
     
             // If nobody is marked as a winner, find and mark a winner
-            if (event && !event.playerId) {
+            if (event && !event.winnerId) {
                 try {
                     const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
                     let winnerParticipantId = null

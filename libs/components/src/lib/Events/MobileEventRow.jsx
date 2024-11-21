@@ -38,13 +38,13 @@ export const MobileEventRow = (props) => {
                     <div className="player-cell">
                         <img 
                             className="player-cell-pfp"
-                            src={`https://cdn.formatlibrary.com/images/pfps/${event.player.discordId || event.player.name}.png`}
+                            src={`https://cdn.formatlibrary.com/images/pfps/${event.winner.discordId || event.winner.name}.png`}
                             onError={(e) => {
                                     e.target.onerror = null
                                     e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                                 }
                             }
-                            alt={event.player.name}
+                            alt={event.winner.name}
                         />
                     </div>
                 </div>

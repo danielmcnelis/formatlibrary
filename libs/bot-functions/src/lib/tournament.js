@@ -3224,7 +3224,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         }
 
         // If nobody is marked as a winner, find and mark a winner
-        if (event && !event.playerId) {
+        if (event && !event.winnerId) {
             try {
                 const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${event.topCutTournamentId || tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
                 let winnerParticipantId = null
@@ -3544,7 +3544,7 @@ export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId
     }
 
     // If nobody is marked as a winner, find and mark a winner
-    if (event && !event.playerId) {
+    if (event && !event.winnerId) {
         try {
             const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${event.topCutTournamentId || tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
             let winnerParticipantId = null

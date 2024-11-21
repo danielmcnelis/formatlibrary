@@ -81,7 +81,7 @@ export const SingleEvent = () => {
       try {
         const {data} = await axios.get(`/api/events/${id}?isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`)
         setEvent(data.event)
-        setWinner(data.event.player || data.event.team)
+        setWinner(data.event.winner || data.event.team)
         setReplays(data.replays)
         setTopDecks(data.topDecks)
         setMetagame(data.metagame)
@@ -230,14 +230,14 @@ export const SingleEvent = () => {
                                         <img 
                                             className="single-event-winner-cell-pfp"
                                             src={
-                                                event.player.discordPfp ? `https://cdn.discordapp.com/avatars/${event.player?.discordId}/${event.player.discordPfp}.webp` :
-                                                `https://cdn.formatlibrary.com/images/pfps/${event.player?.name}.png`
+                                                event.winner.discordPfp ? `https://cdn.discordapp.com/avatars/${event.winner?.discordId}/${event.winner.discordPfp}.webp` :
+                                                `https://cdn.formatlibrary.com/images/pfps/${event.winner?.name}.png`
                                             }
                                             onError={(e) => {
                                                 e.target.onerror = null
                                                 e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                                             }}
-                                            alt={event.player.name}
+                                            alt={event.winner.name}
                                         />
                                     </div>
                                 )
