@@ -17,7 +17,7 @@ export const getBlogPosts = async (req, res, next) => {
       attributes: [
         'eventName', 'eventAbbreviation', 'eventDate', 'winnerName', 
         'winnerPfp', 'teamName', 'teamId', 'formatName', 'formatIcon', 
-        'winningDeckType', 'winningDeckTypeIsPopular', 
+        'winningDeckType', 'winningDeckTypeIsPopular', 'winningDeckId',
         'communityName', 'serverInviteLink'
       ],
       offset: (req.query.page - 1) * 10,

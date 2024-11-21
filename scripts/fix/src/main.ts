@@ -1884,7 +1884,7 @@ const shuffleArray = (arr) => {
                 eventDate: blogpost.event?.endDate,
                 eventId: blogpost.eventId,
                 winnerName: blogpost.event?.winnerName,
-                winnerPfp: blogpost.winner?.discordPfp,
+                winnerPfp: blogpost.winner?.discordId,
                 winningDeckType: deck.type,
                 winningDeckTypeIsPopular: popularDecks.includes(deck.type),
                 winningDeckId: deck.id,

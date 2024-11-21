@@ -53,7 +53,7 @@ export const DeckGallery = () => {
                     </div>
                     <div className="popular-decks-flexbox">
                     {
-                        decks.map((deck) => <DeckThumbnail format={id} deck={deck} key={deck.id}/>)
+                        decks.map((deck) => <DeckThumbnail formatName={id} deck={deck} key={deck.id}/>)
                     }
                     </div>
                 </div>
