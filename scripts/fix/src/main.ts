@@ -1873,8 +1873,10 @@ const shuffleArray = (arr) => {
                 }
             })
                      
+            const sortFn = (a, b) => b[1] - a[1]
+
             const freqs = (decks || []).reduce((acc, curr) => (acc[curr.type] ? acc[curr.type]++ : acc[curr.type] = 1, acc), {})
-            const popularDecks = Object.entries(freqs).sort((a, b) => b[1] - a[1]).map((e) => e[0]).slice(0, 6)
+            const popularDecks = Object.entries(freqs).sort(sortFn).map((e) => e[0]).slice(0, 6)
 
             await blogpost.update({ 
                 eventName: blogpost.event?.name,
