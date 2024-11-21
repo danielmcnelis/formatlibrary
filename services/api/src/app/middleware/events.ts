@@ -174,11 +174,13 @@ export const eventsId = async (req, res, next) => {
       ],
       include: [
         { model: Player, as: 'winner'},
-        { model: Team, as: 'winningTeam'},
+        // { model: Team, as: 'winningTeam'},
         { model: Server, attributes: ['id', 'inviteLink'] },
         { model: Format, attributes: ['id', 'name', 'icon', 'videoPlaylistId'] },
       ]
     })
+
+    console.log('event', event)
     
     const replays = await Replay.findAll({
         where: {
@@ -315,6 +317,8 @@ export const eventsId = async (req, res, next) => {
         topSideDeckCards
       }
     }
+
+    console.log('data', data)
 
     res.json(data)
   } catch (err) {
