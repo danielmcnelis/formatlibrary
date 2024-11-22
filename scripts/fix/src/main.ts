@@ -1852,7 +1852,7 @@ const shuffleArray = (arr) => {
 //         where: { 
 //             winningTeamId: null
 //         },
-//         include: [Event, Format, Server, { model: {Player, as: 'winner'} }]
+//         include: [Event, Format, Server, { model: Player, as: 'winner' }]
 //     })
 
 
