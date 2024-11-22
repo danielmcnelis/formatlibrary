@@ -115,7 +115,7 @@ export const SingleCard = () => {
     }, [id])
   
     if (data === null) return <NotFound/>
-    if (!card?.id) return <div />
+    if (!card?.id) return <div style={{height: '100vh'}}/>
   
     const template = card.category === 'Spell' ? `https://cdn.formatlibrary.com/images/templates/spellCard.png` :
       card.category === 'Trap' ? `https://cdn.formatlibrary.com/images/templates/trapCard.jpeg` :

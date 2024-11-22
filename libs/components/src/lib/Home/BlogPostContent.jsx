@@ -32,7 +32,7 @@ export const BlogPostContent = (props) => {
                     <img class="blogpost-event-icon" src="https://cdn.formatlibrary.com/images/emojis/event.png" alt="trophy"/></div>
             </div>
             <div class="blogpost-content-flexbox">
-                <p class="blogpost-paragraph">{winnerName} won <a class="blogpost-event-link" href={`/events/${eventAbbreviation}`}>{eventName}</a> on {dateToVerbose(eventDate, true, true, false)} with a ${winningDeckTypeIsPopular ? 'popular' : 'rogue'} deck, ${winningDeckType}!</p>
+                <p class="blogpost-paragraph">{winnerName} won <a class="blogpost-event-link" href={`/events/${eventAbbreviation}`}>{eventName}</a> on {dateToVerbose(eventDate, true, true, false)} with a {winningDeckTypeIsPopular ? 'popular' : 'rogue'} deck, {winningDeckType}!</p>
                 <div class="blogpost-images-flexbox">
                     <div class="blogpost-pfp-community-flexbox">
                         <img class="blogpost-pfp" src={`https://cdn.formatlibrary.com/images/pfps/${winnerPfp}.png`} alt="winner pfp"/>

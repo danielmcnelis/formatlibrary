@@ -80,7 +80,7 @@ export const FormatIntro = () => {
     }, [])
 
     if (!format) return <NotFound/>
-    if (!format.id) return <div />
+    if (!format.id) return <div style={{height: '100vh'}}/>
   
     return (
         <>
@@ -171,8 +171,8 @@ export const FormatIntro = () => {
                 </div>
             ) : ''
             }
-            <PopularDecks id="popular-decks" format={format}/>
-            <RecentEvents id="recent-events" format={format}/>
+            <PopularDecks id="popular-decks" formatName={format.name}/>
+            <RecentEvents id="recent-events" formatName={format.name}/>
             <MiniBoard limit={10} format={format}/>
             <div className="divider"/>
             <BanList id="banlist" format={format}/>

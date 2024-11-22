@@ -22,7 +22,7 @@ export const FormatMenu = () => {
       fetchData()
     }, [])
   
-    if (!formats) return <div />
+    if (!formats) return <div style={{height: '100vh'}}/>
   
     return (
         

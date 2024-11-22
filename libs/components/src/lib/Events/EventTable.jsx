@@ -12,7 +12,7 @@ import './EventTable.css'
 export const EventTable = (props) => {
     const isMounted = useRef(false)
     const [community, setCommunity] = useState(null)
-    const [events, setEvents] = useState([])
+    const [events, setEvents] = useState([{},{},{},{},{},{},{},{},{},{}])
     const [eventsPerPage, setEventsPerPage] = useState(10)
     const [format, setFormat] = useState(null)
     const [formats, setFormats] = useState([])

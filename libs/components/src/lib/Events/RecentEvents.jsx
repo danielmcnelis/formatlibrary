@@ -7,17 +7,15 @@ import './RecentEvents.css'
 
 export const RecentEvents = (props) => {
     const [recentEvents, setRecentEvents] = useState([])
-    console.log('recentEvents', recentEvents)
     const [winners, setWinners] = useState([])
-    console.log('winners', winners)
     const navigate = useNavigate()
-    const goToEventGallery = () => navigate(`/event-gallery/${props.format.name}`)
+    const goToEventGallery = () => navigate(`/event-gallery/${props.formatName}`)
   
     // USE EFFECT
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const {data} = await axios.get(`/api/events/recent/${props.format.name}`)
+                const {data} = await axios.get(`/api/events/recent/${props.formatName}`)
                 setRecentEvents(data.events)
                 setWinners(data.winners)
             } catch (err) {

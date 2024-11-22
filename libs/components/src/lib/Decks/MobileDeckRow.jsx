@@ -17,7 +17,7 @@ export const MobileDeckRow = (props) => {
           >
             <div className="format-cell-flexbox">
                 <img 
-                    src={`https://cdn.formatlibrary.com/images/emojis/${deck.format.icon}.png`}
+                    src={`https://cdn.formatlibrary.com/images/emojis/${deck.format?.icon}.png`}
                     alt="format-emoji"
                 />
             </div>
@@ -43,7 +43,7 @@ export const MobileDeckRow = (props) => {
             <div className="player-cell">
               <img 
                   className="player-cell-pfp"
-                  src={`https://cdn.formatlibrary.com/images/pfps/${deck.player.discordId || deck.player.name}.png`}
+                  src={`https://cdn.formatlibrary.com/images/pfps/${deck.player?.discordId || deck.builder}.png`}
                   onError={(e) => {
                           e.target.onerror = null
                           e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"

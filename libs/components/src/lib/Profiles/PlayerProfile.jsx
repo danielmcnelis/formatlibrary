@@ -79,7 +79,7 @@ export const PlayerProfile = () => {
   }, [player])
 
   if (player === null) return <NotFound />
-  if (!player.id) return <div />
+  if (!player.id) return <div style={{height: '100vh'}}/>
 
   return (
     <>

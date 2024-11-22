@@ -179,7 +179,7 @@ export const SingleDeck = () => {
     }
 
   if (!deck) return <NotFound/>
-  if (!deck.id) return <div/>
+  if (!deck.id) return <div style={{height: '100vh'}}/>
 
   let extension =  (deck.player?.name || '').replaceAll('%', '%25')
     .replaceAll('/', '%2F')

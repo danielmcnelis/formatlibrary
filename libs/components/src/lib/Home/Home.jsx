@@ -44,7 +44,7 @@ export const Home = () => {
         fetchData()
     }, [page])
   
-    if (!blogPosts?.length) return <div/>
+    if (!blogPosts?.length) return <div style={{height: '100vh'}}/>
   
     return (
         <div className="blog" id="blog">

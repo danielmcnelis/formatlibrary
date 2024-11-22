@@ -4,43 +4,43 @@ import { capitalize, urlize } from '@fl/utils'
 import './DeckThumbnail.css'
 
 export const DeckThumbnail = (props) => {
-    const {deck} = props
-    if (!deck) return <div/>
+    const {deckType, formatName} = props
+    if (!deckType) return <div/>
   
     return (
         <div 
             className='link' 
-            onClick={() => {window.location.href=`${urlize(`/decktypes/${deck.name}${props.format?.name ? `?format=${props.format.name}` : ''}`)}`}} 
+            onClick={() => {window.location.href=`${urlize(`/decktypes/${deckType.name}?format=${formatName}`)}`}} 
         >
             <div className="deckThumbnail">
-                <h3>{capitalize(deck.name, true)}</h3>
+                <h3>{capitalize(deckType.name, true)}</h3>
                 <div className="deckThumbnail-flexbox">
                     <img 
                         className="deckThumbnail-image" 
-                        src={`https://cdn.formatlibrary.com/images/artworks/${deck.leftCardArtworkId}.jpg`} 
+                        src={`https://cdn.formatlibrary.com/images/artworks/${deckType.leftCardArtworkId}.jpg`} 
                         onError={(e) => {
                         e.target.onerror = null
                         e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"
                         }}
-                        alt={deck.leftCard}
+                        alt={deckType.leftCard}
                     />
                     <img 
                         className="deckThumbnail-image" 
-                        src={`https://cdn.formatlibrary.com/images/artworks/${deck.centerCardArtworkId}.jpg`}
+                        src={`https://cdn.formatlibrary.com/images/artworks/${deckType.centerCardArtworkId}.jpg`}
                         onError={(e) => {
                         e.target.onerror = null
                         e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"
                         }}
-                        alt={deck.centerCard}
+                        alt={deckType.centerCard}
                     />
                     <img 
                         className="deckThumbnail-image" 
-                        src={`https://cdn.formatlibrary.com/images/artworks/${deck.rightCardArtworkId}.jpg`}
+                        src={`https://cdn.formatlibrary.com/images/artworks/${deckType.rightCardArtworkId}.jpg`}
                         onError={(e) => {
                         e.target.onerror = null
                         e.target.src="https://cdn.formatlibrary.com/images/artworks/question.jpg"
                         }}
-                        alt={deck.rightCard}
+                        alt={deckType.rightCard}
                     />
                 </div>
             </div>

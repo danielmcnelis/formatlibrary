@@ -30,7 +30,7 @@ export const DeckGallery = () => {
         fetchData()
     }, [])
 
-    if (!decks.length) return <div/>
+    if (!decks.length) return <div style={{height: '100vh'}}/>
 
     return (
         <>

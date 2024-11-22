@@ -38,7 +38,7 @@ export const EventRow = (props) => {
               <div className="player-cell">
                 <img 
                     className="player-cell-pfp"
-                    src={`https://cdn.formatlibrary.com/images/pfps/${event.winner.discordId || event.winner.name}.png`}
+                    src={`https://cdn.formatlibrary.com/images/pfps/${event.winner?.discordId || event.winnerName}.png`}
                     onError={(e) => {
                             e.target.onerror = null
                             e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"

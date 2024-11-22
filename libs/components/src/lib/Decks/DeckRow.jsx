@@ -16,7 +16,7 @@ export const DeckRow = (props) => {
                   rel="noopener noreferrer"
               >
                 <div className="format-cell-flexbox">
-                  <img src={`https://cdn.formatlibrary.com/images/emojis/${deck.format.icon}.png`} alt={deck.format.icon}/>
+                  <img src={`https://cdn.formatlibrary.com/images/emojis/${deck.format?.icon}.png`} alt={deck.format?.icon}/>
                   <div>{deck.formatName}</div>
                 </div>
               </Link>
@@ -41,7 +41,7 @@ export const DeckRow = (props) => {
                 <div className="player-cell">
                   <img 
                       className="player-cell-pfp"
-                      src={`https://cdn.formatlibrary.com/images/pfps/${deck.player.discordId || deck.player.name}.png`}                    
+                      src={`https://cdn.formatlibrary.com/images/pfps/${deck.player?.discordId || deck.builder}.png`}                    
                       alt={`${deck.builder}`}
                       onError={(e) => {
                               e.target.onerror = null

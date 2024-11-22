@@ -16,7 +16,7 @@ export const DeckTable = () => {
     const isMounted = useRef(false)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
-    const [decks, setDecks] = useState([])
+    const [decks, setDecks] = useState([{},{},{},{},{},{},{},{},{},{}])
     const [decksPerPage, setDecksPerPage] = useState(10)
     const [view, setView] = useState('table')
     const [sortBy, setSortBy] = useState('publishDate:desc')

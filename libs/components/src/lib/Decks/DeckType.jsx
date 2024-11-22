@@ -9,7 +9,7 @@ import { useLocation } from 'react-router-dom'
 import { capitalize, getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import './DeckType.css'
-const playerId = getCookie('playerId')
+// const playerId = getCookie('playerId')
 
 const emojis = {
   Helmet: 'https://cdn.formatlibrary.com/images/emojis/helmet.png',
@@ -29,10 +29,7 @@ export const DeckType = () => {
     const [summary, setSummary] = useState({})
     const [matchups, setMatchups] = useState(false)
     const [banlist, setBanList] = useState({})
-    const [isAdmin, setIsAdmin] = useState(false)
-    const [isSubscriber, setIsSubscriber] = useState(false)
-    const navigate = useNavigate()
-    const goToFormat = () => navigate(`/formats/${summary.formatName ? summary.format?.name : ''}`)
+    
     const { id } = useParams()
     const location = useLocation()
     const format = location?.search?.slice(8)
@@ -41,9 +38,9 @@ export const DeckType = () => {
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
 
-    // USE EFFECT
+    // USE EFFECT FETCH DATA
     useEffect(() => {
-        const checkRoles = async () => {
+        const fetchData = async () => {
             try {
                 const accessToken = getCookie('access')
                 const { data: player } = await axios.get(`/api/players/roles`, {
@@ -51,63 +48,25 @@ export const DeckType = () => {
                         ...(accessToken && {authorization: `Bearer ${accessToken}`})
                     }
                 })
-
-                if (player.admin) setIsAdmin(true)
-                if (player.subscriber) setIsSubscriber(true)
+                
+                const {data: summaryData} = await axios.get(`/api/deckTypes/summary?id=${id}&format=${format}`)
+                const {data: matchupData} = await axios.get(`/api/matchups/${id}?format=${format}&isAdmin=${player.admin}&isSubscriber=${player.subscriber}`)
+                const {data: banlistData} = await axios.get(`/api/banlists/simple/${summaryData?.format?.banlist}?category=${summaryData?.format?.category || 'TCG'}`)
+                
+                setMatchups(matchupData)
+                setSummary(summaryData)
+                setBanList(banlistData)
             } catch (err) {
                 console.log(err)
+                setSummary(null)
             }
         }
 
-        if (playerId) checkRoles()
-    }, [])
-
-    // USE EFFECT SET MATCHUPS
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const {data} = await axios.get(`/api/matchups/${id}?format=${format}&isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`)
-            setMatchups(data)
-          } catch (err) {
-            console.log(err)
-            setSummary(null)
-          }
-        }
-    
         fetchData()
-      }, [isSubscriber, isAdmin, format, id])
-
-    // USE EFFECT SET SUMMARY
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const {data} = await axios.get(`/api/deckTypes/summary?id=${id}&format=${format}`)
-          setSummary(data)
-        } catch (err) {
-          console.log(err)
-          setSummary(null)
-        }
-      }
-  
-      fetchData()
     }, [id, format])
-  
-    // USE EFFECT SET BANLIST
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const {data} = await axios.get(`/api/banlists/simple/${summary?.format?.banlist}?category=${summary?.format?.category || 'TCG'}`)
-          setBanList(data)
-        } catch (err) {
-          console.log(err)
-        }
-      }
-  
-      fetchData()
-    }, [summary])
-  
+
     if (!summary) return <NotFound/>
-    if (!summary.deckType) return <div/>
+    if (!summary?.deckType) return <div style={{height: '100vh'}}/>
   
     const categoryImage = summary.deckCategory === 'Aggro' ? emojis.Helmet :
       summary.deckCategory === 'Combo' ? Controller :
@@ -118,19 +77,11 @@ export const DeckType = () => {
       summary.deckCategory === 'Midrange' ? Bow :
       summary.deckCategory === 'Ramp' ? Volcano :
       Thinking
-    
-    const addLike = async () => {
-      const res = await axios.get(`/api/deckTypes/like/${id}`)
-      if (res.status === 200) {
-        const rating = summary.rating++
-        setSummary({rating, ...deck})
-      }
-    }
   
-    const addDownload = async () => {
-      const downloads = summary.downloads++
-      setSummary({downloads, ...deck})
-    }
+    // const addDownload = async () => {
+    //   const downloads = summary.downloads++
+    //   setSummary({downloads, ...deck})
+    // }
   
     const toggle = (category, index) => {
       let info = document.getElementById(`${category}-info-${index}`)
@@ -167,7 +118,7 @@ export const DeckType = () => {
                         className="link desktop-only"
                         href={`/api/deckTypes/download?id=${id}&format=${format}`} 
                         download={`${summary.deckType} - ${capitalize(format)} Skeleton.ydk`}
-                        onClick={()=> addDownload()}
+                        // onClick={()=> addDownload()}
                     >                                    
                         <div className="deck-button">
                             <b style={{padding: '0px 6px'}}>Download</b>

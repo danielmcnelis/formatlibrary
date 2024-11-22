@@ -138,7 +138,7 @@ export const Settings = () => {
 
   if (player === null) return <NotFound /> 
   const {id, name, firstName, lastName, discordName, country, timeZone, youtube, twitch, twitter, duelingBook, email} = player
-  if (!id) return <div/>
+  if (!id) return <div style={{height: '100vh'}}/>
   return (
     <>
         <Helmet>
