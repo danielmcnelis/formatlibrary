@@ -36,7 +36,7 @@ export const Event = db.define('events', {
   winnerId: {
     type: Sequelize.STRING
   },
-  winningDeckType: {
+  winningDeckTypeName: {
     type: Sequelize.INTEGER
   },
   winningDeckId: {

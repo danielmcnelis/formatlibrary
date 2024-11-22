@@ -1,5 +1,4 @@
 
-import parse from 'html-react-parser'
 import { useMediaQuery } from 'react-responsive'
 import { BlogPostContent } from './BlogPostContent'
 import './BlogPost.css'

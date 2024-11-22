@@ -82,28 +82,28 @@ export const getMatchupMatrix = async (req, res, next) => {
             const matrix = {}
 
             wins.forEach((matchup) => {
-                if (!matrix[matchup.losingDeckType]) {
-                    matrix[matchup.losingDeckType] = {
+                if (!matrix[matchup.losingDeckTypeName]) {
+                    matrix[matchup.losingDeckTypeName] = {
                         wins: 1,
                         losses: 0,
                         total: 1
                     }
                 } else {
-                    matrix[matchup.losingDeckType].wins++
-                    matrix[matchup.losingDeckType].total++
+                    matrix[matchup.losingDeckTypeName].wins++
+                    matrix[matchup.losingDeckTypeName].total++
                 }
             })
 
             losses.forEach((matchup) => {
-                if (!matrix[matchup.winningDeckType]) {
-                    matrix[matchup.winningDeckType] = {
+                if (!matrix[matchup.winningDeckTypeName]) {
+                    matrix[matchup.winningDeckTypeName] = {
                         wins: 0,
                         losses: 1,
                         total: 1
                     }
                 } else {
-                    matrix[matchup.winningDeckType].losses++
-                    matrix[matchup.winningDeckType].total++
+                    matrix[matchup.winningDeckTypeName].losses++
+                    matrix[matchup.winningDeckTypeName].total++
                 }
             })
         

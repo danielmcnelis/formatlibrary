@@ -46,7 +46,7 @@ export const ReplayRow = (props) => {
           </td>
 
             <div className="deckType-cell">
-                {replay.winningDeckType || '-'}
+                {replay.winningDeckTypeName || '-'}
             </div>
 
           <td className="no-padding">
@@ -66,7 +66,7 @@ export const ReplayRow = (props) => {
           </td>
 
             <div className="deckType-cell">
-                {replay.losingDeckType || '-'}
+                {replay.losingDeckTypeName || '-'}
             </div>
 
           <td className="no-padding">

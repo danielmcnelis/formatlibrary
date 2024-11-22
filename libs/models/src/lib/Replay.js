@@ -27,13 +27,13 @@ export const Replay = db.define('replays', {
     loserId: {
         type: Sequelize.STRING
     },
-    winningDeckType: {
+    winningDeckTypeName: {
         type: Sequelize.STRING
     },
     winningDeckId: {
         type: Sequelize.INTEGER
     },
-    losingDeckType: {
+    losingDeckTypeName: {
         type: Sequelize.STRING
     },
     losingDeckId: {
@@ -89,8 +89,8 @@ Replay.countResults = async (filter = {}) => {
         if (['deckType'].includes(key)) { 
             key = Op.or
             value = {
-                winningDeckType: {[Op.iLike]: `%${value}%`},
-                losingDeckType: {[Op.iLike]: `%${value}%`}
+                winningDeckTypeName: {[Op.iLike]: `%${value}%`},
+                losingDeckTypeName: {[Op.iLike]: `%${value}%`}
             }
         }
 
@@ -153,8 +153,8 @@ Replay.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
         if (['deckType'].includes(key)) { 
             key = Op.or
             value = {
-                winningDeckType: {[Op.iLike]: `%${value}%`},
-                losingDeckType: {[Op.iLike]: `%${value}%`}
+                winningDeckTypeName: {[Op.iLike]: `%${value}%`},
+                losingDeckTypeName: {[Op.iLike]: `%${value}%`}
             }
         }
 

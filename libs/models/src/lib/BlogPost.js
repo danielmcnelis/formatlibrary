@@ -39,7 +39,7 @@ export const BlogPost = db.define('blogposts', {
   formatId: {
     type: Sequelize.STRING
   },
-  winningDeckType: {
+  winningDeckTypeName: {
     type: Sequelize.STRING
   },
   winningDeckTypeIsPopular: {

@@ -197,8 +197,8 @@ export default {
                 const losingDeckType = await getDeckType(losingDeckFile, format.name)
 
                 await Matchup.create({
-                    winningDeckType: winningDeckType?.name,
-                    losingDeckType: losingDeckType?.name,
+                    winningDeckTypeName: winningDeckType?.name,
+                    losingDeckTypeName: losingDeckType?.name,
                     winningDeckTypeId: winningDeckType?.id,
                     losingDeckTypeId: losingDeckType?.id,
                     formatId: format.id,

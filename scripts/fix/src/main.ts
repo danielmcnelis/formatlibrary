@@ -1,4 +1,4 @@
-import { Artwork, Alius, Card, Cube, Deck, DeckType, DeckThumb, Entry, Event, Format, Match, Membership, Pairing, Player, Pool, Print, Replay, Ruling, Set, Server, Stats, Status, Team, Tournament, BlogPost } from '@fl/models'
+import { Artwork, Alius, Card, Cube, Deck, DeckType, DeckThumb, Entry, Event, Format, Match, Membership, Pairing, Player, Pool, Print, Replay, Ruling, Set, Server, Stats, Status, Team, Tournament, BlogPost, Matchup } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { config } from '@fl/config'
@@ -1845,60 +1845,87 @@ const shuffleArray = (arr) => {
 // })()
 
 
+// ;(async () => { 
+//     let b = 0
+//     b = 0
+//     const blogposts = await BlogPost.findAll({ 
+//         where: { 
+//             winningTeamId: null
+//         },
+//         include: [Event, Format, Server, { model: {Player, as: 'winner'} }]
+//     })
+
+
+//     for (let i = 0; i < blogposts.length; i++) {
+//         try {
+//             const blogpost = blogposts[i]
+            
+//             const deck = await Deck.findOne({
+//                 where: {
+//                     eventId: blogpost.eventId,
+//                     placement: 1
+//                 }
+//             })
+
+//             const decks = await Deck.findAll({ 
+//                 where: {
+//                     formatId: blogpost.formatId
+//                 }
+//             })
+                     
+//             const sortFn = (a, b) => b[1] - a[1]
+
+//             const freqs = (decks || []).reduce((acc, curr) => (acc[curr.type] ? acc[curr.type]++ : acc[curr.type] = 1, acc), {})
+//             const popularDecks = Object.entries(freqs).sort(sortFn).map((e) => e[0]).slice(0, 6)
+
+//             await blogpost.update({ 
+//                 eventName: blogpost.event?.name,
+//                 eventAbbreviation: blogpost.event?.abbreviation,
+//                 eventDate: blogpost.event?.endDate,
+//                 eventId: blogpost.eventId,
+//                 winnerName: blogpost.event?.winnerName,
+//                 winnerPfp: blogpost.winner?.discordId,
+//                 winningDeckTypeName: deck.type,
+//                 winningDeckTypeIsPopular: popularDecks.includes(deck.type),
+//                 winningDeckId: deck.id,
+//                 formatName: blogpost.format?.name,
+//                 formatIcon: blogpost.format?.icon, 
+//                 communityName: blogpost.server?.communityName,
+//                 serverInviteLink: blogpost.server?.inviteLink,
+//             })
+//             b++
+//         } catch (err) {
+//             console.log('blogpost error', err)
+//         }
+//     }
+
+//     console.log('updated blogpost:', b)
+//     return
+// })()
+
+
 ;(async () => { 
     let b = 0
     b = 0
-    const blogposts = await BlogPost.findAll({ 
-        where: { 
-            winningTeamId: null
-        },
-        include: [Event, Format, Server, { model: {Player, as: 'winner'} }]
+    const matchups = await Matchup.findAll({ 
+        include: [{ model: DeckType, as: 'winningDeckType'}, { model: DeckType, as: 'losingDeckType' }]
     })
 
 
-    for (let i = 0; i < blogposts.length; i++) {
+    for (let i = 0; i < matchups.length; i++) {
         try {
-            const blogpost = blogposts[i]
+            const matchup = matchups[i]
             
-            const deck = await Deck.findOne({
-                where: {
-                    eventId: blogpost.eventId,
-                    placement: 1
-                }
-            })
-
-            const decks = await Deck.findAll({ 
-                where: {
-                    formatId: blogpost.formatId
-                }
-            })
-                     
-            const sortFn = (a, b) => b[1] - a[1]
-
-            const freqs = (decks || []).reduce((acc, curr) => (acc[curr.type] ? acc[curr.type]++ : acc[curr.type] = 1, acc), {})
-            const popularDecks = Object.entries(freqs).sort(sortFn).map((e) => e[0]).slice(0, 6)
-
-            await blogpost.update({ 
-                eventName: blogpost.event?.name,
-                eventAbbreviation: blogpost.event?.abbreviation,
-                eventDate: blogpost.event?.endDate,
-                eventId: blogpost.eventId,
-                winnerName: blogpost.event?.winnerName,
-                winnerPfp: blogpost.winner?.discordId,
-                winningDeckType: deck.type,
-                winningDeckTypeIsPopular: popularDecks.includes(deck.type),
-                winningDeckId: deck.id,
-                formatName: blogpost.format?.name,
-                formatIcon: blogpost.format?.icon, 
-                communityName: blogpost.server?.communityName,
-                serverInviteLink: blogpost.server?.inviteLink,
+            await matchup.update({ 
+                winningDeckTypeName: matchup.winningDeckType.name,
+                losingDeckTypeName: matchup.losingDeckType.name
             })
             b++
         } catch (err) {
-            console.log('blogpost error', err)
+            console.log('matchup error', err)
         }
     }
 
-    console.log('updated blogpost:', b)
+    console.log('updated matchup:', b)
     return
 })()

@@ -9,7 +9,7 @@ export const Matchup = db.define('matchups', {
     formatId: {
         type: Sequelize.INTEGER
     },
-    winningDeckType: {
+    winningDeckTypeName: {
         type: Sequelize.STRING
     },
     winningDeckTypeId: {
@@ -18,7 +18,7 @@ export const Matchup = db.define('matchups', {
     winningDeckId: {
         type: Sequelize.INTEGER
     },
-    losingDeckType: {
+    losingDeckTypeName: {
         type: Sequelize.STRING
     },
     losingDeckTypeId: {

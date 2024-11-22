@@ -284,8 +284,8 @@ export const ReplayTable = () => {
                             <option value="publishDate:asc,display:desc,roundAbs:desc">Date: Old ⮕ New</option>
                             <option value="winnerName:asc,display:desc,roundAbs:desc">Winner: A ⮕ Z</option>
                             <option value="winnerName:desc,display:desc,roundAbs:desc">Winner: Z ⮕ A</option>
-                            <option value="winningDeckType:asc,display:desc,roundAbs:desc">Winning Deck: A ⮕ Z</option>
-                            <option value="winningDeckType:desc,display:desc,roundAbs:desc">Winning Deck: Z ⮕ A</option>
+                            <option value="winningDeckTypeName:asc,display:desc,roundAbs:desc">Winning Deck: A ⮕ Z</option>
+                            <option value="winningDeckTypeName:desc,display:desc,roundAbs:desc">Winning Deck: Z ⮕ A</option>
                         </select>
             
                         <div
@@ -458,8 +458,8 @@ export const ReplayTable = () => {
                         <option value="publishDate:asc,display:desc,suggestedOrder:desc">Date: Old ⮕ New</option>
                         <option value="winnerName:asc,display:desc,suggestedOrder:desc">Winner: A ⮕ Z</option>
                         <option value="winnerName:desc,display:desc,suggestedOrder:desc">Winner: Z ⮕ A</option>
-                        <option value="winningDeckType:asc,display:desc,suggestedOrder:desc">Winning Deck: A ⮕ Z</option>
-                        <option value="winningDeckType:desc,display:desc,suggestedOrder:desc">Winning Deck: Z ⮕ A</option>
+                        <option value="winningDeckTypeName:asc,display:desc,suggestedOrder:desc">Winning Deck: A ⮕ Z</option>
+                        <option value="winningDeckTypeName:desc,display:desc,suggestedOrder:desc">Winning Deck: Z ⮕ A</option>
                         </select>
             
                         <div

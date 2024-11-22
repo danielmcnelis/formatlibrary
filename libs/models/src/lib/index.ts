@@ -255,6 +255,16 @@ Matchup.belongsTo(Deck, {
     id: 'winningDeckId'
 })
 
+Matchup.belongsTo(DeckType, {
+    as: 'losingDeckType',
+    id: 'losingDeckTypeId'
+})
+
+Matchup.belongsTo(DeckType, {
+    as: 'winningDeckType',
+    id: 'winningDeckTypeId'
+})
+
 //MEMBERSHIP
 Membership.belongsTo(Player)
 Player.hasMany(Membership)
