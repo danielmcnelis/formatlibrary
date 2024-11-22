@@ -7,18 +7,16 @@ import { useMediaQuery } from 'react-responsive'
 import { NotFound } from '../General/NotFound'
 import { PrintRow } from './PrintRow'
 import { StatusBox } from './StatusBar'
-import { capitalize, dateToSimple, dateToVerbose, getCookie, getEraVideoPlaylistId } from '@fl/utils'
+import { capitalize, dateToSimple, dateToVerbose, getEraVideoPlaylistId } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import './SingleCard.css'
 import banlists from '../../data/banlists.json'
 
-const playerId = getCookie('playerId')
-
 // SINGLE CARD COMPONENT
-export const SingleCard = () => {
+export const SingleCard = (props) => {
     const isMobile = useMediaQuery({ query: '(max-width: 480px)' })
-    const [isAdmin, setIsAdmin] = useState(false)
-    const [isContentManager, setIsContentManager] = useState(false)
+    const isAdmin = props.roles?.admin
+    const isContentManager = props.roles?.contentManager
     const [inEditMode, setInEditMode] = useState(false)
     const [data, setData] = useState({
         card: {},
@@ -32,27 +30,6 @@ export const SingleCard = () => {
 
     // USE EFFECT
     useEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop), [inEditMode])
-  
-    // USE EFFECT
-    useEffect(() => {
-        const checkRoles = async () => {
-            try {
-                const accessToken = getCookie('access')
-                const { data: player } = await axios.get(`/api/players/roles`, {
-                    headers: {
-                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                    }
-                })
-
-                if (player.admin) setIsAdmin(true)
-                if (player.contentManager) setIsContentManager(true)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        if (playerId) checkRoles()
-    }, [])
 
     // DOWNLOAD CARD IMAGE
     const downloadCardImage = async () => {

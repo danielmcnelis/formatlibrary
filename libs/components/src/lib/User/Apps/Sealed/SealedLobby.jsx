@@ -136,7 +136,6 @@ export const SealedLobby = () => {
 
     // HOOK - FETCH PARTICIPANTS
     useEffect(() => {
-        fetchParticipants(draft.id)
     }, [draft.id])
 
     // HOOK - SOCKET.IO
@@ -170,8 +169,13 @@ export const SealedLobby = () => {
     useEffect(() => {
         console.log('Fetch initial draft data useEffect()') 
         const fetchData = async () => {
-            const {data} = await axios.get(`/api/drafts/${id}`)
-            setDraft(data)
+            try {
+                const {data: draftData} = await axios.get(`/api/drafts/${id}`)
+                    setDraft(draftData)
+                    fetchParticipants(draftData.id)
+            } catch (err) {
+                console.log(err)
+            }
         }
         
         fetchData()

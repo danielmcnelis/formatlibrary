@@ -7,19 +7,16 @@ import { NotFound } from '../General/NotFound'
 import { PopularDecks } from './PopularDecks'
 import { RecentEvents } from '../Events/RecentEvents'
 import { useParams } from 'react-router-dom'
-import { getCookie, urlize } from '@fl/utils'
+import { urlize } from '@fl/utils'
 import { Helmet } from 'react-helmet'
-import parse from 'html-react-parser'
 import './FormatIntro.css'
 
-const playerId = getCookie('playerId')
-
-export const FormatIntro = () => {
+export const FormatIntro = (props) => {
+    const isContentManager = props.roles?.contentManager
     const [format, setFormat] = useState({})
     const [deckCount, setDeckCount] = useState(0)
     const [eventCount, setEventCount] = useState(0)
     const [statsCount, setStatsCount] = useState(0)
-    const [isContentManager, setIsContentManager] = useState(false)
     const { id } = useParams()
     const videoPlaylistId = format?.videoPlaylistId
   
@@ -58,26 +55,6 @@ export const FormatIntro = () => {
   
       fetchData()
     }, [id])
-  
-    // USE EFFECT
-    useEffect(() => {
-        const checkRoles = async () => {
-            try {
-                const accessToken = getCookie('access')
-                const { data: player } = await axios.get(`/api/players/roles`, {
-                    headers: {
-                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                    }
-                })
-
-                if (player.contentManager) setIsContentManager(true)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        if (playerId) checkRoles()
-    }, [])
 
     if (!format) return <NotFound/>
     if (!format.id) return <div style={{height: '100vh'}}/>

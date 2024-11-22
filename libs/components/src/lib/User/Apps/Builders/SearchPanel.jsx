@@ -27,9 +27,9 @@ const { Shield, Swords } = emojis
 const now = new Date()
 
 export const SearchPanel = (props) => {
-    const format = props.format || {}
+    const format = props.format
     const cardsPerPage = 20
-    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 860px)' })
+    // const isTabletOrMobile = useMediaQuery({ query: '(max-width: 860px)' })
     const [page, setPage] = useState(1)
     const [cards, setCards] = useState([])
     const [sortBy, setSortBy] = useState('name:asc')
@@ -215,29 +215,14 @@ export const SearchPanel = (props) => {
 
     // RESET
     const reset = async () => {
-        const formatSelector = document.getElementById('format')
-        if (formatSelector) formatSelector.value = ''
         document.getElementById('category').value = ''
-
-        setSliders({
-            year: now.getFullYear(),
-            month: 12,
-            day: 31,
-            level: [1, 12],
-            atk: [0, 5000],
-            def: [0, 5000]
-        })
-        
         setPage(1)
-        const {data} = await axios.get(`/api/formats/current`)
-        props.setFormat(data.format)
-        document.getElementById('format').value = ""
         setSortBy('name:asc')
         
         setQueryParams({
+            ...queryParams,
             name: null,
-            description: null,
-            category: null
+            description: null
         })
 
         document.getElementById('searchBar').value = ""
@@ -359,23 +344,24 @@ export const SearchPanel = (props) => {
 
     // USE EFFECT IF FORMAT CHANGES
     useEffect(() => {
-        const year = format.date ? parseInt(format.date.slice(0, 4)) : now.getFullYear()
-        const month = format.date ? parseInt(format.date.slice(6, 7)) : 12
-        const day = format.date ? parseInt(format.date.slice(-2)) : 31
-        setCutoff(format.date || `${year}-12-31`)
-        setSliders({ ...sliders, year, month, day })
-
         const fetchData = async () => {
             try {
-                const {data} = await axios.get(`/api/banlists/simple/${format.banlist || 'sep23'}?category=${format.category || 'TCG'}`)
-                setBanlist(data)
+                const year = format.date ? parseInt(format.date.slice(0, 4)) : now.getFullYear()
+                const month = format.date ? parseInt(format.date.slice(6, 7)) : 12
+                const day = format.date ? parseInt(format.date.slice(-2)) : 31
+
+                const {data: banlistData} = await axios.get(`/api/banlists/simple/${format.banlist || 'sep23'}?category=${format.category || 'TCG'}`)
+                
+                setBanlist(banlistData)
+                setCutoff(format.date || `${year}-12-31`)
+                setSliders({ ...sliders, year, month, day })
             } catch (err) {
                 console.log(err)
             }
         }
 
         fetchData()
-    }, [format.id])
+    }, [format])
 
     // USE EFFECT IF DATE SLIDERS CHANGE
     useEffect(() => {
@@ -384,7 +370,7 @@ export const SearchPanel = (props) => {
             const day = sliders.day >= 10 ? sliders.day : `0${sliders.day}`
             setCutoff(`${sliders.year}-${month}-${day}`)
         }
-    }, [props])
+    }, [format, sliders])
 
     // USE EFFECT IF RELEVANT SEARCH PARAM STATES CHANGE
     useEffect(() => {

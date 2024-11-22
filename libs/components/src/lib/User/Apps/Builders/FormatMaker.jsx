@@ -255,24 +255,17 @@ export const FormatMaker = () => {
   useEffect(() => {
     const fetchData = async () => {
         try {
-          const {data} = await axios.get(`/api/formats`)
-          setFormats(data)
+            const {data: formatData} = await axios.get(`/api/formats`)
+            const {data: customFormatData} = await axios.get(`/api/formats?category=Custom`)
+            
+            setFormats(formatData)
+            setCustomFormats(customFormatData)
         } catch (err) {
-          console.log(err)
-        }
-    }
-
-    const fetchData2 = async () => {
-        try {
-          const {data} = await axios.get(`/api/formats?category=Custom`)
-          setCustomFormats(data)
-        } catch (err) {
-          console.log(err)
+            console.log(err)
         }
     }
 
     fetchData()
-    fetchData2()
   }, [])
 
   return (

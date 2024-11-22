@@ -473,7 +473,7 @@ export const decksGallery = async (req, res, next) => {
     }
 
     res.json({
-      decks: data,
+      deckTypes: data,
       format: format
     })
   } catch (err) {

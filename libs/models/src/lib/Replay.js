@@ -157,8 +157,6 @@ Replay.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
                 losingDeckTypeName: {[Op.iLike]: `%${value}%`}
             }
         }
-
-        // if (['display'].includes(key)) { value = value.toLowerCase() === 'true' }
        
         if (operator === 'eq') {
             operator = Op.eq
@@ -199,9 +197,9 @@ Replay.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
         offset: (page - 1) * limit,
         limit: limit,
         subQuery: false,
-        // attributes: { exclude: ['tournamentId', 'type', 'series', 'createdAt', 'updatedAt'] },        
+        attributes: { exclude: ['tournamentId', 'winningDeckId', 'losingDeckId', 'matchId', 'roundInt', 'createdAt', 'updatedAt'] },        
         include: [
-            {model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp']},
+            {model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp']},
             {model: Player, as: 'loser', attributes: ['id', 'name', 'discordId', 'discordPfp'] },
             {model: Format, attributes: ['name', 'icon']},
             {model: Event, attributes: ['community']}

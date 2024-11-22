@@ -9,21 +9,19 @@ import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import './ReplayTable.css' 
 
-const playerId = getCookie('playerId')
+export const ReplayTable = (props) => {
+    const isAdmin = props.roles?.admin
+    const isSubscriber = props.roles?.subscriber
 
-export const ReplayTable = () => {
     const isMounted = useRef(false)
     const [community, setCommunity] = useState(null)
     const [replays, setReplays] = useState([])
-    console.log('replays', replays)
     const [replaysPerPage, setReplaysPerPage] = useState(10)
     const [format, setFormat] = useState(null)
     const [formats, setFormats] = useState([])
     const [page, setPage] = useState(1)
     const [sortBy, setSortBy] = useState('publishDate:desc,display:desc,roundAbs:desc')
     const [total, setTotal] = useState(0)
-    const [isAdmin, setIsAdmin] = useState(false)
-    const [isSubscriber, setIsSubscriber] = useState(false)
     const [queryParams, setQueryParams] = useState({
       player: null,
       event: null,
@@ -35,27 +33,6 @@ export const ReplayTable = () => {
         if (!isMounted.current) return
         window.scrollTo(0, document.getElementById('sortSelector')?.offsetTop - 10)
     }, [page])
-
-    // USE EFFECT
-    useEffect(() => {
-        const checkRoles = async () => {
-            try {
-                const accessToken = getCookie('access')
-                const { data: player } = await axios.get(`/api/players/roles`, {
-                    headers: {
-                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                    }
-                })
-
-                if (player.admin) setIsAdmin(true)
-                if (player.subscriber) setIsSubscriber(true)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        if (playerId) checkRoles()
-    }, [])
 
     // SORT REPLAYS
     const sortReplays = () => {
@@ -450,16 +427,16 @@ export const ReplayTable = () => {
             
                         <select
                         id="sortSelector"
-                            defaultValue="publishDate:desc,display:desc,suggestedOrder:desc"
+                            defaultValue="publishDate:desc,display:desc,roundAbs:desc"
                             style={{width: '230px'}}
                             onChange={() => sortReplays()}
                         >
-                        <option value="publishDate:desc,display:desc,suggestedOrder:desc">Date: New ⮕ Old</option>
-                        <option value="publishDate:asc,display:desc,suggestedOrder:desc">Date: Old ⮕ New</option>
-                        <option value="winnerName:asc,display:desc,suggestedOrder:desc">Winner: A ⮕ Z</option>
-                        <option value="winnerName:desc,display:desc,suggestedOrder:desc">Winner: Z ⮕ A</option>
-                        <option value="winningDeckTypeName:asc,display:desc,suggestedOrder:desc">Winning Deck: A ⮕ Z</option>
-                        <option value="winningDeckTypeName:desc,display:desc,suggestedOrder:desc">Winning Deck: Z ⮕ A</option>
+                        <option value="publishDate:desc,display:desc,roundAbs:desc">Date: New ⮕ Old</option>
+                        <option value="publishDate:asc,display:desc,roundAbs:desc">Date: Old ⮕ New</option>
+                        <option value="winnerName:asc,display:desc,roundAbs:desc">Winner: A ⮕ Z</option>
+                        <option value="winnerName:desc,display:desc,roundAbs:desc">Winner: Z ⮕ A</option>
+                        <option value="winningDeckTypeName:asc,display:desc,roundAbs:desc">Winning Deck: A ⮕ Z</option>
+                        <option value="winningDeckTypeName:desc,display:desc,roundAbs:desc">Winning Deck: Z ⮕ A</option>
                         </select>
             
                         <div

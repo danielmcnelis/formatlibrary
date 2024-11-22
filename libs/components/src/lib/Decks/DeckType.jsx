@@ -1,15 +1,14 @@
 
 import { useState, useEffect, useLayoutEffect } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { CardImage } from '../Cards/CardImage'
 import { Matchup } from './MatchupBar'
 import { NotFound } from '../General/NotFound'
 import { useLocation } from 'react-router-dom'
-import { capitalize, getCookie } from '@fl/utils'
+import { capitalize } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import './DeckType.css'
-// const playerId = getCookie('playerId')
 
 const emojis = {
   Helmet: 'https://cdn.formatlibrary.com/images/emojis/helmet.png',
@@ -25,7 +24,8 @@ const emojis = {
 
 const { Controller, Orb, Lock, Bow, Voltage, Volcano, Unicorn, Thinking } = emojis
 
-export const DeckType = () => {
+export const DeckType = (props) => {
+    console.log('props', props)
     const [summary, setSummary] = useState({})
     const [matchups, setMatchups] = useState(false)
     const [banlist, setBanList] = useState({})
@@ -42,15 +42,8 @@ export const DeckType = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const accessToken = getCookie('access')
-                const { data: player } = await axios.get(`/api/players/roles`, {
-                    headers: {
-                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                    }
-                })
-                
                 const {data: summaryData} = await axios.get(`/api/deckTypes/summary?id=${id}&format=${format}`)
-                const {data: matchupData} = await axios.get(`/api/matchups/${id}?format=${format}&isAdmin=${player.admin}&isSubscriber=${player.subscriber}`)
+                const {data: matchupData} = await axios.get(`/api/matchups/${id}?format=${format}&isAdmin=${props.roles?.admin}&isSubscriber=${props.roles?.subscriber}`)
                 const {data: banlistData} = await axios.get(`/api/banlists/simple/${summaryData?.format?.banlist}?category=${summaryData?.format?.category || 'TCG'}`)
                 
                 setMatchups(matchupData)

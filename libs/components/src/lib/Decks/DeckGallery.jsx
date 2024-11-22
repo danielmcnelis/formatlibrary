@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet'
 import './DeckGallery.css'
 
 export const DeckGallery = () => {
-    const [decks, setDecks] = useState([])
+    const [deckTypes, setDeckTypes] = useState([])
     const [format, setFormat] = useState({})
     const { id } = useParams()
     const videoPlaylistId = format?.videoPlaylistId
@@ -20,7 +20,7 @@ export const DeckGallery = () => {
         const fetchData = async () => {
             try {
                 const {data} = await axios.get(`/api/decks/gallery/${id}`)
-                setDecks(data.decks)
+                setDeckTypes(data.deckTypes)
                 setFormat(data.format)
             } catch (err) {
                 console.log(err)
@@ -30,7 +30,7 @@ export const DeckGallery = () => {
         fetchData()
     }, [])
 
-    if (!decks.length) return <div style={{height: '100vh'}}/>
+    if (!deckTypes.length) return <div style={{height: '100vh'}}/>
 
     return (
         <>
@@ -53,7 +53,7 @@ export const DeckGallery = () => {
                     </div>
                     <div className="popular-decks-flexbox">
                     {
-                        decks.map((deck) => <DeckThumbnail formatName={id} deck={deck} key={deck.id}/>)
+                        deckTypes.map((deckType) => <DeckThumbnail formatName={id} deckType={deckType} key={deckType.id}/>)
                     }
                     </div>
                 </div>

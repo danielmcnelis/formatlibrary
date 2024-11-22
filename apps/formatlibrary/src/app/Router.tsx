@@ -1,36 +1,36 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import {
-  AdminPortal,
-  Builder,
-  CardTable,
-  CubeBrowser,
-  DraftLauncher,
-  CubeMaker,
-  DeckGallery,
-  DeckTable,
-  DeckType,
-  DraftLobby,
-  EventGallery,
-  EventTable,
-  FormatMaker,
-  FormatMenu,
-  FormatIntro,
-  Home,
-  LeaderBoard,
-  NotFound,
-  PackSimulator,
-  Page,
-  PlayerProfile,
-  RatedLobby,
-  ReplayTable,
-  SealedLauncher,
-  SealedLobby,
-  Settings,
-  SingleBanList,
-  SingleCard,
-  SingleDeck,
-  SingleEvent,
-  UserPortal
+ AdminPortal,
+ Builder,
+ CardTable,
+ CubeBrowser,
+ DraftLauncher,
+ CubeMaker,
+ DeckGallery,
+ DeckTable,
+ DeckType,
+ DraftLobby,
+ EventGallery,
+ EventTable,
+ FormatMaker,
+ FormatMenu,
+ FormatIntro,
+ Home,
+ LeaderBoard,
+ NotFound,
+ PackSimulator,
+ Page,
+ PlayerProfile,
+ RatedLobby,
+ ReplayTable,
+ SealedLauncher,
+ SealedLobby,
+ Settings,
+ SingleBanList,
+ SingleCard,
+ SingleDeck,
+ SingleEvent,
+ UserPortal
 } from '@fl/components'
 
 // import { SocketProvider } from '@fl/context'
@@ -39,69 +39,69 @@ import {
 // const socket = io(config.siteUrl, { transports: ["websocket"] })
 
 const AdsTxtRedirect = () => {
-    window.location.href = 'https://ads.adthrive.com/sites/66e1eae5fdcedc15a412ead6/ads.txt';
-    return null;
+ window.location.href = 'https://ads.adthrive.com/sites/66e1eae5fdcedc15a412ead6/ads.txt';
+ return null;
 }
 
 export const Router = (props) => {
-    const {disableAds} = props
-    return (
+ const {disableAds, roles} = props
+ return (
 			<BrowserRouter>
 				<Routes>
-					<Route path="/" element=<Page disableAds={disableAds} element=<Home /> /> />
+					<Route path="/" element=<Page roles={roles} disableAds={disableAds} element=<Home /> /> />
                     <Route path='/ads.txt' element=<AdsTxtRedirect /> />
-					<Route path="/home" element=<Page disableAds={disableAds} element=<Home /> /> />
+					<Route path="/home" element=<Page roles={roles} disableAds={disableAds} element=<Home /> /> />
                     <Route path="/auth/"/>
-					<Route path="/apps" element=<Page disableAds={disableAds} element=<UserPortal /> /> />
-					<Route path="/deck-builder" element=<Page disableAds={true} element=<Builder /> /> />
-					<Route path="/deck-builder/:id" element=<Page disableAds={true}  element=<Builder /> /> />
-					<Route path="/pack-simulator" element=<Page element=<PackSimulator /> /> />
-					<Route path="/settings" element=<Page disableAds={true} element=<Settings /> /> />
-					<Route path="/cube-maker" element=<Page disableAds={true} element=<CubeMaker /> /> />
-					<Route path="/rated-lobby" element=<Page disableAds={disableAds} element=<RatedLobby /> /> />
-					<Route path="/cubes/:id" element=<Page disableAds={disableAds} element=<CubeBrowser /> /> />
-					<Route path="/drafts/:id" element=<Page disableAds={disableAds} element= <DraftLobby/> /> />
-					{/* <Route path="/drafts/:id" element=<Page disableAds={disableAds} element= <SocketProvider value={socket}><DraftLobby/></SocketProvider> /> /> */}
-					<Route path="/sealed/:id" element=<Page disableAds={disableAds} element= <SealedLobby/> /> />
-					<Route path="/format-maker" element=<Page disableAds={disableAds} element=<FormatMaker /> /> />
-					<Route path="/great-library.html" element=<Page disableAds={disableAds} element= <CardTable /> /> />
-					<Route path="/great-library" element=<Page disableAds={disableAds} element= <CardTable /> /> />
-					<Route path="/cards-by-format.html" element=<Page disableAds={disableAds} element= <CardTable /> /> />
-					<Route path="/cards-by-format" element=<Page disableAds={disableAds} element= <CardTable /> /> />
-					<Route path="/cards-by-year.html" element=<Page disableAds={disableAds} element= <CardTable /> /> />
-					<Route path="/cards-by-year" element=<Page disableAds={disableAds} element= <CardTable /> /> />
+					<Route path="/apps" element=<Page roles={roles} disableAds={disableAds} element=<UserPortal /> /> />
+					<Route path="/deck-builder" element=<Page roles={roles} disableAds={true} element=<Builder /> /> />
+					<Route path="/deck-builder/:id" element=<Page roles={roles} disableAds={true} element=<Builder /> /> />
+					<Route path="/pack-simulator" element=<Page roles={roles} element=<PackSimulator /> /> />
+					<Route path="/settings" element=<Page roles={roles} disableAds={true} element=<Settings /> /> />
+					<Route path="/cube-maker" element=<Page roles={roles} disableAds={true} element=<CubeMaker /> /> />
+					<Route path="/rated-lobby" element=<Page roles={roles} disableAds={disableAds} element=<RatedLobby /> /> />
+					<Route path="/cubes/:id" element=<Page roles={roles} disableAds={disableAds} element=<CubeBrowser /> /> />
+					<Route path="/drafts/:id" element=<Page roles={roles} disableAds={disableAds} element= <DraftLobby/> /> />
+					{/* <Route path="/drafts/:id" element=<Page roles={roles} disableAds={disableAds} element= <SocketProvider value={socket}><DraftLobby/></SocketProvider> /> /> */}
+					<Route path="/sealed/:id" element=<Page roles={roles} disableAds={disableAds} element= <SealedLobby/> /> />
+					<Route path="/format-maker" element=<Page roles={roles} disableAds={disableAds} element=<FormatMaker /> /> />
+					<Route path="/great-library.html" element=<Page roles={roles} disableAds={disableAds} element= <CardTable /> /> />
+					<Route path="/great-library" element=<Page roles={roles} disableAds={disableAds} element= <CardTable /> /> />
+					<Route path="/cards-by-format.html" element=<Page roles={roles} disableAds={disableAds} element= <CardTable /> /> />
+					<Route path="/cards-by-format" element=<Page roles={roles} disableAds={disableAds} element= <CardTable /> /> />
+					<Route path="/cards-by-year.html" element=<Page roles={roles} disableAds={disableAds} element= <CardTable /> /> />
+					<Route path="/cards-by-year" element=<Page roles={roles} disableAds={disableAds} element= <CardTable /> /> />
 					<Route path="/goat-pool.html" element={<Navigate to="/cards?format=goat" />} />
 					<Route path="/goat-pool" element={<Navigate to="/cards?format=goat" />} />
 					<Route path="/goat-card-pool.html" element={<Navigate to="/cards?format=goat" />} />
-					<Route path="/goat-card-pool"  element={<Navigate to="/cards?format=goat" />} />
-					<Route path="/cards/" element=<Page disableAds={disableAds} element=<CardTable /> /> />
-					<Route path="/cards?format=:id" element=<Page disableAds={disableAds} element=<CardTable /> /> />
-					<Route path="/cards/:id" element=<Page disableAds={disableAds} element=<SingleCard /> /> />
+					<Route path="/goat-card-pool" element={<Navigate to="/cards?format=goat" />} />
+					<Route path="/cards/" element=<Page roles={roles} disableAds={disableAds} element=<CardTable /> /> />
+					<Route path="/cards?format=:id" element=<Page roles={roles} disableAds={disableAds} element=<CardTable /> /> />
+					<Route path="/cards/:id" element=<Page roles={roles} disableAds={disableAds} element=<SingleCard roles={roles}/> /> />
 					<Route path="/goat-deck-gallery" element={<Navigate to="/deck-gallery/Goat" />} />
-					<Route path="/decks/" element=<Page disableAds={disableAds} element= <DeckTable /> /> />
-					<Route path="/decks/:id" element=<Page disableAds={disableAds} element= <SingleDeck /> /> />
-					<Route path="/decktypes/:id" element=<Page disableAds={disableAds} element= <DeckType /> /> />
-					<Route path="/deck-gallery/:id" element=<Page disableAds={disableAds} element= <DeckGallery /> /> />
-					<Route path="/events/" element=<Page disableAds={disableAds} element= <EventTable /> /> />
-					<Route path="/events/:id" element=<Page disableAds={disableAds} element= <SingleEvent /> /> />
-					<Route path="/event-gallery/:id" element=<Page disableAds={disableAds} element= <EventGallery /> /> />
-					<Route path="/ban-lists" element=<Page disableAds={disableAds} element= <FormatMenu /> /> />
+					<Route path="/decks/" element=<Page roles={roles} disableAds={disableAds} element= <DeckTable roles={roles}/> /> />
+					<Route path="/decks/:id" element=<Page roles={roles} disableAds={disableAds} element= <SingleDeck roles={roles}/> /> />
+					<Route path="/decktypes/:id" element=<Page roles={roles} disableAds={disableAds} element= <DeckType roles={roles}/> /> />
+					<Route path="/deck-gallery/:id" element=<Page roles={roles} disableAds={disableAds} element= <DeckGallery /> /> />
+					<Route path="/events/" element=<Page roles={roles} disableAds={disableAds} element= <EventTable /> /> />
+					<Route path="/events/:id" element=<Page roles={roles} disableAds={disableAds} element= <SingleEvent roles={roles}/> /> />
+					<Route path="/event-gallery/:id" element=<Page roles={roles} disableAds={disableAds} element= <EventGallery /> /> />
+					<Route path="/ban-lists" element=<Page roles={roles} disableAds={disableAds} element= <FormatMenu /> /> />
 					<Route path="/goat-intro.html" element={<Navigate to="/formats/goat" />} />
 					<Route path="/goat-intro" element={<Navigate to="/formats/goat" />} />
 					<Route path="/goat-history.html" element={<Navigate to="/formats/goat" />} />
 					<Route path="/goat-history" element={<Navigate to="/formats/goat" />} />
 					<Route path="/goat-rulings.html" element={<Navigate to="/formats/goat" />} />
 					<Route path="/goat-rulings" element={<Navigate to="/formats/goat" />} />
-					<Route path="/formats/" element=<Page disableAds={disableAds} element= <FormatMenu /> /> />
-					<Route path="/formats/:id" element=<Page disableAds={disableAds} element= <FormatIntro /> /> />
-					<Route path="/leaderboards/:id" element=<Page disableAds={disableAds} element= <LeaderBoard /> /> />
-					<Route path="/replays/" element=<Page disableAds={disableAds} element= <ReplayTable /> /> />
-                    <Route path="/start-draft/" element=<Page disableAds={disableAds} element= <DraftLauncher/> /> />
-                    {/* <Route path="/start-draft/" element=<Page disableAds={disableAds} element= <SocketProvider value={socket}><DraftLauncher/></SocketProvider> /> /> */}
-					<Route path="/start-sealed/" element=<Page disableAds={disableAds} element= <SealedLauncher /> /> />
-					<Route path="/banlists/:id" element=<Page disableAds={disableAds} element= <SingleBanList /> /> />
-					<Route path="/players/:id" element=<Page disableAds={disableAds} element= <PlayerProfile /> /> />
-					<Route path="/admin-portal" element=<Page  element= <AdminPortal /> /> />
+					<Route path="/formats/" element=<Page roles={roles} disableAds={disableAds} element= <FormatMenu /> /> />
+					<Route path="/formats/:id" element=<Page roles={roles} disableAds={disableAds} element= <FormatIntro roles={roles}/> /> />
+					<Route path="/leaderboards/:id" element=<Page roles={roles} disableAds={disableAds} element= <LeaderBoard /> /> />
+					<Route path="/replays/" element=<Page roles={roles} disableAds={disableAds} element= <ReplayTable roles={roles}/> /> />
+                    <Route path="/start-draft/" element=<Page roles={roles} disableAds={disableAds} element= <DraftLauncher/> /> />
+                    {/* <Route path="/start-draft/" element=<Page roles={roles} disableAds={disableAds} element= <SocketProvider value={socket}><DraftLauncher/></SocketProvider> /> /> */}
+					<Route path="/start-sealed/" element=<Page roles={roles} disableAds={disableAds} element= <SealedLauncher /> /> />
+					<Route path="/banlists/:id" element=<Page roles={roles} disableAds={disableAds} element= <SingleBanList /> /> />
+					<Route path="/players/:id" element=<Page roles={roles} disableAds={disableAds} element= <PlayerProfile /> /> />
+					<Route path="/admin-portal" element=<Page roles={roles} element= <AdminPortal roles={roles}/> /> />
 					<Route path="/may-2002---yugi-kaiba" element={<Navigate to="/formats/yugi-kaiba" />} />
 					<Route path="/jul-2002---critter" element={<Navigate to="/formats/critter" />} />
 					<Route path="/apr-2003---android" element={<Navigate to="/formats/android" />} />
@@ -130,9 +130,9 @@ export const Router = (props) => {
 					<Route path="/flc3" element={<Navigate to="/events/FLC3" />} />
 					<Route path="/flc4" element={<Navigate to="/events/FLC4" />} />
 					<Route path="/flc5" element={<Navigate to="/events/FLC5" />} />
-					<Route path="/not-found"  element= < NotFound /> />
+					<Route path="/not-found" element= < NotFound /> />
 					<Route element= < NotFound /> />
 				</Routes>
 			</BrowserRouter>
-  )
+ )
 }

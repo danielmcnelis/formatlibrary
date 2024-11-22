@@ -1,8 +1,6 @@
 
-import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getCookie } from '@fl/utils'
-import axios from 'axios'
 import './Navigation.css'
 
 const playerId = getCookie('playerId')
@@ -19,29 +17,9 @@ const toggle = () => {
 
 // NAVIGATION
 export const Navigation = (props) => {
-    const [isContentManager, setIsContentManager] = useState(false)
+    const isContentManager = props.roles?.contentManager
     const { switchTheme, theme } = props
 
-    // USE EFFECT
-    useEffect(() => {
-        const checkRoles = async () => {
-            try {
-                const accessToken = getCookie('access')
-                const { data: player } = await axios.get(`/api/players/roles`, {
-                    headers: {
-                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                    }
-                })
-
-                if (player.contentManager) setIsContentManager(true)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        if (playerId) checkRoles()
-    }, [])
-    
     return (
         <div className="nav-bar">
             <Link to="/" state={{ page: 1 }}  >

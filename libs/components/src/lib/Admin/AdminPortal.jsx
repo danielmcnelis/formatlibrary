@@ -1,36 +1,12 @@
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { BanListCreator, BracketCreator, CardCreator, DeckCreator, DeckTypeCreator, EventCreator, ImageCreator, PlayerCreator, TeamCreator, YDKCreator } from './Creators'
 import { NotFound } from '../General/NotFound'
-import { getCookie } from '@fl/utils'
-import axios from 'axios'
 import './AdminPortal.css'
 
-const playerId = getCookie('playerId')
-
-export const AdminPortal = () => {
-  const [isContentManager, setIsContentManager] = useState(false)
-  const [view, setView] = useState(false)
-
-    // USE EFFECT
-    useEffect(() => {
-        const checkRoles = async () => {
-            try {
-                const accessToken = getCookie('access')
-                const { data: player } = await axios.get(`/api/players/roles`, {
-                    headers: {
-                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                    }
-                })
-
-                if (player.contentManager) setIsContentManager(true)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        if (playerId) checkRoles()
-    }, [])
+export const AdminPortal = (props) => {
+    const isContentManager = props.roles?.contentManager
+    const [view, setView] = useState(false)
 
   // SWITCH VIEW
   const switchView = (view) => {

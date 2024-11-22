@@ -451,84 +451,50 @@ export const Builder = () => {
   useLayoutEffect(() => window.scrollTo(0, 0), [])
 
   // USE EFFECT SET DECK
-  useEffect(() => {
+useEffect(() => {
     const fetchData = async () => {
-      try {
-        const accessToken = getCookie('access')
-        const {data} = await axios.get(`/api/decks/my-decks`, {
-            headers: {
-                ...(accessToken && {authorization: `Bearer ${accessToken}`})
-            }
-        })
-        setDecks(data)
-      } catch (err) {
-        console.log(err)
-      }
-    }
-
-    const fetchData1 = async () => {
         try {
-          const {data} = await axios.get(`/api/decktypes/`)
-          setDeckTypes(data)
-        } catch (err) {
-          console.log(err)
-        }
-    }
-
-    const fetchData2 = async () => {
-        try {
-          const {data} = await axios.get(`/api/formats`)
-          setFormats(data)
-        } catch (err) {
-          console.log(err)
-        }
-    }
-
-    const fetchData3 = async () => {
-        try {
-          const {data} = await axios.get(`/api/formats/current`)
-          setFormat(data.format)
-        } catch (err) {
-          console.log(err)
-        }
-    }
-
-    const fetchData4 = async () => {
-        try {
-            const { deck, format, origin } = location.state
-            const deckId = deck?.playerId === playerId && origin === 'user' ? deck.id : null
-
-            const { data } = await axios.put(`/api/decks/read-ydk`, {
-                name: deck?.name,
-                ydk: deck?.ydk
-            })
-
-            const name = deck?.playerId === playerId && origin === 'user' ? deck.name : `${deck?.builder}-${deck?.type || deck?.name}`
+            const accessToken = getCookie('access')
             
-            setDeck({
-                ...data,
-                id: deckId,
-                name: name,
-                format: deck?.format || format || {}
+            const {data: decksData} = await axios.get(`/api/decks/my-decks`, {
+                headers: {
+                    ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                }
             })
 
-            setFormat(deck?.format || format || {})
+            const {data: deckTypeData} = await axios.get(`/api/decktypes/`)
+            const {data: formatData} = await axios.get(`/api/formats`)
+
+            setDecks(decksData)
+            setDeckTypes(deckTypeData)
+            setFormats(formatData)
+
+            if (location.state) {
+                const { deck, format, origin } = location.state
+                const deckId = deck?.playerId === playerId && origin === 'user' ? deck.id : null
+                const name = deck?.playerId === playerId && origin === 'user' ? deck.name : `${deck?.builder}-${deck?.type || deck?.name}`
+
+                const { data: ydkData } = await axios.put(`/api/decks/read-ydk`, {
+                    name: deck?.name,
+                    ydk: deck?.ydk
+                })
+
+                setDeck({
+                    ...ydkData,
+                    id: deckId,
+                    name: name,
+                    format: deck?.format || format || {}
+                })
+
+                setFormat(deck.format)
+            }
         } catch (err) {
             console.log(err)
         }
     }
 
     fetchData()
-    fetchData1()
-    fetchData2()
-
-    if (location && location.state && location.state.deck) {
-        fetchData4()
-    } else {
-        fetchData3()
-    }
-  }, [])
-
+}, [location])
 
   // USE EFFECT SET DECK
   useEffect(() => {

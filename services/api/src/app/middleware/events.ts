@@ -192,7 +192,7 @@ export const eventsId = async (req, res, next) => {
             { model: Player, as: 'loser' }, 
             { model: Player, as: 'winner'}
         ],
-        order: [['display', 'DESC'], ['suggestedOrder', 'DESC']]
+        order: [['display', 'DESC'], ['roundAbs', 'DESC']]
     })
 
     const topDecks = await Deck.findAll({

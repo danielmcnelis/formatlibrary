@@ -8,7 +8,6 @@ import { dateToSimple, dateToVerbose, ordinalize } from '@fl/utils'
 import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import './SingleDeck.css'
-const playerId = getCookie('playerId')
 
 const emojis = {
   Helmet: 'https://cdn.formatlibrary.com/images/emojis/helmet.png',
@@ -31,13 +30,14 @@ const emojis = {
 
 const { Unicorn, Voltage, Bow, Volcano, Controller, Orb, Lock, Thinking, First, Second, Third, Consolation, Heart, Disk, Eye } = emojis
 
-export const SingleDeck = () => {
+export const SingleDeck = (props) => {
+    const isAdmin = props.roles?.admin
+    const isContentManager = props.roles?.contentManager
+    const isSubscriber = props.roles?.subscriber
+
     const [deck, setDeck] = useState({})
     const [banlist, setBanlist] = useState({})
-    const [isAdmin, setIsAdmin] = useState(false)
-    const [isContentManager, setIsContentManager] = useState(false)
     const [inEditMode, setInEditMode] = useState(false)
-    const [isSubscriber, setIsSubscriber] = useState(false)
     const [suggestions, setSuggestions] = useState([])
     const [input, setInput] = useState('')
     const [selectedDeckType, setSelectedDeckType] = useState({})
@@ -49,29 +49,6 @@ export const SingleDeck = () => {
     
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0), [])
-
-    // USE EFFECT
-    useEffect(() => {
-        const checkRoles = async () => {
-            try {
-                const accessToken = getCookie('access')
-                const { data: player } = await axios.get(`/api/players/roles`, {
-                    headers: {
-                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                    }
-                })
-
-                if (player.admin) setIsAdmin(true)
-                if (player.contentManager) setIsContentManager(true)
-                if (player.subscriber) setIsSubscriber(true)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        if (playerId) checkRoles()
-    }, [])
-
 
     // UPDATE DECK INFO
     const updateDeckInfo = async () => {

@@ -1,8 +1,8 @@
 
 import { useState, useEffect, useLayoutEffect } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
-import { capitalize, dateToSimple, dateToVerbose, getCookie } from '@fl/utils'
+import { capitalize, dateToSimple, dateToVerbose } from '@fl/utils'
 import { ReplayThumbnail } from './ReplayThumbnail'
 import { DeckImage } from '../Decks/DeckImage'
 import { NotFound } from '../General/NotFound'
@@ -12,13 +12,13 @@ import { Bar, Doughnut } from 'react-chartjs-2'
 import { Helmet } from 'react-helmet'
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
-const playerId = getCookie('playerId')
 
-export const SingleEvent = () => {
+export const SingleEvent = (props) => {
+    const isAdmin = props.roles?.admin
+    const isSubscriber = props.roles?.subscriber
+
   const [event, setEvent] = useState({})
   const [winner, setWinner] = useState({})
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [isSubscriber, setIsSubscriber] = useState(false)
   const [replays, setReplays] = useState({})
   const [topDecks, setTopDecks] = useState({})
   const [metagame, setMetagame] = useState({
@@ -54,27 +54,6 @@ export const SingleEvent = () => {
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0), [])
 
-    // USE EFFECT
-    useEffect(() => {
-        const checkRoles = async () => {
-            try {
-                const accessToken = getCookie('access')
-                const { data: player } = await axios.get(`/api/players/roles`, {
-                    headers: {
-                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                    }
-                })
-
-                if (player.admin) setIsAdmin(true)
-                if (player.subscriber) setIsSubscriber(true)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        if (playerId) checkRoles()
-    }, [])
-    
   // USE EFFECT SET CARD
   useEffect(() => {
     const uploadEvent = async () => {

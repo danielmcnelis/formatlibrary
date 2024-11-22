@@ -6,13 +6,11 @@ import { DeckRow } from './DeckRow.jsx'
 import { MobileDeckRow } from './MobileDeckRow'
 import { Pagination } from '../General/Pagination'
 import { useMediaQuery } from 'react-responsive'
-import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import './DeckTable.css' 
 
-const playerId = getCookie('playerId')
-
-export const DeckTable = () => {
+// DECK TABLE
+export const DeckTable = (props) => {
     const isMounted = useRef(false)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
@@ -23,8 +21,8 @@ export const DeckTable = () => {
     const [origin, setOrigin] = useState('event')
     const [format, setFormat] = useState(null)
     const [formats, setFormats] = useState([])
-    const [isAdmin, setIsAdmin] = useState(false)
-    const [isSubscriber, setIsSubscriber] = useState(false)
+    const isAdmin = props.roles?.admin
+    const isSubscriber = props.roles?.subscriber
   
     const [queryParams, setQueryParams] = useState({
       type: null,
@@ -40,27 +38,6 @@ export const DeckTable = () => {
         if (!isMounted.current) return
         window.scrollTo(0, document.getElementById('sortSelector')?.offsetTop - 10)
     }, [page])
-
-    // USE EFFECT
-    useEffect(() => {
-        const checkRoles = async () => {
-            try {
-                const accessToken = getCookie('access')
-                const { data: player } = await axios.get(`/api/players/roles`, {
-                    headers: {
-                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                    }
-                })
-
-                if (player.admin) setIsAdmin(true)
-                if (player.subscriber) setIsSubscriber(true)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        if (playerId) checkRoles()
-    }, [])
 
     // COUNT
     const count = async () => {

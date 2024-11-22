@@ -2,13 +2,17 @@ import { Router } from './Router'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { getCookie } from '@fl/utils'
-import { Helmet } from 'react-helmet'
 import { useDetectAdBlock } from 'adblock-detect-react'
 
 const App = () => {
     const playerId = getCookie('playerId')
     const visited = getCookie('visited')
-    const [isSubscriber, setIsSubscriber] = useState(false)
+    const [roles, setRoles] = useState({
+        admin: false, 
+        contentManager: false, 
+        subscriber: false
+    })
+    
     const [checkedSubscription, setCheckedSubscription] = useState(false)  
     const adBlockDetected = useDetectAdBlock()
     const [showReminder, setShowReminder] = useState(false) 
@@ -41,7 +45,12 @@ const App = () => {
                     }
                 })
 
-                if (player.subscriber) setIsSubscriber(true)
+                setRoles({
+                    admin: player.admin,
+                    contentManager: player.contentManager,
+                    subscriber: player.subscriber
+                })
+                
                 setCheckedSubscription(true)
             } catch (err) {
                 setCheckedSubscription(true)
@@ -50,9 +59,10 @@ const App = () => {
         }
 
         if (playerId) checkRoles()
-    }, [])
+    }, [playerId])
 
-    const disableAds = playerId && (!checkedSubscription || (checkedSubscription && isSubscriber))
+    if (!checkedSubscription) return <div style={{height: '100vh'}}/>
+    const disableAds = checkedSubscription && roles.subscriber
 
   return (
     <div className="app">
@@ -84,7 +94,7 @@ const App = () => {
                             </div>
                         </div>
                     </div>
-                ) : (<Router disableAds={disableAds}/>)
+                ) : (<Router disableAds={disableAds} roles={roles}/>)
         }
     </div>
     )

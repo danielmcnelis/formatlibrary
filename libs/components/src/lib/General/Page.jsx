@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet'
 
 // PAGE
 export const Page = (props) => {
-  const { element, disableAds } = props
+  const { element, disableAds, roles } = props
   const defaultDark = window.matchMedia('(prefers-color-scheme: dark)').matches
   const [theme, setTheme] = useLocalStorage('theme', defaultDark ? 'dark' : 'light')  
 
@@ -24,7 +24,7 @@ export const Page = (props) => {
     {
         disableAds ? (
             <div id="theme" data-theme={theme}>
-                <Navigation switchTheme={switchTheme} theme={theme}/>
+                <Navigation switchTheme={switchTheme} theme={theme}  roles={roles}/>
                 {element}
                 <Footer/>
             </div>
@@ -34,7 +34,7 @@ export const Page = (props) => {
                     <script data-no-optimize="1" data-cfasync="false" src="https://formatlibrary.com/raptive.js"></script>
                 </Helmet>
                 <div id="theme" data-theme={theme}>
-                    <Navigation switchTheme={switchTheme} theme={theme}/>
+                    <Navigation switchTheme={switchTheme} theme={theme} roles={roles}/>
                     {element}
                     <Footer/>
                 </div>

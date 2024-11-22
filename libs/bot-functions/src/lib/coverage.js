@@ -901,7 +901,7 @@ export const generateMatchupData = async (interaction, event, tournament) => {
         })
 
         const percentage = (wins / (wins + losses)).toFixed(3) * 100
-        console.log(`added new ${matchup.formatName} format matchup data point: ${matchup.} > ${matchup.losingDeckTypeName} (${percentage}%)`)
+        console.log(`added new ${matchup.formatName} format matchup data point: ${matchup.winningDeckTypeName} > ${matchup.losingDeckTypeName} (${percentage}%)`)
     }
 
     return interaction.editReply(`Generated new matchup data points for ${b} matches from ${tournament.name}.${d ? ` ${d} matchups were already recorded.` : ''}${c ? ` ${c} matches appear to have been forfeited.` : ''} ${b + d + c} out of ${matches.length} matches are now accounted for.`)
