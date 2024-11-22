@@ -614,6 +614,9 @@ export const displayReplays = async (interaction, event) => {
                         }
                 }
 
+                console.log('winningDeck', winningDeck)
+                console.log('losingDeck', losingDeck)
+
                 await replay.update({
                     winningDeckTypeName: winningDeck?.deckType.name,
                     winningDeckId: winningDeck?.id,
