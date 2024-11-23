@@ -296,7 +296,7 @@ export const composeBlogPost = async (interaction, event) => {
                 formatId: event.formatId,
                 communityName: event.server?.communityName,
                 serverInviteLink: event.server?.InviteLink,
-                serverId: event.tournament?.serverId,
+                serverId: event.primaryTournament?.serverId,
             })
         
             return await interaction.channel.send(`Composed blogpost for ${event.name}.`)
@@ -391,7 +391,7 @@ export const composeBlogPost = async (interaction, event) => {
                 formatId: event.formatId,
                 communityName: event.server?.communityName,
                 serverInviteLink: event.server?.InviteLink,
-                serverId: event.tournament?.serverId,
+                serverId: event.primaryTournament?.serverId,
             })
         
             const buffer = canvas.toBuffer('image/png')
@@ -499,7 +499,7 @@ export const composeThumbnails = async (interaction, event) => {
 
 // DISPLAY DECKS
 export const displayDecks = async (interaction, event) => {
-    const minPlacement = event.tournament?.topCut ? event.tournament?.topCut :
+    const minPlacement = event.primaryTournament?.topCut ? event.primaryTournament?.topCut :
         event.size <= 8 ? 1 :
         event.size > 8 && event.size <= 16 ? 2 :
         event.size > 16 && event.size <= 24 ? 3 :
@@ -587,14 +587,14 @@ export const displayReplays = async (interaction, event) => {
                 const round = replay.roundInt
                 let display = false
         
-                if (event.tournament?.type === 'single elimination') {
+                if (event.primaryTournament?.type === 'single elimination') {
                     const totalRounds = Math.ceil(Math.log2(event.size))
                     const roundsRemaining = totalRounds - round
                     display = roundsRemaining === 0 || 
                         event.size > 8 && roundsRemaining <= 1 ||
                         event.size > 16 && roundsRemaining <= 2 ||
                         event.size > 32 && roundsRemaining <= 3
-                } else if (event.tournament?.type === 'double elimination') {
+                } else if (event.primaryTournament?.type === 'double elimination') {
                     const totalWinnersRounds = Math.ceil(Math.log2(event.size)) + 1
                     const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(event.size)))
                     const correction = (event.size - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
@@ -614,10 +614,6 @@ export const displayReplays = async (interaction, event) => {
                         }
                 }
 
-                console.log('replay.id', replay.id)
-                console.log('winningDeck.deckTypeId', winningDeck?.deckTypeId)
-                console.log('losingDeck.deckTypeId', losingDeck?.deckTypeId)
-
                 await replay.update({
                     winningDeckTypeName: winningDeck?.deckType.name,
                     winningDeckId: winningDeck?.id,
@@ -630,9 +626,6 @@ export const displayReplays = async (interaction, event) => {
                     publishDate: event.endDate,
                     display: display
                 })
-
-                console.log('updated replay.winningDeckTypeId', replay.winningDeckTypeId)
-                console.log('updated replay.losingDeckTypeId', replay.losingDeckTypeId)
             } catch (err) {
                 console.log(err)
             }
@@ -670,10 +663,6 @@ export const displayReplays = async (interaction, event) => {
                     },
                     include: DeckType
                 })
-    
-                console.log('replay.id', replay.id)
-                console.log('winningDeck.deckTypeId', winningDeck?.deckTypeId)
-                console.log('losingDeck.deckTypeId', losingDeck?.deckTypeId)
 
                 await replay.update({
                     winningDeckTypeName: winningDeck?.deckType?.name,
@@ -687,9 +676,6 @@ export const displayReplays = async (interaction, event) => {
                     publishDate: event.endDate,
                     display: true
                 })
-
-                console.log('updated replay.winningDeckTypeId', replay.winningDeckTypeId)
-                console.log('updated replay.losingDeckTypeId', replay.losingDeckTypeId)
             } catch (err) {
                 console.log(err)
             }

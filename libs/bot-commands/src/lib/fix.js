@@ -42,7 +42,7 @@ export default {
                         abbreviation: input
                     }
                 },
-                include: [Format, { model: Player, as: 'winner' }, Tournament]
+                include: [Format, { model: Player, as: 'winner' }, {model: Tournament, as: 'primaryTournament'}]
             })
 
             const topCutTournament = await Tournament.findOne({ where: {
@@ -53,13 +53,13 @@ export default {
 
             const server = await Server.findOne({
                 where: {
-                    id: event.tournament?.serverId
+                    id: event.primaryTournament?.serverId
                 }
             })
 
             const matches = await getMatches(server, event.primaryTournamentId)
             const participants = await getParticipants(server, event.primaryTournamentId)
-            const standings = await calculateStandings(event.tournament, matches, participants, topCutTournament)
+            const standings = await calculateStandings(event.primaryTournament, matches, participants, topCutTournament)
 
             for (let i = 0; i < standings.length; i++) {
                 try {

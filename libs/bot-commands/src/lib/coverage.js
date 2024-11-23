@@ -28,7 +28,7 @@ export default {
                     abbreviation: {[Op.iLike]: input}
                 }
             },
-            include: [Format, { model: Player, as: 'winner' }, Server, { model: Team, as: 'winningTeam' }, Tournament]
+            include: [Format, { model: Player, as: 'winner' }, Server, { model: Team, as: 'winningTeam' }, { model: Tournament, as: 'primaryTournament' }]
         })
 
         if (!event) return await interaction.editReply({ content: `No event found.` })
@@ -49,8 +49,8 @@ export default {
         await displayReplays(interaction, event)
         await composeThumbnails(interaction, event)
 
-        if (event.tournament) {
-            await generateMatchupData(interaction, event, event.tournament)
+        if (event.primaryTournament) {
+            await generateMatchupData(interaction, event, event.primaryTournament)
         }
 
         await composeBlogPost(interaction, event) 
