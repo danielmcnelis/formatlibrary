@@ -21,22 +21,28 @@ export const Replay = db.define('replays', {
     winnerId: {
         type: Sequelize.STRING
     },
+    winningDeckId: {
+        type: Sequelize.INTEGER
+    },
+    winningDeckTypeName: {
+        type: Sequelize.STRING
+    },
+    winningDeckTypeId: {
+        type: Sequelize.INTEGER
+    },
     loserName: {
         type: Sequelize.STRING
     },
     loserId: {
         type: Sequelize.STRING
     },
-    winningDeckTypeName: {
-        type: Sequelize.STRING
-    },
-    winningDeckId: {
+    losingDeckId: {
         type: Sequelize.INTEGER
     },
     losingDeckTypeName: {
         type: Sequelize.STRING
     },
-    losingDeckId: {
+    losingDeckTypeId: {
         type: Sequelize.INTEGER
     },
     matchId: {
@@ -58,9 +64,6 @@ export const Replay = db.define('replays', {
         type: Sequelize.INTEGER
     },
     roundAbs: {
-        type: Sequelize.INTEGER
-    },
-    suggestedOrder: {
         type: Sequelize.INTEGER
     },
     display: {

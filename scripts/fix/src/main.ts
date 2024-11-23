@@ -1904,28 +1904,80 @@ const shuffleArray = (arr) => {
 // })()
 
 
+// ;(async () => { 
+//     let b = 0
+//     b = 0
+//     const matchups = await Matchup.findAll({ 
+//         include: [{ model: DeckType, as: 'winningDeckType'}, { model: DeckType, as: 'losingDeckType' }]
+//     })
+
+
+//     for (let i = 0; i < matchups.length; i++) {
+//         try {
+//             const matchup = matchups[i]
+            
+//             await matchup.update({ 
+//                 winningDeckTypeName: matchup.winningDeckType.name,
+//                 losingDeckTypeName: matchup.losingDeckType.name
+//             })
+//             b++
+//         } catch (err) {
+//             console.log('matchup error', err)
+//         }
+//     }
+
+//     console.log('updated matchup:', b)
+//     return
+// })()
+
 ;(async () => { 
     let b = 0
-    b = 0
-    const matchups = await Matchup.findAll({ 
-        include: [{ model: DeckType, as: 'winningDeckType'}, { model: DeckType, as: 'losingDeckType' }]
+    let e = 0
+    const replays = await Replay.findAll({ 
+        include: [{ model: Deck, as: 'winningDeck'}, { model: Deck, as: 'losingDeck' }, Match]
     })
 
-
-    for (let i = 0; i < matchups.length; i++) {
+    for (let i = 0; i < replays.length; i++) {
         try {
-            const matchup = matchups[i]
+            const replay = replays[i]
             
-            await matchup.update({ 
-                winningDeckTypeName: matchup.winningDeckType.name,
-                losingDeckTypeName: matchup.losingDeckType.name
+            await replay.update({ 
+                winningDeckTypeName: replay.winningDeck?.deckTypeName,
+                winningDeckTypeId: replay.winningDeck?.deckTypeId,
+                losingDeckTypeName: replay.losingDeck?.deckTypeName,
+                losingDeckTypeId: replay.losingDeck?.deckTypeId
             })
             b++
         } catch (err) {
-            console.log('matchup error', err)
+            console.log('replay error', err)
+            e++
         }
     }
 
-    console.log('updated matchup:', b)
+    console.log('updated replays:', b, '\nerrors:', e)
+
+
+    let x = 0
+    let y = 0
+    let z = 0
+    for (let i = 0; i < replays.length; i++) {
+        try {
+            const replay = replays[i]
+            
+            if (!replay.tournamentId && replay.roundName) {
+                if (!replay.match.tournamentId) {
+                    x++
+                } else {
+                    y++
+                }
+            }
+            b++
+        } catch (err) {
+            console.log('replay error', err)
+            z++
+        }
+    }
+
+    console.log('missing tournamentId from replay AND match tables:', x, '\nmissing tournamentId from replay table ONLY:', y, '\nerrors:', z)
     return
 })()
