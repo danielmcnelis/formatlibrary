@@ -1939,7 +1939,8 @@ const shuffleArray = (arr) => {
             tournamentId: {[Op.not]: null},
             '$tournament.state$': 'complete'
         },
-        include: Tournament
+        include: Tournament,
+        order: [['tournamentId', 'DESC']]
     })
 
     for (let i = 0; i < replays.length; i++) {
