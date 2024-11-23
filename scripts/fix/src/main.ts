@@ -1955,7 +1955,7 @@ const shuffleArray = (arr) => {
             })
 
             if (!event) {
-                console.log('no event found for tournament:', replay.tournament.name)
+                console.log('no event found for tournament name:', replay.tournament.name, 'id:', replay.tournamentId, )
             } else {
                 await replay.update({ 
                     eventId: event.id,
