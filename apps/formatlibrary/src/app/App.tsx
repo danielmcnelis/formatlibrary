@@ -61,8 +61,9 @@ const App = () => {
         if (playerId) checkRoles()
     }, [playerId])
 
-    if (!checkedSubscription) return <div style={{height: '100vh'}}/>
-    const disableAds = checkedSubscription && roles.subscriber
+    // if (!checkedSubscription) return <div style={{height: '100vh'}}/>
+    // const disableAds = checkedSubscription && roles.subscriber
+    const disableAds = playerId && (!checkedSubscription || (checkedSubscription && roles.subscriber))
 
   return (
     <div className="app">
