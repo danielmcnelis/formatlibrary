@@ -614,8 +614,9 @@ export const displayReplays = async (interaction, event) => {
                         }
                 }
 
-                console.log('winningDeck', winningDeck)
-                console.log('losingDeck', losingDeck)
+                console.log('replay.id', replay.id)
+                console.log('winningDeck.deckTypeId', winningDeck?.deckTypeId)
+                console.log('losingDeck.deckTypeId', losingDeck?.deckTypeId)
 
                 await replay.update({
                     winningDeckTypeName: winningDeck?.deckType.name,
@@ -629,6 +630,9 @@ export const displayReplays = async (interaction, event) => {
                     publishDate: event.endDate,
                     display: display
                 })
+
+                console.log('updated replay.winningDeckTypeId', replay.winningDeckTypeId)
+                console.log('updated replay.losingDeckTypeId', replay.losingDeckTypeId)
             } catch (err) {
                 console.log(err)
             }
@@ -667,6 +671,10 @@ export const displayReplays = async (interaction, event) => {
                     include: DeckType
                 })
     
+                console.log('replay.id', replay.id)
+                console.log('winningDeck.deckTypeId', winningDeck?.deckTypeId)
+                console.log('losingDeck.deckTypeId', losingDeck?.deckTypeId)
+
                 await replay.update({
                     winningDeckTypeName: winningDeck?.deckType?.name,
                     winningDeckId: winningDeck?.id,
@@ -679,6 +687,9 @@ export const displayReplays = async (interaction, event) => {
                     publishDate: event.endDate,
                     display: true
                 })
+
+                console.log('updated replay.winningDeckTypeId', replay.winningDeckTypeId)
+                console.log('updated replay.losingDeckTypeId', replay.losingDeckTypeId)
             } catch (err) {
                 console.log(err)
             }
