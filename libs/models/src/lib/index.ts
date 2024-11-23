@@ -165,8 +165,15 @@ Event.belongsTo(Team, {
 Event.hasMany(Deck)
 Deck.belongsTo(Event)
 
-Event.belongsTo(Tournament)
-Tournament.hasOne(Event)
+Event.belongsTo(Tournament, {
+    as: 'primaryTournament',
+    id: 'primaryTournamentId'
+})
+
+Event.belongsTo(Tournament, {
+    as: 'topCutTournament',
+    id: 'topCutTournamentId'
+})
 
 Event.belongsTo(Server)
 Server.hasMany(Event)
