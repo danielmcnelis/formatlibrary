@@ -1933,21 +1933,36 @@ const shuffleArray = (arr) => {
 ;(async () => { 
     let b = 0
     let e = 0
-    const replays = await Replay.findAll({ 
-        include: [{ model: Deck, as: 'winningDeck'}, { model: Deck, as: 'losingDeck' }, Match]
+    const replays = await Replay.findAll({
+        where: {
+            eventId: null,
+            tournamentId: {[Op.not]: null},
+            '$tournament.state$': 'complete'
+        },
+        include: Tournament
     })
 
     for (let i = 0; i < replays.length; i++) {
         try {
             const replay = replays[i]
-            
-            await replay.update({ 
-                winningDeckTypeName: replay.winningDeck?.deckTypeName,
-                winningDeckTypeId: replay.winningDeck?.deckTypeId,
-                losingDeckTypeName: replay.losingDeck?.deckTypeName,
-                losingDeckTypeId: replay.losingDeck?.deckTypeId
+            const event = await Event.findOne({
+                where: {
+                    [Op.or]: {
+                        primaryTournamentId: replay.tournamentId,
+                        topCutTournamentId: replay.tournamentId
+                    }
+                }
             })
-            b++
+
+            if (!event) {
+                console.log('no event found for tournament:', replay.tournament.name)
+            } else {
+                await replay.update({ 
+                    eventId: event.id,
+                    eventAbbreviation: event.abbreviation
+                })
+                b++
+            }
         } catch (err) {
             console.log('replay error', err)
             e++
@@ -1955,29 +1970,5 @@ const shuffleArray = (arr) => {
     }
 
     console.log('updated replays:', b, '\nerrors:', e)
-
-
-    let x = 0
-    let y = 0
-    let z = 0
-    for (let i = 0; i < replays.length; i++) {
-        try {
-            const replay = replays[i]
-            
-            if (!replay.tournamentId && replay.roundName) {
-                if (!replay.match.tournamentId) {
-                    x++
-                } else {
-                    y++
-                }
-            }
-            b++
-        } catch (err) {
-            console.log('replay error', err)
-            z++
-        }
-    }
-
-    console.log('missing tournamentId from replay AND match tables:', x, '\nmissing tournamentId from replay table ONLY:', y, '\nerrors:', z)
     return
 })()
