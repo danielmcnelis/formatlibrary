@@ -4,14 +4,13 @@ import './MobileReplayRow.css'
 export const MobileReplayRow = (props) => {
     const {replay} = props
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
-    const format = replay.format || {}
     const openNewTab = () => window.open(replay.url, "_blank")
 
     return (
         <tr onClick={() => openNewTab()} className={`${evenOrOdd}-search-results-row`}>
           <td className="no-padding">
               <div className="format-cell-flexbox">
-                <img src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`}/>
+                <img src={`https://cdn.formatlibrary.com/images/emojis/${event.format?.icon}.png`}/>
               </div>
           </td>
 

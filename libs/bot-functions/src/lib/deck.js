@@ -30,7 +30,7 @@ export const getDeckFormat = async (server, message, interaction) => {
     let format = await Format.findOne({ 
         where: { 
             [Op.or]: {
-                name: { [Op.iLike]: server.format },
+                name: { [Op.iLike]: server.formatName },
                 channelId: interaction.channelId
             }
         }

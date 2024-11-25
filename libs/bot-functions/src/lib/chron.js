@@ -31,9 +31,9 @@ export const getRemainingDaysInMonth = () => {
 export const runNightlyTasks = async (client) => {
     await refreshExpiredTokens()
     await purgeEntries()
-    await purgeTourRoles(client)
+    await purgeTournamentRoles(client)
     await purgeLocalsAndInternalDecks(client)
-    await assignTourRoles(client)
+    await assignTournamentRoles(client)
     await markInactives()
     await updateServers(client)
     await updateSets()
@@ -390,7 +390,7 @@ export const purgeEntries = async () => {
 }
 
 // PURGE TOURNAMENT PARTICIPANT ROLES
-export const purgeTourRoles = async (client) => {
+export const purgeTournamentRoles = async (client) => {
     const start = Date.now()
     const servers = await Server.findAll()
     for (let s = 0; s < servers.length; s++) {
@@ -429,11 +429,11 @@ export const purgeTourRoles = async (client) => {
         }
     }
 
-    return console.log(`purgeTourRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return console.log(`purgeTournamentRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // ASSIGN TOURNAMENT PARTICIPANT ROLES
-export const assignTourRoles = async (client) => {
+export const assignTournamentRoles = async (client) => {
     const start = Date.now()
     const servers = await Server.findAll()
     for (let s = 0; s < servers.length; s++) {
@@ -472,7 +472,7 @@ export const assignTourRoles = async (client) => {
         }
     }
 
-    return console.log(`assignTourRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    return console.log(`assignTournamentRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // UPDATE DECK TYPES

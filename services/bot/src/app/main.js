@@ -452,7 +452,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.on('guildMemberAdd', async (member) => {    
     try {
         const guild = member.guild
-        const server = await Server.findOne({ where: { id: guild.id }, include: [{model: Format, attributes: ['id', 'emoji']}]})
+        const server = await Server.findOne({ 
+            where: { id: guild.id }, 
+            include: [
+                {model: Format, attributes: ['id', 'emoji']}
+            ]
+        })
+        
         if (!server || !hasPartnerAccess(server)) return
         const channel = guild.channels.cache.get(server.welcomeChannelId)
         if (await isNewUser(member.user.id)) await createPlayer(member) 

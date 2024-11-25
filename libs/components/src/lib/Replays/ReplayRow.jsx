@@ -4,15 +4,14 @@ import './ReplayRow.css'
 export const ReplayRow = (props) => {
     const {replay} = props
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
-    const format = replay.format || {}
     const openNewTab = () => window.open(replay.url, "_blank")
 
     return (    
         <tr onClick={() => openNewTab()} className={`${evenOrOdd}-search-results-row`}>
           <td className="no-padding">
               <div className="format-cell-flexbox">
-                <img src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
-                <div>{format.name}</div>
+                <img src={`https://cdn.formatlibrary.com/images/emojis/${replay.format?.icon}.png`} alt={replay.format?.icon}/>
+                <div>{replay.formatName}</div>
               </div>
           </td>
 

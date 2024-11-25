@@ -70,7 +70,7 @@ Format.findById = async (id) => await Format.findOne({ where: { id }})
 Format.findByServerOrChannelId = async (server, channelId) => await Format.findOne({
     where: {
         [Op.or]: {
-            name: {[Op.iLike]: server?.format },
+            name: {[Op.iLike]: server?.formatName },
             channelId: channelId
         }
     }
@@ -79,7 +79,7 @@ Format.findByServerOrChannelId = async (server, channelId) => await Format.findO
 Format.findByServerOrInputOrChannelId = async (server, formatName, channelId) => await Format.findOne({
     where: {
         [Op.or]: {
-            name: { [Op.iLike]: server.format || formatName },
+            name: { [Op.iLike]: server.formatName || formatName },
             channelId: channelId
         }
     }

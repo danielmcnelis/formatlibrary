@@ -1,11 +1,9 @@
 
-import { Link } from 'react-router-dom'
 import './MobileEventRow.css'
 
 export const MobileEventRow = (props) => {
     const {event} = props
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
-    const format = event.format || {}
     
     return (
         <tr className={`${evenOrOdd}-search-results-row`}>
@@ -15,7 +13,7 @@ export const MobileEventRow = (props) => {
                 onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
             >
               <div className="format-cell-flexbox">
-                <img src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`}/>
+                <img src={`https://cdn.formatlibrary.com/images/emojis/${event.format?.icon}.png`}/>
               </div>
             </div>
           </td>

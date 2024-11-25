@@ -41,7 +41,7 @@ export const SingleEvent = (props) => {
     .replaceAll('&', '%26')
     .replaceAll('★', '_')
 
-  const goToFormat = () => navigate(`/formats/${event.format ? event.format.name : null}`)
+  const goToFormat = () => navigate(`/formats/${event.formatName || null}`)
   const goToPlayer = () => navigate(`/players/${extension}`)
   
   const communityLink = event.server?.inviteLink ? event.server?.inviteLink :

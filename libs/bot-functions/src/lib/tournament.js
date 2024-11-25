@@ -2465,7 +2465,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
     const format = await Format.findOne({
         where: {
             [Op.or]: {
-                name: { [Op.iLike]: server.format || formatName },
+                name: { [Op.iLike]: server.formatName || formatName },
                 channelId: interaction.channelId
             }
         }
