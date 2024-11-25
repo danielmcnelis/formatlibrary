@@ -452,7 +452,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.on('guildMemberAdd', async (member) => {    
     try {
         const guild = member.guild
-        const server = await Server.findOne({ where: { id: guild.id }, include: {model: Format, attributes: ['id', 'emoji']}})
+        const server = await Server.findOne({ where: { id: guild.id }, include: [{model: Format, attributes: ['id', 'emoji']}]})
         if (!server || !hasPartnerAccess(server)) return
         const channel = guild.channels.cache.get(server.welcomeChannelId)
         if (await isNewUser(member.user.id)) await createPlayer(member) 
@@ -476,10 +476,12 @@ client.on('guildMemberRemove', async (member) => {
         const guild = member.guild
         const server = await Server.findOne({ where: { id: guild.id }})
         if (!server || !hasPartnerAccess(server)) return
-        const channel = guild.channels.cache.get(server.welcomeChannelId)
-        channel.send({ content: `Oh dear. ${member.user.username} has left the server. ${emojis.sad}`})
+        
         const membership = await Membership.findOne({ where: { '$player.discordId$': member.user.id, serverId: guild.id }, include: Player })
         membership.isActive = false
+
+        const channel = guild.channels.cache.get(server.welcomeChannelId)
+        if (channel) channel.send({ content: `Oh dear. ${member.user.username} has left the server. ${emojis.sad}`})
         await membership.save()
     } catch (err) {
         console.log(err)
