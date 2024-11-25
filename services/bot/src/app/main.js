@@ -3,7 +3,7 @@
 // RETROBOT - A RANKINGS & TOURNAMENT MANAGEMENT DISCORD BOT
 
 // MODULE IMPORTS
-import { Collection, Events } from 'discord.js'
+import { Collection, Events, Format } from 'discord.js'
 const FuzzySet = require('fuzzyset')
 import { client } from './client'
 import { readFileSync } from 'fs'
