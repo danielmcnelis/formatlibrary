@@ -2556,7 +2556,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 `You created a new tournament:` + 
                 `\nName: ${name} ${logo}` + 
                 `\nFormat: ${format.name} ${format.emoji}` + 
-                `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ' (Unranked)' : ''}` +
+                `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ? ' (Unranked)' : ''}` +
                 tournament_type === 'swiss' ? `\nTie Breakers: TB1: OWP, TB2: OOWP, TB3: N/A` : '' +
                 `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
             })
@@ -2621,7 +2621,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     `You created a new tournament:` + 
                     `\nName: ${data.tournament.name} ${logo}` + 
                     `\nFormat: ${format.name} ${format.emoji}` + 
-                    `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ' (Unranked)' : ''}` +
+                    `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ? ' (Unranked)' : ''}` +
                     tournament_type === 'swiss' ? `\nTie Breakers: TB1: OWP, TB2: OOWP, TB3: N/A` : '' +
                     `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
                 })
@@ -2671,7 +2671,7 @@ export const updateTournament = async (interaction, tournamentId, name, tourname
             return await interaction.editReply({ content: 
                 `Updated tournament settings:` + 
                 `\nName: ${data.tournament.name} ${tournament.logo}` + 
-                `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ' (Unranked)' : ''}` +
+                `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ? ' (Unranked)' : ''}` +
                 `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
             })
         } else {
