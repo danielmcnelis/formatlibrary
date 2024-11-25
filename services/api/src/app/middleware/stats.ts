@@ -7,9 +7,9 @@ export const statsLeaders = async (req, res, next) => {
       where: {
         formatName: { [Op.iLike]: req.params.format.replace(' ', '_').replace('-', '_') },
         games: { [Op.gte]: 3 },
-        inactive: false,
+        isActive: true,
         serverId: '414551319031054346',
-        '$player.hidden$': false
+        '$player.isHidden$': false
       },
       attributes: ['id', 'formatName', 'formatId', 'elo', 'wins', 'losses', 'playerId'],
       include: [{ model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp']}],

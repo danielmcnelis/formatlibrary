@@ -12,7 +12,7 @@ export default {
                 .setDescription('Select a simulator.')
                 .setRequired(true)
                 .addChoices(
-					{ name: 'DuelingBook', value: 'DuelingBook, duelingBook' },	
+					{ name: 'DuelingBook', value: 'DuelingBook, duelingBookName' },	
 				)
         )
 		.addUserOption(user =>

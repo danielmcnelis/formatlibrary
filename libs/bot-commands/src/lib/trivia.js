@@ -23,7 +23,7 @@ export default {
                     playerName: player.name,
                     playerId: player.id,
                     status: isConfirming ? 'confirming' : 'playing',
-                    confirmed: true
+                    isConfirmed: true
                 })
 
                 return await interaction.reply({ content: `You joined the Trivia game. 📚 🐛`})
@@ -32,7 +32,7 @@ export default {
                     playerName: player.name,
                     playerId: player.id,
                     status: 'pending',
-                    confirmed: false
+                    isConfirmed: false
                 })
 
                 const count = await TriviaEntry.count()

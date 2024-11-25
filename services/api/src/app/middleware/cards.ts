@@ -83,7 +83,7 @@ export const cardsId = async (req, res, next) => {
                     cleanName: {[Op.iLike]: id}
                 }
             },
-            attributes: { exclude: ['konamiCode', 'tcgLegal', 'ocgLegal', 'createdAt', 'updatedAt'] }
+            attributes: { exclude: ['konamiCode', 'isTcgLegal', 'isOcgLegal', 'createdAt', 'updatedAt'] }
         })
 
         const statuses =
@@ -98,12 +98,12 @@ export const cardsId = async (req, res, next) => {
         ).map((s) => [s.banlist, s.restriction]) || []
 
         const prints = await Print.findAll({
-        where: {
-            cardId: card.id
-        },
-        attributes: { exclude: ['tcgPlayerProductId', 'createdAt', 'updatedAt'] },
-        include: [{ model: Set, attributes: ['tcgDate'] }],
-        order: [[Set, 'tcgDate', 'ASC']]
+            where: {
+                cardId: card.id
+            },
+            attributes: { exclude: ['tcgPlayerProductId', 'createdAt', 'updatedAt'] },
+            include: [{ model: Set, attributes: ['tcgDate'] }],
+            order: [[Set, 'tcgDate', 'ASC']]
         })
 
         const genericRulings = await Ruling.findAll({
@@ -196,8 +196,8 @@ export const cardsCreate = async (req, res, next) => {
             artworkId: req.body.artworkId.toString(),
             tcgDate: req.body.tcgDate,
             ocgDate: req.body.ocgDate,
-            tcgLegal: req.body.tcgLegal,
-            ocgLegal: req.body.ocgLegal,
+            isTcgLegal: req.body.isTcgLegal,
+            isOcgLegal: req.body.isOcgLegal,
             category: req.body.category,
             icon: req.body.icon,
             attribute: req.body.attribute,
@@ -208,22 +208,22 @@ export const cardsCreate = async (req, res, next) => {
             rating: req.body.rating,
             scale: req.body.scale,
             arrows: req.body.arrows,
-            normal: req.body.normal,
-            effect: req.body.effect,
-            fusion: req.body.fusion,
-            ritual: req.body.ritual,
-            synchro: req.body.synchro,
-            xyz: req.body.xyz,
-            pendulum: req.body.pendulum,
-            link: req.body.link,
-            flip: req.body.flip,
-            gemini: req.body.gemini,
-            spirit: req.body.spirit,
-            toon: req.body.toon,
-            tuner: req.body.tuner,
-            union: req.body.union,
+            isNormal: req.body.isNormal,
+            isEffect: req.body.isEffect,
+            isFusion: req.body.isFusion,
+            isRitual: req.body.isRitual,
+            isSynchro: req.body.isSynchro,
+            isXyz: req.body.isXyz,
+            isPendulum: req.body.isPendulum,
+            isLink: req.body.isLink,
+            isFlip: req.body.isFlip,
+            isGemini: req.body.isGemini,
+            isSpirit: req.body.isSpirit,
+            isToon: req.body.isToon,
+            isTuner: req.body.isTuner,
+            isUnion: req.body.isUnion,
             color: req.body.color,
-            extraDeck: req.body.extraDeck,
+            isExtraDeck: req.body.isExtraDeck,
             sortPriority: req.body.sortPriority
         })
 

@@ -66,7 +66,7 @@ export const CardImage = (props) => {
                             return removeCard(locale, index)
                         } else if (e.shiftKey) {
                             return addCard(card, 'side')
-                        } else if (card.extraDeck) {
+                        } else if (card.isExtraDeck) {
                             return addCard(card, 'extra')
                         } else {
                             return addCard(card, 'main')

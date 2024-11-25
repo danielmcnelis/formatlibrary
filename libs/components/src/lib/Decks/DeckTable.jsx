@@ -25,9 +25,9 @@ export const DeckTable = (props) => {
     const isSubscriber = props.roles?.subscriber
   
     const [queryParams, setQueryParams] = useState({
-      type: null,
-      builder: null,
-      eventName: null
+      deckTypeName: null,
+      builderName: null,
+      eventAbbreviation: null
     })
   
     // USE LAYOUT EFFECT
@@ -41,14 +41,14 @@ export const DeckTable = (props) => {
 
     // COUNT
     const count = async () => {
-        let url = `/api/decks/count?isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`
+        let url = `/api/decks/count?admin=${isAdmin}&subscriber=${isSubscriber}`
         let filter = ''
   
-        if (queryParams.eventName) filter += `,eventName:inc:${queryParams.eventName}`
-        if (queryParams.builder) filter += `,builder:inc:${queryParams.builder}`
-        if (queryParams.type) filter += `,type:inc:${queryParams.type}`
+        if (queryParams.eventAbbreviation) filter += `,event:or:${queryParams.eventAbbreviation}`
+        if (queryParams.builderName) filter += `,builder:inc:${queryParams.builderName}`
+        if (queryParams.deckTypeName) filter += `,type:inc:${queryParams.deckTypeName}`
         if (origin) filter += `,origin:eq:${origin}`
-        if (format) filter += `,formatName:eq:${format}`
+        if (format) filter += `,format:eq:${format}`
         if (filter.length) url += ('&filter=' + filter.slice(1))
 
         const {data} = await axios.get(url)
@@ -57,14 +57,14 @@ export const DeckTable = (props) => {
   
     // SEARCH
     const search = async () => {
-      let url = `/api/decks?page=${page}&limit=${decksPerPage}&isAdmin=${isAdmin}&isSubscriber=${isSubscriber}&sort=${sortBy}`
+      let url = `/api/decks?page=${page}&limit=${decksPerPage}&admin=${isAdmin}&subscriber=${isSubscriber}&sort=${sortBy}`
       let filter = ''
 
-      if (queryParams.eventName) filter += `,eventName:inc:${queryParams.eventName}`
-      if (queryParams.builder) filter += `,builder:inc:${queryParams.builder}`
-      if (queryParams.type) filter += `,type:inc:${queryParams.type}`
+      if (queryParams.eventAbbreviation) filter += `,event:or:${queryParams.eventAbbreviation}`
+      if (queryParams.builderName) filter += `,builder:inc:${queryParams.builderName}`
+      if (queryParams.deckTypeName) filter += `,type:inc:${queryParams.deckTypeName}`
       if (origin) filter += `,origin:eq:${origin}`
-      if (format) filter += `,formatName:eq:${format}`
+      if (format) filter += `,format:eq:${format}`
       if (filter.length) url += ('&filter=' + filter.slice(1))
 
       const { data } = await axios.get(url)
@@ -76,15 +76,15 @@ export const DeckTable = (props) => {
       document.getElementById('format').value = ''
       document.getElementById('origin').value = 'event'
       document.getElementById('searchBar').value = null
-      document.getElementById('searchTypeSelector').value = 'type'
+      document.getElementById('searchTypeSelector').value = 'deckTypeName'
       setPage(1)
       setOrigin('event')
       setSortBy('publishDate:desc')
       setFormat(null)
       setQueryParams({
         name: null,
-        builder: null,
-        type: null
+        builderName: null,
+        deckTypeName: null
       })
 
       count()
@@ -94,9 +94,9 @@ export const DeckTable = (props) => {
     // RUN QUERY
     const runQuery = () => {
       const id = document.getElementById('searchTypeSelector').value
-      const otherIds = id === 'type' ? ['builder', 'eventName'] : 
-          id === 'builder' ? ['type', 'eventName'] :
-          ['type', 'builder']
+      const otherIds = id === 'deckTypeName' ? ['builderName', 'eventAbbreviation'] : 
+          id === 'builderName' ? ['deckTypeName', 'eventAbbreviation'] :
+          ['deckTypeName', 'builderName']
   
       setQueryParams(() => {
         return {
@@ -176,9 +176,9 @@ export const DeckTable = (props) => {
                             className="filter"
                             onChange={() => runQuery()}
                             >
-                            <option value="type">Deck Type</option>
-                            <option value="builder">Builder</option>
-                            <option value="eventName">Event</option>
+                            <option value="deckTypeName">Deck Type</option>
+                            <option value="builderName">Builder</option>
+                            <option value="eventAbbreviation">Event</option>
                             </select>
                 
                             <select
@@ -257,12 +257,12 @@ export const DeckTable = (props) => {
                     <option value="downloads:asc">Sort Downloads: Low ⮕ Hi</option>
                     <option value="rating:desc">Sort Likes: Hi ⮕ Low</option>
                     <option value="rating:asc">Sort Likes: Low ⮕ Hi</option>
-                    <option value="builder:asc">Sort Builder: A ⮕ Z</option>
-                    <option value="builder:desc">Sort Builder: Z ⮕ A</option>
-                    <option value="eventName:asc">Sort Event: A ⮕ Z</option>
-                    <option value="eventName:desc">Sort Event: Z ⮕ A</option>
-                    <option value="type:asc">Sort Deck Type: A ⮕ Z</option>
-                    <option value="type:desc">Sort Deck Type: Z ⮕ A</option>
+                    <option value="builderName:asc">Sort Builder: A ⮕ Z</option>
+                    <option value="builderName:desc">Sort Builder: Z ⮕ A</option>
+                    <option value="eventAbbreviation:asc">Sort Event: A ⮕ Z</option>
+                    <option value="eventAbbreviation:desc">Sort Event: Z ⮕ A</option>
+                    <option value="deckTypeName:asc">Sort Deck Type: A ⮕ Z</option>
+                    <option value="deckTypeName:desc">Sort Deck Type: Z ⮕ A</option>
                     </select>
         
                     <div

@@ -2,8 +2,11 @@ import { Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const Status = db.define('statuses', {
-  name: {
+  cardName: {
     type: Sequelize.STRING
+  },
+  cardId: {
+    type: Sequelize.INTEGER
   },
   banlist: {
     type: Sequelize.STRING

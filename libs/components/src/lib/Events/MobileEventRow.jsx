@@ -25,7 +25,7 @@ export const MobileEventRow = (props) => {
                     onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
                 >
               <div className="community-cell-flexbox">
-                  <img src={`https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png`}/>
+                  <img src={`https://cdn.formatlibrary.com/images/logos/${event.communityName?.replaceAll('+', '%2B')}.png`}/>
                   <div>{event.name}</div>
               </div>
               </div>

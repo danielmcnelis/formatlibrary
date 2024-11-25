@@ -6,11 +6,11 @@ import './DeckImage.css'
 export const DeckImage = (props) => {
     const {deck, width, margin, padding, coverage} = props
     if (!deck) return <div/>
-    const fullName = deck.player?.name || deck.builder || ''
+    const fullName = deck.builderName || ''
     const displayName = fullName.length <= 17 ? fullName : fullName.slice(0, 17).split(' ')[0] || ''
     const placement = ordinalize(deck.placement)
-    const title = coverage ? `${deck.type} - ${displayName} - ${placement}` :
-      `${deck.type ? deck.type + ' - ' : ''}${displayName}${deck.eventName ? ' - ' + deck.eventName : ''}`
+    const title = coverage ? `${deck.deckTypeName} - ${displayName} - ${placement}` :
+      `${deck.deckTypeName ? deck.deckTypeName + ' - ' : ''}${displayName}${deck.eventAbbreviation ? ' - ' + deck.eventAbbreviation : ''}`
   
     return (
       <div className="DeckImage-box">

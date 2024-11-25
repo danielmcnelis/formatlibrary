@@ -2,7 +2,7 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Server, Tournament } from '@fl/models'
 import { removeParticipant, selectTournament } from '@fl/bot-functions'
-import { isMod, hasPartnerAccess } from '@fl/bot-functions'
+import { isModerator, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
 
@@ -24,7 +24,7 @@ export default {
         const member = await interaction.guild?.members.fetch(user.id).catch((err) => console.log(err))
 
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
+        if (!isModerator(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
 
         const player = await Player.findOne({ where: { discordId: user.id }})
         if (!player) return await interaction.editReply(`That player is not in the database.`)

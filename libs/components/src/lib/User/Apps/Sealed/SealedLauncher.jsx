@@ -94,7 +94,7 @@ export const SealedLauncher = () => {
                     >
                     <option value="">Select Booster:</option>
                     {
-                        boosters.filter((b) => !packIds.includes(b.id)).map((b, index) => <option value={index}>{b.setName}</option>)
+                        boosters.filter((b) => !packIds.includes(b.id)).map((b, index) => <option value={index}>{b.name}</option>)
                     }
                     </select>
                 </label>
@@ -113,7 +113,7 @@ export const SealedLauncher = () => {
 
                 {
                     selectedPacks.map((p, index) => {
-                       return <li className="selected-packs">{packQuants[index]} Packs of {p.setName}</li>
+                       return <li className="selected-packs">{packQuants[index]} Packs of {p.name}</li>
                     })
                 }
 

@@ -3,7 +3,7 @@ import { Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const DeckThumb = db.define('deckThumbs', {
-  name: {
+  deckTypeName: {
     type: Sequelize.STRING
   },
   formatName: {
@@ -12,7 +12,7 @@ export const DeckThumb = db.define('deckThumbs', {
   formatId: {
     type: Sequelize.INTEGER
   },
-  primary: {
+  isPrimary: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },

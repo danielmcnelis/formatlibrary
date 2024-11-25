@@ -3,7 +3,7 @@ import { dateToVerbose } from "@fl/utils"
 
 export const BlogPostContent = (props) => {
     const { blogpost } = props
-    console.log('BlogPostContent blogpost', blogpost)
+
     const {
         eventAbbreviation,
         eventDate,
@@ -49,6 +49,4 @@ export const BlogPostContent = (props) => {
             </div>
         </>
     )
-
-    
 }

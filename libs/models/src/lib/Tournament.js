@@ -31,15 +31,11 @@ export const Tournament = db.define('tournaments', {
   },
   isLive: {
     type: Sequelize.BOOLEAN,
-    defaultValue: false
+    defaultValue: true
   },
-  isUnranked: {
+  isRanked: {
     type: Sequelize.BOOLEAN,
-    defaultValue: false
-  },
-  pointsEligible: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false
+    defaultValue: true
   },
   type: {
     type: Sequelize.STRING
@@ -50,7 +46,7 @@ export const Tournament = db.define('tournaments', {
   deadline: {
       type: Sequelize.DATE
   },
-  community: {
+  communityName: {
     type: Sequelize.STRING
   },
   logo: {
@@ -74,14 +70,14 @@ export const Tournament = db.define('tournaments', {
   rounds: {
     type: Sequelize.INTEGER
   },
-  topCut: {
+  topCutSize: {
     type: Sequelize.INTEGER
   },
   isTopCutTournament: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
-  assocTournamentId: {
+  associatedTournamentId: {
     type: Sequelize.STRING
   },
   pointsPerMatchWin: {

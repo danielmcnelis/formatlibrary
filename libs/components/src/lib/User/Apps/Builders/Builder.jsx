@@ -43,7 +43,7 @@ export const Builder = () => {
     const { id } = useParams()
     
     const myFormats = [...new Set(decks.map((d) => d.formatName))]
-    const myDeckTypes = [...new Set(decks.map((d) => d.type))]
+    const myDeckTypes = [...new Set(decks.map((d) => d.deckTypeName))]
     const location = useLocation()
 
     // HANDLE DRAG END
@@ -136,13 +136,13 @@ export const Builder = () => {
         try {
             setShowShareModal(false)
             const expiresIn = parseInt(document.getElementById('link-expiration').value)
-            const linkExpiration = new Date(Date.now() + expiresIn)
+            const linkExpiresAt = new Date(Date.now() + expiresIn)
             const { data } = await axios.put(`/api/decks/share/${deck.id}`, {
-                linkExpiration: linkExpiration
+                linkExpiresAt: linkExpiresAt
             })
 
             const shareLink = data.shareLink
-            setDeck({ ...deck, shareLink, linkExpiration })            
+            setDeck({ ...deck, shareLink, linkExpiresAt })            
             window.open(`/decks/${shareLink}`, "_blank")
         } catch (err) {
             console.log(err)
@@ -154,9 +154,9 @@ export const Builder = () => {
         document.getElementById('deck-type').value = "Other"
         setDeck({
             ...deck,
-            type: 'Other',
+            deckTypeName: 'Other',
             deckTypeId: 124,
-            suggestedType: e.target.value
+            suggestedDeckTypeName: e.target.value
         })
 
         setEdited(true)
@@ -189,10 +189,10 @@ export const Builder = () => {
             try {
                 await axios.put(`/api/decks/update/${deck.id}`, {
                     name: name,
-                    type: deck.type,
+                    deckTypeName: deck.deckTypeName,
                     deckTypeId: deck.deckTypeId,
                     category: deck.category,
-                    suggestedType: deck.suggestedType,
+                    suggestedDeckTypeName: deck.suggestedDeckTypeName,
                     formatName: format.name,
                     formatDate: format.date,
                     formatCategory: format.category,
@@ -217,11 +217,11 @@ export const Builder = () => {
             try {
                 const { data } = await axios.post(`/api/decks/create`, {
                     name: name,
-                    playerId: playerId,
-                    type: deck.type,
+                    builderId: playerId,
+                    deckTypeName: deck.deckTypeName,
                     deckTypeId: deck.deckTypeId,
                     category: deck.category,
-                    suggestedType: deck.suggestedType,
+                    suggestedDeckTypeName: deck.suggestedDeckTypeName,
                     formatName: format.name,
                     formatDate: format.date,
                     formatBanlist: format.banlist,
@@ -417,10 +417,10 @@ export const Builder = () => {
 
             setDeck({
                 ...deck,
-                type: data.name,
+                deckTypeName: data.name,
                 deckTypeId: data.id,
                 category: data.category,
-                suggestedType: null
+                suggestedDeckTypeName: null
             })
 
             setEdited(true)
@@ -470,23 +470,35 @@ useEffect(() => {
             setFormats(formatData)
 
             if (location.state) {
-                const { deck, format, origin } = location.state
-                const deckId = deck?.playerId === playerId && origin === 'user' ? deck.id : null
-                const name = deck?.playerId === playerId && origin === 'user' ? deck.name : `${deck?.builder}-${deck?.type || deck?.name}`
+                const { deck, format, origin, skeleton } = location.state
+
+                const deckId = deck?.builderId === playerId && origin === 'user' ? deck.id : null
+
+                let ydk = deck?.ydk
+
+                if (skeleton) {
+                    const {data: skeletonYdk} = await axios.get(skeleton)
+                    ydk = skeletonYdk   
+                }
 
                 const { data: ydkData } = await axios.put(`/api/decks/read-ydk`, {
                     name: deck?.name,
-                    ydk: deck?.ydk
+                    ydk: ydk
                 })
+                
+                const name = deck?.builderId === playerId && origin === 'user' ? deck?.name : 
+                    skeleton ? `${deck.name} Skeleton` :
+                    `${deck?.builderName}-${deck?.deckTypeName || deck?.name}`
 
                 setDeck({
                     ...ydkData,
                     id: deckId,
                     name: name,
-                    format: deck?.format || format || {}
+                    formatName: deck?.formatName || '',
+                    format: format || {}
                 })
 
-                setFormat(deck.format)
+                setFormat(deck.formatName)
             }
         } catch (err) {
             console.log(err)
@@ -575,7 +587,7 @@ useEffect(() => {
                                 onChange={(e) => {getDeck(e.target.value || null); setControlPanelFormat(null); setControlPanelDeckType(null)}}
                             >
                             {
-                                decks.filter((d) => (!controlPanelFormat && !controlPanelDeckType) || (!controlPanelFormat || d.formatName === controlPanelFormat) && (!controlPanelDeckType || d.type === controlPanelDeckType)).map((d) => <option key={d.id} value={d.id}>{d.id === deck.id ? deck.name : d.name}</option>)
+                                decks.filter((d) => (!controlPanelFormat && !controlPanelDeckType) || (!controlPanelFormat || d.formatName === controlPanelFormat) && (!controlPanelDeckType || d.deckTypeName === controlPanelDeckType)).map((d) => <option key={d.id} value={d.id}>{d.id === deck.id ? deck.name : d.name}</option>)
                             }
                             </Form.Select>
                         </Form.Group>
@@ -650,7 +662,7 @@ useEffect(() => {
                             <Form.Select 
                                 aria-label="Format:" 
                                 style={{width: '180px'}}
-                                defaultValue={deck.format ? deck.format.name : ''}
+                                defaultValue={deck.formatName || deck.format?.name || ''}
                                 onChange={(e) => updateFormat(e)}
                             >
                             <option key={format.name} value={format.name}>{format.name}</option>
@@ -664,7 +676,7 @@ useEffect(() => {
                             <Form.Select 
                                 id="deck-type" 
                                 aria-label="Deck Type:" 
-                                defaultValue={deck.type}
+                                defaultValue={deck.deckTypeName}
                                 onChange={(e) => handleDeckTypeSelect(e)}
                             >
                             <option key="None" value="">None</option>
@@ -678,7 +690,7 @@ useEffect(() => {
                             <Form.Control
                                 type="other-deck-type"
                                 id="other-deck-type"
-                                defaultValue={deck.suggestedType}
+                                defaultValue={deck.suggestedDeckTypeName}
                                 onChange={(e) => handleOtherDeckTypeInput(e)}
                             />
                         </Form.Group>
@@ -935,8 +947,8 @@ useEffect(() => {
                                 <div className="show-cursor deck-button">
                                     <a
                                         className="link"
-                                        href={`/api/decks/download/${deck.id}?playerId=${deck.playerId}`} 
-                                        download={`${deck.builder}-${deck.name || deck.type}.ydk`}
+                                        href={`/api/decks/download/${deck.id}?builderId=${deck.builderId}`} 
+                                        download={`${deck.builderName}-${deck.name || deck.deckTypeName}.ydk`}
                                     >                                    
                                         <div className="builder-button">
                                             <b style={{padding: '0px 6px'}}>Download</b>
@@ -951,7 +963,7 @@ useEffect(() => {
                                         onClick={() => {
                                             if (deck.display) {
                                                 window.open(`/decks/${deck.id}`, "_blank")
-                                            } else if (deck.shareLink && new Date() < deck.linkExpiration) {
+                                            } else if (deck.shareLink && new Date() < deck.linkExpiresAt) {
                                                 window.open(`/decks/${deck.shareLink}`, "_blank")
                                             } else {
                                                 setShowShareModal(true)

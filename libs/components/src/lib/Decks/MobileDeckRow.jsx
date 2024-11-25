@@ -30,7 +30,7 @@ export const MobileDeckRow = (props) => {
               rel="noopener noreferrer"
           >
             <div className="deckType-cell">
-              {capitalize(deck.type, true) || '?'}
+              {capitalize(deck.deckTypeName, true) || '?'}
             </div>
           </Link>
         </td>
@@ -43,13 +43,13 @@ export const MobileDeckRow = (props) => {
             <div className="player-cell">
               <img 
                   className="player-cell-pfp"
-                  src={`https://cdn.formatlibrary.com/images/pfps/${deck.player?.discordId || deck.builder}.png`}
+                  src={`https://cdn.formatlibrary.com/images/pfps/${deck.builder?.discordId || deck.builderName}.png`}
                   onError={(e) => {
                           e.target.onerror = null
                           e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                       }
                   }
-                  alt={deck.builder}
+                  alt={deck.builderName}
               />
             </div>
           </Link>

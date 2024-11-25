@@ -17,10 +17,13 @@ export const Server = db.define('servers', {
     type: Sequelize.STRING,
     defaultValue: 'free'
   },
-  format: {
+  formatName: {
     type: Sequelize.STRING
   },
-  internalLadder: {
+  formatId: {
+    type: Sequelize.INTEGER
+  },
+  hasInternalLadder: {
     type: Sequelize.BOOLEAN
   },
   size: {
@@ -32,34 +35,28 @@ export const Server = db.define('servers', {
   logo: {
     type: Sequelize.STRING
   },
-  emoji: {
-    type: Sequelize.STRING
-  },
-  challongeAPIKey: {
+  challongeApiKey: {
       type: Sequelize.STRING
   },
   challongeSubdomain: {
       type: Sequelize.STRING
   },
-  challongePremium: {
-      type: Sequelize.BOOLEAN
-  },
-  welcomeChannel: {
+  welcomeChannelId: {
       type: Sequelize.STRING
   },
-  botSpamChannel: {
+  botSpamChannelId: {
       type: Sequelize.STRING
   },
-  adminRole: {
+  adminRoleId: {
       type: Sequelize.STRING
   },
-  modRole: {
+  moderatorRoleId: {
       type: Sequelize.STRING
   },
-  judgeRole: {
+  judgeRoleId: {
       type: Sequelize.STRING
   },
-  tourRole: {
+  tournamentRoleId: {
       type: Sequelize.STRING
   },
   inviteLink: {
@@ -68,7 +65,7 @@ export const Server = db.define('servers', {
   discordIconId: {
     type: Sequelize.STRING
   },
-  logoUrl: {
+  logoName: {
     type: Sequelize.STRING
   }
 })

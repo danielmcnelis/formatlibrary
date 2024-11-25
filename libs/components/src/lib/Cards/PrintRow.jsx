@@ -6,7 +6,7 @@ export const PrintRow = (props) => {
   const { index, print } = props
   const raritySymbol = print.rarity === '10000 Secret Rare' ? 'tenThousandSecretRare' : camelize(print.rarity)
   const evenOrOdd = index % 2 ? 'even' : 'odd'
-  const prices = [print.unlimPrice, print.firstPrice, print.limPrice].filter((e) => !!e)
+  const prices = [print.unlimitedPrice, print.firstEditionPrice, print.limitedPrice].filter((e) => !!e)
   const minPrice = prices.length ? '$' + Math.min(...prices).toFixed(2) : 'N/A'
   const tcgPlayerUrl = `https://tcgplayer.pxf.io/XYZQm5?u=${encodeURIComponent(print.tcgPlayerUrl || `https://store.tcgplayer.com/yugioh/${urlize(print.setName)}/${urlize(print.cardName)}`)}`
 

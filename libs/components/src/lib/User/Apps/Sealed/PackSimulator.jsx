@@ -67,7 +67,7 @@ export const PackSimulator = () => {
                         >
                         <option value="">Select Pack:</option>
                         {
-                            boosters.map((b) => <option value={b.id}>{b.setName}</option>)
+                            boosters.map((b) => <option value={b.id}>{b.name}</option>)
                         }
                         </select>
                     </label>

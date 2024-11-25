@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { isProgrammer, isMod, selectMatch } from '@fl/bot-functions'
+import { isProgrammer, isModerator, selectMatch } from '@fl/bot-functions'
 import { Entry, Format, Match, Player, Replay, Server, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
@@ -38,7 +38,7 @@ export default {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         const memberIsProgrammer = isProgrammer(interaction.member)
-        const memberIsMod = isMod(server, interaction.member)
+        const memberIsMod = isModerator(server, interaction.member)
 
         const tournaments = memberIsProgrammer ? await Tournament.findAll({
             where: {
@@ -126,17 +126,17 @@ export default {
         const match = await selectMatch(interaction, matches, replayExtension)
 		if (!match) return
 
-        const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
+        const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeApiKey}`).catch((err) => console.log(err))
         if (!challongeMatch) return await interaction.editReply({ content: `Error: Challonge match not found.`})	
 
         const replay = await Replay.findOne({ where: { matchId: match.id }})
-        if (replay && await isMod(server, interaction.member)) {
+        if (replay && await isModerator(server, interaction.member)) {
             await replay.update({ url })
             return await interaction.editReply({ content: `Replay updated for Round ${challongeMatch?.match?.round} of ${tournament.name} ${tournament.logo}:\nMatch: ${replay.winnerName} vs ${replay.loserName}\nURL: <${url}>`})	
         } else if (replay) {
             return await interaction.editReply({ content: `The replay from this match was already saved:\n<${replay.url}>\n\nIf this link is incorrect, please get a Moderator to help you.`})	
         } else if (!replay) {
-            const { data: { tournament: { participants_count } }} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
+            const { data: { tournament: { participants_count } }} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`).catch((err) => console.log(err))
             const round = challongeMatch?.match?.round
             let roundName
 

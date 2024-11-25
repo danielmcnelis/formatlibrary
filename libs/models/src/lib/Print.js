@@ -8,8 +8,14 @@ export const Print = db.define('prints', {
   cardCode: {
     type: Sequelize.STRING
   },
+  cardId: {
+    type: Sequelize.INTEGER
+  },
   setName: {
     type: Sequelize.STRING
+  },
+  setId: {
+    type: Sequelize.INTEGER
   },
   region: {
     type: Sequelize.STRING
@@ -17,22 +23,19 @@ export const Print = db.define('prints', {
   rarity: {
     type: Sequelize.STRING
   },
-  original: {
-    type: Sequelize.BOOLEAN
-  },
   description: {
     type: Sequelize.TEXT,
   },
   marketPrice: {
     type: Sequelize.FLOAT
   },
-  unlimPrice: {
+  unlimitedPrice: {
     type: Sequelize.FLOAT
   },
-  firstPrice: {
+  firstEditionPrice: {
     type: Sequelize.FLOAT
   },
-  limPrice: {
+  limitedPrice: {
     type: Sequelize.FLOAT
   },
   tcgPlayerProductId: {
@@ -40,8 +43,5 @@ export const Print = db.define('prints', {
   },
   tcgPlayerUrl: {
     type: Sequelize.TEXT
-  },
-  cardId: {
-    type: Sequelize.INTEGER
   }
 })

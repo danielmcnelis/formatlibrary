@@ -55,14 +55,14 @@ export const MobileCardRow = (props) => {
     const line = card.type
     
     const symbol = symbols[card.attribute] || symbols[card.category]
-    const symbol2 = card.link ? `https://cdn.formatlibrary.com/images/arrows/${card.arrows}.png` :
-      card.xyz ? symbols.Rank :
+    const symbol2 = card.isLink ? `https://cdn.formatlibrary.com/images/arrows/${card.arrows}.png` :
+      card.isXyz ? symbols.Rank :
       category === 'Monster' ? symbols.Star :
       card.icon ? symbols[card.icon.replace('-', '')] :
       ''
   
-    const line2 = card.link ? `Lk${rating}` :
-    card.xyz ? `Rk${level}` :
+    const line2 = card.isLink ? `Lk${rating}` :
+    card.isXyz ? `Rk${level}` :
     category === 'Monster' ? `Lv${level}` :
     card.icon
   

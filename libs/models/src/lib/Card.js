@@ -22,13 +22,13 @@ export const Card = db.define('cards', {
   artworkId: {
     type: Sequelize.STRING
   },
-  tcgLegal: {
+  isTcgLegal: {
     type: Sequelize.BOOLEAN
   },
-  ocgLegal: {
+  isOcgLegal: {
     type: Sequelize.BOOLEAN
   },
-  speedLegal: {
+  isSpeedLegal: {
     type: Sequelize.BOOLEAN
   },
   category: {
@@ -37,46 +37,46 @@ export const Card = db.define('cards', {
   icon: {
     type: Sequelize.STRING
   },
-  normal: {
+  isNormal: {
     type: Sequelize.BOOLEAN
   },
-  effect: {
+  isEffect: {
     type: Sequelize.BOOLEAN
   },
-  fusion: {
+  isFusion: {
     type: Sequelize.BOOLEAN
   },
-  ritual: {
+  isRitual: {
     type: Sequelize.BOOLEAN
   },
-  synchro: {
+  isSynchro: {
     type: Sequelize.BOOLEAN
   },
-  xyz: {
+  isXyz: {
     type: Sequelize.BOOLEAN
   },
-  pendulum: {
+  isPendulum: {
     type: Sequelize.BOOLEAN
   },
-  link: {
+  isLink: {
     type: Sequelize.BOOLEAN
   },
-  flip: {
+  isFlip: {
     type: Sequelize.BOOLEAN
   },
-  gemini: {
+  isGemini: {
     type: Sequelize.BOOLEAN
   },
-  spirit: {
+  isSpirit: {
     type: Sequelize.BOOLEAN
   },
-  toon: {
+  isToon: {
     type: Sequelize.BOOLEAN
   },
-  tuner: {
+  isTuner: {
     type: Sequelize.BOOLEAN
   },
-  union: {
+  isUnion: {
     type: Sequelize.BOOLEAN
   },
   attribute: {
@@ -121,7 +121,7 @@ export const Card = db.define('cards', {
   color: {
     type: Sequelize.STRING
   },
-  extraDeck: {
+  isExtraDeck: {
     type: Sequelize.BOOLEAN
   },
   sortPriority: {
@@ -134,9 +134,19 @@ Card.countResults = async (filter = {}, booster) => {
         let value = by.value
         if (typeof value === 'string') value.replaceAll('%20', ' ')
         let operator = by.operator
-        if (['tcgLegal', 'ocgLegal', 'speedLegal', 'normal', 'effect', 'fusion', 'ritual', 'synchro', 'xyz', 'pendulum', 'link', 'flip', 'gemini', 'spirit', 'toon', 'tuner', 'union', 'extraDeck'].includes(key)) { value = value.toLowerCase() === 'true' }
+        if (['isNormal', 'isEffect', 'isFusion', 'isRitual', 'isSynchro', 'isXyz', 'isPendulum', 'isLink', 'isFlip', 'isGemini', 'isSpirit', 'isToon', 'isTuner', 'isUnion'].includes(key)) { value = value.toLowerCase() === 'true' }
         if (['level', 'rating', 'scale', 'sortPriority'].includes(key) && operator !== 'btw') { value = parseInt(value) }
         
+        if (['tcg'].includes(key)) { 
+            key = 'isTcgLegal'
+        } else if (['ocg'].includes(key)) { 
+            key = 'isOcgLegal'
+        } else if (['speed'].includes(key)) { 
+            key = 'isSpeedLegal'
+        } else if (['extra'].includes(key)) { 
+            key = 'isExtraDeck'
+        }
+
         if (operator === 'eq') {
             operator = Op.eq
         } else if (operator === 'not') {
@@ -185,8 +195,18 @@ Card.find = async (filter = {}, booster, limit = 10, page = 1, sort = []) => {
         let value = by.value
         if (typeof value === 'string') value.replaceAll('%20', ' ')
         let operator = by.operator
-        if (['tcgLegal', 'ocgLegal', 'speedLegal', 'normal', 'effect', 'fusion', 'ritual', 'synchro', 'xyz', 'pendulum', 'link', 'flip', 'gemini', 'spirit', 'toon', 'tuner', 'union', 'extraDeck'].includes(key)) { value = value.toLowerCase() === 'true' }
+        if (['tcg', 'ocg', 'speed', 'extra', 'isNormal', 'isEffect', 'isFusion', 'isRitual', 'isSynchro', 'isXyz', 'isPendulum', 'isLink', 'isFlip', 'isGemini', 'isSpirit', 'isToon', 'isTuner', 'isUnion'].includes(key)) { value = value.toLowerCase() === 'true' }
         if (['level', 'rating', 'scale', 'sortPriority'].includes(key) && operator !== 'btw') { value = parseInt(value) }
+        
+        if (['tcg'].includes(key)) { 
+            key = 'isTcgLegal'
+        } else if (['ocg'].includes(key)) { 
+            key = 'isOcgLegal'
+        } else if (['speed'].includes(key)) { 
+            key = 'isSpeedLegal'
+        } else if (['extra'].includes(key)) { 
+            key = 'isExtraDeck'
+        }
 
         if (operator === 'eq') {
             operator = Op.eq
@@ -225,7 +245,7 @@ Card.find = async (filter = {}, booster, limit = 10, page = 1, sort = []) => {
         offset: (page - 1) * limit,
         limit: limit,
         subQuery: false,
-        attributes: { exclude: ['tcgLegal', 'ocgLegal', 'speedLegal', 'createdAt', 'updatedAt'] },
+        attributes: { exclude: ['isTcgLegal', 'isOcgLegal', 'isSpeedLegal', 'createdAt', 'updatedAt'] },
         include: [{ model: Print, separate: !booster, attributes: ['id'] }],
         order: sort
     })

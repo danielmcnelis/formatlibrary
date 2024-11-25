@@ -59,8 +59,8 @@ export const SearchPanel = (props) => {
         counter: false,
         equip: false,
         field: false,
-        normal: false,
-        ritual: false,
+        isNormal: false,
+        isRitual: false,
         'quick-play': false
     })
 
@@ -102,20 +102,20 @@ export const SearchPanel = (props) => {
     })
 
     const [groupParams, setGroupParams] = useState({
-        effect: false,
-        flip: false,
-        fusion: false,
-        gemini: false,
-        link: false,
-        normal: false,
-        pendulum: false,
-        ritual: false,
-        spirit: false,
-        synchro: false,
-        toon: false,
-        tuner: false,
-        union: false,
-        xyz: false
+        isEffect: false,
+        isFlip: false,
+        isFusion: false,
+        isGemini: false,
+        isLink: false,
+        isNormal: false,
+        isPendulum: false,
+        isRitual: false,
+        isSpirit: false,
+        isSynchro: false,
+        isToon: false,
+        isTuner: false,
+        isUnion: false,
+        isXyz: false
     })
 
     // USE LAYOUT EFFECT
@@ -128,9 +128,9 @@ export const SearchPanel = (props) => {
         if (queryParams.name) filter += `,name:inc:${queryParams.name}`
         if (queryParams.category) filter += `,category:eq:${queryParams.category}`
         if (queryParams.description) filter += `,description:inc:${queryParams.description}`
-        if (queryParams.region?.toLowerCase() === 'tcg') filter += `,tcgLegal:eq:true`
-        if (queryParams.region?.toLowerCase() === 'ocg') filter += `,ocgLegal:eq:true`
-        if (queryParams.region?.toLowerCase() === 'speed') filter += `,speedLegal:eq:true`
+        if (queryParams.region?.toLowerCase() === 'tcg') filter += `,isTcgLegal:eq:true`
+        if (queryParams.region?.toLowerCase() === 'ocg') filter += `,isOcgLegal:eq:true`
+        if (queryParams.region?.toLowerCase() === 'speed') filter += `,isSpeedLegal:eq:true`
 
         const icons = Object.entries(iconParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
         const attributes = Object.entries(attributeParams).filter((e) => !!e[1]).map((e) => e[0].toUpperCase())
@@ -141,7 +141,7 @@ export const SearchPanel = (props) => {
         if (attributes.length) filter += `,attribute:or:arr(${attributes.join(';')})`
         if (types.length) filter += `,type:or:arr(${types.join(';')})`
         groups.forEach((g) => filter += `,${g}:eq:true`)
-        if (groupParams.effect) filter += `,extraDeck:eq:false`
+        if (groupParams.isEffect) filter += `,isExtraDeck:eq:false`
 
         if (cutoff !== `${now.getFullYear()}-12-31`) {
             queryParams.region?.toLowerCase() === 'speed' ? filter += `,speedDate:lte:${cutoff}`: 
@@ -174,9 +174,9 @@ export const SearchPanel = (props) => {
         if (queryParams.name) filter += `,name:inc:${queryParams.name}`
         if (queryParams.category) filter += `,category:eq:${queryParams.category}`
         if (queryParams.description) filter += `,description:inc:${queryParams.description}`
-        if (queryParams.region?.toLowerCase() === 'tcg') filter += `,tcgLegal:eq:true`
-        if (queryParams.region?.toLowerCase() === 'ocg') filter += `,ocgLegal:eq:true`
-        if (queryParams.region?.toLowerCase() === 'speed') filter += `,speedLegal:eq:true`
+        if (queryParams.region?.toLowerCase() === 'tcg') filter += `,isTcgLegal:eq:true`
+        if (queryParams.region?.toLowerCase() === 'ocg') filter += `,isOcgLegal:eq:true`
+        if (queryParams.region?.toLowerCase() === 'speed') filter += `,isSpeedLegal:eq:true`
 
         const icons = Object.entries(iconParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
         const attributes = Object.entries(attributeParams).filter((e) => !!e[1]).map((e) => e[0].toUpperCase())
@@ -187,7 +187,7 @@ export const SearchPanel = (props) => {
         if (attributes.length) filter += `,attribute:or:arr(${attributes.join(';')})`
         if (types.length) filter += `,type:or:arr(${types.join(';')})`
         groups.forEach((g) => filter += `,${g}:eq:true`)
-        if (groupParams.effect) filter += `,extraDeck:eq:false`
+        if (groupParams.isEffect) filter += `,isExtraDeck:eq:false`
 
         if (cutoff !== `${now.getFullYear()}-12-31`) {
             queryParams.region?.toLowerCase() === 'speed' ? filter += `,speedDate:lte:${cutoff}`: 
@@ -232,8 +232,8 @@ export const SearchPanel = (props) => {
             counter: false,
             equip: false,
             field: false,
-            normal: false,
-            ritual: false,
+            isNormal: false,
+            isRitual: false,
             'quick-play': false
         })
         
@@ -275,20 +275,20 @@ export const SearchPanel = (props) => {
         })
         
         setGroupParams({
-            effect: false,
-            flip: false,
-            fusion: false,
-            gemini: false,
-            link: false,
-            normal: false,
-            pendulum: false,
-            ritual: false,
-            spirit: false,
-            synchro: false,
-            toon: false,
-            tuner: false,
-            union: false,
-            xyz: false
+            isEffect: false,
+            isFlip: false,
+            isFusion: false,
+            isGemini: false,
+            isLink: false,
+            isNormal: false,
+            isPendulum: false,
+            isRitual: false,
+            isSpirit: false,
+            isSynchro: false,
+            isToon: false,
+            isTuner: false,
+            isUnion: false,
+            isXyz: false
         })
 
         count()
@@ -380,12 +380,12 @@ export const SearchPanel = (props) => {
 
     const advancedButtons = {
         icon: [
-            ['normal'], 
+            ['isNormal'], 
             ['continuous'], 
             ['counter'], 
             ['equip'], 
             ['field'], 
-            ['ritual'], 
+            ['isRitual'], 
             ['quick-play']
         ],
         attribute: [
@@ -426,20 +426,20 @@ export const SearchPanel = (props) => {
             ['zombie']
         ],
         group: [
-            ['normal'], 
-            ['effect'], 
-            ['ritual'], 
-            ['pendulum'], 
-            ['fusion'], 
-            ['synchro'], 
-            ['xyz'], 
-            ['link'], 
-            ['flip'], 
-            ['gemini'], 
-            ['spirit'], 
-            ['toon'], 
-            ['tuner'], 
-            ['union']
+            ['isNormal'], 
+            ['isEffect'], 
+            ['isRitual'], 
+            ['isPendulum'], 
+            ['isFusion'], 
+            ['isSynchro'], 
+            ['isXyz'], 
+            ['isLink'], 
+            ['isFlip'], 
+            ['isGemini'], 
+            ['isSpirit'], 
+            ['isToon'], 
+            ['isTuner'], 
+            ['isUnion']
         ]
     }
 

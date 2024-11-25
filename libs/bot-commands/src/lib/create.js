@@ -3,7 +3,7 @@ import { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from
 import { SlashCommandBuilder } from 'discord.js'
 import { Format, Server } from '@fl/models'
 import { emojis } from '@fl/bot-emojis'
-import { isMod, hasPartnerAccess } from '@fl/bot-functions'
+import { isModerator, hasPartnerAccess } from '@fl/bot-functions'
 
 export default {
     data: new SlashCommandBuilder()
@@ -26,7 +26,7 @@ export default {
         const type = interaction.options.getString('type')
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return await interaction.reply({ content: 'You do not have permission to do that.'})
+        if (!isModerator(server, interaction.member)) return await interaction.reply({ content: 'You do not have permission to do that.'})
 
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
 

@@ -6,10 +6,10 @@ export const Video = db.define('videos', {
   title: {
     type: Sequelize.STRING
   },
-  author: {
+  authorName: {
     type: Sequelize.STRING
   },
-  playerId: {
+  authorId: {
     type: Sequelize.STRING
   },
   url: {

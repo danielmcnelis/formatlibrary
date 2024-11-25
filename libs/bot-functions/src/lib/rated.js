@@ -122,7 +122,7 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${channelId}>` +
                 `\nDiscord Name: ${playerGlobalName ? `${playerGlobalName} (${playerDiscordName})` : playerDiscordName}` +
-                `\nDuelingbook Name: ${player.duelingBook}`
+                `\nDuelingbook Name: ${player.duelingBookName}`
             ).catch((err) => console.log(err))
 
             interaction.user.send(
@@ -130,7 +130,7 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
                 `\nServer: ${server.name} ${server.logo}` + 
                 `\nChannel: <#${channelId}>` +
                 `\nDiscord Name: ${opponentGlobalName ? `${opponentGlobalName} (${opponentDiscordName})` : opponentDiscordName}` +
-                `\nDuelingbook Name: ${opponent.duelingBook}`
+                `\nDuelingbook Name: ${opponent.duelingBookName}`
             ).catch((err) => console.log(err))
 
             await Pairing.create({
@@ -165,8 +165,8 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
                     formatId: format.id, 
                     games: { [Op.gte]: 3 },
                     serverId: '414551319031054346',
-                    inactive: false,
-                    '$player.hidden$': false
+                    isActive: true,
+                    '$player.isHidden$': false
                 },
                 include: [Player],
                 order: [['elo', 'DESC']] 
@@ -176,7 +176,7 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
             const p1Rank = p1Index >= 0 ? `#${p1Index + 1} ` : ''
             const p2Index = allStats.findIndex((s) => s.playerId === opponent.id)
             const p2Rank = p2Index >= 0 ? `#${p2Index + 1} ` : ''
-            const content = `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBook}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBook}). Good luck to both duelists.`
+            const content = `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
             return channel.send({ content: content })   
         }
     }
@@ -184,13 +184,13 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
 }
 
 // HANDLE RATED CONFIRMATION
-export const handleRatedConfirmation = async (client, interaction, confirmed, yourPoolId, opponentsPoolId, serverId) => {
+export const handleRatedConfirmation = async (client, interaction, isConfirmed, yourPoolId, opponentsPoolId, serverId) => {
     try {
         const yourPool = await Pool.findOne({ where: { id: yourPoolId }, include: [Format, Player] })
         const format = yourPool.format
         const opponentsPool = await Pool.findOne({ where: { id: opponentsPoolId, status: {[Op.not]: 'inactive'}}, include: Player })
         
-        if (confirmed) {
+        if (isConfirmed) {
             if (!opponentsPool) {
                 await yourPool.update({ status: 'pending' })
                 return interaction.user.send(`Sorry, your potential opponent either found a match or left the pool while waiting for you to confirm. I'll put you back in the Rated ${format.name} Format ${format.emoji} Pool.`)
@@ -213,7 +213,7 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${channelId}>` +
                 `\nDiscord Name: ${playerGlobalName ? `${playerGlobalName} (${playerDiscordName})` : playerDiscordName}` +
-                `\n${`Duelingbook Name: ${player.duelingBook}`}`
+                `\n${`Duelingbook Name: ${player.duelingBookName}`}`
             ).catch((err) => console.log(err))
             
             interaction.user.send(
@@ -221,7 +221,7 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${channelId}>` +
                 `\nDiscord Name: ${opponentGlobalName ? `${opponentGlobalName} (${opponentDiscordName})` : opponentDiscordName}` +
-                `\nDuelingbook Name: ${opponent.duelingBook}`
+                `\nDuelingbook Name: ${opponent.duelingBookName}`
             ).catch((err) => console.log(err))
      
             await Pairing.create({
@@ -229,10 +229,10 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
                 formatName: format.name,
                 serverId: server.id,
                 serverName: server.name,
-                playerAName: yourPool.name,
+                playerAName: yourPool.playerName,
                 playerAId: yourPool.playerId,
                 deckFileA: yourPool.deckFile,
-                playerBName: opponentsPool.name,
+                playerBName: opponentsPool.playerName,
                 playerBId: opponentsPool.playerId,
                 deckFileB: opponentsPool.deckFile
             })   
@@ -256,8 +256,8 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
                     formatId: format.id, 
                     games: { [Op.gte]: 3 },
                     serverId: '414551319031054346',
-                    inactive: false,
-                    '$player.hidden$': false
+                    isActive: true,
+                    '$player.isHidden$': false
                 },
                 include: [Player],
                 order: [['elo', 'DESC']] 
@@ -268,7 +268,7 @@ export const handleRatedConfirmation = async (client, interaction, confirmed, yo
             const p2Index = allStats.findIndex((s) => s.playerId === opponent.id)
             const p2Rank = p2Index >= 0 ? `#${p2Index + 1} ` : ''
     
-            const content = format.category === `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBook}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBook}). Good luck to both duelists.`
+            const content = format.category === `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
     
             return channel.send({ content: content })
         } else {
@@ -439,14 +439,14 @@ export const getNewRatedDeck = async (user, player, format) => {
                 user.send({ content: `Thanks, ${user.username}, your deck is perfectly legal. ${emojis.legend}`}).catch((err) => console.log(err))
                 const deckName = await askForDeckName(user, player) || 'Unnamed Deck'
                 const newRatedDeck = await Deck.create({
-                    builder: player.name,
+                    builderName: player.name,
                     formatName: format.name,
                     formatId: format.id,
                     name: deckName,
                     url: url,
                     ydk: ydk,
                     origin: 'user',
-                    playerId: player.id
+                    builderId: player.id
                 })
 
                 return newRatedDeck
@@ -529,7 +529,7 @@ export const sendRatedPairingAnnouncement = async (client, player, opponent, for
             `\nServer: Format Library ${emojis.FL}` + 
             `\nChannel: <#${format.channel}}>` +
             `\nDiscord Name: ${opponentGlobalName ? `${opponentGlobalName} (${opponentDiscordName})` : opponentDiscordName}` +
-            `\nDuelingbook Name: ${opponent.duelingBook}`
+            `\nDuelingbook Name: ${opponent.duelingBookName}`
         ).catch((err) => console.log(err))
     
         user2.send(
@@ -537,7 +537,7 @@ export const sendRatedPairingAnnouncement = async (client, player, opponent, for
             `\nServer: Format Library ${emojis.FL}` +
             `\nChannel: <#${format.channel}>` +
             `\nDiscord Name: ${playerGlobalName ? `${playerGlobalName} (${playerDiscordName})` : playerDiscordName}` +
-            `\nDuelingbook Name: ${player.duelingBook}`
+            `\nDuelingbook Name: ${player.duelingBookName}`
         ).catch((err) => console.log(err))  
     } catch (err) {
         console.log(err)
@@ -555,8 +555,8 @@ export const sendRatedPairingNotifications = async (client, player, opponent, fo
                 formatId: format.id, 
                 games: { [Op.gte]: 3 },
                 serverId: '414551319031054346',
-                inactive: false,
-                '$player.hidden$': false
+                isActive: true,
+                '$player.isHidden$': false
             },
             include: [Player],
             order: [['elo', 'DESC']] 
@@ -566,7 +566,7 @@ export const sendRatedPairingNotifications = async (client, player, opponent, fo
         const p1Rank = p1Index >= 0 ? `#${p1Index + 1} ` : ''
         const p2Index = allStats.findIndex((s) => s.playerId === opponent.id)
         const p2Rank = p2Index >= 0 ? `#${p2Index + 1} ` : ''
-        const content = `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBook}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBook}). Good luck to both duelists.`
+        const content = `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
         
         return channel.send({ content: content })   
     } catch (err) {

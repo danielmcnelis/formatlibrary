@@ -9,34 +9,34 @@ export const CardRow = (props) => {
   
     if (category === 'Monster') {
       stats.push(card.type)
-      if (card.normal) stats.push("Normal")
-      if (card.fusion) stats.push("Fusion")
-      if (card.ritual) stats.push("Ritual")
-      if (card.synchro) stats.push("Synchro")
-      if (card.xyz) stats.push("Xyz")
-      if (card.pendulum) stats.push("Pendulum")
-      if (card.link) stats.push("Link")
-      if (card.flip) stats.push("Flip")
-      if (card.gemini) stats.push("Gemini")
-      if (card.spirit) stats.push("Spirit")
-      if (card.toon) stats.push("Toon")
-      if (card.tuner) stats.push("Tuner")
-      if (card.union) stats.push("Union")
-      if (card.effect) stats.push("Effect")
+      if (card.isNormal) stats.push("Normal")
+      if (card.isFusion) stats.push("Fusion")
+      if (card.isRitual) stats.push("Ritual")
+      if (card.isSynchro) stats.push("Synchro")
+      if (card.isXyz) stats.push("Xyz")
+      if (card.isPendulum) stats.push("Pendulum")
+      if (card.isLink) stats.push("Link")
+      if (card.isFlip) stats.push("Flip")
+      if (card.isGemini) stats.push("Gemini")
+      if (card.isSpirit) stats.push("Spirit")
+      if (card.isToon) stats.push("Toon")
+      if (card.isTuner) stats.push("Tuner")
+      if (card.isUnion) stats.push("Union")
+      if (card.isEffect) stats.push("Effect")
     }
   
     const line = stats.join(' / ')
     const symbol = card.attribute ? `https://cdn.formatlibrary.com/images/symbols/${card.attribute.toLowerCase()}.png` :
         `https://cdn.formatlibrary.com/images/symbols/${card.category.toLowerCase()}.png`
 
-    const symbol2 = card.link ? `https://cdn.formatlibrary.com/images/arrows/${card.arrows}.png` :
-      card.xyz ? `https://cdn.formatlibrary.com/images/symbols/rank.png` :
+    const symbol2 = card.isLink ? `https://cdn.formatlibrary.com/images/arrows/${card.arrows}.png` :
+      card.isXyz ? `https://cdn.formatlibrary.com/images/symbols/rank.png` :
       category === 'Monster' ? `https://cdn.formatlibrary.com/images/symbols/star.png` :
       card.icon ? `https://cdn.formatlibrary.com/images/symbols/${card.icon.toLowerCase().replaceAll(' ', '-')}.png` :
       ''
   
-    const line2 = card.link ? `Link ${rating}` :
-        card.xyz ? `Rank ${level}` :
+    const line2 = card.isLink ? `Link ${rating}` :
+        card.isXyz ? `Rank ${level}` :
         category === 'Monster' ? `Level ${level}` :
         card.icon
   
@@ -92,7 +92,7 @@ export const CardRow = (props) => {
                           <th
                               colSpan="2"
                               style={{
-                              fontWeight: 'normal',
+                              fontWeight: 'isNormal',
                               fontSize: '14px',
                               textAlign: 'right',
                               padding: '10px 20px 20px 10px',
@@ -160,7 +160,7 @@ export const CardRow = (props) => {
                           )}
                           <td />
                           </tr>
-                          {card.pendulum ? (
+                          {card.isPendulum ? (
                               <tr>
                               <td height="25px" width="110px" style={{borderRight: '2px solid #CFDCE5', borderTop: '2px solid #CFDCE5'}}>
                                   <img
@@ -190,7 +190,7 @@ export const CardRow = (props) => {
                                 style={{padding: '10px 20px 20px 10px', fontSize: '16px', borderTop: '2px solid #CFDCE5'}}
                             >
                                 {
-                                    card.normal ? <i>{card.description}</i> : card.description
+                                    card.isNormal ? <i>{card.description}</i> : card.description
                                 }
                             </td>
                             </tr>

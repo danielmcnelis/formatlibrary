@@ -69,7 +69,7 @@ export const Settings = () => {
         try {
             const {data} = await axios.put(`/api/players/update/${player?.id}`, {
                 name: document.getElementById('name').value,
-                duelingBook: document.getElementById('duelingbook').value,
+                duelingBookName: document.getElementById('duelingbook').value,
                 firstName: document.getElementById('first-name').value,
                 lastName: document.getElementById('last-name').value,
                 country: document.getElementById('country').value,
@@ -137,7 +137,7 @@ export const Settings = () => {
 //   }, [isMounted])
 
   if (player === null) return <NotFound /> 
-  const {id, name, firstName, lastName, discordName, country, timeZone, youtube, twitch, twitter, duelingBook, email} = player
+  const {id, name, firstName, lastName, discordName, country, timeZone, youtube, twitch, twitter, duelingBookName, email} = player
   if (!id) return <div style={{height: '100vh'}}/>
   return (
     <>
@@ -171,7 +171,7 @@ export const Settings = () => {
                                 <Form.Control
                                     type="name"
                                     id="duelingbook"
-                                    defaultValue={duelingBook}
+                                    defaultValue={duelingBookName}
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
@@ -322,7 +322,7 @@ export const Settings = () => {
                     />
                     <div className="profile-info"> 
                         <div className="profile-line"><b>Name:</b> {firstName && lastName ? `${firstName} ${lastName}` : ''}</div>
-                        <div className="profile-line"><b>DuelingBook:</b> {duelingBook || ''}</div>
+                        <div className="profile-line"><b>DuelingBook:</b> {duelingBookName || ''}</div>
                         <div className="profile-line"><b>Discord:</b> {discordName}</div>
                         <div className="profile-line"><b>Country:</b> {country || ''} {country ? <img className="country" src={`https://www.worldometers.info/img/flags/${countries[country].fips}-flag.gif`} alt={country + '-flag'}/> : ''}</div>
                         <div className="profile-line"><b>Time Zone:</b> {timeZone || ''}</div>

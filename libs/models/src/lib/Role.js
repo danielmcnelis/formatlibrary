@@ -8,5 +8,8 @@ export const Role = db.define('roles', {
     },
     roleName: {
         type: Sequelize.STRING
+    },
+    membershipId: {
+        type: Sequelize.INTEGER
     }
 })

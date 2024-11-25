@@ -32,7 +32,7 @@ export const getSet = async (req, res, next) => {
         where: {
           id: req.params.id
         },
-        attributes: ['id', 'setName', 'setCode', 'tcgDate']
+        attributes: ['id', 'name', 'setCode', 'tcgDate']
       })
   
       res.json(set)
@@ -46,10 +46,9 @@ export const getDraftable = async (req, res, next) => {
     try {
       const sets = await Set.findAll({
         where: {
-          draftable: true,
-          game: 'YGO'
+          isDraftable: true
         },
-        attributes: ['id', 'setName', 'setCode', 'tcgDate', 'packSize'],
+        attributes: ['id', 'name', 'setCode', 'tcgDate', 'packSize'],
         order: [['tcgDate', 'ASC']]
       })
   
@@ -64,10 +63,9 @@ export const getCore = async (req, res, next) => {
     try {
       const sets = await Set.findAll({
         where: {
-          core: true,
-          game: 'YGO'
+          isCore: true
         },
-        attributes: ['id', 'setName', 'setCode', 'tcgDate', 'packSize'],
+        attributes: ['id', 'name', 'setCode', 'tcgDate', 'packSize'],
         order: [['tcgDate', 'ASC']]
       })
   
@@ -82,10 +80,9 @@ export const getBoosters = async (req, res, next) => {
   try {
     const sets = await Set.findAll({
       where: {
-        booster: true,
-        game: 'YGO'
+        isBooster: true
       },
-      attributes: ['id', 'setName', 'setCode', 'tcgDate', 'packSize'],
+      attributes: ['id', 'name', 'setCode', 'tcgDate', 'packSize'],
       order: [['tcgDate', 'ASC']]
     })
 
@@ -98,7 +95,7 @@ export const getBoosters = async (req, res, next) => {
 // GENERATE PACKS
 export const generatePacks = async (req, res, next) => {
     try {
-        const set = await Set.findOne({ where: { setCode: req.params.set_code, booster: true }})
+        const set = await Set.findOne({ where: { setCode: req.params.set_code, isBooster: true }})
         const prints = await Print.findAll({ 
             where: { 
                 setId: set.id, 

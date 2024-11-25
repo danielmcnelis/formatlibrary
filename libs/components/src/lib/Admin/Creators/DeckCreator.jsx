@@ -4,7 +4,7 @@ import axios from 'axios'
 import { shouldDisplay } from '@fl/utils'
 
 export const DeckCreator = () => {
-    const [community, setCommunity] = useState(null)
+    const [communityName, setCommunityName] = useState(null)
     const [deckType, setDeckType] = useState(null)
     const [deckTypes, setDeckTypes] = useState([])
     const [display, setDisplay] = useState(true)
@@ -18,7 +18,7 @@ export const DeckCreator = () => {
     const placementArr = event ? Array.from({length: event.size}, (_, i) => i + 1) : []
 
     const reset = async () => {
-        setCommunity(null)
+        setCommunityName(null)
         setDeckType(null)
         setDisplay(true)
         setEvent(null)
@@ -45,19 +45,19 @@ export const DeckCreator = () => {
         
         try {
             const { data } = await axios.post('/api/decks/create', {
-                builder: player.name || player.name,
-                playerId: player.id,
-                type: deckType.name,
+                builderName: player.name,
+                builderId: player.id,
+                deckTypeName: deckType.name,
                 deckTypeId: deckType.id,
                 category: deckType.category,
                 format: event.formatName,
                 ydk: ydk,
-                eventName: event.abbreviation,
+                eventAbbreviation: event.abbreviation,
                 eventId: event.id,
                 publishDate: event.startDate,
                 placement: placement,
                 origin: 'event',
-                community: community,
+                communityName: communityName,
                 display: display
             })
 
@@ -115,12 +115,12 @@ export const DeckCreator = () => {
     // USE EFFECT
     useEffect(() => {
         const fetchEvents= async () => {
-            const {data} = await axios.get(`/api/events/community/${community}`)
+            const {data} = await axios.get(`/api/events/community/${communityName}`)
             setEvents(data)
         }
 
         fetchEvents()
-    }, [community])
+    }, [communityName])
 
     return (
         <div className="admin-portal">
@@ -156,7 +156,7 @@ export const DeckCreator = () => {
                 Community:
                 <select
                     id="community"
-                    onChange={(e) => setCommunity(e.target.value || null)}
+                    onChange={(e) => setCommunityName(e.target.value || null)}
                 >
                     <option value=""></option>
                     <option value="Format Library">Format Library</option>

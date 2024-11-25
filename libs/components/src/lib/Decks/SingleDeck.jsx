@@ -56,7 +56,7 @@ export const SingleDeck = (props) => {
             const accessToken = getCookie('access')
             const {data} = await axios.post(`/api/decks/labels?id=${deck.id}`, { 
                 ...deck, 
-                type: selectedDeckType.name, 
+                deckTypeName: selectedDeckType.name, 
                 deckTypeId: selectedDeckType.id,
                 category: selectedDeckType.category
             }, {
@@ -158,7 +158,7 @@ export const SingleDeck = (props) => {
   if (!deck) return <NotFound/>
   if (!deck.id) return <div style={{height: '100vh'}}/>
 
-  let extension =  (deck.player?.name || '').replaceAll('%', '%25')
+  let extension =  (deck.builderName || '').replaceAll('%', '%25')
     .replaceAll('/', '%2F')
     .replaceAll(' ', '_')
     .replaceAll('#', '%23')
@@ -166,7 +166,7 @@ export const SingleDeck = (props) => {
     .replaceAll('&', '%26')
     .replaceAll('★', '_')
 
-  const goToEvent = () => navigate(`/events/${deck.eventName}`)
+  const goToEvent = () => navigate(`/events/${deck.eventAbbreviation}`)
   const goToFormat = () => navigate(`/formats/${deck.formatName}`)
   const goToPlayer = () => navigate(`/players/${extension}`)
 
@@ -198,18 +198,18 @@ export const SingleDeck = (props) => {
     setDeck({downloads, ...deck})
   }
 
-  const fullName = deck.player?.name || deck.builder || ''
+  const fullName = deck.builderName || ''
   const displayName = fullName.length <= 24 ? fullName : fullName.slice(0, 24).split(' ')[0] || ''
 
   return (
     <>
         <Helmet>
-            <title>{`${deck?.type} ${deck?.formatName} Deck by ${deck?.builder} - Format Library`}</title>
+            <title>{`${deck?.deckTypeName} ${deck?.formatName} Deck by ${deck?.builderName} - Format Library`}</title>
             <meta 
                 name="description" 
                 content={
-                    deck?.placement ? `${ordinalize(deck?.placement)} Place ${deck?.formatName} Format ${deck?.type} Deck by ${deck?.builder}. This deck was used in ${deck.eventName} on ${dateToVerbose(deck.publishDate)}.` :
-                        `${deck?.formatName} Format ${deck?.type} Deck by ${deck?.builder}. This deck was shared by ${deck?.builder} on ${dateToVerbose(deck.publishDate)}.`
+                    deck?.placement ? `${ordinalize(deck?.placement)} Place ${deck?.formatName} Format ${deck?.deckTypeName} Deck by ${deck?.builderName}. This deck was used in ${deck.eventAbbreviation} on ${dateToVerbose(deck.publishDate)}.` :
+                        `${deck?.formatName} Format ${deck?.deckTypeName} Deck by ${deck?.builderName}. This deck was shared by ${deck?.builderName} on ${dateToVerbose(deck.publishDate)}.`
                 }
             />
         </Helmet>
@@ -229,7 +229,7 @@ export const SingleDeck = (props) => {
                 <a
                     className="link desktop-only"
                     href={`/api/decks/download/${deck.id}`} 
-                    download={`${deck.builder}-${deck.type || deck.name}.ydk`}
+                    download={`${deck.builderName}-${deck.deckTypeName || deck.name}.ydk`}
                     onClick={()=> addDownload()}
                 >                                     
                     <div className="deck-button">
@@ -245,9 +245,9 @@ export const SingleDeck = (props) => {
 
                 !inEditMode ? (
                         <div 
-                            onClick={() => {window.location.href=`/decktypes/${deck.type.toLowerCase().replace(/\s/g, '-')}?format=${deck.formatName.toLowerCase().replace(/\s/g, '_')}`}}
+                            onClick={() => {window.location.href=`/decktypes/${deck.deckTypeName.toLowerCase().replace(/\s/g, '-')}?format=${deck.formatName.toLowerCase().replace(/\s/g, '_')}`}}
                         >
-                            <div className="single-deck-title">{deck.type || deck.name}</div>
+                            <div className="single-deck-title">{deck.deckTypeName || deck.name}</div>
                         </div>
                     ) : (
                         <div>
@@ -255,7 +255,7 @@ export const SingleDeck = (props) => {
                             <input
                                 id="decktype-input"
                                 className="large-input"
-                                defaultValue={deck.type || deck.name}
+                                defaultValue={deck.deckTypeName || deck.name}
                                 type="text"
                                 onChange={(e) => {
                                     setInput(e.target.value)
@@ -310,13 +310,13 @@ export const SingleDeck = (props) => {
                             <p>{displayName}</p>
                             <img 
                                 className="single-deck-builder-cell-pfp"
-                                src={`https://cdn.formatlibrary.com/images/pfps/${deck.player.discordId || deck.player.name}.png`}
+                                src={`https://cdn.formatlibrary.com/images/pfps/${deck.builder.discordId || deck.builderName}.png`}
                                 onError={(e) => {
                                         e.target.onerror = null
                                         e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                                     }
                                 }
-                                alt={deck.player.name}
+                                alt={deck.builderName}
                             />
                         </div>
                     </div>       
@@ -356,15 +356,15 @@ export const SingleDeck = (props) => {
                     }
                 </tr>
                 {
-                    deck.eventName && deck.placement ? (
+                    deck.eventAbbreviation && deck.placement ? (
                         <tr className="single-deck-info-2">
                         <td>
                         <div onClick={() => goToEvent()} className="single-deck-cell">
-                            <div className="single-deck-event-link" style={{paddingRight:'7px'}}><b>Event:</b> {deck.eventName}</div> 
+                            <div className="single-deck-event-link" style={{paddingRight:'7px'}}><b>Event:</b> {deck.eventAbbreviation}</div> 
                             <img 
                                 style={{width:'28px'}} 
-                                src={`https://cdn.formatlibrary.com/images/logos/${deck.community?.replaceAll('+', '%2B')}.png`}
-                                alt={deck.community}
+                                src={`https://cdn.formatlibrary.com/images/logos/${deck.communityName?.replaceAll('+', '%2B')}.png`}
+                                alt={deck.communityName}
                             />
                         </div>   
                         </td>
@@ -434,7 +434,7 @@ export const SingleDeck = (props) => {
                                 <div style={{paddingRight:'7px'}}><b className="deck-stats-label">Downloads: </b>{deck.downloads}</div> 
                                 <a
                                     href={`/api/decks/download/${id}`} 
-                                    download={`${deck.builder}-${deck.type || deck.name}.ydk`}
+                                    download={`${deck.builderName}-${deck.deckTypeName || deck.name}.ydk`}
                                     onClick={()=> addDownload()}
                                 >
                                 <img style={{width:'28px'}} alt="download" src={Disk}/>

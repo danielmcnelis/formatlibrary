@@ -2,7 +2,7 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Server, Team, Tournament } from '@fl/models'
 import { askForSimName, getDeckList, getSpeedDeckList, postParticipant, selectTournament } from '@fl/bot-functions'
-import { isMod, hasPartnerAccess } from '@fl/bot-functions'
+import { isModerator, hasPartnerAccess } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
 
@@ -21,14 +21,14 @@ export default {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that. Please type **/join** instead.'})           
+        if (!isModerator(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that. Please type **/join** instead.'})           
         let format = await Format.findByServerOrChannelId(server, interaction.channelId)
         const tournaments = await Tournament.findByState({[Op.or]: ['pending', 'standby']}, format, interaction.guildId, 'ASC')
         const user = interaction.options.getUser('player')
         const member = await interaction.guild?.members.fetch(user.id)
         const player = await Player.findOne({ where: { discordId: user.id }})
         if (!player) return await interaction.editReply({ content: `That player is not in the database.`})
-        if (player.hidden) return await interaction.reply(`That player is not allowed to play in Format Library sanctioned tournaments.`)
+        if (player.isHidden) return await interaction.reply(`That player is not allowed to play in Format Library sanctioned tournaments.`)
 
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
@@ -72,11 +72,11 @@ export default {
   
         interaction.editReply({ content: `Please check your DMs.`})
         
-        const simName = player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
+        const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
         if (!simName) return
 
         const data = format.category === format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
-            await getDeckList(interaction.member, player, format, true, tournament.isUnranked)
+            await getDeckList(interaction.member, player, format, true, !tournament.isRanked)
 
         if (!data) return await interaction.editReplay({ content: `Error processing deck list.` })
 
@@ -125,7 +125,7 @@ export default {
             }
 
             await entry.update({ participantId: participant.id })
-            member.roles.add(server.tourRole).catch((err) => console.log(err))
+            member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
             return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament?.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         } else if (!entry && tournament.isTeamTournament && team) {
@@ -153,7 +153,7 @@ export default {
                 return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
             }
 
-            member.roles.add(server.tourRole).catch((err) => console.log(err))
+            member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.`})
             return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> (${team.name}) for ${tournament?.name}! ${tournament.logo}`}).catch((err) => console.log(err))        
         } else if (!entry && tournament.isTeamTournament && !team) {
@@ -172,7 +172,7 @@ export default {
                 return interaction.member.send({ content: `${emojis.high_alert} Error: Please do not spam bot commands multiple times. ${emojis.one_week}`})
             }
 
-            member.roles.add(server.tourRole).catch((err) => console.log(err))
+            member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.`})
             return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> as a Free Agent for ${tournament?.name}! ${tournament.logo}`}).catch((err) => console.log(err))        
         }

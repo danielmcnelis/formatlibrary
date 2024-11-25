@@ -87,17 +87,23 @@ Replay.countResults = async (filter = {}) => {
                 winnerName: {[Op.iLike]: `%${value}%`},
                 loserName: {[Op.iLike]: `%${value}%`}
             }
-        }
-
-        if (['deckType'].includes(key)) { 
+        } else if (['deck'].includes(key)) { 
             key = Op.or
             value = {
                 winningDeckTypeName: {[Op.iLike]: `%${value}%`},
                 losingDeckTypeName: {[Op.iLike]: `%${value}%`}
             }
+        } else if (['event'].includes(key)) { 
+            key = Op.or
+            value = {
+                eventAbbreviation: {[Op.iLike]: `%${value}%`},
+                '$event.name$': {[Op.iLike]: `%${value}%`}
+            }
+        } else if (['community'].includes(key)) {
+            key = '$event.communityName$'
+        } else if (['format'].includes(key)) {
+            key = 'formatName'
         }
-
-        // if (['display'].includes(key)) { value = value.toLowerCase() === 'true' }
         
         if (operator === 'eq') {
             operator = Op.eq
@@ -134,7 +140,13 @@ Replay.countResults = async (filter = {}) => {
     if (query) filter = {[Op.or]: [{name: query}, {abbreviation: query}], ...filter}
 
     const count = await Replay.count({ 
-        where: filter
+        where: filter,
+        include: [
+            {model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp']},
+            {model: Player, as: 'loser', attributes: ['id', 'name', 'discordId', 'discordPfp'] },
+            {model: Format, attributes: ['name', 'icon']},
+            {model: Event, attributes: ['name', 'communityName']}
+        ]
     })
 
     return count
@@ -151,14 +163,22 @@ Replay.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
                 winnerName: {[Op.iLike]: `%${value}%`},
                 loserName: {[Op.iLike]: `%${value}%`}
             }
-        }
-
-        if (['deckType'].includes(key)) { 
+        } else if (['deck'].includes(key)) { 
             key = Op.or
             value = {
                 winningDeckTypeName: {[Op.iLike]: `%${value}%`},
                 losingDeckTypeName: {[Op.iLike]: `%${value}%`}
             }
+        } else if (['event'].includes(key)) { 
+            key = Op.or
+            value = {
+                eventAbbreviation: {[Op.iLike]: `%${value}%`},
+                '$event.name$': {[Op.iLike]: `%${value}%`}
+            }
+        } else if (['community'].includes(key)) {
+            key = '$event.communityName$'
+        } else if (['format'].includes(key)) {
+            key = 'formatName'
         }
        
         if (operator === 'eq') {
@@ -205,7 +225,7 @@ Replay.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
             {model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp']},
             {model: Player, as: 'loser', attributes: ['id', 'name', 'discordId', 'discordPfp'] },
             {model: Format, attributes: ['name', 'icon']},
-            {model: Event, attributes: ['community']}
+            {model: Event, attributes: ['name', 'communityName']}
         ],
         order: sort
     })

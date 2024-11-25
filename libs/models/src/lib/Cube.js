@@ -6,10 +6,10 @@ export const Cube = db.define('cubes', {
   name: {
     type: Sequelize.STRING
   },
-  builder: {
+  builderName: {
     type: Sequelize.STRING
   },
-  playerId: {
+  builderId: {
     type: Sequelize.STRING
   },
   ydk: {
@@ -37,7 +37,7 @@ export const Cube = db.define('cubes', {
   shareLink: {
     type: Sequelize.STRING
   },
-  linkExpiration: {
+  linkExpiresAt: {
     type: Sequelize.DATE
   }
 })

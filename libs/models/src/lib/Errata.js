@@ -18,10 +18,10 @@ export const Errata = db.define('erratas', {
     expirationDate: {
         type: Sequelize.STRING
     },
-    original: {
+    isOriginal: {
         type: Sequelize.BOOLEAN
     },
-    active: {
+    isActive: {
         type: Sequelize.BOOLEAN
     }
 })

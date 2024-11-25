@@ -45,7 +45,7 @@ export const Match = db.define('matches', {
     pairingId: {
         type: Sequelize.INTEGER,
     },
-    internal: {
+    isInternal: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
     }

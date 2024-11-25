@@ -1,8 +1,8 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { createPlayer, getDeckType, postStory, isMod, isNewUser, hasPartnerAccess, isIronPlayer, lookForPotentialPairs, checkPairing, getMatches, processMatchResult, processTeamResult, selectTournament } from '@fl/bot-functions'
+import { createPlayer, getDeckType, isModerator, isNewUser, hasPartnerAccess, lookForPotentialPairs, checkPairing, getMatches, processMatchResult, processTeamResult, selectTournament } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
-import { Entry, Format, Iron, Match, Matchup, Pairing, Player, Pool, Replay, Server, Stats, Tournament } from '@fl/models'
+import { Entry, Format, Match, Matchup, Pairing, Player, Pool, Replay, Server, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import { client } from '../client'
 
@@ -31,7 +31,7 @@ export default {
         const losingMember = await interaction.guild?.members.fetch(loser.id).catch((err) => console.log(err))
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
+        if (!isModerator(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!format) return await interaction.editReply({ content: `Try using **/manual** in channels like: <#414575168174948372> or <#629464112749084673>.`})
         
@@ -43,14 +43,14 @@ export default {
         if (await isNewUser(winnerDiscordId)) await createPlayer(winningMember)
         if (await isNewUser(loserDiscordId)) await createPlayer(losingMember)
 
-        const serverId = server.internalLadder ? server.id : '414551319031054346'
+        const serverId = server.hasInternalLadder ? server.id : '414551319031054346'
         const winningPlayer = await Player.findOne({ where: { discordId: winnerDiscordId } })
         const wCount = await Stats.count({ where: { playerId: winningPlayer.id, formatId: format.id, serverId: serverId } })
-        if (!wCount) await Stats.create({ playerId: winningPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, internal: server.internalLadder })
+        if (!wCount) await Stats.create({ playerId: winningPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, isInternal: server.hasInternalLadder })
         const winnerStats = await Stats.findOne({ where: { playerId: winningPlayer.id, formatId: format.id, serverId: serverId } })
         const losingPlayer = await Player.findOne({ where: { discordId: loserDiscordId } })
         const lCount = await Stats.count({ where: { playerId: losingPlayer.id, formatId: format.id, serverId: serverId } })
-        if (!lCount) await Stats.create({ playerId: losingPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, internal: server.internalLadder })
+        if (!lCount) await Stats.create({ playerId: losingPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, isInternal: server.hasInternalLadder })
         const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, formatId: format.id, serverId: serverId } })
 
         if (!losingPlayer || !loserStats) return await interaction.editReply({ content: `Sorry, <@${loserDiscordId}> is not in the database.`})
@@ -66,11 +66,6 @@ export default {
         let tournament
         let tournamentId
         let challongeMatch
-
-        const loserHasIronRole = isIronPlayer(losingMember)
-        const winnerHasIronRole = isIronPlayer(winningMember)
-        const activeIron = await Iron.count({ where: { format: format.name, status: 'active' }})
-        let isIronMatch
 
         if (activeTournament) {
             const loserTournamentIds = [...await Entry.findByPlayerIdAndFormatId(losingPlayer.id, format.id)].map((e) => e.tournamentId)
@@ -107,46 +102,11 @@ export default {
                     return
                 }
             }
-        } else if (loserHasIronRole && winnerHasIronRole && activeIron) {
-            const teamA = [...await Iron.findAll({ 
-                where: {
-                    format: format.name,
-                    team: 'A',
-                    eliminated: false
-                },
-                order: [["position", "ASC"]]
-            })]
-        
-            const teamB = [...await Iron.findAll({ 
-                where: {
-                    format: format.name,
-                    team: 'B',
-                    eliminated: false
-                },
-                order: [["position", "ASC"]]
-            })]
-  
-            const ironPersonA = teamA[0]
-            const ironPersonB = teamB[0]
-
-            if (winningPlayer.id === ironPersonA.playerId && losingPlayer.id === ironPersonB.playerId) {
-                isIronMatch = true
-                ironPersonB.eliminated = true
-                await ironPersonB.save()
-                setTimeout(() => postStory(interaction.channel, format), 5000)
-            } else if (winningPlayer.id === ironPersonB.playerId && losingPlayer.id === ironPersonA.playerId) {
-                isIronMatch = true
-                ironPersonA.eliminated = true
-                await ironPersonA.save()
-                setTimeout(() => postStory(interaction.channel, format), 5000)
-            } else {
-                return await interaction.editReply({ content: `Sorry, ${winningPlayer.name} is not ${losingPlayer.name}'s ${format.name} Iron opponent. ${server.emoji || format.emoji} ${emojis.iron}`})
-            }
         }
 
         
         let match
-        if (!isTournament || !tournament?.isUnranked) {
+        if (!isTournament || tournament?.isRanked) {
             const origEloWinner = winnerStats.elo || 500.00
             const origEloLoser = loserStats.elo || 500.00
             const delta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
@@ -156,10 +116,9 @@ export default {
             winnerStats.backupElo = origEloWinner
             winnerStats.wins++
             winnerStats.games++
-            winnerStats.inactive = false
-            winnerStats.streak++
-            if (winnerStats.streak >= winnerStats.bestStreak) winnerStats.bestStreak++
-            if (challongeMatch && tournament?.pointsEligible) winnerStats.tournamentPoints += challongeMatch.round + 1
+            winnerStats.isActive = true
+            winnerStats.currentStreak++
+            if (winnerStats.currentStreak >= winnerStats.bestStreak) winnerStats.bestStreak++
             if (!await Match.checkIfVanquished(format.id, winningPlayer.id, losingPlayer.id)) winnerStats.vanquished++
             await winnerStats.save()
     
@@ -167,9 +126,8 @@ export default {
             loserStats.backupElo = origEloLoser
             loserStats.losses++
             loserStats.games++
-            loserStats.inactive = false
-            loserStats.streak = 0
-            if (challongeMatch?.round === 1 && tournament?.pointsEligible) loserStats.tournamentPoints++
+            loserStats.isActive = true
+            loserStats.currentStreak = 0
             await loserStats.save()
     
             match = await Match.create({
@@ -185,12 +143,12 @@ export default {
                 formatId: format.id,
                 delta: delta,
                 serverId: serverId,
-                internal: server.internalLadder
+                isInternal: server.hasInternalLadder
             })
         }
         
 
-        if (!isTournament && !isIronMatch) {
+        if (!isTournament) {
             const pairing = await Pairing.findOne({
                 where: {
                     formatId: format.id,
@@ -236,7 +194,7 @@ export default {
             lookForPotentialPairs(client, interaction, rPTU, rPTU.player, rPTU.format)
         }
 
-        if (isTournament && !tournament.isUnranked) {
+        if (isTournament && tournament.isRanked) {
             setTimeout(async () => {
                 const count = await Replay.count({
                     where: {
@@ -250,6 +208,6 @@ export default {
             }, 5 * 60 * 1000)
         }
 
-        return await interaction.editReply({ content: `A manual ${server.internalLadder ? 'Internal ' : ''}${format.name} Format ${server.emoji || format.emoji} ${isTournament ? 'Tournament ' : isIronMatch ? `Iron ${emojis.iron}` : ''}loss by <@${losingPlayer.discordId}>${tournament?.pointsEligible && challongeMatch?.round ? ` (+1 TP)` : ''} to <@${winningPlayer.discordId}>${tournament?.pointsEligible ? ` (+${challongeMatch.round + 1} TP)` : ''} has been recorded.`})		
+        return await interaction.editReply({ content: `A manual ${server.hasInternalLadder ? 'Internal ' : ''}${format.name} Format ${format.emoji} ${isTournament ? 'Tournament ' : ''}loss by <@${losingPlayer.discordId}>${tournament?.pointsEligible && challongeMatch?.round ? ` (+1 TP)` : ''} to <@${winningPlayer.discordId}>${tournament?.pointsEligible ? ` (+${challongeMatch.round + 1} TP)` : ''} has been recorded.`})		
     }
 }

@@ -33,7 +33,7 @@ export const undoMatch = async (interaction, server, matchId, authorIsMod) => {
             try {
                 await axios({
                     method: 'post',
-                    url: `https://api.challonge.com/v1/tournaments/${match.tournamentId}/matches/${match.challongeMatchId}/reopen.json?api_key=${server.challongeAPIKey}`
+                    url: `https://api.challonge.com/v1/tournaments/${match.tournamentId}/matches/${match.challongeMatchId}/reopen.json?api_key=${server.challongeApiKey}`
                 })
             } catch (err) {
                 console.log(err)
@@ -53,7 +53,7 @@ export const undoMatch = async (interaction, server, matchId, authorIsMod) => {
         await loserStats.save()
     
         await match.destroy()
-        return interaction.channel.send({ content: `The last ${server.internalLadder ? 'Internal ' : ''}${match.formatName} Format ${server.emoji || match.format?.emoji || ''} ${match.isTournament ? 'Tournament ' : ''}match in which ${winningPlayer.name} defeated ${losingPlayer.name} has been erased.`})	
+        return interaction.channel.send({ content: `The last ${server.hasInternalLadder ? 'Internal ' : ''}${match.formatName} Format ${match.format?.emoji || ''} ${match.isTournament ? 'Tournament ' : ''}match in which ${winningPlayer.name} defeated ${losingPlayer.name} has been erased.`})	
     } catch (err) {
         console.log(err)
     }

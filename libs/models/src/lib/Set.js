@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const Set = db.define('sets', {
-  setName: {
+  name: {
     type: Sequelize.STRING
   },
   setCode: {
@@ -11,19 +11,19 @@ export const Set = db.define('sets', {
   tcgDate: {
     type: Sequelize.STRING
   },
-  booster: {
+  isBooster: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
-  core: {
+  isCore: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
-  mini: {
+  isMini: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
-  draftable: {
+  isDraftable: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
@@ -38,10 +38,6 @@ export const Set = db.define('sets', {
   },
   tcgPlayerGroupId: {
     type: Sequelize.INTEGER
-  },
-  game: {
-    type: Sequelize.STRING,
-    defaultValue: 'YGO'
   },
   legalDate: {
     type: Sequelize.STRING

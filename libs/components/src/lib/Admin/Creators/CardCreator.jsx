@@ -18,20 +18,20 @@ export const CardCreator = () => {
     const [rating, setRating] = useState(null)
     const [scale, setScale] = useState(null)
     const [arrows, setArrows] = useState(null)
-    const [normal, setNormal] = useState(false)
-    const [effect, setEffect] = useState(false)
-    const [fusion, setFusion] = useState(false)
-    const [ritual, setRitual] = useState(false)
-    const [synchro, setSynchro] = useState(false)
-    const [xyz, setXyz] = useState(false)
-    const [pendulum, setPendulum] = useState(false)
-    const [link, setLink] = useState(false)
-    const [flip, setFlip] = useState(false)
-    const [gemini, setGemini] = useState(false)
-    const [spirit, setSpirit] = useState(false)
-    const [tuner, setTuner] = useState(false)
-    const [toon, setToon] = useState(false)
-    const [union, setUnion] = useState(false)
+    const [isNormal, setIsNormal] = useState(false)
+    const [isEffect, setIsEffect] = useState(false)
+    const [isFusion, setIsFusion] = useState(false)
+    const [isRitual, setIsRitual] = useState(false)
+    const [isSynchro, setIsPendulumSynchro] = useState(false)
+    const [isXyz, setIsXyz] = useState(false)
+    const [isPendulum, setIsPendulum] = useState(false)
+    const [isLink, setIsLink] = useState(false)
+    const [isFlip, setIsFlip] = useState(false)
+    const [isGemini, setIsGemini] = useState(false)
+    const [isSpirit, setIsSpirit] = useState(false)
+    const [isTuner, setIsTuner] = useState(false)
+    const [isToon, setIsToon] = useState(false)
+    const [isUnion, setIsUnion] = useState(false)
     const [image, setImage] = useState(null)
 
     //RESET
@@ -52,20 +52,20 @@ export const CardCreator = () => {
         setRating(null)
         setScale(null)
         setArrows(null)
-        setNormal(false)
-        setEffect(false)
-        setFusion(false)
-        setRitual(false)
-        setSynchro(false)
-        setXyz(false)
-        setPendulum(false)
-        setLink(false)
-        setFlip(false)
-        setGemini(false)
-        setSpirit(false)
-        setToon(false)
-        setTuner(false)
-        setUnion(false)
+        setIsNormal(false)
+        setIsEffect(false)
+        setIsFusion(false)
+        setIsRitual(false)
+        setIsPendulumSynchro(false)
+        setIsXyz(false)
+        setIsPendulum(false)
+        setIsLink(false)
+        setIsFlip(false)
+        setIsGemini(false)
+        setIsSpirit(false)
+        setIsToon(false)
+        setIsTuner(false)
+        setIsUnion(false)
         document.getElementById('name').value = null
         document.getElementById('description').value = null
         document.getElementById('konamiCode').value = null
@@ -86,10 +86,10 @@ export const CardCreator = () => {
         document.getElementById('effect').value = false
         document.getElementById('fusion').value = false
         document.getElementById('ritual').value = false
-        document.getElementById('synchro').value = false
-        document.getElementById('xyz').value = false
+        document.getElementById('isSynchro').value = false
+        document.getElementById('isXyz').value = false
         document.getElementById('pendulum').value = false
-        document.getElementById('link').value = false
+        document.getElementById('isLink').value = false
         document.getElementById('flip').value = false
         document.getElementById('gemini').value = false
         document.getElementById('spirit').value = false
@@ -111,11 +111,11 @@ export const CardCreator = () => {
         if (!type && category === 'Monster') return alert('Please select a Type.')
         if (atk === null && category === 'Monster') return alert('Please provide an ATK stat.')
         if (def === null && category === 'Monster') return alert('Please provide a DEF stat.')
-        if (level === null && !link && category === 'Monster') return alert('Please provide a Level/Rank.')
-        if (level === null && link && category === 'Monster') return alert('Please provide a Link Rating.')
-        if (!arrows && link && category === 'Monster') return alert('Please provide Link Arrows.')
-        if (scale === null && pendulum && category === 'Monster') return alert('Please provide a Pendulum Scale.')
-        if (category === 'Monster' && !normal && !effect) return alert('Please set Normal or Effect to equal TRUE.')
+        if (level === null && !isLink && category === 'Monster') return alert('Please provide a Level/Rank.')
+        if (level === null && isLink && category === 'Monster') return alert('Please provide a Link Rating.')
+        if (!arrows && isLink && category === 'Monster') return alert('Please provide Link Arrows.')
+        if (scale === null && isPendulum && category === 'Monster') return alert('Please provide a Pendulum Scale.')
+        if (category === 'Monster' && !isNormal && !isEffect) return alert('Please set Normal or Effect to equal TRUE.')
 
         try {
             const {data} = await axios.post('/api/cards/create', {
@@ -126,8 +126,8 @@ export const CardCreator = () => {
                 artworkId: parseInt(konamiCode),
                 tcgDate: tcgDate,
                 ocgDate: ocgDate,
-                tcgLegal: !!tcgDate,
-                ocgLegal: !!ocgDate,
+                isTcgLegal: !!tcgDate,
+                isOcgLegal: !!ocgDate,
                 category: category,
                 icon: icon,
                 attribute: attribute,
@@ -138,42 +138,42 @@ export const CardCreator = () => {
                 rating: rating,
                 scale: scale,
                 arrows: arrows,
-                normal: normal,
-                effect: effect,
-                fusion: fusion,
-                ritual: ritual,
-                synchro: synchro,
-                xyz: xyz,
-                pendulum: pendulum,
-                link: link,
-                flip: flip,
-                gemini: gemini,
-                spirit: spirit,
-                toon: toon,
-                tuner: tuner,
-                union: union,
-                color: normal ? 'yellow' :
+                isNormal: isNormal,
+                isEffect: isEffect,
+                isFusion: isFusion,
+                isRitual: isRitual,
+                isSynchro: isSynchro,
+                isXyz: isXyz,
+                isPendulum: isPendulum,
+                isLink: isLink,
+                isFlip: isFlip,
+                isGemini: isGemini,
+                isSpirit: isSpirit,
+                isToon: isToon,
+                isTuner: isTuner,
+                isUnion: isUnion,
+                color: isNormal ? 'yellow' :
                     category === 'Spell' ? 'green' : 
                     category === 'Trap' ? 'violet' : 
-                    link ? 'dark-blue' :
-                    pendulum && effect ? 'orange-green' :
-                    pendulum && !effect ? 'yellow-green' :
-                    xyz ? 'black' :
-                    synchro ? 'white' :
-                    ritual ? 'light-blue' :
-                    fusion ? 'purple' :
+                    isLink ? 'dark-blue' :
+                    isPendulum && isEffect ? 'orange-green' :
+                    isPendulum && !isEffect ? 'yellow-green' :
+                    isXyz ? 'black' :
+                    isSynchro ? 'white' :
+                    isRitual ? 'light-blue' :
+                    isFusion ? 'purple' :
                     'orange',
-                extraDeck: fusion || synchro || xyz || link,
-                sortPriority: normal ? 1 :
+                isExtraDeck: isFusion || isSynchro || isXyz || isLink,
+                sortPriority: isNormal ? 1 :
                     category === 'Spell' ? 11 : 
                     category === 'Trap' ? 10 : 
-                    link ? 9 :
-                    pendulum && effect ? 4 :
-                    pendulum && !effect ? 2 :
-                    xyz ? 8 :
-                    synchro ? 7 :
-                    ritual ? 5 :
-                    fusion ? 6 :
+                    isLink ? 9 :
+                    isPendulum && isEffect ? 4 :
+                    isPendulum && !isEffect ? 2 :
+                    isXyz ? 8 :
+                    isSynchro ? 7 :
+                    isRitual ? 5 :
+                    isFusion ? 6 :
                     3,
                 image: image
             })
@@ -362,8 +362,8 @@ export const CardCreator = () => {
             <label>Normal:
                 <select
                     id="normal"
-                    value={normal}
-                    onChange={(e) => setNormal(e.target.value)}
+                    value={isNormal}
+                    onChange={(e) => setIsNormal(e.target.value)}
                 >
                     <option value="true">True</option>
                     <option value="false">False</option>
@@ -372,9 +372,9 @@ export const CardCreator = () => {
             <label>Effect:
                 <select
                     id="effect"
-                    value={effect}
+                    value={isEffect}
                     style={{backgroundImage: 'none'}}
-                    onChange={(e) => setEffect(e.target.value)}
+                    onChange={(e) => setIsEffect(e.target.value)}
                 >
                     <option value="true">True</option>
                     <option value="false">False</option>
@@ -383,9 +383,9 @@ export const CardCreator = () => {
             <label>Fusion:
                 <select
                     id="fusion"
-                    value={fusion}
+                    value={isFusion}
                     style={{backgroundImage: 'none'}}
-                    onChange={(e) => setFusion(e.target.value)}
+                    onChange={(e) => setIsFusion(e.target.value)}
                 >
                     <option value="true">True</option>
                     <option value="false">False</option>
@@ -394,9 +394,9 @@ export const CardCreator = () => {
             <label>Ritual:
                 <select
                     id="ritual"
-                    value={ritual}
+                    value={isRitual}
                     style={{backgroundImage: 'none'}}
-                    onChange={(e) => setRitual(e.target.value)}
+                    onChange={(e) => setIsRitual(e.target.value)}
                 >
                     <option value="true">True</option>
                     <option value="false">False</option>
@@ -405,9 +405,9 @@ export const CardCreator = () => {
             <label>Synchro:
                 <select
                     id="synchro"
-                    value={synchro}
+                    value={isSynchro}
                     style={{backgroundImage: 'none'}}
-                    onChange={(e) => setSynchro(e.target.value)}
+                    onChange={(e) => setIsPendulumSynchro(e.target.value)}
                 >
                     <option value="true">True</option>
                     <option value="false">False</option>
@@ -416,9 +416,9 @@ export const CardCreator = () => {
             <label>Xyz:
                 <select
                     id="xyz"
-                    value={xyz}
+                    value={isXyz}
                     style={{backgroundImage: 'none'}}
-                    onChange={(e) => setXyz(e.target.value)}
+                    onChange={(e) => setIsXyz(e.target.value)}
                 >
                     <option value="true">True</option>
                     <option value="false">False</option>
@@ -426,10 +426,10 @@ export const CardCreator = () => {
             </label>
             <label>Pendulum:
                 <select
-                    id="pendulum"
-                    value={pendulum}
+                    id="isPendulum"
+                    value={isPendulum}
                     style={{backgroundImage: 'none'}}
-                    onChange={(e) => setPendulum(e.target.value)}
+                    onChange={(e) => setIsPendulum(e.target.value)}
                 >
                     <option value="true">True</option>
                     <option value="false">False</option>
@@ -438,9 +438,9 @@ export const CardCreator = () => {
             <label>Link:
                 <select
                     id="link"
-                    value={link}
+                    value={isLink}
                     style={{backgroundImage: 'none'}}
-                    onChange={(e) => setLink(e.target.value)}
+                    onChange={(e) => setIsLink(e.target.value)}
                 >
                     <option value="true">True</option>
                     <option value="false">False</option>
@@ -449,9 +449,9 @@ export const CardCreator = () => {
             <label>Flip:
                 <select
                     id="flip"
-                    value={flip}
+                    value={isFlip}
                     style={{backgroundImage: 'none'}}
-                    onChange={(e) => setFlip(e.target.value)}
+                    onChange={(e) => setIsFlip(e.target.value)}
                 >
                     <option value="true">True</option>
                     <option value="false">False</option>
@@ -460,9 +460,9 @@ export const CardCreator = () => {
             <label>Gemini:
                 <select
                     id="gemini"
-                    value={gemini}
+                    value={isGemini}
                     style={{backgroundImage: 'none'}}
-                    onChange={(e) => setGemini(e.target.value)}
+                    onChange={(e) => setIsGemini(e.target.value)}
                 >
                     <option value="true">True</option>
                     <option value="false">False</option>
@@ -471,9 +471,9 @@ export const CardCreator = () => {
             <label>Spirit:
                 <select
                     id="spirit"
-                    value={spirit}
+                    value={isSpirit}
                     style={{backgroundImage: 'none'}}
-                    onChange={(e) => setSpirit(e.target.value)}
+                    onChange={(e) => setIsSpirit(e.target.value)}
                 >
                     <option value="true">True</option>
                     <option value="false">False</option>
@@ -482,9 +482,9 @@ export const CardCreator = () => {
             <label>Toon:
                 <select
                     id="toon"
-                    value={toon}
+                    value={isToon}
                     style={{backgroundImage: 'none'}}
-                    onChange={(e) => setToon(e.target.value)}
+                    onChange={(e) => setIsToon(e.target.value)}
                 >
                     <option value="true">True</option>
                     <option value="false">False</option>
@@ -493,9 +493,9 @@ export const CardCreator = () => {
             <label>Tuner:
                 <select
                     id="tuner"
-                    value={tuner}
+                    value={isTuner}
                     style={{backgroundImage: 'none'}}
-                    onChange={(e) => setTuner(e.target.value)}
+                    onChange={(e) => setIsTuner(e.target.value)}
                 >
                     <option value="true">True</option>
                     <option value="false">False</option>
@@ -504,9 +504,9 @@ export const CardCreator = () => {
             <label>Union:
                 <select
                     id="union"
-                    value={union}
+                    value={isUnion}
                     style={{backgroundImage: 'none'}}
-                    onChange={(e) => setUnion(e.target.value)}
+                    onChange={(e) => setIsUnion(e.target.value)}
                 >
                     <option value="true">True</option>
                     <option value="false">False</option>

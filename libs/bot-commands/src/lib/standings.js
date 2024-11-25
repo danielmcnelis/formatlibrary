@@ -16,7 +16,7 @@ export default {
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         const tournaments = [...await Tournament.findByState('underway', format, interaction.guildId, 'ASC')].filter((t) => t.type === 'swiss')
-        if (!tournaments.length && format) return await interaction.editReply({ content: `There are no active ${format.name} ${server.emoji || format.emoji} Swiss tournaments.`})
+        if (!tournaments.length && format) return await interaction.editReply({ content: `There are no active ${format.name} ${format.emoji} Swiss tournaments.`})
         if (!tournaments.length && !format) return await interaction.editReply({ content: `There are no active Swiss tournaments.`})
         const tournament = await selectTournament(interaction, tournaments)
         if (!tournament) return
@@ -68,8 +68,8 @@ export default {
             results.push(`${s.rank}.  ${s.name}  -  ${s.score.toFixed(1)}  (${s.wins}-${s.losses}-${s.ties})${s.byes ? ` +BYE` : ''}  [${getAndStylizeTBVal(s, tb1)} / ${getAndStylizeTBVal(s, tb2)}${tb3 ? '/ ' + getAndStylizeTBVal(s, tb3) : ''}]`)
         }
 
-        const channel = interaction.guild?.channels?.cache?.get(server.botSpamChannel) || interaction.channel
-        if (interaction.channel !== channel.id && server.botSpamChannel === channel.id) await interaction.channel.send(`Please visit <#${channel.id}> to view the ${tournament.name} standings. ${tournament.logo}`)
+        const channel = interaction.guild?.channels?.cache?.get(server.botSpamChannelId) || interaction.channel
+        if (interaction.channel !== channel.id && server.botSpamChannelId === channel.id) await interaction.channel.send(`Please visit <#${channel.id}> to view the ${tournament.name} standings. ${tournament.logo}`)
         
         for (let i = 0; i < results.length; i += 30) {
             channel.send(results.slice(i, i + 30).join('\n'))

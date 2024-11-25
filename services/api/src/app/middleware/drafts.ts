@@ -114,7 +114,7 @@ export const getParticipants = async (req, res, next) => {
         }
       }) : {}
 
-      const cubeName = cube?.id ? `${cube.name} by ${cube.builder}` : null
+      const cubeName = cube?.id ? `${cube.name} by ${cube.builderName}` : null
 
       const set = req.body.type === 'booster' ? await Set.findOne({
         where: {
@@ -134,7 +134,7 @@ export const getParticipants = async (req, res, next) => {
         type: req.body.type,
         cubeId: cube?.id,
         cubeName: cubeName,
-        setName: set?.setName,
+        setName: set?.name,
         setId: set?.id,
         hostName: player.name,
         hostId: player.id,

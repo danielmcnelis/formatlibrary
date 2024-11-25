@@ -63,30 +63,30 @@ export const builderDESC = (a, b) => {
 }
 
 export const eventASC = (a, b) => {
-  const eventA = a.eventName ? a.eventName.toLowerCase() : null
-  const eventB = b.eventName ? b.eventName.toLowerCase() : null
+  const eventA = a.eventAbbreviation ? a.eventAbbreviation.toLowerCase() : null
+  const eventB = b.eventAbbreviation ? b.eventAbbreviation.toLowerCase() : null
   if (eventA < eventB) return -1
   if (eventA > eventB) return 1
   return 0
 }
 
 export const eventDESC = (a, b) => {
-  const eventA = a.eventName ? a.eventName.toLowerCase() : null
-  const eventB = b.eventName ? b.eventName.toLowerCase() : null
+  const eventA = a.eventAbbreviation ? a.eventAbbreviation.toLowerCase() : null
+  const eventB = b.eventAbbreviation ? b.eventAbbreviation.toLowerCase() : null
   if (eventA < eventB) return 1
   if (eventA > eventB) return -1
   return 0
 }
 
 export const typeASC = (a, b) => {
-  if (a.type < b.type) return -1
-  if (a.type > b.type) return 1
+  if (a.deckTypeName < b.deckTypeName) return -1
+  if (a.deckTypeName > b.deckTypeName) return 1
   return 0
 }
 
 export const typeDESC = (a, b) => {
-  if (a.type < b.type) return 1
-  if (a.type > b.type) return -1
+  if (a.deckTypeName < b.deckTypeName) return 1
+  if (a.deckTypeName > b.deckTypeName) return -1
   return 0
 }
 

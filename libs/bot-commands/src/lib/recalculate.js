@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { isMod, hasPartnerAccess } from '@fl/bot-functions'
+import { isModerator, hasPartnerAccess } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Format, Match, Player, Server, Stats } from '@fl/models'
 
@@ -23,10 +23,10 @@ export default {
         const formatName = interaction.options.getString('format')
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return await interaction.reply({ content: `You do not have permission to do that.`})
+        if (!isModerator(server, interaction.member)) return await interaction.reply({ content: `You do not have permission to do that.`})
         const format = await Format.findByServerOrInputOrChannelId(server, formatName, interaction.channelId)
         if (!format) return await interaction.reply({ content: `Try using **/recalculate** in channels like: <#414575168174948372> or <#629464112749084673>.`})
-        const serverId = server.internalLadder ? server.id : '414551319031054346'
+        const serverId = server.hasInternalLadder ? server.id : '414551319031054346'
         const count = await Match.count({ where: { formatName: format.name, serverId: serverId }})
         interaction.reply({ content: `Recalculating data from ${count} ${format.name} ${format.emoji} matches. Please wait...`})
         
@@ -38,7 +38,7 @@ export default {
 
         const allStats = await Stats.findAll({ 
             where: { formatId: format.id, serverId: serverId }, 
-            attributes: ['id', 'formatName', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 'streak', 'bestStreak', 'vanquished', 'playerId', 'serverId'], 
+            attributes: ['id', 'formatName', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 'currentStreak', 'bestStreak', 'vanquished', 'playerId', 'serverId'], 
             include: { model: Player, attributes: ['id', 'name']} 
         })
 
@@ -51,7 +51,7 @@ export default {
                 wins: 0,
                 losses: 0,
                 games: 0,
-                streak: 0,
+                currentStreak: 0,
                 bestStreak: 0,
                 vanquished: 0
             })
@@ -71,7 +71,7 @@ export default {
                         formatName: format.name,
                         formatId: format.id,
                         serverId: '414551319031054346',
-                        internal: server.internalLadder
+                        isInternal: server.hasInternalLadder
                     })
 
                     console.log('created new winner stats', winnerId)
@@ -86,7 +86,7 @@ export default {
                         formatName: format.name,
                         formatId: format.id,
                         serverId: '414551319031054346',
-                        internal: server.internalLadder
+                        isInternal: server.hasInternalLadder
                     })
 
                     console.log('created new loser stats:', loserId)
@@ -104,15 +104,15 @@ export default {
                 winnerStats.backupElo = origEloWinner
                 winnerStats.wins++
                 winnerStats.games++
-                winnerStats.streak++
-                if (winnerStats.streak >= winnerStats.bestStreak) winnerStats.bestStreak++
+                winnerStats.currentStreak++
+                if (winnerStats.currentStreak >= winnerStats.bestStreak) winnerStats.bestStreak++
                 await winnerStats.save()
         
                 loserStats.elo = origEloLoser - delta
                 loserStats.backupElo = origEloLoser
                 loserStats.losses++
                 loserStats.games++
-                loserStats.streak = 0
+                loserStats.currentStreak = 0
                 await loserStats.save()
     
                 match.delta = delta

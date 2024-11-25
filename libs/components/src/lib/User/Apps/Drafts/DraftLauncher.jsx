@@ -17,7 +17,7 @@ export const DraftLauncher = () => {
     const [timer, setTimer] = useState(60)
     const [draftLink, setDraftLink] = useState(null)
     const playerId = getCookie('playerId')
-    const logoUrl = type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${cube?.logo || 'cube.png'}` :
+    const logoName = type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${cube?.logo || 'cube.png'}` :
         `https://cdn.formatlibrary.com/images/artworks/${booster?.setCode || 'back'}.jpg`
         
     const logoWidth = type === 'cube' ? '128px' : '100px'
@@ -84,11 +84,11 @@ export const DraftLauncher = () => {
             </Helmet>
             <div className="draft-portal">
                 <div className="card-database-flexbox">
-                    <img style={{ width:logoWidth }} src={logoUrl} alt="draft-logo"/>
+                    <img style={{ width:logoWidth }} src={logoName} alt="draft-logo"/>
                 <div>
                         <h1>Start a New Draft!</h1>
                     </div>
-                    <img style={{ width:logoWidth }} src={logoUrl} alt="draft-logo"/>
+                    <img style={{ width:logoWidth }} src={logoName} alt="draft-logo"/>
                 </div>
 
                 <br/>
@@ -132,7 +132,7 @@ export const DraftLauncher = () => {
                         type === 'cube' ? (
                             cubes.map((c, index) => <option value={index}>{c.name} by {c.builder}</option>)
                         ) : (
-                            boosters.map((b, index) => <option value={index}>{b.setName}</option>)
+                            boosters.map((b, index) => <option value={index}>{b.name}</option>)
                         )
                     }
                     </select>

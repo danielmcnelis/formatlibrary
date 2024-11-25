@@ -13,7 +13,7 @@ export const Entry = db.define('entries', {
     ydk: {
         type: Sequelize.TEXT
     },
-    active: {
+    isActive: {
         type: Sequelize.BOOLEAN,
         defaultValue: true
     },

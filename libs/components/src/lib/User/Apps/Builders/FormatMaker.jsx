@@ -183,10 +183,10 @@ export const FormatMaker = () => {
             try {
                 await axios.put(`/api/decks/update/${deck.id}`, {
                     name: name,
-                    type: deck.type,
+                    deckTypeName: deck.deckTypeName,
                     deckTypeId: deck.deckTypeId,
                     category: deck.category,
-                    suggestedType: deck.suggestedType,
+                    suggestedDeckTypeName: deck.suggestedDeckTypeName,
                     formatName: format.name,
                     formatDate: format.date,
                     formatCategory: format.category,
@@ -212,10 +212,10 @@ export const FormatMaker = () => {
                 const { data } = await axios.post(`/api/decks/create`, {
                     name: name,
                     playerId: playerId,
-                    type: deck.type,
+                    deckTypeName: deck.deckTypeName,
                     deckTypeId: deck.deckTypeId,
                     category: deck.category,
-                    suggestedType: deck.suggestedType,
+                    suggestedDeckTypeName: deck.suggestedDeckTypeName,
                     formatName: format.name,
                     formatDate: format.date,
                     formatBanlist: format.banlist,

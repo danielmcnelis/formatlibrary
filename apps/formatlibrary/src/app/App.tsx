@@ -46,9 +46,9 @@ const App = () => {
                 })
 
                 setRoles({
-                    admin: player.admin,
-                    contentManager: player.contentManager,
-                    subscriber: player.subscriber
+                    admin: player.isAdmin,
+                    contentManager: player.isContentManager,
+                    subscriber: player.isSubscriber
                 })
                 
                 setCheckedSubscription(true)

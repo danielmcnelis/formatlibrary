@@ -82,7 +82,7 @@ export default {
                     const deck = await Deck.findOne({
                         where: {
                             eventId: event.id,
-                            playerId: player?.id
+                            builderId: player?.id
                         }
                     })
     
@@ -121,7 +121,7 @@ export default {
         // const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
             // const tournamentId = interaction.options.getString('tournament')
            
-            // const { data: tournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`)
+            // const { data: tournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeApiKey}`)
             // console.log('tournamentData?.tournament?.id', tournamentData?.tournament?.id)
             // let tournament = await Tournament.findOne({ 
             //     where: {
@@ -149,8 +149,8 @@ export default {
             //     console.log('!!tournament', !!tournament)
             // }
         
-            // const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}/participants.json?api_key=${server.challongeAPIKey}`)
-            // const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}/matches.json?api_key=${server.challongeAPIKey}`)
+            // const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}/participants.json?api_key=${server.challongeApiKey}`)
+            // const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournamentId}/matches.json?api_key=${server.challongeApiKey}`)
             // const participantMap = {}
             // let b = 0
             // let c = 0

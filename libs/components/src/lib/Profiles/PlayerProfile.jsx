@@ -110,7 +110,7 @@ export const PlayerProfile = () => {
                                 <div className="profile-line"><b>Name:</b> {player.firstName} {player.lastName}</div>
                             ) : ''
                         }
-                        <div className="profile-line"><b>DuelingBook:</b> {player.duelingBook || 'N/A'}</div>   
+                        <div className="profile-line"><b>DuelingBook:</b> {player.duelingBookName || 'N/A'}</div>   
                         <div className="profile-line"><b>Discord:</b> {player.discordName}</div>
                         {
                             player.country ? (
@@ -191,7 +191,7 @@ export const PlayerProfile = () => {
                 <h2>Favorite Decks:</h2>
                 <div className="popular-decks-flexbox">
                     {deckTypes.map((dt) => (
-                    <DeckThumbnail deck={dt} key={dt.id} />
+                    <DeckThumbnail deckType={dt} key={dt.id} />
                     ))}
                 </div>
                 </div>

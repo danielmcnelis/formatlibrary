@@ -7,17 +7,20 @@ export const Article = db.define('articles', {
   title: {
     type: Sequelize.STRING
   },
-  author: {
+  authorName: {
     type: Sequelize.STRING
   },
-  playerId: {
+  authorId: {
     type: Sequelize.STRING
   },
   content: {
     type: Sequelize.TEXT
   },
-  format: {
+  formatName: {
     type: Sequelize.STRING
+  },
+  formatId: {
+    type: Sequelize.INTEGER
   },
   publishDate: {
     type: Sequelize.STRING

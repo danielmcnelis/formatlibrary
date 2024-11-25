@@ -58,10 +58,10 @@ export const getDeckFormat = async (server, message, interaction) => {
 // GET ISSUES
 export const getIssues = async (deckArr, format) => {
     const deck = convertArrayToObject(deckArr)   
-    const [dateType, legalType] = format.category === 'TCG' ? ['tcgDate', 'tcgLegal'] :    
-        format.category === 'OCG' ? ['ocgDate', 'ocgLegal'] :
-        format.category === 'Speed' ? ['speedDate', 'speedLegal'] :
-        ['tcgDate', 'tcgLegal']
+    const [dateType, legalType] = format.category === 'TCG' ? ['tcgDate', 'isTcgLegal'] :    
+        format.category === 'OCG' ? ['ocgDate', 'isOcgLegal'] :
+        format.category === 'Speed' ? ['speedDate', 'isSpeedLegal'] :
+        ['tcgDate', 'isTcgLegal']
 
     const now = new Date()
     const year = now.getFullYear()
@@ -339,7 +339,7 @@ export const getDeckType = async (deckfile, formatName) => {
 
     const labeledDecks = await Deck.findAll({
         where: {
-            type: {[Op.not]: 'Other' },
+            deckTypeName: {[Op.not]: 'Other' },
             deckTypeId: {[Op.not]: null },
             formatName: formatName
         },

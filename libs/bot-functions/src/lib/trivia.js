@@ -15,7 +15,7 @@ export const initiateTrivia = async (interaction) => {
     let round = 1
 
     let questions = await TriviaQuestion.findAll({
-        where: { askedRecently: false },
+        where: { wasAskedRecently: false },
         order: [["order", "ASC"]],
         limit: 10
     })
@@ -23,7 +23,7 @@ export const initiateTrivia = async (interaction) => {
     if (!questions.length) {
         console.log(`all questions have been asked!`)
         let askedQuestions = await TriviaQuestion.findAll({
-            where: { askedRecently: true }
+            where: { wasAskedRecently: true }
         })
 
         const shuffledQuestions = shuffleArray(askedQuestions)
@@ -32,12 +32,12 @@ export const initiateTrivia = async (interaction) => {
             const q = shuffledQuestions[i]
             await q.update({
                 order: i + 1,
-                askedRecently: false
+                wasAskedRecently: false
             })
         }
 
         questions = await TriviaQuestion.findAll({
-            where: { askedRecently: false },
+            where: { wasAskedRecently: false },
             order: [["order", "ASC"]],
             limit: 10
         })
@@ -45,7 +45,7 @@ export const initiateTrivia = async (interaction) => {
 
     if (questions.length < 10) {
         questions = [...questions, ...await TriviaQuestion.findAll({
-            where: { askedRecently: true },
+            where: { wasAskedRecently: true },
             order: [["order", "ASC"]],
             limit: 10 - questions.length
         })]
@@ -55,7 +55,7 @@ export const initiateTrivia = async (interaction) => {
         setTimeout(async () => {
             const playing = await TriviaEntry.count({ where: { status: 'playing' }})
             if (playing) return
-            const unconfirmed = await TriviaEntry.count({ where: { confirmed: false }})
+            const unconfirmed = await TriviaEntry.count({ where: { isConfirmed: false }})
 
             if (!unconfirmed) {
                 for (let j = 0; j < entries.length; j++) {
@@ -77,7 +77,7 @@ export const initiateTrivia = async (interaction) => {
         const playing = await TriviaEntry.count({ where: { status: 'playing' }})
         if (playing) return
 
-        const missingEntries = await TriviaEntry.findAll({ where: { confirmed: false }})
+        const missingEntries = await TriviaEntry.findAll({ where: { isConfirmed: false }})
         const missingNames = missingEntries.map((entry) => entry.playerName)
 
         for (let i = 0; i < missingEntries.length; i++) {
@@ -85,12 +85,12 @@ export const initiateTrivia = async (interaction) => {
             await entry?.destroy()
         }
 
-        const remainingEntries = await TriviaEntry.findAll({ where: { confirmed: true }})
+        const remainingEntries = await TriviaEntry.findAll({ where: { isConfirmed: true }})
 
         if (remainingEntries.length < 4) {    
             for (let i = 0; i < remainingEntries.length; i++) {
                 const entry = remainingEntries[i]
-                await entry?.update({ status: 'pending', confirmed: false })
+                await entry?.update({ status: 'pending', isConfirmed: false })
             }
 
             return interaction.channel.send({ content: `Unfortunately, Trivia cannot begin without at least 4 players. 📚 🐛\n\nThe following players have been removed from the queue:\n${missingNames.sort().join("\n")}`})
@@ -136,15 +136,15 @@ export const getTriviaConfirmation = async (interaction, entry) => {
 }
 
 //HANDLE TRIVIA CONFIRMATION
-export const handleTriviaConfirmation = async (interaction, entryId, confirmed) => {
+export const handleTriviaConfirmation = async (interaction, entryId, isConfirmed) => {
     const entry = await TriviaEntry.findOne({ where: { id: entryId }})
     const count = await TriviaEntry.count({ where: { status: 'confirming' }})
     if (!count) return interaction.user?.send({ content: `Sorry, time expired.` })
     const guild = client.guilds.cache.get('414551319031054346')
     const triviaChannel = guild.channels.cache.get('1085316454053838981')
 
-    if (confirmed) {
-        await entry.update({ confirmed: true })
+    if (isConfirmed) {
+        await entry.update({ isConfirmed: true })
         await interaction.user?.send({ content: `Thanks! Please wait to see if enough players confirm. ${emojis.cultured}`})
         return triviaChannel?.send({ content: `${entry.playerName} confirmed their participation in Trivia! 📚 🐛`})
     } else {
@@ -156,7 +156,7 @@ export const handleTriviaConfirmation = async (interaction, entryId, confirmed) 
 //ASK QUESTION
 export const askQuestion = async (interaction, round, questions) => {
     const question = questions[round - 1]  
-    await question.update({ askedRecently: true })
+    await question.update({ wasAskedRecently: true })
 
     const answers = JSON.parse(question.answers)
 	let fuzzyAnswers = FuzzySet([], false)

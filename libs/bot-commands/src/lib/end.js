@@ -2,7 +2,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
 import { Deck, Entry, Event, Format, Player, Server, Team, Tournament } from '@fl/models'
 import { selectTournament } from '@fl/bot-functions'
-import { capitalize, createDecks, isMod, hasPartnerAccess, getMatches, getParticipants, calculateStandings, createTopCut, autoRegisterTopCut } from '@fl/bot-functions'
+import { capitalize, createDecks, isModerator, hasPartnerAccess, getMatches, getParticipants, calculateStandings, createTopCut, autoRegisterTopCut } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { emojis } from '@fl/bot-emojis'
@@ -22,7 +22,7 @@ export default {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that. Please type **/join** instead.`})   
+        if (!isModerator(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that. Please type **/join** instead.`})   
         const name = interaction.options.getString('tournament')        
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         const tournaments = await Tournament.findByState('underway', format, interaction.guildId, 'DESC') 
@@ -45,11 +45,11 @@ export default {
 
         // Finalize tournament on Challonge.com if not yet finalized
         try {
-            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`)
             if (data.tournament.state !== 'complete') {
                 const { status } = await axios({
                     method: 'post',
-                    url: `https://api.challonge.com/v1/tournaments/${tournament.id}/finalize.json?api_key=${server.challongeAPIKey}`
+                    url: `https://api.challonge.com/v1/tournaments/${tournament.id}/finalize.json?api_key=${server.challongeApiKey}`
                 })
     
                 if (status === 200) {   
@@ -63,7 +63,7 @@ export default {
             return await interaction.editReply({ content: `Unable to finalize ${tournament.name} ${tournament.logo} on Challonge.com.`})
         }
 
-        if (tournament.type === 'swiss' && !tournament.assocTournamentId) {
+        if (tournament.type === 'swiss' && !tournament.associatedTournamentId) {
             // If tournament is Swiss and no top cut tournament has been created, ask to create a top cut tournament
             const row = new ActionRowBuilder()
                 .addComponents(new ButtonBuilder()
@@ -92,10 +92,10 @@ export default {
                     referenceUrl: `https://challonge.com/${tournament.url}`,
                     display: false,
                     primaryTournamentId: tournament.id,
-                    topCutTournamentId: tournament.assocTournamentId,
+                    topCutTournamentId: tournament.associatedTournamentId,
                     type: tournament.type,
                     isTeamEvent: tournament.isTeamTournament,
-                    community: tournament.community,
+                    communityName: tournament.communityName,
                     serverId: tournament.serverId
                 })
             }
@@ -103,7 +103,7 @@ export default {
             // If nobody is marked as a winner, find and mark a winner
             if (event && !event.winnerId) {
                 try {
-                    const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+                    const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeApiKey}`)
                     let winnerParticipantId = null
                     for (let i = 0; i < data.length; i++) {
                         const participant = data[i].participant
@@ -134,7 +134,7 @@ export default {
             // If event information is incomplete, get and save that information
             if (event && (!event.size || !event.startDate || !event.endDate)) {
                 try {
-                    const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+                    const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`)
                     const size = event.size || data.tournament.participants_count
                     const startDate = data.tournament.started_at ? `${data.tournament.started_at.slice(0, 10)} ${data.tournament.started_at.slice(11, 26)}` : ''
                     const endDate = data.tournament.completed_at ? `${data.tournament.completed_at.slice(0, 10)} ${data.tournament.completed_at.slice(11, 26)}` : ''
@@ -155,8 +155,8 @@ export default {
             let count = await Deck.count({ where: { eventId: event.id }})
             if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
                 try {
-                    const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeAPIKey}`)
-                    const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+                    const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeApiKey}`)
+                    const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeApiKey}`)
                     const standings = await calculateStandings(tournament, matches, participants)                
                     const success = await createDecks(event, participants, standings)
 
@@ -190,7 +190,7 @@ export default {
                         const count = await Entry.count({ 
                             where: {
                                 playerId: playerId,
-                                active: true,
+                                isActive: true,
                                 '$tournament.serverId$': server.id
                             },
                             include: Tournament,
@@ -200,7 +200,7 @@ export default {
                             const member = await interaction.guild?.members.fetch(discordId)
                             if (!member) continue
                             console.log(`Removing ${playerName}'s tournament role on ${server.name}.`)
-                            member.roles.remove(server.tourRole)
+                            member.roles.remove(server.tournamentRoleId)
                         }
                     } catch (err) {
                         console.log(err)
@@ -212,7 +212,7 @@ export default {
             }
         } else if (tournament.isTopCutTournament) {
             // If tournament is a top cut tournament, find or create an event
-            const primaryTournament = await Tournament.findOne({ where: { id: tournament.assocTournamentId }})
+            const primaryTournament = await Tournament.findOne({ where: { id: tournament.associatedTournamentId }})
             let event = await Event.findOne({ where: { primaryTournamentId: primaryTournament.id }})
 
             if (!event) {
@@ -227,7 +227,7 @@ export default {
                     topCutTournamentId: tournament.id,
                     type: primaryTournament.type,
                     isTeamEvent: primaryTournament.isTeamTournament,
-                    community: tournament.community,
+                    communityName: tournament.communityName,
                     serverId: tournament.serverId
                 })
             }
@@ -235,7 +235,7 @@ export default {
             // Update winner
             if (event) {
                 try {
-                    const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+                    const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeApiKey}`)
                     let winnerParticipantId = null
                     for (let i = 0; i < data.length; i++) {
                         const participant = data[i].participant
@@ -269,8 +269,8 @@ export default {
             // Update event information
             if (event) {
                 try {
-                    const { data: primaryTournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}.json?api_key=${server.challongeAPIKey}`)
-                    const { data: topCutTournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+                    const { data: primaryTournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}.json?api_key=${server.challongeApiKey}`)
+                    const { data: topCutTournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`)
                     const size = primaryTournamentData.tournament.participants_count || event.size
                     const startDate = primaryTournamentData.tournament.started_at ? `${primaryTournamentData.tournament.started_at.slice(0, 10)} ${primaryTournamentData.tournament.started_at.slice(11, 26)}` : ''
                     const endDate = topCutTournamentData.tournament.completed_at ? `${topCutTournamentData.tournament.completed_at.slice(0, 10)} ${topCutTournamentData.tournament.completed_at.slice(11, 26)}` : ''
@@ -291,8 +291,8 @@ export default {
             let count = await Deck.count({ where: { eventId: event.id }})
             if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
                 try {                    
-                    const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/matches.json?api_key=${server.challongeAPIKey}`)
-                    const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+                    const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/matches.json?api_key=${server.challongeApiKey}`)
+                    const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/participants.json?api_key=${server.challongeApiKey}`)
                     const standings = await calculateStandings(tournament, matches, participants)                
                     const success = await createDecks(event, participants, standings)
 
@@ -314,13 +314,13 @@ export default {
             if (event && event.size > 0 && ((!event.isTeamEvent && event.size === count) || (event.isTeamEvent && (event.size * 3) === count))) {
                 try {      
                     const topCutEntries = await Entry.findAll({ where: { tournamentId: tournament.id }, include: Player })
-                    const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+                    const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeApiKey}`)
 
                     for (let i = 0; i < topCutEntries.length; i++) {
                         const entry = topCutEntries[i]
                         const participant = participants.map((p) => p.participant).find((p) => p.id === entry.participantId)
                         const placement = participant?.final_rank
-                        const deck = await Deck.findOne({ where: { eventId: event.id, playerId: entry.playerId }})
+                        const deck = await Deck.findOne({ where: { eventId: event.id, builderId: entry.playerId }})
                         await deck.update({ placement: placement })
                     }
                 } catch (err) {
@@ -342,7 +342,7 @@ export default {
                         const count = await Entry.count({ 
                             where: {
                                 playerId: playerId,
-                                active: true,
+                                isActive: true,
                                 '$tournament.serverId$': server.id
                             },
                             include: Tournament,
@@ -352,7 +352,7 @@ export default {
                             const member = await interaction.guild?.members.fetch(discordId)
                             if (!member) continue
                             console.log(`Removing ${playerName}'s tournament role on ${server.name}.`)
-                            member.roles.remove(server.tourRole)
+                            member.roles.remove(server.tournamentRoleId)
                         }
                     } catch (err) {
                         console.log(err)

@@ -19,14 +19,14 @@ export const cubesId = async (req, res, next) => {
               'id',
               'name',
               'ydk',
-              'builder',
-              'playerId',
+              'builderName',
+              'builderId',
               'downloads',
               'views',
               'rating'
           ],
           include: [
-              { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp'] }
+              { model: Player, as: 'builder', attributes: ['id', 'name', 'discordId', 'discordPfp'] }
           ]
       })
   
@@ -46,7 +46,7 @@ export const cubesId = async (req, res, next) => {
           where: {
             konamiCode: konamiCode
           },
-          attributes: { exclude: ['tcgLegal', 'ocgLegal', 'ocgDate', 'speedLegal', 'speedDate', 'createdAt', 'updatedAt'] },
+          attributes: { exclude: ['isTcgLegal', 'isOcgLegal', 'ocgDate', 'isSpeedLegal', 'speedDate', 'createdAt', 'updatedAt'] },
         })
   
         if (!card) {
@@ -139,7 +139,7 @@ export const getMyCubes = async (req, res, next) => {
 
         const cubes = await Cube.findAll({ 
             where: {
-                playerId: player.id
+                builderId: player.id
             },
             attributes: ['id', 'name', 'ydk'],
             order: [['name', 'ASC']]
@@ -174,12 +174,12 @@ export const cubesUpdateId = async (req, res, next) => {
 
 export const cubesCreate = async (req, res, next) => {
     try {
-      const player = await Player.findOne({ where: { id: req.body.playerId } })
+      const player = await Player.findOne({ where: { id: req.body.builderId } })
   
       const cube = await Cube.create({
         name: req.body.name,
         builder: player.name,
-        playerId: player.id,
+        builderId: player.id,
         ydk: req.body.ydk,
         display: req.body.display
       })

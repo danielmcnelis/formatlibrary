@@ -96,21 +96,21 @@ export const SingleCard = (props) => {
   
     const template = card.category === 'Spell' ? `https://cdn.formatlibrary.com/images/templates/spellCard.png` :
       card.category === 'Trap' ? `https://cdn.formatlibrary.com/images/templates/trapCard.jpeg` :
-      card.fusion ? `https://cdn.formatlibrary.com/images/templates/fusionCard.jpg` :
-      card.ritual ? `https://cdn.formatlibrary.com/images/templates/ritualCard.jpg` :
-      card.synchro ? `https://cdn.formatlibrary.com/images/templates/synchroCard.png` :
-      card.xyz ? `https://cdn.formatlibrary.com/images/templates/xyzCard.png` :
-      card.pendulum ? `https://cdn.formatlibrary.com/images/templates/pendulumCard.png` :
-      card.link ? `https://cdn.formatlibrary.com/images/templates/linkCard.png` :
-      card.normal ? `https://cdn.formatlibrary.com/images/templates/monsterCard.jpg` :
-      card.effect ? `https://cdn.formatlibrary.com/images/templates/effectCard.png` :
+      card.isFusion ? `https://cdn.formatlibrary.com/images/templates/fusionCard.jpg` :
+      card.isRitual ? `https://cdn.formatlibrary.com/images/templates/ritualCard.jpg` :
+      card.isSynchro ? `https://cdn.formatlibrary.com/images/templates/synchroCard.png` :
+      card.isXyz ? `https://cdn.formatlibrary.com/images/templates/xyzCard.png` :
+      card.isPendulum ? `https://cdn.formatlibrary.com/images/templates/pendulumCard.png` :
+      card.link ? `https://cdn.formatlibrary.com/images/templates/isLinkCard.png` :
+      card.isNormal ? `https://cdn.formatlibrary.com/images/templates/monsterCard.jpg` :
+      card.isEffect ? `https://cdn.formatlibrary.com/images/templates/effectCard.png` :
       null
   
     const attribute = card.attribute ? `https://cdn.formatlibrary.com/images/symbols/${card.attribute.toLowerCase()}.png` : null
     const type = card.type ? `https://cdn.formatlibrary.com/images/symbols/${card.type.replace(/\s/g, '-').toLowerCase()}.png` : null
     
-    const starWord = card.xyz ? `Rank` : 
-      card.link ? `Link` : 
+    const starWord = card.isXyz ? `Rank` : 
+      card.isLink ? `Link` : 
       card.category === 'Monster' ? `Level` : 
       null
   
@@ -118,20 +118,20 @@ export const SingleCard = (props) => {
     const icon = `https://cdn.formatlibrary.com/images/symbols/${card.icon?.toLowerCase()}.png`
   
     const classes = [card.category]
-    if (card.fusion) classes.push('Fusion')
-    if (card.ritual) classes.push('Ritual')
-    if (card.synchro) classes.push('Synchro')
-    if (card.xyz) classes.push('Xyz')
+    if (card.isFusion) classes.push('Fusion')
+    if (card.isRitual) classes.push('Ritual')
+    if (card.isSynchro) classes.push('Synchro')
+    if (card.isXyz) classes.push('Xyz')
     if (card.pendulum) classes.push('Pendulum')
-    if (card.link) classes.push('Link')
-    if (card.gemini) classes.push('Gemini')
-    if (card.flip) classes.push('Flip')
-    if (card.spirit) classes.push('Spirit')
-    if (card.toon) classes.push('Toon')
-    if (card.tuner) classes.push('Tuner')
-    if (card.union) classes.push('Union')
-    if (card.normal) classes.push('Normal')
-    if (card.effect) classes.push('Effect')
+    if (card.isLink) classes.push('Link')
+    if (card.isGemini) classes.push('Gemini')
+    if (card.isFlip) classes.push('Flip')
+    if (card.isSpirit) classes.push('Spirit')
+    if (card.isToon) classes.push('Toon')
+    if (card.isTuner) classes.push('Tuner')
+    if (card.isUnion) classes.push('Union')
+    if (card.isNormal) classes.push('Normal')
+    if (card.isEffect) classes.push('Effect')
   
     return (
         <>
@@ -191,9 +191,9 @@ export const SingleCard = (props) => {
                                         <div className="single-card-description-label">Description:</div>
                                         <div className="single-card-description-box">
                                         {
-                                            card.pendulumEffect && card.normal ? 'Pendulum Effect:\n' + card.pendulumEffect + '\n\nFlavor Text:\n' + <i>card.description</i> :
-                                            card.pendulumEffect && !card.normal ? 'Pendulum Effect:\n' + card.pendulumEffect + '\n\nMonster Effect:\n' + card.description :
-                                            card.normal ? <i>{card.description}</i> :
+                                            card.pendulumEffect && card.isNormal ? 'Pendulum Effect:\n' + card.pendulumEffect + '\n\nFlavor Text:\n' + <i>card.description</i> :
+                                            card.pendulumEffect && !card.isNormal ? 'Pendulum Effect:\n' + card.pendulumEffect + '\n\nMonster Effect:\n' + card.description :
+                                            card.isNormal ? <i>{card.description}</i> :
                                             card.description
                                         }
                                         </div>
@@ -321,20 +321,20 @@ export const SingleCard = (props) => {
                                                     setData({ ...data, card: { 
                                                         ...card, 
                                                         category,
-                                                        normal: false,
-                                                        effect: false,
-                                                        fusion: false,
-                                                        ritual: false,
-                                                        synchro: false,
-                                                        xyz: false,
-                                                        pendulum: false,
-                                                        link: false,
-                                                        flip: false,
-                                                        gemini: false,
-                                                        spirit: false,
-                                                        toon: false,
-                                                        tuner: false,
-                                                        union: false,
+                                                        isNormal: false,
+                                                        isEffect: false,
+                                                        isFusion: false,
+                                                        isRitual: false,
+                                                        isSynchro: false,
+                                                        isXyz: false,
+                                                        isPendulum: false,
+                                                        isLink: false,
+                                                        isFlip: false,
+                                                        isGemini: false,
+                                                        isSpirit: false,
+                                                        isToon: false,
+                                                        isTuner: false,
+                                                        isUnion: false,
                                                         ...data 
                                                     }})
                                                 }}
@@ -371,7 +371,7 @@ export const SingleCard = (props) => {
                                         <div className="single-card-description-label">Description:</div>
                                         <div className="single-card-description-box">
                                         {
-                                            card.pendulum ? 'Pendulum Effect:\n' + (
+                                            card.isPendulum ? 'Pendulum Effect:\n' + (
                                                 <textarea
                                                     id="pendulum-effect"
                                                     className="description-input"

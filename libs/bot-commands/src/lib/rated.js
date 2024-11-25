@@ -18,9 +18,9 @@ const getRatedInformation = async (interaction, player) => {
     const yourServers = [...await Membership.findAll({ 
         where: { 
             playerId: player.id,
-            active: true,
+            isActive: true,
             '$server.access$': access,
-            '$server.internalLadder$': false,
+            '$server.hasInternalLadder$': false,
             '$server.format$': {[Op.or]: [format.name, null]}
         }, 
         include: Server,
@@ -30,13 +30,13 @@ const getRatedInformation = async (interaction, player) => {
     const yourGuildIds = yourServers.map((s) => s.id) || []
 
     if (!yourGuildIds.length) return await interaction.user.send(`Sorry, you are not a member of a server that supports rated play for ${format.name} Format. ${format.emoji}`)
-    const simName = player.duelingBook || await askForSimName(interaction.user, player, 'DuelingBook')
+    const simName = player.duelingBookName || await askForSimName(interaction.user, player, 'DuelingBook')
     if (!simName) return
 
     const yourRatedDecks = await Deck.findAll({
         where: {
             formatName: format.name,
-            playerId: player.id,
+            builderId: player.id,
             origin: 'user'
         },
         order: [['updatedAt', 'DESC']],
@@ -74,7 +74,7 @@ const getRatedInformation = async (interaction, player) => {
             playerId: player.id
         }
     }) : await Pool.create({
-        name: player.name,
+        playerName: player.name,
         formatName: format.name,
         formatId: format.id,
         status: 'pending',
@@ -107,7 +107,7 @@ export default {
         if (interaction.guildId) return await interaction.reply(`Try using **/rated** by DM'ing it to me.`)
         const player = await Player.findOne({ where: { discordId: interaction.user.id } })
         if (!player) return await interaction.reply(`You are not in the database. Please join the Format Library Discord server to register.`)
-        if (player.hidden) return await interaction.reply(`You are not allowed is not allowed to play in the Format Library rated system.`)
+        if (player.isHidden) return await interaction.reply(`You are not allowed is not allowed to play in the Format Library rated system.`)
         interaction.reply('🥸')
         return getRatedInformation(interaction, player)
     }

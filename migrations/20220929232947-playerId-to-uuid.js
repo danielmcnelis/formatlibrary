@@ -17,7 +17,7 @@ module.exports = {
     // const decks = await Deck.findAll()
     // for (let i = 0; i < decks.length; i++) {
     //     const deck = decks[i]
-    //     const player = await Player.findOne({ where: { id: deck.playerId }})
+    //     const player = await Player.findOne({ where: { id: deck.builderId }})
     //     if (!player || !player.uuid) continue
     //     await deck.update({ playerId: player.uuid })
     // }

@@ -8,7 +8,7 @@ import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, String
 import { Deck, Entry, Event, Format, Match, Player, Replay, Stats, Server, Team, Tournament } from '@fl/models'
 import { getIssues, getSkillCard } from './deck.js'
 import { createDecks } from './coverage.js'
-import { capitalize, drawDeck, generateRandomString, getRoundName, isMod, shuffleArray } from './utility.js'
+import { capitalize, drawDeck, generateRandomString, getRoundName, isModerator, shuffleArray } from './utility.js'
 import { emojis } from '@fl/bot-emojis'
 
 ////// TOURNAMENT REGISTRATION FUNCTIONS ///////
@@ -38,7 +38,7 @@ export const askForSimName = async (member, player, simulator, override = false,
             }
         } else {
             if (simulator === 'DuelingBook') {
-                await player.update({ duelingBook: name })
+                await player.update({ duelingBookName: name })
             }
 
             member.send({ content: `Thanks! I saved ${pronoun} ${simulator} name as: ${name}. If that's wrong, go back to the server and type **/username**.`}).catch((err) => console.log(err))
@@ -75,7 +75,7 @@ export const askForTimeZone = async (member, player, override = false, error = f
                 return askForSimName(member, player, 'DuelingBook', override, true, attempt++)
             }
         } else {
-            await player.update({ duelingBook: name })
+            await player.update({ duelingBookName: name })
             member.send({ content: `Thanks! I saved ${pronoun} DuelingBook name as: ${name}. If that's wrong, go back to the server and type **/username**.`}).catch((err) => console.log(err))
             return name
         }
@@ -269,14 +269,14 @@ export const getSpeedDeckList = async (member, player, format, override = false)
 // SEND DECK
 export const sendDeck = async (interaction, id) => {
     if (id.startsWith('D')) {
-        const deck = await Deck.findOne({ where: { id: id.slice(1) }, include: [Player, Event, Format] })
+        const deck = await Deck.findOne({ where: { id: id.slice(1) }, include: [{model: Player, as: 'builder'}, Event, Format] })
         interaction.editReply({ content: `Please check your DMs.` })
         const deckAttachments = await drawDeck(deck.ydk) || []
-        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${deck.player?.name}_${deck.event?.abbreviation || deck.event?.name}.ydk` })
-        const isAuthor = interaction.user.id === deck.player.discordId
+        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${deck.builder?.name}_${deck.event?.abbreviation || deck.event?.name}.ydk` })
+        const isAuthor = interaction.user.id === deck.builder.discordId
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
-                interaction.member.send({ content: `${isAuthor ? 'Your' : `${deck.player?.name}'s`} deck for ${deck.event?.name} is:`, files: [attachment] }).catch((err) => console.log(err))
+                interaction.member.send({ content: `${isAuthor ? 'Your' : `${deck.builder?.name}'s`} deck for ${deck.event?.name} is:`, files: [attachment] }).catch((err) => console.log(err))
             } else {
                 interaction.member.send({ files: [attachment] }).catch((err) => console.log(err))
             }
@@ -442,12 +442,12 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
     const winningPlayer = await Player.findOne({ where: { id: match.winnerId }})
     const losingPlayer = await Player.findOne({ where: { id: match.loserId }})
 
-    const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
+    const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`).catch((err) => console.log(err))
     if (!participants_count) return await interaction.channel.send({ content: `Error: Challonge tournament data not found.`})	
-    const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeAPIKey}`).catch((err) => console.log(err))
+    const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeApiKey}`).catch((err) => console.log(err))
     if (!challongeMatch) return await interaction.channel.send({ content: `Error: Challonge match data not found.`})	
     const replay = await Replay.findOne({ where: { matchId: match.id }})
-    if (replay && await isMod(server, interaction.member)) {
+    if (replay && await isModerator(server, interaction.member)) {
         await replay.update({ url })
         return await interaction.channel.send({ content: `Replay updated for Round ${challongeMatch?.match?.round} of ${tournament.name} ${tournament.logo}:\nMatch: ${replay.winnerName} vs ${replay.loserName}\nURL: <${url}>`})	
     } if (replay) {
@@ -553,7 +553,7 @@ export const joinTournament = async (interaction, tournamentId) => {
 
     let format = await Format.findByServerOrChannelId(server, interaction.channelId)
     
-    if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
+    if (tournament.isPremiumTournament && (!player.isSubscriber || player.subscriberTier === 'Supporter')) {
         return await interaction.editReply({ content: `Sorry, premium tournaments are only open to premium server subscribers.`})
     } else if (tournament.requiredRoleId && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
         return await interaction.editReply({ content: `Sorry, you must have the <@&${tournament?.requiredRoleId}> role to join ${tournament.name}.`})
@@ -590,10 +590,10 @@ export const joinTournament = async (interaction, tournamentId) => {
         }
     }
 
-    const simName = player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
+    const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
-    const data = await getDeckList(interaction.member, player, tournament.format || format, false, tournament.isUnranked)
+    const data = await getDeckList(interaction.member, player, tournament.format || format, false, !tournament.isRanked)
     if (!data) return
 
     if (!entry && tournament.isTeamTournament && team) {
@@ -621,7 +621,7 @@ export const joinTournament = async (interaction, tournamentId) => {
         }
 
         const deckAttachments = await drawDeck(data.ydk) || []
-        interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
+        interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
@@ -633,7 +633,7 @@ export const joinTournament = async (interaction, tournamentId) => {
         
         return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> (${team.name}) is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else if (!entry && !tournament.isTeamTournament) {
-        if (tournament.isPremiumTournament && player.subTier === 'Premium') {
+        if (tournament.isPremiumTournament && player.subscriberTier === 'Premium') {
             const alreadyEntered = await Entry.count({
                 where: {
                     playerId: player.id,
@@ -671,7 +671,7 @@ export const joinTournament = async (interaction, tournamentId) => {
         await entry.update({ participantId: participant.id })
 
         const deckAttachments = await drawDeck(data.ydk) || []
-        interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
+        interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
@@ -682,15 +682,15 @@ export const joinTournament = async (interaction, tournamentId) => {
         })
 
         return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> is now registered for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
-    } else if (entry && entry.active === false && tournament.isTeamTournament) {
+    } else if (entry && entry.isActive === false && tournament.isTeamTournament) {
         await entry.update({
             url: data.url,
             ydk: data.ydk || data.opdk,
-            active: true
+            isActive: true
         })
 
         const deckAttachments = await drawDeck(data.ydk) || []
-        interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
+        interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
@@ -715,7 +715,7 @@ export const joinTournament = async (interaction, tournamentId) => {
 
         await entry.update({ url: data.url, ydk: data.ydk || data.opdk })
         const deckAttachments = await drawDeck(data.ydk) || []
-        interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
+        interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have your updated deck list for ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
@@ -758,10 +758,10 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
     entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournamentId }})
     interaction.editReply({ content: `Please check your DMs.` })
     
-    const simName = player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
+    const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
-    const data = await getDeckList(interaction.member, player, tournament.format, true, tournament.isUnranked)
+    const data = await getDeckList(interaction.member, player, tournament.format, true, !tournament.isRanked)
 
     if (!data) return
 
@@ -784,10 +784,10 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
         if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})        
         await entry.update({ participantId: participant.id })
 
-        member.roles.add(server.tourRole).catch((err) => console.log(err))
+        member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
         return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
-    } else if (entry && entry.active === false) {
+    } else if (entry && entry.isActive === false) {
         const { participant } = await postParticipant(server, tournament, player.name)
         if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})
         
@@ -795,13 +795,13 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
             url: data.url,
             ydk: data.ydk || data.opdk,
             participantId: participant.id,
-            active: true
+            isActive: true
         })
 
-        member.roles.add(server.tourRole).catch((err) => console.log(err))
+        member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
         interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
         return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
-    } else if (entry && entry.active === true) {
+    } else if (entry && entry.isActive === true) {
         await entry.update({ url: data.url, ydk: data.ydk || data.opdk })
         interaction.member.send({ content: `Thanks! I have ${player.name}'s updated deck list for the tournament.` }).catch((err) => console.log(err))
         return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator resubmitted <@${player.discordId}>'s deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))   
@@ -949,12 +949,12 @@ export const removeParticipant = async (server, interaction, member, entry, tour
         // DELETE PARTICIPANT FROM CHALLONGE BRACKET 
         await axios({
             method: 'delete',
-            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${entry.participantId}.json?api_key=${server.challongeAPIKey}`
+            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${entry.participantId}.json?api_key=${server.challongeApiKey}`
         })
         
         // DE-ACTIVATE ENTRY DATA IF UNDERWAY, OTHERWISE DELETE ENTRY DATA
         if (initialState === 'underway') {
-            await entry.update({ active: false, roundDropped: entry.wins + entry.losses })
+            await entry.update({ isActive: false, roundDropped: entry.wins + entry.losses })
         } else {
             await entry.destroy()
         }
@@ -962,14 +962,14 @@ export const removeParticipant = async (server, interaction, member, entry, tour
         const count = await Entry.count({ 
             where: {
                 playerId: playerId,
-                active: true,
+                isActive: true,
                 '$tournament.serverId$': server.id
             },
             include: Tournament
         })
 
         // REMOVE TOURNAMENT PARTICIPANT ROLE IF NOT IN ANY OTHER TOURNAMENTS ON THE SERVER
-        if (!count) member.roles.remove(server.tourRole).catch((err) => console.log(err))
+        if (!count) member.roles.remove(server.tournamentRoleId).catch((err) => console.log(err))
 
         // NOTIFY OPPONENT IF MATCH WAS OPEN
         if (opponentEntry) {
@@ -1019,7 +1019,7 @@ export const removeTeam = async (server, interaction, team, entries, tournament,
         await tournament.update({ state: 'processing' })
         const success = await axios({
             method: 'delete',
-            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${team.participantId}.json?api_key=${server.challongeAPIKey}`
+            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${team.participantId}.json?api_key=${server.challongeApiKey}`
         })
 
         if (success) {
@@ -1028,7 +1028,7 @@ export const removeTeam = async (server, interaction, team, entries, tournament,
 
                 if (tournament.state === 'underway') {
                     await entry.update({
-                        active: false,
+                        isActive: false,
                         roundDropped: entry.wins + entry.losses
                     })
 
@@ -1074,7 +1074,7 @@ export const seed = async (interaction, tournamentId, shuffle = false) => {
         try {
             await axios({
                 method: 'post',
-                url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/randomize.json?api_key=${server.challongeAPIKey}`
+                url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/randomize.json?api_key=${server.challongeApiKey}`
             })
             
             interaction.channel.send(`Success! Your seeds 🌱 have been shuffled! 🎲`)
@@ -1084,8 +1084,8 @@ export const seed = async (interaction, tournamentId, shuffle = false) => {
     } else {
         interaction.channel.send({ content: `Seeding 🌱 in progress, please wait. 🙏`})
 
-        const entries = await Entry.findAll({ where: { active: true, tournamentId: tournament.id } })  
-        const serverId = server.internalLadder ? server.id : '414551319031054346'  
+        const entries = await Entry.findAll({ where: { isActive: true, tournamentId: tournament.id } })  
+        const serverId = server.hasInternalLadder ? server.id : '414551319031054346'  
         const expEntries = []
         const newbieEntries = []
     
@@ -1113,7 +1113,7 @@ export const seed = async (interaction, tournamentId, shuffle = false) => {
             try {
                 await axios({
                     method: 'put',
-                    url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${participantId}.json?api_key=${server.challongeAPIKey}`,
+                    url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${participantId}.json?api_key=${server.challongeApiKey}`,
                     data: {
                         participant: {
                             seed: i+1
@@ -1278,7 +1278,7 @@ export const findOtherPreReqMatch = (matchesArr = [], nextMatchId, completedMatc
 
 //GET MATCHES
 export const getMatches = async (server, tournamentId, state = 'all', participantId) => {
-    let url = `https://api.challonge.com/v1/tournaments/${tournamentId}/matches.json?api_key=${server.challongeAPIKey}&state=${state}`
+    let url = `https://api.challonge.com/v1/tournaments/${tournamentId}/matches.json?api_key=${server.challongeApiKey}&state=${state}`
     if (participantId) url += `&participant_id=${participantId}`
 
     try {
@@ -1299,7 +1299,7 @@ export const getParticipants = async (server, tournamentId) => {
     try {
         const { data } = await axios({
             method: 'get',
-            url: `https://api.challonge.com/v1/tournaments/${tournamentId}/participants.json?api_key=${server.challongeAPIKey}`
+            url: `https://api.challonge.com/v1/tournaments/${tournamentId}/participants.json?api_key=${server.challongeApiKey}`
         })
         
         return data
@@ -1314,7 +1314,7 @@ export const getTournament = async (server, tournamentId) => {
     try {
         const { data } = await axios({
             method: 'get',
-            url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`
+            url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeApiKey}`
         })
         
         return data
@@ -1351,7 +1351,7 @@ export const postParticipant = async (server, tournament, name) => {
     try {
         const { data } = await axios({
             method: 'post',
-            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`,
+            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeApiKey}`,
             data: {
                 participant: {
                     name: name
@@ -1407,7 +1407,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
         await tournament.update({ state: 'processing' })
         success = await axios({
             method: 'put',
-            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${matchId}.json?api_key=${server.challongeAPIKey}`,
+            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${matchId}.json?api_key=${server.challongeApiKey}`,
             data: {
                 match: {
                     winner_id: winningEntry.participantId,
@@ -1448,19 +1448,19 @@ export const processMatchResult = async (server, interaction, winner, winningPla
             const playerId = losingEntry.player.id
             const discordId = losingEntry.player.discordId
             const member = interaction.guild.members.cache.get(discordId)
-            losingEntry.active = false
+            losingEntry.isActive = false
             await losingEntry.save()
 
             const count = await Entry.count({
                 where: {
                     playerId: playerId,
-                    active: true,
+                    isActive: true,
                     '$tournament.serverId$': server.id
                 },
                 include: Tournament
             })
 
-            if (member && !count) member.roles.remove(server.tourRole).catch((err) => console.log(err))
+            if (member && !count) member.roles.remove(server.tournamentRoleId).catch((err) => console.log(err))
         }
 
         const loserNextMatch = loserEliminated ? null : findNextMatch(updatedMatchesArr, matchId, losingEntry.participantId)
@@ -1482,7 +1482,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                         `\nChannel: <#${tournament.channelId}>` +
                         `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                         `\nDiscord Name: ${loserNextOpponentGlobalName ? `${loserNextOpponentGlobalName} (${loserNextOpponentDiscordName})` : loserNextOpponentDiscordName}` +
-                        `\nDuelingbook Name: ${loserNextOpponent.player.duelingBook}`
+                        `\nDuelingbook Name: ${loserNextOpponent.player.duelingBookName}`
                     )
                 } catch (err) {
                     console.log(err)
@@ -1496,15 +1496,15 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                         `\nChannel: <#${tournament.channelId}>` +
                         `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                         `\nDiscord Name: ${losingPlayer.globalName ? `${losingPlayer.globalName} (${losingPlayer.discordName})` : losingPlayer.discordName}` +
-                        `\nDuelingbook Name: ${losingPlayer.duelingBook}`
+                        `\nDuelingbook Name: ${losingPlayer.duelingBookName}`
                     )
                 } catch (err) {
                     console.log(err)
                 }
 
-                return await interaction.channel.send(`New Match: <@${losingPlayer.discordId}> (DB: ${losingPlayer.duelingBook}) vs. <@${loserNextOpponent.player.discordId}> (DB: ${loserNextOpponent.player.duelingBook}). Good luck to both duelists.`)
+                return await interaction.channel.send(`New Match: <@${losingPlayer.discordId}> (DB: ${losingPlayer.duelingBookName}) vs. <@${loserNextOpponent.player.discordId}> (DB: ${loserNextOpponent.player.duelingBookName}). Good luck to both duelists.`)
             } else if (loserMatchWaitingOn && loserWaitingOnP1 && loserWaitingOnP2) {
-                const content = `${losingPlayer.name}, You are waiting for the result of ${loserWaitingOnP1.player.name} (DB: ${loserWaitingOnP1.player.duelingBook}) vs ${loserWaitingOnP2.player.name} (DB: ${loserWaitingOnP2.player.duelingBook}).`
+                const content = `${losingPlayer.name}, You are waiting for the result of ${loserWaitingOnP1.player.name} (DB: ${loserWaitingOnP1.player.duelingBookName}) vs ${loserWaitingOnP2.player.name} (DB: ${loserWaitingOnP2.player.duelingBookName}).`
                 return await interaction.channel.send({ content: content })
             } else {
                 return await interaction.channel.send({ content: `${losingPlayer.name}, You are waiting for multiple matches to finish. Grab a snack and stay hydrated.`})
@@ -1518,7 +1518,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                 } else if (winnerNextOpponent) {
                     try {
                         const name = winnerNextOpponent.player.name
-                        const content = `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord Name: ${name}\nDuelingbook Name: ${winnerNextOpponent.player.duelingBook}`
+                        const content = `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord Name: ${name}\nDuelingbook Name: ${winnerNextOpponent.player.duelingBookName}`
                         winner.send({ content: content })
                     } catch (err) {
                         console.log(err)
@@ -1527,17 +1527,17 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                     try {
                         const member = await interaction.guild?.members.fetch(winnerNextOpponent.player.discordId)
                         const name = winningPlayer.name
-                        const content = `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord Name: ${name}\nDuelingbook Name: ${winningPlayer.duelingBook}`
+                        const content = `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord Name: ${name}\nDuelingbook Name: ${winningPlayer.duelingBookName}`
                             
                         member.user.send({ content: content })
                     } catch (err) {
                         console.log(err)
                     }
                     
-                    const content = `New Match: <@${winningPlayer.discordId}> (DB: ${winningPlayer.duelingBook}) vs. <@${winnerNextOpponent.player.discordId}> (DB: ${winnerNextOpponent.player.duelingBook}). Good luck to both duelists.`
+                    const content = `New Match: <@${winningPlayer.discordId}> (DB: ${winningPlayer.duelingBookName}) vs. <@${winnerNextOpponent.player.discordId}> (DB: ${winnerNextOpponent.player.duelingBookName}). Good luck to both duelists.`
                     return await interaction.channel.send({ content: content })
                 } else if (winnerMatchWaitingOn && winnerWaitingOnP1 && winnerWaitingOnP2) {
-                    const content = `${winningPlayer.name}, You are waiting for the result of ${winnerWaitingOnP1.player.name} (DB: ${winnerWaitingOnP1.player.duelingBook}) vs ${winnerWaitingOnP2.player.name} (DB: ${winnerWaitingOnP2.player.duelingBook}).`
+                    const content = `${winningPlayer.name}, You are waiting for the result of ${winnerWaitingOnP1.player.name} (DB: ${winnerWaitingOnP1.player.duelingBookName}) vs ${winnerWaitingOnP2.player.name} (DB: ${winnerWaitingOnP2.player.duelingBookName}).`
                     return await interaction.channel.send({ content: content})
                 } else {
                     return await interaction.channel.send({ content: `${winningPlayer.name}, You are waiting for multiple matches to finish. Grab a snack and stay hydrated.`})
@@ -1609,7 +1609,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
             await tournament.update({ state: 'processing' })
             success = await axios({
                 method: 'put',
-                url: `https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${matchId}.json?api_key=${server.challongeAPIKey}`,
+                url: `https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${matchId}.json?api_key=${server.challongeApiKey}`,
                 data: {
                     match: {
                         winner_id: winningEntry.participantId,
@@ -1660,18 +1660,18 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                     const playerId = losingEntries[i].playerId
                     const discordId = losingEntries[i].player.discordId
                     const member = interaction.guild.members.cache.get(discordId)
-                    await losingEntries[i].update({ active: false})
+                    await losingEntries[i].update({ isActive: false})
     
                     const count = await Entry.count({
                         where: {
                             playerId: playerId,
-                            active: true,
+                            isActive: true,
                             '$tournament.serverId$': server.id
                         },
                         include: Tournament
                     })
     
-                    if (member && !count) member.roles.remove(server.tourRole).catch((err) => console.log(err))
+                    if (member && !count) member.roles.remove(server.tournamentRoleId).catch((err) => console.log(err))
                 }
             }
 
@@ -1703,7 +1703,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                             `\nDiscord Name: ${playerA2.globalName ? `${playerA2.globalName} (${pA2DiscordUsername})` : pA2DiscordUsername}` +
-                            `\nDuelingbook Name: ${playerA2.duelingBook}`
+                            `\nDuelingbook Name: ${playerA2.duelingBookName}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1718,7 +1718,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                             `\nDiscord Name: ${playerA1.globalName ? `${playerA1.globalName} (${pA1DiscordUsername})` : pA1DiscordUsername}` +
-                            `\nDuelingbook Name: ${playerA1.duelingBook}`
+                            `\nDuelingbook Name: ${playerA1.duelingBookName}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1738,7 +1738,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                             `\nDiscord Name: ${playerB2.globalName ? `${playerB2.globalName} (${pB2DiscordUsername})` : pB2DiscordUsername}` +
-                            `\nDuelingbook Name: ${playerB2.duelingBook}`
+                            `\nDuelingbook Name: ${playerB2.duelingBookName}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1753,7 +1753,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                             `\nDiscord Name: ${playerB1.globalName ? `${playerB1.globalName} (${pB1DiscordUsername})` : pB1DiscordUsername}` +
-                            `\nDuelingbook Name: ${playerB1.duelingBook}`
+                            `\nDuelingbook Name: ${playerB1.duelingBookName}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1773,7 +1773,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                             `\nDiscord Name: ${playerC2.globalName ? `${playerC2.globalName} (${pC2DiscordUsername})` : pC2DiscordUsername}` +
-                            `\nDuelingbook Name: ${playerC2.duelingBook}`
+                            `\nDuelingbook Name: ${playerC2.duelingBookName}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1788,7 +1788,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                             `\nDiscord Name: ${playerC1.globalName ? `${playerC1.globalName} (${pC1DiscordUsername})` : pC1DiscordUsername}` +
-                            `\nDuelingbook Name: ${playerC1.duelingBook}`
+                            `\nDuelingbook Name: ${playerC1.duelingBookName}`
                         )
                     } catch (err) {
                         console.log(err)
@@ -1832,7 +1832,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                                 `\nDiscord Name: ${playerA2.globalName ? `${playerA2.globalName} (${pA2DiscordUsername})` : pA2DiscordUsername}` +
-                                `\nDuelingbook Name: ${playerA2.duelingBook}`
+                                `\nDuelingbook Name: ${playerA2.duelingBookName}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1847,7 +1847,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                                 `\nDiscord Name: ${playerA1.globalName ? `${playerA1.globalName} (${pA1DiscordUsername})` : pA1DiscordUsername}` +
-                                `\nDuelingbook Name: ${playerA1.duelingBook}`
+                                `\nDuelingbook Name: ${playerA1.duelingBookName}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1867,7 +1867,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                                 `\nDiscord Name: ${playerB2.globalName ? `${playerB2.globalName} (${pB2DiscordUsername})` : pB2DiscordUsername}` +
-                                `\nDuelingbook Name: ${playerB2.duelingBook}`
+                                `\nDuelingbook Name: ${playerB2.duelingBookName}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1882,7 +1882,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                                 `\nDiscord Name: ${playerB1.globalName ? `${playerB1.globalName} (${pB1DiscordUsername})` : pB1DiscordUsername}` +
-                                `\nDuelingbook Name: ${playerB1.duelingBook}`
+                                `\nDuelingbook Name: ${playerB1.duelingBookName}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1902,7 +1902,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                                 `\nDiscord Name: ${playerC2.globalName ? `${playerC2.globalName} (${pC2DiscordUsername})` : pC2DiscordUsername}` +
-                                `\nDuelingbook Name: ${playerC2.duelingBook}`
+                                `\nDuelingbook Name: ${playerC2.duelingBookName}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1917,7 +1917,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                                 `\nChannel: <#${tournament.channelId}>` +
                                 `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                                 `\nDiscord Name: ${playerC1.globalName ? `${playerC1.globalName} (${pC1DiscordUsername})` : pC1DiscordUsername}` +
-                                `\nDuelingbook Name: ${playerC1.duelingBook}`
+                                `\nDuelingbook Name: ${playerC1.duelingBookName}`
                             )
                         } catch (err) {
                             console.log(err)
@@ -1971,7 +1971,7 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                 `\nDiscord Name: ${playerA2.globalName ? `${playerA2.globalName} (${pA2DiscordUsername})` : pA2DiscordUsername}` +
-                `\nDuelingbook Name: ${playerA2.duelingBook}`
+                `\nDuelingbook Name: ${playerA2.duelingBookName}`
             )
         } catch (err) {
             console.log(err)
@@ -1986,7 +1986,7 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
                 `\nDiscord Name: ${playerA1.globalName ? `${playerA1.globalName} (${pA1DiscordUsername})` : pA1DiscordUsername}` +
-                `\nDuelingbook Name: ${playerA1.duelingBook}`
+                `\nDuelingbook Name: ${playerA1.duelingBookName}`
             )
         } catch (err) {
             console.log(err)
@@ -2006,7 +2006,7 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                 `\nDiscord Name: ${playerB2.globalName ? `${playerB2.globalName} (${pB2DiscordUsername})` : pB2DiscordUsername}` +
-                `\nDuelingbook Name: ${playerB2.duelingBook}`
+                `\nDuelingbook Name: ${playerB2.duelingBookName}`
             )
         } catch (err) {
             console.log(err)
@@ -2021,7 +2021,7 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
                 `\nDiscord Name: ${playerB1.globalName ? `${playerB1.globalName} (${pB1DiscordUsername})` : pB1DiscordUsername}` +
-                `\nDuelingbook Name: ${playerB1.duelingBook}`
+                `\nDuelingbook Name: ${playerB1.duelingBookName}`
             )
         } catch (err) {
             console.log(err)
@@ -2041,7 +2041,7 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                 `\nDiscord Name: ${playerC2.globalName ? `${playerC2.globalName} (${pC2DiscordUsername})` : pC2DiscordUsername}` +
-                `\nDuelingbook Name: ${playerC2.duelingBook}`
+                `\nDuelingbook Name: ${playerC2.duelingBookName}`
             )
         } catch (err) {
             console.log(err)
@@ -2056,7 +2056,7 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
                 `\nChannel: <#${tournament.channelId}>` +
                 `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
                 `\nDiscord Name: ${playerC1.globalName ? `${playerC1.globalName} (${pC1DiscordUsername})` : pC1DiscordUsername}` +
-                `\nDuelingbook Name: ${playerC1.duelingBook}`
+                `\nDuelingbook Name: ${playerC1.duelingBookName}`
             )
         } catch (err) {
             console.log(err)
@@ -2105,7 +2105,7 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
                     `\nChannel: <#${tournament.channelId}>` +
                     `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                     `\nDiscord Name: ${player2.globalName ? `${player2.globalName} (${p2DiscordUsername})` : p2DiscordUsername}` +
-                    `\nDuelingbook Name: ${player2.duelingBook}`
+                    `\nDuelingbook Name: ${player2.duelingBookName}`
                 )
             } catch (err) {
                 console.log(err)
@@ -2120,7 +2120,7 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
                     `\nChannel: <#${tournament.channelId}>` +
                     `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                     `\nDiscord Name: ${player1.globalName ? `${player1.globalName} (${p1DiscordUsername})` : p1DiscordUsername}` +
-                    `\nDuelingbook Name: ${player1.duelingBook}`
+                    `\nDuelingbook Name: ${player1.duelingBookName}`
                 )
             } catch (err) {
                 console.log(err)
@@ -2141,7 +2141,7 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
         const playersWithByes = [...await Entry.findAll({
             where: {
                 tournamentId: tournament.id,
-                active: true
+                isActive: true
             },
             include: Player
         })].filter((e) => !participantIds.includes(e.participantId)).map((e) => e.player)
@@ -2167,7 +2167,7 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
 }
 
 // CALCULATE STANDINGS 
-export const calculateStandings = async (tournament, matches, participants, topCutTournamentParticipants) => {
+export const calculateStandings = async (tournament, matches, participants) => {
     if (tournament.type !== 'swiss') return null
     const data = {}
     let currentRound = 1
@@ -2206,7 +2206,7 @@ export const calculateStandings = async (tournament, matches, participants, topC
                 byes: 0,
                 score: 0,
                 topCutResult: 0,
-                active: p.participant.active,
+                isActive: p.participant.active,
                 roundDropped: null,
                 roundsWithoutBye: [],
                 opponents: [],
@@ -2233,7 +2233,7 @@ export const calculateStandings = async (tournament, matches, participants, topC
                 byes: 0,
                 score: 0,
                 topCutResult: 0,
-                active: entry.active,
+                isActive: entry.isActive,
                 roundDropped: entry.roundDropped,
                 roundsWithoutBye: [],
                 opponents: [],
@@ -2301,7 +2301,7 @@ export const calculateStandings = async (tournament, matches, participants, topC
 
     keys.forEach((k) => {
         for (let j = 1; j <= currentRound; j++) {
-            if (!data[k].roundsWithoutBye.includes(j) && (data[k].active || data[k].roundDropped > j)) {
+            if (!data[k].roundsWithoutBye.includes(j) && (data[k].isActive || data[k].roundDropped > j)) {
                 data[k].byes++
             }
         }
@@ -2418,7 +2418,7 @@ export const calculateStandings = async (tournament, matches, participants, topC
 export const autoRegisterTopCut = async (server, tournament, topCutTournament, standings) => {
     const topCut = standings.filter((s) => {
         const rawRankValue = parseInt(s.rank.replace(/^\D+/g, ''))
-        if (rawRankValue <= tournament.topCut) return s
+        if (rawRankValue <= tournament.topCutSize) return s
     })
 
     const size = topCut.length
@@ -2457,7 +2457,7 @@ export const autoRegisterTopCut = async (server, tournament, topCutTournament, s
 }
 
 // CREATE TOURNAMENT
-export const createTournament = async (interaction, formatName, name, abbreviation, tournament_type, channelName, isUnranked, isLive) => {
+export const createTournament = async (interaction, formatName, name, abbreviation, tournament_type, channelName, isRanked, isLive) => {
     const server = !interaction.guildId ? {} : 
         await Server.findOne({ where: { id: interaction.guildId }}) || 
         await Server.create({ id: interaction.guildId, name: interaction.guild.name })
@@ -2520,7 +2520,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
         
         const { status, data } = await axios({
             method: 'post',
-            url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
+            url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeApiKey}`,
             data: {
                 tournament
             }
@@ -2536,13 +2536,13 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 formatName: format.name,
                 formatId: format.id,
                 logo: logo,
-                emoji: server.emoji || format.emoji,
+                emoji: format.emoji,
                 url: data.tournament.url,
                 channelId: channelId,
                 serverId: interaction.guildId,
-                community: server.name,
+                communityName: server.name,
                 isLive: isLive,
-                isUnranked: isUnranked,
+                isRanked: isRanked,
                 pointsPerMatchWin: '1.0',
                 pointsPerMatchTie: '0.0',
                 pointsPerBye: '1.0',
@@ -2551,12 +2551,12 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 tieBreaker3: null
             })
 
-            const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
+            const subdomain = server.challongeSubdomain ? `${server.challongeSubdomain}.` : ''
             return await interaction.editReply({ content: 
                 `You created a new tournament:` + 
                 `\nName: ${name} ${logo}` + 
-                `\nFormat: ${format.name} ${server.emoji || format.emoji}` + 
-                `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${tournament.isUnranked ? ' (Unranked)' : ''}` +
+                `\nFormat: ${format.name} ${format.emoji}` + 
+                `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ' (Unranked)' : ''}` +
                 tournament_type === 'swiss' ? `\nTie Breakers: TB1: OWP, TB2: OOWP, TB3: N/A` : '' +
                 `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
             })
@@ -2587,7 +2587,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             
             const { status, data } = await axios({
                 method: 'post',
-                url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
+                url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeApiKey}`,
                 data: {
                     tournament
                 }
@@ -2603,11 +2603,11 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     formatName: format.name,
                     formatId: format.id,
                     logo: logo,
-                    emoji: server.emoji || format.emoji,
+                    emoji: format.emoji,
                     url: data.tournament.url,
                     channelId: channelId,
                     serverId: interaction.guildId,
-                    community: server.name,
+                    communityName: server.name,
                     pointsPerMatchWin: '1.0',
                     pointsPerMatchTie: '0.0',
                     pointsPerBye: '1.0',
@@ -2616,12 +2616,12 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     tieBreaker3: null
                 })
 
-                const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
+                const subdomain = server.challongeSubdomain ? `${server.challongeSubdomain}.` : ''
                 return await interaction.editReply({ content: 
                     `You created a new tournament:` + 
                     `\nName: ${data.tournament.name} ${logo}` + 
-                    `\nFormat: ${format.name} ${server.emoji || format.emoji}` + 
-                    `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${tournament.isUnranked ? ' (Unranked)' : ''}` +
+                    `\nFormat: ${format.name} ${format.emoji}` + 
+                    `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ' (Unranked)' : ''}` +
                     tournament_type === 'swiss' ? `\nTie Breakers: TB1: OWP, TB2: OOWP, TB3: N/A` : '' +
                     `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
                 })
@@ -2634,7 +2634,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
 }
 
 // UPDATE TOURNAMENT
-export const updateTournament = async (interaction, tournamentId, name, tournament_type, url, isUnranked, isLive) => {
+export const updateTournament = async (interaction, tournamentId, name, tournament_type, url, isRanked, isLive) => {
     const server = !interaction.guildId ? {} : 
         await Server.findOne({ where: { id: interaction.guildId }}) || 
         await Server.create({ id: interaction.guildId, name: interaction.guild.name })
@@ -2645,12 +2645,12 @@ export const updateTournament = async (interaction, tournamentId, name, tourname
         }
     })
 
-    await tournament.update({ isUnranked: isUnranked, isLive: isLive })
+    await tournament.update({ isRanked: isRanked, isLive: isLive })
 
     try {
         const { status, data } = await axios({
             method: 'put',
-            url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`,
+            url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeApiKey}`,
             data: {
                 tournament: {
                     name: name || tournament.name,
@@ -2667,11 +2667,11 @@ export const updateTournament = async (interaction, tournamentId, name, tourname
                 type: data.tournament.tournament_type
             })
 
-            const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
+            const subdomain = server.challongeSubdomain ? `${server.challongeSubdomain}.` : ''
             return await interaction.editReply({ content: 
                 `Updated tournament settings:` + 
                 `\nName: ${data.tournament.name} ${tournament.logo}` + 
-                `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${tournament.isUnranked ? ' (Unranked)' : ''}` +
+                `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ' (Unranked)' : ''}` +
                 `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
             })
         } else {
@@ -2704,7 +2704,7 @@ export const editTieBreakers = async (interaction, tournamentId, tieBreaker1, ti
     try {
         const { status } = await axios({
             method: 'put',
-            url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`,
+            url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeApiKey}`,
             data: {
                 tournament: {
                     tie_breaks: tie_breaks
@@ -2747,7 +2747,7 @@ export const editPointsSystem = async (interaction, tournamentId, pointsPerMatch
     try {
         const { status } = await axios({
             method: 'put',
-            url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeAPIKey}`,
+            url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeApiKey}`,
             data: {
                 tournament: {
                     pts_for_match_win: pointsPerMatchWin,
@@ -2894,7 +2894,7 @@ export const startChallongeBracket = async (interaction, tournamentId) => {
     try {
         await axios({
             method: 'post',
-            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/start.json?api_key=${server.challongeAPIKey}`
+            url: `https://api.challonge.com/v1/tournaments/${tournament.id}/start.json?api_key=${server.challongeApiKey}`
         })
 
         await tournament.update({ state: 'underway' })
@@ -2931,7 +2931,7 @@ export const startTournament = async (interaction, tournamentId) => {
     
     if (tournament?.type?.toLowerCase() === 'swiss') {
         try {
-            const [rounds, topCut] = entryCount <= 2 ? [1, null] :
+            const [rounds, topCutSize] = entryCount <= 2 ? [1, null] :
                 entryCount >= 3 && entryCount <= 4 ? [2, null] :
                 entryCount >= 5 && entryCount <= 7 ? [3, null] :
                 entryCount === 8 ? [3, 4] :
@@ -2944,11 +2944,11 @@ export const startTournament = async (interaction, tournamentId) => {
                 entryCount >= 193 && entryCount <= 256 ? [8, 16] :
                 [9, 16]
 
-            await tournament.update({ rounds, topCut })
+            await tournament.update({ rounds, topCutSize })
 
             await axios({
                 method: 'put',
-                url: `https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`,
+                url: `https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`,
                 data: {
                     tournament: {
                         swiss_rounds: rounds,
@@ -2968,7 +2968,7 @@ export const startTournament = async (interaction, tournamentId) => {
     }
 
     try {
-        const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+        const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`)
     
         if (data?.tournament?.state === 'underway') {
             await tournament.update({ state: 'underway' })
@@ -3011,16 +3011,16 @@ export const startTournament = async (interaction, tournamentId) => {
 export const createTopCut = async(interaction, tournamentId) => {
     const primaryTournament = await Tournament.findOne({ where: { id: tournamentId }, include: Format }) 
     
-    if (primaryTournament.assocTournamentId) {
+    if (primaryTournament.associatedTournamentId) {
         return await interaction.channel.send({ content: `Error: Top cut tournament was already created. ${emojis.megaphone}` })
     }
 
     const server = await Server.findOne({ where: { id: interaction.guildId }})  
-    const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
+    const subdomain = server.challongeSubdomain ? `${server.challongeSubdomain}.` : ''
     const game_name = 'Yu-Gi-Oh!'
     const description = `${primaryTournament.format?.name} Format`
     const str = generateRandomString(10, '0123456789abcdefghijklmnopqrstuvwxyz')
-    const name = `${primaryTournament.name} - Top ${primaryTournament.topCut}`
+    const name = `${primaryTournament.name} - Top ${primaryTournament.topCutSize}`
     const abbreviation = primaryTournament.abbreviation ? `${primaryTournament.abbreviation}_Top${primaryTournament.topCut}` : null
     let topCutTournament
 
@@ -3044,7 +3044,7 @@ export const createTopCut = async(interaction, tournamentId) => {
 
         const { status, data } = await axios({
             method: 'post',
-            url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
+            url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeApiKey}`,
             data: {
                 tournament
             }
@@ -3064,8 +3064,8 @@ export const createTopCut = async(interaction, tournamentId) => {
                 url: data.tournament.url,
                 channelId: primaryTournament.channelId,
                 serverId: primaryTournament.serverId,
-                community: primaryTournament.community,
-                assocTournamentId: primaryTournament.id,
+                communityName: primaryTournament.communityName,
+                associatedTournamentId: primaryTournament.id,
                 isTopCutTournament: true
             })
         } 
@@ -3091,7 +3091,7 @@ export const createTopCut = async(interaction, tournamentId) => {
              
             const { status, data } = await axios({
                 method: 'post',
-                url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeAPIKey}`,
+                url: `https://api.challonge.com/v1/tournaments.json?api_key=${server.challongeApiKey}`,
                 data: {
                     tournament
                 }
@@ -3110,8 +3110,8 @@ export const createTopCut = async(interaction, tournamentId) => {
                     url: data.tournament.url,
                     channelId: primaryTournament.channelId,
                     serverId: primaryTournament.serverId,
-                    community: primaryTournament.community,
-                    assocTournamentId: primaryTournament.id
+                    communityName: primaryTournament.communityName,
+                    associatedTournamentId: primaryTournament.id
                 })
             }
         } catch (err) {
@@ -3128,7 +3128,7 @@ export const createTopCut = async(interaction, tournamentId) => {
         `\nBracket: https://${subdomain}challonge.com/${topCutTournament.url}`
     })
 
-    await primaryTournament.update({ state: 'topcut', assocTournamentId: topCutTournament.id })
+    await primaryTournament.update({ state: 'topcut', associatedTournamentId: topCutTournament.id })
 
     try {
         const matches = await getMatches(server, primaryTournament.id)
@@ -3155,11 +3155,11 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
 
     // Finalize tournament on Challonge.com if not yet finalized
     try {
-        const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+        const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`)
         if (data.tournament.state !== 'complete') {
             const { status } = await axios({
                 method: 'post',
-                url: `https://api.challonge.com/v1/tournaments/${tournament.id}/finalize.json?api_key=${server.challongeAPIKey}`
+                url: `https://api.challonge.com/v1/tournaments/${tournament.id}/finalize.json?api_key=${server.challongeApiKey}`
             })
 
             if (status === 200) {   
@@ -3173,7 +3173,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         interaction.channel.send({ content: `Unable to finalize ${tournament.name} ${tournament.logo} on Challonge.com.`})
     }
 
-    if (tournament.type === 'swiss' && !tournament.assocTournamentId) {
+    if (tournament.type === 'swiss' && !tournament.associatedTournamentId) {
         // If tournament is Swiss and no top cut tournament has been created, ask to create a top cut tournament
         const row = new ActionRowBuilder()
             .addComponents(new ButtonBuilder()
@@ -3202,10 +3202,10 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
                 referenceUrl: `https://challonge.com/${tournament.url}`,
                 display: false,
                 primaryTournamentId: tournament.id,
-                topCutTournamentId: tournament.assocTournamentId,
+                topCutTournamentId: tournament.associatedTournamentId,
                 type: tournament.type,
                 isTeamEvent: tournament.isTeamTournament,
-                community: tournament.community,
+                communityName: tournament.communityName,
                 serverId: tournament.serverId
             })
         }
@@ -3213,7 +3213,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         // If nobody is marked as a winner, find and mark a winner
         if (event && !event.winnerId) {
             try {
-                const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${event.topCutTournamentId || tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+                const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${event.topCutTournamentId || tournament.id}/participants.json?api_key=${server.challongeApiKey}`)
                 let winnerParticipantId = null
                 for (let i = 0; i < data.length; i++) {
                     const participant = data[i].participant
@@ -3246,7 +3246,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         // If event information is incomplete, get and save that information
         if (event && (!event.size || !event.startDate || !event.endDate)) {
             try {
-                const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+                const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`)
                 const size = event.size || data.tournament.participants_count
                 const startDate = data.tournament.started_at ? `${data.tournament.started_at.slice(0, 10)} ${data.tournament.started_at.slice(11, 26)}` : ''
                 const endDate = data.tournament.completed_at ? `${data.tournament.completed_at.slice(0, 10)} ${data.tournament.completed_at.slice(11, 26)}` : ''
@@ -3267,8 +3267,8 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         let count = await Deck.count({ where: { eventId: event.id }})
         if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
             try {
-                const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeAPIKey}`)
-                const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+                const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeApiKey}`)
+                const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeApiKey}`)
                 const standings = await calculateStandings(tournament, matches, participants)          
                 const success = await createDecks(event, participants, standings)
                 if (!success) {
@@ -3301,7 +3301,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
                     const count = await Entry.count({ 
                         where: {
                             playerId: playerId,
-                            active: true,
+                            isActive: true,
                             '$tournament.serverId$': server.id
                         },
                         include: Tournament,
@@ -3311,7 +3311,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
                         const member = await interaction.guild?.members.fetch(discordId)
                         if (!member) continue
                         console.log(`Removing ${playerName}'s tournament role on ${server.name}.`)
-                        member.roles.remove(server.tourRole)
+                        member.roles.remove(server.tournamentRoleId)
                     }
                 } catch (err) {
                     console.log(err)
@@ -3323,7 +3323,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         }
     } else if (tournament.isTopCutTournament) {
         // If tournament is a top cut tournament, find or create an event
-        const primaryTournament = await Tournament.findOne({ where: { id: tournament.assocTournamentId }})
+        const primaryTournament = await Tournament.findOne({ where: { id: tournament.associatedTournamentId }})
         let event = await Event.findOne({ where: { primaryTournamentId: primaryTournament.id }})
 
         if (!event) {
@@ -3338,7 +3338,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
                 topCutTournamentId: tournament.id,
                 type: primaryTournament.type,
                 isTeamEvent: primaryTournament.isTeamTournament,
-                community: primaryTournament.community,
+                communityName: primaryTournament.communityName,
                 serverId: tournament.serverId
             })
         }
@@ -3346,7 +3346,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         // Update winner
         if (event) {
             try {
-                const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+                const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeApiKey}`)
                 let winnerParticipantId = null
                 for (let i = 0; i < data.length; i++) {
                     const participant = data[i].participant
@@ -3380,8 +3380,8 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         // Update event information
         if (event) {
             try {
-                const { data: primaryTournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}.json?api_key=${server.challongeAPIKey}`)
-                const { data: topCutTournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+                const { data: primaryTournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}.json?api_key=${server.challongeApiKey}`)
+                const { data: topCutTournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`)
                 const size = primaryTournamentData.tournament.participants_count || event.size
                 const startDate = primaryTournamentData.tournament.started_at ? `${primaryTournamentData.tournament.started_at.slice(0, 10)} ${primaryTournamentData.tournament.started_at.slice(11, 26)}` : ''
                 const endDate = topCutTournamentData.tournament.completed_at ? `${topCutTournamentData.tournament.completed_at.slice(0, 10)} ${topCutTournamentData.tournament.completed_at.slice(11, 26)}` : ''
@@ -3402,8 +3402,8 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         let count = await Deck.count({ where: { eventId: event.id }})
         if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
             try {                    
-                const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/matches.json?api_key=${server.challongeAPIKey}`)
-                const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+                const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/matches.json?api_key=${server.challongeApiKey}`)
+                const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/participants.json?api_key=${server.challongeApiKey}`)
                 const standings = await calculateStandings(tournament, matches, participants)                
                 const success = await createDecks(event, participants, standings)
 
@@ -3425,13 +3425,13 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         if (event && event.size > 0 && ((!event.isTeamEvent && event.size === count) || (event.isTeamEvent && (event.size * 3) === count))) {
             try {      
                 const topCutEntries = await Entry.findAll({ where: { tournamentId: tournament.id }, include: Player })
-                const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+                const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeApiKey}`)
 
                 for (let i = 0; i < topCutEntries.length; i++) {
                     const entry = topCutEntries[i]
                     const participant = participants.map((p) => p.participant).find((p) => p.id === entry.participantId)
                     const placement = participant?.final_rank
-                    const deck = await Deck.findOne({ where: { eventId: event.id, playerId: entry.playerId }})
+                    const deck = await Deck.findOne({ where: { eventId: event.id, builderId: entry.playerId }})
                     await deck.update({ placement: placement })
                 }
             } catch (err) {
@@ -3453,7 +3453,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
                     const count = await Entry.count({ 
                         where: {
                             playerId: playerId,
-                            active: true,
+                            isActive: true,
                             '$tournament.serverId$': server.id
                         },
                         include: Tournament,
@@ -3463,7 +3463,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
                         const member = await interaction.guild?.members.fetch(discordId)
                         if (!member) continue
                         console.log(`Removing ${playerName}'s tournament role on ${server.name}.`)
-                        member.roles.remove(server.tourRole)
+                        member.roles.remove(server.tournamentRoleId)
                     }
                 } catch (err) {
                     console.log(err)
@@ -3486,17 +3486,17 @@ export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId
     if (!tournament) return
     
     if (tournament.type !== 'swiss') return await interaction.editReply({ content: `Error: this is not a Swiss tournament.`})
-    if (tournament.assocTournamentId) return await interaction.editReply({ content: `Error: this tournament is already associated with a top cut tournament.`})
+    if (tournament.associatedTournamentId) return await interaction.editReply({ content: `Error: this tournament is already associated with a top cut tournament.`})
     if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `This tournament has not begun.`})
     if (tournament.state === 'complete') return await interaction.editReply({ content: `This tournament has already ended.`})
 
     // Finalize tournament on Challonge.com if not yet finalized
     try {
-        const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+        const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`)
         if (data.tournament.state !== 'complete') {
             const { status } = await axios({
                 method: 'post',
-                url: `https://api.challonge.com/v1/tournaments/${tournament.id}/finalize.json?api_key=${server.challongeAPIKey}`
+                url: `https://api.challonge.com/v1/tournaments/${tournament.id}/finalize.json?api_key=${server.challongeApiKey}`
             })
 
             if (status === 200) {   
@@ -3522,10 +3522,10 @@ export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId
             referenceUrl: `https://challonge.com/${tournament.url}`,
             display: false,
             primaryTournamentId: tournament.id,
-            topCutTournamentId: tournament.assocTournamentId, 
+            topCutTournamentId: tournament.associatedTournamentId, 
             type: tournament.type,
             isTeamEvent: tournament.isTeamTournament,
-            community: tournament.community,
+            communityName: tournament.communityName,
             serverId: tournament.serverId
         })
     }
@@ -3533,7 +3533,7 @@ export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId
     // If nobody is marked as a winner, find and mark a winner
     if (event && !event.winnerId) {
         try {
-            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${event.topCutTournamentId || tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${event.topCutTournamentId || tournament.id}/participants.json?api_key=${server.challongeApiKey}`)
             let winnerParticipantId = null
             for (let i = 0; i < data.length; i++) {
                 const participant = data[i].participant
@@ -3566,7 +3566,7 @@ export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId
     // If event information is incomplete, get and save that information
     if (event && !event.size) {
         try {
-            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`)
             const size = event.size || data.tournament.participants_count
             const startDate = data.tournament.started_at ? `${data.tournament.started_at.slice(0, 10)} ${data.tournament.started_at.slice(11, 26)}` : ''
             const endDate = data.tournament.completed_at ? `${data.tournament.completed_at.slice(0, 10)} ${data.tournament.completed_at.slice(11, 26)}` : ''
@@ -3587,8 +3587,8 @@ export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId
     let count = await Deck.count({ where: { eventId: event.id }})
     if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
         try {
-            const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeAPIKey}`)
-            const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeAPIKey}`)
+            const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeApiKey}`)
+            const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeApiKey}`)
             const standings = await calculateStandings(tournament, matches, participants)                
             const success = await createDecks(event, participants, standings)
             if (!success) {
@@ -3621,7 +3621,7 @@ export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId
                 const count = await Entry.count({ 
                     where: {
                         playerId: playerId,
-                        active: true,
+                        isActive: true,
                         '$tournament.serverId$': server.id
                     },
                     include: Tournament,
@@ -3631,7 +3631,7 @@ export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId
                     const member = await interaction.guild?.members.fetch(discordId)
                     if (!member) continue
                     console.log(`Removing ${playerName}'s tournament role on ${server.name}.`)
-                    member.roles.remove(server.tourRole)
+                    member.roles.remove(server.tournamentRoleId)
                 }
             } catch (err) {
                 console.log(err)
@@ -3758,8 +3758,8 @@ export const postStandings = async (interaction, tournamentId) => {
         results.push(`${s.rank}.  ${s.name}  -  ${s.score.toFixed(1)}  (${s.wins}-${s.losses}-${s.ties})${s.byes ? ` +BYE` : ''}  [${getAndStylizeTBVal(s, tb1)} / ${getAndStylizeTBVal(s, tb2)}${tb3 ? '/ ' + getAndStylizeTBVal(s, tb3) : ''}]`)
     }
 
-    const channel = interaction.guild?.channels?.cache?.get(server.botSpamChannel) || interaction.channel
-    if (interaction.channel !== channel.id && server.botSpamChannel === channel.id) await interaction.channel.send(`Please visit <#${channel.id}> to view the ${tournament.name} standings. ${tournament.logo}`)
+    const channel = interaction.guild?.channels?.cache?.get(server.botSpamChannelId) || interaction.channel
+    if (interaction.channel !== channel.id && server.botSpamChannelId === channel.id) await interaction.channel.send(`Please visit <#${channel.id}> to view the ${tournament.name} standings. ${tournament.logo}`)
     
     for (let i = 0; i < results.length; i += 30) {
         channel.send(results.slice(i, i + 30).join('\n'))

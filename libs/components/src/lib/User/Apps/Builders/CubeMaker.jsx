@@ -130,7 +130,7 @@ export const CubeMaker = () => {
             try {
                 const { data } = await axios.post(`/api/cubes/create`, {
                     name: name || 'Unnamed Cube',
-                    playerId: playerId,
+                    builderId: playerId,
                     ydk: ydk,
                     display: false
                 })

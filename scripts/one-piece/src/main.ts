@@ -31,7 +31,7 @@
 //             life: datum.l,
 //             artwork: datum.iu?.replaceAll("\/", "/"),
 //             artist: datum.ar,
-//             effect: datum.e,
+//             isEffect: datum.e,
 //             type: datum.tr?.replaceAll("\/", "/"),
 //             cardCode: datum.cid
 //         })

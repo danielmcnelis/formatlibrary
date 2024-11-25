@@ -3,6 +3,7 @@ import { useLayoutEffect } from 'react'
 import { BanList } from './BanList'
 import { Helmet } from 'react-helmet'
 import { useParams } from 'react-router-dom'
+import { capitalize } from '@fl/utils'
 
 export const SingleBanList = (props) => {
     const { id } = useParams()
@@ -13,10 +14,10 @@ export const SingleBanList = (props) => {
     return (
         <>
             <Helmet>
-                <title>{`${props.format?.banlist} Yu-Gi-Oh! Banlist - Format Library`}</title>
-                <meta name="og:title" content={`${props.format?.banlist} Yu-Gi-Oh! Banlist - Format Library`}/>
-                <meta name="description" content={`An interactive list of Forbidden, Limited, and Semi-Limited Yu-Gi-Oh! cards from ${props.format?.banlist || id?.replace('-', ' ')}.`}/>
-                <meta name="og:description" content={`An interactive list of Forbidden, Limited, and Semi-Limited Yu-Gi-Oh! cards from ${props.format?.banlist || id?.replace('-', ' ')}.`}/>
+                <title>{`${capitalize(id?.replaceAll('-', ' '), true)} Yu-Gi-Oh! Banlist - Format Library`}</title>
+                <meta name="og:title" content={`${capitalize(id?.replaceAll('-', ' '), true)} Yu-Gi-Oh! Banlist - Format Library`}/>
+                <meta name="description" content={`An interactive list of Forbidden, Limited, and Semi-Limited Yu-Gi-Oh! cards from ${capitalize(id?.replaceAll('-', ' '), true)}.`}/>
+                <meta name="og:description" content={`An interactive list of Forbidden, Limited, and Semi-Limited Yu-Gi-Oh! cards from ${capitalize(id?.replaceAll('-', ' '), true)}.`}/>
             </Helmet>
             {/* Default Gaming Playlist */}
             <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>

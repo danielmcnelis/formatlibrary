@@ -43,7 +43,7 @@ export default {
         const p2Wins = await Match.count({ where: { winnerId: player2.id, loserId: player1.id, formatName: format.name } })
         
         return await interaction.reply({ content: 
-            `${server.emoji || format.emoji} --- H2H ${format.name} Results --- ${server.emoji || format.emoji}`+
+            `${format.emoji} --- H2H ${format.name} Results --- ${format.emoji}`+
             `\n${player1.name} has won ${p1Wins}x`+
             `\n${player2.name} has won ${p2Wins}x`
         })	

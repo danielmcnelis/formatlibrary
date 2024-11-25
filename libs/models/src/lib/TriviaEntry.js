@@ -9,7 +9,7 @@ export const TriviaEntry = db.define('triviaEntries', {
     playerId: {
         type: Sequelize.STRING
     },
-    confirmed: {
+    isConfirmed: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
     },

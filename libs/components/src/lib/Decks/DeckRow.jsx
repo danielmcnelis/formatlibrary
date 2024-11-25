@@ -28,7 +28,7 @@ export const DeckRow = (props) => {
                   rel="noopener noreferrer"
               >
                 <div className="deckType-cell">
-                  {deck.type || '-'}
+                  {deck.deckTypeName || '-'}
                 </div>
               </Link>
             </td>
@@ -41,15 +41,15 @@ export const DeckRow = (props) => {
                 <div className="player-cell">
                   <img 
                       className="player-cell-pfp"
-                      src={`https://cdn.formatlibrary.com/images/pfps/${deck.player?.discordId || deck.builder}.png`}                    
-                      alt={`${deck.builder}`}
+                      src={`https://cdn.formatlibrary.com/images/pfps/${deck.builder?.discordId || deck.builderName}.png`}                    
+                      alt={`${deck.builderName}`}
                       onError={(e) => {
                               e.target.onerror = null
                               e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                           }
                       }
                   />
-                  <div>{deck.builder || '-'}</div>
+                  <div>{deck.builderName || '-'}</div>
                 </div>
               </Link>
             </td>
@@ -72,9 +72,9 @@ export const DeckRow = (props) => {
               >
                 <div className="community-cell-flexbox">
                   {
-                    deck.eventName ? <img src={`https://cdn.formatlibrary.com/images/logos/${deck.community?.replaceAll('+', '%2B')}.png`} alt={deck.community}/> : <img/>
+                    deck.eventAbbreviation ? <img src={`https://cdn.formatlibrary.com/images/logos/${deck.communityName?.replaceAll('+', '%2B')}.png`} alt={deck.communityName}/> : <img/>
                   }
-                  <div>{deck.eventName || '-'}</div>
+                  <div>{deck.eventAbbreviation || '-'}</div>
                 </div>
               </Link>
             </td>

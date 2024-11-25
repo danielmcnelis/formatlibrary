@@ -21,12 +21,12 @@ export default {
         if (await isNewUser(interaction.user?.id)) await createPlayer(member)
         const player = await Player.findOne({ where: { discordId: interaction.user?.id }})    
         if (!player) { return await interaction.editReply({ content: `You are not in the database. Please try again.`})}
-        if (player.hidden) return await interaction.reply(`You are not allowed to play in Format Library sanctioned tournaments.`)
+        if (player.isHidden) return await interaction.reply(`You are not allowed to play in Format Library sanctioned tournaments.`)
 
         const tournament = await selectTournament(interaction, tournaments, 'ASC')
         if (!tournament) return
 
-        if (tournament.isPremiumTournament && (!player.subscriber || player.subTier === 'Supporter')) {
+        if (tournament.isPremiumTournament && (!player.isSubscriber || player.subscriberTier === 'Supporter')) {
             return interaction.editReply({ content: `Sorry, premium tournaments are only open to premium server subscribers.`})
         } else if (tournament.requiredRoleId && !tournament.isTeamTournament && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
             return interaction.editReply({ content: `Sorry, you must have the <@&${tournament.requiredRoleId}> role to join ${tournament.name}.`})
@@ -71,12 +71,12 @@ export default {
 
         interaction.editReply({ content: `Please check your DMs.` })
         
-        let simName = player.duelingBook || await askForSimName(interaction.member, player, 'DuelingBook')
+        let simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
 
         if (!simName) return
 
         const data = format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
-            await getDeckList(interaction.member, player, format, false, tournament.isUnranked)
+            await getDeckList(interaction.member, player, format, false, !tournament.isRanked)
 
         if (!data) return
 
@@ -117,7 +117,7 @@ export default {
             
             return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> resubmitted their deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
         } else if (!entry && !tournament.isTeamTournament) {
-            if (tournament.isPremiumTournament && player.subTier === 'Premium') {
+            if (tournament.isPremiumTournament && player.subscriberTier === 'Premium') {
                 const alreadyEntered = await Entry.count({
                     where: {
                         playerId: player.id,

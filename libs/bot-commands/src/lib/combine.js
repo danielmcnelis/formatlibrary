@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { isMod } from '@fl/bot-functions'
+import { isModerator } from '@fl/bot-functions'
 import { Alius, Deck, Event, Match, Membership, Pairing, Player, Replay, Server } from '@fl/models'
 import { Op } from 'sequelize'
 
@@ -34,7 +34,7 @@ export default {
         const newDiscordId = interaction.options.getUser('newuser')?.id || interaction.options._hoistedOptions[1].user?.id || interaction.options._hoistedOptions[1].value
 
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
+        if (!isModerator(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
         if (oldDiscordId === newDiscordId) return await interaction.editReply({ content: `Please specify 2 different users.`})
 
         const oldPlayer = await Player.findOne({ where: { discordId: oldDiscordId } })
@@ -56,13 +56,13 @@ export default {
 
         const decks = await Deck.findAll({
             where: {
-                playerId: oldPlayer.id
+                builderId: oldPlayer.id
             }
         })
 
         for (let i = 0; i < decks.length; i++) {
             const deck = decks[i]
-            await deck.update({ playerId: newPlayer.id })
+            await deck.update({ builderId: newPlayer.id })
         }
 
         const events = await Event.findAll({
@@ -136,7 +136,7 @@ export default {
 
         for (let i = 0; i < decks.length; i++) {
             const deck = decks[i]
-            await deck.update({ playerId: newPlayer.id })
+            await deck.update({ builderId: newPlayer.id })
         }
 
         const matches = await Match.findAll({

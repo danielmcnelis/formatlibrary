@@ -114,7 +114,7 @@ export const getCard = async (query, fuzzyCards, format) => {
         where: { 
             banlist: format.banlist,
             category: format.category,
-            name: {
+            cardName: {
                 [Op.iLike]: card_name
             }
         }
@@ -137,7 +137,7 @@ export const getCard = async (query, fuzzyCards, format) => {
             order: [[Set, 'tcgDate', 'ASC'], ['marketPrice', 'DESC']]
         })
 
-    const firstPrint = print ? `${rarities[print.rarity]} ${print.set.setName}` : null 
+    const firstPrint = print ? `${rarities[print.rarity]} ${print.set.name}` : null 
     const dateType = format?.category?.toLowerCase() + 'Date'
     const legal = format && card[dateType] && (card[dateType] <= format.date || format.name === 'Traditional' || format.name === 'Current')
     const position = format?.name === 'Traditional' && legal && status && status.restriction === 'Forbidden' ? 'limited' :
@@ -153,31 +153,31 @@ export const getCard = async (query, fuzzyCards, format) => {
 
 	const color = card.category === "Spell" ? "#42f578" :
 		card.category === "Trap" ? "#e624ed" :
-		card.category === "Monster" && card.fusion ? "#a930ff" :
-		card.category === "Monster" && card.ritual ? "#3b7cf5" :
-		card.category === "Monster" && card.synchro ? "#ebeef5" :
-		card.category === "Monster" && card.xyz ? "#6e6e6e" :
-		card.category === "Monster" && card.pendulum ? "#a5e096" :
-		card.category === "Monster" && card.link ? "#468ef2" :
-		card.category === "Monster" && card.normal ? "#faf18e" :
-		card.category === "Monster" && card.effect ? "#f5b042" :
+		card.category === "Monster" && card.isFusion ? "#a930ff" :
+		card.category === "Monster" && card.isRitual ? "#3b7cf5" :
+		card.category === "Monster" && card.isSynchro ? "#ebeef5" :
+		card.category === "Monster" && card.isXyz ? "#6e6e6e" :
+		card.category === "Monster" && card.isPendulum ? "#a5e096" :
+		card.category === "Monster" && card.isLink ? "#468ef2" :
+		card.category === "Monster" && card.isNormal ? "#faf18e" :
+		card.category === "Monster" && card.isEffect ? "#f5b042" :
 		null
 
 	const classes = []
-	if (card.normal) classes.push("Normal")
-	if (card.fusion) classes.push("Fusion")
-	if (card.ritual) classes.push("Ritual")
-	if (card.synchro) classes.push("Synchro")
-	if (card.xyz) classes.push("Xyz")
-	if (card.pendulum) classes.push("Pendulum")
-	if (card.link) classes.push("Link")
-	if (card.flip) classes.push("Flip")
-	if (card.gemini) classes.push("Gemini")
-	if (card.spirit) classes.push("Spirit")
-	if (card.toon) classes.push("Toon")
-	if (card.tuner) classes.push("Tuner")
-	if (card.union) classes.push("Union")
-	if (card.effect) classes.push("Effect")
+	if (card.isNormal) classes.push("Normal")
+	if (card.isFusion) classes.push("Fusion")
+	if (card.isRitual) classes.push("Ritual")
+	if (card.isSynchro) classes.push("Synchro")
+	if (card.isXyz) classes.push("Xyz")
+	if (card.isPendulum) classes.push("Pendulum")
+	if (card.isLink) classes.push("Link")
+	if (card.isFlip) classes.push("Flip")
+	if (card.isGemini) classes.push("Gemini")
+	if (card.isSpirit) classes.push("Spirit")
+	if (card.isToon) classes.push("Toon")
+	if (card.isTuner) classes.push("Tuner")
+	if (card.isUnion) classes.push("Union")
+	if (card.isEffect) classes.push("Effect")
 
     const releaseDate = card[dateType] ? 
         dateToVerbose(card[dateType], true, false, true) : 
@@ -192,7 +192,7 @@ export const getCard = async (query, fuzzyCards, format) => {
     if (card.category === 'Monster') {
         labels = [
             `Attribute: ${card.attribute} ${emojis[card.attribute]}`,
-            `\n${card.xyz ? `Rank: ${card.level} ${emojis.Rank}` : card.link ? `Link Rating: ${card.rating} ${emojis.Link}` : `Level: ${card.level} ${emojis.Star}`}`,
+            `\n${card.isXyz ? `Rank: ${card.level} ${emojis.Rank}` : card.isLink ? `Link Rating: ${card.rating} ${emojis.Link}` : `Level: ${card.level} ${emojis.Star}`}`,
             ...labels,
             `\n**[** ${card.type} ${emojis[card.type.replace(/[^\ws]/gi, "")]} / ${classes.join(" / ")} **]**`
         ]
@@ -206,7 +206,7 @@ export const getCard = async (query, fuzzyCards, format) => {
 
 	const stats = card.category === "Monster" ? 
 			`ATK: ${card.atk === null ? '?' : card.atk} ${emojis.ATK}` + 
-			` ${!card.link ? `DEF: ${card.def === null ? '?' : card.def} ${emojis.DEF}` : ''}` :
+			` ${!card.isLink ? `DEF: ${card.def === null ? '?' : card.def} ${emojis.DEF}` : ''}` :
 			null
 	
 	const attachment = new AttachmentBuilder(`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`, { name: `${card.artworkId}.jpg` })
@@ -344,7 +344,7 @@ export const makeCanvasAttachment = async (cardsArr = [], width = 57, height = 8
 export const assignRoles = async (guild, member) => {
     const membership = await Membership.findOne({ where: { '$player.discordId$': member.user.id, serverId: guild.id }, include: Player })
     if (!membership) return
-    membership.active = true
+    membership.isActive = true
     await membership.save()
     const roles = await Role.findAll({ where: { membershipId: membership.id } })
     roles.forEach(async (r) => { 
@@ -405,7 +405,8 @@ export const createMembership = async (guild, member) => {
         const player = await Player.findOne({ where: { discordId: member.user.id }})
 
         await Membership.create({
-            guildName: guild.name,
+            serverName: guild.name,
+            playerName: player.name,
             playerId: player.id,
             serverId: guild.id
         })
@@ -532,13 +533,10 @@ export const isProgrammer = (member) => member?.user?.id === '194147938786738176
 export const isCommunityPartner = (member) => member?._roles.includes('1120540792654671973')
 
 //IS MOD?
-export const isMod = (server, member) => member?._roles.includes(server?.modRole) || member?._roles.includes(server?.adminRole) || member?._roles.includes(server?.judgeRole) || member?.user?.id === '194147938786738176'
+export const isModerator = (server, member) => member?._roles.includes(server?.moderatorRoleId) || member?._roles.includes(server?.adminRoleId) || member?._roles.includes(server?.judgeRoleId) || member?.user?.id === '194147938786738176'
 
 //IS SERVER MANAGER?
 export const isServerManager = (member) => member.permissions?.has('MANAGE_SERVER')
-
-//IS IRON PLAYER?
-export const isIronPlayer = (member) => member?._roles.includes('948006324237643806')
 
 //IS NEW MEMBER?
 export const isNewMember = async (serverId, discordId) => !await Membership.count({ where: { serverId, '$player.discordId$': discordId }, include: Player })
@@ -547,7 +545,7 @@ export const isNewMember = async (serverId, discordId) => !await Membership.coun
 export const isNewUser = async (discordId) => !await Player.count({ where: { discordId: discordId } })
 
 //IS TOURNAMENT PLAYER?
-export const isTourPlayer = (server, member) => member?._roles.includes(server?.tourRole)
+export const isTourPlayer = (server, member) => member?._roles.includes(server?.tournamentRoleId)
 
 // PAD ZEROS MID STRING
 export const extractDigitsAndPadZeros = (str, len = 2) => {

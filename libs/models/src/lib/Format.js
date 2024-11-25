@@ -19,7 +19,7 @@ export const Format = db.define('formats', {
   banlist: {
     type: Sequelize.STRING
   },
-  event: {
+  eventName: {
     type: Sequelize.STRING
   },
   icon: {
@@ -37,20 +37,20 @@ export const Format = db.define('formats', {
   videoPlaylistId: {
     type: Sequelize.STRING
   },
-  channel: {
+  channelId: {
     type: Sequelize.STRING
   },
   emoji: {
     type: Sequelize.STRING
   },
-  role: {
+  roleId: {
     type: Sequelize.STRING
   },
-  popular: {
+  isPopular: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
-  spotlight: {
+  isSpotlight: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },

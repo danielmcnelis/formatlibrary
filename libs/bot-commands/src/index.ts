@@ -22,7 +22,6 @@ import h2h from './lib/h2h'
 import help from './lib/help'
 import history from './lib/history'
 import info from './lib/info'
-import iron from './lib/iron'
 import join from './lib/join'
 import leaderboard from './lib/leaderboard'
 import legal from './lib/legal'
@@ -66,7 +65,6 @@ export default {
         coverage,
         fix,
         flair,
-        iron,
         queue,
         recalculate,
         trivia,

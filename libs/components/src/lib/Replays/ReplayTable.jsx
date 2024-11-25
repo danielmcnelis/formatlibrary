@@ -14,7 +14,7 @@ export const ReplayTable = (props) => {
     const isSubscriber = props.roles?.subscriber
 
     const isMounted = useRef(false)
-    const [community, setCommunity] = useState(null)
+    const [communityName, setCommunityName] = useState(null)
     const [replays, setReplays] = useState([])
     const [replaysPerPage, setReplaysPerPage] = useState(10)
     const [format, setFormat] = useState(null)
@@ -25,7 +25,7 @@ export const ReplayTable = (props) => {
     const [queryParams, setQueryParams] = useState({
       player: null,
       event: null,
-      deckType: null
+      deck: null
     })
   
     // USE LAYOUT EFFECT
@@ -43,15 +43,15 @@ export const ReplayTable = (props) => {
     // COUNT
     const count = async () => {
         const accessToken = getCookie('access')
-        let url = `/api/replays/count?isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`
+        let url = `/api/replays/count?admin=${isAdmin}&subscriber=${isSubscriber}`
         let filter = ''
   
         if (queryParams.player) filter += `,player:or:${queryParams.player}`
-        if (queryParams.event) filter += `,eventAbbreviation:inc:${queryParams.event}`
-        if (queryParams.deckType) filter += `,deckType:or:${queryParams.deckType}`
-        if (community) filter += `,$event.community$:eq:${community}`
-        if (format) filter += `,formatName:eq:${format}`
-        if (filter.length) url += ('?filter=' + filter.slice(1))
+        if (queryParams.event) filter += `,event:or:${queryParams.event}`
+        if (queryParams.deck) filter += `,deck:or:${queryParams.deck}`
+        if (communityName) filter += `,community:eq:${communityName}`
+        if (format) filter += `,format:eq:${format}`
+        if (filter.length) url += ('&filter=' + filter.slice(1))
   
         const { data } = await axios.get(url, {
             headers: {
@@ -64,14 +64,14 @@ export const ReplayTable = (props) => {
 
     // SEARCH
     const search = async () => {
-        let url = `/api/replays?page=${page}&limit=${replaysPerPage}&isAdmin=${isAdmin}&isSubscriber=${isSubscriber}&sort=${sortBy}`
+        let url = `/api/replays?page=${page}&limit=${replaysPerPage}&admin=${isAdmin}&subscriber=${isSubscriber}&sort=${sortBy}`
         let filter = ''
   
         if (queryParams.player) filter += `,player:or:${queryParams.player}`
-        if (queryParams.event) filter += `,eventAbbreviation:inc:${queryParams.event}`
-        if (queryParams.deckType) filter += `,deckType:or:${queryParams.deckType}`
-        if (community) filter += `,$event.community$:eq:${community}`
-        if (format) filter += `,formatName:eq:${format}`
+        if (queryParams.event) filter += `,event:or:${queryParams.event}`
+        if (queryParams.deck) filter += `,deck:or:${queryParams.deck}`
+        if (communityName) filter += `,community:eq:${communityName}`
+        if (format) filter += `,format:eq:${format}`
         if (filter.length) url += ('&filter=' + filter.slice(1))
             
         const accessToken = getCookie('access')
@@ -97,7 +97,7 @@ export const ReplayTable = (props) => {
       setQueryParams({
         player: null,
         event: null,
-        deckType: null
+        deck: null
       })
 
       count()
@@ -107,8 +107,8 @@ export const ReplayTable = (props) => {
     // RUN QUERY
     const runQuery = () => {
       const id = document.getElementById('searchTypeSelector').value
-      const otherIds = id === 'player' ? ['event', 'deckType'] : 
-            id === 'event' ? ['player', 'deckType'] : ['player', 'event'] 
+      const otherIds = id === 'player' ? ['event', 'deck'] : 
+            id === 'event' ? ['player', 'deck'] : ['player', 'event'] 
 
       setQueryParams(() => {
         return {
@@ -156,13 +156,13 @@ export const ReplayTable = (props) => {
     // USE EFFECT COUNT
     useEffect(() => {
         count()
-      }, [isAdmin, isSubscriber, format, community, queryParams])
+      }, [isAdmin, isSubscriber, format, communityName, queryParams])
 
 
     // USE EFFECT SEARCH
     useEffect(() => {
         search()
-    }, [isAdmin, isSubscriber, page, replaysPerPage, format, community, queryParams, sortBy])
+    }, [isAdmin, isSubscriber, page, replaysPerPage, format, communityName, queryParams, sortBy])
   
 
     // RENDER
@@ -207,7 +207,7 @@ export const ReplayTable = (props) => {
                         >
                         <option value="player">Player</option>
                         <option value="event">Event</option>
-                        <option value="deckType">Deck Type</option>
+                        <option value="deck">Deck Type</option>
                         </select>
             
                         <select
@@ -346,14 +346,14 @@ export const ReplayTable = (props) => {
                         >
                             <option value="player">Player</option>
                             <option value="event">Event</option>
-                            <option value="deckType">Deck Type</option>
+                            <option value="deck">Deck Type</option>
                         </select>
             
                         <select
                         id="community"
                         defaultValue="All Communities"
                         className="filter"
-                        onChange={(e) => {setCommunity(e.target.value || null); setPage(1)}}
+                        onChange={(e) => {setCommunityName(e.target.value || null); setPage(1)}}
                         >
                         <option value="">All Communities</option>
                             <option value="Format Library">Format Library</option>

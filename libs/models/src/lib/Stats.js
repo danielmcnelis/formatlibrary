@@ -31,7 +31,7 @@ export const Stats = db.define('stats', {
     type: Sequelize.INTEGER,
     defaultValue: 0
   },
-  streak: {
+  currentStreak: {
     type: Sequelize.INTEGER,
     defaultValue: 0
   },
@@ -43,16 +43,12 @@ export const Stats = db.define('stats', {
     type: Sequelize.INTEGER,
     defaultValue: 0
   },
-  tournamentPoints: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0
-  },
-  internal: {
+  isInternal: {
     type: Sequelize.BOOLEAN
   },
-  inactive: {
+  isActive: {
       type: Sequelize.BOOLEAN,  
-      defaultValue: false
+      defaultValue: true
   },
   playerId: {
       type: Sequelize.STRING

@@ -29,7 +29,7 @@ export default {
         const player = await Player.findOne({ where: { discordId: discordId } })
         if (!player) return await interaction.reply({ content: `That user is not in the database.`})
         let data = [500]
-        const serverId = server.internalLadder ? server.id : '414551319031054346'
+        const serverId = server.hasInternalLadder ? server.id : '414551319031054346'
 
         const matches = await Match.findAll({
             where: {

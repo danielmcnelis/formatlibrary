@@ -1,7 +1,7 @@
 
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 import { Server } from '@fl/models'
-import { hasPartnerAccess, isMod } from '@fl/bot-functions'
+import { hasPartnerAccess, isModerator } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { hasPartnerAccess } from '../../../bot-functions/src'
 
@@ -13,7 +13,7 @@ export default {
 	async execute(interaction) {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}` })
-        if (!isMod(server, interaction.member)) return await interaction.reply({ content: `You do not have permission to do that.` })
+        if (!isModerator(server, interaction.member)) return await interaction.reply({ content: `You do not have permission to do that.` })
 
         const botEmbed = new EmbedBuilder()
 	        .setColor('#38C368')

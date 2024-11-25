@@ -15,7 +15,7 @@ export const DeckTypeArchetype = db.define('deckTypeArchetypes', {
   archetypeId: {
     type: Sequelize.INTEGER
   },
-  primary: {
+  isPrimary: {
     type: Sequelize.BOOLEAN,
     defaultValue: true
   }

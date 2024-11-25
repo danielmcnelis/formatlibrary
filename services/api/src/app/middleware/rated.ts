@@ -43,10 +43,10 @@ export const getRatedDecks = async (req, res, next) => {
     try {
         const decks = await Deck.findAll({
             where: {
-                playerId: req.user?.playerId,
+                builderId: req.user?.playerId,
                 origin: 'user'
             },
-            attributes: ['id', 'name', 'ydk', 'playerId', 'formatId', 'updatedAt'],
+            attributes: ['id', 'name', 'ydk', 'builderId', 'formatId', 'updatedAt'],
             include: Format,
             order: [['updatedAt', 'DESC']]
         })

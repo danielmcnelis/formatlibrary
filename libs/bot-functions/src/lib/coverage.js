@@ -38,7 +38,7 @@ export const createDecks = async (event, participants, standings = []) => {
 
                 const count = await Deck.count({
                     where: {
-                        playerId: entry.playerId,
+                        builderId: entry.playerId,
                         eventId: event.id
                     }
                 })
@@ -52,21 +52,21 @@ export const createDecks = async (event, participants, standings = []) => {
                     const deckType = await getDeckType(entry.ydk, event.formatName)
     
                     await Deck.create({
-                        type: deckType.name,
+                        deckTypeName: deckType.name,
+                        deckTypeId: deckType.id,
                         category: deckType.category,
-                        builder: entry.player?.name,
+                        builderName: entry.player?.name,
+                        builderId: entry.playerId,
                         formatName: event.formatName,
                         formatId: event.formatId,
                         ydk: entry.ydk,
                         placement: placement,
-                        eventName: event.abbreviation || event.name,
-                        origin: 'event',
-                        display: false,
-                        community: event.community,
-                        playerId: entry.playerId,
+                        eventAbbreviation: event.abbreviation,
+                        eventDate: event.startDate,
+                        communityName: event.communityName,
                         eventId: event.id,
-                        deckTypeId: deckType.id,
-                        eventDate: event.startDate
+                        origin: 'event',
+                        display: false
                     })
     
                     b++
@@ -148,7 +148,7 @@ export const fixPlacements = async (event, participants, standings = []) => {
 
             const deck = await Deck.findOne({
                 where: {
-                    playerId: player.id,
+                    builderId: player.id,
                     eventId: event.id
                 }
             })
@@ -202,7 +202,7 @@ export const composeBlogPost = async (interaction, event) => {
 
             const winningDeckA = await Deck.findOne({
                 where: {
-                    playerId: team.playerAId,
+                    builderId: team.playerAId,
                     eventId: event.id,
                     placement: 1
                 }
@@ -210,7 +210,7 @@ export const composeBlogPost = async (interaction, event) => {
 
             const winningDeckB = await Deck.findOne({
                 where: {
-                    playerId: team.playerBId,
+                    builderId: team.playerBId,
                     eventId: event.id,
                     placement: 1
                 }
@@ -218,7 +218,7 @@ export const composeBlogPost = async (interaction, event) => {
 
             const winningDeckC = await Deck.findOne({
                 where: {
-                    playerId: team.playerCId,
+                    builderId: team.playerCId,
                     eventId: event.id,
                     placement: 1
                 }
@@ -237,7 +237,7 @@ export const composeBlogPost = async (interaction, event) => {
                 })) ||
                     (await DeckThumb.findOne({
                     where: {
-                        primary: true,
+                        isPrimary: true,
                         deckTypeId: winningDeck.deckTypeId
                     }
                 })) ||
@@ -249,7 +249,7 @@ export const composeBlogPost = async (interaction, event) => {
 
                 deckThumbnails.push(
                     `<div class="deckThumbnail">` +
-                        `<h3>${capitalize(winningDeck.type, true)}</h3>` +
+                        `<h3>${capitalize(winningDeck.deckTypeName, true)}</h3>` +
                         `<div class="deckThumbnail-flexbox">` +
                             `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.leftCardArtworkId}.jpg" alt="${deckThumb.leftCard}"/>` +
                             `<img class="deckThumbnail-image" src="https://cdn.formatlibrary.com/images/artworks/${deckThumb.centerCardArtworkId}.jpg" alt="${deckThumb.centerCard}"/>` +
@@ -325,7 +325,7 @@ export const composeBlogPost = async (interaction, event) => {
             //     await s3FileExists(`images/pfps/${event.winner.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.name}.png` :
             //     `https://cdn.formatlibrary.com/images/pfps/discord-default-red.png`
             
-            // const serverLogoUrl = event.server?.logoUrl ? `https://cdn.formatlibrary.com/images/logos/${event.server?.logoUrl.replaceAll('+', '%2B')}.png` :
+            // const serverLogoUrl = event.server?.logoName ? `https://cdn.formatlibrary.com/images/logos/${event.server?.logoName.replaceAll('+', '%2B')}.png` :
             //     event.server?.discordIconId ? `https://cdn.discordapp.com/icons/${event.server?.id}/${event.server.discordIconId}.webp?size=240` :
             //     await s3FileExists(`images/logos/${event.community}.png`) ? `https://cdn.formatlibrary.com/images/logos/${event.community}.png` :
             //     'https://cdn.formatlibrary.com/images/artworks/71625222.jpg'
@@ -383,8 +383,8 @@ export const composeBlogPost = async (interaction, event) => {
                 winnerName: event.winnerName,
                 winnerPfp: event.winner?.pfp,
                 winnerId: event.winnerId,
-                winningDeckTypeName: deck.type,
-                winningDeckTypeIsPopular: popularDecks.includes(deck.type),
+                winningDeckTypeName: deck.deckTypeName,
+                winningDeckTypeIsPopular: popularDecks.includes(deck.deckTypeName),
                 winningDeckId: deck.id,
                 formatName: event.format?.name,
                 formatIcon: event.format?.icon, 
@@ -499,7 +499,7 @@ export const composeThumbnails = async (interaction, event) => {
 
 // DISPLAY DECKS
 export const displayDecks = async (interaction, event) => {
-    const minPlacement = event.primaryTournament?.topCut ? event.primaryTournament?.topCut :
+    const minPlacement = event.primaryTournament?.topCutSize ? event.primaryTournament?.topCutSize :
         event.size <= 8 ? 1 :
         event.size > 8 && event.size <= 16 ? 2 :
         event.size > 16 && event.size <= 24 ? 3 :
@@ -570,7 +570,7 @@ export const displayReplays = async (interaction, event) => {
 
                 const winningDeck = await Deck.findOne({
                     where: {
-                        playerId: replay.winnerId,
+                        builderId: replay.winnerId,
                         eventId: event.id
                     },
                     include: DeckType
@@ -578,7 +578,7 @@ export const displayReplays = async (interaction, event) => {
     
                 const losingDeck = await Deck.findOne({
                     where: {
-                        playerId: replay.loserId,
+                        builderId: replay.loserId,
                         eventId: event.id
                     },
                     include: DeckType
@@ -650,7 +650,7 @@ export const displayReplays = async (interaction, event) => {
 
                 const winningDeck = await Deck.findOne({
                     where: {
-                        playerId: replay.winnerId,
+                        builderId: replay.winnerId,
                         eventId: event.id
                     },
                     include: DeckType
@@ -658,7 +658,7 @@ export const displayReplays = async (interaction, event) => {
     
                 const losingDeck = await Deck.findOne({
                     where: {
-                        playerId: replay.loserId,
+                        builderId: replay.loserId,
                         eventId: event.id
                     },
                     include: DeckType
@@ -693,8 +693,8 @@ export const displayReplays = async (interaction, event) => {
 
 // GENERATE MATCHUP DATA
 export const generateMatchupData = async (interaction, event, tournament) => {
-    const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${event.server?.challongeAPIKey}`)
-    const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${event.server?.challongeAPIKey}`)
+    const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${event.server?.challongeApiKey}`)
+    const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${event.server?.challongeApiKey}`)
     const deckMap = {}
     let b = 0
     let c = 0
@@ -711,7 +711,7 @@ export const generateMatchupData = async (interaction, event, tournament) => {
         if (entry) {
             const deck = await Deck.findOne({
                 where: {
-                    playerId: entry.playerId,
+                    builderId: entry.playerId,
                     eventId: event.id
                 },
                 include: DeckType
@@ -748,7 +748,7 @@ export const generateMatchupData = async (interaction, event, tournament) => {
 
                 const deck = await Deck.findOne({
                     where: {
-                        playerId: player.id,
+                        builderId: player.id,
                         eventId: event.id
                     }
                 })
@@ -798,8 +798,8 @@ export const generateMatchupData = async (interaction, event, tournament) => {
             matchId: retrobotMatch?.id,
             winningDeckId: winningDeck.id,
             losingDeckId: losingDeck.id,
-            winningDeckTypeName: winningDeck.type,
-            losingDeckTypeName: losingDeck.type,
+            winningDeckTypeName: winningDeck.deckTypeName,
+            losingDeckTypeName: losingDeck.deckTypeName,
             winningDeckTypeId: winningDeck.deckTypeId,
             losingDeckTypeId: losingDeck.deckTypeId,
         })
@@ -825,38 +825,4 @@ export const generateMatchupData = async (interaction, event, tournament) => {
     }
 
     return interaction.editReply(`Generated new matchup data points for ${b} matches from ${tournament.name}.${d ? ` ${d} matchups were already recorded.` : ''}${c ? ` ${c} matches appear to have been forfeited.` : ''} ${b + d + c} out of ${matches.length} matches are now accounted for.`)
-}
-
-
-// FIX DECK FOLDER
-export const fixDeckFolder = async (interaction, tournamentId) => {
-    const server = await Server.findOne({
-        where: {
-            id: interaction.guildId
-        }
-    })
-
-    const tournament = await Tournament.findOne({
-        where: {
-            id: tournamentId
-        }
-    })
-
-    const decks = await Deck.findAll({
-        where: {
-            eventName: {
-                [Op.or]: [tournament.abbreviation, tournament.name]
-            }
-        },
-        include: Player
-    })
-
-    try {
-        await checkExpiryDate(server)
-        await uploadDeckFolder(server, tournament.name, decks)
-        return await interaction.reply({ content: `Your tournament files have been uploaded! ${server.logo}` })
-    } catch (err) {
-        console.log(err)
-        return await interaction.reply({ content: `Error. Check bot logs.` })
-    }
 }

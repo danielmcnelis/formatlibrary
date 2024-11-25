@@ -18,7 +18,6 @@ import { Errata } from './Errata'
 import { Event } from './Event'
 import { Format } from './Format'
 import { Inventory } from './Inventory'
-import { Iron } from './Iron'
 import { LikedArticle } from './LikedArticle'
 import { LikedCube } from './LikedCube'
 import { LikedDeck } from './LikedDeck'
@@ -54,8 +53,13 @@ Alius.belongsTo(Player)
 Player.hasMany(Alius)
 
 //ARTICLE
-Article.belongsTo(Player)
-Player.hasMany(Article)
+Article.belongsTo(Player, {
+    as: 'author',
+    id: 'authorId'
+})
+
+Article.belongsTo(Format)
+Format.hasMany(Article)
 
 //ARTWORK
 Artwork.belongsTo(Card)
@@ -97,6 +101,18 @@ BlogPost.belongsTo(Server)
 
 // DeckTypeArchetype.hasOne(DeckType)
 // DeckType.hasMany(DeckTypeArchetype)
+
+// CUBE
+Cube.belongsTo(Player, {
+    as: 'builder',
+    id: 'builderId'
+})
+
+// DECK
+Deck.belongsTo(Player, {
+    as: 'builder',
+    id: 'builderId'
+})
 
 //DECKTYPE
 DeckType.hasMany(Deck)
@@ -162,8 +178,8 @@ Event.belongsTo(Team, {
     id: 'winningTeamId'
 })
 
-Event.hasMany(Deck)
 Deck.belongsTo(Event)
+Event.hasMany(Deck)
 
 Event.belongsTo(Tournament, {
     as: 'primaryTournament',
@@ -185,13 +201,8 @@ Format.hasMany(Event)
 Format.hasMany(Deck)
 Deck.belongsTo(Format)
 
-
 Format.hasMany(Match)
 Match.belongsTo(Format)
-
-//IRON
-Iron.belongsTo(Player)
-Player.hasMany(Iron)
 
 //LIKEDARTICLE
 LikedArticle.belongsTo(Article)
@@ -278,13 +289,6 @@ Player.hasMany(Membership)
 
 Membership.belongsTo(Server)
 Server.hasMany(Membership)
-
-//PLAYER
-Player.hasMany(Cube)
-Cube.belongsTo(Player)
-
-Player.hasMany(Deck)
-Deck.belongsTo(Player)
 
 //PRICE
 Price.belongsTo(Print)
@@ -453,7 +457,6 @@ export {
   Event,
   Format,
   Inventory,
-  Iron,
   Match,
   Matchup,
   Membership,

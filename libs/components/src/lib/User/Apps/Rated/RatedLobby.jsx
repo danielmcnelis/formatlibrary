@@ -117,7 +117,7 @@ export const RatedLobby = () => {
             const { status, data } = await axios.post(`/api/decks/create`, {
                 name: newDeckName,
                 formatName: format.name,
-                playerId: playerId,
+                builderId: playerId,
                 ydk: reader.result,
                 origin: 'user'
             })
@@ -140,7 +140,7 @@ export const RatedLobby = () => {
         const { status, data } = await axios.post(`/api/decks/create`, {
             formatName: format.name,
             deckName: newDeckName,
-            playerId: playerId,
+            builderId: playerId,
             ydk: ydk,
             origin: 'user'
         })

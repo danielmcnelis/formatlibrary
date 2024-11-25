@@ -2,6 +2,7 @@
 import { Op, Sequelize } from 'sequelize'
 import { db } from './db'
 import { Card } from './Card'
+import { Event } from './Event'
 import { Format } from './Format'
 import { Player } from './Player'
 import { Status } from './Status'
@@ -11,16 +12,16 @@ export const Deck = db.define('decks', {
   name: {
     type: Sequelize.STRING
   },
-  type: {
+  deckTypeName: {
     type: Sequelize.STRING
   },
   category: {
     type: Sequelize.STRING
   },
-  builder: {
+  builderName: {
     type: Sequelize.STRING
   },
-  playerId: {
+  builderId: {
     type: Sequelize.STRING
   },
   teamId: {
@@ -38,7 +39,7 @@ export const Deck = db.define('decks', {
   ydk: {
     type: Sequelize.TEXT
   },
-  eventName: {
+  eventAbbreviation: {
     type: Sequelize.STRING
   },
   publishDate: {
@@ -47,7 +48,7 @@ export const Deck = db.define('decks', {
   eventId: {
     type: Sequelize.INTEGER
   },
-  community: {
+  communityName: {
     type: Sequelize.STRING
   },
   placement: {
@@ -69,13 +70,13 @@ export const Deck = db.define('decks', {
     type: Sequelize.INTEGER,
     defaultValue: 0
   },
-  suggestedType: {
+  suggestedDeckTypeName: {
       type: Sequelize.STRING
   },
   shareLink: {
     type: Sequelize.STRING
   },
-  linkExpiration: {
+  linkExpiresAt: {
     type: Sequelize.DATE
   },
   url: {
@@ -93,9 +94,21 @@ Deck.countResults = async (filter = {}) => {
         let value = by.value
         if (typeof value === 'string') value.replaceAll('%20', ' ')
         let operator = by.operator
-        // if (['display'].includes(key)) { value = value.toLowerCase() === 'true' }
-        if (['deckTypeId', 'downloads', 'views', 'rating'].includes(key)) { value = parseInt(value) }
-        
+
+        if (['event'].includes(key)) { 
+            key = Op.or
+            value = {
+                eventAbbreviation: {[Op.iLike]: `%${value}%`},
+                '$event.name$': {[Op.iLike]: `%${value}%`}
+            }
+        } else if (['builder'].includes(key)) { 
+            key = 'builderName'
+        } else if (['type'].includes(key)) { 
+            key = 'deckTypeName'
+        } else if (['format'].includes(key)) {
+            key = 'formatName'
+        }
+
         if (operator === 'eq') {
             operator = Op.eq
         } else if (operator === 'not') {
@@ -127,7 +140,8 @@ Deck.countResults = async (filter = {}) => {
     }, {})
 
     const count = await Deck.count({ 
-        where: filter
+        where: filter,
+        include: [{model: Event, attributes: ['name']}]
      })
     return count
 }
@@ -137,10 +151,23 @@ Deck.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
     filter = Object.entries(filter).reduce((reduced, [key, by]) => {
         let value = by.value
         if (typeof value === 'string') value.replaceAll('%20', ' ')
-        let operator = by.operator
         // if (['display'].includes(key)) { value = value.toLowerCase() === 'true' }
-        if (['deckTypeId', 'downloads', 'views', 'rating'].includes(key)) { value = parseInt(value) }
-       
+        let operator = by.operator
+
+        if (['event'].includes(key)) { 
+            key = Op.or
+            value = {
+                eventAbbreviation: {[Op.iLike]: `%${value}%`},
+                '$event.name$': {[Op.iLike]: `%${value}%`}
+            }
+        } else if (['builder'].includes(key)) { 
+            key = 'builderName'
+        } else if (['type'].includes(key)) { 
+            key = 'deckTypeName'
+        } else if (['format'].includes(key)) {
+            key = 'formatName'
+        }    
+        
         if (operator === 'eq') {
             operator = Op.eq
         } else if (operator === 'not') {
@@ -180,10 +207,11 @@ Deck.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
         offset: (page - 1) * limit,
         limit: limit,
         subQuery: false,
-        attributes: { exclude: ['url', 'shareLink', 'linkExpiration', 'createdAt', 'updatedAt'] },        
+        attributes: { exclude: ['url', 'shareLink', 'linkExpiresAt', 'createdAt', 'updatedAt'] },        
         include: [
-            {model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp']}, 
-            {model: Format, attributes: ['name', 'icon']}
+            {model: Player, as: 'builder', attributes: ['id', 'name', 'discordId', 'discordPfp']}, 
+            {model: Format, attributes: ['name', 'icon']},
+            {model: Event, attributes: ['name']}
         ],
         order: sort
     })

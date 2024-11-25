@@ -12,7 +12,7 @@ export const getPlayerRoles = async (req, res, next) => {
           where: {
             id: playerId
           },
-          attributes: ['id', 'admin', 'contentManager', 'subscriber']
+          attributes: ['id', 'isAdmin', 'isContentManager', 'isSubscriber']
         })
 
         res.json(player)
@@ -46,9 +46,9 @@ export const playersId = async (req, res, next) => {
                 { name: { [Op.iLike]: req.params.id }},
                 { discordName: { [Op.iLike]: req.params.id }}
             ],
-            hidden: false            
+            isHidden: false            
         },
-        attributes: ['id', 'name', 'discordId', 'discordPfp', 'discordName', 'firstName', 'lastName', 'googlePfp', 'duelingBook', 'duelingBookPfp', 'country', 'timeZone', 'youtube', 'twitch', 'twitter']
+        attributes: ['id', 'name', 'discordId', 'discordPfp', 'discordName', 'firstName', 'lastName', 'googlePfp', 'duelingBookName', 'duelingBookPfp', 'country', 'timeZone', 'youtube', 'twitch', 'twitter']
     })
 
     const hasPassword = await Player.count({
@@ -67,7 +67,7 @@ export const playersId = async (req, res, next) => {
 export const playersAll = async (req, res, next) => {
   try {
     const players = await Player.findAll({
-      attributes: ['id', 'name', 'discordId', 'discordPfp', 'firstName', 'lastName', 'duelingBook'],
+      attributes: ['id', 'name', 'discordId', 'discordPfp', 'firstName', 'lastName', 'duelingBookName'],
       order: [['name', 'ASC']]
     })
 
@@ -109,7 +109,7 @@ export const playersUpdateId = async (req, res, next) => {
             where: {
                 id: req.params.id
             },
-            attributes: ['id', 'email', 'name', 'discordId', 'discordPfp', 'discordName', 'firstName', 'lastName', 'googleId', 'googlePfp', 'duelingBook', 'duelingBookPfp', 'country', 'timeZone', 'youtube', 'twitch', 'twitter']
+            attributes: ['id', 'email', 'name', 'discordId', 'discordPfp', 'discordName', 'firstName', 'lastName', 'googleId', 'googlePfp', 'duelingBookName', 'duelingBookPfp', 'country', 'timeZone', 'youtube', 'twitch', 'twitter']
         })
 
         if (!req.body.name || !req.body.name.length) {
@@ -119,7 +119,7 @@ export const playersUpdateId = async (req, res, next) => {
         } else {
             await player.update({ 
                 name: req.body.name,
-                duelingBook: req.body.duelingBook,
+                duelingBookName: req.body.duelingBookName,
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 country: req.body.country,
@@ -153,7 +153,7 @@ export const adminPlayerUpdate = async (req, res, next) => {
         } else {
             await player.update({ 
                 name: req.body.name,
-                duelingBook: req.body.duelingBook,
+                duelingBookName: req.body.duelingBookName,
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 country: req.body.country,

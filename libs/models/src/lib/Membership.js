@@ -3,13 +3,16 @@ import { Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const Membership = db.define('memberships', {
-    guildName: {
+    serverName: {
         type: Sequelize.STRING
     },
-    playerName: {
-        type: Sequelize.STRING, 
+    serverId: {
+        type: Sequelize.INTEGER
     },
-    active: {
+    playerName: {
+        type: Sequelize.STRING
+    },
+    isActive: {
         type: Sequelize.BOOLEAN,  
         defaultValue: true
     }

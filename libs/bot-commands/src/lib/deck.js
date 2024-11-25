@@ -2,7 +2,7 @@
 import { AttachmentBuilder, SlashCommandBuilder } from 'discord.js'
 import { Deck, Entry, Event, Format, Player, Server, Tournament } from '@fl/models'
 import { hasPartnerAccess, selectTournamentForDeckCheck } from '@fl/bot-functions'
-import { drawDeck, isMod } from '@fl/bot-functions'
+import { drawDeck, isModerator } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Op } from 'sequelize'
 
@@ -23,7 +23,7 @@ export default {
         const inspectingOtherUser = discordId !== interaction.user.id
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        const userIsMod = isMod(server, interaction.member)
+        const userIsMod = isModerator(server, interaction.member)
         if (!userIsMod && inspectingOtherUser) return await interaction.editReply({ content: `You do not have permission to do that.` })
     
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
@@ -65,7 +65,7 @@ export default {
                     if (event) {
                         const deck = await Deck.findOne({
                             where: {
-                                playerId: player.id,
+                                builderId: player.id,
                                 eventId: event.id
                             }
                         })

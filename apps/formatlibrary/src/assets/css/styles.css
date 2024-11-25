@@ -1780,65 +1780,65 @@
     background-position: 35%;
   }
   
-  #normal.groupMiniButton, #normal.clickedGroupMiniButton, #normal.groupButton, #normal.clickedGroupButton {
+  #isNormal.groupMiniButton, #isNormal.clickedGroupMiniButton, #isNormal.groupButton, #isNormal.clickedGroupButton {
     background-image: url('https://cdn.formatlibrary.com/images/templates/monsterCard.jpg');
   }
   
-  #effect {
+  #isEffect {
     background-image: url('https://cdn.formatlibrary.com/images/templates/effectCard.png');
   }
   
-  #fusion {
+  #isFusion {
     background-image: url('https://cdn.formatlibrary.com/images/templates/fusionCard.jpg');
   }
   
-  #ritual {
+  #isRitual {
     background-image: url('https://cdn.formatlibrary.com/images/templates/ritualCard.jpg');
   }
   
-  #synchro {
+  #isSynchro {
     background-image: url('https://cdn.formatlibrary.com/images/templates/synchroCard.png');
   }
   
-  #xyz {
+  #isXyz {
     background-image: url('https://cdn.formatlibrary.com/images/templates/xyzCard.png');
   }
   
-  #pendulum {
+  #isPendulum {
     background-image: url('https://cdn.formatlibrary.com/images/templates/pendulumCard.png');
   }
   
-  #flip {
+  #isFlip {
     background-size: 24px;
     background-image: url('https://cdn.formatlibrary.com/images/symbols/flip.png');
   }
   
-  #gemini {
+  #isGemini {
     background-size: 24px;
     background-image: url('https://cdn.formatlibrary.com/images/symbols/gemini.png');
   }
   
-  #spirit {
+  #isSpirit {
     background-size: 22px;
     background-image: url('https://cdn.formatlibrary.com/images/symbols/spirit.png');
   }
   
-  #toon {
+  #isToon {
     background-size: 22px;
     background-image: url('https://cdn.formatlibrary.com/images/symbols/toon.png');
   }
   
-  #tuner {
+  #isTuner {
     background-size: 24px;
     background-image: url('https://cdn.formatlibrary.com/images/symbols/tuner.png');
   }
   
-  #union {
+  #isUnion {
     background-size: 24px;
     background-image: url('https://cdn.formatlibrary.com/images/symbols/union.png');
   }
   
-  #link {
+  #isLink {
     background-image: url('https://cdn.formatlibrary.com/images/templates/linkCard.png');
   }
   

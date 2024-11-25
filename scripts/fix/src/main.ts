@@ -38,8 +38,8 @@ const shuffleArray = (arr) => {
 //         }
 
 //         // synchronize Deck types with DeckType names
-//         if (deck.deckType?.name && deck.deckType.name !== deck.type) {
-//             await deck.update({ type: deck.deckType.name })
+//         if (deck.deckType?.name && deck.deckType.name !== deck.deckTypeName) {
+//             await deck.update({ deckTypeName: deck.deckType.name })
 //             b++
 //         }
 
@@ -56,8 +56,8 @@ const shuffleArray = (arr) => {
 //         }
 
 //         // synchronize Deck communities with Event communities
-//         if (deck.event?.community && deck.event.community !== deck.community) {
-//             await deck.update({ community: deck.event.community })
+//         if (deck.event?.communityName && deck.event.communityName !== deck.communityName) {
+//             await deck.update({ communityName: deck.event.communityName })
 //             k++
 //         }
 
@@ -74,8 +74,8 @@ const shuffleArray = (arr) => {
 //         }
 
 //         // synchronize Deck builders with Player names
-//         if (deck.player?.name && deck.player.name !== deck.builder) {
-//             await deck.update({ builder: deck.player.name })
+//         if (deck.builder?.name && deck.builder.name !== deck.builder) {
+//             await deck.update({ builder: deck.builder.name })
 //             g++
 //         }
 //     }
@@ -96,12 +96,12 @@ const shuffleArray = (arr) => {
 
 //         // synchronize DeckThumb names with DeckType names
 //         if (deckThumb.deckType?.name && deckThumb.name !== deckThumb.deckType.name) {
-//             await deckThumb.update({ name: deckThumb.deckType.name })
+//             await deckThumb.update({ deckTypeName: deckThumb.deckType.name })
 //             h++
 //         }
 //     }
 
-//     console.log(`synchronized ${h} DeckThumb names with DeckType names`)
+//     console.log(`synchronized ${h} DeckThumb deckTypeName with DeckType names`)
 
 //     const deckTypes = await DeckType.findAll()
 
@@ -190,7 +190,7 @@ const shuffleArray = (arr) => {
 //             const yearStr = nextDate.slice(2, 4)
 
 //             await Status.create({
-//                 name: status.name,
+//                 name: status.cardName,
 //                 cardId: status.cardId,
 //                 banlist: monthStr + yearStr,
 //                 date: nextDate,
@@ -297,13 +297,13 @@ const shuffleArray = (arr) => {
 //             firstName: null,
 //             lastName: null,
 //             googleId: null,
-//             duelingBook: null,
+//             duelingBookName: null,
 //             opTcgSim: null,
 //             hash: null,
-//             subscriber: false,
-//             admin: false,
-//             contentManager: false,
-//             creator: false
+//             isSubscriber: false,
+//             isAdmin: false,
+//             isContentManager: false,
+//             isCreator: false
 //         }
 //     })
 
@@ -316,13 +316,13 @@ const shuffleArray = (arr) => {
 //                 firstName: null,
 //                 lastName: null,
 //                 googleId: null,
-//                 duelingBook: null,
+//                 duelingBookName: null,
 //                 opTcgSim: null,
 //                 hash: null,
-//                 subscriber: false,
-//                 admin: false,
-//                 contentManager: false,
-//                 creator: false
+//                 isSubscriber: false,
+//                 isAdmin: false,
+//                 isContentManager: false,
+//                 isCreator: false
 //             },
 //             limit: 100,
 //             offset: offset,
@@ -474,7 +474,7 @@ const shuffleArray = (arr) => {
 
 //     for (let i = 0; i < topCutTournaments.length; i++) {
 //         const tournament = topCutTournaments[i]
-//         const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+//         const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`)
 
 //         const replays = await Replay.findAll({
 //             where: {
@@ -544,7 +544,7 @@ const shuffleArray = (arr) => {
 //     for (let i = 0; i < primaryTournaments.length; i++) {
 //         try {
 //             const tournament = primaryTournaments[i]
-//             const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+//             const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`)
 //             if (!participants_count) {
 //                 console.log(`no participants_count found for replay ${tournament.name}`)
 //                 continue
@@ -568,7 +568,7 @@ const shuffleArray = (arr) => {
 //                     let display
 
 //                     if (!replay.roundInt) {
-//                         const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${replay?.match?.challongeMatchId}.json?api_key=${server.challongeAPIKey}`)
+//                         const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${replay?.match?.challongeMatchId}.json?api_key=${server.challongeApiKey}`)
 //                         round = challongeMatch?.match?.round ||  ''
 //                     } else {
 //                         round = replay.roundInt
@@ -692,9 +692,9 @@ const shuffleArray = (arr) => {
 //                 const print = prints[j]
 //                 const card = print.card
                 
-//                 if (!card.speedLegal || !card.speedDate || card.speedDate > set.tcgDate) {
+//                 if (!card.isSpeedLegal || !card.speedDate || card.speedDate > set.tcgDate) {
 //                     await card.update({
-//                         speedLegal: true,
+//                         isSpeedLegal: true,
 //                         speedDate: set.tcgDate
 //                     })
 
@@ -727,11 +727,11 @@ const shuffleArray = (arr) => {
 //         try {
 //             const card = cards[i]
 //             await card.update({
-//                 tcgLegal: false,
+//                 isTcgLegal: false,
 //                 tcgDate: null,
-//                 ocgLegal: false,
+//                 isOcgLegal: false,
 //                 ocgDate: null,
-//                 speedLegal: false,
+//                 isSpeedLegal: false,
 //                 speedDate: null
 //             })
 
@@ -761,9 +761,9 @@ const shuffleArray = (arr) => {
 //             const speedDate = card.speedDate || card.tcgDate
 //             await card.update({
 //                 speedDate: speedDate,
-//                 tcgLegal: false,
+//                 isTcgLegal: false,
 //                 tcgDate: null,
-//                 ocgLegal: false,
+//                 isOcgLegal: false,
 //                 ocgDate: null
 //             })
 
@@ -794,9 +794,9 @@ const shuffleArray = (arr) => {
 //             const speedDate = card.speedDate || card.tcgDate
 //             await card.update({
 //                 speedDate: speedDate,
-//                 tcgLegal: false,
+//                 isTcgLegal: false,
 //                 tcgDate: null,
-//                 ocgLegal: false,
+//                 isOcgLegal: false,
 //                 ocgDate: null
 //             })
 
@@ -1103,7 +1103,7 @@ const shuffleArray = (arr) => {
 //     for (let i = 0; i < decks.length; i++) {
 //         try {
 //             const deck = decks[i]
-//             const baseName = deck.type || 'Unnamed Deck'
+//             const baseName = deck.deckTypeName || 'Unnamed Deck'
 //             let name = baseName
 //             let attempt = 0
 //             let confirmed = false
@@ -1113,7 +1113,7 @@ const shuffleArray = (arr) => {
 //                     where: {
 //                         name: name,
 //                         formatId: deck.formatId,
-//                         playerId: deck.playerId
+//                         playerId: deck.builderId
 //                     }
 //                 })
 
@@ -1285,8 +1285,8 @@ const shuffleArray = (arr) => {
 //     const failures = []
 
 //     for (let i = 0; i < cards.length; i++) {
-//         const {name, id, category, normal} = cards[i]
-//         if (category === 'Monster' && normal) {
+//         const {name, id, category, isNormal} = cards[i]
+//         if (category === 'Monster' && isNormal) {
 //             const prints = await Print.findAll({ where: { cardId: id }})
 //             for (let j = 0; j < prints.length; j++) {
 //                 const print = prints[j]
@@ -1875,7 +1875,7 @@ const shuffleArray = (arr) => {
                      
 //             const sortFn = (a, b) => b[1] - a[1]
 
-//             const freqs = (decks || []).reduce((acc, curr) => (acc[curr.type] ? acc[curr.type]++ : acc[curr.type] = 1, acc), {})
+//             const freqs = (decks || []).reduce((acc, curr) => (acc[curr.deckTypeName] ? acc[curr.deckTypeName]++ : acc[curr.deckTypeName] = 1, acc), {})
 //             const popularDecks = Object.entries(freqs).sort(sortFn).map((e) => e[0]).slice(0, 6)
 
 //             await blogpost.update({ 
@@ -1885,8 +1885,8 @@ const shuffleArray = (arr) => {
 //                 eventId: blogpost.eventId,
 //                 winnerName: blogpost.event?.winnerName,
 //                 winnerPfp: blogpost.winner?.discordId,
-//                 winningDeckTypeName: deck.type,
-//                 winningDeckTypeIsPopular: popularDecks.includes(deck.type),
+//                 winningDeckTypeName: deck.deckTypeName,
+//                 winningDeckTypeIsPopular: popularDecks.includes(deck.deckTypeName),
 //                 winningDeckId: deck.id,
 //                 formatName: blogpost.format?.name,
 //                 formatIcon: blogpost.format?.icon, 
@@ -1930,46 +1930,84 @@ const shuffleArray = (arr) => {
 //     return
 // })()
 
+// ;(async () => { 
+//     let b = 0
+//     let e = 0
+//     const replays = await Replay.findAll({
+//         where: {
+//             eventId: null,
+//             tournamentId: {[Op.not]: null},
+//             '$tournament.state$': 'complete'
+//         },
+//         include: Tournament,
+//         order: [['tournamentId', 'DESC']]
+//     })
+
+//     for (let i = 0; i < replays.length; i++) {
+//         try {
+//             const replay = replays[i]
+//             const event = await Event.findOne({
+//                 where: {
+//                     [Op.or]: {
+//                         primaryTournamentId: replay.tournamentId,
+//                         topCutTournamentId: replay.tournamentId
+//                     }
+//                 }
+//             })
+
+//             if (!event) {
+//                 console.log('no event found for tournament name:', replay.tournament.name, 'id:', replay.tournamentId, )
+//             } else {
+//                 await replay.update({ 
+//                     eventId: event.id,
+//                     eventAbbreviation: event.abbreviation
+//                 })
+//                 b++
+//             }
+//         } catch (err) {
+//             console.log('replay error', err)
+//             e++
+//         }
+//     }
+
+//     console.log('updated replays:', b, '\nerrors:', e)
+//     return
+// })()
+
+
 ;(async () => { 
     let b = 0
     let e = 0
-    const replays = await Replay.findAll({
-        where: {
-            eventId: null,
-            tournamentId: {[Op.not]: null},
-            '$tournament.state$': 'complete'
-        },
-        include: Tournament,
-        order: [['tournamentId', 'DESC']]
-    })
+    const stats = await Stats.findAll()
 
-    for (let i = 0; i < replays.length; i++) {
+    for (let i = 0; i < stats.length; i++) {
         try {
-            const replay = replays[i]
-            const event = await Event.findOne({
-                where: {
-                    [Op.or]: {
-                        primaryTournamentId: replay.tournamentId,
-                        topCutTournamentId: replay.tournamentId
-                    }
-                }
-            })
-
-            if (!event) {
-                console.log('no event found for tournament name:', replay.tournament.name, 'id:', replay.tournamentId, )
-            } else {
-                await replay.update({ 
-                    eventId: event.id,
-                    eventAbbreviation: event.abbreviation
-                })
-                b++
-            }
+            const stat = stats[i]
+            await stat.update({ isActive: !stat.isActive})
+            b++
         } catch (err) {
-            console.log('replay error', err)
+            console.log('stats error', err)
             e++
         }
     }
 
-    console.log('updated replays:', b, '\nerrors:', e)
+    console.log('updated stats:', b, '\nerrors:', e)
+
+    b = 0
+    e = 0
+
+    const tournaments = await Tournament.findAll()
+    for (let i = 0; i < tournaments.length; i++) {
+        try {
+            const tournament = tournaments[i]
+            await tournament.update({ isRanked: !tournament.isRanked})
+            b++
+        } catch (err) {
+            console.log('tournament error', err)
+            e++
+        }
+    }
+
+    console.log('updated tournaments:', b, '\nerrors:', e)
     return
 })()

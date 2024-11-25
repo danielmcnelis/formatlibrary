@@ -6,7 +6,7 @@ export const EventCreator = () => {
   const [abbreviation, setAbbreviation] = useState(null)
   const [bracket, setBracket] = useState(null)
   const [challongeName, setChallongeName] = useState(null)
-  const [community, setCommunity] = useState(null)
+  const [communityName, setCommunityName] = useState(null)
   const [endDate, setEndDate] = useState(null)
   const [formats, setFormats] = useState([])
   const [format, setFormat] = useState(null)
@@ -29,7 +29,7 @@ export const EventCreator = () => {
     setAbbreviation(null)
     setBracket(null)
     setChallongeName(null)
-    setCommunity(null)
+    setCommunityName(null)
     setEndDate(null)
     setFormat(null)
     setFullName(null)
@@ -61,7 +61,7 @@ export const EventCreator = () => {
 
   // CREATE EVENT
   const createEvent = async () => {
-    if (!community) return alert('Please Select a Community.')
+    if (!communityName) return alert('Please Select a Community.')
     if (!referenceUrl) return alert('No URL Found.')
     if (!fullName) return alert('Please provide a Full Name.')
     if (!abbreviation) return alert('Please provide an Abbreviation.')
@@ -76,7 +76,7 @@ export const EventCreator = () => {
     try {
       const { data } = await axios.post('/api/events/create', {
         id: tournamentId,
-        community: community,
+        communityName: communityName,
         url: url,
         referenceUrl: referenceUrl,
         fullName: fullName,
@@ -112,7 +112,7 @@ export const EventCreator = () => {
       try {
         const { data } = await axios.get(`/api/tournaments/challonge/${name}`, {
           headers: {
-            community: community || 'Format Library'
+            communityName: communityName || 'Format Library'
           }
         })
 
@@ -161,7 +161,7 @@ export const EventCreator = () => {
     <div className="admin-portal">
       <label>
         Community:
-        <select id="community" onChange={(e) => setCommunity(e.target.value || null)}>
+        <select id="community" onChange={(e) => setCommunityName(e.target.value || null)}>
           <option value=""></option>
                     <option value="Format Library">Format Library</option>
                     <option value="Androidland">Androidland</option>

@@ -19,12 +19,12 @@ export default {
         const results = []
         for (let i = 0; i < tournaments.length; i++) {
             const tournament = tournaments[i]
-            const subdomain = server.challongePremium ? `${server.challongeSubdomain}.` : ''
+            const subdomain = server.challongeSubdomain ? `${server.challongeSubdomain}.` || ''
             results.push(`Name: ${tournament.name} ${tournament.logo}` +
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` + 
                 `\nBracket: <https://${subdomain}challonge.com/${tournament.url}>` +
-                `\nType: ${capitalize(tournament.type, true)}${tournament.isUnranked ? ' (Unranked)' : ''}` +
-                `${tournament.type === 'swiss' && tournament.state === 'underway' ? `\nDetails: ${tournament.rounds} Rounds - ${tournament.topCut ? `Top ${tournament.topCut}` : `No Playoff` }` : ''}` +
+                `\nType: ${capitalize(tournament.type, true)}${!tournament.isRanked ' (Unranked)' : ''}` +
+                `${tournament.type === 'swiss' && tournament.state === 'underway' ? `\nDetails: ${tournament.rounds} Rounds - ${tournament.topCutSize ? `Top ${tournament.topCutSize}` : `No Playoff` }` : ''}` +
                 `\nStatus: ${capitalize(tournament.state, true)}`
             )
         }

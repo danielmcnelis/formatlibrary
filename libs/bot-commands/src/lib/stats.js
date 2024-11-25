@@ -22,8 +22,8 @@ export default {
         const user = interaction.options.getUser('player') || interaction.user
         const player = await Player.findOne({ where: { discordId: user?.id } })
         if (!player) return await interaction.reply({ content: `That user is not in the database.`})
-        if (player.hidden) return await interaction.reply({ content: `That user's stats are not available at this time.`})
-        const serverId = server.internalLadder ? server.id : '414551319031054346'
+        if (player.isHidden) return await interaction.reply({ content: `That user's stats are not available at this time.`})
+        const serverId = server.hasInternalLadder ? server.id : '414551319031054346'
 
         if (interaction.channel?.name === 'trivia') {
             const smarts = await TriviaKnowledge.count({ where: { playerId: player.id } })
@@ -78,8 +78,8 @@ export default {
                         formatId: format.id, 
                         games: { [Op.gte]: 3 },
                         serverId: serverId,
-                        inactive: false,
-                        '$player.hidden$': false
+                        isActive: true,
+                        '$player.isHidden$': false
                     },
                     include: [Player],
                     order: [['elo', 'DESC']] 
@@ -95,13 +95,12 @@ export default {
             const winrate = wins || losses ? `${(100 * wins / (wins + losses)).toFixed(2)}%` : 'N/A'		
 
             return await interaction.reply({ content: 
-                `${server.emoji || format.emoji} --- ${format.name} Stats --- ${server.emoji || format.emoji}`
-                + `${server.internalLadder ? `\nServer: ${server.name}` : ''}`
+                `${format.emoji} --- ${format.name} Stats --- ${format.emoji}`
+                + `${server.hasInternalLadder ? `\nServer: ${server.name}` : ''}`
                 + `\nName: ${player.name}`
                 + `\nMedal: ${medal}`
                 + `\nRanking: ${rank}`
                 + `\nElo Rating: ${elo}`
-                + `${stats?.tournamentPoints ? `\nTournament Points: ${stats?.tournamentPoints}` : ''}`
                 + `\nWins: ${wins}, Losses: ${losses}`
                 + `\nWin Rate: ${winrate}`
             })

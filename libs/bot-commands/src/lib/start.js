@@ -2,7 +2,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Server, Team, Tournament } from '@fl/models'
 import { initiateEndTournament, selectTournament, sendPairings, sendTeamPairings, postParticipant } from '@fl/bot-functions'
-import { isMod, hasPartnerAccess, shuffleArray } from '@fl/bot-functions'
+import { isModerator, hasPartnerAccess, shuffleArray } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { emojis } from '@fl/bot-emojis'
@@ -17,7 +17,7 @@ export default {
         await interaction.deferReply()
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that. Please type **/join** instead.'})   
+        if (!isModerator(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that. Please type **/join** instead.'})   
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         const tournaments = await Tournament.findByState({[Op.or]: ['pending', 'standby']}, format, interaction.guildId, 'ASC')
 		const tournament = await selectTournament(interaction, tournaments)
@@ -82,7 +82,7 @@ export default {
 
         if (tournament?.type?.toLowerCase() === 'swiss') {
             try {            
-                const [rounds, topCut] = entryCount <= 2 ? [1, null] :
+                const [rounds, topCutSize] = entryCount <= 2 ? [1, null] :
                     entryCount >= 3 && entryCount <= 4 ? [2, null] :
                     entryCount >= 5 && entryCount <= 7 ? [3, null] :
                     entryCount === 8 ? [3, 4] :
@@ -95,11 +95,11 @@ export default {
                     entryCount >= 129 && entryCount <= 256 ? [8, 16] :
                     [9, 16]
     
-                await tournament.update({ rounds, topCut })
+                await tournament.update({ rounds, topCutSize })
     
                 await axios({
                     method: 'put',
-                    url: `https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`,
+                    url: `https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`,
                     data: {
                         tournament: {
                             swiss_rounds: rounds,
@@ -117,7 +117,7 @@ export default {
         }
 
         try {
-            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeAPIKey}`)
+            const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`)
         
             if (data?.tournament?.state === 'underway') {
                 await tournament.update({ state: 'underway' })

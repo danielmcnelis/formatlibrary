@@ -24,7 +24,7 @@ export const joinRatedPool = async (req, res, next) => {
                 playerId: req.body.playerId
             }
         }) : await Pool.create({
-            name: player.name,
+            playerName: player.name,
             formatName: format.name,
             formatId: format.id,
             status: 'pending',
@@ -89,10 +89,10 @@ export const joinRatedPool = async (req, res, next) => {
                 const pairing = await Pairing.create({
                     formatId: format.id,
                     formatName: format.name,
-                    playerAName: pool.name,
+                    playerAName: pool.playerName,
                     playerAId: pool.playerId,
                     deckFileA: pool.deckFile,
-                    playerBName: potentialPair.name,
+                    playerBName: potentialPair.playerName,
                     playerBId: potentialPair.playerId,
                     deckFileB: potentialPair.deckFile
                 })

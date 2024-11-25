@@ -21,12 +21,12 @@ import { Match, Membership, Player, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
 import { createTopCut, editTieBreakers, getMidnightCountdown, 
-    fixDeckFolder, postStandings, checkTimer, closeTournament, createTournament, 
+    postStandings, checkTimer, closeTournament, createTournament, 
     dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
     startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, 
     assignRoles, createMembership, createPlayer, fetchCardNames, hasPartnerAccess, 
-    isMod, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
+    isModerator, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
     editPointsSystem, runNightlyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, getKnownAbbreviation, getAlphas, capitalize
 } from '@fl/bot-functions'
 
@@ -179,9 +179,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
         if (interaction.message?.content?.includes('Do you still wish to play Trivia?')) {
             await interaction.update({ components: [] }).catch((err) => console.log(err))
             const customId = interaction.customId
-            const confirmed = customId.charAt(0) === 'Y'
+            const isConfirmed = customId.charAt(0) === 'Y'
             const entryId = customId.slice(1)
-            return handleTriviaConfirmation(interaction, entryId, confirmed)
+            return handleTriviaConfirmation(interaction, entryId, isConfirmed)
         } else if (interaction.message?.content?.includes(`I've found a Rated`)) {
             await interaction.update({ components: [] }).catch((err) => console.log(err))
             console.log('interaction?.message?.timestamp', interaction?.message?.timestamp)
@@ -193,12 +193,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
             }
             
             const customId = interaction.customId
-            const confirmed = customId.charAt(0) === 'Y'
+            const isConfirmed = customId.charAt(0) === 'Y'
             const ids = customId.slice(2).split('-')
             const yourPoolId = ids[0]
             const opponentsPoolId = ids[1]
             const serverId = ids[2]
-            return handleRatedConfirmation(client, interaction, confirmed, yourPoolId, opponentsPoolId, serverId)
+            return handleRatedConfirmation(client, interaction, isConfirmed, yourPoolId, opponentsPoolId, serverId)
         } else if (interaction.message?.content?.includes('Should this tournament be seeded')) {
             await interaction.message.edit({ components: [] })
             const [answer, userId, tournamentId] = interaction.customId?.split('-') || []
@@ -233,7 +233,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 // MODAL SUBMIT
 client.on(Events.InteractionCreate, async (interaction) => {
     try {
-        if (!interaction.isModalSubmit()) return
+        if (!interaction.isModeratoralSubmit()) return
         await interaction.deferReply()
     
         if (interaction.customId?.includes('create')) {
@@ -258,15 +258,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const digits = extractDigitsAndPadZeros(interaction.fields.getTextInputValue('name'))
             const abbreviation = alphas ? alphas + digits : null
             
-            const decipherRankedInput = (input = '') => !!input.toLowerCase()?.includes('u')
+            const decipherRankedInput = (input = '') => !input.toLowerCase()?.includes('u')
             const decipherDurationInput = (input = '') => !input.toLowerCase()?.includes('m')
-            const isUnranked = interaction.fields.fields.get('ranked') ? decipherRankedInput(interaction.fields.getTextInputValue('ranked')) : null
+            const isRanked = interaction.fields.fields.get('ranked') ? decipherRankedInput(interaction.fields.getTextInputValue('ranked')) : null
             const isLive = interaction.fields.fields.get('duration') ? decipherDurationInput(interaction.fields.getTextInputValue('duration')) : null
             
             const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
             const channelName = interaction.fields.fields.get('channelName') ? interaction.fields.getTextInputValue('channelName') : null
         
-            return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, isUnranked, isLive)
+            return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, isRanked, isLive)
         } else if (interaction.customId?.includes('settings')) {
             const name = capitalize(interaction.fields.getTextInputValue('name'))
     
@@ -285,17 +285,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 }
             }
     
-            const decipherRankedInput = (input = '') => !!input.toLowerCase()?.includes('u')
+            const decipherRankedInput = (input = '') => !input.toLowerCase()?.includes('u')
             const decipherDurationInput = (input = '') => !input.toLowerCase()?.includes('m')
     
             const tournament_type = interaction.fields.fields.get('type') ? decipherTournamentTypeInput(interaction.fields.getTextInputValue('type')) : null
             
             const url = interaction.fields.getTextInputValue('url')
-            const isUnranked = interaction.fields.fields.get('ranked') ? decipherRankedInput(interaction.fields.getTextInputValue('ranked')) : null
+            const isRanked = interaction.fields.fields.get('ranked') ? decipherRankedInput(interaction.fields.getTextInputValue('ranked')) : null
             const isLive = interaction.fields.fields.get('duration') ? decipherDurationInput(interaction.fields.getTextInputValue('duration')) : null
             const tournamentId = interaction.customId?.split('-')[1]
     
-            return updateTournament(interaction, tournamentId, name, tournament_type, url, isUnranked, isLive)
+            return updateTournament(interaction, tournamentId, name, tournament_type, url, isRanked, isLive)
         } else if (interaction.customId?.includes('tiebreakers')) {
             const decipherTieBreakerInput = (input) => {
                 if (input.includes('mb') || input.includes('med')) {
@@ -348,12 +348,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	try {
         if (command.data.name === 'close') {
-            if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+            if (!isModerator(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
             await closeTournament(interaction, tournamentId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'deck') {
-            if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+            if (!isModerator(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const id = interaction.values[0]
             await sendDeck(interaction, id)
             return interaction.message.edit({components: []})
@@ -364,7 +364,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             await dropFromTournament(interaction, tournamentId)
             return interaction.message.edit({ components: []})
         }  else if (command.data.name === 'end') {
-            if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+            if (!isModerator(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
             await initiateEndTournament(interaction, tournamentId)
             return interaction.message.edit({components: []})
@@ -373,11 +373,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const userId = interaction.message.components[0].components[0].data.custom_id
             await getFilm(interaction, tournamentId, userId)
             return interaction.message.edit({components: []})
-        } else if (command.data.name === 'fix') {
-            if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
-            const tournamentId = interaction.values[0]
-            await fixDeckFolder(interaction, tournamentId)
-            return interaction.message.edit({components: []})
         } else if (command.data.name === 'join') {
             const userId = interaction.message.components[0].components[0].data.custom_id
             if (userId !== interaction.member.id) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
@@ -385,18 +380,18 @@ client.on(Events.InteractionCreate, async (interaction) => {
             await joinTournament(interaction, tournamentId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'noshow') {
-            if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+            if (!isModerator(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
             const userId = interaction.message.components[0].components[0].data.custom_id
             await processNoShow(interaction, tournamentId, userId)
             return interaction.message.edit({ components: []})
         } else if (command.data.name === 'open') {
-            if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+            if (!isModerator(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
             await openTournament(interaction, tournamentId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'remove') {
-            if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+            if (!isModerator(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
             const userId = interaction.message.components[0].components[0].data.custom_id
             await removeFromTournament(interaction, tournamentId, userId)
@@ -410,13 +405,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
             await saveReplay(server, interaction, match, tournament, url)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'settimer') {
-            if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+            if (!isModerator(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
             const [hours, minutes] = interaction.message.components[0].components[0].data.custom_id.split(':')
             await setTimerForTournament(interaction, tournamentId, hours, minutes)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'signup') {
-            if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+            if (!isModerator(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const userId = interaction.message.components[0].components[0].data.custom_id
             const tournamentId = interaction.values[0]
             await signupForTournament(interaction, tournamentId, userId)
@@ -428,7 +423,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             await postStandings(interaction, tournamentId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'start') {
-            if (!isMod(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+            if (!isModerator(server, interaction.member)) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const tournamentId = interaction.values[0]
             await startTournament(interaction, tournamentId)
             return interaction.message.edit({components: []})
@@ -439,7 +434,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             await checkTimer(interaction, tournamentId)
             return interaction.message.edit({components: []})
         } else if (command.data.name === 'undo') {
-            const authorIsMod = isMod(server, interaction.member)
+            const authorIsMod = isModerator(server, interaction.member)
             if (!authorIsMod) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const matchId = interaction.values[0]
             await undoMatch(interaction, server, matchId, authorIsMod)
@@ -457,14 +452,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.on('guildMemberAdd', async (member) => {    
     try {
         const guild = member.guild
-        const server = await Server.findOne({ where: { id: guild.id }})
+        const server = await Server.findOne({ where: { id: guild.id }, include: {model: Format, attributes: ['id', 'emoji']}})
         if (!server || !hasPartnerAccess(server)) return
-        const channel = guild.channels.cache.get(server.welcomeChannel)
+        const channel = guild.channels.cache.get(server.welcomeChannelId)
         if (await isNewUser(member.user.id)) await createPlayer(member) 
         if (await isNewMember(guild.id, member.user.id)) {
             await createMembership(guild, member)
             if (!channel) return
-            return channel.send({ content: `${member}, Welcome to the ${guild.name} ${server.logo} Discord server. ${server.emoji|| emojis.legend}`})
+            return channel.send({ content: `${member}, Welcome to the ${guild.name} ${server.logo} Discord server. ${server.format?.emoji || emojis.legend}`})
         } else {
             await assignRoles(guild, member)
             if (!channel) return
@@ -481,10 +476,10 @@ client.on('guildMemberRemove', async (member) => {
         const guild = member.guild
         const server = await Server.findOne({ where: { id: guild.id }})
         if (!server || !hasPartnerAccess(server)) return
-        const channel = guild.channels.cache.get(server.welcomeChannel)
+        const channel = guild.channels.cache.get(server.welcomeChannelId)
         channel.send({ content: `Oh dear. ${member.user.username} has left the server. ${emojis.sad}`})
         const membership = await Membership.findOne({ where: { '$player.discordId$': member.user.id, serverId: guild.id }, include: Player })
-        membership.active = false
+        membership.isActive = false
         await membership.save()
     } catch (err) {
         console.log(err)
@@ -512,9 +507,9 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
                 }
             })
     
-            const subTier = player.subTier
-            await player.update({ subscriber: false, subTier: null })
-            return await programmer.send({ content: `${oldMember.user?.username} is no longer a Subscriber (${subTier}).` })
+            const subscriberTier = player.subscriberTier
+            await player.update({ isSubscriber: false, subscriberTier: null })
+            return await programmer.send({ content: `${oldMember.user?.username} is no longer a Subscriber (${subscriberTier}).` })
         } else if ((!wasSubscriber && isSubscriber) || (!wasTest && isTest)) {
             const programmer = await client.users.fetch('194147938786738176')
             
@@ -529,19 +524,19 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
             const isDoublePremium = newRoles.has('1102796965592449044')
             
             if (isSupporter) {
-                await player.update({ subscriber: true, subTier: 'Supporter' })
+                await player.update({ isSubscriber: true, subscriberTier: 'Supporter' })
                 console.log(`Welcome ${oldMember.user?.username} to the Supporter Tier!`)
                 return await programmer.send({ content: `Welcome ${oldMember.user?.username} to the Supporter Tier!` })
             } else if (isPremium) {
-                await player.update({ subscriber: true, subTier: 'Premium' })
+                await player.update({ isSubscriber: true, subscriberTier: 'Premium' })
                 console.log(`Welcome ${oldMember.user?.username} to the Premium Tier!`)
                 return await programmer.send({ content: `Welcome ${oldMember.user?.username} to the Premium Tier!` })
             } else if (isDoublePremium) {
-                await player.update({ subscriber: true, subTier: 'Double Premium' })
+                await player.update({ isSubscriber: true, subscriberTier: 'Double Premium' })
                 console.log(`Welcome ${oldMember.user?.username} to the Double Premium Tier!`)
                 return await programmer.send({ content: `Welcome ${oldMember.user?.username} to the Double Premium Tier!` })
             } else {
-                await player.update({ subscriber: true, subTier: 'Unknown' })
+                await player.update({ isSubscriber: true, subscriberTier: 'Unknown' })
                 console.log(`Welcome ${oldMember.user?.username} to the Subscribers(?)!`)
                 return await programmer.send({ content: `Welcome ${oldMember.user?.username} to the Subscribers(?)!` })
             }

@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Event, Format, Player, Server, Team, Tournament } from '@fl/models'
-import { composeBlogPost, composeThumbnails, displayDecks, displayReplays, generateMatchupData, publishDecks, isCommunityPartner, isMod } from '@fl/bot-functions'
+import { composeBlogPost, composeThumbnails, displayDecks, displayReplays, generateMatchupData, publishDecks, isCommunityPartner, isModerator } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 
 export default {
@@ -18,7 +18,7 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         const formatLibraryServer = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!isMod(formatLibraryServer, interaction.member) && !isCommunityPartner(interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.` })
+        if (!isModerator(formatLibraryServer, interaction.member) && !isCommunityPartner(interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.` })
         
         const input = interaction.options.getString('tournament')     
         const event = await Event.findOne({

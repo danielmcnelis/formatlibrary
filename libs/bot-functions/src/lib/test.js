@@ -9,7 +9,7 @@ export const testGetDeckType = async (eventId = '') => {
     const decks = await Deck.findAll({
         where: {
             // eventId: eventId,
-            type: {[Op.or]: ['Other', null]}
+            deckTypeName: {[Op.or]: ['Other', null]}
         },
         order: [['formatId', 'ASC'], ['id', 'ASC']]
     })
@@ -23,13 +23,13 @@ export const testGetDeckType = async (eventId = '') => {
 
             if (deckType) {
                 await deck.update({
-                    type: deckType.name,
+                    deckTypeName: deckType.name,
                     deckTypeId: deckType.id
                 })
 
-                console.log(`Labeling ${deck.builder}'s deck ${deck.id} as: ${deckType.name}`)
+                console.log(`Labeling ${deck.builderName}'s deck ${deck.id} as: ${deckType.name}`)
             } else {
-                console.log(`<!> Could not determine type for ${deck.builder}'s deck ${deck.id} <!>`)
+                console.log(`<!> Could not determine type for ${deck.builderName}'s deck ${deck.id} <!>`)
                 continue
             }
     
@@ -48,7 +48,7 @@ export const testSeed = async (tournamentId = '12464468', shuffle = false) => {
         try {
             await axios({
                 method: 'post',
-                url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/randomize.json?api_key=${server.challongeAPIKey}`
+                url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/randomize.json?api_key=${server.challongeApiKey}`
             })
             
             console.log(`Success! Your seeds 🌱 have been shuffled! 🎲`)
@@ -58,7 +58,7 @@ export const testSeed = async (tournamentId = '12464468', shuffle = false) => {
     } else {
         console.log(`Seeding 🌱 in progress, please wait. 🙏`)
 
-        const entries = await Entry.findAll({ where: { active: true, tournamentId: tournament.id } })  
+        const entries = await Entry.findAll({ where: { isActive: true, tournamentId: tournament.id } })  
         const serverId = '414551319031054346'  
         const expEntries = []
         const newbieEntries = []
@@ -87,7 +87,7 @@ export const testSeed = async (tournamentId = '12464468', shuffle = false) => {
             try {
                 await axios({
                     method: 'put',
-                    url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${participantId}.json?api_key=${server.challongeAPIKey}`,
+                    url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/${participantId}.json?api_key=${server.challongeApiKey}`,
                     data: {
                         participant: {
                             seed: i+1

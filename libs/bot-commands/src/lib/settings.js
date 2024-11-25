@@ -4,7 +4,7 @@ import { SlashCommandBuilder } from 'discord.js'
 import { Format, Server, Tournament } from '@fl/models'
 import { emojis } from '@fl/bot-emojis'
 import { Op } from 'sequelize'
-import { isMod, hasPartnerAccess } from '@fl/bot-functions'
+import { isModerator, hasPartnerAccess } from '@fl/bot-functions'
 
 export default {
     data: new SlashCommandBuilder()
@@ -22,7 +22,7 @@ export default {
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isMod(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
+        if (!isModerator(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
 
         const tournaments = await Tournament.findAll({
                 where: {
@@ -83,7 +83,7 @@ export default {
             .setCustomId('ranked')
             .setLabel('Ranked or Unranked? (R, U)')
             .setStyle(TextInputStyle.Short)
-            .setPlaceholder(tournament.isUnranked ? 'unranked' : 'ranked')
+            .setPlaceholder(!tournament.isRanked 'unranked' : 'ranked')
             .setRequired(false)
         
         const nameRow = new ActionRowBuilder().addComponents(name)

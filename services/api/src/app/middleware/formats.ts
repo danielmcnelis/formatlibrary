@@ -7,7 +7,7 @@ export const formatsName = async (req, res, next) => {
       where: {
         name: { [Op.iLike]: req.params.name.replace(' ', '_').replace('-', '_') }
       },
-      attributes: ['id', 'name', 'icon', 'date', 'banlist', 'category', 'event', 'description', 'popular', 'spotlight', 'videoEmbed', 'videoPlaylistId']
+      attributes: ['id', 'name', 'icon', 'date', 'banlist', 'category', 'eventName', 'description', 'isPopular', 'isSpotlight', 'videoEmbed', 'videoPlaylistId']
     })
 
     const deckCount = await Deck.count({
@@ -47,15 +47,15 @@ export const formatsAll = async (req, res, next) => {
     const formats = await Format.findAll({
       where: {
         [Op.or]: {
-          spotlight: true,
+          isSpotlight: true,
           category: 'TCG'
         },
         isHighlander: false
       },
-      attributes: ['id', 'name', 'icon', 'date', 'banlist', 'category', 'event', 'description', 'popular', 'spotlight'],
+      attributes: ['id', 'name', 'icon', 'date', 'banlist', 'category', 'eventName', 'description', 'isPopular', 'isSpotlight'],
       order: [
-        ['popular', 'DESC'],
-        ['spotlight', 'DESC'],
+        ['isPopular', 'DESC'],
+        ['isSpotlight', 'DESC'],
         ['date', 'ASC']
       ]
     })

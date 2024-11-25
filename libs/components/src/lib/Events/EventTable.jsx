@@ -11,7 +11,7 @@ import './EventTable.css'
 
 export const EventTable = (props) => {
     const isMounted = useRef(false)
-    const [community, setCommunity] = useState(null)
+    const [communityName, setCommunityName] = useState(null)
     const [events, setEvents] = useState([{},{},{},{},{},{},{},{},{},{}])
     const [eventsPerPage, setEventsPerPage] = useState(10)
     const [format, setFormat] = useState(null)
@@ -43,10 +43,10 @@ export const EventTable = (props) => {
         let url = `/api/events/count`
         let filter = ''
   
-        if (queryParams.name) filter += `,name:inc:${queryParams.name}`
-        if (queryParams.winner) filter += `,winnerName:inc:${queryParams.winner}`
-        if (community) filter += `,community:eq:${community}`
-        if (format) filter += `,formatName:eq:${format}`
+        if (queryParams.name) filter += `,name:or:${queryParams.name}`
+        if (queryParams.winner) filter += `,winner:inc:${queryParams.winner}`
+        if (communityName) filter += `,community:eq:${communityName}`
+        if (format) filter += `,format:eq:${format}`
         if (filter.length) url += ('?filter=' + filter.slice(1))
   
         const { data } = await axios.get(url)
@@ -58,10 +58,10 @@ export const EventTable = (props) => {
         let url = `/api/events?page=${page}&limit=${eventsPerPage}&sort=${sortBy}`
         let filter = ''
   
-        if (queryParams.name) filter += `,name:inc:${queryParams.name}`
-        if (queryParams.winner) filter += `,winnerName:inc:${queryParams.winner}`
-        if (community) filter += `,community:eq:${community}`
-        if (format) filter += `,formatName:eq:${format}`
+        if (queryParams.name) filter += `,name:or:${queryParams.name}`
+        if (queryParams.winner) filter += `,winner:inc:${queryParams.winner}`
+        if (communityName) filter += `,community:eq:${communityName}`
+        if (format) filter += `,format:eq:${format}`
         if (filter.length) url += ('&filter=' + filter.slice(1))
   
         const { data } = await axios.get(url)
@@ -123,13 +123,13 @@ export const EventTable = (props) => {
     // USE EFFECT SEARCH
     useEffect(() => {
         count()
-      }, [format, community, queryParams])
+      }, [format, communityName, queryParams])
 
 
     // USE EFFECT SEARCH
     useEffect(() => {
         search()
-    }, [page, eventsPerPage, format, community, queryParams, sortBy])
+    }, [page, eventsPerPage, format, communityName, queryParams, sortBy])
   
 
     // RENDER
@@ -315,7 +315,7 @@ export const EventTable = (props) => {
                             id="community"
                             defaultValue="All Communities"
                             className="filter"
-                            onChange={(e) => {setCommunity(e.target.value || null); setPage(1)}}
+                            onChange={(e) => {setCommunityName(e.target.value || null); setPage(1)}}
                             >
                             <option value="">All Communities</option>
                                     <option value="Format Library">Format Library</option>

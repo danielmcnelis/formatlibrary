@@ -4,11 +4,11 @@ import { Replay } from '@fl/models'
 
 export const countReplays = async (req, res, next) => {
     try {
-        const isAdmin = req.query.isAdmin
-        const isSubscriber = req.query.isSubscriber
-        const display = isAdmin === 'true' ? { display: {operator: 'or', value: [true, false]} } :
-            isSubscriber === 'true' ? { publishDate: {operator: 'not', value: null }} :
-            { display: {operator: 'eq', value: true} }
+        const isAdmin = req.query.admin
+        const isSubscriber = req.query.subscriber
+        const display = isAdmin === 'true' ? {} :
+            isSubscriber === 'true' ? { publishDate: {operator: 'not', value: null } } :
+            { display: {operator: 'eq', value: true}, publishDate: {operator: 'not', value: null }}
 
         const filter = req.query.filter ? req.query.filter.split(',').reduce((reduced, val) => {
             let [field, operator, value] = val.split(':')
@@ -26,8 +26,8 @@ export const countReplays = async (req, res, next) => {
 
 export const getReplays = async (req, res, next) => {
     try {
-        const isAdmin = req.query.isAdmin
-        const isSubscriber = req.query.isSubscriber
+        const isAdmin = req.query.admin
+        const isSubscriber = req.query.subscriber
         const limit = parseInt(req.query.limit || 10)
         const page = parseInt(req.query.page || 1)
         const display = isAdmin === 'true' ? {} :
@@ -45,7 +45,6 @@ export const getReplays = async (req, res, next) => {
             reduced.push(val.split(':'))
             return reduced
         }, []) : [['publishDate', 'desc'], ['display', 'desc'], ['roundAbs', 'desc']]
-        console.log('sort', sort)
 
         const replays = await Replay.find(filter, limit, page, sort)
         res.json(replays)

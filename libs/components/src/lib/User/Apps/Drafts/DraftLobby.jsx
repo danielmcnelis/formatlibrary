@@ -77,7 +77,7 @@ export const DraftLobby = () => {
     // const [{id}] = useState(useParams())
     const { id } = useParams()
     const timerColor = JSON.parse(localStorage.getItem('theme')) === 'dark' ? '#00bca6' : '#334569'
-    const logoUrl = draft?.type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${draft?.cube?.logo || 'cube.png'}` :
+    const logoName = draft?.type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${draft?.cube?.logo || 'cube.png'}` :
         `https://cdn.formatlibrary.com/images/artworks/${draft?.set?.setCode || 'back'}.jpg`
     const logoWidth = draft?.type === 'cube' ? '128px' : '100px'
 
@@ -281,12 +281,12 @@ export const DraftLobby = () => {
                             <meta name="og:description" content={`Click here to join the next draft for ${draft?.cubeName || draft?.setName}.`}/>
                         </Helmet>
                         <div className="card-database-flexbox">
-                            <img className="desktop-only" style={{ width:logoWidth}} src={logoUrl} alt="draft-logo"/>
+                            <img className="desktop-only" style={{ width:logoWidth}} src={logoName} alt="draft-logo"/>
                             <div>
                                 <h1>Upcoming Draft!</h1>
                                 <h2>{draft?.cubeName || draft?.setName}</h2>
                             </div>
-                            <img className="desktop-only" style={{ width:logoWidth}} src={logoUrl} alt="draft-logo"/>
+                            <img className="desktop-only" style={{ width:logoWidth}} src={logoName} alt="draft-logo"/>
                         </div>
                         <br/>
 
@@ -368,12 +368,12 @@ export const DraftLobby = () => {
                             }
                             
                             <div className="card-database-flexbox">
-                                <img className="desktop-only" style={{ width:logoWidth}} src={logoUrl} alt="draft-logo"/>
+                                <img className="desktop-only" style={{ width:logoWidth}} src={logoName} alt="draft-logo"/>
                                 <div>
                                     <h1>{draft.state === 'underway' ? 'Live Draft!' : draft.state === 'complete' ? 'Draft Complete!' : ''}</h1>
                                     <h2>{draft.state === 'underway' ? `Round ${draft.round} • Pick ${draft.pick}` : ''}</h2>
                                 </div>
-                                <img className="desktop-only" style={{ width:logoWidth}} src={logoUrl} alt="draft-logo"/>
+                                <img className="desktop-only" style={{ width:logoWidth}} src={logoName} alt="draft-logo"/>
                             </div>
                             <div className="empty-clock desktop-only"/>
                         </div>

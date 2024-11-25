@@ -3,7 +3,7 @@ import { Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const Pool = db.define('pools', {
-    name: {
+    playerName: {
         type: Sequelize.STRING
     },
     formatName: {

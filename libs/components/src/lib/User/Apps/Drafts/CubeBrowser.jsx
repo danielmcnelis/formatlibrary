@@ -47,8 +47,8 @@ export const CubeBrowser = () => {
       counter: false,
       equip: false,
       field: false,
-      normal: false,
-      ritual: false,
+      isNormal: false,
+      isRitual: false,
       'quick-play': false
     })
   
@@ -90,20 +90,20 @@ export const CubeBrowser = () => {
     })
   
     const [groupParams, setGroupParams] = useState({
-      effect: false,
-      flip: false,
-      fusion: false,
-      gemini: false,
-      link: false,
-      normal: false,
-      pendulum: false,
-      ritual: false,
-      spirit: false,
-      synchro: false,
-      toon: false,
-      tuner: false,
-      union: false,
-      xyz: false
+      isEffect: false,
+      isFlip: false,
+      isFusion: false,
+      isGemini: false,
+      isLink: false,
+      isNormal: false,
+      isPendulum: false,
+      isRitual: false,
+      isSpirit: false,
+      isSynchro: false,
+      isToon: false,
+      isTuner: false,
+      isUnion: false,
+      isXyz: false
     })
   
     // USE LAYOUT EFFECT
@@ -287,8 +287,8 @@ export const CubeBrowser = () => {
         counter: false,
         equip: false,
         field: false,
-        normal: false,
-        ritual: false,
+        isNormal: false,
+        isRitual: false,
         'quick-play': false
       })
     
@@ -330,20 +330,20 @@ export const CubeBrowser = () => {
       })
     
       setGroupParams({
-        effect: false,
-        flip: false,
-        fusion: false,
-        gemini: false,
-        link: false,
-        normal: false,
-        pendulum: false,
-        ritual: false,
-        spirit: false,
-        synchro: false,
-        toon: false,
-        tuner: false,
-        union: false,
-        xyz: false
+        isEffect: false,
+        isFlip: false,
+        isFusion: false,
+        isGemini: false,
+        isLink: false,
+        isNormal: false,
+        isPendulum: false,
+        isRitual: false,
+        isSpirit: false,
+        isSynchro: false,
+        isToon: false,
+        isTuner: false,
+        isUnion: false,
+        isXyz: false
       })
   
       search()
@@ -418,12 +418,12 @@ export const CubeBrowser = () => {
 
     const advancedButtons = {
       icon: [
-        ['normal', 'Normal'], 
+        ['isNormal', 'Normal'], 
         ['continuous', 'Contin.'], 
         ['counter', 'Counter'], 
         ['equip', 'Equip'], 
         ['field', 'Field'], 
-        ['ritual', 'Ritual'], 
+        ['isRitual', 'Ritual'], 
         ['quick-play', 'Quick-P.']
       ],
       attribute: [
@@ -462,20 +462,20 @@ export const CubeBrowser = () => {
         ['zombie', 'Zombie']
       ],
       group: [
-        ['normal', 'Normal'], 
-        ['effect', 'Effect'], 
-        ['ritual', 'Ritual'], 
-        ['pendulum', 'Pend.'], 
-        ['fusion', 'Fusion'], 
-        ['synchro', 'Synchro'], 
-        ['xyz', 'Xyz'], 
-        ['link', 'Link'], 
-        ['flip', 'Flip'], 
-        ['gemini', 'Gemini'], 
-        ['spirit', 'Spirit'], 
-        ['toon', 'Toon'], 
-        ['tuner', 'Tuner'], 
-        ['union', 'Union']
+        ['isNormal', 'Normal'], 
+        ['isEffect', 'Effect'], 
+        ['isRitual', 'Ritual'], 
+        ['isPendulum', 'Pend.'], 
+        ['isFusion', 'Fusion'], 
+        ['isSynchro', 'Synchro'], 
+        ['isXyz', 'Xyz'], 
+        ['isLink', 'Link'], 
+        ['isFlip', 'Flip'], 
+        ['isGemini', 'Gemini'], 
+        ['isSpirit', 'Spirit'], 
+        ['isToon', 'Toon'], 
+        ['isTuner', 'Tuner'], 
+        ['isUnion', 'Union']
       ]
     }
   
@@ -485,17 +485,17 @@ export const CubeBrowser = () => {
     return (
         <>
             <Helmet>
-                <title>{`${cube?.name} by ${cube?.builder} - Yu-Gi-Oh! Cube - Format Library`}</title>
-                <meta name="og:title" content={`${cube?.name} by ${cube?.builder} - Yu-Gi-Oh! Cube - Format Library`}/>
-                <meta name="description" content={`Search the card pool for ${cube.name} by ${cube.builder}. Filter and sort by Category, Attribute, Type, ATK, DEF, Level/Rank, etc.`}/>
-                <meta name="og:description" content={`Search the card pool for ${cube.name} by ${cube.builder}. Filter and sort by Category, Attribute, Type, ATK, DEF, Level/Rank, etc.`}/>
+                <title>{`${cube?.name} by ${cube?.builderName} - Yu-Gi-Oh! Cube - Format Library`}</title>
+                <meta name="og:title" content={`${cube?.name} by ${cube?.builderName} - Yu-Gi-Oh! Cube - Format Library`}/>
+                <meta name="description" content={`Search the card pool for ${cube.name} by ${cube.builderName}. Filter and sort by Category, Attribute, Type, ATK, DEF, Level/Rank, etc.`}/>
+                <meta name="og:description" content={`Search the card pool for ${cube.name} by ${cube.builderName}. Filter and sort by Category, Attribute, Type, ATK, DEF, Level/Rank, etc.`}/>
             </Helmet>
             <div className="body">
                 <div className="card-database-flexbox">
                     <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
                     <div>
                         <h1>{cube.name}</h1>
-                        <h2 className="desktop-only">Created By {cube.builder}</h2>
+                        <h2 className="desktop-only">Created By {cube.builderName}</h2>
                     </div>
                     <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
                 </div>

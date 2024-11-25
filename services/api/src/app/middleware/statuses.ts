@@ -6,7 +6,7 @@ export const statusesQuery = async (req, res, next) => {
     const category = req.headers?.category || 'TCG'
     const status = await Status.findOne({
       where: {
-        name: name,
+        cardName: name,
         banlist: banlist,
         category: category
       }

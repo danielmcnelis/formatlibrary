@@ -16,7 +16,7 @@ export default {
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         const tournaments = await Tournament.findByState('underway', format, interaction.guildId, 'ASC')
-        if (!tournaments.length && format) return await interaction.editReply({ content: `There are no active ${format.name} ${server.emoji || format.emoji} tournaments.`})
+        if (!tournaments.length && format) return await interaction.editReply({ content: `There are no active ${format.name} ${format.emoji} tournaments.`})
         if (!tournaments.length && !format) return await interaction.editReply({ content: `There are no active tournaments.`})
         
         const tournament = await selectTournament(interaction, tournaments)

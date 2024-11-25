@@ -65,6 +65,8 @@ export const getMatchupMatrix = async (req, res, next) => {
                 }
             })
 
+            if (!format) return res.json({})
+
             const wins = await Matchup.findAll({
                 where: {
                     winningDeckTypeId: deckType.id,

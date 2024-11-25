@@ -75,9 +75,9 @@ export const config = {
       userInfoUrl: 'https://discord.com/api/users/@me'
     },
     challonge: {
-      'Format Library': process.env.CHALLONGE_FORMAT_LIBRARY_API_KEY, // formatLibraryChallongeAPIKey or challongeAPIKeys.'Format Library'
-      'GoatFormat.com': process.env.CHALLONGE_GOAT_FORMAT_API_KEY, // goatformatChallongeAPIKey or challongeAPIKeys.'GoatFormat.com'
-      'Crows Nest': process.env.CHALLONGE_CROWS_NEST_API_KEY // challongeAPIKeys.'Crows Nest'
+      'Format Library': process.env.CHALLONGE_FORMAT_LIBRARY_API_KEY, // formatLibraryChallongeAPIKey or challongeApiKeys.'Format Library'
+      'GoatFormat.com': process.env.CHALLONGE_GOAT_FORMAT_API_KEY, // goatformatChallongeAPIKey or challongeApiKeys.'GoatFormat.com'
+      'Crows Nest': process.env.CHALLONGE_CROWS_NEST_API_KEY // challongeApiKeys.'Crows Nest'
     },
     tcgPlayer: {
        accessToken: process.env.TCGPLAYER_ACCESS_TOKEN,

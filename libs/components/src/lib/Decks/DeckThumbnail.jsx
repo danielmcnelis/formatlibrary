@@ -6,11 +6,13 @@ import './DeckThumbnail.css'
 export const DeckThumbnail = (props) => {
     const {deckType, formatName} = props
     if (!deckType) return <div/>
+    const deckTypeLink = formatName ? urlize(`/decktypes/${deckType.name}?format=${formatName}`) : 
+        urlize(`/decktypes/${deckType.name}`)
   
     return (
         <div 
             className='link' 
-            onClick={() => {window.location.href=`${urlize(`/decktypes/${deckType.name}?format=${formatName}`)}`}} 
+            onClick={() => {window.location.href=`${deckTypeLink}`}} 
         >
             <div className="deckThumbnail">
                 <h3>{capitalize(deckType.name, true)}</h3>

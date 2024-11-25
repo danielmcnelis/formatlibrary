@@ -39,7 +39,7 @@ export const Player = db.define('players', {
   googlePfp: {
     type: Sequelize.TEXT
   },
-  duelingBook: {
+  duelingBookName: {
     type: Sequelize.STRING
   },
   duelingBookPfp: {
@@ -60,29 +60,29 @@ export const Player = db.define('players', {
   hash: {
     type: Sequelize.STRING
   },
-  admin: {
+  isAdmin: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
-  contentManager: {
+  isContentManager: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
-  creator: {
+  isCreator: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
   triviaWins: {
     type: Sequelize.INTEGER
   },
-  subscriber: {
+  isSubscriber: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
-  subTier: {
+  subscriberTier: {
     type: Sequelize.STRING
   },
-  hidden: {
+  isHidden: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },

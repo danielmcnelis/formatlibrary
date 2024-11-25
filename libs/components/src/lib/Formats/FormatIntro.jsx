@@ -23,11 +23,11 @@ export const FormatIntro = (props) => {
     // SWITCH SPOTLIGHT
     const switchSpotlight = async () => {
         try {
-            if (format.spotlight) {
-                const {data} = await axios.post(`/api/formats/update?id=${format.id}`, { ...format, spotlight: false })
+            if (format.isSpotlight) {
+                const {data} = await axios.post(`/api/formats/update?id=${format.id}`, { ...format, isSpotlight: false })
                 setFormat(data) 
               } else {
-                const {data} = await axios.post(`/api/formats/update?id=${format.id}`, { ...format, spotlight: true })
+                const {data} = await axios.post(`/api/formats/update?id=${format.id}`, { ...format, isSpotlight: true })
                 setFormat(data) 
               }
         } catch (err) {
@@ -64,8 +64,8 @@ export const FormatIntro = (props) => {
             <Helmet>
                 <title>{`Yu-Gi-Oh! ${format?.name} Format - Format Library`}</title>
                 <meta name="og:title" content={`Yu-Gi-Oh! ${format?.name} Format - Format Library`}/>
-                <meta name="description" content={format.blurb || (format.event + `\nDecks • Tournaments • Cardpool • Rulings • Banlist`)}/>
-                <meta name="og:description" content={format.blurb || (format.event + `\nDecks • Tournaments • Cardpool • Rulings • Banlist`)}/>
+                <meta name="description" content={format.blurb || (format.eventName + `\nDecks • Tournaments • Cardpool • Rulings • Banlist`)}/>
+                <meta name="og:description" content={format.blurb || (format.eventName + `\nDecks • Tournaments • Cardpool • Rulings • Banlist`)}/>
                 <meta name="image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
                 <meta name="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
             </Helmet>
@@ -78,21 +78,21 @@ export const FormatIntro = (props) => {
             <div className="format-text">
                 <h1>{format.name} Format</h1>
                 {
-                    isContentManager && format.popular === false ? (
+                    isContentManager && format.isPopular === false ? (
                         <div className='horizontal-space-between-flexbox'>
-                            <h2>{format.event}</h2>
+                            <h2>{format.eventName}</h2>
                             <div className='horizontal-space-between-flexbox' >
                                 <h2>Spotlight</h2>
                                 <div 
-                                    id={`spotlight-toggle-${format?.spotlight}`} 
+                                    id={`spotlight-toggle-${format?.isSpotlight}`} 
                                     onClick={() => switchSpotlight()}
                                 >
-                                    <div id={`spotlight-toggle-inner-circle-${format?.spotlight}`}></div>
+                                    <div id={`spotlight-toggle-inner-circle-${format?.isSpotlight}`}></div>
                                 </div>
                             </div>
                             
                         </div>
-                    ) : <h2>{format.event}</h2>
+                    ) : <h2>{format.eventName}</h2>
                 }
                 {
                 format.description ? (

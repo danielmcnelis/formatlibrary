@@ -109,7 +109,7 @@ export const updateAvatars = async (client) => {
                     if (!avatar) continue
                     const player = await Player.findOne({ where: { discordId: memberId }})
                     if (!player) continue
-                    const isActive = player.email || (await Deck.count({ where: { playerId: player.id }})) || (await Stats.count({ where: { playerId: player.id }}))
+                    const isActive = player.email || (await Deck.count({ where: { builderId: player.id }})) || (await Stats.count({ where: { playerId: player.id }}))
 
                     // if (player && isActive && player.discordPfp) {
                     if (player && isActive && player.discordPfp && player.discordPfp !== avatar) {
@@ -237,12 +237,12 @@ export const conductCensus = async (client) => {
             for (let i = 0; i < memberships.length; i++) {
                 try {
                     const m = memberships[i]
-                    if (m.active === true && m.player && !memberIds.includes(m.player.discordId)) {
-                        m.active = false
+                    if (m.isActive === true && m.player && !memberIds.includes(m.player.discordId)) {
+                        m.isActive = false
                         await m.save()
                         inactivatedCount++
-                    } else if (m.active === false && m.player && memberIds.includes(m.player.discordId)) {
-                        m.active = true
+                    } else if (m.isActive === false && m.player && memberIds.includes(m.player.discordId)) {
+                        m.isActive = true
                         await m.save()
                         reactivatedCount++
                     }
@@ -345,7 +345,7 @@ export const markInactives = async () => {
     const start = Date.now()
     let b = 0
     const oneYearAgo = new Date() - (365 * 24 * 60 * 60 * 1000)
-    const stats = await Stats.findAll({ where: { inactive: {[Op.not]: true }}, include: Player })
+    const stats = await Stats.findAll({ where: { isActive:  true }, include: Player })
 
     for (let i = 0; i < stats.length; i++) {
         const s = stats[i]
@@ -362,10 +362,8 @@ export const markInactives = async () => {
 
         if (!count) { 
             console.log(`Inactivating ${s.player?.name || s.playerId}'s STATS IN ${s.formatName} FORMAT`)
-            await s.update({ inactive: true })
+            await s.update({ isActive: false })
             b++
-        } else {
-            await s.update({ inactive: false })
         }
     }
 
@@ -399,7 +397,7 @@ export const purgeTourRoles = async (client) => {
         let b = 0
         try {
             const server = servers[s]
-            const roleId = server.tourRole
+            const roleId = server.tournamentRoleId
             if (!roleId) continue
             const guild = client.guilds.cache.get(server.id)
             const membersMap = await guild.members.fetch()
@@ -411,7 +409,7 @@ export const purgeTourRoles = async (client) => {
 
                 const count = await Entry.count({
                     where: {
-                        active: true,
+                        isActive: true,
                         '$player.discordId$': member.user.id,
                         '$tournament.serverId$': server.id
                     },
@@ -442,7 +440,7 @@ export const assignTourRoles = async (client) => {
         let b = 0
         try {
             const server = servers[s]
-            const roleId = server.tourRole
+            const roleId = server.tournamentRoleId
             if (!roleId) continue
             const guild = client.guilds.cache.get(server.id)
             const membersMap = await guild.members.fetch()
@@ -454,7 +452,7 @@ export const assignTourRoles = async (client) => {
 
                 const count = await Entry.count({
                     where: {
-                        active: true,
+                        isActive: true,
                         '$player.discordId$': member.user.id,
                         '$tournament.serverId$': server.id
                     },
@@ -483,8 +481,8 @@ export const updateDeckTypes = async () => {
     let b = 0
     const decks = await Deck.findAll({
         where: {
-            type: 'Other',
-            suggestedType: {[Op.not]: null }
+            deckTypeName: 'Other',
+            suggestedDeckTypeName: {[Op.not]: null }
         }
     })
 
@@ -492,15 +490,15 @@ export const updateDeckTypes = async () => {
         const deck = decks[i]
         const deckType = await DeckType.findOne({
             where: {
-                cleanName: {[Op.iLike]: deck.suggestedType.replaceAll(' ', '_').replaceAll('-', '_') }
+                cleanName: {[Op.iLike]: deck.suggestedDeckTypeName.replaceAll(' ', '_').replaceAll('-', '_') }
             }
         })
 
         if (deckType) {
             await deck.update({
-                type: deckType.name,
+                deckTypeName: deckType.name,
                 deckTypeId: deckType.id,
-                suggestedType: null
+                suggestedDeckTypeName: null
             })
 
             b++
@@ -540,9 +538,9 @@ export const updateMarketPrices = async () => {
                 const result = data.results[i]
                 if (!result.marketPrice) continue
         
-                const priceType = result.subTypeName === 'Unlimited' ? 'unlimPrice' :
-                    result.subTypeName === '1st Edition' ? 'firstPrice' :
-                    result.subTypeName === 'Limited' ? 'limPrice' :
+                const priceType = result.subTypeName === 'Unlimited' ? 'unlimitedPrice' :
+                    result.subTypeName === '1st Edition' ? 'firstEditionPrice' :
+                    result.subTypeName === 'Limited' ? 'limitedPrice' :
                     null
         
                 const recentPrice = await Price.findOne({
@@ -702,9 +700,9 @@ export const updatePrints = async (set, groupId) => {
                     }
 
                     const isSpeedDuel = set.name?.includes('Speed Duel')
-                    if (isSpeedDuel && !card.speedLegal) {
+                    if (isSpeedDuel && !card.isSpeedLegal) {
                         await card.update({ 
-                            speedLegal: true,
+                            isSpeedLegal: true,
                             speedDate: set.tcgDate
                         })
                     }
@@ -712,7 +710,7 @@ export const updatePrints = async (set, groupId) => {
                     print = await Print.create({
                         cardName: card.name,
                         cardCode: result.extendedData[0].value,
-                        setName: set.setName,
+                        setName: set.name,
                         rarity: result.extendedData[1].value,
                         cardId: card.id,
                         setId: set.id,
@@ -736,7 +734,7 @@ export const updatePrints = async (set, groupId) => {
         }
     }
 
-    return console.log(`created ${b} new prints for ${set.setName}, couldn't find ${c} cards, encountered ${e} errors`)
+    return console.log(`created ${b} new prints for ${set.name}, couldn't find ${c} cards, encountered ${e} errors`)
 }
 
 // GET NEW GROUP ID
@@ -757,7 +755,7 @@ export const getNewGroupId = async (setId) => {
             const set = await Set.findOne({
                 where: {
                     [Op.and]: [
-                        {setName: {[Op.iLike]: r.name}},
+                        {name: {[Op.iLike]: r.name}},
                         {id: setId},
                         {tcgPlayerGroupId: null}
                     ]
@@ -1110,7 +1108,7 @@ export const downloadNewCards = async () => {
 
             if (!category) console.log(`No category for ${datum.type}`)
 
-            const tcgLegal = (
+            const isTcgLegal = (
                 id === '501000000' || 
                 id === '501000001' || 
                 id === '501000002' || 
@@ -1123,12 +1121,12 @@ export const downloadNewCards = async () => {
                 category === 'Token'
             ) ? false : !!datum.misc_info[0]?.tcg_date
 
-            const ocgLegal = (
+            const isOcgLegal = (
                 category === 'Skill' ||
                 category === 'Token'
             ) ? false : !!datum.misc_info[0]?.ocg_date
 
-            const speedLegal = datum.misc_info[0]?.formats?.includes('Speed Duel')
+            const isSpeedLegal = datum.misc_info[0]?.formats?.includes('Speed Duel')
             const tcgDate = category !== 'Skill' ? datum.misc_info[0]?.tcg_date || null : null
             const ocgDate = category !== 'Skill' ? datum.misc_info[0]?.ocg_date || null : null
 
@@ -1139,13 +1137,13 @@ export const downloadNewCards = async () => {
                     konamiCode: konamiCode,
                     ypdId: id,
                     artworkId: id,
-                    tcgLegal: tcgLegal,
-                    ocgLegal: ocgLegal,
-                    speedLegal: speedLegal,
+                    isTcgLegal: isTcgLegal,
+                    isOcgLegal: isOcgLegal,
+                    isSpeedLegal: isSpeedLegal,
                     category: category,
                     icon: category !== 'Monster' ? datum.race : null,
-                    normal: category === 'Monster' && type.includes('Normal'),
-                    effect: category === 'Monster' &&
+                    isNormal: category === 'Monster' && type.includes('Normal'),
+                    isEffect: category === 'Monster' &&
                         !type.includes('Normal') && 
                         (
                             type.includes('Effect') || 
@@ -1156,18 +1154,18 @@ export const downloadNewCards = async () => {
                             type.includes('Union') || 
                             type.includes('Tuner')
                         ),
-                    fusion: category === 'Monster' && type.includes('Fusion'),
-                    ritual: category === 'Monster' && type.includes('Ritual'),
-                    synchro: category === 'Monster' && type.includes('Synchro'),
-                    xyz: category === 'Monster' && type.includes('Xyz'),
-                    pendulum: category === 'Monster' && type.includes('Pendulum'),
-                    link: category === 'Monster' && type.includes('Link'),
-                    flip: category === 'Monster' && type.includes('Flip'),
-                    gemini: category === 'Monster' && type.includes('Gemini'),
-                    spirit: category === 'Monster' && type.includes('Spirit'),
-                    toon: category === 'Monster' && type.includes('Toon'),
-                    tuner: category === 'Monster' && type.includes('Tuner'),
-                    union: category === 'Monster' && type.includes('Union'),
+                    isFusion: category === 'Monster' && type.includes('Fusion'),
+                    isRitual: category === 'Monster' && type.includes('Ritual'),
+                    isSynchro: category === 'Monster' && type.includes('Synchro'),
+                    isXyz: category === 'Monster' && type.includes('Xyz'),
+                    isPendulum: category === 'Monster' && type.includes('Pendulum'),
+                    isLink: category === 'Monster' && type.includes('Link'),
+                    isFlip: category === 'Monster' && type.includes('Flip'),
+                    isGemini: category === 'Monster' && type.includes('Gemini'),
+                    isSpirit: category === 'Monster' && type.includes('Spirit'),
+                    isToon: category === 'Monster' && type.includes('Toon'),
+                    isTuner: category === 'Monster' && type.includes('Tuner'),
+                    isUnion: category === 'Monster' && type.includes('Union'),
                     attribute: datum.attribute,
                     type: (category === 'Monster' || category === 'Token') ? datum.race : null,
                     level: (category === 'Monster' || category === 'Token') && !type.includes('Link') ? datum.level : null,
@@ -1179,7 +1177,7 @@ export const downloadNewCards = async () => {
                     description: datum.desc,
                     tcgDate: tcgDate,
                     ocgDate: ocgDate,
-                    extraDeck: type.includes('Fusion') || type.includes('Synchro') || type.includes('Xyz') || type.includes('Link'),
+                    isExtraDeck: type.includes('Fusion') || type.includes('Synchro') || type.includes('Xyz') || type.includes('Link'),
                     color: getColor(datum.type),
                     sortPriority: getSortPriority(datum.type)
                 })
@@ -1198,36 +1196,36 @@ export const downloadNewCards = async () => {
                     ypdId: id,
                     artworkId: id,
                     description: datum.desc,
-                    tcgLegal: tcgLegal,
-                    ocgLegal: ocgLegal,
+                    isTcgLegal: isTcgLegal,
+                    isOcgLegal: isOcgLegal,
                     tcgDate: tcgDate,
                     ocgDate: ocgDate
                 })
 
                 await downloadCardImage(id)
                 console.log(`Image saved (${datum.name})`)
-            } else if (card && (!card.tcgDate || !card.tcgLegal) && tcgDate) {
+            } else if (card && (!card.tcgDate || !card.isTcgLegal) && tcgDate) {
                 await card.update({
                     name: name,
                     cleanName: cleanName,
                     description: datum.desc,
                     tcgDate: tcgDate,
-                    tcgLegal: true
+                    isTcgLegal: true
                 })
 
                 t++
                 console.log(`New TCG Card: ${card.name}`)
                 await downloadCardImage(id)
                 console.log(`Image saved (${card.name})`)
-            } else if (card && (!card.ocgDate || !card.ocgLegal) && ocgDate) {
+            } else if (card && (!card.ocgDate || !card.isOcgLegal) && ocgDate) {
                 await card.update({
                     ocgDate: ocgDate,
-                    ocgLegal: true  
+                    isOcgLegal: true  
                 })
 
                 o++
                 console.log(`New OCG Card: ${card.name}`)
-            } else if (card && (!card.speedLegal || !card.speedDate) && speedLegal) {
+            } else if (card && (!card.isSpeedLegal || !card.speedDate) && isSpeedLegal) {
                 const print = await Print.findOne({
                     where: {
                         cardId: card.id,
@@ -1241,7 +1239,7 @@ export const downloadNewCards = async () => {
 
                 await card.update({
                     speedDate: speedDate,
-                    speedLegal: true
+                    isSpeedLegal: true
                 })
 
                 p++
@@ -1349,17 +1347,17 @@ export const updateSets = async () => {
             if (!datum.set_name.includes('Shonen Jump') && !datum.set_name.includes('(POR)') && datum.tcg_date) {
                 let set = await Set.findOne({
                     where: {
-                        setName: {[Op.iLike]: datum.set_name }
+                        name: {[Op.iLike]: datum.set_name }
                     }
                 })
 
                 if (set && !set.tcgPlayerGroupId) {
                     const tcgPlayerGroupId = await getNewGroupId(set.id)
                     if (!tcgPlayerGroupId) {
-                        console.log(`no tcgPlayerGroupId for ${set.setName}`)
+                        console.log(`no tcgPlayerGroupId for ${set.name}`)
                         continue
                     } else {
-                        console.log(`updating group Id for ${set.setName} from ${set.tcgPlayerGroupId} to ${tcgPlayerGroupId}`)
+                        console.log(`updating group Id for ${set.name} from ${set.tcgPlayerGroupId} to ${tcgPlayerGroupId}`)
                         set.tcgPlayerGroupId = tcgPlayerGroupId
                         await set.save()
                     }
@@ -1367,7 +1365,7 @@ export const updateSets = async () => {
 
                 if (set && set.tcgPlayerGroupId) {
                     if (set.size !== datum.num_of_cards) {
-                        console.log(`updating size of ${set.setName} from ${set.size} to ${datum.num_of_cards}`)
+                        console.log(`updating size of ${set.name} from ${set.size} to ${datum.num_of_cards}`)
                         set.size = datum.num_of_cards
                         await set.save()
                         c++
@@ -1380,7 +1378,7 @@ export const updateSets = async () => {
                     }
                 } else if (!set) {
                     set = await Set.create({
-                        setName: datum.set_name,
+                        name: datum.set_name,
                         setCode: datum.set_code,
                         size: datum.num_of_cards,
                         tcgDate: datum.tcg_date
@@ -1533,9 +1531,9 @@ export const updateServers = async (client) => {
                 await server.save()
             }
 
-            if (server.access !== 'free' && !server.logoUrl) {
+            if (server.access !== 'free' && !server.logoName) {
                 if (await s3FileExists(`images/logos/${server.name.replaceAll('+', '%2B')}.png`)) {
-                    await server.update({ logoUrl: server.name })
+                    await server.update({ logoName: server.name })
                 }
             }
         } catch (err) {
@@ -1552,7 +1550,7 @@ export const updateDecks = async () => {
     const start = Date.now()
     let b = 0
     let e = 0
-    const decks = await Deck.findAll({ include: [DeckType, Event, Player] })
+    const decks = await Deck.findAll({ include: DeckType })
     for (let i = 0; i < decks.length; i++) {
         try {
             const deck = decks[i]

@@ -45,8 +45,8 @@ export const SingleEvent = (props) => {
   const goToPlayer = () => navigate(`/players/${extension}`)
   
   const communityLink = event.server?.inviteLink ? event.server?.inviteLink :
-    event.communtiy === 'Konami' ? 'https://www.yugioh-card.com/en/events/' :
-    event.community === 'Upper Deck Entertainment' ? 'https://upperdeck.com/entertainment/' :
+    event.communityName === 'Konami' ? 'https://www.yugioh-card.com/en/events/' :
+    event.communityName === 'Upper Deck Entertainment' ? 'https://upperdeck.com/entertainment/' :
     'https://formatlibrary.com/cards/lost-world'
 
   const goToCommunity = () => window.open(communityLink, "_blank")
@@ -182,8 +182,8 @@ export const SingleEvent = (props) => {
         <Helmet>
             <title>{`${event?.name} Yu-Gi-Oh! Tournament Coverage - Format Library`}</title>
             <meta name="og:title" content={`${event?.name} Yu-Gi-Oh! Tournament Coverage - Format Library`}/>
-            <meta name="description" content={`Coverage of ${event?.name} - ${event?.formatName} Format hosted by ${event?.community}. Includes decklists, metagame stats, and match replays.`}/>
-            <meta name="og:description" content={`Coverage of ${event?.name} - ${event?.formatName} Format hosted by ${event?.community}. Includes decklists, metagame stats, and match replays.`}/>
+            <meta name="description" content={`Coverage of ${event?.name} - ${event?.formatName} Format hosted by ${event?.communityName}. Includes decklists, metagame stats, and match replays.`}/>
+            <meta name="og:description" content={`Coverage of ${event?.name} - ${event?.formatName} Format hosted by ${event?.communityName}. Includes decklists, metagame stats, and match replays.`}/>
         </Helmet>
         {
             videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
@@ -230,11 +230,11 @@ export const SingleEvent = (props) => {
                         </td>
                         <td className="desktop-only">
                         <div className="single-event-cell">
-                            <div onClick={() => goToCommunity()} className="single-event-community-link" style={{paddingRight:'7px'}}><b>Community:</b> {event.community}</div> 
+                            <div onClick={() => goToCommunity()} className="single-event-community-link" style={{paddingRight:'7px'}}><b>Community:</b> {event.communityName}</div> 
                             <img 
                                 style={{width:'32px'}} 
-                                src={`https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png`}
-                                alt={event.community}
+                                src={`https://cdn.formatlibrary.com/images/logos/${event.communityName?.replaceAll('+', '%2B')}.png`}
+                                alt={event.communityName}
                             />
                         </div>
                         </td>
@@ -264,9 +264,9 @@ export const SingleEvent = (props) => {
                         <td className="desktop-only">
                         <div className="single-event-cell">
                             <div 
-                                onClick={() => {window.location.href=`/decktypes/${topDecks[0]?.type?.toLowerCase()?.replace(/\s/g, '-')}?format=${event.format.name}`}}                                 
+                                onClick={() => {window.location.href=`/decktypes/${topDecks[0]?.deckTypeName?.toLowerCase()?.replace(/\s/g, '-')}?format=${event.format.name}`}}                                 
                             >
-                                <div className="winning-deck-link" style={{paddingRight:'7px'}}><b>Winning Deck:</b> {capitalize(topDecks[0] ? topDecks[0].type : '', true)}</div> 
+                                <div className="winning-deck-link" style={{paddingRight:'7px'}}><b>Winning Deck:</b> {capitalize(topDecks[0] ? topDecks[0].deckTypeName : '', true)}</div> 
                             </div>
                         </div>   
                         </td>

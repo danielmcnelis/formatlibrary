@@ -12,7 +12,7 @@ export const TeamCreator = () => {
     const [playerBs, setPlayerBs] = useState([])
     const [playerC, setPlayerC] = useState(null)
     const [playerCs, setPlayerCs] = useState([])
-    const [community, setCommunity] = useState(null)
+    const [communityName, setCommunityName] = useState(null)
     const [event, setEvent] = useState(null)
     const [events, setEvents] = useState([])
     const [placement, setPlacement] = useState(1)
@@ -59,7 +59,7 @@ export const TeamCreator = () => {
         setPlayerBs([])
         setPlayerC(null)
         setPlayerCs([])
-        setCommunity(null)
+        setCommunityName(null)
         setEvent(null)
         setPlacement(1)
         document.getElementById('name').value = null
@@ -116,12 +116,12 @@ export const TeamCreator = () => {
     // USE EFFECT
     useEffect(() => {
         const fetchEvents= async () => {
-            const {data} = await axios.get(`/api/events/community/${community}`)
+            const {data} = await axios.get(`/api/events/community/${communityName}`)
             setEvents(data)
         }
 
         fetchEvents()
-    }, [community])
+    }, [communityName])
 
     return (
         <div className="admin-portal">
@@ -202,7 +202,7 @@ export const TeamCreator = () => {
                 Community:
                 <select
                     id="community"
-                    onChange={(e) => setCommunity(e.target.value || null)}
+                    onChange={(e) => setCommunityName(e.target.value || null)}
                 >
                     <option value=""></option>
                     <option value="Format Library">Format Library</option>

@@ -51,20 +51,14 @@ export const Event = db.define('events', {
   size: {
     type: Sequelize.INTEGER
   },
-  category: {
-    type: Sequelize.STRING
-  },
   type: {
     type: Sequelize.STRING
-  },
-  series: {
-    type: Sequelize.BOOLEAN
   },
   isTeamEvent: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
-  community: {
+  communityName: {
     type: Sequelize.STRING
   },
   serverId: {
@@ -86,9 +80,23 @@ Event.countResults = async (filter = {}) => {
         let value = by.value
         if (typeof value === 'string') value.replaceAll('%20', ' ')
         let operator = by.operator
-        if (['display', 'series'].includes(key)) { value = value.toLowerCase() === 'true' }
-        if (['size', 'primaryTournamentId', 'formatId'].includes(key)) { value = parseInt(value) }
-        
+        if (['display'].includes(key)) { value = value.toLowerCase() === 'true' }
+        // if (['size', 'primaryTournamentId', 'formatId'].includes(key)) { value = parseInt(value) }
+
+        if (['name'].includes(key)) { 
+            key = Op.or
+            value = {
+                abbreviation: {[Op.iLike]: `%${value}%`},
+                name: {[Op.iLike]: `%${value}%`}
+            }
+        } else if (['winner'].includes(key)) { 
+            key = 'winnerName'
+        } else if (['community'].includes(key)) { 
+            key = 'communityName'
+        } else if (['format'].includes(key)) {
+            key = 'formatName'
+        }
+
         if (operator === 'eq') {
             operator = Op.eq
         } else if (operator === 'not') {
@@ -136,8 +144,22 @@ Event.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
         if (typeof value === 'string') value.replaceAll('%20', ' ')
         let operator = by.operator
         if (['display'].includes(key)) { value = value.toLowerCase() === 'true' }
-        if (['deckTypeId', 'downloads', 'views', 'rating'].includes(key)) { value = parseInt(value) }
+        // if (['deckTypeId', 'downloads', 'views', 'rating'].includes(key)) { value = parseInt(value) }
        
+        if (['name'].includes(key)) { 
+            key = Op.or
+            value = {
+                abbreviation: {[Op.iLike]: `%${value}%`},
+                name: {[Op.iLike]: `%${value}%`}
+            }
+        } else if (['winner'].includes(key)) { 
+            key = 'winnerName'
+        } else if (['community'].includes(key)) { 
+            key = 'communityName'
+        } else if (['format'].includes(key)) {
+            key = 'formatName'
+        }
+
         if (operator === 'eq') {
             operator = Op.eq
         } else if (operator === 'not') {
@@ -177,7 +199,7 @@ Event.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
         offset: (page - 1) * limit,
         limit: limit,
         subQuery: false,
-        attributes: { exclude: ['type', 'series', 'createdAt', 'updatedAt'] },        
+        attributes: { exclude: ['type', 'createdAt', 'updatedAt'] },        
         include: [
             {model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp', 'pfp']}, 
             {model: Team, as: 'winningTeam', attributes: ['id', 'name', 'captainId', 'playerAId', 'playerBId', 'playerCId']},

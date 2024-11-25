@@ -291,7 +291,7 @@ export const deckTypesSummary = async (req, res, next) => {
         const deckThumb = await DeckThumb.findOne({
             where: {
                 deckTypeId: deckType.id,
-                primary: true
+                isPrimary: true
             }
         })
         
@@ -310,7 +310,7 @@ export const deckTypesSummary = async (req, res, next) => {
             origin: 'event',
             eventId: { [Op.not]: null }
         },
-        attributes: ['id', 'type', 'category', 'ydk', 'formatName']
+        attributes: ['id', 'deckTypeName', 'category', 'ydk', 'formatName']
     })
 
     const showExtra = format.date >= '2008-08-05' || !format.date
@@ -534,21 +534,21 @@ export const deckTypesCreate = async (req, res, next) => {
         category: req.body.category
       }))
 
-    const count = await DeckThumb.count({ where: { name: req.body.name } })
+    const count = await DeckThumb.count({ where: { deckTypeName: req.body.deckTypeName } })
 
     const deckThumb =
       (await DeckThumb.findOne({
         where: {
-          name: req.body.name,
+          deckTypeName: req.body.deckTypeName,
           formatId: req.body.formatId
         }
       })) ||
       (await DeckThumb.create({
-        name: deckType.name,
+        deckTypeName: deckType.name,
         deckTypeId: deckType.id,
         formatName: req.body.formatName,
         formatId: req.body.formatId,
-        primary: !!count
+        iSPrimary: !!count
       }))
 
     ;(deckThumb.leftCard = req.body.leftCardName),

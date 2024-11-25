@@ -25,14 +25,14 @@ const emojis = {
 const { Controller, Orb, Lock, Bow, Voltage, Volcano, Unicorn, Thinking } = emojis
 
 export const DeckType = (props) => {
-    console.log('props', props)
     const [summary, setSummary] = useState({})
     const [matchups, setMatchups] = useState(false)
     const [banlist, setBanList] = useState({})
+    console.log(summary)
     
     const { id } = useParams()
     const location = useLocation()
-    const format = location?.search?.slice(8)
+    const format = location?.search?.slice(8) || summary?.format?.name
     const videoPlaylistId = summary?.format?.videoPlaylistId
 
     // USE LAYOUT EFFECT
@@ -42,13 +42,24 @@ export const DeckType = (props) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const {data: summaryData} = await axios.get(`/api/deckTypes/summary?id=${id}&format=${format}`)
-                const {data: matchupData} = await axios.get(`/api/matchups/${id}?format=${format}&isAdmin=${props.roles?.admin}&isSubscriber=${props.roles?.subscriber}`)
-                const {data: banlistData} = await axios.get(`/api/banlists/simple/${summaryData?.format?.banlist}?category=${summaryData?.format?.category || 'TCG'}`)
-                
-                setMatchups(matchupData)
+                let summaryApiUrl = `/api/deckTypes/summary?id=${id}`
+                if (format) summaryApiUrl += `&format=${format}`
+
+                const {data: summaryData} = await axios.get(summaryApiUrl)
                 setSummary(summaryData)
-                setBanList(banlistData)
+
+                let matchupApiUrl = `/api/matchups/${id}`
+                if (format) matchupApiUrl += `?format=${format}`
+                if (props.roles?.admin) matchupApiUrl += '&isAdmin=true'
+                if (props.roles?.subscriber) matchupApiUrl += '&isSubscriber=true'
+
+                const {data: matchupData} = await axios.get(matchupApiUrl)
+                setMatchups(matchupData)
+
+                if (summaryData?.format) {
+                    const {data: banlistData} = await axios.get(`/api/banlists/simple/${summaryData?.format?.banlist}?category=${summaryData?.format?.category || 'TCG'}`)
+                    setBanList(banlistData)
+                }
             } catch (err) {
                 console.log(err)
                 setSummary(null)
@@ -56,7 +67,7 @@ export const DeckType = (props) => {
         }
 
         fetchData()
-    }, [id, format])
+    }, [id, format, props.roles])
 
     if (!summary) return <NotFound/>
     if (!summary?.deckType) return <div style={{height: '100vh'}}/>
@@ -119,7 +130,7 @@ export const DeckType = (props) => {
                         </div>
                     </a>
                     <div className="single-deck-title">{summary.deckType}</div>
-                    <Link to="/deck-builder" state={{ deck: {} }} className="desktop-only">                                    
+                    <Link to="/deck-builder" state={{ deck: {name: summary.deckType, formatName: summary.format?.name}, skeleton: `/api/deckTypes/download?id=${id}&format=${format}` }} className="desktop-only">                                    
                         <div className="deck-button">
                             <b style={{padding: '0px 6px'}}>Open Deck</b>
                             <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`} alt="open-file"/>

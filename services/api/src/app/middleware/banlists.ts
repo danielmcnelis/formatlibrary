@@ -31,7 +31,7 @@ export const banlistsDate = async (req, res, next) => {
       include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'artworkId', 'sortPriority'] }],
       order: [
         [Card, 'sortPriority', 'ASC'],
-        ['name', 'ASC']
+        ['cardName', 'ASC']
       ]
     })
 
@@ -45,7 +45,7 @@ export const banlistsDate = async (req, res, next) => {
       include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'artworkId', 'sortPriority'] }],
       order: [
         [Card, 'sortPriority', 'ASC'],
-        ['name', 'ASC']
+        ['cardName', 'ASC']
       ]
     })
 
@@ -59,7 +59,7 @@ export const banlistsDate = async (req, res, next) => {
         include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'artworkId', 'sortPriority'] }],
         order: [
           [Card, 'sortPriority', 'ASC'],
-          ['name', 'ASC']
+          ['cardName', 'ASC']
         ]
       })
 
@@ -73,7 +73,7 @@ export const banlistsDate = async (req, res, next) => {
       include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'artworkId', 'sortPriority'] }],
       order: [
         [Card, 'sortPriority', 'ASC'],
-        ['name', 'ASC']
+        ['cardName', 'ASC']
       ]
     })
 
@@ -87,7 +87,7 @@ export const banlistsDate = async (req, res, next) => {
         include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'artworkId', 'sortPriority'] }],
         order: [
           [Card, 'sortPriority', 'ASC'],
-          ['name', 'ASC']
+          ['cardName', 'ASC']
         ]
       })
 
@@ -102,7 +102,7 @@ export const banlistsDate = async (req, res, next) => {
         include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'artworkId', 'sortPriority'] }],
         order: [
           [Card, 'sortPriority', 'ASC'],
-          ['name', 'ASC']
+          ['cardName', 'ASC']
         ]
       })
 
@@ -117,7 +117,7 @@ export const banlistsDate = async (req, res, next) => {
         include: [{ model: Card, attributes: ['id', 'name', 'cleanName', 'artworkId', 'sortPriority'] }],
         order: [
           [Card, 'sortPriority', 'ASC'],
-          ['name', 'ASC']
+          ['cardName', 'ASC']
         ]
       })
   
@@ -173,13 +173,13 @@ export const banlistsCreate = async (req, res, next) => {
         const c = changes[i]
         const card = await Card.findOne({ where: { name: c.name } })
         await Status.create({
-          name: c.name,
+          cardName: c.name,
+          cardId: card.id,
           restriction: c.newStatus,
           previous: c.prevStatus,
           date: `${year}-${month}-${day}`,
           banlist: banlist,
-          category: category,
-          cardId: card.id
+          category: category
         })
 
         b++
@@ -200,7 +200,7 @@ export const banlistsCreate = async (req, res, next) => {
       const ps = prevStatuses[i]
       const count = await Status.count({
         where: {
-          name: ps.name,
+          cardName: ps.name,
           category: category,
           banlist: banlist
         }
@@ -209,7 +209,7 @@ export const banlistsCreate = async (req, res, next) => {
       if (!count) {
         try {
           await Status.create({
-            name: ps.name,
+            cardName: ps.name,
             restriction: ps.restriction,
             cardId: ps.cardId,
             banlist: banlist,

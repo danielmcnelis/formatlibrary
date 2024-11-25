@@ -56,8 +56,8 @@ export const CardTable = () => {
       counter: false,
       equip: false,
       field: false,
-      normal: false,
-      ritual: false,
+      isNormal: false,
+      isRitual: false,
       'quick-play': false
     })
   
@@ -100,20 +100,20 @@ export const CardTable = () => {
     })
   
     const [groupParams, setGroupParams] = useState({
-      effect: false,
-      flip: false,
-      fusion: false,
-      gemini: false,
-      link: false,
-      normal: false,
-      pendulum: false,
-      ritual: false,
-      spirit: false,
-      synchro: false,
-      toon: false,
-      tuner: false,
-      union: false,
-      xyz: false
+      isEffect: false,
+      isFlip: false,
+      isFusion: false,
+      isGemini: false,
+      isLink: false,
+      isNormal: false,
+      isPendulum: false,
+      isRitual: false,
+      isSpirit: false,
+      isSynchro: false,
+      isToon: false,
+      isTuner: false,
+      isUnion: false,
+      isXyz: false
     })
   
     // USE LAYOUT EFFECT
@@ -136,11 +136,11 @@ export const CardTable = () => {
       if (queryParams.name) filter += `,name:inc:${queryParams.name}`
       if (queryParams.category) filter += `,category:eq:${queryParams.category}`
       if (queryParams.description) filter += `,description:inc:${queryParams.description}`
-      if (queryParams.region?.toLowerCase() === 'tcg') filter += `,tcgLegal:eq:true`
-      if (queryParams.region?.toLowerCase() === 'ocg') filter += `,ocgLegal:eq:true`
-      if (queryParams.region === 'tcg-exclusive') filter += `,tcgLegal:eq:true,ocgLegal:eq:false`
-      if (queryParams.region === 'ocg-exclusive') filter += `,tcgLegal:eq:false,ocgLegal:eq:true`
-      if (queryParams.region?.toLowerCase() === 'speed') filter += `,speedLegal:eq:true`
+      if (queryParams.region?.toLowerCase() === 'tcg') filter += `,tcg:eq:true`
+      if (queryParams.region?.toLowerCase() === 'ocg') filter += `,ocg:eq:true`
+      if (queryParams.region?.toLowerCase() === 'tcg-exclusive') filter += `,tcg:eq:true,ocg:eq:false`
+      if (queryParams.region?.toLowerCase() === 'ocg-exclusive') filter += `,tcg:eq:false,ocg:eq:true`
+      if (queryParams.region?.toLowerCase() === 'speed') filter += `,speed:eq:true`
   
       const icons = Object.entries(iconParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
       const attributes = Object.entries(attributeParams).filter((e) => !!e[1]).map((e) => e[0].toUpperCase())
@@ -151,7 +151,7 @@ export const CardTable = () => {
       if (attributes.length) filter += `,attribute:or:arr(${attributes.join(';')})`
       if (types.length) filter += `,type:or:arr(${types.join(';')})`
       groups.forEach((g) => filter += `,${g}:eq:true`)
-      if (groupParams.effect) filter += `,extraDeck:eq:false`
+      if (groupParams.isEffect) filter += `,extra:eq:false`
 
       if (cutoff !== `${now.getFullYear()}-12-31`) {
         queryParams.region?.toLowerCase() === 'speed' ? filter += `,speedDate:lte:${cutoff}`: 
@@ -192,12 +192,11 @@ export const CardTable = () => {
       if (queryParams.name) headers.name = queryParams.name
       if (queryParams.category) filter += `,category:eq:${queryParams.category}`
       if (queryParams.description) headers.description = queryParams.description
-      if (queryParams.region?.toLowerCase() === 'tcg') filter += `,tcgLegal:eq:true`
-      if (queryParams.region?.toLowerCase() === 'ocg') filter += `,ocgLegal:eq:true`
-      if (queryParams.region === 'tcg-exclusive') filter += `,tcgLegal:eq:true,ocgLegal:eq:false`
-      if (queryParams.region === 'ocg-exclusive') filter += `,tcgLegal:eq:false,ocgLegal:eq:true`
-      if (queryParams.region?.toLowerCase() === 'speed') filter += `,speedLegal:eq:true`
-      if (queryParams.region === 'duelLinks') filter += `,duelLinks:eq:true`
+      if (queryParams.region?.toLowerCase() === 'tcg') filter += `,tcg:eq:true`
+      if (queryParams.region?.toLowerCase() === 'ocg') filter += `,ocg:eq:true`
+      if (queryParams.region === 'tcg-exclusive') filter += `,tcg:eq:true,ocg:eq:false`
+      if (queryParams.region === 'ocg-exclusive') filter += `,tcg:eq:false,ocg:eq:true`
+      if (queryParams.region?.toLowerCase() === 'speed') filter += `,speed:eq:true`
   
       const icons = Object.entries(iconParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
       const attributes = Object.entries(attributeParams).filter((e) => !!e[1]).map((e) => e[0].toUpperCase())
@@ -208,10 +207,10 @@ export const CardTable = () => {
       if (attributes.length) filter += `,attribute:or:arr(${attributes.join(';')})`
       if (types.length) filter += `,type:or:arr(${types.join(';')})`
       groups.forEach((g) => filter += `,${g}:eq:true`)
-      if (groupParams.effect) filter += `,extraDeck:eq:false`
+      if (groupParams.isEffect) filter += `,extra:eq:false`
       
       if (cutoff !== `${now.getFullYear()}-12-31`) {
-        queryParams.region?.toLowerCase() === 'speed' ? filter += `,speedDate:lte:${cutoff}`: 
+        queryParams.region?.toLowerCase() === 'speed' ? filter += `,speeDdate:lte:${cutoff}`: 
         queryParams.region?.toLowerCase()?.includes('ocg') ? filter += `,ocgDate:lte:${cutoff}` : 
         filter += `,tcgDate:lte:${cutoff}`
       }
@@ -277,8 +276,8 @@ export const CardTable = () => {
         counter: false,
         equip: false,
         field: false,
-        normal: false,
-        ritual: false,
+        isNormal: false,
+        isRitual: false,
         'quick-play': false
       })
     
@@ -321,20 +320,20 @@ export const CardTable = () => {
       })
     
       setGroupParams({
-        effect: false,
-        flip: false,
-        fusion: false,
-        gemini: false,
-        link: false,
-        normal: false,
-        pendulum: false,
-        ritual: false,
-        spirit: false,
-        synchro: false,
-        toon: false,
-        tuner: false,
-        union: false,
-        xyz: false
+        isEffect: false,
+        isFlip: false,
+        isFusion: false,
+        isGemini: false,
+        isLink: false,
+        isNormal: false,
+        isPendulum: false,
+        isRitual: false,
+        isSpirit: false,
+        isSynchro: false,
+        isToon: false,
+        isTuner: false,
+        isUnion: false,
+        isXyz: false
       })
   
       count()
@@ -486,20 +485,20 @@ export const CardTable = () => {
         ['zombie', 'Zombie']
       ],
       group: [
-        ['normal', 'Normal'], 
-        ['effect', 'Effect'], 
-        ['ritual', 'Ritual'], 
-        ['pendulum', 'Pend.'], 
-        ['fusion', 'Fusion'], 
-        ['synchro', 'Synchro'], 
-        ['xyz', 'Xyz'], 
-        ['link', 'Link'], 
-        ['flip', 'Flip'], 
-        ['gemini', 'Gemini'], 
-        ['spirit', 'Spirit'], 
-        ['toon', 'Toon'], 
-        ['tuner', 'Tuner'], 
-        ['union', 'Union']
+        ['isNormal', 'Normal'], 
+        ['isEffect', 'Effect'], 
+        ['isRitual', 'Ritual'], 
+        ['isPendulum', 'Pend.'], 
+        ['isFusion', 'Fusion'], 
+        ['isSynchro', 'Synchro'], 
+        ['isXyz', 'Xyz'], 
+        ['isLink', 'Link'], 
+        ['isFlip', 'Flip'], 
+        ['isGemini', 'Gemini'], 
+        ['isSpirit', 'Spirit'], 
+        ['isToon', 'Toon'], 
+        ['isTuner', 'Tuner'], 
+        ['isUnion', 'Union']
       ]
     }
   
@@ -521,8 +520,8 @@ export const CardTable = () => {
                 <div className="card-database-flexbox">
                     <img src={`https://cdn.formatlibrary.com/images/artworks/${format.icon ? `${format.icon}.jpg` : 'nibiru.jpg'}`} alt={format.icon} className="format-icon-medium desktop-only"/>
                     <div>
-                        <h1>{format.event ? format.name + ' ' : ''}Card Database</h1>
-                        <h2 className="desktop-only">{format.event || 'May 2002 - Present'}</h2>
+                        <h1>{format.eventName ? format.name + ' ' : ''}Card Database</h1>
+                        <h2 className="desktop-only">{format.eventName || 'May 2002 - Present'}</h2>
                     </div>
                     <img src={`https://cdn.formatlibrary.com/images/artworks/${format.icon ? `${format.icon}.jpg` : 'nibiru.jpg'}`} alt={format.icon} className="format-icon-medium"/>
                 </div>
@@ -690,7 +689,7 @@ export const CardTable = () => {
                                 >
                                     <option key="All Sets" value="">All Sets</option>
                                     {
-                                        boosters.map((b) => <option key={b.id} value={b.setCode}>{b.setName}</option>)
+                                        boosters.map((b) => <option key={b.id} value={b.setCode}>{b.name}</option>)
                                     }
                                 </select>
         

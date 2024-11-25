@@ -107,14 +107,14 @@ export const updateDeckLabels = async (req, res, next) => {
                 'id',
                 'name',
                 'ydk',
-                'builder',
-                'playerId',
-                'type',
+                'builderName',
+                'builderId',
+                'deckTypeName',
                 'category',
                 'formatName',
                 'formatId',
-                'community',
-                'eventName',
+                'communityName',
+                'eventAbbreviation',
                 'eventId',
                 'publishDate',
                 'placement',
@@ -124,7 +124,7 @@ export const updateDeckLabels = async (req, res, next) => {
             ],
             include: [
                 { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'videoPlaylistId'] },
-                { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp'] }
+                { model: Player, as: 'builder', attributes: ['id', 'name', 'discordId', 'discordPfp'] }
             ]
         })
 
@@ -153,9 +153,9 @@ export const decksUpdateId = async (req, res, next) => {
                 name: req.body.name,
                 formatName: req.body.formatName,
                 formatId: req.body.formatId,
-                type: req.body.type,
+                deckTypeName: req.body.deckTypeName,
                 deckTypeId: req.body.deckTypeId,
-                suggestedType: req.body.suggestedType,
+                suggestedDeckTypeName: req.body.suggestedDeckTypeName,
                 ydk: req.body.ydk
              })
 
@@ -208,7 +208,7 @@ export const decksShareId = async (req, res, next) => {
         
         await deck.update({
             shareLink: shareLink,
-            linkExpiration: req.body.linkExpiration
+            linkExpiresAt: req.body.linkExpiresAt
         })
 
         res.json({ shareLink })
@@ -222,13 +222,13 @@ export const decksBuilderId = async (req, res, next) => {
         const deck = await Deck.findOne({ 
             where: {
                 id: req.params.id,
-                eventName: null,
+                eventAbbreviation: null,
                 eventId: null
             }, 
-            attributes: ['id', 'name', 'url', 'ydk', 'builder', 'playerId', 'type', 'deckTypeId', 'suggestedType', 'formatName', 'formatId', 'display', 'shareLink', 'linkExpiration'],            
+            attributes: ['id', 'name', 'url', 'ydk', 'builderName', 'builderId', 'deckTypeName', 'deckTypeId', 'suggestedDeckTypeName', 'formatName', 'formatId', 'display', 'shareLink', 'linkExpiresAt'],            
             include: [
                 { model: Format, attributes: ['id', 'name', 'date', 'banlist', 'icon']},
-                { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp']}
+                { model: Player, as: 'builder', attributes: ['id', 'name', 'discordId', 'discordPfp']}
             ],
         })
 
@@ -323,11 +323,11 @@ export const decksMyDecks = async (req, res, next) => {
 
         const decks = await Deck.findAll({ 
             where: {
-                playerId: player.id,
-                eventName: null,
+                builderId: player.id,
+                eventAbbreviation: null,
                 eventId: null
             },
-            attributes: ['id', 'name', 'type', 'deckTypeId', 'formatName', 'formatId'],
+            attributes: ['id', 'name', 'deckTypeName', 'deckTypeId', 'formatName', 'formatId'],
             include: Format,
             order: [['name', 'ASC']]
         })
@@ -349,14 +349,14 @@ export const decksPopular = async (req, res, next) => {
       where: {
         formatId: format.id,
         origin: 'event',
-        type: { [Op.not]: 'Other' }
+        deckTypeName: { [Op.not]: 'Other' }
       },
-      attributes: ['id', 'type']
+      attributes: ['id', 'deckTypeName']
     })
 
     if (!decks.length) return false
 
-    const freqs = decks.reduce((acc, curr) => (acc[curr.type] ? acc[curr.type]++ : (acc[curr.type] = 1), acc), {})
+    const freqs = decks.reduce((acc, curr) => (acc[curr.deckTypeName] ? acc[curr.deckTypeName]++ : (acc[curr.deckTypeName] = 1), acc), {})
     const names = Object.entries(freqs)
       .sort((a: never, b: never) => b[1] - a[1])
       .map((e) => e[0])
@@ -379,20 +379,20 @@ export const decksPopular = async (req, res, next) => {
                 formatId: format.id,
                 deckTypeId: deckType.id
             },
-            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
+            attributes: ['id', 'deckTypeName', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           })) ||
           (await DeckThumb.findOne({
             where: {
-              primary: true,
+              isPrimary: true,
               deckTypeId: deckType.id
             },
-            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
+            attributes: ['id', 'deckTypeName', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           })) ||
           (await DeckThumb.findOne({
             where: {
               deckTypeId: deckType.id
             },
-            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
+            attributes: ['id', 'deckTypeName', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           }))
 
         data.push({ ...deckType.dataValues, ...deckThumb.dataValues })
@@ -419,15 +419,15 @@ export const decksGallery = async (req, res, next) => {
     const decks = await Deck.findAll({
       where: {
         formatId: format.id,
-        type: { [Op.not]: 'Other' },
+        deckTypeName: { [Op.not]: 'Other' },
         origin: 'event'
       },
-      attributes: ['id', 'type', 'deckTypeId']
+      attributes: ['id', 'deckTypeName', 'deckTypeId']
     })
 
     if (!decks.length) return false
 
-    const freqs = decks.reduce((acc, curr) => (acc[curr.type] ? acc[curr.type]++ : (acc[curr.type] = 1), acc), {})
+    const freqs = decks.reduce((acc, curr) => (acc[curr.deckTypeName] ? acc[curr.deckTypeName]++ : (acc[curr.deckTypeName] = 1), acc), {})
     const names = Object.entries(freqs)
       .sort((a: never, b: never) => b[1] - a[1])
       .filter((e, index) => e[1] >= 3 || index <= 5)
@@ -450,20 +450,20 @@ export const decksGallery = async (req, res, next) => {
               formatName: { [Op.iLike]: req.params.format },
               deckTypeId: deckType.id
             },
-            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
+            attributes: ['id', 'deckTypeName', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           })) ||
           (await DeckThumb.findOne({
             where: {
-              primary: true,
+              isPrimary: true,
               deckTypeId: deckType.id
             },
-            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
+            attributes: ['id', 'deckTypeName', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           })) ||
           (await DeckThumb.findOne({
             where: {
               deckTypeId: deckType.id
             },
-            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
+            attributes: ['id', 'deckTypeName', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           }))
 
         data.push({ ...deckType.dataValues, ...deckThumb.dataValues })
@@ -485,20 +485,20 @@ export const decksFrequent = async (req, res, next) => {
   try {
     const decks = await Deck.findAll({
       where: {
-        playerId: req.params.id,
+        builderId: req.params.id,
         origin: 'event',
-        type: { [Op.not]: 'Other' }
+        deckTypeName: { [Op.not]: 'Other' }
       },
-      attributes: ['id', 'type', 'formatName']
+      attributes: ['id', 'deckTypeName', 'formatName']
     })
 
     if (!decks.length) return false
 
     const freqs = decks.reduce(
       (acc, curr) => (
-        acc[`${curr.formatName}_${curr.type}`]
-          ? acc[`${curr.formatName}_${curr.type}`]++
-          : (acc[`${curr.formatName}_${curr.type}`] = 1),
+        acc[`${curr.formatName}_${curr.deckTypeName}`]
+          ? acc[`${curr.formatName}_${curr.deckTypeName}`]++
+          : (acc[`${curr.formatName}_${curr.deckTypeName}`] = 1),
         acc
       ),
       {}
@@ -529,14 +529,14 @@ export const decksFrequent = async (req, res, next) => {
               deckTypeId: deckType.id,
               formatName: format
             },
-            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
+            attributes: ['id', 'deckTypeName', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           })) ||
           (await DeckThumb.findOne({
             where: {
               deckTypeId: deckType.id,
-              primary: true
+              isPrimary: true
             },
-            attributes: ['id', 'name', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
+            attributes: ['id', 'deckTypeName', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
           }))
 
         types.push(deckType.id)
@@ -556,11 +556,11 @@ export const decksPlayer = async (req, res, next) => {
   try {
     const decks = await Deck.findAll({
       where: {
-        playerId: req.params.id,
+        builderId: req.params.id,
         origin: 'event',
         display: true
       },
-      attributes: ['placement', 'eventId', 'eventName', 'publishDate'],
+      attributes: ['placement', 'eventId', 'eventAbbreviation', 'publishDate'],
       order: [
         ['placement', 'ASC'],
         ['publishDate', 'DESC']
@@ -738,8 +738,8 @@ export const convertTextToYDK = async (req, res, next) => {
 
 export const countDecks = async (req, res, next) => {
     try {
-        const isAdmin = req.query.isAdmin
-        const isSubscriber = req.query.isSubscriber
+        const isAdmin = req.query.admin
+        const isSubscriber = req.query.subscriber
         const display = isAdmin === 'true' ? { display: {operator: 'or', value: [true, false]} } :
             isSubscriber === 'true' ? { publishDate: {operator: 'not', value: null }} :
             { display: {operator: 'eq', value: true} }
@@ -760,8 +760,8 @@ export const countDecks = async (req, res, next) => {
 
 export const getDecks = async (req, res, next) => {
     try {
-        const isAdmin = req.query.isAdmin
-        const isSubscriber = req.query.isSubscriber
+        const isAdmin = req.query.admin
+        const isSubscriber = req.query.subscriber
         const limit = parseInt(req.query.limit || 10)
         const page = parseInt(req.query.page || 1)
         const display = isAdmin === 'true' ? { display: {operator: 'or', value: [true, false]} } :
@@ -806,20 +806,20 @@ export const decksId = async (req, res, next) => {
             display: true,
         } : {
             shareLink: shareLink,
-            linkExpiration: {[Op.gte]: new Date()}
+            linkExpiresAt: {[Op.gte]: new Date()}
         },
         attributes: [
             'id',
             'name',
             'ydk',
-            'builder',
-            'playerId',
-            'type',
+            'builderName',
+            'builderId',
+            'deckTypeName',
             'category',
             'formatName',
             'formatId',
-            'community',
-            'eventName',
+            'communityName',
+            'eventAbbreviation',
             'eventId',
             'publishDate',
             'placement',
@@ -829,7 +829,7 @@ export const decksId = async (req, res, next) => {
         ],
         include: [
             { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'videoPlaylistId'] },
-            { model: Player, attributes: ['id', 'name', 'discordId', 'discordPfp'] }
+            { model: Player, as: 'builder', attributes: ['id', 'name', 'discordId', 'discordPfp'] }
         ]
     })
 
@@ -972,7 +972,7 @@ export const convertYDKeToYDK = async (req, res, next) => {
 export const decksCreate = async (req, res, next) => {
   try {
     const format = await Format.findOne({ where: { name: { [Op.iLike]: req.body.format || req.body.formatName } } })
-    const player = await Player.findOne({ where: { id: req.body.playerId } })
+    const player = await Player.findOne({ where: { id: req.body.builderId } })
     const raw = req.body.ydk.split('\n')
     const verified = []
     for (let i = 0; i < raw.length; i++) {
@@ -1003,22 +1003,22 @@ export const decksCreate = async (req, res, next) => {
     }
     
     const deck = await Deck.create({
-      builder: player.name,
-      playerId: player.id,
+      builderName: player.name,
+      builderId: player.id,
       name: req.body.name,
-      type: req.body.type,
-      suggestedType: req.body.suggestedType,
+      deckTypeName: req.body.deckTypeName,
+      suggestedDeckTypeName: req.body.suggestedDeckTypeName,
       deckTypeId: req.body.deckTypeId,
       category: req.body.category,
       formatName: format.name,
       formatId: format.id,
       ydk: verified.join('\n'),
-      eventName: req.body.eventName,
+      eventAbbreviation: req.body.eventAbbreviation,
       eventId: req.body.eventId,
       origin: req.body.origin,
       publishDate: req.body.publishDate,
       placement: req.body.placement,
-      community: req.body.community,
+      communityName: req.body.communityName,
       display: req.body.display
     })
 

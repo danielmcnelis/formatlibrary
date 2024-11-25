@@ -91,7 +91,7 @@ export const eventsCommunity = async (req, res, next) => {
     const events = await Event.findAll({
       where: {
         display: true,
-        community: { [Op.iLike]: req.params.community }
+        communityName: { [Op.iLike]: req.params.communityName }
       },
       attributes: [
         'id',
@@ -102,7 +102,7 @@ export const eventsCommunity = async (req, res, next) => {
         'size',
         'winnerName',
         'winnerId',
-        'community',
+        'communityName',
         'startDate',
         'endDate'
       ],
@@ -127,7 +127,7 @@ export const eventsRecent = async (req, res, next) => {
         display: true,
         formatName: { [Op.iLike]: req.params.format }
       },
-      // attributes: ['id', 'name', 'abbreviation', 'winnerName', 'winnerId', 'community', 'startDate', 'endDate'],
+      // attributes: ['id', 'name', 'abbreviation', 'winnerName', 'winnerId', 'communityName', 'startDate', 'endDate'],
       include: [
         { model: Format, attributes: ['id', 'name', 'icon'] },
         { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp', 'pfp']},
@@ -170,7 +170,7 @@ export const eventsId = async (req, res, next) => {
         'winnerId',
         'isTeamEvent',
         'winnerId',
-        'community',
+        'communityName',
         'serverId',
         'startDate',
         'endDate'
@@ -199,30 +199,30 @@ export const eventsId = async (req, res, next) => {
       where: {
         display: (req.query.isAdmin === 'true' || req.query.isSubscriber === 'true') ? {[Op.or]: [true, false]} : true,
         [Op.or]: {
-          eventName: event.abbreviation,
+          eventAbbreviation: event.abbreviation,
           eventId: event.id
         }
       },
-      attributes: ['id', 'type', 'builder', 'placement'],
+      attributes: ['id', 'deckTypeName', 'builderName', 'placement'],
       order: [
         ['placement', 'ASC'],
-        ['builder', 'ASC']
+        ['builderName', 'ASC']
       ]
     })
 
     const allDecks = await Deck.findAll({
       where: {
         [Op.or]: {
-          eventName: event.abbreviation,
+          eventAbbreviation: event.abbreviation,
           eventId: event.id
         }
       },
-      attributes: ['id', 'type', 'category', 'builder', 'ydk', 'placement']
+      attributes: ['id', 'deckTypeName', 'category', 'builderName', 'ydk', 'placement']
     })
 
     const deckTypes =
       allDecks.length >= event.size / 2
-        ? Object.entries(arrayToObject(allDecks.map((d) => capitalize(d.type, true)))).sort(
+        ? Object.entries(arrayToObject(allDecks.map((d) => capitalize(d.deckTypeName, true)))).sort(
             (a: any, b: any) => b[1] - a[1]
           )
         : []
@@ -361,7 +361,7 @@ export const eventsCreate = async (req, res, next) => {
         name: req.body.challongeName,
         url: req.body.url,
         format: req.body.format.name,
-        community: req.body.community,
+        communityName: req.body.communityName,
         emoji: req.body.emoji,
         type: req.body.type,
         channelId: req.body.channelId,
@@ -385,7 +385,7 @@ export const eventsCreate = async (req, res, next) => {
       isTeamEvent: req.body.isTeamEvent,
       winnerName: req.body.winner,
       winnerId: req.body.playerId,
-      community: req.body.community,
+      communityName: req.body.communityName,
       emoji: req.body.emoji,
       startDate: req.body.startDate,
       endDate: req.body.endDate

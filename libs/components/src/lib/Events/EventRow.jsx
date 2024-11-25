@@ -56,8 +56,8 @@ export const EventRow = (props) => {
                 onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
             >
               <div className="community-cell-flexbox">
-                <img src={`https://cdn.formatlibrary.com/images/logos/${event.community?.replaceAll('+', '%2B')}.png`}/>
-                <div>{event.community}</div>
+                <img src={`https://cdn.formatlibrary.com/images/logos/${event.communityName?.replaceAll('+', '%2B')}.png`}/>
+                <div>{event.communityName}</div>
               </div>
             </div>
           </td>

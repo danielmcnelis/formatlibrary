@@ -22,7 +22,7 @@ export default {
         const discordId = user.id	
         const player = await Player.findOne({ where: { discordId: discordId } })
         if (!player) return await interaction.reply({ content: "That user is not in the database."})
-        if (player.hidden) return await interaction.reply({ content: `That user's profile is not available at this time.`})
+        if (player.isHidden) return await interaction.reply({ content: `That user's profile is not available at this time.`})
 
         const format = await Format.findByServerOrChannelId(server, interaction.channelId)
         
@@ -35,15 +35,15 @@ export default {
                         { wins: { [Op.not]: null } }, 
                         { losses: { [Op.not]: null } }, 
                     ],
-                    internal: false
+                    isInternal: false
                 }
             })
 
             const trophies = [...await Deck.findAll({
                 where: {
-                    playerId: player.id,
+                    builderId: player.id,
                     formatId: format.id,
-                    eventName: {[Op.not]: null},
+                    eventAbbreviation: {[Op.not]: null},
                     placement: {[Op.not]: null},
                     display: true
                 },
@@ -69,7 +69,6 @@ export default {
                     value: 
                     `Best Medal: ${getMedal(stats ? stats?.bestElo : null, true)}` +
                     `\nHighest Elo: ${stats && stats?.bestElo ? stats?.bestElo.toFixed(2) : '500.00'}` +
-                    `${stats?.tournamentPoints ? `\nTournament Points: ${stats?.tournamentPoints}` : ''}` +
                     `\nWinrate: ${stats && (stats?.wins || stats?.losses) ? `${(100 * stats?.wins / (stats?.wins + stats?.losses)).toFixed(2)}%` : 'N/A'}` +
                     `\nVanquished Foes: ${stats ? stats?.vanquished : 0}` +
                     `\nLongest Win Streak: ${stats ? stats?.bestStreak : 0}`
@@ -80,8 +79,8 @@ export default {
                 },
                 { 
                     name: `Misc. Info`,
-                    value: player.duelingBook || player.opTcgSim || player.youtube || player.twitch || player.twitter || player.country || player.timeZone ? (
-                        `${player.duelingBook ? `Duelingbook Name: ${player.duelingBook}` : ''}` +
+                    value: player.duelingBookName || player.opTcgSim || player.youtube || player.twitch || player.twitter || player.country || player.timeZone ? (
+                        `${player.duelingBookName ? `Duelingbook Name: ${player.duelingBookName}` : ''}` +
                         `${player.opTcgSim ? `\nOnePieceTCGSim: ${player.opTcgSim}` : ''}` +
                         `${player.youtube ? `\nYouTube: ${player.youtube}` : ''}` +
                         `${player.twitch ? `\nTwitch: ${player.twitch}` : ''}` +
@@ -102,7 +101,7 @@ export default {
                         { wins: { [Op.not]: null } }, 
                         { losses: { [Op.not]: null } }, 
                     ],
-                    internal: false
+                    isInternal: false
                 },
                 limit: 5,
                 order: [["elo", "DESC"]]
@@ -120,8 +119,8 @@ export default {
 
             const trophies = [...await Deck.findAll({
                 where: {
-                    playerId: player.id,
-                    eventName: {[Op.not]: null},
+                    builderId: player.id,
+                    eventAbbreviation: {[Op.not]: null},
                     eventId: {[Op.not]: null},
                     placement: {[Op.not]: null},
                     display: true
@@ -135,7 +134,7 @@ export default {
                     d.placement === 3 ? emojis.third :
                     emojis.placing
 
-                return `${d.format.emoji} ${d.eventName}: ${ordinalize(d.placement)} ${badge} of ${d.event.size}`
+                return `${d.format.emoji} ${d.eventAbbreviation}: ${ordinalize(d.placement)} ${badge} of ${d.event.size}`
             })
 
         const embed = new EmbedBuilder()
@@ -147,8 +146,8 @@ export default {
                 { name: `Best Finishes`, value: trophies.length ? trophies.join('\n') : 'N/A' },
                 { 
                     name: `Misc. Info`,
-                    value: player.duelingBook || player.opTcgSim || player.youtube || player.twitch || player.twitter || player.country || player.timeZone ? (
-                        `${player.duelingBook ? `Duelingbook Name: ${player.duelingBook}` : ''}` +
+                    value: player.duelingBookName || player.opTcgSim || player.youtube || player.twitch || player.twitter || player.country || player.timeZone ? (
+                        `${player.duelingBookName ? `Duelingbook Name: ${player.duelingBookName}` : ''}` +
                         `${player.opTcgSim ? `OnePieceTCGSim: ${player.opTcgSim}` : ''}` +
                         `${player.youtube ? `\nYouTube: ${player.youtube}` : ''}` +
                         `${player.twitch ? `\nTwitch: ${player.twitch}` : ''}` +
