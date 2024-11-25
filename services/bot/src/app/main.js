@@ -233,7 +233,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 // MODAL SUBMIT
 client.on(Events.InteractionCreate, async (interaction) => {
     try {
-        if (!interaction.isModeratoralSubmit()) return
+        if (!interaction.isModalSubmit()) return
         await interaction.deferReply()
     
         if (interaction.customId?.includes('create')) {
