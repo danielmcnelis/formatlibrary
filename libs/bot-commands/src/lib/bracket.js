@@ -19,7 +19,7 @@ export default {
         const results = []
         for (let i = 0; i < tournaments.length; i++) {
             const tournament = tournaments[i]
-            const subdomain = server.challongeSubdomain ? `${server.challongeSubdomain}.` || ''
+            const subdomain = server.challongeSubdomain ? `${server.challongeSubdomain}.` : ''
             results.push(`Name: ${tournament.name} ${tournament.logo}` +
                 `\nFormat: ${tournament.formatName} ${tournament.emoji}` + 
                 `\nBracket: <https://${subdomain}challonge.com/${tournament.url}>` +
