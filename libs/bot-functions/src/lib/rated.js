@@ -107,7 +107,7 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
             continue
         } else {
             const server = await Server.findOne({ where: { id: '414551319031054346' }})
-            const channelId = format.channel
+            const channelId = format.channelId
             const guild = client.guilds.cache.get('414551319031054346')
             const channel = guild.channels.cache.get(channelId)
             const playerDiscordName =  player.discordName
@@ -197,7 +197,7 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
             }
     
             const server = await Server.findOne({ where: { id: '414551319031054346' }})
-            const channelId = format.channel
+            const channelId = format.channelId
             const guild = client.guilds.cache.get(serverId)
             const channel = guild.channels.cache.get(channelId)
             const player = yourPool.player
@@ -487,7 +487,7 @@ export const sendRatedJoinNotifications = async (client, player, format, deck, i
     try {
         if (!isResubmission) {
             const guild = client.guilds.cache.get('414551319031054346')
-            const channel = guild.channels.cache.get(format.channel)
+            const channel = guild.channels.cache.get(format.channelId)
             if (channel) await channel.send(`Somebody joined the ${format.name} ${format.emoji} Rated Pool! ${emojis.megaphone}`)
         }
 
@@ -527,7 +527,7 @@ export const sendRatedPairingAnnouncement = async (client, player, opponent, for
         user1.send(
             `New pairing for Rated ${format.name} Format! ${format.emoji}` + 
             `\nServer: Format Library ${emojis.FL}` + 
-            `\nChannel: <#${format.channel}}>` +
+            `\nChannel: <#${format.channelId}}>` +
             `\nDiscord Name: ${opponentGlobalName ? `${opponentGlobalName} (${opponentDiscordName})` : opponentDiscordName}` +
             `\nDuelingbook Name: ${opponent.duelingBookName}`
         ).catch((err) => console.log(err))
@@ -535,7 +535,7 @@ export const sendRatedPairingAnnouncement = async (client, player, opponent, for
         user2.send(
             `New pairing for Rated ${format.name} Format! ${format.emoji}` +
             `\nServer: Format Library ${emojis.FL}` +
-            `\nChannel: <#${format.channel}>` +
+            `\nChannel: <#${format.channelId}>` +
             `\nDiscord Name: ${playerGlobalName ? `${playerGlobalName} (${playerDiscordName})` : playerDiscordName}` +
             `\nDuelingbook Name: ${player.duelingBookName}`
         ).catch((err) => console.log(err))  
@@ -548,7 +548,7 @@ export const sendRatedPairingAnnouncement = async (client, player, opponent, for
 export const sendRatedPairingNotifications = async (client, player, opponent, format) => {
     try {
         const guild = client.guilds.cache.get('414551319031054346')
-        const channel = guild.channels.cache.get(format.channel)
+        const channel = guild.channels.cache.get(format.channelId)
     
         const allStats = await Stats.findAll({ 
             where: {

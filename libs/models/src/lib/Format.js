@@ -71,7 +71,7 @@ Format.findByServerOrChannelId = async (server, channelId) => await Format.findO
     where: {
         [Op.or]: {
             name: {[Op.iLike]: server?.format },
-            channel: channelId
+            channelId: channelId
         }
     }
 })
@@ -80,7 +80,7 @@ Format.findByServerOrInputOrChannelId = async (server, formatName, channelId) =>
     where: {
         [Op.or]: {
             name: { [Op.iLike]: server.format || formatName },
-            channel: channelId
+            channelId: channelId
         }
     }
 })

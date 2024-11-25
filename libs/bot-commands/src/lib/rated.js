@@ -13,7 +13,7 @@ import { emojis } from '@fl/bot-emojis'
 const getRatedInformation = async (interaction, player) => {
     const format = await getRatedFormat(interaction)
     if (!format) return await interaction.user.send({ content: `Please specify a valid format.`})
-    const access = format.channel ? 'full' : 'partner'
+    const access = format.channelId ? 'full' : 'partner'
 
     const yourServers = [...await Membership.findAll({ 
         where: { 
@@ -87,7 +87,7 @@ const getRatedInformation = async (interaction, player) => {
     if (!count) {
         try {
             const guild = client.guilds.cache.get('414551319031054346')
-            const channel = guild.channels.cache.get(format.channel)
+            const channel = guild.channels.cache.get(format.channelId)
             channel.send(`Somebody joined the ${format.name} ${format.emoji} Rated Pool! ${emojis.megaphone}`)
         } catch (err) {
             console.log(err)

@@ -31,7 +31,7 @@ export const getDeckFormat = async (server, message, interaction) => {
         where: { 
             [Op.or]: {
                 name: { [Op.iLike]: server.format },
-                channel: interaction.channelId
+                channelId: interaction.channelId
             }
         }
     })

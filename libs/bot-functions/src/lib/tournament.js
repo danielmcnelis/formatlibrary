@@ -2466,7 +2466,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
         where: {
             [Op.or]: {
                 name: { [Op.iLike]: server.format || formatName },
-                channel: interaction.channelId
+                channelId: interaction.channelId
             }
         }
     })
@@ -2474,7 +2474,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
     const game_name = 'Yu-Gi-Oh!'
     const description = `${format.name} Format`
     const channel = interaction.guild.name !== 'Format Library' ? await interaction.guild?.channels.cache.find((channel) => channel.name === channelName) : {}
-    const channelId = interaction.guild.name === 'Format Library' ? format.channel : channel?.id
+    const channelId = interaction.guild.name === 'Format Library' ? format.channelId : channel?.id
     if (!channelId) return
 
     const str = generateRandomString(10, '0123456789abcdefghijklmnopqrstuvwxyz')
