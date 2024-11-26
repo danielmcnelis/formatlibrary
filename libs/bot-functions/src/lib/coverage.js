@@ -381,7 +381,7 @@ export const composeBlogPost = async (interaction, event) => {
                 eventDate: event.endDate,
                 eventId: event.id,
                 winnerName: event.winnerName,
-                winnerPfp: event.winner?.pfp,
+                winnerPfp: event.winner?.discordId,
                 winnerId: event.winnerId,
                 winningDeckTypeName: deck.deckTypeName,
                 winningDeckTypeIsPopular: popularDecks.includes(deck.deckTypeName),
