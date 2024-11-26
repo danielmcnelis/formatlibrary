@@ -3,7 +3,7 @@ import { Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const Membership = db.define('memberships', {
-    serverName: {
+    communityName: {
         type: Sequelize.STRING
     },
     serverId: {

@@ -2458,10 +2458,7 @@ export const autoRegisterTopCut = async (server, tournament, topCutTournament, s
 
 // CREATE TOURNAMENT
 export const createTournament = async (interaction, formatName, name, abbreviation, tournament_type, channelName, isRanked, isLive) => {
-    const server = !interaction.guildId ? {} : 
-        await Server.findOne({ where: { id: interaction.guildId }}) || 
-        await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-
+    const server = await Server.findOne({ where: { id: interaction.guildId }})
     const format = await Format.findOne({
         where: {
             [Op.or]: {
@@ -2635,10 +2632,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
 
 // UPDATE TOURNAMENT
 export const updateTournament = async (interaction, tournamentId, name, tournament_type, url, isRanked, isLive) => {
-    const server = !interaction.guildId ? {} : 
-        await Server.findOne({ where: { id: interaction.guildId }}) || 
-        await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-    
+    const server = await Server.findOne({ where: { id: interaction.guildId }})
     const tournament = await Tournament.findOne({
         where: {
             id: tournamentId
@@ -2685,21 +2679,18 @@ export const updateTournament = async (interaction, tournamentId, name, tourname
 
 // EDIT TIE-BREAKERS 
 export const editTieBreakers = async (interaction, tournamentId, tieBreaker1, tieBreaker2, tieBreaker3) => {
-    const server = !interaction.guildId ? {} : 
-        await Server.findOne({ where: { id: interaction.guildId }}) || 
-        await Server.create({ id: interaction.guildId, name: interaction.guild?.name })
+    const server = await Server.findOne({ where: { id: interaction.guildId }})
+    const tie_breaks = [tieBreaker1, tieBreaker2, tieBreaker3]
+    
+    tie_breaks.forEach((tb, index) => {
+        if (tb?.includes('win percentage')) tie_breaks[index] = null
+    })
 
-        const tie_breaks = [tieBreaker1, tieBreaker2, tieBreaker3]
-        
-        tie_breaks.forEach((tb, index) => {
-            if (tb?.includes('win percentage')) tie_breaks[index] = null
-        })
-
-        const tournament = await Tournament.findOne({
-            where: {
-                id: tournamentId
-            }
-        })
+    const tournament = await Tournament.findOne({
+        where: {
+            id: tournamentId
+        }
+    })
 
     try {
         const { status } = await axios({
@@ -2734,10 +2725,7 @@ export const editTieBreakers = async (interaction, tournamentId, tieBreaker1, ti
 
 // EDIT POINTS SYSTEM
 export const editPointsSystem = async (interaction, tournamentId, pointsPerMatchWin, pointsPerMatchTie, pointsPerBye) => {
-    const server = !interaction.guildId ? {} : 
-        await Server.findOne({ where: { id: interaction.guildId }}) || 
-        await Server.create({ id: interaction.guildId, name: interaction.guild.name })
-
+    const server = await Server.findOne({ where: { id: interaction.guildId }})
     const tournament = await Tournament.findOne({
         where: {
             id: tournamentId

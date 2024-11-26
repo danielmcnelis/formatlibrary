@@ -3,7 +3,7 @@ import axios from 'axios'
 import * as fs from 'fs'
 import * as sharp from 'sharp'
 import { Artwork, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Event, Format, Tournament, Match, Matchup, Membership, Player, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
-import { createMembership, createPlayer, dateToVerbose, s3FileExists, capitalize } from './utility'
+import { createMembership, createPlayer, dateToVerbose, s3FileExists, capitalize, checkIfDiscordNameIsTaken } from './utility'
 import { Op } from 'sequelize'
 import { Upload } from '@aws-sdk/lib-storage'
 import { S3 } from '@aws-sdk/client-s3'
@@ -31,9 +31,9 @@ export const getRemainingDaysInMonth = () => {
 export const runNightlyTasks = async (client) => {
     await refreshExpiredTokens()
     await purgeEntries()
+    await assignTournamentRoles(client)
     await purgeTournamentRoles(client)
     await purgeLocalsAndInternalDecks(client)
-    await assignTournamentRoles(client)
     await markInactives()
     await updateServers(client)
     await updateSets()
@@ -61,9 +61,7 @@ export const runMonthlyTasks = async () => {
 
 // REFRESH EXPIRED TOKENS
 export const refreshExpiredTokens = async () => {
-    console.log('tcgPlayer[".expires"]', tcgPlayer[".expires"])
     const difference = new Date(tcgPlayer[".expires"]) - Date.now()
-    console.log('difference', difference)
     if (!tcgPlayer[".expires"] || difference < 24 * 60 * 60 * 1000) {
         const params = new URLSearchParams()
         params.append('grant_type', 'client_credentials')
@@ -78,10 +76,10 @@ export const refreshExpiredTokens = async () => {
 
         fs.writeFile('./tokens/tcgplayer.json', JSON.stringify(data), (err) => {
             if (err) return console.error(err)
-            console.log('Token stored to', './tokens/tcgplayer.json')
+            console.log('tcgPlayer token stored to', './tokens/tcgplayer.json')
         })
     } else {
-        console.log('Token Is Not Expiring Soon')
+        console.log('tcgPlayer token is not expiring soon')
     }
 }
 
@@ -91,65 +89,60 @@ export const updateAvatars = async (client) => {
     const servers = await Server.findAll({ order: [['size', 'DESC']]})
     const discordIds = []
     for (let s = 0; s < servers.length; s++) {
-        try {
-            let count = 0
-            const server = servers[s]
-            const guild = client.guilds.cache.get(server.id)
-            const membersMap = await guild.members.fetch()
-            const memberIds = [...membersMap.keys()]
-            
-            for (let i = 0; i < memberIds.length; i++) {
-                try {
-                    const memberId = memberIds[i]
-                    const member = membersMap.get(memberId)
-                    const user = member.user
-                    if (discordIds.includes(user.id)) continue
-                    discordIds.push(user.id)
-                    const avatar = user.avatar
-                    if (!avatar) continue
-                    const player = await Player.findOne({ where: { discordId: memberId }})
-                    if (!player) continue
-                    const isActive = player.email || (await Deck.count({ where: { builderId: player.id }})) || (await Stats.count({ where: { playerId: player.id }}))
+        let count = 0
+        const server = servers[s]
+        const guild = client.guilds.cache.get(server.id)
+        const membersMap = await guild.members.fetch()
+        const memberIds = [...membersMap.keys()]
+        
+        for (let i = 0; i < memberIds.length; i++) {
+            try {
+                const memberId = memberIds[i]
+                const member = membersMap.get(memberId)
+                const user = member.user
+                if (discordIds.includes(user.id)) continue
+                discordIds.push(user.id)
+                const avatar = user.avatar
+                if (!avatar) continue
+                const player = await Player.findOne({ where: { discordId: memberId }})
+                if (!player) continue
+                const isActive = player.email || (await Deck.count({ where: { builderId: player.id }})) || (await Stats.count({ where: { playerId: player.id }}))
 
-                    // if (player && isActive && player.discordPfp) {
-                    if (player && isActive && player.discordPfp && player.discordPfp !== avatar) {
-                        await player.update({ discordPfp: avatar })
-                        
-                        const {data} = await axios.get(
-                            `https://cdn.discordapp.com/avatars/${player.discordId}/${avatar}.webp`, {
-                                responseType: 'arraybuffer',
-                            }
-                        )
-    
-                        const buffer = await sharp(data).toFormat('png').toBuffer()
-    
-                        const s3 = new S3({
-                            region: config.s3.region,
-                            credentials: {
-                                accessKeyId: config.s3.credentials.accessKeyId,
-                                secretAccessKey: config.s3.credentials.secretAccessKey
-                            },
-                        })
-    
-                        const { Location: uri} = await new Upload({
-                            client: s3,
-                            params: { Bucket: 'formatlibrary', Key: `images/pfps/${player.discordId}.png`, Body: buffer, ContentType: `image/png` },
-                        }).done()
-                        console.log('uri', uri)
-                        console.log(`saved new pfp for ${player.name}`)
-                        count++
-                    } else {
-                        continue
-                    }
-                } catch (err) {
-                    console.log(err)
-                }   
-            }
+                if (player && isActive && player.discordPfp && player.discordPfp !== avatar) {
+                    await player.update({ discordPfp: avatar })
+                    
+                    const {data} = await axios.get(
+                        `https://cdn.discordapp.com/avatars/${player.discordId}/${avatar}.webp`, {
+                            responseType: 'arraybuffer',
+                        }
+                    )
 
-            console.log(`updated ${count} avatars for ${server.name}`)
-        } catch (err) {
-            console.log(err)
+                    const buffer = await sharp(data).toFormat('png').toBuffer()
+
+                    const s3 = new S3({
+                        region: config.s3.region,
+                        credentials: {
+                            accessKeyId: config.s3.credentials.accessKeyId,
+                            secretAccessKey: config.s3.credentials.secretAccessKey
+                        },
+                    })
+
+                    const { Location: uri} = await new Upload({
+                        client: s3,
+                        params: { Bucket: 'formatlibrary', Key: `images/pfps/${player.discordId}.png`, Body: buffer, ContentType: `image/png` },
+                    }).done()
+                    console.log('uri', uri)
+                    console.log(`saved new pfp for ${player.name}`)
+                    count++
+                } else {
+                    continue
+                }
+            } catch (err) {
+                console.log(err)
+            }   
         }
+
+        console.log(`updated ${count} avatars for ${server.name}`)
     }
 
     return console.log(`updateAvatars() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
@@ -170,45 +163,48 @@ export const conductCensus = async (client) => {
     const checkedDiscordIds = []
     
     for (let s = 0; s < servers.length; s++) {
-        try {
-            const server = servers[s]
-            const guild = client.guilds.cache.get(server.id)
-            if (!guild) {
-                console.log(`cannot find cached guild for ${server.name}`)
-                continue
-            }
-            
-            const membersMap = await guild.members.fetch()
-            const members = [...membersMap.values()]
-            const rolesMap = guild.roles.cache
-            const roles = [...rolesMap.values()].reduce((a, v) => ({ ...a, [v.id]: v.name}), {})
-            let updateCount = 0
-            let createCount = 0
-            let memberCount = 0
-            let roleCount = 0
-            let inactivatedCount = 0
-            let reactivatedCount = 0
+        const server = servers[s]
+        const guild = client.guilds.cache.get(server.id)
+        if (!guild) {
+            console.log(`cannot find cached guild for ${server.name}`)
+            continue
+        }
+        
+        const membersMap = await guild.members.fetch()
+        const members = [...membersMap.values()]
+        const rolesMap = guild.roles.cache
+        const roles = [...rolesMap.values()].reduce((a, v) => ({ ...a, [v.id]: v.name}), {})
+        let updateCount = 0
+        let createCount = 0
+        let memberCount = 0
+        let roleCount = 0
+        let inactivatedCount = 0
+        let reactivatedCount = 0
 
-            for (let i = 0; i < members.length; i++) {
-                const member = members[i]
-                if (member.user.bot ) continue
+        for (let i = 0; i < members.length; i++) {
+            const member = members[i]
+            if (member.user.bot ) continue
 
-                if (!checkedDiscordIds.includes(member.user.id)) {
+            if (!checkedDiscordIds.includes(member.user.id)) {
+                try {
                     checkedDiscordIds.push(member.user.id)
                     const player = await Player.findOne({ where: { discordId: member.user.id } })
                     if (player && ( 
                         player.discordName !== member.user.username
                     )) {
+                        await checkIfDiscordNameIsTaken(member.user.username)
+                        await player.update({ discordName: member.user.username })
                         updateCount++
-                        await player.update({
-                            discordName: member.user.username
-                        })
                     } else if (!player && !member.user.bot) {
                         createCount++
                         await createPlayer(member)
                     }
+                } catch (err) {
+                    console.log(err)
                 }
+            }
 
+            try {
                 const membership = await Membership.count({ where: { '$player.discordId$': member.user.id, serverId: guild.id }, include: Player })
                 if (!membership) {
                     memberCount++
@@ -230,39 +226,39 @@ export const conductCensus = async (client) => {
                         roleCount++
                     }
                 }
+            } catch (err) {
+                console.log(err)
             }
-
-            const memberIds = members.map((m) => m.user.id) || []
-            const memberships = (await Membership.findAll({ where: { serverId: guild.id }, include: Player })) || []
-            for (let i = 0; i < memberships.length; i++) {
-                try {
-                    const m = memberships[i]
-                    if (m.isActive === true && m.player && !memberIds.includes(m.player.discordId)) {
-                        m.isActive = false
-                        await m.save()
-                        inactivatedCount++
-                    } else if (m.isActive === false && m.player && memberIds.includes(m.player.discordId)) {
-                        m.isActive = true
-                        await m.save()
-                        reactivatedCount++
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
-            }
-
-            console.log( 
-                `Updated the following in the database from ${server.name}:` +
-                `\n- ${createCount} new ${createCount === 1 ? 'player' : 'players'}` +
-                `\n- ${memberCount} new ${memberCount === 1 ? 'member' : 'members'}` +
-                `\n- ${inactivatedCount} inactivated ${inactivatedCount === 1 ? 'member' : 'members'}` +
-                `\n- ${reactivatedCount} reactivated ${reactivatedCount === 1 ? 'member' : 'members'}` +
-                `\n- ${updateCount} updated ${updateCount === 1 ? 'player' : 'players'}` +
-                `\n- ${roleCount} updated ${roleCount === 1 ? 'role' : 'roles'}`
-            )
-        } catch (err) {
-            console.log(err)
         }
+
+        const memberIds = members.map((m) => m.user.id) || []
+        const memberships = (await Membership.findAll({ where: { serverId: guild.id }, include: Player })) || []
+        for (let i = 0; i < memberships.length; i++) {
+            try {
+                const m = memberships[i]
+                if (m.isActive === true && m.player && !memberIds.includes(m.player.discordId)) {
+                    m.isActive = false
+                    await m.save()
+                    inactivatedCount++
+                } else if (m.isActive === false && m.player && memberIds.includes(m.player.discordId)) {
+                    m.isActive = true
+                    await m.save()
+                    reactivatedCount++
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        console.log( 
+            `Updated the following in the database from ${server.name}:` +
+            `\n- ${createCount} new ${createCount === 1 ? 'player' : 'players'}` +
+            `\n- ${memberCount} new ${memberCount === 1 ? 'member' : 'members'}` +
+            `\n- ${inactivatedCount} inactivated ${inactivatedCount === 1 ? 'member' : 'members'}` +
+            `\n- ${reactivatedCount} reactivated ${reactivatedCount === 1 ? 'member' : 'members'}` +
+            `\n- ${updateCount} updated ${updateCount === 1 ? 'player' : 'players'}` +
+            `\n- ${roleCount} updated ${roleCount === 1 ? 'role' : 'roles'}`
+        )
     }
 
     return console.log(`conductCensus() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
@@ -362,7 +358,7 @@ export const markInactives = async () => {
 
         if (!count) { 
             console.log(`Inactivating ${s.player?.name || s.playerId}'s STATS IN ${s.formatName} FORMAT`)
-            await s.update({ isActive: false })
+            await s.update({ isActive: false }).catch((err) => console.log(err))
             b++
         }
     }
@@ -375,14 +371,18 @@ export const markInactives = async () => {
 export const purgeEntries = async () => {
     const start = Date.now()
     let count = 0
-    const entries = await Entry.findAll({ include: Tournament })
-    for (let i = 0; i < entries.length; i++) {
-        const entry = entries[i]
-        const tournament = entry.tournament
-        if (tournament.state === 'complete') {
+    try {
+        const entries = await Entry.findAll({ include: Tournament })
+        for (let i = 0; i < entries.length; i++) {
+            const entry = entries[i]
+            const tournament = entry.tournament
+            if (tournament.state === 'complete') {
                 await entry.destroy()
                 count++
             }
+        }
+    } catch (err) {
+        console.log(err)
     }
 
     console.log(`Purged ${count} old tournament entries from the database.`)
@@ -394,8 +394,8 @@ export const purgeTournamentRoles = async (client) => {
     const start = Date.now()
     const servers = await Server.findAll()
     for (let s = 0; s < servers.length; s++) {
-        let b = 0
         try {
+            let b = 0
             const server = servers[s]
             const roleId = server.tournamentRoleId
             if (!roleId) continue
@@ -437,8 +437,8 @@ export const assignTournamentRoles = async (client) => {
     const start = Date.now()
     const servers = await Server.findAll()
     for (let s = 0; s < servers.length; s++) {
-        let b = 0
         try {
+            let b = 0
             const server = servers[s]
             const roleId = server.tournamentRoleId
             if (!roleId) continue
@@ -479,6 +479,8 @@ export const assignTournamentRoles = async (client) => {
 export const updateDeckTypes = async () => {
     const start = Date.now()
     let b = 0
+
+    // UPDATE USER DECKS LABELED AS "OTHER"
     const decks = await Deck.findAll({
         where: {
             deckTypeName: 'Other',
@@ -1485,8 +1487,12 @@ export const updateServers = async (client) => {
         }) 
 
         if (!count) {
-            console.log('Creating server:', guild.name)
-            await Server.create({ id: guild.id, name: guild.name })
+            try {
+                console.log('Creating server:', guild.name)
+                await Server.create({ id: guild.id, name: guild.name })
+            } catch (err) {
+                console.log(err)
+            }
         } else {
             console.log(`server found: ${guild.name}`)
         }

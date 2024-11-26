@@ -13,7 +13,6 @@ import * as morgan from 'morgan'
 import * as chalk from 'chalk'
 import * as http from 'http'
 import * as https from 'https'
-import axios from 'axios'
 import { config } from '@fl/config'
 
 // DATABASE IMPORTS 
@@ -27,7 +26,8 @@ import { createTopCut, editTieBreakers, getMidnightCountdown,
     startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, 
     assignRoles, createMembership, createPlayer, fetchCardNames, hasPartnerAccess, 
     isModerator, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
-    editPointsSystem, runNightlyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, getKnownAbbreviation, getAlphas, capitalize
+    editPointsSystem, runNightlyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, 
+    getKnownAbbreviation, capitalize
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS

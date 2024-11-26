@@ -6,7 +6,7 @@ const Canvas = require('canvas')
 import { ActionRowBuilder, EmbedBuilder, AttachmentBuilder, StringSelectMenuBuilder } from 'discord.js'
 import { Op } from 'sequelize'
 import axios from 'axios'
-import { Card, Membership, Player, Print, Role, Set, Status, Tournament } from '@fl/models'
+import { Card, Membership, Player, Print, Role, Server, Set, Status, Tournament } from '@fl/models'
 import { emojis, rarities } from '@fl/bot-emojis'
 import { config } from '@fl/config'
 import { HeadObjectCommand, S3Client } from '@aws-sdk/client-s3'
@@ -397,15 +397,53 @@ export const createPlayer = async (member) => {
     }
 }
 
+// CHECK IF DISCORD NAME IS TAKEN
+export const checkIfDiscordNameIsTaken = async (discordName) => {
+    const player = await Player.findOne({
+        where: {
+            discordName: discordName
+        }
+    })
+
+    if (player) {
+        const updatedPlayer = await getAndUpdateDiscordName(player)
+        if (updatedPlayer.discordName === discordName) {
+            return true
+        } else {
+            return false
+        }
+    } else {
+        return false
+    }
+}
+
+// GET AND UPDATE DISCORD NAME
+export const getAndUpdateDiscordName = async (player) => {
+    try {
+        const {data: user } = await axios.get(`https://discord.com/api/v9/users/${player.discordId}`, {
+            headers: {
+                Authorization: `Bot ${config.services.bot.token}`
+            }
+        })
+    
+        await player.update({ discordName: user.username })
+    } catch (err) {
+        console.log(err)
+    }
+
+    return player
+}
+
 //CREATE MEMBERSHIP
 export const createMembership = async (guild, member) => {
     try {
         const count = await Player.count({ where: { discordId: member.user.id }})
         if (!count) await createPlayer(member)
         const player = await Player.findOne({ where: { discordId: member.user.id }})
+        const server = await Server.findOne({ where: { id: guild.id }})
 
         await Membership.create({
-            serverName: guild.name,
+            communityName: server?.communityName,
             playerName: player.name,
             playerId: player.id,
             serverId: guild.id

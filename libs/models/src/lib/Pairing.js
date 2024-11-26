@@ -31,7 +31,7 @@ export const Pairing = db.define('pairings', {
     deckFileB: {
         type: Sequelize.TEXT
     },
-    serverName: {
+    communityName: {
         type: Sequelize.STRING
     },
     serverId: {

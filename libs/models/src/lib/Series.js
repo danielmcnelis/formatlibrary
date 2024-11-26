@@ -11,7 +11,7 @@ export const Series = db.define('series', {
   emoji: {
     type: Sequelize.STRING
   },
-  serverName: {
+  communityName: {
     type: Sequelize.STRING
   },
   serverId: {
