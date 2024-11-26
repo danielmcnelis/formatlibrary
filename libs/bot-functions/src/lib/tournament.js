@@ -189,7 +189,7 @@ export const getSpeedDeckList = async (member, player, format, override = false)
         time: 180000
     }).then(async (collected) => {
         const url = collected.first()?.attachments?.first()?.url
-        const ydke = collected.first().content
+        const ydke = collected.first()?.content
         let ydk
 
         if (url) {

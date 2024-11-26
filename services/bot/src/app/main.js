@@ -17,7 +17,7 @@ import axios from 'axios'
 import { config } from '@fl/config'
 
 // DATABASE IMPORTS 
-import { Match, Membership, Player, Server, Tournament } from '@fl/models'
+import { Format, Match, Membership, Player, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
 import { createTopCut, editTieBreakers, getMidnightCountdown, 

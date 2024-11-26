@@ -105,7 +105,7 @@ export default {
             }) 
 
             const deckAttachments = await drawDeck(data.ydk) || []
-            interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
+            interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have your updated deck list for ${tournament.name}! ${tournament.logo}`})
             deckAttachments.forEach((attachment, index) => {
                 if (index === 0) {
@@ -154,7 +154,7 @@ export default {
             }
                 
             await entry.update({ participantId: participant.id })
-            interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
+            interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
             
             const deckAttachments = await drawDeck(data.ydk) || []
@@ -193,7 +193,7 @@ export default {
             }
 
             const deckAttachments = await drawDeck(data.ydk) || []
-            interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
+            interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
             deckAttachments.forEach((attachment, index) => {
                 if (index === 0) {
@@ -221,7 +221,7 @@ export default {
             }
 
             const deckAttachments = await drawDeck(data.ydk) || []
-            interaction.member.roles.add(server.tourRole).catch((err) => console.log(err))
+            interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
             interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
             deckAttachments.forEach((attachment, index) => {
                 if (index === 0) {

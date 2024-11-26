@@ -381,9 +381,8 @@ export const getNewRatedDeck = async (user, player, format) => {
         max: 1,
         time: 180000
     }).then(async (collected) => {
-
         const url = collected.first()?.attachments?.first()?.url
-        const ydke = collected.first().content
+        const ydke = collected.first()?.content
         let ydk
 
         if (url) {

@@ -21,7 +21,7 @@ const getRatedInformation = async (interaction, player) => {
             isActive: true,
             '$server.access$': access,
             '$server.hasInternalLadder$': false,
-            '$server.format$': {[Op.or]: [format.name, null]}
+            '$server.formatName$': {[Op.or]: [format.name, null]}
         }, 
         include: Server,
         order: [[Server, 'createdAt', 'ASC']] 

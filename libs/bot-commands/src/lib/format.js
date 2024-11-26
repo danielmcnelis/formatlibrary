@@ -42,8 +42,7 @@ export default {
         const hadFormatSet = !!server.format
 
         await server.update({
-            format: format.name,
-            emoji: format.emoji
+            formatName: format.name
         })
 
         return await interaction.editReply({ content: `This server's format has been ${hadFormatSet ? 'set' : 'changed'} to: ${format.name} ${format.emoji} Format!`})	 
