@@ -391,7 +391,7 @@ export const composeBlogPost = async (interaction, event) => {
                 formatId: event.formatId,
                 communityName: event.server?.communityName,
                 serverInviteLink: event.server?.InviteLink,
-                serverId: event.primaryTournament?.serverId,
+                serverId: event.primaryTournament?.serverId
             })
         
             const buffer = canvas.toBuffer('image/png')
