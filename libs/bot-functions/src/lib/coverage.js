@@ -295,7 +295,7 @@ export const composeBlogPost = async (interaction, event) => {
                 formatIcon: event.format?.icon, 
                 formatId: event.formatId,
                 communityName: event.server?.communityName,
-                serverInviteLink: event.server?.InviteLink,
+                serverInviteLink: event.server?.inviteLink,
                 serverId: event.primaryTournament?.serverId,
             })
         
@@ -390,7 +390,7 @@ export const composeBlogPost = async (interaction, event) => {
                 formatIcon: event.format?.icon, 
                 formatId: event.formatId,
                 communityName: event.server?.communityName,
-                serverInviteLink: event.server?.InviteLink,
+                serverInviteLink: event.server?.inviteLink,
                 serverId: event.primaryTournament?.serverId
             })
         
