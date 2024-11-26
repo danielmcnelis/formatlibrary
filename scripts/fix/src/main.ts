@@ -74,7 +74,7 @@ const shuffleArray = (arr) => {
 //         }
 
 //         // synchronize Deck builders with Player names
-//         if (deck.builder?.name && deck.builder.name !== deck.builder) {
+//         if (deck.builder?.name && deck.builder.name !== deck.builderName) {
 //             await deck.update({ builder: deck.builder.name })
 //             g++
 //         }
@@ -1975,39 +1975,68 @@ const shuffleArray = (arr) => {
 // })()
 
 
+// ;(async () => { 
+//     let b = 0
+//     let e = 0
+//     const stats = await Stats.findAll()
+
+//     for (let i = 0; i < stats.length; i++) {
+//         try {
+//             const stat = stats[i]
+//             await stat.update({ isActive: !stat.isActive})
+//             b++
+//         } catch (err) {
+//             console.log('stats error', err)
+//             e++
+//         }
+//     }
+
+//     console.log('updated stats:', b, '\nerrors:', e)
+
+//     b = 0
+//     e = 0
+
+//     const tournaments = await Tournament.findAll()
+//     for (let i = 0; i < tournaments.length; i++) {
+//         try {
+//             const tournament = tournaments[i]
+//             await tournament.update({ isRanked: !tournament.isRanked})
+//             b++
+//         } catch (err) {
+//             console.log('tournament error', err)
+//             e++
+//         }
+//     }
+
+//     console.log('updated tournaments:', b, '\nerrors:', e)
+//     return
+// })()
+
+
 ;(async () => { 
     let b = 0
     let e = 0
-    const stats = await Stats.findAll()
+    const servers = await Server.findAll({ where: { formatName: {[Op.not]: null}}})
 
-    for (let i = 0; i < stats.length; i++) {
+    for (let i = 0; i < servers.length; i++) {
         try {
-            const stat = stats[i]
-            await stat.update({ isActive: !stat.isActive})
-            b++
+            const server = servers[i]
+            const format = await Format.findOne({
+                where: {
+                    name: server.formatName
+                }
+            })
+
+            if (format) {
+                await server.update({ formatId: format?.id })
+                b++
+            }
         } catch (err) {
-            console.log('stats error', err)
+            console.log('server error', err)
             e++
         }
     }
 
-    console.log('updated stats:', b, '\nerrors:', e)
-
-    b = 0
-    e = 0
-
-    const tournaments = await Tournament.findAll()
-    for (let i = 0; i < tournaments.length; i++) {
-        try {
-            const tournament = tournaments[i]
-            await tournament.update({ isRanked: !tournament.isRanked})
-            b++
-        } catch (err) {
-            console.log('tournament error', err)
-            e++
-        }
-    }
-
-    console.log('updated tournaments:', b, '\nerrors:', e)
+    console.log('updated servers:', b, '\nerrors:', e)
     return
 })()

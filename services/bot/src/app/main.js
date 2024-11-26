@@ -453,10 +453,7 @@ client.on('guildMemberAdd', async (member) => {
     try {
         const guild = member.guild
         const server = await Server.findOne({ 
-            where: { id: guild.id }, 
-            include: [
-                {model: Format, attributes: ['id', 'emoji']}
-            ]
+            where: { id: guild.id }
         })
         
         if (!server || !hasPartnerAccess(server)) return
@@ -465,7 +462,17 @@ client.on('guildMemberAdd', async (member) => {
         if (await isNewMember(guild.id, member.user.id)) {
             await createMembership(guild, member)
             if (!channel) return
-            return channel.send({ content: `${member}, Welcome to the ${guild.name} ${server.logo} Discord server. ${server.format?.emoji || emojis.legend}`})
+            const format = await Format.findOne({
+                where: {
+                    [Op.or]: {
+                        name: server.formatName,
+                        id: server.formatId
+                    }
+                },
+                attributes: ['emoji']
+            })
+
+            return channel.send({ content: `${member}, Welcome to the ${guild.name} ${server.logo} Discord server. ${format?.emoji || emojis.legend}`})
         } else {
             await assignRoles(guild, member)
             if (!channel) return

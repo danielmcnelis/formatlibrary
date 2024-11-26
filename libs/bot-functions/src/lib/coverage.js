@@ -436,7 +436,7 @@ export const composeThumbnails = async (interaction, event) => {
 
     for (let i = 0; i < decks.length; i++) {
         const deck = decks[i]
-        console.log(`drawing ${deck.builder}'s deck...`)
+        console.log(`drawing ${deck.builderName}'s deck...`)
         const main = []
         const mainKonamiCodes = deck.ydk
             .split('#main')[1]
@@ -489,7 +489,7 @@ export const composeThumbnails = async (interaction, event) => {
             }).done()
             console.log('uri', uri)
         } catch (err) {
-            console.log(`Error composing ${deck.builder}'s deck thumbnail`, err)
+            console.log(`Error composing ${deck.builderName}'s deck thumbnail`, err)
         }
     }
 

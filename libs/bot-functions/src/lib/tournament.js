@@ -272,11 +272,11 @@ export const sendDeck = async (interaction, id) => {
         const deck = await Deck.findOne({ where: { id: id.slice(1) }, include: [{model: Player, as: 'builder'}, Event, Format] })
         interaction.editReply({ content: `Please check your DMs.` })
         const deckAttachments = await drawDeck(deck.ydk) || []
-        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${deck.builder?.name}_${deck.event?.abbreviation || deck.event?.name}.ydk` })
+        const ydkFile = new AttachmentBuilder(Buffer.from(deck.ydk), { name: `${deck.builderName}_${deck.eventAbbreviation || deck.event?.name}.ydk` })
         const isAuthor = interaction.user.id === deck.builder.discordId
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
-                interaction.member.send({ content: `${isAuthor ? 'Your' : `${deck.builder?.name}'s`} deck for ${deck.event?.name} is:`, files: [attachment] }).catch((err) => console.log(err))
+                interaction.member.send({ content: `${isAuthor ? 'Your' : `${deck.builderName}'s`} deck for ${deck.event?.name} is:`, files: [attachment] }).catch((err) => console.log(err))
             } else {
                 interaction.member.send({ files: [attachment] }).catch((err) => console.log(err))
             }
