@@ -119,6 +119,18 @@
     padding: 10px 0px;
 }
 
+.announcement-banner {
+    padding: 12px 0px;
+    background-color: var(--background-announcements);
+    color: var(--text-opposite);
+}
+
+.announcement-banner:hover {
+    cursor: pointer;
+    background-color: var(--announcements-opposite);
+    color: var(--text-primary);
+}
+
 .nav-header {
     color: #f7f7f7;
     padding: 10px;

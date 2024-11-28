@@ -21,6 +21,7 @@ export const Navigation = (props) => {
     const { switchTheme, theme } = props
 
     return (
+        <>
         <div className="nav-bar">
             <Link to="/" state={{ page: 1 }}  >
                 <div id="logo">
@@ -126,5 +127,15 @@ export const Navigation = (props) => {
                 }
             </div>
         </div>
+            <div className="announcement-banner">
+                <h2>
+                    <a 
+                        className="inherit-color" 
+                        href="https://discord.com/events/414551319031054346/1306285189575475324"
+                        rel="noreferrer"
+                        target="_blank"
+                    >Tournament Alert: Edison Worlds LCQ #1 - Friday Nov. 29 @ 1pm EST</a></h2>
+            </div>
+        </>
     )
 }

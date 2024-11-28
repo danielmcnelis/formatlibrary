@@ -16,6 +16,8 @@
   :root {
     --background: #f7f7f7;
     --background-secondary: #0c0e17;
+    --background-announcements: #1c3c78;
+    --announcements-opposite: #e8d46d;
     --card-description: #e3dede;
     --even-row: #eef2f5;
     --text-primary: black;
@@ -61,6 +63,8 @@
   [data-theme='dark'] {
     --background: #212023;
     --background-secondary: #0b0b0d;
+    --background-announcements: #e8d46d;
+    --announcements-opposite: #1c3c78;
     --card-description: #363333;
     --even-row: #302e35;
     --text-primary: white;
@@ -249,6 +253,10 @@
   Link, .Link, .link, .link:hover, a, a:hover {
       text-decoration: none;
       color: var(--text-primary);
+  }
+
+  .inherit-color {
+    color: inherit;
   }
   
   .h2 {
