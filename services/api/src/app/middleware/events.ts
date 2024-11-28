@@ -64,6 +64,7 @@ export const countEvents = async (req, res, next) => {
 export const getEvents = async (req, res, next) => {
     try {
         const limit = parseInt(req.query.limit || 10)
+        if (limit > 100) return res.json({})
         const page = parseInt(req.query.page || 1)
 
         const filter = req.query.filter ? req.query.filter.split(',').reduce((reduced, val) => {

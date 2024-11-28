@@ -29,6 +29,7 @@ export const getReplays = async (req, res, next) => {
         const isAdmin = req.query.admin
         const isSubscriber = req.query.subscriber
         const limit = parseInt(req.query.limit || 10)
+        if (limit > 100) return res.json({})
         const page = parseInt(req.query.page || 1)
         const display = isAdmin === 'true' ? {} :
             isSubscriber === 'true' ? { publishDate: {operator: 'not', value: null } } :

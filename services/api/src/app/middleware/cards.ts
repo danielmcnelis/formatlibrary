@@ -39,6 +39,7 @@ export const cardsCount = async (req, res, next) => {
 export const cards = async (req, res, next) => {
     try {
         const limit = parseInt(req.query.limit || 10)
+        if (limit > 100) return res.json({})
         const page = parseInt(req.query.page || 1)
         const booster = req.query.booster
 
