@@ -2169,7 +2169,6 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
 // CALCULATE STANDINGS 
 export const calculateStandings = async (tournament, matches, participants) => {
     if (tournament.type !== 'swiss') return null
-    console.log('tournament.pointsPerMatchTie', tournament.pointsPerMatchTie)
     const data = {}
     let currentRound = 1
 
@@ -2277,6 +2276,7 @@ export const calculateStandings = async (tournament, matches, participants) => {
             data[match.loser_id].roundsWithoutBye.push(round)
             data[match.loser_id].pointsDifference-=1
         } else if (match.state === 'complete') {
+            // The following if-statement addresses a duplicate pairing bug introduced to challonge.com in March 2024
             if (
                 data[match.player1_id].opponents.includes(match.player2_id) || 
                 data[match.player2_id].opponents.includes(match.player1_id)

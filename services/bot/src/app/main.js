@@ -5,6 +5,7 @@
 // MODULE IMPORTS
 import { Collection, Events } from 'discord.js'
 const FuzzySet = require('fuzzyset')
+import { Op } from 'sequelize'
 import { client } from './client'
 import { readFileSync } from 'fs'
 import * as express from 'express'
