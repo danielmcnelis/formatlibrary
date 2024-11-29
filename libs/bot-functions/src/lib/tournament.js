@@ -2169,6 +2169,7 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
 // CALCULATE STANDINGS 
 export const calculateStandings = async (tournament, matches, participants) => {
     if (tournament.type !== 'swiss') return null
+    console.log('tournament.pointsPerMatchTie', tournament.pointsPerMatchTie)
     const data = {}
     let currentRound = 1
 
@@ -2275,7 +2276,7 @@ export const calculateStandings = async (tournament, matches, participants) => {
             data[match.loser_id].opponents.push(match.winner_id)
             data[match.loser_id].roundsWithoutBye.push(round)
             data[match.loser_id].pointsDifference-=1
-        } else if (match.state === 'complete' && tournament.pointsPerMatchTie !== '0.0') {
+        } else if (match.state === 'complete') {
             if (
                 data[match.player1_id].opponents.includes(match.player2_id) || 
                 data[match.player2_id].opponents.includes(match.player1_id)
@@ -2288,13 +2289,6 @@ export const calculateStandings = async (tournament, matches, participants) => {
             data[match.player2_id].opponents.push(match.player1_id)
             data[match.player2_id].roundsWithoutBye.push(round)
         }
-    }
-
-    const rounds = []
-    let i = 1
-    while (i <= currentRound) {
-        rounds.push(i)
-        i++
     }
     
     const keys = Object.keys(data)
