@@ -33,11 +33,11 @@ export default {
         const name = interaction.options.getString('name')
         console.log('submitted name:', name)
         const [simulator, colName] = interaction.options.getString('simulator').split(', ')
+        const player =  await Player.findOne({ where: { discordId: user.id } })
         console.log('simulator:', simulator)
         console.log('colName:', colName)
         console.log('prev. player.duelingBookName:', player.duelingBookName)
         console.log('prev. player[colName]:', player[colName])
-        const player =  await Player.findOne({ where: { discordId: user.id } })
         if (userIsAuthor && name) {
             await player.update({ [colName]: name })
             console.log('new player.duelingBookName:', player.duelingBookName)
