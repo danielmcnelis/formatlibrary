@@ -129,12 +129,12 @@ export const Navigation = (props) => {
         </div>
             <div className="announcement-banner">
                 <h2>
-                    <a 
+                    <a
                         className="inherit-color" 
-                        href="https://discord.com/events/414551319031054346/1306285189575475324"
+                        href="https://discord.com/events/414551319031054346/1306285681026400407"
                         rel="noreferrer"
                         target="_blank"
-                    >Tournament Alert: Edison Worlds LCQ #1 - Friday Nov. 29 @ 1pm EST</a></h2>
+                    >Tournament Alert: Edison Worlds LCQs - 12/7 @ 12pm EST, 12/8 @ 11am EST</a></h2>
             </div>
         </>
     )

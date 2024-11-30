@@ -31,20 +31,12 @@ export default {
         const user = interaction.options.getUser('user') || interaction.user
         const userIsAuthor = user.id === interaction.user.id
         const name = interaction.options.getString('name')
-        console.log('submitted name:', name)
         const [simulator, colName] = interaction.options.getString('simulator').split(', ')
         const player =  await Player.findOne({ where: { discordId: user.id } })
-        console.log('simulator:', simulator)
-        console.log('colName:', colName)
-        console.log('prev. player.duelingBookName:', player.duelingBookName)
-        console.log('prev. player[colName]:', player[colName])
         if (userIsAuthor && name) {
             await player.update({ [colName]: name })
-            console.log('new player.duelingBookName:', player.duelingBookName)
-            console.log('new player[colName]:', player[colName])
             return await interaction.reply({ content: `Your ${simulator} username has been set to: ${player[colName]}`})
         } else {
-            console.log('not author or no name')
             return await interaction.reply({ content: `${userIsAuthor ? 'Your' : `${user.username}'s`} ${simulator} username is: ${player[colName]}`})
         }
 	}
