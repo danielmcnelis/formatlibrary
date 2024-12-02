@@ -2195,7 +2195,7 @@ export const calculateStandings = async (tournament, matches, participants) => {
         })
 
         if (!entry) {
-            console.log(`no entry:`, p.participant)
+            console.log(`no entry:`, p.participant?.name)
             data[p.participant.id] = {
                 participantId: p.participant.id,
                 name: p.participant.name,
@@ -2405,6 +2405,7 @@ export const calculateStandings = async (tournament, matches, participants) => {
         }
     }
 
+    console.log('standings', standings)
     return standings
 }
 
