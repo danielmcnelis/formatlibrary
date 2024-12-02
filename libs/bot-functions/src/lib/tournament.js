@@ -2405,7 +2405,8 @@ export const calculateStandings = async (tournament, matches, participants) => {
         }
     }
 
-    console.log('standings', standings)
+    console.log('tiebreakers:', tieBreaker1, tieBreaker2, tieBreaker3)
+    console.log('standings:', '\n', standings.map((s) => `${s.rank}. ${s.name} ${s.wins}-${s.losses}-${s.ties}${s.byes > 0 ? ` +${s.byes} BYE` : ''} [${tieBreaker1}, ${tieBreaker2}, ${tieBreaker3}]`).join('\n'))
     return standings
 }
 
