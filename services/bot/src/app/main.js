@@ -292,8 +292,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const decipherDurationInput = (input = '') => !input.toLowerCase()?.includes('m')
     
             console.log(`interaction.fields.fields.get('type')`, interaction.fields.fields.get('type'))
-            console.log(`interaction.fields.getTextInputValue('type')`, interaction.fields.getTextInputValue('type'))
-            const tournament_type = decipherTournamentTypeInput(interaction.fields.getTextInputValue('type'))
+            console.log(`interaction.fields.getTextInputValue('type').catch((err) => console.log(err))`, interaction.fields.getTextInputValue('type').catch((err) => console.log(err)))
+            const tournament_type = decipherTournamentTypeInput(interaction.fields.getTextInputValue('type').catch((err) => console.log(err)))
             const url = interaction.fields.getTextInputValue('url')
             const isRanked = decipherRankedInput(interaction.fields.getTextInputValue('ranked'))
             const isLive = decipherDurationInput(interaction.fields.getTextInputValue('duration'))
