@@ -299,7 +299,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     
             return updateTournament(interaction, tournamentId, name, tournament_type, url, isRanked, isLive)
         } else if (interaction.customId?.includes('tiebreakers')) {
-            const decipherTieBreakerInput = (input) => {
+            const decipherTieBreakerInput = (input = '') => {
                 if (input.includes('mb') || input.includes('med')) {
                     return 'median buchholz'
                 } else if (input.includes('wvt') || input.includes('wins vs')) {
@@ -315,9 +315,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 }
             }
         
-            const tieBreaker1 = interaction.fields.fields.get('tb1') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase()) || 'median buchholz' : 'median buchholz'
-            const tieBreaker2 = interaction.fields.fields.get('tb2') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) || 'match wins vs tied' : 'match wins vs tied'
-            const tieBreaker3 = interaction.fields.fields.get('tb3') ? decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase()) || null : null
+            const tieBreaker1 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase()) || 'median buchholz'
+            const tieBreaker2 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) || 'match wins vs tied'
+            const tieBreaker3 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase()) || null
             const tournamentId = interaction.customId?.split('-')[1]
     
             return editTieBreakers(interaction, tournamentId, tieBreaker1, tieBreaker2, tieBreaker3)
