@@ -38,7 +38,7 @@ export default {
 
             let b = 0
             let e = 0
-            console.log('input', input)
+            console.log('input:', input)
             const event = await Event.findOne({
                 where: { 
                     [Op.or]: {
@@ -79,7 +79,7 @@ export default {
                     })
     
                     if (!player) {
-                        console.log(`no player found: ${standing.name}`)
+                        console.log(`No player found: ${standing.name}`)
                         continue
                     }
     
@@ -91,27 +91,41 @@ export default {
                     })
     
                     if (!deck) {
-                        console.log(`no deck found: ${player.name}`)
-                        continue
-                    } else if (deck.display === true) {
-                        console.log(`deck topped: ${player.name}`)
+                        console.log(`No deck found: ${player.name}`)
                         continue
                     }
+                    
+                    if ((i + 1) <= event.primaryTournament.topCut) {
+                        if (deck.display === true) {
+                            console.log(`${player.name}'s deck topped and is correctly displayed: ${player.name}`)
+                            continue
+                        } else {
+                            console.log(`${player.name}'s deck topped but (!) is not displayed. Updating -> display = true`)
+                            await deck.update({ display: true })
+                            continue
+                        }
+                    } else {
+                        if (deck.display === true) {
+                            console.log(`${player.name}'s  deck did not top but (!) is incorrectly displayed. Updating -> display = false`)
+                            await deck.update({ display: false })
+                        } else {
+                            console.log(`${player.name}'s deck did not top and is correctly not displayed.`)
+                        }
+                    }
     
-                    const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
-                        participant.final_rank ? parseInt(participant.final_rank) :
-                        null
+                    const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) : null
                     
                     if (!placement) {
-                        console.log(`no placement found: ${player.name}`)
+                        console.log(`Warning (!) No placement found: ${player.name}`)
                         continue
                     } else if (placement === deck.placement) {
                         console.log(`${player.name}'s deck already has the correct placement (${placement})`)
+                        continue
+                    } else {
+                        console.log(`Updating deck placement: ${deck.placement} -> ${placement}`)
+                        await deck.update({ placement })
+                        b++
                     }
-    
-                    console.log(`updating deck placement: ${deck.placement} -> ${placement}`)
-                    await deck.update({ placement })
-                    b++
                 } catch (err) {
                     e++
                     console.log(err)
