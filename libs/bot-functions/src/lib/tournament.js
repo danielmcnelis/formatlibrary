@@ -2410,6 +2410,18 @@ export const calculateStandings = async (tournament, matches, participants) => {
     return standings
 }
 
+// GET PARTICIPANT FINAL RANK
+export const getParticipantFinalRank = async (server, tournament, participantName) => {
+    const participants = await getParticipants(server, tournament.id)
+    participants.forEach((p) => {
+        if (p.participant.name === participantName) {
+            return p.participant.final_rank
+        }
+    })
+
+    return null
+}
+
 // AUTO REGISTER TOP CUT
 export const autoRegisterTopCut = async (server, tournament, topCutTournament, standings) => {
     const topCut = standings.filter((s) => {

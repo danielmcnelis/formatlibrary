@@ -2,7 +2,7 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { isProgrammer } from '@fl/bot-functions'
 import { Alius, Deck, DeckType, Event, Format, Match, Matchup, Player, Replay, Server, Team, Tournament } from '@fl/models'
-import { getMatches, getParticipants, composeBlogPost, calculateStandings, generateMatchupData, fixPlacements, updateSingleAvatar } from '@fl/bot-functions'
+import { getMatches, getParticipantFinalRank, getParticipants, composeBlogPost, calculateStandings, generateMatchupData, fixPlacements, updateSingleAvatar } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { getParticipants } from '../../../bot-functions/src'
@@ -38,7 +38,7 @@ export default {
 
             let b = 0
             let e = 0
-            console.log('input:', input)
+
             const event = await Event.findOne({
                 where: { 
                     [Op.or]: {
@@ -46,12 +46,8 @@ export default {
                         abbreviation: input
                     }
                 },
-                include: [Format, { model: Player, as: 'winner' }, {model: Tournament, as: 'primaryTournament'}]
+                include: [Format, { model: Player, as: 'winner' }, {model: Tournament, as: 'primaryTournament'}, {model: Tournament, as: 'topCutTournament'}]
             })
-
-            const topCutTournament = await Tournament.findOne({ where: {
-                id: event.topCutTournamentId
-            }})
 
             if (!event) return await interaction.editReply('No event found.')
 
@@ -61,13 +57,13 @@ export default {
                 }
             })
 
-            const matches = await getMatches(server, event.primaryTournamentId)
-            const participants = await getParticipants(server, event.primaryTournamentId)
-            const standings = await calculateStandings(event.primaryTournament, matches, participants, topCutTournament)
-
+            const primaryTournamentMatches = await getMatches(server, event.primaryTournamentId)
+            const primaryTournamentParticipants = await getParticipants(server, event.primaryTournamentId)
+            const standings = await calculateStandings(event.primaryTournament, primaryTournamentMatches, primaryTournamentParticipants)
+            
             for (let i = 0; i < standings.length; i++) {
                 try {
-                    const standing = standings[i] 
+                    const standing = standings[i]
                     const player = await Player.findOne({
                         where: {
                             [Op.or]: {
@@ -95,36 +91,42 @@ export default {
                         continue
                     }
                     
-                    if ((i + 1) <= event.primaryTournament.topCut) {
+                    if ((i + 1) <= event.primaryTournament.topCutSize) {
                         if (deck.display === true) {
                             console.log(`${player.name}'s deck topped and is correctly displayed: ${player.name}`)
-                            continue
                         } else {
                             console.log(`${player.name}'s deck topped but (!) is not displayed. Updating -> display = true`)
                             await deck.update({ display: true })
-                            continue
+                        }
+
+                        const placement = await getParticipantFinalRank(event.topCutTournament, standing.name)
+
+                        if (!placement) {
+                            console.log(`Warning (!) No placement found: ${player.name}`)
+                        } else if (placement === deck.placement) {
+                            console.log(`${player.name}'s deck already has the correct placement (${placement})`)
+                        } else {
+                            console.log(`Updating ${player.name}'s deck placement: ${deck.placement} -> ${placement}`)
+                            await deck.update({ placement })
+                            b++
                         }
                     } else {
                         if (deck.display === true) {
-                            console.log(`${player.name}'s  deck did not top but (!) is incorrectly displayed. Updating -> display = false`)
+                            console.log(`${player.name}'s deck did not top but (!) is incorrectly displayed. Updating -> display = false`)
                             await deck.update({ display: false })
-                        } else {
-                            console.log(`${player.name}'s deck did not top and is correctly not displayed.`)
                         }
-                    }
-    
-                    const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) : null
-                    
-                    if (!placement) {
-                        console.log(`Warning (!) No placement found: ${player.name}`)
-                        continue
-                    } else if (placement === deck.placement) {
-                        console.log(`${player.name}'s deck already has the correct placement (${placement})`)
-                        continue
-                    } else {
-                        console.log(`Updating deck placement: ${deck.placement} -> ${placement}`)
-                        await deck.update({ placement })
-                        b++
+
+                        const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) : null
+                        
+                        if (!placement) {
+                            console.log(`Warning (!) No placement found: ${player.name}`)
+                        } else if (placement === deck.placement) {
+                            console.log(`${player.name}'s deck already has the correct placement (${placement})`)
+                        } else {
+                            console.log(`Updating ${player.name}'s deck placement: ${deck.placement} -> ${placement}`)
+                            await deck.update({ placement })
+                            b++
+                        }
                     }
                 } catch (err) {
                     e++
