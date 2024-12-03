@@ -291,12 +291,21 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const decipherRankedInput = (input = '') => !input.toLowerCase()?.includes('u')
             const decipherDurationInput = (input = '') => !input.toLowerCase()?.includes('m')
     
-            console.log(`interaction.fields.fields.get('type')`, interaction.fields.fields.get('type'))
-            console.log(`interaction.fields.getTextInputValue('type').catch((err) => console.log(err))`, interaction.fields.getTextInputValue('type').catch((err) => console.log(err)))
-            const tournament_type = decipherTournamentTypeInput(interaction.fields.getTextInputValue('type').catch((err) => console.log(err)))
+            let tournament_type, isRanked, isLive
+
+            if (interaction.fields.fields.get('type')) {
+                tournament_type = decipherTournamentTypeInput(interaction.fields.getTextInputValue('type'))
+            }
+
+            if (interaction.fields.fields.get('ranked')) {
+                isRanked = decipherRankedInput(interaction.fields.getTextInputValue('ranked'))
+            }
+
+            if (interaction.fields.fields.get('duration')) {
+                isLive = decipherDurationInput(interaction.fields.getTextInputValue('duration'))
+            }
+
             const url = interaction.fields.getTextInputValue('url')
-            const isRanked = decipherRankedInput(interaction.fields.getTextInputValue('ranked'))
-            const isLive = decipherDurationInput(interaction.fields.getTextInputValue('duration'))
             const tournamentId = interaction.customId?.split('-')[1]
     
             return updateTournament(interaction, tournamentId, name, tournament_type, url, isRanked, isLive)
@@ -317,16 +326,42 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 }
             }
         
-            const tieBreaker1 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1')?.toLowerCase()) || 'median buchholz'
-            const tieBreaker2 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2')?.toLowerCase()) || 'match wins vs tied'
-            const tieBreaker3 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3')?.toLowerCase()) || null
+            let tieBreaker1 = 'median buchholz'
+            let tieBreaker2 = 'match wins vs tied'
+            let tieBreaker3 = null
+
+            if (interaction.fields.fields.get('tb1')) {
+                tieBreaker1 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb1'))
+            }
+
+            if (interaction.fields.fields.get('tb2')) {
+                tieBreaker2 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb2'))
+            }
+
+            if (interaction.fields.fields.get('tb3')) {
+                tieBreaker3 = decipherTieBreakerInput(interaction.fields.getTextInputValue('tb3'))
+            }
+
             const tournamentId = interaction.customId?.split('-')[1]
     
             return editTieBreakers(interaction, tournamentId, tieBreaker1, tieBreaker2, tieBreaker3)
         } else if (interaction.customId.includes('points')) {    
-            const pointsPerMatchWin = interaction.fields.fields.get('ppwin') ? interaction.fields.getTextInputValue('ppwin') : '1.0'
-            const pointsPerMatchTie = interaction.fields.fields.get('pptie') ? interaction.fields.getTextInputValue('pptie') : '0.0'
-            const pointsPerBye = interaction.fields.fields.get('ppbye') ? interaction.fields.getTextInputValue('ppbye') : '1.0'
+            let pointsPerMatchWin = '1.0'
+            let pointsPerMatchTie = '0.0'
+            let pointsPerBye = '1.0'
+
+            if (interaction.fields.fields.get('ppwin')) {
+                pointsPerMatchWin = interaction.fields.getTextInputValue('ppwin')
+            }
+
+            if (interaction.fields.fields.get('pptie')) {
+                pointsPerMatchTie = interaction.fields.getTextInputValue('pptie')
+            }
+
+            if (interaction.fields.fields.get('ppbye')) {
+                pointsPerBye = interaction.fields.getTextInputValue('ppbye')
+            }
+
             const tournamentId = interaction.customId?.split('-')[1]
     
             return editPointsSystem(interaction, tournamentId, pointsPerMatchWin, pointsPerMatchTie, pointsPerBye)
