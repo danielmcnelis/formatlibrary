@@ -28,7 +28,7 @@ import { createTopCut, editTieBreakers, getMidnightCountdown,
     assignRoles, createMembership, createPlayer, fetchCardNames, hasPartnerAccess, 
     isModerator, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
     editPointsSystem, runNightlyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, 
-    getKnownAbbreviation, capitalize
+    getKnownAbbreviation, capitalize, removeLeadingZerosFromWords
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
@@ -240,11 +240,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
         if (interaction.customId?.includes('create')) {
             // REMOVE ALL WEIRD SYMBOLS.
             const name = capitalize(
-                interaction.fields.getTextInputValue('name')
-                    ?.replace(/[/|\\()[\]{}<>~^%&?@#,;"'`_*+=0]/g, '')
-                    ?.replace(/\s+/g, ' ')
-                    ?.toLowerCase()
-                , true)
+                    removeLeadingZerosFromWords(
+                        interaction.fields.getTextInputValue('name')
+                            ?.replace(/[/|\\()[\]{}<>~^%&?@#,;"'`_*+=]/g, '')
+                            ?.replace(/\s+/g, ' ')
+                            ?.toLowerCase()
+                        , true)
+                    )
     
             const tournament_type = interaction.customId?.includes('SW') ? 'swiss' :
                 interaction.customId?.includes('SE') ? 'single elimination' :
@@ -270,7 +272,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, isRanked, isLive)
         } else if (interaction.customId?.includes('settings')) {
             const name = capitalize(interaction.fields.getTextInputValue('name'))
-    
+
             const decipherTournamentTypeInput = (input = '') => {
                 input = input.toLowerCase()
                 if (input.includes('sw')) {
@@ -289,11 +291,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const decipherRankedInput = (input = '') => !input.toLowerCase()?.includes('u')
             const decipherDurationInput = (input = '') => !input.toLowerCase()?.includes('m')
     
-            const tournament_type = interaction.fields.fields.get('type') ? decipherTournamentTypeInput(interaction.fields.getTextInputValue('type')) : null
-            
+            const tournament_type = decipherTournamentTypeInput(interaction.fields.getTextInputValue('type'))
             const url = interaction.fields.getTextInputValue('url')
-            const isRanked = interaction.fields.fields.get('ranked') ? decipherRankedInput(interaction.fields.getTextInputValue('ranked')) : null
-            const isLive = interaction.fields.fields.get('duration') ? decipherDurationInput(interaction.fields.getTextInputValue('duration')) : null
+            const isRanked = decipherRankedInput(interaction.fields.getTextInputValue('ranked'))
+            const isLive = decipherDurationInput(interaction.fields.getTextInputValue('duration'))
             const tournamentId = interaction.customId?.split('-')[1]
     
             return updateTournament(interaction, tournamentId, name, tournament_type, url, isRanked, isLive)

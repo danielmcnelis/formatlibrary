@@ -2652,7 +2652,13 @@ export const updateTournament = async (interaction, tournamentId, name, tourname
         }
     })
 
-    await tournament.update({ isRanked: isRanked, isLive: isLive })
+    if (interaction.fields.fields.get('ranked')) {
+        await tournament.update({ isRanked: isRanked })
+    } 
+
+    if (interaction.fields.fields.get('duration')) {
+        await tournament.update({ isLive: isLive })
+    }
 
     try {
         const { status, data } = await axios({
@@ -3406,7 +3412,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
                 const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/matches.json?api_key=${server.challongeApiKey}`)
                 const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/participants.json?api_key=${server.challongeApiKey}`)
                 const standings = await calculateStandings(tournament, matches, participants)                
-                const success = await createDecks(event, participants, standings)
+                const success = await createDecks(event, participants, standings, tournament.size, tournament.id, server.challongeApiKey)
 
                 if (!success) {
                     return await interaction.editReply(`Failed to save all decks.`)

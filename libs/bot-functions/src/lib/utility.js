@@ -373,6 +373,11 @@ export const capitalize = (str = '', eachWord = false) => {
     }
 }
 
+// REMOVE LEADING ZEROS FROM WORDS
+export const removeLeadingZerosFromWords = (str = '') => {
+    return str.split(' ').map(word => word.replace(/^0+/, '')).join(' ')
+}
+
 //CONVERT ARRAY TO OBJECT
 export const convertArrayToObject = (arr = []) => {
     const obj = {}

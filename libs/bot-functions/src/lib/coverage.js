@@ -12,7 +12,7 @@ import { config } from '@fl/config'
 import { checkExpiryDate, uploadDeckFolder } from './drive'
 
 // CREATE DECKS
-export const createDecks = async (event, participants, standings = []) => {
+export const createDecks = async (event, participants, standings = [], topCutSize, topCutTournamentId, challongeApiKey) => {
     let b = 0
     let c = 0
     let e = 0
@@ -45,9 +45,24 @@ export const createDecks = async (event, participants, standings = []) => {
     
                 if (!count) {
                     const standing = standings?.find((s) => s.participantId === participant.id)
-                    const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
+                    let placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
                         participant.final_rank ? parseInt(participant.final_rank) :
                         null
+
+                    if (topCutSize && placement <= topCutSize) {
+                        const topCutEntry = await Entry.findOne({
+                            where: {
+                                playerId: entry.playerId,
+                                tournamentId: topCutTournamentId
+                            }
+                        })
+
+                        const {data} = await axios.get(`https://api.challonge.com/v1/tournaments/${topCutTournamentId}/participants/${topCutEntry.participantId}.json?api_key=${challongeApiKey}`) 
+                        
+                        if (data?.participant?.final_rank) {
+                            placement = data.participant.final_rank
+                        }
+                    }
     
                     const deckType = await getDeckType(entry.ydk, event.formatName)
     
