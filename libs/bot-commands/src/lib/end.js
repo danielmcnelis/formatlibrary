@@ -121,7 +121,7 @@ export default {
                         const winningEntry = await Entry.findOne({ where: { participantId: parseInt(winnerParticipantId) }})
                         await event.update({
                             winnerName: winningEntry.playerName,
-                            playerId: winningEntry.playerId
+                            winnerId: winningEntry.playerId
                         })
 
                         console.log(`Marked ${winningEntry.playerName} as the winner of ${event.name}.`)

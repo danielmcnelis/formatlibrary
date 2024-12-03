@@ -209,14 +209,14 @@ export const SingleEvent = (props) => {
                                         <img 
                                             className="single-event-winner-cell-pfp"
                                             src={
-                                                event.winner.discordPfp ? `https://cdn.discordapp.com/avatars/${event.winner?.discordId}/${event.winner.discordPfp}.webp` :
+                                                event.winner?.discordPfp ? `https://cdn.discordapp.com/avatars/${event.winner?.discordId}/${event.winner?.discordPfp}.webp` :
                                                 `https://cdn.formatlibrary.com/images/pfps/${event.winner?.name}.png`
                                             }
                                             onError={(e) => {
                                                 e.target.onerror = null
                                                 e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
                                             }}
-                                            alt={event.winner.name}
+                                            alt={event.winner?.name}
                                         />
                                     </div>
                                 )
