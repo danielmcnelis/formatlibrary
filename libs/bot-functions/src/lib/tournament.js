@@ -2412,12 +2412,14 @@ export const calculateStandings = async (tournament, matches, participants) => {
 
 // GET PARTICIPANT FINAL RANK
 export const getParticipantFinalRank = async (server, tournament, participantName) => {
-    console.log('server.challongeApiKey', server.challongeApiKey)
-    console.log('tournament.id', tournament.id)
     console.log('participantName', participantName)
     const participants = await getParticipants(server, tournament.id)
+    console.log('participants.length', participants.length)
     participants.forEach((p) => {
+        console.log('p.participant.name', p.participant.name)
+        console.log('p.participant.final_rank', p.participant.final_rank)
         if (p.participant.name === participantName) {
+            console.log('NAME MATCH -> RETURN', p.participant.name, p.participant.final_rank)
             return p.participant.final_rank
         }
     })
