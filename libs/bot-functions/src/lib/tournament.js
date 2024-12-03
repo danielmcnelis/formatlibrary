@@ -2415,7 +2415,7 @@ export const getParticipantFinalRank = async (server, tournament, participantNam
     console.log('participantName', participantName)
     const participants = await getParticipants(server, tournament.id)
     console.log('participants.length', participants.length)
-    participants.forEach((p) => {
+    const finalRank = participants.forEach((p) => {
         console.log('p.participant.name', p.participant.name)
         console.log('p.participant.final_rank', p.participant.final_rank)
         if (p.participant.name === participantName) {
@@ -2424,7 +2424,8 @@ export const getParticipantFinalRank = async (server, tournament, participantNam
         }
     })
 
-    return null
+    console.log('finalRank', finalRank)
+    return finalRank
 }
 
 // AUTO REGISTER TOP CUT
