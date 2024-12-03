@@ -99,7 +99,7 @@ export default {
                             await deck.update({ display: true })
                         }
 
-                        const placement = await getParticipantFinalRank(event.topCutTournament, standing.name)
+                        const placement = await getParticipantFinalRank(server, event.topCutTournament, standing.name)
 
                         if (!placement) {
                             console.log(`Warning (!) No placement found: ${player.name}`)
