@@ -445,14 +445,13 @@ export const manageSubscriptions = async (client) => {
     // const members = [...membersMap.values()]
     const programmer = await client.users.fetch('194147938786738176')
     
-    const players = await Player.findAll({
+    const players = [...await Membership.findAll({
         where: {
-            id: {[Op.not]: null},
-            '$membership.serverId$': '414551319031054346',
-            '$membership.isActive$': true
+            serverId: '414551319031054346',
+            isActive: true
         },
-        include: Membership
-    })
+        include: Player
+    })].map((m) => m.player)
                     
     for (let i = 0; i < players.length; i++) {
         try {
