@@ -366,18 +366,18 @@ export const selectTournament = async (interaction, tournaments) => {
 // GET FILM
 export const getFilm = async (interaction, tournamentId, userId) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
-    const inspectingPlayer = await Player.findOne({ where: { discordId: interaction.user.id }})
+    // const inspectingPlayer = await Player.findOne({ where: { discordId: interaction.user.id }})
     const player = await Player.findOne({ where: { discordId: userId }})
     const server = await Server.findOne({ where: { id: interaction.guildId }})
 
-    const elligibleToView = await Entry.findOne({
-        where: {
-            tournamentId: tournament.id,
-            playerId: inspectingPlayer.id
-        }
-    })
+    // const elligibleToView = await Entry.findOne({
+    //     where: {
+    //         tournamentId: tournament.id,
+    //         playerId: inspectingPlayer.id
+    //     }
+    // })
 
-    if (!elligibleToView) return await interaction.editReply({ content: `You do not have permission to do that.`})
+    // if (!elligibleToView) return await interaction.editReply({ content: `You do not have permission to do that.`})
 
     const entry = await Entry.findOne({
         where: {
