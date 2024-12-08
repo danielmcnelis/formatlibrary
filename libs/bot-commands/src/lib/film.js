@@ -23,6 +23,10 @@ export default {
         
         const user = interaction.options.getUser('player') || interaction.user    
         const discordId = user.id
+
+        const inspectingPlayer = await Player.findOne({ where: { discordId: interaction.user.id } })
+        if (!inspectingPlayer) return await interaction.editReply({ content: "You are not in the database."})
+
         const player = await Player.findOne({ where: { discordId: discordId } })
         if (!player) return await interaction.editReply({ content: "That user is not in the database."})
 
@@ -30,6 +34,15 @@ export default {
         const tournaments = await Tournament.findByState({[Op.or]:['underway', 'topcut']}, format, interaction.guildId, 'ASC')
         const tournament = await selectTournament(interaction, tournaments, 'ASC')
         if (!tournament) return
+
+        const elligibleToView = await Entry.findOne({
+            where: {
+                tournamentId: tournament.id,
+                playerId: inspectingPlayer.id
+            }
+        })
+
+        if (!elligibleToView) return await interaction.editReply({ content: `You do not have permission to do that.`})
 
         const entry = await Entry.findOne({
             where: {

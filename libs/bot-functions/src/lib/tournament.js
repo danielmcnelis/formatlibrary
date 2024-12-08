@@ -366,8 +366,18 @@ export const selectTournament = async (interaction, tournaments) => {
 // GET FILM
 export const getFilm = async (interaction, tournamentId, userId) => {
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})
+    const inspectingPlayer = await Player.findOne({ where: { discordId: interaction.user.id }})
     const player = await Player.findOne({ where: { discordId: userId }})
     const server = await Server.findOne({ where: { id: interaction.guildId }})
+
+    const elligibleToView = await Entry.findOne({
+        where: {
+            tournamentId: tournament.id,
+            playerId: inspectingPlayer.id
+        }
+    })
+
+    if (!elligibleToView) return await interaction.editReply({ content: `You do not have permission to do that.`})
 
     const entry = await Entry.findOne({
         where: {
@@ -2606,10 +2616,10 @@ export const createTournament = async (interaction, formatName, name, abbreviati
             if (status === 200 && data) {
                 await Tournament.create({ 
                     id: data.tournament.id,
+                    name: name,
                     abbreviation: abbreviation,
-                    name: data.tournament.name,
-                    state: data.tournament.state,
-                    type: data.tournament.tournament_type,
+                    state: 'pending',
+                    type: tournament_type,
                     formatName: format.name,
                     formatId: format.id,
                     logo: logo,
@@ -2618,6 +2628,8 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     channelId: channelId,
                     serverId: interaction.guildId,
                     communityName: server.name,
+                    isLive: isLive,
+                    isRanked: isRanked,
                     pointsPerMatchWin: '1.0',
                     pointsPerMatchTie: '0.0',
                     pointsPerBye: '1.0',
@@ -2629,7 +2641,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 const subdomain = server.challongeSubdomain ? `${server.challongeSubdomain}.` : ''
                 return await interaction.editReply({ content: 
                     `You created a new tournament:` + 
-                    `\nName: ${data.tournament.name} ${logo}` + 
+                    `\nName: ${name} ${logo}` + 
                     `\nFormat: ${format.name} ${format.emoji}` + 
                     `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ? ' (Unranked)' : ''}` +
                     tournament_type === 'swiss' ? `\nTie Breakers: TB1: OWP, TB2: OOWP, TB3: N/A` : '' +

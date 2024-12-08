@@ -657,15 +657,18 @@ export const getKnownAbbreviation = (name = '') => {
         name.includes('miami meltdown') ? 'MIME' :
         name.includes('moralltach monthly') ? 'MOMO' :
         name.includes('obelisk') ? 'OBEL' :
+        name.includes('pleiades pay') ? 'PPAY' :
         name.includes('patreon world championship qualifier') ? 'PWCQ' :
         name.includes('patron battle royale') ? 'PBR' :
         name.includes('peak beak') ? 'BEAK' :
+        name.includes('alphabet breakout cup') ? 'ABC' :
         name.includes('premium world championship qualifier') ? 'PWCQ' :
         name.includes('prophecy cup') ? 'PROC' :
         name.includes('pumpking of games') ? 'PKOG' :
         name.includes('reaper monthly') ? 'REAP' :
         name.includes('science sackers') ? 'SACK' :
         name.includes('electroshock therapy') ? 'SHOCK' :
+        name.includes('senatvs popvlvsqve romanvs') ? 'SPQR' :
         name.includes('stardust dragon series') ? 'SDS' :
         name.includes('scuffle at the forum') ? 'SCUF' :
         name.includes('skill charge cup') ? 'SCC' :

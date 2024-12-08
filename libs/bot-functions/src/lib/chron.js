@@ -432,6 +432,48 @@ export const purgeTournamentRoles = async (client) => {
     return console.log(`purgeTournamentRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
+// PURGE OLD SUBSCRIBERS
+export const purgeOldSubscribers = async (client) => {
+    const start = Date.now()
+        try {
+            let b = 0
+            const premiumRoleId 
+            const double
+            const roleId = server.tournamentRoleId
+            if (!roleId) continue
+            const guild = client.guilds.cache.get(server.id)
+            const membersMap = await guild.members.fetch()
+            const members = [...membersMap.values()]
+
+            for (let i = 0; i < members.length; i++) {
+                const member = members[i]
+                if (!member._roles.includes(roleId)) continue
+
+                const count = await Entry.count({
+                    where: {
+                        isActive: true,
+                        '$player.discordId$': member.user.id,
+                        '$tournament.serverId$': server.id
+                    },
+                    include: [Player, Tournament]
+                })
+
+                if (member && !count) {
+                    console.log(`removing tour role from ${member.user.username}`)
+                    b++
+                    member.roles.remove(roleId).catch((err) => console.log(err))
+                }
+            }
+
+            console.log(`removed ${b} old tour roles from ${server.name}`)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    return console.log(`purgeTournamentRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+}
+
 // ASSIGN TOURNAMENT PARTICIPANT ROLES
 export const assignTournamentRoles = async (client) => {
     const start = Date.now()

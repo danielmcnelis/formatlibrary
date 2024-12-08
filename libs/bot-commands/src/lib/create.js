@@ -45,7 +45,7 @@ export default {
             .setLabel('Live or Multi-Day? (L, M)')
             .setStyle(TextInputStyle.Short)
             .setPlaceholder('Live')
-            .setRequired(true)
+            .setRequired(false)
 
         const ranked = new TextInputBuilder()
             .setCustomId('ranked')

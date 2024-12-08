@@ -22,7 +22,7 @@ export default {
         const discordId = interaction.options.getUser('user')?.id || interaction.user.id
         const inspectingOtherUser = discordId !== interaction.user.id
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         const userIsMod = isModerator(server, interaction.member)
         if (!userIsMod && inspectingOtherUser) return await interaction.editReply({ content: `You do not have permission to do that.` })
     
