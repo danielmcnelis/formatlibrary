@@ -440,9 +440,7 @@ export const manageSubscriptions = async (client) => {
     let b = 0
     const premiumRoleId = '1102002847056400464'
     const supporterRoleId = '1102020060631011400'
-    console.log('client.guilds.cache', client.guilds.cache)
     const guild = client.guilds.cache.get('414551319031054346')
-    console.log('guild', guild)
     const membersMap = await guild.members.fetch()
     // const members = [...membersMap.values()]
     const programmer = await client.users.fetch('194147938786738176')
@@ -459,8 +457,12 @@ export const manageSubscriptions = async (client) => {
         try {
             const player = players[i]
             const member = membersMap.get(player.discordId)
+            if (!member) {
+                console.log('no member:', player.name)
+                continue
+            }
 
-            if ((player.isSubscriber || player.subscriberTier !== null) && !member._roles.includes(supporterRoleId) && !member._roles.includes(supporterRoleId)) {
+            if ((player.isSubscriber || player.subscriberTier !== null) && !member._roles.includes(supporterRoleId) && !member._roles.includes(premiumRoleId)) {
                 await programmer.send({ content: `${player.name} is no longer a Subscriber (${player.subscriberTier}).`})
                 console.log(`${player.name} is no longer a Subscriber (${player.subscriberTier}).`)
                 await player.update({ isSubscriber: false, subscriberTier: null })
