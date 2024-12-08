@@ -447,6 +447,7 @@ export const manageSubscriptions = async (client) => {
     
     const players = await Player.findAll({
         where: {
+            id: {[Op.not]: null},
             '$membership.serverId$': '414551319031054346',
             '$membership.isActive$': true
         },
