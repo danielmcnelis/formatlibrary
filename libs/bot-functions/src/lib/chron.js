@@ -29,6 +29,7 @@ export const getRemainingDaysInMonth = () => {
 
 // RUN NIGHTLY TASKS
 export const runNightlyTasks = async (client) => {
+    await manageSubscriptions(client)
     await refreshExpiredTokens()
     await purgeEntries()
     await assignTournamentRoles(client)
@@ -432,46 +433,54 @@ export const purgeTournamentRoles = async (client) => {
     return console.log(`purgeTournamentRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
-// PURGE OLD SUBSCRIBERS
-export const purgeOldSubscribers = async (client) => {
+// MANAGE SUBSCRIBERS
+export const manageSubscriptions = async (client) => {
     const start = Date.now()
+    let a = 0
+    let b = 0
+    const premiumRoleId = '1102002847056400464'
+    const supporterRoleId = '1102020060631011400'
+    const guild = client.guilds.cache.get('414551319031054346')
+    const membersMap = await guild.members.fetch()
+    // const members = [...membersMap.values()]
+    const programmer = await client.users.fetch('194147938786738176')
+    
+    const players = await Player.findAll({
+        where: {
+            '$membership.serverId$': '414551319031054346',
+            '$membership.isActive$': true
+        },
+        include: Membership
+    })
+                    
+    for (let i = 0; i < players.length; i++) {
         try {
-            let b = 0
-            const premiumRoleId 
-            const double
-            const roleId = server.tournamentRoleId
-            if (!roleId) continue
-            const guild = client.guilds.cache.get(server.id)
-            const membersMap = await guild.members.fetch()
-            const members = [...membersMap.values()]
+            const player = players[i]
+            const member = membersMap.get(player.discordId)
 
-            for (let i = 0; i < members.length; i++) {
-                const member = members[i]
-                if (!member._roles.includes(roleId)) continue
-
-                const count = await Entry.count({
-                    where: {
-                        isActive: true,
-                        '$player.discordId$': member.user.id,
-                        '$tournament.serverId$': server.id
-                    },
-                    include: [Player, Tournament]
-                })
-
-                if (member && !count) {
-                    console.log(`removing tour role from ${member.user.username}`)
-                    b++
-                    member.roles.remove(roleId).catch((err) => console.log(err))
-                }
+            if ((player.isSubscriber || player.subscriberTier !== null) && !member._roles.includes(supporterRoleId) && !member._roles.includes(supporterRoleId)) {
+                await programmer.send({ content: `${player.name} is no longer a Subscriber (${player.subscriberTier}).`})
+                console.log(`${player.name} is no longer a Subscriber (${player.subscriberTier}).`)
+                await player.update({ isSubscriber: false, subscriberTier: null })
+                a++
+            } else if (member._roles.includes(supporterRoleId) && (!player.isSubscriber || player.subscriberTier !== 'Supporter')) {
+                await programmer.send({ content: `Welcome ${player.name} to the Supporter Tier!`})
+                console.log(`Welcome ${player.name} to the Supporter Tier!`)
+                await player.update({ isSubscriber: true, subscriberTier: 'Supporter' })
+                b++
+            } else if (member._roles.includes(premiumRoleId) && (!player.isSubscriber || player.subscriberTier !== 'Premium')) {
+                await programmer.send({ content: `Welcome ${player.name} to the Premium Tier!`})
+                console.log(`Welcome ${player.name} to the Premium Tier!`)
+                await player.update({ isSubscriber: true, subscriberTier: 'Premium' })
+                b++
             }
-
-            console.log(`removed ${b} old tour roles from ${server.name}`)
         } catch (err) {
             console.log(err)
         }
     }
 
-    return console.log(`purgeTournamentRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    console.log(`added ${b} new subscriptions and removed ${a} old subscriptions`)
+    return console.log(`manageSubscriptions() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // ASSIGN TOURNAMENT PARTICIPANT ROLES
