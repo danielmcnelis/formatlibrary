@@ -440,7 +440,9 @@ export const manageSubscriptions = async (client) => {
     let b = 0
     const premiumRoleId = '1102002847056400464'
     const supporterRoleId = '1102020060631011400'
+    console.log('client.guilds.cache', client.guilds.cache)
     const guild = client.guilds.cache.get('414551319031054346')
+    console.log('guild', guild)
     const membersMap = await guild.members.fetch()
     // const members = [...membersMap.values()]
     const programmer = await client.users.fetch('194147938786738176')
