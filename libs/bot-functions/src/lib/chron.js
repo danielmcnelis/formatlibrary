@@ -444,14 +444,7 @@ export const manageSubscriptions = async (client) => {
     const membersMap = await guild.members.fetch()
     // const members = [...membersMap.values()]
     const programmer = await client.users.fetch('194147938786738176')
-    
-    const players = [...await Membership.findAll({
-        where: {
-            serverId: '414551319031054346',
-            isActive: true
-        },
-        include: Player
-    })].map((m) => m.player)
+    const players = await Player.findAll()
                     
     for (let i = 0; i < players.length; i++) {
         try {
