@@ -450,16 +450,15 @@ export const manageSubscriptions = async (client) => {
         try {
             const player = players[i]
             const member = membersMap.get(player.discordId)
-            if (!member) {
-                console.log('no member:', player.name)
-                continue
-            }
 
-            if ((player.isSubscriber || player.subscriberTier !== null) && !member._roles.includes(supporterRoleId) && !member._roles.includes(premiumRoleId)) {
+            if ((player.isSubscriber || player.subscriberTier !== null) && (!member || !member._roles.includes(supporterRoleId) && !member._roles.includes(premiumRoleId))) {
                 await programmer.send({ content: `${player.name} is no longer a Subscriber (${player.subscriberTier}).`})
                 console.log(`${player.name} is no longer a Subscriber (${player.subscriberTier}).`)
                 await player.update({ isSubscriber: false, subscriberTier: null })
                 a++
+            } else if (!member) {
+                console.log('no member:', player.name)
+                continue
             } else if (member._roles.includes(supporterRoleId) && (!player.isSubscriber || player.subscriberTier !== 'Supporter')) {
                 await programmer.send({ content: `Welcome ${player.name} to the Supporter Tier!`})
                 console.log(`Welcome ${player.name} to the Supporter Tier!`)
