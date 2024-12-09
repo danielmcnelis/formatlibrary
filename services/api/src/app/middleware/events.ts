@@ -89,6 +89,8 @@ export const getEvents = async (req, res, next) => {
 
 export const eventsCommunity = async (req, res, next) => {
   try {
+
+    console.log('req.params.communityName', req.params.communityName)
     const events = await Event.findAll({
       where: {
         display: true,
@@ -114,6 +116,8 @@ export const eventsCommunity = async (req, res, next) => {
       ],
       order: [['startDate', 'DESC']]
     })
+
+    console.log('events', events)
 
     res.json(events)
   } catch (err) {
