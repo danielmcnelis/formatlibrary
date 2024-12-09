@@ -10,6 +10,7 @@ export const DeckCreator = () => {
     const [display, setDisplay] = useState(true)
     const [event, setEvent] = useState(null)
     const [events, setEvents] = useState([])
+    console.log('events', events)
     const [placement, setPlacement] = useState(1)
     const [player, setPlayer] = useState(null)
     const [players, setPlayers] = useState([])
