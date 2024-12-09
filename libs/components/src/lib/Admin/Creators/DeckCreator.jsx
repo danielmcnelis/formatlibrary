@@ -117,7 +117,6 @@ export const DeckCreator = () => {
     useEffect(() => {
         const fetchEvents= async () => {
             const {data} = await axios.get(`/api/events/community/${communityName}`)
-            console.log('data', data)
             setEvents(data)
         }
 
