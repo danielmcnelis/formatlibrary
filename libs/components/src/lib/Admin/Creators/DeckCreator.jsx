@@ -28,11 +28,11 @@ export const DeckCreator = () => {
         setPlayers([])
         setYDK(null)  
 
-        document.getElementById('builder').value = ''
-        document.getElementById('deckType').value = null
+        document.getElementById('builder-name').value = ''
+        document.getElementById('deck-type').value = null
         document.getElementById('display').value = true
-        document.getElementById('community').value = null
-        document.getElementById('event').value = null
+        document.getElementById('community-name').value = null
+        document.getElementById('event-name').value = null
         document.getElementById('ydk').value = null
     }
 
@@ -50,7 +50,7 @@ export const DeckCreator = () => {
                 deckTypeName: deckType.name,
                 deckTypeId: deckType.id,
                 category: deckType.category,
-                format: event.formatName,
+                formatName: event.formatName,
                 ydk: ydk,
                 eventAbbreviation: event.abbreviation,
                 eventId: event.id,
@@ -126,7 +126,7 @@ export const DeckCreator = () => {
         <div className="admin-portal">
             <label>Builder:
                 <input
-                    id="builder"
+                    id="builder-name"
                     type="search"
                     onKeyDown={(e) => { if (e.key === 'Enter') findPlayers(e.target.value)}}
                 />
@@ -142,7 +142,7 @@ export const DeckCreator = () => {
             
             <label>Deck Type:
                 <select
-                    id="deckType"
+                    id="deck-type"
                     onChange={(e) => getDeckType(e.target.value || null)}
                 >
                 <option value=""></option>
@@ -155,7 +155,7 @@ export const DeckCreator = () => {
             <label>
                 Community:
                 <select
-                    id="community"
+                    id="community-name"
                     onChange={(e) => setCommunityName(e.target.value || null)}
                 >
                     <option value=""></option>
@@ -191,7 +191,7 @@ export const DeckCreator = () => {
 
             <label>Event:
                 <select
-                    id="event"
+                    id="event-name"
                     onChange={(e) => getEvent(e.target.value || null)}
                 >
                 <option value=""></option>
