@@ -163,9 +163,8 @@ export const banlistsSimpleDate = async (req, res, next) => {
 export const banlistsCreate = async (req, res, next) => {
   try {
     const {month, day, year, changes, category} = req.body
-    const abbrevs = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
-    const abr = abbrevs[Number(month)-1]
-    const banlist = `${abr}${year}`
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    const banlist = `${months[Number(month)-1]} ${year}`
     let b = 0
 
     for (let i = 0; i < changes.length; i++) {
@@ -198,7 +197,7 @@ export const banlistsCreate = async (req, res, next) => {
 
     for (let i = 0; i < prevStatuses.length; i++) {
       const ps = prevStatuses[i]
-      const count = await Status.count({
+      const statusIsChanging = await Status.count({
         where: {
           cardName: ps.cardName,
           category: category,
@@ -206,12 +205,13 @@ export const banlistsCreate = async (req, res, next) => {
         }
       })
 
-      if (!count) {
+      if (!statusIsChanging) {
         try {
           await Status.create({
             cardName: ps.cardName,
             restriction: ps.restriction,
             cardId: ps.cardId,
+            date: `${year}-${month}-${day}`,
             banlist: banlist,
             category: category
           })

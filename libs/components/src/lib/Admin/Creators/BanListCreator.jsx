@@ -49,7 +49,7 @@ export const BanListCreator = () => {
         
         try {
             const { data } = await axios.post('/api/banlists/create', { month, day, year, category, changes, previous })
-            alert(`Success! Added ${data} Cards to the ${month}${year} Ban List`)
+            alert(`Success! Added ${data} Cards to the ${month} ${year} Ban List`)
             return reset()
         } catch (err) {
             console.log(err)
