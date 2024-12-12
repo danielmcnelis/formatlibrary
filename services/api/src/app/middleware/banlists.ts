@@ -200,7 +200,7 @@ export const banlistsCreate = async (req, res, next) => {
       const ps = prevStatuses[i]
       const count = await Status.count({
         where: {
-          cardName: ps.name,
+          cardName: ps.cardName,
           category: category,
           banlist: banlist
         }
@@ -209,7 +209,7 @@ export const banlistsCreate = async (req, res, next) => {
       if (!count) {
         try {
           await Status.create({
-            cardName: ps.name,
+            cardName: ps.cardName,
             restriction: ps.restriction,
             cardId: ps.cardId,
             banlist: banlist,

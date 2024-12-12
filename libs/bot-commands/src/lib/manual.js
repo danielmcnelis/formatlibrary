@@ -46,11 +46,11 @@ export default {
         const serverId = server.hasInternalLadder ? server.id : '414551319031054346'
         const winningPlayer = await Player.findOne({ where: { discordId: winnerDiscordId } })
         const wCount = await Stats.count({ where: { playerId: winningPlayer.id, formatId: format.id, serverId: serverId } })
-        if (!wCount) await Stats.create({ playerId: winningPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, isInternal: server.hasInternalLadder })
+        if (!wCount) await Stats.create({ playerName: winningPlayer.name, playerId: winningPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, isInternal: server.hasInternalLadder })
         const winnerStats = await Stats.findOne({ where: { playerId: winningPlayer.id, formatId: format.id, serverId: serverId } })
         const losingPlayer = await Player.findOne({ where: { discordId: loserDiscordId } })
         const lCount = await Stats.count({ where: { playerId: losingPlayer.id, formatId: format.id, serverId: serverId } })
-        if (!lCount) await Stats.create({ playerId: losingPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, isInternal: server.hasInternalLadder })
+        if (!lCount) await Stats.create({ playerName: losingPlayer.name, playerId: losingPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, isInternal: server.hasInternalLadder })
         const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, formatId: format.id, serverId: serverId } })
 
         if (!losingPlayer || !loserStats) return await interaction.editReply({ content: `Sorry, <@${loserDiscordId}> is not in the database.`})

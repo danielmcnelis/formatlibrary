@@ -306,12 +306,12 @@ export const composeBlogPost = async (interaction, event) => {
                 eventId: event.id,
                 teamName: team.name,
                 winningTeamId: team.id,
-                formatName: event.format?.name,
+                formatName: event.formatName,
                 formatIcon: event.format?.icon, 
                 formatId: event.formatId,
-                communityName: event.server?.communityName,
+                communityName: event.communityName,
                 serverInviteLink: event.server?.inviteLink,
-                serverId: event.primaryTournament?.serverId,
+                serverId: event.server?.serverId,
             })
         
             return await interaction.channel.send(`Composed blogpost for ${event.name}.`)
@@ -401,12 +401,12 @@ export const composeBlogPost = async (interaction, event) => {
                 winningDeckTypeName: deck.deckTypeName,
                 winningDeckTypeIsPopular: popularDecks.includes(deck.deckTypeName),
                 winningDeckId: deck.id,
-                formatName: event.format?.name,
+                formatName: event.formatName,
                 formatIcon: event.format?.icon, 
                 formatId: event.formatId,
-                communityName: event.server?.communityName,
+                communityName: event.communityName ,
                 serverInviteLink: event.server?.inviteLink,
-                serverId: event.primaryTournament?.serverId
+                serverId: event.server?.serverId
             })
         
             const buffer = canvas.toBuffer('image/png')

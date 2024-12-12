@@ -20,12 +20,12 @@ export default {
             option
                 .setName('old-user')
                 .setDescription('Tag the old user.')
-                .setRequired(true))
+                .setRequired(false))
         .addUserOption(option =>
             option
                 .setName('new-user')
                 .setDescription('Tag the new user.')
-                .setRequired(true)
+                .setRequired(false)
         )
         .setDMPermission(false),
     async execute(interaction) {

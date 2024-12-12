@@ -20,7 +20,6 @@ export default {
     async execute(interaction) {
         await interaction.deferReply()
         const winningUser = interaction.options.getUser('opponent')
-        const member = await interaction.guild?.members.fetch(interaction.user.id)
         const winningMember = await interaction.guild?.members.fetch(winningUser.id).catch((err) => console.log(err))
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
@@ -33,11 +32,11 @@ export default {
         const serverId = server.hasInternalLadder ? server.id : '414551319031054346'
         
         const wCount = await Stats.count({ where: { playerId: winningPlayer.id, formatId: format.id, serverId: serverId } })
-        if (!wCount) await Stats.create({ playerId: winningPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, isInternal: server.hasInternalLadder })
+        if (!wCount) await Stats.create({ playerName: winningPlayer.name, playerId: winningPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, isInternal: server.hasInternalLadder })
         const winnerStats = await Stats.findOne({ where: { playerId: winningPlayer.id, formatId: format.id, serverId: serverId } })
         const losingPlayer = await Player.findOne({ where: { discordId: interaction.user.id } })
         const lCount = await Stats.count({ where: { playerId: losingPlayer.id, formatId: format.id, serverId: serverId } })
-        if (!lCount) await Stats.create({ playerId: losingPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, isInternal: server.hasInternalLadder })
+        if (!lCount) await Stats.create({ playerName: losingPlayer.name, playerId: losingPlayer.id, formatName: format.name, formatId: format.id, serverId: serverId, isInternal: server.hasInternalLadder })
         const loserStats = await Stats.findOne({ where: { playerId: losingPlayer.id, formatId: format.id, serverId: serverId } })
 
         if (winningUser.bot) return await interaction.editReply({ content: `Sorry, Bots do not play ${format.name} Format... *yet*.`})
@@ -122,7 +121,7 @@ export default {
             match = await Match.create({
                 winnerName: winningPlayer.name,
                 winnerId: winningPlayer.id,
-                loser: losingPlayer.name,
+                loserName: losingPlayer.name,
                 loserId: losingPlayer.id,
                 isTournament: isTournament,
                 tournamentId: tournamentId,

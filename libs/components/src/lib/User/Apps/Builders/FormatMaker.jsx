@@ -211,7 +211,7 @@ export const FormatMaker = () => {
             try {
                 const { data } = await axios.post(`/api/decks/create`, {
                     name: name,
-                    playerId: playerId,
+                    builderId: playerId,
                     deckTypeName: deck.deckTypeName,
                     deckTypeId: deck.deckTypeId,
                     category: deck.category,

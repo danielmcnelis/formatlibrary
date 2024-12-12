@@ -67,6 +67,7 @@ export default {
 
                 if (!winnerStats) {
                     const stats = await Stats.create({
+                        playerName: match.winnerName,
                         playerId: winnerId,
                         formatName: format.name,
                         formatId: format.id,
@@ -82,6 +83,7 @@ export default {
     
                 if (!loserStats) {
                     const stats = await Stats.create({
+                        playerName: match.loserName,
                         playerId: loserId,
                         formatName: format.name,
                         formatId: format.id,

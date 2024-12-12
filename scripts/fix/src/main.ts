@@ -2013,30 +2013,76 @@ const shuffleArray = (arr) => {
 // })()
 
 
+// ;(async () => { 
+//     let b = 0
+//     let e = 0
+//     const servers = await Server.findAll({ where: { formatName: {[Op.not]: null}}})
+
+//     for (let i = 0; i < servers.length; i++) {
+//         try {
+//             const server = servers[i]
+//             const format = await Format.findOne({
+//                 where: {
+//                     name: server.formatName
+//                 }
+//             })
+
+//             if (format) {
+//                 await server.update({ formatId: format?.id })
+//                 b++
+//             }
+//         } catch (err) {
+//             console.log('server error', err)
+//             e++
+//         }
+//     }
+
+//     console.log('updated servers:', b, '\nerrors:', e)
+//     return
+// })()
+
+
 ;(async () => { 
     let b = 0
     let e = 0
-    const servers = await Server.findAll({ where: { formatName: {[Op.not]: null}}})
+    const matches = await Match.findAll({ 
+        where: { 
+            loserName: null
+        },
+        include: { model: Player, as: 'loser' }
+    })
 
-    for (let i = 0; i < servers.length; i++) {
+    for (let i = 0; i < matches.length; i++) {
         try {
-            const server = servers[i]
-            const format = await Format.findOne({
-                where: {
-                    name: server.formatName
-                }
-            })
-
-            if (format) {
-                await server.update({ formatId: format?.id })
-                b++
-            }
+            const match = matches[i]
+            await match.update({ loserName: match.loser?.name })
+            b++
         } catch (err) {
-            console.log('server error', err)
+            console.log('match error', err)
             e++
         }
     }
 
-    console.log('updated servers:', b, '\nerrors:', e)
+    console.log('updated matches:', b, '\nerrors:', e)
+
+
+    const stats = await Stats.findAll({ 
+        include: Player
+    })
+
+    b = 0
+    e = 0
+    for (let i = 0; i < stats.length; i++) {
+        try {
+            const stat = stats[i]
+            await stat.update({ playerName: stat.player?.name })
+            b++
+        } catch (err) {
+            console.log('stat error', err)
+            e++
+        }
+    }
+
+    console.log('updated stats:', b, '\nerrors:', e)
     return
 })()
