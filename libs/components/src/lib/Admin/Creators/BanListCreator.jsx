@@ -7,7 +7,7 @@ export const BanListCreator = () => {
 	const [month, setMonth] = useState(null)
 	const [day, setDay] = useState(null)
     const [year, setYear] = useState(null)
-    const [previous, setPrevious] = useState(null)
+    const [previousBanlist, setPreviousBanlist] = useState(null)
     const [category, setCategory] = useState('TCG')
     const [changes, setChanges] = useState([])
     const [banlists, setBanlists] = useState([])
@@ -28,7 +28,7 @@ export const BanListCreator = () => {
         setMonth(null)  
         setDay(null)  
         setYear(null)  
-        setPrevious(null)  
+        setPreviousBanlist(null)  
         setChanges([])  
         setCard(null)  
         setPrevStatus(null)  
@@ -44,11 +44,11 @@ export const BanListCreator = () => {
         if (!month) return alert('Please select a Month.')
         if (!day) return alert('Please select a Day.')
         if (!year) return alert('Please select a Year.')
-        if (!previous) return alert('Please select a Previous Ban List.')
+        if (!previousBanlist) return alert('Please select a Previous Ban List.')
         if (!changes || !changes.length) return alert('Please add some changes.')
         
         try {
-            const { data } = await axios.post('/api/banlists/create', { month, day, year, category, changes, previous })
+            const { data } = await axios.post('/api/banlists/create', { month, day, year, category, changes, previousBanlist })
             alert(`Success! Added ${data} Cards to the ${month} ${year} Ban List`)
             return reset()
         } catch (err) {
@@ -72,7 +72,7 @@ export const BanListCreator = () => {
             headers: {
                 name: name,
                 category: category,
-                banlist: previous
+                banlist: previousBanlist
             }
         })
 
@@ -90,6 +90,7 @@ export const BanListCreator = () => {
         setChanges([...changes, change])
         document.getElementById('card').value = null
         document.getElementById('new-status').value = null
+        document.getElementById('prev-status').value = null
         setCard(null)
         setCards([])
         setPrevStatus(null)
@@ -131,18 +132,18 @@ export const BanListCreator = () => {
                     onChange={(e) => setMonth(e.target.value || null)}
                 >
                     <option value=""></option>
-                    <option value="01">January</option>
-                    <option value="02">February</option>
-                    <option value="03">March</option>
-                    <option value="04">April</option>
-                    <option value="05">May</option>
-                    <option value="06">June</option>
-                    <option value="07">July</option>
-                    <option value="08">August</option>
-                    <option value="09">September</option>
-                    <option value="10">October</option>
-                    <option value="11">November</option>
-                    <option value="12">December</option>
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
                 </select>
             </label>
 
@@ -165,15 +166,15 @@ export const BanListCreator = () => {
                 >
                     <option value=""></option>
                     {
-                        years.map((year) => <option value={year.toString().slice(-2)}>{year}</option>)
+                        years.map((year) => <option value={year.toString()}>{year}</option>)
                     }
                 </select>
             </label>
 
             <label>Previous List:
                 <select
-                    id="previous"
-                    onChange={(e) => setPrevious(e.target.value || null)}
+                    id="previous-banlist"
+                    onChange={(e) => setPreviousBanlist(e.target.value || null)}
                 >
                 <option value=""></option>
                 {

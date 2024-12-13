@@ -189,7 +189,7 @@ export const banlistsCreate = async (req, res, next) => {
 
     const prevStatuses = await Status.findAll({
       where: {
-        banlist: req.body.previous,
+        banlist: req.body.previousBanlist,
         restriction: {[Op.not]: 'unlimited'},
         category: category
       }
