@@ -2307,7 +2307,9 @@ export const calculateStandings = async (tournament, matches, participants) => {
         for (let j = 1; j <= currentRound; j++) {
             if (!data[k].roundsWithoutBye.includes(j) && (data[k].isActive || data[k].roundDropped > j)) {
                 data[k].byes++
-                data[k].opponentLosses.push(tournament.rounds)
+                data[k].opponentScores.push(0)
+                data[k].opponentWins.push(0)
+                data[k].opponentLosses.push(currentRound)
             }
         }
     })
