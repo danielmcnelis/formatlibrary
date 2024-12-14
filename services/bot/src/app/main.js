@@ -239,26 +239,25 @@ client.on(Events.InteractionCreate, async (interaction) => {
     
         if (interaction.customId?.includes('create')) {
             // REMOVE ALL WEIRD SYMBOLS.
-            const name = capitalize(
-                    removeLeadingZerosFromWords(
-                        interaction.fields.getTextInputValue('name')
-                            ?.replace(/[/|\\()[\]{}<>~^%&?@#,;"'`_*+=]/g, '')
-                            ?.replace(/\s+/g, ' ')
-                            ?.toLowerCase()
-                        , true)
-                    )
-    
+            // const name = removeLeadingZerosFromWords(
+            //         interaction.fields.getTextInputValue('name')
+            //     ?.replace(/[/|\\()[\]{}<>~^%&?@#,;"'`_*+=]/g, '')
+            //     ?.replace(/\s+/g, ' ')
+            // )
+             
+            const name = interaction.fields.getTextInputValue('name')
+
             const tournament_type = interaction.customId?.includes('SW') ? 'swiss' :
                 interaction.customId?.includes('SE') ? 'single elimination' :
                 interaction.customId?.includes('DE') ? 'double elimination' :
                 'round robin'
                 
             const knownAbbreviation = getKnownAbbreviation(name)
-            const suggestedAbbreviation = knownAbbreviation ? getSuggestedAbbreviation(name) : null
-        
+            const suggestedAbbreviation = getSuggestedAbbreviation(name)
+
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT EXACTLY ONE ZERO AT FRONT OF NUMBERS.
             const alphas = knownAbbreviation || suggestedAbbreviation
-            const digits = extractDigitsAndPadZeros(interaction.fields.getTextInputValue('name'))
+            const digits = extractDigitsAndPadZeros(name)
             const abbreviation = alphas ? alphas + digits : null
             
             const decipherRankedInput = (input = '') => !input.toLowerCase()?.includes('u')
@@ -311,6 +310,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             return updateTournament(interaction, tournamentId, name, tournament_type, url, isRanked, isLive)
         } else if (interaction.customId?.includes('tiebreakers')) {
             const decipherTieBreakerInput = (input = '') => {
+                input = input.toLowerCase()
                 if (input.includes('mb') || input.includes('med')) {
                     return 'median buchholz'
                 } else if (input.includes('wvt') || input.includes('wins vs')) {

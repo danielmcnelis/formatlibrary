@@ -2307,6 +2307,7 @@ export const calculateStandings = async (tournament, matches, participants) => {
         for (let j = 1; j <= currentRound; j++) {
             if (!data[k].roundsWithoutBye.includes(j) && (data[k].isActive || data[k].roundDropped > j)) {
                 data[k].byes++
+                // This would add a tiebreaker penalty for byes:
                 // data[k].opponentScores.push(0)
                 // data[k].opponentWins.push(0)
                 // data[k].opponentLosses.push(currentRound)
@@ -2574,14 +2575,13 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 tieBreaker3: null
             })
 
-            const subdomain = server.challongeSubdomain ? `${server.challongeSubdomain}.` : ''
             return await interaction.editReply({ content: 
                 `You created a new tournament:` + 
                 `\nName: ${name} ${logo}` + 
                 `\nFormat: ${format.name} ${format.emoji}` + 
                 `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ? ' (Unranked)' : ''}` +
                 tournament_type === 'swiss' ? `\nTie Breakers: TB1: OWP, TB2: OOWP, TB3: N/A` : '' +
-                `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
+                `\nBracket: https://challonge.com/${data.tournament.url}`
             })
         } 
     } catch (err) {
@@ -2641,14 +2641,13 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     tieBreaker3: null
                 })
 
-                const subdomain = server.challongeSubdomain ? `${server.challongeSubdomain}.` : ''
                 return await interaction.editReply({ content: 
                     `You created a new tournament:` + 
                     `\nName: ${name} ${logo}` + 
                     `\nFormat: ${format.name} ${format.emoji}` + 
                     `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ? ' (Unranked)' : ''}` +
                     tournament_type === 'swiss' ? `\nTie Breakers: TB1: OWP, TB2: OOWP, TB3: N/A` : '' +
-                    `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
+                    `\nBracket: https://challonge.com/${data.tournament.url}`
                 })
             } 
         } catch (err) {
@@ -2695,12 +2694,11 @@ export const updateTournament = async (interaction, tournamentId, name, tourname
                 type: data.tournament.tournament_type
             })
 
-            const subdomain = server.challongeSubdomain ? `${server.challongeSubdomain}.` : ''
             return await interaction.editReply({ content: 
                 `Updated tournament settings:` + 
                 `\nName: ${data.tournament.name} ${tournament.logo}` + 
                 `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ? ' (Unranked)' : ''}` +
-                `\nBracket: https://${subdomain}challonge.com/${data.tournament.url}`
+                `\nBracket: https://challonge.com/${data.tournament.url}`
             })
         } else {
             return await interaction.editReply({ content: `Unable to update tournament on Challonge.com.`})
@@ -3038,12 +3036,11 @@ export const createTopCut = async(interaction, tournamentId) => {
     }
 
     const server = await Server.findOne({ where: { id: interaction.guildId }})  
-    const subdomain = server.challongeSubdomain ? `${server.challongeSubdomain}.` : ''
     const game_name = 'Yu-Gi-Oh!'
     const description = `${primaryTournament.format?.name} Format`
     const str = generateRandomString(10, '0123456789abcdefghijklmnopqrstuvwxyz')
     const name = `${primaryTournament.name} - Top ${primaryTournament.topCutSize}`
-    const abbreviation = primaryTournament.abbreviation ? `${primaryTournament.abbreviation}_Top${primaryTournament.topCut}` : null
+    const abbreviation = primaryTournament.abbreviation ? `${primaryTournament.abbreviation}_Top${primaryTournament.topCutSize}` : null
     let topCutTournament
 
     try {
@@ -3147,7 +3144,7 @@ export const createTopCut = async(interaction, tournamentId) => {
         `\nName: ${topCutTournament.name} ${topCutTournament.logo}` + 
         `\nFormat: ${topCutTournament.formatName} ${topCutTournament.emoji}` + 
         `\nType: ${capitalize(topCutTournament.type, true)}` +
-        `\nBracket: https://${subdomain}challonge.com/${topCutTournament.url}`
+        `\nBracket: https://challonge.com/${topCutTournament.url}`
     })
 
     await primaryTournament.update({ state: 'topcut', associatedTournamentId: topCutTournament.id })
