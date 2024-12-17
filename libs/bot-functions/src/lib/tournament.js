@@ -383,6 +383,7 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
         console.log('inspectingPlayer.name', inspectingPlayer.name)
 
     const inspectingEntry = await Entry.findByPlayerIdAndTournamentId(inspectingPlayer.id, tournament.id)
+    console.log('!!inspectingEntry', !!inspectingEntry)
     console.log('inspectingEntry?.participantId', inspectingEntry?.participantId)
 
     let [openChallongeMatch] = tournament.state === 'underway' ? 
