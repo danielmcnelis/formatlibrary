@@ -383,6 +383,7 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
         console.log('inspectingPlayer.name', inspectingPlayer.name)
 
     const inspectingMember = await interaction.guild?.members.fetch(interaction.user.id)
+    console.log('inspectingMember', inspectingMember)
 
     const inspectingEntry = await Entry.findByPlayerIdAndTournamentId(inspectingPlayer.id, tournament.id)
     console.log('!!inspectingEntry', !!inspectingEntry)
@@ -395,9 +396,9 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
     console.log('!!openChallongeMatch', !!openChallongeMatch)
 
     const inspectingIsPairedWithInspected = checkPairing(openChallongeMatch, inspectedEntry?.participantId, inspectingEntry?.participantId)
-    console.log('isModerator(inspectingPlayer)', isModerator(inspectingMember))
+    console.log('isModerator(inspectingMember)', isModerator(inspectingMember))
     console.log('!!inspectingEntry?.id', !!inspectingEntry)
-    console.log('isModerator(inspectingPlayer) && !inspectingEntry', isModerator(inspectingMember) && !inspectingEntry)
+    console.log('isModerator(inspectingMember) && !inspectingEntry', isModerator(inspectingMember) && !inspectingEntry)
     console.log('inspectingIsPairedWithInspected', inspectingIsPairedWithInspected)
     const elligibleToView = (isModerator(inspectingMember) && !inspectingEntry) || inspectingIsPairedWithInspected 
     console.log('elligibleToView', elligibleToView)
