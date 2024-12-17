@@ -16,7 +16,7 @@ export default {
         await interaction.deferReply()
         if (isProgrammer(interaction.member)) {
             await interaction.editReply(emojis.yellow)
-            return await manageSubscriptions(client)
+            // return await manageSubscriptions(client)
             // await updateMarketPrices()
             // return await conductCensus(client)
             // await updateAvatars(client)
@@ -26,7 +26,7 @@ export default {
             // await updateReplays()
             // await updateMatchups()
             // return updateGlobalNames()
-            // return runNightlyTasks(client)
+            return runNightlyTasks(client)
             // return runMonthlyTasks(client)
         } else {
             await interaction.editReply('🧪')
