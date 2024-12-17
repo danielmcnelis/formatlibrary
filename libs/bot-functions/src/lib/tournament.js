@@ -401,7 +401,7 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
     console.log('elligibleToView', elligibleToView)
     if (!elligibleToView) return await interaction.editReply({ content: `You do not have permission to do that.`})
 
-    const matches = await getMatches(server, tournament.id, 'complete', inspectedEntry.participantId)
+    const matches = [...await getMatches(server, tournament.id, 'complete', inspectedEntry.participantId)].map((el) => el.match)
     if (tournament.type === 'double elimination') matches.sort((a, b) => a.suggested_play_order - b.suggested_play_order)
 
     const replays = []
