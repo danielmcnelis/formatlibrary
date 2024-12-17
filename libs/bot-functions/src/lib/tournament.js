@@ -387,8 +387,8 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
     console.log('inspectingEntry?.participantId', inspectingEntry?.participantId)
 
     let [openChallongeMatch] = tournament.state === 'underway' ? 
-        await getMatches(server, tournament.id, 'open', inspectedEntry.participantId) :
-        await getMatches(server, tournament.associatedTournamentId, 'open', inspectedEntry.participantId)
+        [...await getMatches(server, tournament.id, 'open', inspectedEntry.participantId)].map((el) => el.match) :
+        [...await getMatches(server, tournament.associatedTournamentId, 'open', inspectedEntry.participantId)].map((el) => el.match)
 
     console.log('!!openChallongeMatch', !!openChallongeMatch)
 
