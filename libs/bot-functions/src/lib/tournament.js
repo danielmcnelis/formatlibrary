@@ -374,7 +374,7 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
     if (!inspectedPlayer) return await interaction.editReply({ content: "That user is not in the database."})
         console.log('inspectedPlayer.name', inspectedPlayer.name)
 
-    const inspectedEntry = await Entry.findByPlayerIdAndTournamentIdfindOne(inspectedPlayer.id, tournament.id)
+    const inspectedEntry = await Entry.findByPlayerIdAndTournamentId(inspectedPlayer.id, tournament.id)
     if (!inspectedEntry) return await interaction.editReply({ content: `That user is not in ${tournament.name}.`})
         console.log('inspectedEntry.participantId', inspectedEntry.participantId)
 
@@ -382,7 +382,7 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
     if (!inspectingPlayer) return await interaction.editReply({ content: "You are not in the database."})
         console.log('inspectingPlayer.name', inspectingPlayer.name)
 
-    const inspectingEntry = await Entry.findByPlayerIdAndTournamentIdfindOne(inspectingPlayer.id, tournament.id)
+    const inspectingEntry = await Entry.findByPlayerIdAndTournamentId(inspectingPlayer.id, tournament.id)
     console.log('inspectedEntry?.participantId', inspectedEntry?.participantId)
 
     let [openChallongeMatch] = tournament.state === 'underway' ? 
