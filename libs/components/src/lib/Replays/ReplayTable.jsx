@@ -12,6 +12,7 @@ import './ReplayTable.css'
 export const ReplayTable = (props) => {
     const isAdmin = props.roles?.admin
     const isSubscriber = props.roles?.subscriber
+    const accessToken = getCookie('access')
 
     const isMounted = useRef(false)
     const [communityName, setCommunityName] = useState(null)
@@ -42,7 +43,6 @@ export const ReplayTable = (props) => {
   
     // COUNT
     const count = async () => {
-        const accessToken = getCookie('access')
         let url = `/api/replays/count?admin=${isAdmin}&subscriber=${isSubscriber}`
         let filter = ''
   
@@ -53,36 +53,59 @@ export const ReplayTable = (props) => {
         if (format) filter += `,format:eq:${format}`
         if (filter.length) url += ('&filter=' + filter.slice(1))
   
-        const { data } = await axios.get(url, {
-            headers: {
-                ...(accessToken && {authorization: `Bearer ${accessToken}`})
-            }
-        })
-        
+        const { data } = await axios.get(url)
         setTotal(data)
     }
 
     // SEARCH
     const search = async () => {
-        let url = `/api/replays?page=${page}&limit=${replaysPerPage}&admin=${isAdmin}&subscriber=${isSubscriber}&sort=${sortBy}`
         let filter = ''
-  
         if (queryParams.player) filter += `,player:or:${queryParams.player}`
         if (queryParams.event) filter += `,event:or:${queryParams.event}`
         if (queryParams.deck) filter += `,deck:or:${queryParams.deck}`
         if (communityName) filter += `,community:eq:${communityName}`
         if (format) filter += `,format:eq:${format}`
-        if (filter.length) url += ('&filter=' + filter.slice(1))
             
-        const accessToken = getCookie('access')
-        const { data } = await axios.get(url, {
-            headers: {
-                ...(accessToken && {authorization: `Bearer ${accessToken}`})
-            }
-        })
-        
-        setReplays(data)
+        const fetchReplayData = async () => {
+            try {
+                // If user is subscriber or admin: Hit a different endpoint that requires authentication
+                if (isAdmin) {
+                    let url = `/api/replays/admin?page=${page}&limit=${replaysPerPage}&sort=${sortBy}`
+                    if (filter.length) url += ('&filter=' + filter.slice(1))
+
+                    const { data } = await axios.get(url, {
+                        headers: {
+                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                        }
+                    })
+                    
+                    setReplays(data)
+                }  if (isSubscriber) {
+                    let url = `/api/replays/subscriber?page=${page}&limit=${replaysPerPage}&sort=${sortBy}`
+                    if (filter.length) url += ('&filter=' + filter.slice(1))
+                        
+                    const { data } = await axios.get(url, {
+                        headers: {
+                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                        }
+                    })
+                    
+                    setReplays(data)
+                } else {
+                    let url = `/api/replays?page=${page}&limit=${replaysPerPage}&sort=${sortBy}`
+                    if (filter.length) url += ('&filter=' + filter.slice(1))
+
+                    const { data } = await axios.get(url)                
+                    setReplays(data)
+                }
+            } catch (err) {
+                console.log(err)
+            } 
+        }
+
+        fetchReplayData()
     }
+        
   
     // RESET
     const reset = () => {
@@ -123,33 +146,39 @@ export const ReplayTable = (props) => {
 
     // USE EFFECT
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchReplayData = async () => {
             try {
-                const accessToken = getCookie('access')
-                const url = `/api/replays?page=1&limit=10&sortBy=publishDate:desc,display:desc,roundAbs:desc`
-                const { data: replayData } = await axios.get(url, {
-                    headers: {
-                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                    }
-                })
-                
-                setReplays(replayData)
+                // If user is subscriber or admin: Hit a different endpoint that requires authentication
+                if (isAdmin) {
+                    const url = `/api/replays/admin?page=1&limit=10&sortBy=publishDate:desc,display:desc,roundAbs:desc`
+                    const { data } = await axios.get(url, {
+                        headers: {
+                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                        }
+                    })
+                    
+                    setReplays(data)
+                }  if (isSubscriber) {
+                    const url = `/api/replays/subscriber?page=1&limit=10&sortBy=publishDate:desc,display:desc,roundAbs:desc`
+                    const { data } = await axios.get(url, {
+                        headers: {
+                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                        }
+                    })
+                    
+                    setReplays(data)
+                } else {
+                    const url = `/api/replays?page=1&limit=10&sortBy=publishDate:desc,display:desc,roundAbs:desc`
+                    const { data } = await axios.get(url)                
+                    setReplays(data)
+                }
             } catch (err) {
                 console.log(err)
-            }
-
-            try {
-                const {data: formatData} = await axios.get(`/api/formats/`)
-                setFormats(formatData)  
-            } catch (err) {
-                console.log(err)
-            }
-
-            isMounted.current = true
+            } 
         }
 
         count()
-        fetchData()
+        fetchReplayData()
     }, [])
   
 

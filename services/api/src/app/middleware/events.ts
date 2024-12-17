@@ -154,7 +154,7 @@ export const eventsRecent = async (req, res, next) => {
   }
 }
 
-export const eventsId = async (req, res, next) => {
+export const getEventById = async (req, res, next) => {
   try {
     const event = await Event.findOne({
       where: {
@@ -333,7 +333,7 @@ export const eventsId = async (req, res, next) => {
 }
 
 
-export const subscriberEventsId = async (req, res, next) => {
+export const getEventByIdAsSubscriber = async (req, res, next) => {
     try {
       const event = await Event.findOne({
         where: {
