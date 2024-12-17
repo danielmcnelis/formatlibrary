@@ -414,6 +414,7 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
     })
 
     console.log('matches.length', matches.length)
+    console.log('matches', matches)
     for (let i = 0; i < matches.length; i++) {
         const match = matches[i]
         const roundName = getRoundName(tournament, match.round, entryCount)
