@@ -391,7 +391,7 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
 
     console.log('!!openChallongeMatch', !!openChallongeMatch)
 
-    const inspectingIsPairedWithInspected = checkPairing(openChallongeMatch, inspectedEntry.participantId, inspectingEntry.participantId)
+    const inspectingIsPairedWithInspected = checkPairing(openChallongeMatch, inspectedEntry?.participantId, inspectingEntry?.participantId)
     console.log('inspectingIsPairedWithInspected', inspectingIsPairedWithInspected)
     const elligibleToView = isModerator(inspectingPlayer) && !inspectingEntry || inspectingIsPairedWithInspected 
     console.log('elligibleToView', elligibleToView)
