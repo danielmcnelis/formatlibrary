@@ -68,11 +68,11 @@ router.get('/api/decks/admin/:id', [authenticate, getDeckByIdAsAdmin])
 
 router.get('/api/decks/subscriber/:id', [authenticate, getDeckByIdAsSubscriber])
 
-router.get('/api/decks/:id', getDeckByIdAsRegularUser)
-
 router.get('/api/decks/admin', [authenticate, getDecksAsAdmin])
 
 router.get('/api/decks/subscriber', [authenticate, getDecksAsSubscriber])
+
+router.get('/api/decks/:id', getDeckByIdAsRegularUser)
 
 router.get('/api/decks/', getDecksAsRegularUser)
 
