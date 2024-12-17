@@ -13,6 +13,7 @@ import './DeckTable.css'
 // DECK TABLE
 export const DeckTable = (props) => {
     const isMounted = useRef(false)
+    const accessToken = getCookie('access')
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const [decks, setDecks] = useState([{},{},{},{},{},{},{},{},{},{}])
@@ -58,18 +59,56 @@ export const DeckTable = (props) => {
   
     // SEARCH
     const search = async () => {
-      let url = `/api/decks?page=${page}&limit=${decksPerPage}&admin=${isAdmin}&subscriber=${isSubscriber}&sort=${sortBy}`
-      let filter = ''
+        let filter = ''
 
-      if (queryParams.eventAbbreviation) filter += `,event:or:${queryParams.eventAbbreviation}`
-      if (queryParams.builderName) filter += `,builder:inc:${queryParams.builderName}`
-      if (queryParams.deckTypeName) filter += `,type:inc:${queryParams.deckTypeName}`
-      if (origin) filter += `,origin:eq:${origin}`
-      if (format) filter += `,format:eq:${format}`
-      if (filter.length) url += ('&filter=' + filter.slice(1))
+        if (queryParams.eventAbbreviation) filter += `,event:or:${queryParams.eventAbbreviation}`
+        if (queryParams.builderName) filter += `,builder:inc:${queryParams.builderName}`
+        if (queryParams.deckTypeName) filter += `,type:inc:${queryParams.deckTypeName}`
+        if (origin) filter += `,origin:eq:${origin}`
+        if (format) filter += `,format:eq:${format}`
+       
+        // If user is subscriber or admin: Hit different endpoints that require authentication
+        if (isAdmin) {
+            try { 
+                let url = `/api/decks/admin?page=${page}&limit=${decksPerPage}&admin=${isAdmin}&subscriber=${isSubscriber}&sort=${sortBy}`
+                if (filter.length) url += ('&filter=' + filter.slice(1))
+    
+                const {data: deckData} = await axios.get(url, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
 
-      const { data } = await axios.get(url)
-      setDecks(data)
+                setDecks(deckData)
+            } catch (err) {
+                console.log(err)
+            }
+        } else if (isSubscriber) {
+            try {
+                let url = `/api/decks/subscriber?page=${page}&limit=${decksPerPage}&admin=${isAdmin}&subscriber=${isSubscriber}&sort=${sortBy}`
+                if (filter.length) url += ('&filter=' + filter.slice(1))
+    
+                const {data: deckData} = await axios.get(url, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
+
+                setDecks(deckData)
+            } catch (err) {
+                console.log(err)
+            }
+        } else {
+            try {
+                let url = `/api/decks?page=${page}&limit=${decksPerPage}&admin=${isAdmin}&subscriber=${isSubscriber}&sort=${sortBy}`
+                if (filter.length) url += ('&filter=' + filter.slice(1))
+    
+                const {data: deckData} = await axios.get(url)
+                setDecks(deckData)
+            } catch (err) {
+                console.log(err)
+            }
+        }
     }
   
     // RESET
@@ -113,62 +152,22 @@ export const DeckTable = (props) => {
   
     // USE EFFECT
     useEffect(() => {
-        const fetchDecksData = async () => {
-            // If user is subscriber or admin: Hit different endpoints that require authentication
-            if (isAdmin) {
-                try {
-                    const accessToken = getCookie('access')
-                    const {data: deckData} = await axios.get(`/api/decks/admin?page=1&limit=12&sortBy=publishDate:desc&filter=origin:eq:event`, {
-                        headers: {
-                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                        }
-                    })
+        const fetchInitialData = async () => {
+            try {
+                const {data: deckData} = await axios.get(`/api/decks?page=1&limit=12&sortBy=publishDate:desc&filter=origin:eq:event`)
+                setDecks(deckData)
 
-                    setDecks(deckData)
-
-                    const {data: formatData} = await axios.get(`/api/formats/`)
-                    setFormats(formatData)  
-                    
-                    isMounted.current = true
-                } catch (err) {
-                    console.log(err)
-                }
-            } else if (isSubscriber) {
-                try {
-                    const accessToken = getCookie('access')
-                    const {data: deckData} = await axios.get(`/api/decks/subscriber?page=1&limit=12&sortBy=publishDate:desc&filter=origin:eq:event`, {
-                        headers: {
-                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                        }
-                    })
-
-                    setDecks(deckData)
-
-                    const {data: formatData} = await axios.get(`/api/formats/`)
-                    setFormats(formatData)  
-                    
-                    isMounted.current = true
-                  } catch (err) {
-                    console.log(err)
-                  }
-            } else {
-                try {
-                    const {data: deckData} = await axios.get(`/api/decks?page=1&limit=12&sortBy=publishDate:desc&filter=origin:eq:event`)
-                    setDecks(deckData)
-
-                    const {data: formatData} = await axios.get(`/api/formats/`)
-                    setFormats(formatData)  
-                    
-                    isMounted.current = true
-                  } catch (err) {
-                    console.log(err)
-                  }
-
+                const {data: formatData} = await axios.get(`/api/formats/`)
+                setFormats(formatData)  
+                
+                isMounted.current = true
+            } catch (err) {
+                console.log(err)
             }
         }
     
         count()
-        fetchDecksData()
+        fetchInitialData()
     }, [])
   
     // USE EFFECT SEARCH
