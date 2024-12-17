@@ -146,39 +146,45 @@ export const ReplayTable = (props) => {
 
     // USE EFFECT
     useEffect(() => {
-        const fetchReplayData = async () => {
+        const fetchInitialData = async () => {
             try {
                 // If user is subscriber or admin: Hit a different endpoint that requires authentication
                 if (isAdmin) {
                     const url = `/api/replays/admin?page=1&limit=10&sortBy=publishDate:desc,display:desc,roundAbs:desc`
-                    const { data } = await axios.get(url, {
+                    const { data: replayData } = await axios.get(url, {
                         headers: {
                             ...(accessToken && {authorization: `Bearer ${accessToken}`})
                         }
                     })
                     
-                    setReplays(data)
+                    setReplays(replayData)
+                    const {data: formatData} = await axios.get(`/api/formats`)
+                    setFormats(formatData)
                 }  if (isSubscriber) {
                     const url = `/api/replays/subscriber?page=1&limit=10&sortBy=publishDate:desc,display:desc,roundAbs:desc`
-                    const { data } = await axios.get(url, {
+                    const { data:replayData } = await axios.get(url, {
                         headers: {
                             ...(accessToken && {authorization: `Bearer ${accessToken}`})
                         }
                     })
                     
-                    setReplays(data)
+                    setReplays(replayData)
+                    const {data: formatData} = await axios.get(`/api/formats`)
+                    setFormats(formatData)
                 } else {
                     const url = `/api/replays?page=1&limit=10&sortBy=publishDate:desc,display:desc,roundAbs:desc`
-                    const { data } = await axios.get(url)                
-                    setReplays(data)
+                    const { data: replayData } = await axios.get(url)                
+                    setReplays(replayData)
+                    const {data: formatData} = await axios.get(`/api/formats`)
+                    setFormats(formatData)
                 }
             } catch (err) {
                 console.log(err)
             } 
         }
-
-        count()
-        fetchReplayData()
+        
+        // count()
+        fetchInitialData()
     }, [])
   
 
