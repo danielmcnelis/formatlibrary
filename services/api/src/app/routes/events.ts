@@ -11,7 +11,7 @@ router.get('/api/events/community/:community', eventsCommunity)
 
 router.get('/api/events/count', countEvents)
 
-router.get('/api/events/sub/:id', [authenticate, eventsId])
+router.get('/api/events/subscriber/:id', [authenticate, eventsId])
 
 router.get('/api/events/:id', eventsId)
 
