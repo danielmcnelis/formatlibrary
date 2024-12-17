@@ -383,7 +383,7 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
         console.log('inspectingPlayer.name', inspectingPlayer.name)
 
     const inspectingEntry = await Entry.findByPlayerIdAndTournamentId(inspectingPlayer.id, tournament.id)
-    console.log('inspectedEntry?.participantId', inspectedEntry?.participantId)
+    console.log('inspectingEntry?.participantId', inspectingEntry?.participantId)
 
     let [openChallongeMatch] = tournament.state === 'underway' ? 
         await getMatches(server, tournament.id, 'open', inspectedEntry.participantId) :
@@ -393,7 +393,7 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
 
     const inspectingIsPairedWithInspected = checkPairing(openChallongeMatch, inspectedEntry?.participantId, inspectingEntry?.participantId)
     console.log('inspectingIsPairedWithInspected', inspectingIsPairedWithInspected)
-    const elligibleToView = isModerator(inspectingPlayer) && !inspectingEntry || inspectingIsPairedWithInspected 
+    const elligibleToView = (isModerator(inspectingPlayer) && !inspectingEntry) || inspectingIsPairedWithInspected 
     console.log('elligibleToView', elligibleToView)
     if (!elligibleToView) return await interaction.editReply({ content: `You do not have permission to do that.`})
 
