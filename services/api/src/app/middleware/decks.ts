@@ -758,57 +758,158 @@ export const countDecks = async (req, res, next) => {
     }
 }
 
-export const getDecks = async (req, res, next) => {
+// GET DECKS AS NORMAL USER
+export const getDecksAsRegularUser = async (req, res, next) => {
     try {
-        const isAdmin = req.query.admin
-        const isSubscriber = req.query.subscriber
         const limit = parseInt(req.query.limit || 10)
         if (limit > 100) return res.json({})
         const page = parseInt(req.query.page || 1)
-        const display = isAdmin === 'true' ? { display: {operator: 'or', value: [true, false]} } :
-            isSubscriber === 'true' ? { publishDate: {operator: 'not', value: null }} :
-            { display: {operator: 'eq', value: true} }
-
-        const filter = req.query.filter ? req.query.filter.split(',').reduce((reduced, val) => {
-            let [field, operator, value] = val.split(':')
-            if (value.startsWith('arr(') && value.endsWith(')')) value = (value.slice(4, -1)).split(';')
-            reduced[field] = {operator, value}
-            return reduced
-        }, display) : display
-
-        const sort = req.query.sort?.split(',').reduce((reduced, val) => {
-            const [field, value] = val.split(':')
-            reduced.push([field, value])
-            return reduced
-        }, [])
-
-        const decks = await Deck.find(filter, limit, page, sort)
+        const display = { display: {operator: 'eq', value: true} }
+        const decks = await findDecks(req, display, limit, page)
         res.json(decks)
     } catch (err) {
         next(err)
     }
 }
 
-export const decksId = async (req, res, next) => {
-  try {
-    const id = parseInt(req.params.id)
-    const shareLink = req.params.id
-    const isAdmin = req.query.isAdmin
-    const isSubscriber = req.query.isSubscriber
+// GET DECKS AS SUBSCRIBER
+export const getDecksAsSubscriber = async (req, res, next) => {
+    try {
+        const limit = parseInt(req.query.limit || 10)
+        if (limit > 100) return res.json({})
+        const page = parseInt(req.query.page || 1)
+        const display = { publishDate: {operator: 'not', value: null }}
+        const decks = await findDecks(req, display, limit, page)
+        res.json(decks)
+    } catch (err) {
+        next(err)
+    }
+}
+
+// GET DECKS AS ADMIN
+export const getDecksAsAdmin = async (req, res, next) => {
+    try {
+        const limit = parseInt(req.query.limit || 10)
+        if (limit > 100) return res.json({})
+        const page = parseInt(req.query.page || 1)
+        const display = { display: {operator: 'or', value: [true, false]} }
+        const decks = await findDecks(req, display, limit, page)
+        res.json(decks)
+    } catch (err) {
+        next(err)
+    }
+}
+
+// FIND DECKS
+const findDecks = async (req, display, limit, page) => {
+    const filter = req.query.filter ? req.query.filter.split(',').reduce((reduced, val) => {
+        let [field, operator, value] = val.split(':')
+        if (value.startsWith('arr(') && value.endsWith(')')) value = (value.slice(4, -1)).split(';')
+        reduced[field] = {operator, value}
+        return reduced
+    }, display) : display
+
+    const sort = req.query.sort?.split(',').reduce((reduced, val) => {
+        const [field, value] = val.split(':')
+        reduced.push([field, value])
+        return reduced
+    }, [])
+
+    const decks = await Deck.find(filter, limit, page, sort)
+    return decks
+}
+
+// const deck = await Deck.findOne({
+//     where: !isNaN(id) && isAdmin === 'true' ? {
+//         id: id
+//     } : !isNaN(id) && isSubscriber === 'true' ? {
+//         id: id,
+//         publishDate: {[Op.not]: null}
+//     } : !isNaN(id) ? {
+//         id: id,
+//         display: true,
+//     } : {
+//         shareLink: shareLink,
+//         linkExpiresAt: {[Op.gte]: new Date()}
+//     },
+
+export const getDeckByIdAsAdmin = async (req, res, next) => {
+    try {
+        const id = parseInt(req.params.id)
+        const shareLink = req.params.id
     
-    const deck = await Deck.findOne({
-        where: !isNaN(id) && isAdmin === 'true' ? {
+        const filter = !isNaN(id) ? {
             id: id
-        } : !isNaN(id) && isSubscriber === 'true' ? {
+        } : {
+            shareLink: shareLink,
+            linkExpiresAt: {[Op.gte]: new Date()}
+        }
+    
+        const deck = await getDeckData(filter)
+
+        if (deck) {
+            res.json(deck)
+        } else {
+            return res.sendStatus(404)
+        }
+    } catch (err) {
+        next(err)
+    }
+}
+
+export const getDeckByIdAsSubscriber = async (req, res, next) => {
+    try {
+        const id = parseInt(req.params.id)
+        const shareLink = req.params.id
+    
+        const filter = !isNaN(id) ? {
             id: id,
             publishDate: {[Op.not]: null}
-        } : !isNaN(id) ? {
+        } : {
+            shareLink: shareLink,
+            linkExpiresAt: {[Op.gte]: new Date()}
+        }
+    
+        const deck = await getDeckData(filter)
+
+        if (deck) {
+            res.json(deck)
+        } else {
+            return res.sendStatus(404)
+        }
+    } catch (err) {
+        next(err)
+    }
+}
+
+export const getDeckByIdAsRegularUser = async (req, res, next) => {
+    try {
+        const id = parseInt(req.params.id)
+        const shareLink = req.params.id
+    
+        const filter = !isNaN(id) ? {
             id: id,
             display: true,
         } : {
             shareLink: shareLink,
             linkExpiresAt: {[Op.gte]: new Date()}
-        },
+        }
+    
+        const deck = await getDeckData(filter)
+
+        if (deck) {
+            res.json(deck)
+        } else {
+            return res.sendStatus(404)
+        }
+    } catch (err) {
+        next(err)
+    }
+}
+
+export const getDeckData = async (filter) => {
+    const deck = await Deck.findOne({
+        where: filter,
         attributes: [
             'id',
             'name',
@@ -834,7 +935,7 @@ export const decksId = async (req, res, next) => {
         ]
     })
 
-    if (!deck) return res.sendStatus(404)
+    if (!deck) return null
 
     const main = []
     const extra = []
@@ -931,10 +1032,7 @@ export const decksId = async (req, res, next) => {
       side
     }
 
-    res.json(data)
-  } catch (err) {
-    next(err)
-  }
+    return data
 }
 
 export const convertYDKeToYDK = async (req, res, next) => {

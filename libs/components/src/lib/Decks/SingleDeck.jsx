@@ -31,6 +31,7 @@ const emojis = {
 const { Unicorn, Voltage, Bow, Volcano, Controller, Orb, Lock, Thinking, First, Second, Third, Consolation, Heart, Disk, Eye } = emojis
 
 export const SingleDeck = (props) => {
+    const accessToken = getCookie('access')
     const isAdmin = props.roles?.admin
     const isContentManager = props.roles?.contentManager
     const isSubscriber = props.roles?.subscriber
@@ -53,7 +54,6 @@ export const SingleDeck = (props) => {
     // UPDATE DECK INFO
     const updateDeckInfo = async () => {
         try {
-            const accessToken = getCookie('access')
             const {data} = await axios.post(`/api/decks/labels?id=${deck.id}`, { 
                 ...deck, 
                 deckTypeName: selectedDeckType.name, 
@@ -75,22 +75,47 @@ export const SingleDeck = (props) => {
     
   // USE EFFECT SET DECK
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const accessToken = getCookie('access')
-        const {data} = await axios.get(`/api/decks/${id}?isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`, {
-            headers: {
-                ...(accessToken && {authorization: `Bearer ${accessToken}`})
+    const fetchDeckData = async () => {
+        // If user is subscriber or admin: Hit different endpoints that require authentication
+        if (isAdmin) {
+            try {
+                const {data: deckData} = await axios.get(`/api/decks/admin/${id}`, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
+
+                setDeck(deckData)
+            } catch (err) {
+                console.log(err)
+                setDeck(null)
             }
-        })
-        setDeck(data)
-      } catch (err) {
-        console.log(err)
-        setDeck(null)
-      }
+        } else if (isSubscriber) {
+            try {
+                const {data: deckData} = await axios.get(`/api/decks/subscriber/${id}`, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
+
+                setDeck(deckData)
+                } catch (err) {
+                console.log(err)
+                setDeck(null)
+                }
+        } else {
+            try {
+                const {data: deckData} = await axios.get(`/api/decks/${id}`)
+                setDeck(deckData)
+                } catch (err) {
+                console.log(err)
+                setDeck(null)
+                }
+
+        }
     }
 
-    fetchData()
+    fetchDeckData()
   }, [id, isAdmin, isSubscriber])
 
 
@@ -228,7 +253,11 @@ export const SingleDeck = (props) => {
                 </div>
                 <a
                     className="link desktop-only"
-                    href={`/api/decks/download/${deck.id}`} 
+                    href={(`/api/decks/download/${deck.id}`, {
+                        headers: {
+                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                        }
+                    })} 
                     download={`${deck.builderName}-${deck.deckTypeName || deck.name}.ydk`}
                     onClick={()=> addDownload()}
                 >                                     
@@ -433,7 +462,11 @@ export const SingleDeck = (props) => {
                             <div className="deck-stats-cell">
                                 <div style={{paddingRight:'7px'}}><b className="deck-stats-label">Downloads: </b>{deck.downloads}</div> 
                                 <a
-                                    href={`/api/decks/download/${id}`} 
+                                    href={(`/api/decks/download/${deck.id}`, {
+                                        headers: {
+                                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                                        }
+                                    })}
                                     download={`${deck.builderName}-${deck.deckTypeName || deck.name}.ydk`}
                                     onClick={()=> addDownload()}
                                 >

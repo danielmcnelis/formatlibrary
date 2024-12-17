@@ -10,6 +10,7 @@ import './SingleEvent.css'
 import { Chart as ChartJS, ArcElement, CategoryScale, BarElement, Title, LinearScale, Tooltip, Legend } from 'chart.js'
 import { Bar, Doughnut } from 'react-chartjs-2'
 import { Helmet } from 'react-helmet'
+import { getCookie } from '@fl/utils'
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -56,21 +57,42 @@ export const SingleEvent = (props) => {
 
   // USE EFFECT SET CARD
   useEffect(() => {
-    const uploadEvent = async () => {
-      try {
-        const {data} = await axios.get(`/api/events/${id}?isAdmin=${isAdmin}&isSubscriber=${isSubscriber}`)
+    const fetchEventData = async () => {
+        // If user is subscriber or admin: Hit a different endpoint that requires authentication
+        if (isAdmin || isSubscriber) {
+            try {
+                const accessToken = getCookie('access')
+                const {data} = await axios.get(`/api/events/subscriber/${id}`, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
+
+                setEventData(data)
+            } catch (err) {
+                console.log(err)
+                setEvent(null)
+            }
+        } else {
+            try {
+                const {data} = await axios.get(`/api/events/${id}`)
+                setEventData(data)
+              } catch (err) {
+                console.log(err)
+                setEvent(null)
+              }
+        }
+    }
+
+    const setEventData = (data) => {
         setEvent(data.event)
         setWinner(data.event.winner || data.event.team)
         setReplays(data.replays)
         setTopDecks(data.topDecks)
         setMetagame(data.metagame)
-      } catch (err) {
-        console.log(err)
-        setEvent(null)
-      }
     }
 
-    uploadEvent()
+    fetchEventData()
   }, [id, isAdmin, isSubscriber])
 
   if (event === null) return <NotFound/>

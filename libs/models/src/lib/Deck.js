@@ -207,11 +207,16 @@ Deck.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
         offset: (page - 1) * limit,
         limit: limit,
         subQuery: false,
-        attributes: { exclude: ['url', 'shareLink', 'linkExpiresAt', 'createdAt', 'updatedAt'] },        
+        attributes: [
+            'id', 'name', 'deckTypeName', 'builderName', 'builderId', 
+            'formatId', 'formatName', 'origin', 
+            'eventId', 'eventAbbreviation', 'placement', 'communityName',
+            'rating', 'downloads', 'publishDate'
+        ] ,        
         include: [
             {model: Player, as: 'builder', attributes: ['id', 'name', 'discordId', 'discordPfp']}, 
-            {model: Format, attributes: ['name', 'icon']},
-            {model: Event, attributes: ['name']}
+            {model: Format, attributes: ['id', 'name', 'icon']},
+            {model: Event, attributes: ['id', 'name']}
         ],
         order: sort
     })

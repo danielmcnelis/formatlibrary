@@ -7,6 +7,7 @@ import { MobileDeckRow } from './MobileDeckRow'
 import { Pagination } from '../General/Pagination'
 import { useMediaQuery } from 'react-responsive'
 import { Helmet } from 'react-helmet'
+import { getCookie } from '@fl/utils'
 import './DeckTable.css' 
 
 // DECK TABLE
@@ -112,18 +113,62 @@ export const DeckTable = (props) => {
   
     // USE EFFECT
     useEffect(() => {
-        const fetchData = async () => {
-            const {data: deckData} = await axios.get(`/api/decks?page=1&limit=12&sortBy=publishDate:desc&filter=origin:eq:event`)
-            setDecks(deckData)
-        
-            const {data: formatData} = await axios.get(`/api/formats/`)
-            setFormats(formatData)  
-              
-            isMounted.current = true
+        const fetchDecksData = async () => {
+            // If user is subscriber or admin: Hit different endpoints that require authentication
+            if (isAdmin) {
+                try {
+                    const accessToken = getCookie('access')
+                    const {data: deckData} = await axios.get(`/api/decks/admin?page=1&limit=12&sortBy=publishDate:desc&filter=origin:eq:event`, {
+                        headers: {
+                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                        }
+                    })
+
+                    setDecks(deckData)
+
+                    const {data: formatData} = await axios.get(`/api/formats/`)
+                    setFormats(formatData)  
+                    
+                    isMounted.current = true
+                } catch (err) {
+                    console.log(err)
+                }
+            } else if (isSubscriber) {
+                try {
+                    const accessToken = getCookie('access')
+                    const {data: deckData} = await axios.get(`/api/decks/subscriber?page=1&limit=12&sortBy=publishDate:desc&filter=origin:eq:event`, {
+                        headers: {
+                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                        }
+                    })
+
+                    setDecks(deckData)
+
+                    const {data: formatData} = await axios.get(`/api/formats/`)
+                    setFormats(formatData)  
+                    
+                    isMounted.current = true
+                  } catch (err) {
+                    console.log(err)
+                  }
+            } else {
+                try {
+                    const {data: deckData} = await axios.get(`/api/decks?page=1&limit=12&sortBy=publishDate:desc&filter=origin:eq:event`)
+                    setDecks(deckData)
+
+                    const {data: formatData} = await axios.get(`/api/formats/`)
+                    setFormats(formatData)  
+                    
+                    isMounted.current = true
+                  } catch (err) {
+                    console.log(err)
+                  }
+
+            }
         }
-  
+    
         count()
-        fetchData()
+        fetchDecksData()
     }, [])
   
     // USE EFFECT SEARCH
