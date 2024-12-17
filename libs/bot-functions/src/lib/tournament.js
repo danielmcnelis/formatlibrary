@@ -366,39 +366,25 @@ export const selectTournament = async (interaction, tournaments) => {
 // GET FILM
 export const getFilm = async (interaction, tournamentId, discordId) => {
     const server = await Server.findById(interaction.guildId)
-    console.log('server.name', server.name)
     const tournament = await Tournament.findById(tournamentId)
-    console.log('tournament.name', tournament.name)
 
     const inspectedPlayer = await Player.findOne({ where: { discordId: discordId } })
     if (!inspectedPlayer) return await interaction.editReply({ content: "That user is not in the database."})
-        console.log('inspectedPlayer.name', inspectedPlayer.name)
 
     const inspectedEntry = await Entry.findByPlayerIdAndTournamentId(inspectedPlayer.id, tournament.id)
     if (!inspectedEntry) return await interaction.editReply({ content: `That user is not in ${tournament.name}.`})
-        console.log('inspectedEntry.participantId', inspectedEntry.participantId)
 
     const inspectingPlayer = await Player.findOne({ where: { discordId: interaction.user.id } })
     if (!inspectingPlayer) return await interaction.editReply({ content: "You are not in the database."})
-        console.log('inspectingPlayer.name', inspectingPlayer.name)
 
     const inspectingEntry = await Entry.findByPlayerIdAndTournamentId(inspectingPlayer.id, tournament.id)
-    console.log('!!inspectingEntry', !!inspectingEntry)
-    console.log('inspectingEntry?.participantId', inspectingEntry?.participantId)
 
     let [openChallongeMatch] = tournament.state === 'underway' ? 
         await getMatches(server, tournament.id, 'open', inspectedEntry.participantId) :
         await getMatches(server, tournament.associatedTournamentId, 'open', inspectedEntry.participantId)
 
-    console.log('!!openChallongeMatch', !!openChallongeMatch)
-
     const inspectingIsPairedWithInspected = checkPairing(openChallongeMatch, inspectedEntry?.participantId, inspectingEntry?.participantId)
-    console.log('isModerator(inspectingPlayer)', isModerator(inspectingPlayer))
-    console.log('!inspectingEntry', !inspectingEntry)
-    console.log('isModerator(inspectingPlayer) && !inspectingEntry', isModerator(inspectingPlayer) && !inspectingEntry)
-    console.log('inspectingIsPairedWithInspected', inspectingIsPairedWithInspected)
-    const elligibleToView = (isModerator(inspectingPlayer) && !inspectingEntry) || inspectingIsPairedWithInspected 
-    console.log('elligibleToView', elligibleToView)
+    const elligibleToView = (isModerator(inspectingPlayer) && !inspectingEntry?.id) || inspectingIsPairedWithInspected 
     if (!elligibleToView) return await interaction.editReply({ content: `You do not have permission to do that.`})
 
     const matches = await getMatches(server, tournament.id, 'complete', inspectedEntry.participantId)
