@@ -382,9 +382,6 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
     if (!inspectingPlayer) return await interaction.editReply({ content: "You are not in the database."})
         console.log('inspectingPlayer.name', inspectingPlayer.name)
 
-    const inspectingMember = await interaction.guild?.members.fetch(interaction.user.id)
-    console.log('inspectingMember', inspectingMember)
-
     const inspectingEntry = await Entry.findByPlayerIdAndTournamentId(inspectingPlayer.id, tournament.id)
     console.log('!!inspectingEntry', !!inspectingEntry)
     console.log('inspectingEntry?.participantId', inspectingEntry?.participantId)
@@ -396,11 +393,11 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
     console.log('!!openChallongeMatch', !!openChallongeMatch)
 
     const inspectingIsPairedWithInspected = checkPairing(openChallongeMatch, inspectedEntry?.participantId, inspectingEntry?.participantId)
-    console.log('isModerator(inspectingMember)', isModerator(inspectingMember))
+    console.log('isModerator(interaction.member)', isModerator(server, interaction.member))
     console.log('!!inspectingEntry?.id', !!inspectingEntry)
-    console.log('isModerator(inspectingMember) && !inspectingEntry', isModerator(inspectingMember) && !inspectingEntry)
+    console.log('isModerator(interaction.member) && !inspectingEntry', isModerator(server, interaction.member) && !inspectingEntry)
     console.log('inspectingIsPairedWithInspected', inspectingIsPairedWithInspected)
-    const elligibleToView = (isModerator(inspectingMember) && !inspectingEntry) || inspectingIsPairedWithInspected 
+    const elligibleToView = (isModerator(server, interaction.member) && !inspectingEntry) || inspectingIsPairedWithInspected 
     console.log('elligibleToView', elligibleToView)
     if (!elligibleToView) return await interaction.editReply({ content: `You do not have permission to do that.`})
 
