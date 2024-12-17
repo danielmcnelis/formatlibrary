@@ -100,7 +100,7 @@ export const Tournament = db.define('tournaments', {
   }
 })
 
-Tournament.findById = async (id) => await Tournament.findOne({ where: { id })
+Tournament.findById = async (id) => await Tournament.findOne({ where: { id }})
 
 Tournament.findRecent = async (format, serverId) => await Tournament.findAll({ 
     where: {
