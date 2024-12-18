@@ -602,31 +602,32 @@ export const displayReplays = async (interaction, event) => {
                 const round = replay.roundInt
                 let display = false
         
-                if (event.primaryTournament?.type === 'single elimination') {
+                if (event.primaryTournament.type === 'single elimination') {
                     const totalRounds = Math.ceil(Math.log2(event.size))
                     const roundsRemaining = totalRounds - round
                     display = roundsRemaining === 0 || 
                         event.size > 8 && roundsRemaining <= 1 ||
                         event.size > 16 && roundsRemaining <= 2 ||
                         event.size > 32 && roundsRemaining <= 3
-                } else if (event.primaryTournament?.type === 'double elimination') {
+                } else if (event.primaryTournament.type === 'double elimination') {
                     const totalWinnersRounds = Math.ceil(Math.log2(event.size)) + 1
                     const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(event.size)))
                     const correction = (event.size - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
                     const totalLosersRounds = (totalWinnersRounds - 2) * 2 + correction
-                        if (round > 0) {
-                            const roundsRemaining = totalWinnersRounds - round
-                            display = roundsRemaining === 0 || 
-                                event.size > 8 && roundsRemaining <= 1 ||
-                                event.size > 16 && roundsRemaining <= 2 ||
-                                event.size > 32 && roundsRemaining <= 3
-                        } else {
-                            const roundsRemaining = totalLosersRounds - Math.abs(round)
-                            display = roundsRemaining === 0 ||
-                                event.size > 8 && roundsRemaining <= 1 ||
-                                event.size > 16 && roundsRemaining <= 2 ||
-                                event.size > 32 && roundsRemaining <= 3
-                        }
+                    
+                    if (round > 0) {
+                        const roundsRemaining = totalWinnersRounds - round
+                        display = roundsRemaining === 0 || 
+                            event.size > 8 && roundsRemaining <= 1 ||
+                            event.size > 16 && roundsRemaining <= 2 ||
+                            event.size > 32 && roundsRemaining <= 3
+                    } else {
+                        const roundsRemaining = totalLosersRounds - Math.abs(round)
+                        display = roundsRemaining === 0 ||
+                            event.size > 8 && roundsRemaining <= 1 ||
+                            event.size > 16 && roundsRemaining <= 2 ||
+                            event.size > 32 && roundsRemaining <= 3
+                    }
                 }
 
                 await replay.update({
