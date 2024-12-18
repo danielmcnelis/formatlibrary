@@ -1737,113 +1737,6 @@ const shuffleArray = (arr) => {
 //     }
 // })()
 
-// ;(async () => { 
-//     const replays = await Replay.findAll({ include: Tournament })
-
-//     let b = 0
-//     for (let i = 0; i < replays.length; i++) {
-//         const replay = replays[i]
-
-//         await replay.update({ 
-//             display: false, 
-//             roundName: getRoundName(replay?.tournament, replay.roundInt, replay?.tournament?.size) || replay.roundName,
-//             roundAbs: Math.abs(replay.roundInt)
-//         })
-//         b++
-//     }
-
-//     console.log('updated replays:', b)
-
-//     const events = await Event.findAll()
-//     for (let i = 0; i < events.length; i++) {
-//         const event = events[i]
-
-//         if (event.primaryTournamentId && !event.topCutTournamentId) {
-//             const primaryTournament = await Tournament.findOne({ where: { id: event.primaryTournamentId }})
-//             const primaryReplays = await Replay.findAll({ 
-//                 where: {
-//                     tournamentId: primaryTournament.id
-//                 }
-//             })
-         
-//             let b = 0
-//             for (let i = 0; i < primaryReplays.length; i++) {
-//                 try {
-//                     const replay = primaryReplays[i]
-//                     const round = replay.roundInt
-//                     let display = false
-            
-//                     if (primaryTournament.type === 'single elimination') {
-//                         const totalRounds = Math.ceil(Math.log2(event.size))
-//                         const roundsRemaining = totalRounds - round
-//                         display = roundsRemaining === 0 || 
-//                             event.size > 8 && roundsRemaining <= 1 ||
-//                             event.size > 16 && roundsRemaining <= 2 ||
-//                             event.size > 32 && roundsRemaining <= 3
-//                     } else if (primaryTournament.type === 'double elimination') {
-//                         const totalWinnersRounds = Math.ceil(Math.log2(event.size)) + 1
-//                         const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(event.size)))
-//                         const correction = (event.size - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
-//                         const totalLosersRounds = (totalWinnersRounds - 2) * 2 + correction
-
-//                         if (round > 0) {
-//                             const roundsRemaining = totalWinnersRounds - round
-//                             display = roundsRemaining <= 0 || 
-//                                 event.size > 8 && roundsRemaining <= 1 ||
-//                                 event.size > 16 && roundsRemaining <= 2 ||
-//                                 event.size > 64 && roundsRemaining <= 3
-//                         } else {
-//                             const roundsRemaining = totalLosersRounds - Math.abs(round)
-//                             display = event.size > 8 && roundsRemaining <= 0 ||
-//                                 event.size > 16 && roundsRemaining <= 2 ||
-//                                 event.size > 64 && roundsRemaining <= 4                            
-//                         }
-//                     }
-
-//                     if (display && !replay.display) b++
-                    
-//                     await replay.update({
-//                         display: display
-//                     })
-//                 } catch (err) {
-//                     console.log(err)
-//                 }
-//             }
-    
-//            console.log(`Displayed ${b} new replays for ${event.name}.`)
-//         } else if (event.topCutTournamentId) {
-//             const topCutReplays = await Replay.findAll({ 
-//                 where: {
-//                     tournamentId: event.topCutTournamentId,
-//                     display: false
-//                 }
-//             })
-        
-//             let b = 0
-//             for (let i = 0; i < topCutReplays.length; i++) {
-//                 try {
-//                     const replay = topCutReplays[i]
-//                     if (!replay.display) b++
-    
-//                     await replay.update({
-//                         display: true
-//                     })
-//                 } catch (err) {
-//                     console.log(err)
-//                 }
-//             }
-        
-//             if (b) {
-//                 console.log(`Displayed ${b} new top cut replays for ${event.name}.`)
-//             } else {
-//                 console.log(`All top cut replays for ${event.name} were already published. 👏`)
-//             }
-//         } else {
-//             console.log(`NO TOURNAMENT FOUND FOR: ${event.name}.`)
-//         }
-//     }
-// })()
-
 
 // ;(async () => { 
 //     let b = 0
@@ -2042,47 +1935,155 @@ const shuffleArray = (arr) => {
 // })()
 
 
+// ;(async () => { 
+//     let b = 0
+//     let e = 0
+//     const matches = await Match.findAll({ 
+//         where: { 
+//             loserName: null
+//         },
+//         include: { model: Player, as: 'loser' }
+//     })
+
+//     for (let i = 0; i < matches.length; i++) {
+//         try {
+//             const match = matches[i]
+//             await match.update({ loserName: match.loser?.name })
+//             b++
+//         } catch (err) {
+//             console.log('match error', err)
+//             e++
+//         }
+//     }
+
+//     console.log('updated matches:', b, '\nerrors:', e)
+
+
+//     const stats = await Stats.findAll({ 
+//         include: Player
+//     })
+
+//     b = 0
+//     e = 0
+//     for (let i = 0; i < stats.length; i++) {
+//         try {
+//             const stat = stats[i]
+//             await stat.update({ playerName: stat.player?.name })
+//             b++
+//         } catch (err) {
+//             console.log('stat error', err)
+//             e++
+//         }
+//     }
+
+//     console.log('updated stats:', b, '\nerrors:', e)
+//     return
+// })()
+
+
 ;(async () => { 
+    const replays = await Replay.findAll({ include: Tournament })
+
     let b = 0
-    let e = 0
-    const matches = await Match.findAll({ 
-        where: { 
-            loserName: null
-        },
-        include: { model: Player, as: 'loser' }
-    })
+    for (let i = 0; i < replays.length; i++) {
+        const replay = replays[i]
 
-    for (let i = 0; i < matches.length; i++) {
-        try {
-            const match = matches[i]
-            await match.update({ loserName: match.loser?.name })
-            b++
-        } catch (err) {
-            console.log('match error', err)
-            e++
-        }
+        await replay.update({ 
+            display: false, 
+            roundName: getRoundName(replay?.tournament, replay.roundInt, replay?.tournament?.size) || replay.roundName,
+            roundAbs: Math.abs(replay.roundInt)
+        })
+        b++
     }
 
-    console.log('updated matches:', b, '\nerrors:', e)
+    console.log('updated replays:', b)
 
+    const events = await Event.findAll()
+    for (let i = 0; i < events.length; i++) {
+        const event = events[i]
 
-    const stats = await Stats.findAll({ 
-        include: Player
-    })
+        if (event.primaryTournamentId && !event.topCutTournamentId) {
+            const primaryTournament = await Tournament.findOne({ where: { id: event.primaryTournamentId }})
+            const primaryReplays = await Replay.findAll({ 
+                where: {
+                    tournamentId: primaryTournament.id
+                }
+            })
+         
+            let b = 0
+            for (let i = 0; i < primaryReplays.length; i++) {
+                try {
+                    const replay = primaryReplays[i]
+                    const round = replay.roundInt
+                    let display = false
+            
+                    if (primaryTournament.type === 'single elimination') {
+                        const totalRounds = Math.ceil(Math.log2(event.size))
+                        const roundsRemaining = totalRounds - round
+                        display = roundsRemaining === 0 || 
+                            event.size > 8 && roundsRemaining <= 1 ||
+                            event.size > 16 && roundsRemaining <= 2 ||
+                            event.size > 32 && roundsRemaining <= 3
+                    } else if (primaryTournament.type === 'double elimination') {
+                        const totalWinnersRounds = Math.ceil(Math.log2(event.size)) + 1
+                        const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(event.size)))
+                        const correction = (event.size - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
+                        const totalLosersRounds = (totalWinnersRounds - 2) * 2 + correction
 
-    b = 0
-    e = 0
-    for (let i = 0; i < stats.length; i++) {
-        try {
-            const stat = stats[i]
-            await stat.update({ playerName: stat.player?.name })
-            b++
-        } catch (err) {
-            console.log('stat error', err)
-            e++
+                        if (round > 0) {
+                            const roundsRemaining = totalWinnersRounds - round
+                            display = roundsRemaining <= 0 || 
+                                event.size > 8 && roundsRemaining <= 1 ||
+                                event.size > 16 && roundsRemaining <= 2 ||
+                                event.size > 64 && roundsRemaining <= 3
+                        } else {
+                            const roundsRemaining = totalLosersRounds - Math.abs(round)
+                            display = event.size > 8 && roundsRemaining <= 0 ||
+                                event.size > 16 && roundsRemaining <= 2 ||
+                                event.size > 64 && roundsRemaining <= 4                            
+                        }
+                    }
+
+                    if (display && !replay.display) b++
+                    
+                    await replay.update({
+                        display: display
+                    })
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+    
+           console.log(`Displayed ${b} new replays for ${event.name}.`)
+        } else if (event.topCutTournamentId) {
+            const topCutReplays = await Replay.findAll({ 
+                where: {
+                    tournamentId: event.topCutTournamentId,
+                    display: false
+                }
+            })
+        
+            let b = 0
+            for (let i = 0; i < topCutReplays.length; i++) {
+                try {
+                    const replay = topCutReplays[i]
+                    if (!replay.display) b++
+    
+                    await replay.update({
+                        display: true
+                    })
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+        
+            if (b) {
+                console.log(`Displayed ${b} new top cut replays for ${event.name}.`)
+            } else {
+                console.log(`All top cut replays for ${event.name} were already published. 👏`)
+            }
+        } else {
+            console.log(`NO TOURNAMENT FOUND FOR: ${event.name}.`)
         }
     }
-
-    console.log('updated stats:', b, '\nerrors:', e)
-    return
 })()

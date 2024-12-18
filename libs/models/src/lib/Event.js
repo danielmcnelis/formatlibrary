@@ -144,7 +144,6 @@ Event.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
         if (typeof value === 'string') value.replaceAll('%20', ' ')
         let operator = by.operator
         if (['display'].includes(key)) { value = value.toLowerCase() === 'true' }
-        // if (['deckTypeId', 'downloads', 'views', 'rating'].includes(key)) { value = parseInt(value) }
        
         if (['name'].includes(key)) { 
             key = Op.or

@@ -190,6 +190,7 @@ export default {
                     loserName: losingPlayer.name,
                     matchId: match.id,
                     roundInt: round,
+                    roundAbs: Math.abs(round),
                     roundName: roundName
                 })
                 

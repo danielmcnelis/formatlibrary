@@ -516,6 +516,7 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
                 loserName: losingPlayer.name,
                 matchId: match.id,
                 roundInt: round,
+                roundAbs: Math.abs(round),
                 roundName: roundName
             })
             
