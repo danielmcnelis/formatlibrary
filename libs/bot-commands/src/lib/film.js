@@ -23,9 +23,7 @@ export default {
         
         let format = await Format.findByServerOrChannelId(server, interaction.channelId)
         const tournaments = await Tournament.findByState({[Op.or]:['underway', 'topcut']}, format, interaction.guildId, 'ASC')
-        console.log('tournaments.length', tournaments.length)
         const tournament = await selectTournament(interaction, tournaments, 'ASC')
-        console.log('!!tournament', !!tournament)
         
         if (!tournament) {
             return

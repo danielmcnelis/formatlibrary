@@ -366,40 +366,30 @@ export const selectTournament = async (interaction, tournaments) => {
 // GET FILM
 export const getFilm = async (interaction, tournamentId, discordId) => {
     const server = await Server.findById(interaction.guildId)
-    console.log('server.name', server.name)
     const tournament = await Tournament.findById(tournamentId)
-    console.log('tournament.name', tournament.name)
 
     const inspectedPlayer = await Player.findOne({ where: { discordId: discordId } })
     if (!inspectedPlayer) return await interaction.editReply({ content: "That user is not in the database."})
-        console.log('inspectedPlayer.name', inspectedPlayer.name)
 
     const inspectedEntry = await Entry.findByPlayerIdAndTournamentId(inspectedPlayer.id, tournament.id)
     if (!inspectedEntry) return await interaction.editReply({ content: `That user is not in ${tournament.name}.`})
-        console.log('inspectedEntry.participantId', inspectedEntry.participantId)
 
     const inspectingPlayer = await Player.findOne({ where: { discordId: interaction.user.id } })
     if (!inspectingPlayer) return await interaction.editReply({ content: "You are not in the database."})
-        console.log('inspectingPlayer.name', inspectingPlayer.name)
 
-    const inspectingEntry = await Entry.findByPlayerIdAndTournamentId(inspectingPlayer.id, tournament.id)
-    console.log('!!inspectingEntry', !!inspectingEntry)
-    console.log('inspectingEntry?.participantId', inspectingEntry?.participantId)
+    const inspectingEntry = await Entry.findByPlayerIdAndTournamentId(inspectingPlayer.id, tournament.id) || 
+        await Entry.findByPlayerIdAndTournamentId(inspectingPlayer.id, tournament.associatedTournamentId)
 
-    let [openChallongeMatch] = tournament.state === 'underway' ? 
-        [...await getMatches(server, tournament.id, 'open', inspectedEntry.participantId)].map((el) => el.match) :
-        [...await getMatches(server, tournament.associatedTournamentId, 'open', inspectedEntry.participantId)].map((el) => el.match)
+    // let [openChallongeMatch] = tournament.state === 'underway' ?
+    //     [...await getMatches(server, tournament.id, 'open', inspectedEntry.participantId)].map((el) => el.match) :
+    //     [...await getMatches(server, tournament.associatedTournamentId, 'open', inspectedEntry.participantId)].map((el) => el.match)
 
-    console.log('!!openChallongeMatch', !!openChallongeMatch)
+    // const inspectingIsPairedWithInspected = checkPairing(openChallongeMatch, inspectedEntry?.participantId, inspectingEntry?.participantId)
+    // const elligibleToView = (isModerator(server, interaction.member) && !inspectingEntry) || inspectingIsPairedWithInspected 
+    // if (!elligibleToView) return await interaction.editReply({ content: `You do not have permission to do that.`})
 
-    const inspectingIsPairedWithInspected = checkPairing(openChallongeMatch, inspectedEntry?.participantId, inspectingEntry?.participantId)
-    console.log('isModerator(interaction.member)', isModerator(server, interaction.member))
-    console.log('!!inspectingEntry?.id', !!inspectingEntry)
-    console.log('isModerator(interaction.member) && !inspectingEntry', isModerator(server, interaction.member) && !inspectingEntry)
-    console.log('inspectingIsPairedWithInspected', inspectingIsPairedWithInspected)
-    const elligibleToView = (isModerator(server, interaction.member) && !inspectingEntry) || inspectingIsPairedWithInspected 
-    console.log('elligibleToView', elligibleToView)
-    if (!elligibleToView) return await interaction.editReply({ content: `You do not have permission to do that.`})
+    const elligibleToView = inspectingEntry || inspectingPlayer.isSubscriber || isModerator(server, interaction.member)
+    if (!elligibleToView) return await interaction.editReply({ content: `Sorry, you must be a tournament participant, a staff member, or a subscriber to view replays.`})
 
     const matches = [...await getMatches(server, tournament.id, 'complete', inspectedEntry.participantId)].map((el) => el.match)
     if (tournament.type === 'double elimination') matches.sort((a, b) => a.suggested_play_order - b.suggested_play_order)
@@ -413,8 +403,6 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
         }
     })
 
-    console.log('matches.length', matches.length)
-    console.log('matches', matches)
     for (let i = 0; i < matches.length; i++) {
         const match = matches[i]
         const roundName = getRoundName(tournament, match.round, entryCount)
@@ -454,7 +442,8 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
     if (!replays.length) {
         return await interaction.editReply(`No replays found featuring ${inspectedPlayer.name} in ${tournament.name}. ${tournament.emoji}`)
     } else {
-        return await interaction.editReply(`${inspectedPlayer.name}'s ${tournament.name} ${tournament.emoji} replays:\n${replays.join('\n')}`)
+        interaction.member.send(`${inspectedPlayer.name}'s ${tournament.name} ${tournament.emoji} replays:\n${replays.join('\n')}`)
+        return await interaction.editReply(`Please check your DMs for ${inspectedPlayer.name}'s ${tournament.name} ${tournament.emoji} replays.`)        
     }
 }
 
