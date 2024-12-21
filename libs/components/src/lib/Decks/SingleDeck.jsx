@@ -286,14 +286,6 @@ export const SingleDeck = (props) => {
                 <div
                     className="link desktop-only show-cursor"
                     onClick={() => handleDeckDownload()}
-
-                    // href={(`/api/decks/download/${deck.id}`, {
-                    //     headers: {
-                    //         ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                    //     }
-                    // })}
-                    // download={`${deck.builderName}-${deck.deckTypeName || deck.name}.ydk`}
-                    // onClick={()=> addDownload()}
                 >                                     
                     <div className="deck-button show-cursor">
                         <b style={{padding: '0px 6px'}}>Download</b>
@@ -496,12 +488,6 @@ export const SingleDeck = (props) => {
                             <div className="deck-stats-cell show-cursor">
                                 <div style={{paddingRight:'7px'}}><b className="deck-stats-label show-cursor">Downloads: </b>{deck.downloads}</div> 
                                 <div
-                                    // href={(`/api/decks/download/${deck.id}`, {
-                                    //     headers: {
-                                    //         ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                                    //     }
-                                    // })}
-                                    // download={`${deck.builderName}-${deck.deckTypeName || deck.name}.ydk`}
                                     onClick={()=> handleDeckDownload()}
                                 >
                                     <img style={{width:'28px'}} alt="download" src={Disk}/>

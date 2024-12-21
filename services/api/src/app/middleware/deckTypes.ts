@@ -534,12 +534,12 @@ export const deckTypesCreate = async (req, res, next) => {
         category: req.body.category
       }))
 
-    const count = await DeckThumb.count({ where: { deckTypeName: req.body.deckTypeName } })
+    const count = await DeckThumb.count({ where: { deckTypeName: req.body.name } })
 
     const deckThumb =
       (await DeckThumb.findOne({
         where: {
-          deckTypeName: req.body.deckTypeName,
+          deckTypeName: req.body.name,
           formatId: req.body.formatId
         }
       })) ||
