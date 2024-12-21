@@ -183,14 +183,25 @@ export const SingleDeck = (props) => {
     // HANDLE DECK DOWNLOAD
     const handleDeckDownload = async () => {
         try {
-            const res = await axios.get(`/api/decks/download/${deck.id}`, {
-                headers: {
-                    ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                }
-            })
-    
-            const blob = res.blob()
-            console.log('blob', blob)
+            let blob
+            if (deck.display === true) {
+                const {data} = await axios.get(`/api/decks/download/${deck.id}`)
+
+                console.log('data', data)
+                blob = data.blob()
+                console.log('blob', blob)
+            } else {
+                const {data} = await axios.get(`/api/decks/download/subscriber/${deck.id}`, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
+
+                console.log('data', data)
+                blob = data.blob()
+                console.log('blob', blob)
+            }
+
             const fileURL = window.URL.createObjectURL(blob)
             let alink = document.createElement("a")
                 alink.href = fileURL
