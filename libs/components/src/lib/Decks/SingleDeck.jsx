@@ -185,23 +185,23 @@ export const SingleDeck = (props) => {
         try {
             let blob
             if (deck.display === true) {
-                const res = await axios.get(`/api/decks/download/${deck.id}`, {
+                const {data} = await axios.get(`/api/decks/download/${deck.id}`, {
                     responseType: 'blob',
                 })
 
-                console.log('res', res)
-                blob = res.blob()
+                console.log('data', data)
+                blob = data.blob()
                 console.log('blob', blob)
             } else {
-                const res = await axios.get(`/api/decks/download/subscriber/${deck.id}`, {
+                const {data} = await axios.get(`/api/decks/download/subscriber/${deck.id}`, {
                   responseType: 'blob',
                     headers: {
                         ...(accessToken && {authorization: `Bearer ${accessToken}`})
                     }
                 })
 
-                console.log('res', res)
-                blob = res.blob()
+                console.log('data', data)
+                blob = data.blob()
                 console.log('blob', blob)
             }
 
