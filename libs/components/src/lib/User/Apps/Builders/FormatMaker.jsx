@@ -478,7 +478,8 @@ export const FormatMaker = () => {
                                         <div>
                                             <a
                                                 className="link"
-                                                href={`/api/formats/download/${format.id}`} 
+                                                // onClick={() => downloadDeck()}
+                                                // href={`/api/formats/download/${format.id}`} 
                                                 download={`${format.name}-cardpool.ydk`}
                                             >                                    
                                                 <div className="deck-button">

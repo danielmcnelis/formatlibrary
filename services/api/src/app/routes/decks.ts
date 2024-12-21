@@ -60,7 +60,7 @@ router.get('/api/decks/like/:id', decksLike)
 
 router.post('/api/decks/text-to-ydk/', convertTextToYDK)
 
-router.get('/api/decks/download/:id', decksDownload)
+router.get('/api/decks/download/:id', [authenticate, decksDownload])
 
 router.get('/api/decks/count', countDecks)
 

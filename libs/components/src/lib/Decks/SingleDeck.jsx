@@ -180,6 +180,29 @@ export const SingleDeck = (props) => {
         setSuggestions([])
     }
 
+    // HANDLE DECK DOWNLOAD
+    const handleDeckDownload = async () => {
+        try {
+            const res = await axios.get(`/api/decks/download/${deck.id}`, {
+                headers: {
+                    ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                }
+            })
+    
+            const blob = res.blob()
+            console.log('blob', blob)
+            const fileURL = window.URL.createObjectURL(blob)
+            let alink = document.createElement("a")
+                alink.href = fileURL
+                alink.download = `${deck.builderName}-${deck.deckTypeName || deck.name}.ydk`
+                alink.click()
+    
+            return setDeck({ downloads: deck.downloads + 1, ...deck})
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
   if (!deck) return <NotFound/>
   if (!deck.id) return <div style={{height: '100vh'}}/>
 
@@ -251,15 +274,17 @@ export const SingleDeck = (props) => {
                         ) : null
                     }
                 </div>
-                <a
+                <div
                     className="link desktop-only"
-                    href={(`/api/decks/download/${deck.id}`, {
-                        headers: {
-                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                        }
-                    })} 
-                    download={`${deck.builderName}-${deck.deckTypeName || deck.name}.ydk`}
-                    onClick={()=> addDownload()}
+                    onClick={() => handleDeckDownload()}
+
+                    // href={(`/api/decks/download/${deck.id}`, {
+                    //     headers: {
+                    //         ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    //     }
+                    // })}
+                    // download={`${deck.builderName}-${deck.deckTypeName || deck.name}.ydk`}
+                    // onClick={()=> addDownload()}
                 >                                     
                     <div className="deck-button">
                         <b style={{padding: '0px 6px'}}>Download</b>
@@ -269,7 +294,7 @@ export const SingleDeck = (props) => {
                             alt="download"
                         />
                     </div>
-                </a>
+                </div>
                 {
 
                 !inEditMode ? (
@@ -461,17 +486,17 @@ export const SingleDeck = (props) => {
                             <td>
                             <div className="deck-stats-cell">
                                 <div style={{paddingRight:'7px'}}><b className="deck-stats-label">Downloads: </b>{deck.downloads}</div> 
-                                <a
-                                    href={(`/api/decks/download/${deck.id}`, {
-                                        headers: {
-                                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                                        }
-                                    })}
-                                    download={`${deck.builderName}-${deck.deckTypeName || deck.name}.ydk`}
-                                    onClick={()=> addDownload()}
+                                <div
+                                    // href={(`/api/decks/download/${deck.id}`, {
+                                    //     headers: {
+                                    //         ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                                    //     }
+                                    // })}
+                                    // download={`${deck.builderName}-${deck.deckTypeName || deck.name}.ydk`}
+                                    onClick={()=> handleDeckDownload()}
                                 >
-                                <img style={{width:'28px'}} alt="download" src={Disk}/>
-                                </a>
+                                    <img style={{width:'28px'}} alt="download" src={Disk}/>
+                                </div>
                             </div>   
                             </td>
                             <td>
