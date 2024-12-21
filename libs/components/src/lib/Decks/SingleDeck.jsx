@@ -185,20 +185,23 @@ export const SingleDeck = (props) => {
         try {
             let blob
             if (deck.display === true) {
-                const {data} = await axios.get(`/api/decks/download/${deck.id}`)
+                const res = await axios.get(`/api/decks/download/${deck.id}`, {
+                    responseType: 'blob',
+                })
 
-                console.log('data', data)
-                blob = data.blob()
+                console.log('res', res)
+                blob = res.blob()
                 console.log('blob', blob)
             } else {
-                const {data} = await axios.get(`/api/decks/download/subscriber/${deck.id}`, {
+                const res = await axios.get(`/api/decks/download/subscriber/${deck.id}`, {
+                  responseType: 'blob',
                     headers: {
                         ...(accessToken && {authorization: `Bearer ${accessToken}`})
                     }
                 })
 
-                console.log('data', data)
-                blob = data.blob()
+                console.log('res', res)
+                blob = res.blob()
                 console.log('blob', blob)
             }
 
@@ -297,7 +300,7 @@ export const SingleDeck = (props) => {
                     // download={`${deck.builderName}-${deck.deckTypeName || deck.name}.ydk`}
                     // onClick={()=> addDownload()}
                 >                                     
-                    <div className="deck-button">
+                    <div className="deck-button show-cursor">
                         <b style={{padding: '0px 6px'}}>Download</b>
                         <img 
                             style={{width:'28px'}} 
@@ -496,7 +499,7 @@ export const SingleDeck = (props) => {
                             </td>
                             <td>
                             <div className="deck-stats-cell">
-                                <div style={{paddingRight:'7px'}}><b className="deck-stats-label">Downloads: </b>{deck.downloads}</div> 
+                                <div style={{paddingRight:'7px'}}><b className="deck-stats-label show-cursor">Downloads: </b>{deck.downloads}</div> 
                                 <div
                                     // href={(`/api/decks/download/${deck.id}`, {
                                     //     headers: {
