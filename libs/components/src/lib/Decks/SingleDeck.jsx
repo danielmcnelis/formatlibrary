@@ -183,31 +183,26 @@ export const SingleDeck = (props) => {
     // HANDLE DECK DOWNLOAD
     const handleDeckDownload = async () => {
         try {
-            let blob
+            let fileUrl
             if (deck.display === true) {
-                const {data} = await axios.get(`/api/decks/download/${deck.id}`, {
+                const {data: blob} = await axios.get(`/api/decks/download/${deck.id}`, {
                     responseType: 'blob',
                 })
 
-                console.log('data', data)
-                blob = data.blob()
-                console.log('blob', blob)
+                fileUrl = window.URL.createObjectURL(blob)
             } else {
-                const {data} = await axios.get(`/api/decks/download/subscriber/${deck.id}`, {
+                const {data: blob} = await axios.get(`/api/decks/download/subscriber/${deck.id}`, {
                   responseType: 'blob',
                     headers: {
                         ...(accessToken && {authorization: `Bearer ${accessToken}`})
                     }
                 })
 
-                console.log('data', data)
-                blob = data.blob()
-                console.log('blob', blob)
+                fileUrl = window.URL.createObjectURL(blob)
             }
 
-            const fileURL = window.URL.createObjectURL(blob)
             let alink = document.createElement("a")
-                alink.href = fileURL
+                alink.href = fileUrl
                 alink.download = `${deck.builderName}-${deck.deckTypeName || deck.name}.ydk`
                 alink.click()
     
@@ -289,7 +284,7 @@ export const SingleDeck = (props) => {
                     }
                 </div>
                 <div
-                    className="link desktop-only"
+                    className="link desktop-only show-cursor"
                     onClick={() => handleDeckDownload()}
 
                     // href={(`/api/decks/download/${deck.id}`, {
@@ -498,7 +493,7 @@ export const SingleDeck = (props) => {
                             </div>   
                             </td>
                             <td>
-                            <div className="deck-stats-cell">
+                            <div className="deck-stats-cell show-cursor">
                                 <div style={{paddingRight:'7px'}}><b className="deck-stats-label show-cursor">Downloads: </b>{deck.downloads}</div> 
                                 <div
                                     // href={(`/api/decks/download/${deck.id}`, {
