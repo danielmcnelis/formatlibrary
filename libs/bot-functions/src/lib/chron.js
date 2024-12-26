@@ -450,6 +450,7 @@ export const cleanUpPools = async () => {
             updatedAt: {[Op.lte]: thirtyDaysAgo}
         }
     })
+
     
     for (let i = 0; i < poolsToPurge.length; i++) {
         try {
@@ -461,6 +462,7 @@ export const cleanUpPools = async () => {
             console.log(err)
         }
     }
+    
 
     const poolsToReset = await Pool.findAll({
         where: {
@@ -479,6 +481,11 @@ export const cleanUpPools = async () => {
         }
     }
 
+    console.log('twoHoursAgo', twoHoursAgo)
+    console.log('thirtyDaysAgo', thirtyDaysAgo)
+    console.log('poolsToPurge.length', poolsToPurge.length)
+    console.log('poolsToReset.length', poolsToReset.length)
+    
     console.log(`purged ${b} rated pools, reset ${c} rated pools, encountered ${e} errors`)
     return console.log(`cleanUpPools() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
