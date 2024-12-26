@@ -18,9 +18,16 @@ export default {
                 .setDescription('Format to recalculate.')
                 .setRequired(false)
         )
+        .addNumberOption(num =>
+            num
+                .setName('k-value')
+                .setDescription('The k-value.')
+                .setRequired(false)
+        )
         .setDMPermission(false),
     async execute(interaction) {
         const formatName = interaction.options.getString('format')
+        const kValue = interaction.options.getNumber('k-value')
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         if (!isModerator(server, interaction.member)) return await interaction.reply({ content: `You do not have permission to do that.`})
@@ -99,7 +106,7 @@ export default {
     
                 const origEloWinner = winnerStats.elo || 500.00
                 const origEloLoser = loserStats.elo || 500.00
-                const delta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
+                const delta = kValue * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
                 
                 winnerStats.elo = origEloWinner + delta
                 if ((origEloWinner + delta) > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + delta

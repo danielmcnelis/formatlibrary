@@ -438,11 +438,12 @@ export const purgeTournamentRoles = async (client) => {
 // CLEAN UP POOLS
 export const cleanUpPools = async () => {
     const start = Date.now()
+    const now = new Date()
     let b = 0
     let c = 0
     let e = 0
-    const twoHoursAgo = new Date(start.getDate() - (2 * 60 * 60 * 1000))
-    const thirtyDaysAgo = new Date(start.getDate() - (30 * 24 * 60 * 60 * 1000))
+    const twoHoursAgo = new Date(now.getDate() - (2 * 60 * 60 * 1000))
+    const thirtyDaysAgo = new Date(now.getDate() - (30 * 24 * 60 * 60 * 1000))
 
     const poolsToPurge = await Pool.findAll({
         where: {
