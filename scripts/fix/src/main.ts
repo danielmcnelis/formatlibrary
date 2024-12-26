@@ -2050,19 +2050,18 @@ const shuffleArray = (arr) => {
     let c = 0
     let e = 0
     
-    const prints = await Print.findAll({
-        include: [Card, Set]
-    })
+    const cards = await Card.findAll()
 
-    for (let i = 0; i < prints.length; i++) {
+    for (let i = 0; i < cards.length; i++) {
         try {
-            const print = prints[i]
-            const card = print.card
-            const set = print.set
-            if (!set.legalDate) {
-                await set.update({ legalDate: set.releaseDate })
-                b++
-            }
+            const card = cards[i]
+            const prints = await Print.findAll({ 
+                where: {cardId: card.id}, 
+                include: Set,
+                order: [[Set, 'legalDate', 'ASC']]
+             })
+
+            const set = prints[0].set
 
             if (card.tcgDate === '0000-00-00' || card.tcgDate < set.legalDate) {
                 await card.update({ tcgDate: set.legalDate })
