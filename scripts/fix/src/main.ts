@@ -2066,7 +2066,7 @@ const shuffleArray = (arr) => {
 
             if (card.tcgDate > set.legalDate) {
                 await card.update({ tcgDate: set.legalDate })
-                console.log(`${card.name} (${card.set.name}) was released on ${set.releaseDate} but not legal until ${set.legalDate}`)
+                console.log(`${card.name} (${set.name}) was released on ${set.releaseDate} but not legal until ${set.legalDate}`)
                 c++
             }
         } catch (err) {
