@@ -5,7 +5,7 @@ import { Op } from 'sequelize'
 export const getActivePairings = async (req, res, next) => {
     try {
         const now = new Date()
-        const twoHoursAgo = new Date(now.getDate() - (60 * 60 * 1000))
+        const twoHoursAgo = new Date(now.getDate() - (2 * 60 * 60 * 1000))
         const pairings = await Pairing.findAll({
             where: {
                 status: 'active',

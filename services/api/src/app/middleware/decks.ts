@@ -918,6 +918,7 @@ export const getDeckData = async (filter) => {
             'builderId',
             'deckTypeName',
             'category',
+            'display',
             'formatName',
             'formatId',
             'communityName',

@@ -2,7 +2,7 @@
 import axios from 'axios'
 import * as fs from 'fs'
 import * as sharp from 'sharp'
-import { Artwork, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Event, Format, Tournament, Match, Matchup, Membership, Player, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
+import { Artwork, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Event, Format, Tournament, Match, Matchup, Membership, Player, Pool, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
 import { createMembership, createPlayer, dateToVerbose, s3FileExists, capitalize, checkIfDiscordNameIsTaken } from './utility'
 import { Op } from 'sequelize'
 import { Upload } from '@aws-sdk/lib-storage'
@@ -32,6 +32,7 @@ export const runNightlyTasks = async (client) => {
     await manageSubscriptions(client)
     await refreshExpiredTokens()
     await purgeEntries()
+    await cleanUpPools()
     await assignTournamentRoles(client)
     await purgeTournamentRoles(client)
     await purgeLocalsAndInternalDecks(client)
@@ -431,6 +432,54 @@ export const purgeTournamentRoles = async (client) => {
     }
 
     return console.log(`purgeTournamentRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+}
+
+
+// CLEAN UP POOLS
+export const cleanUpPools = async () => {
+    const start = Date.now()
+    let b = 0
+    let c = 0
+    let e = 0
+    const twoHoursAgo = new Date(start.getDate() - (2 * 60 * 60 * 1000))
+    const thirtyDaysAgo = new Date(start.getDate() - (30 * 24 * 60 * 60 * 1000))
+
+    const poolsToPurge = await Pool.findAll({
+        where: {
+            updatedAt: {[Op.lte]: thirtyDaysAgo}
+        }
+    })
+    
+    for (let i = 0; i < poolsToPurge.length; i++) {
+        try {
+            const pool = poolsToPurge[i]
+            await pool.destroy()
+            b++
+        } catch (err) {
+            e++
+            console.log(err)
+        }
+    }
+
+    const poolsToReset = await Pool.findAll({
+        where: {
+            updatedAt: {[Op.lte]: twoHoursAgo}
+        }
+    })
+
+    for (let i = 0; i < poolsToReset.length; i++) {
+        try {
+            const pool = poolsToReset[i]
+            await pool.update({ status: 'pending' })
+            c++
+        } catch (err) {
+            e++
+            console.log(err)
+        }
+    }
+
+    console.log(`purged ${b} rated pools, reset ${c} rated pools, encountered ${e} errors`)
+    return console.log(`cleanUpPools() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // MANAGE SUBSCRIBERS
