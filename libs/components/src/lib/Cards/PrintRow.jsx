@@ -17,7 +17,7 @@ export const PrintRow = (props) => {
         <td className="print-cell-2 desktop-only">{print.rarity}</td>
         <td className="print-cell-3">{print.cardCode}</td>
         <td className="print-cell-4 desktop-only">{print.setName}</td>
-        <td className="print-cell-5">{print.set?.tcgDate}</td>
+        <td className="print-cell-5">{print.set?.releaseDate}</td>
     </tr>
   )
 }

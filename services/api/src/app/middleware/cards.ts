@@ -103,8 +103,8 @@ export const cardsId = async (req, res, next) => {
                 cardId: card.id
             },
             attributes: { exclude: ['tcgPlayerProductId', 'createdAt', 'updatedAt'] },
-            include: [{ model: Set, attributes: ['tcgDate'] }],
-            order: [[Set, 'tcgDate', 'ASC']]
+            include: [{ model: Set, attributes: ['releaseDate', 'legalDate'] }],
+            order: [[Set, 'releaseDate', 'ASC']]
         })
 
         const genericRulings = await Ruling.findAll({

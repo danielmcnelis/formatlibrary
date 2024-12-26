@@ -104,10 +104,10 @@ export const getCard = async (query, fuzzyCards, format) => {
         where: {
             cardId: card.id,
             description: {[Op.not]: null},
-            '$set.tcgDate$': {[Op.lte]: format.date}
+            '$set.releaseDate$': {[Op.lte]: format.date}
         },
         include: Set,
-        order: [[Set, 'tcgDate', 'DESC']]
+        order: [[Set, 'releaseDate', 'DESC']]
     }) : null
 
     const status = format ? await Status.findOne({ 
@@ -127,14 +127,14 @@ export const getCard = async (query, fuzzyCards, format) => {
                 setName: {[Op.substring]: 'Speed Duel'}
             },
             include: Set,
-            order: [[Set, 'tcgDate', 'ASC'], ['marketPrice', 'DESC']]
+            order: [[Set, 'releaseDate', 'ASC'], ['marketPrice', 'DESC']]
         }) : 
         await Print.findOne({
             where: {
                 cardId: card.id
             },
             include: Set,
-            order: [[Set, 'tcgDate', 'ASC'], ['marketPrice', 'DESC']]
+            order: [[Set, 'releaseDate', 'ASC'], ['marketPrice', 'DESC']]
         })
 
     const firstPrint = print ? `${rarities[print.rarity]} ${print.set.name}` : null 
@@ -218,7 +218,7 @@ export const getCard = async (query, fuzzyCards, format) => {
 	    .setThumbnail(thumbnail)
 	    .setDescription(
             `${labels.join('')}` + 
-            `\n\n${recentPrint?.description ? recentPrint.description + `\n\n*-- ${recentPrint.setName}, ${dateToSimple(recentPrint.set.tcgDate)}*` : card.description}` +
+            `\n\n${recentPrint?.description ? recentPrint.description + `\n\n*-- ${recentPrint.setName}, ${dateToSimple(recentPrint.set.releaseDate)}*` : card.description}` +
             `${stats ? `\n\n${stats}` : ''}` +
             `\n\nhttps://formatlibrary.com/cards/${card.cleanName.replaceAll(' ', '-').toLowerCase()}`
         )

@@ -667,50 +667,6 @@ const shuffleArray = (arr) => {
 // })()
 
 
-// ;(async () => {
-//     let b = 0
-//     let e = 0
-    
-//     const sets = await Set.findAll({
-//         where: {
-//             setName: {[Op.substring]: 'Speed Duel'}
-//         },
-//         order: [['tcgDate', 'ASC']]
-//     })
-
-//     for (let i = 0; i < sets.length; i++) {
-//         try {
-//             const set = sets[i]
-//             const prints = await Print.findAll({
-//                 where: {
-//                     setId: set.id
-//                 },
-//                 include: Card
-//             })
-
-//             for (let j = 0; j < prints.length; j++) {
-//                 const print = prints[j]
-//                 const card = print.card
-                
-//                 if (!card.isSpeedLegal || !card.speedDate || card.speedDate > set.tcgDate) {
-//                     await card.update({
-//                         isSpeedLegal: true,
-//                         speedDate: set.tcgDate
-//                     })
-
-//                     console.log(`${card.name} was released for speed duels on ${card.speedDate}`)
-//                     b++
-//                 } 
-//             }
-//         } catch (err) {
-//             console.log(err)
-//             e++
-//         }
-//     }
-
-//     return console.log(`updated ${b} cards from ${sets.length} speed duel sets and encountered ${e} errors`)
-// })()
-
 
 
 // ;(async () => {
@@ -1981,109 +1937,144 @@ const shuffleArray = (arr) => {
 // })()
 
 
-;(async () => { 
-    const replays = await Replay.findAll({ include: Tournament })
+// ;(async () => { 
+//     const replays = await Replay.findAll({ include: Tournament })
 
-    let b = 0
-    for (let i = 0; i < replays.length; i++) {
-        const replay = replays[i]
+//     let b = 0
+//     for (let i = 0; i < replays.length; i++) {
+//         const replay = replays[i]
 
-        await replay.update({ 
-            display: false, 
-            roundName: getRoundName(replay?.tournament, replay.roundInt, replay?.tournament?.size) || replay.roundName,
-            roundAbs: Math.abs(replay.roundInt)
-        })
-        b++
-    }
+//         await replay.update({ 
+//             display: false, 
+//             roundName: getRoundName(replay?.tournament, replay.roundInt, replay?.tournament?.size) || replay.roundName,
+//             roundAbs: Math.abs(replay.roundInt)
+//         })
+//         b++
+//     }
 
-    console.log('updated replays:', b)
+//     console.log('updated replays:', b)
 
-    const events = await Event.findAll()
-    for (let i = 0; i < events.length; i++) {
-        const event = events[i]
+//     const events = await Event.findAll()
+//     for (let i = 0; i < events.length; i++) {
+//         const event = events[i]
 
-        if (event.primaryTournamentId && !event.topCutTournamentId) {
-            const primaryTournament = await Tournament.findOne({ where: { id: event.primaryTournamentId }})
-            const primaryReplays = await Replay.findAll({ 
-                where: {
-                    tournamentId: primaryTournament.id
-                }
-            })
+//         if (event.primaryTournamentId && !event.topCutTournamentId) {
+//             const primaryTournament = await Tournament.findOne({ where: { id: event.primaryTournamentId }})
+//             const primaryReplays = await Replay.findAll({ 
+//                 where: {
+//                     tournamentId: primaryTournament.id
+//                 }
+//             })
          
-            let b = 0
-            for (let i = 0; i < primaryReplays.length; i++) {
-                try {
-                    const replay = primaryReplays[i]
-                    const round = replay.roundInt
-                    let display = false
+//             let b = 0
+//             for (let i = 0; i < primaryReplays.length; i++) {
+//                 try {
+//                     const replay = primaryReplays[i]
+//                     const round = replay.roundInt
+//                     let display = false
             
-                    if (primaryTournament.type === 'single elimination') {
-                        const totalRounds = Math.ceil(Math.log2(event.size))
-                        const roundsRemaining = totalRounds - round
-                        display = roundsRemaining === 0 || 
-                            event.size > 8 && roundsRemaining <= 1 ||
-                            event.size > 16 && roundsRemaining <= 2 ||
-                            event.size > 32 && roundsRemaining <= 3
-                    } else if (primaryTournament.type === 'double elimination') {
-                        const totalWinnersRounds = Math.ceil(Math.log2(event.size)) + 1
-                        const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(event.size)))
-                        const correction = (event.size - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
-                        const totalLosersRounds = (totalWinnersRounds - 2) * 2 + correction
+//                     if (primaryTournament.type === 'single elimination') {
+//                         const totalRounds = Math.ceil(Math.log2(event.size))
+//                         const roundsRemaining = totalRounds - round
+//                         display = roundsRemaining === 0 || 
+//                             event.size > 8 && roundsRemaining <= 1 ||
+//                             event.size > 16 && roundsRemaining <= 2 ||
+//                             event.size > 32 && roundsRemaining <= 3
+//                     } else if (primaryTournament.type === 'double elimination') {
+//                         const totalWinnersRounds = Math.ceil(Math.log2(event.size)) + 1
+//                         const fullBracketSize = Math.pow(2, Math.ceil(Math.log2(event.size)))
+//                         const correction = (event.size - (fullBracketSize / 2)) <= (fullBracketSize / 4) ? -1 : 0
+//                         const totalLosersRounds = (totalWinnersRounds - 2) * 2 + correction
 
-                        if (round > 0) {
-                            const roundsRemaining = totalWinnersRounds - round
-                            display = roundsRemaining <= 0 || 
-                                event.size > 8 && roundsRemaining <= 1 ||
-                                event.size > 16 && roundsRemaining <= 2 ||
-                                event.size > 64 && roundsRemaining <= 3
-                        } else {
-                            const roundsRemaining = totalLosersRounds - Math.abs(round)
-                            display = event.size > 8 && roundsRemaining <= 0 ||
-                                event.size > 16 && roundsRemaining <= 2 ||
-                                event.size > 64 && roundsRemaining <= 4                            
-                        }
-                    }
+//                         if (round > 0) {
+//                             const roundsRemaining = totalWinnersRounds - round
+//                             display = roundsRemaining <= 0 || 
+//                                 event.size > 8 && roundsRemaining <= 1 ||
+//                                 event.size > 16 && roundsRemaining <= 2 ||
+//                                 event.size > 64 && roundsRemaining <= 3
+//                         } else {
+//                             const roundsRemaining = totalLosersRounds - Math.abs(round)
+//                             display = event.size > 8 && roundsRemaining <= 0 ||
+//                                 event.size > 16 && roundsRemaining <= 2 ||
+//                                 event.size > 64 && roundsRemaining <= 4                            
+//                         }
+//                     }
 
-                    if (display && !replay.display) b++
+//                     if (display && !replay.display) b++
                     
-                    await replay.update({
-                        display: display
-                    })
-                } catch (err) {
-                    console.log(err)
-                }
-            }
+//                     await replay.update({
+//                         display: display
+//                     })
+//                 } catch (err) {
+//                     console.log(err)
+//                 }
+//             }
     
-           console.log(`Displayed ${b} new replays for ${event.name}.`)
-        } else if (event.topCutTournamentId) {
-            const topCutReplays = await Replay.findAll({ 
-                where: {
-                    tournamentId: event.topCutTournamentId,
-                    display: false
-                }
-            })
+//            console.log(`Displayed ${b} new replays for ${event.name}.`)
+//         } else if (event.topCutTournamentId) {
+//             const topCutReplays = await Replay.findAll({ 
+//                 where: {
+//                     tournamentId: event.topCutTournamentId,
+//                     display: false
+//                 }
+//             })
         
-            let b = 0
-            for (let i = 0; i < topCutReplays.length; i++) {
-                try {
-                    const replay = topCutReplays[i]
-                    if (!replay.display) b++
+//             let b = 0
+//             for (let i = 0; i < topCutReplays.length; i++) {
+//                 try {
+//                     const replay = topCutReplays[i]
+//                     if (!replay.display) b++
     
-                    await replay.update({
-                        display: true
-                    })
-                } catch (err) {
-                    console.log(err)
-                }
-            }
+//                     await replay.update({
+//                         display: true
+//                     })
+//                 } catch (err) {
+//                     console.log(err)
+//                 }
+//             }
         
-            if (b) {
-                console.log(`Displayed ${b} new top cut replays for ${event.name}.`)
-            } else {
-                console.log(`All top cut replays for ${event.name} were already published. 👏`)
+//             if (b) {
+//                 console.log(`Displayed ${b} new top cut replays for ${event.name}.`)
+//             } else {
+//                 console.log(`All top cut replays for ${event.name} were already published. 👏`)
+//             }
+//         } else {
+//             console.log(`NO TOURNAMENT FOUND FOR: ${event.name}.`)
+//         }
+//     }
+// })()
+
+
+;(async () => {
+    let b = 0
+    let c = 0
+    let e = 0
+    
+    const prints = await Print.findAll({
+        include: [Card, Set]
+    })
+
+    for (let i = 0; i < prints.length; i++) {
+        try {
+            const print = prints[i]
+            const card = print.card
+            const set = print.set
+            if (!set.legalDate) {
+                await set.update({ legalDate: set.releaseDate })
+                b++
             }
-        } else {
-            console.log(`NO TOURNAMENT FOUND FOR: ${event.name}.`)
+
+            if (card.tcgDate > set.legalDate) {
+                await card.update({ tcgDate: set.legalDate })
+                console.log(`${card.name} (${card.set.name}) was released on ${set.releaseData} but not legal until ${set.legalDate}`)
+                c++
+            }
+        } catch (err) {
+            console.log(err)
+            e++
         }
     }
+
+    console.log(`updated legal dates for ${b} sets`)
+    return console.log(`updated legal dates for ${c} cards and encountered ${e} errors`)
 })()

@@ -8,7 +8,10 @@ export const Set = db.define('sets', {
   setCode: {
     type: Sequelize.STRING
   },
-  tcgDate: {
+  releaseDate: {
+    type: Sequelize.STRING
+  },
+  legalDate: {
     type: Sequelize.STRING
   },
   isBooster: {
@@ -38,8 +41,5 @@ export const Set = db.define('sets', {
   },
   tcgPlayerGroupId: {
     type: Sequelize.INTEGER
-  },
-  legalDate: {
-    type: Sequelize.STRING
   }
 })

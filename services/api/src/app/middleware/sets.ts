@@ -32,7 +32,7 @@ export const getSet = async (req, res, next) => {
         where: {
           id: req.params.id
         },
-        attributes: ['id', 'name', 'setCode', 'tcgDate']
+        attributes: ['id', 'name', 'setCode', 'releaseDate', 'legalDate']
       })
   
       res.json(set)
@@ -48,8 +48,8 @@ export const getDraftable = async (req, res, next) => {
         where: {
           isDraftable: true
         },
-        attributes: ['id', 'name', 'setCode', 'tcgDate', 'packSize'],
-        order: [['tcgDate', 'ASC']]
+        attributes: ['id', 'name', 'setCode', 'releaseDate', 'releaseDate', 'packSize'],
+        order: [['releaseDate', 'ASC']]
       })
   
       res.json(sets)
@@ -65,8 +65,8 @@ export const getCore = async (req, res, next) => {
         where: {
           isCore: true
         },
-        attributes: ['id', 'name', 'setCode', 'tcgDate', 'packSize'],
-        order: [['tcgDate', 'ASC']]
+        attributes: ['id', 'name', 'setCode', 'releaseDate', 'legalDate', 'packSize'],
+        order: [['releaseDate', 'ASC']]
       })
   
       res.json(sets)
@@ -82,8 +82,8 @@ export const getBoosters = async (req, res, next) => {
       where: {
         isBooster: true
       },
-      attributes: ['id', 'name', 'setCode', 'tcgDate', 'packSize'],
-      order: [['tcgDate', 'ASC']]
+      attributes: ['id', 'name', 'setCode', 'releaseDate', 'legalDate', 'packSize'],
+      order: [['releaseDate', 'ASC']]
     })
 
     res.json(sets)

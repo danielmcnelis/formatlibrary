@@ -752,7 +752,7 @@ export const updatePrints = async (set, groupId) => {
                     if (isSpeedDuel && !card.isSpeedLegal) {
                         await card.update({ 
                             isSpeedLegal: true,
-                            speedDate: set.tcgDate
+                            speedDate: set.releaseDate
                         })
                     }
     
@@ -1281,10 +1281,10 @@ export const downloadNewCards = async () => {
                         setName: {[Op.substring]: 'Speed Duel'}
                     },
                     include: Set,
-                    order: [[Set, 'tcgDate', 'DESC']],
+                    order: [[Set, 'releaseDate', 'DESC']],
                 })
 
-                const speedDate = print?.set?.tcgDate
+                const speedDate = print?.set?.legalDate || print?.set?.releaseDate
 
                 await card.update({
                     speedDate: speedDate,
@@ -1430,7 +1430,7 @@ export const updateSets = async () => {
                         name: datum.set_name,
                         setCode: datum.set_code,
                         size: datum.num_of_cards,
-                        tcgDate: datum.tcg_date
+                        releaseDate: datum.tcg_date
                     })
 
                     b++
