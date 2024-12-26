@@ -2048,6 +2048,7 @@ const shuffleArray = (arr) => {
 ;(async () => {
     let b = 0
     let c = 0
+    let d = 0
     let e = 0
     
     const cards = await Card.findAll()
@@ -2080,7 +2081,7 @@ const shuffleArray = (arr) => {
                 missingCards.push(card.name)
                 continue
             }
-            
+
             const set = prints[0]?.set
 
             if (card.tcgDate === '0000-00-00' || card.tcgDate < set.legalDate) {
@@ -2096,5 +2097,6 @@ const shuffleArray = (arr) => {
     }
 
     console.log(`updated legal dates for ${b} sets`)
+    console.log(`missing ${d} cards:`, missingCards)
     return console.log(`updated legal dates for ${c} cards and encountered ${e} errors`)
 })()
