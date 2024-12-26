@@ -2077,6 +2077,6 @@ const shuffleArray = (arr) => {
         }
     }
 
-    console.log(`updated legal dates for ${b} sets`)
+    // console.log(`updated legal dates for ${b} sets`)
     return console.log(`updated legal dates for ${c} cards and encountered ${e} errors`)
 })()
