@@ -2046,18 +2046,32 @@ const shuffleArray = (arr) => {
 
 
 ;(async () => {
-    // let b = 0
+    let b = 0
     let c = 0
     let e = 0
     
     const cards = await Card.findAll()
+    const sets = await Set.findAll({
+        where: {
+            legalDate: null
+        }
+    })
     const missingCards = []
+
+    for (let i = 0; i < sets.length; i++) {
+        const set = sets[i]
+        await set.update({ legalDate: set.releaseDate })
+        b++
+    }
 
     for (let i = 0; i < cards.length; i++) {
         try {
             const card = cards[i]
             const prints = await Print.findAll({ 
-                where: {cardId: card.id}, 
+                where: {
+                    cardId: card.id,
+                    '$set.legalDate$': {[Op.not]: null}
+                }, 
                 include: Set,
                 order: [[Set, 'legalDate', 'ASC']]
              })
@@ -2077,6 +2091,6 @@ const shuffleArray = (arr) => {
         }
     }
 
-    // console.log(`updated legal dates for ${b} sets`)
+    console.log(`updated legal dates for ${b} sets`)
     return console.log(`updated legal dates for ${c} cards and encountered ${e} errors`)
 })()
