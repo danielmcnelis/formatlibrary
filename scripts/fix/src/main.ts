@@ -2046,11 +2046,12 @@ const shuffleArray = (arr) => {
 
 
 ;(async () => {
-    let b = 0
+    // let b = 0
     let c = 0
     let e = 0
     
     const cards = await Card.findAll()
+    const missingCards = []
 
     for (let i = 0; i < cards.length; i++) {
         try {
@@ -2062,6 +2063,7 @@ const shuffleArray = (arr) => {
              })
 
             const set = prints[0].set
+            if (!set) missingCards.push(card.name)
 
             if (card.tcgDate === '0000-00-00' || card.tcgDate < set.legalDate) {
                 await card.update({ tcgDate: set.legalDate })
@@ -2070,6 +2072,7 @@ const shuffleArray = (arr) => {
             }
         } catch (err) {
             console.log(err)
+            
             e++
         }
     }
