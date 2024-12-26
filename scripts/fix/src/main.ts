@@ -2074,10 +2074,14 @@ const shuffleArray = (arr) => {
                 }, 
                 include: Set,
                 order: [[Set, 'legalDate', 'ASC']]
-             })
+            })
 
-            const set = prints[0].set
-            if (!set) missingCards.push(card.name)
+            if (!prints.length) {
+                missingCards.push(card.name)
+                continue
+            }
+            
+            const set = prints[0]?.set
 
             if (card.tcgDate === '0000-00-00' || card.tcgDate < set.legalDate) {
                 await card.update({ tcgDate: set.legalDate })
