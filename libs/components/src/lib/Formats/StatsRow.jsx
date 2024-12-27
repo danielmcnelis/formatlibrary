@@ -36,25 +36,25 @@ const getMedal = (elo) => {
 const getTitle = (elo) => {
   return !elo
     ? 'Gold'
-    : elo <= 230
+    : elo <= 320
     ? 'Tilted'
-    : elo > 230 && elo <= 290
+    : elo > 320 && elo <= 360
     ? 'Chump'
-    : elo > 290 && elo <= 350
+    : elo > 360 && elo <= 400
     ? 'Rock'
-    : elo > 350 && elo <= 410
+    : elo > 400 && elo <= 440
     ? 'Bronze'
-    : elo > 410 && elo <= 470
+    : elo > 440 && elo <= 480
     ? 'Silver'
-    : elo > 470 && elo <= 530
+    : elo > 480 && elo <= 520
     ? 'Gold'
-    : elo > 530 && elo <= 590
+    : elo > 520 && elo <= 560
     ? 'Platinum'
-    : elo > 590 && elo <= 650
+    : elo > 560 && elo <= 600
     ? 'Diamond'
-    : elo > 650 && elo <= 710
+    : elo > 600 && elo <= 640
     ? 'Master'
-    : elo > 710 && elo <= 770
+    : elo > 640 && elo <= 680
     ? 'Legend'
     : 'Deity'
 }
