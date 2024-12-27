@@ -505,6 +505,8 @@ export const lookForAllPotentialPairs = async (client) => {
         include: [Player, Format]
     })
 
+    const playerIds = []
+
     for (let i = 0; i < pools.length; i++) {
         const pool = pools[i]
         const player = pool.player
@@ -541,13 +543,17 @@ export const lookForAllPotentialPairs = async (client) => {
                 }
             })
     
-            if (isRecentOpponent) {
+            if (isRecentOpponent || playerIds.includes(player.id) || playerIds.includes(potentialPair.playerId)) {
                 continue
             } else if (potentialPair.updatedAt < twoMinutesAgo) {
-                console.log(`getRatedConfirmation: ${potentialPair.playerName} vs. ${player.name} (${format.name})`)
-                getRatedConfirmation(client, potentialPair.player, player, format)
+                playerIds.push(player.id)
+                playerIds.push(potentialPair.playerId)
+                console.log(`getRatedConfirmation: ${potentialPair.player?.name} vs. ${player.name} (${format.name})`)
+                getRatedConfirmation(client, player, potentialPair.player, format)
                 continue
             } else {
+                playerIds.push(player.id)
+                playerIds.push(potentialPair.playerId)
                 const server = await Server.findOne({ where: { id: '414551319031054346' }})
                 const channelId = format.channelId
                 const guild = client.guilds.cache.get('414551319031054346')
