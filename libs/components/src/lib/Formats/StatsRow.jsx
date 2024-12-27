@@ -56,7 +56,7 @@ const getTitle = (elo) => {
     ? 'Master'
     : elo > 710 && elo <= 770
     ? 'Legend'
-    : elo > 770 && elo <= 380
+    : elo > 770 && elo <= 830
     ? 'Deity'
     : 'Ascended'
 }
