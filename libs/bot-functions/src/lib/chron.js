@@ -641,10 +641,10 @@ export const recalculateStats = async () => {
                 const origEloLoser = loserStats.elo || 500.00
 
                 const winnerKFactor = winnerStats.games < 20 ? 20 :
-                    winnerStats.bestElo < 650 ? 10 : 5
+                    winnerStats.bestElo < 650 ? 14 : 8
 
                 const loserKFactor = loserStats.games < 20 ? 20 :
-                    loserStats.bestElo < 650 ? 10 : 5
+                    loserStats.bestElo < 650 ? 14 : 8
 
                 const winnerDelta = winnerKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
                 const loserDelta = loserKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
