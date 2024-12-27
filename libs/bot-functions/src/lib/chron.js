@@ -499,7 +499,7 @@ export const cleanUpPools = async () => {
 
 // LOOK FOR ALL POTENTIAL PAIRS
 export const lookForAllPotentialPairs = async (client) => {
-    console.log('lookForAllPotentialPairs', lookForAllPotentialPairs)
+    console.log('lookForAllPotentialPairs()')
     const pools = await Pool.findAll({
         where: {
             status: 'pending'
@@ -546,14 +546,18 @@ export const lookForAllPotentialPairs = async (client) => {
             })
     
             if (isRecentOpponent || playerIds.includes(player.id) || playerIds.includes(potentialPair.playerId)) {
+                console.log('!!isRecentOpponent', !!isRecentOpponent)
+                console.log('playerIds.includes(player.id)', playerIds.includes(player.id))
+                console.log('playerIds.includes(potentialPair.playerId)', playerIds.includes(potentialPair.playerId))
                 continue
             } else if (potentialPair.updatedAt < twoMinutesAgo) {
+                console.log(`getRatedConfirmation: ${potentialPair.player?.name} vs. ${player?.name} (${format.name})`)
                 playerIds.push(player.id)
                 playerIds.push(potentialPair.playerId)
-                console.log(`getRatedConfirmation: ${potentialPair.player?.name} vs. ${player?.name} (${format.name})`)
                 getRatedConfirmation(client, player, potentialPair.player, format)
                 continue
             } else {
+                console.log('<!> new pairing <!>')
                 playerIds.push(player.id)
                 playerIds.push(potentialPair.playerId)
                 const server = await Server.findOne({ where: { id: '414551319031054346' }})
