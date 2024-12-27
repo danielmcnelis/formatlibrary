@@ -542,6 +542,7 @@ export const lookForAllPotentialPairs = async (client) => {
                     formatId: pool.formatId,
                     createdAt: {[Op.gte]: tenMinutesAgo }
                 }
+            })
     
             if (isRecentOpponent || playerIds.includes(player.id) || playerIds.includes(potentialPair.playerId)) {
                 continue
