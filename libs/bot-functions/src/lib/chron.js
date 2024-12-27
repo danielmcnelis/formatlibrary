@@ -525,7 +525,6 @@ export const lookForAllPotentialPairs = async (client) => {
     
         for (let i = 0; i < potentialPairs.length; i++) {
             const potentialPair = potentialPairs[i]
-            const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
             const tenMinutesAgo = new Date(Date.now() - (10 * 60 * 1000))
     
             const isRecentOpponent = await Match.count({
@@ -550,90 +549,12 @@ export const lookForAllPotentialPairs = async (client) => {
                 console.log('playerIds.includes(player.id)', playerIds.includes(player.id))
                 console.log('playerIds.includes(potentialPair.playerId)', playerIds.includes(potentialPair.playerId))
                 continue
-            } else if (potentialPair.updatedAt < twoMinutesAgo) {
+            } else {
                 console.log(`getRatedConfirmation: ${potentialPair.player?.name} vs. ${player?.name} (${format.name})`)
                 playerIds.push(player.id)
                 playerIds.push(potentialPair.playerId)
                 getRatedConfirmation(client, player, potentialPair.player, format)
                 continue
-            } else {
-                console.log('<!> new pairing <!>')
-                playerIds.push(player.id)
-                playerIds.push(potentialPair.playerId)
-                const server = await Server.findOne({ where: { id: '414551319031054346' }})
-                const channelId = format.channelId
-                const guild = client.guilds.cache.get('414551319031054346')
-                const channel = guild.channels.cache.get(channelId)
-                const playerDiscordName =  player.discordName
-                const playerGlobalName = player.globalName
-                const member = await guild.members.fetch(player.discordId)
-                const opponent = potentialPair.player
-                const opponentDiscordName =  opponent.discordName
-                const opponentGlobalName = opponent.globalName
-                const opposingMember = await guild.members.fetch(opponent.discordId)
-    
-                opposingMember.user.send(
-                    `New pairing for Rated ${format.name} Format ${format.emoji}!` +
-                    `\nServer: ${server.name} ${server.logo}` +
-                    `\nChannel: <#${channelId}>` +
-                    `\nDiscord Name: ${playerGlobalName ? `${playerGlobalName} (${playerDiscordName})` : playerDiscordName}` +
-                    `\nDuelingbook Name: ${player.duelingBookName}`
-                ).catch((err) => console.log(err))
-    
-                member.user.send(
-                    `New pairing for Rated ${format.name} Format ${format.emoji}!` + 
-                    `\nServer: ${server.name} ${server.logo}` + 
-                    `\nChannel: <#${channelId}>` +
-                    `\nDiscord Name: ${opponentGlobalName ? `${opponentGlobalName} (${opponentDiscordName})` : opponentDiscordName}` +
-                    `\nDuelingbook Name: ${opponent.duelingBookName}`
-                ).catch((err) => console.log(err))
-
-                await Pairing.create({
-                    formatId: format.id,
-                    formatName: format.name,
-                    serverId: server.id,
-                    communityName: server.name,
-                    playerAName: poolEntry.name,
-                    playerAId: poolEntry.playerId,
-                    deckFileA: poolEntry.deckFile,
-                    playerBName: potentialPair.name,
-                    playerBId: potentialPair.playerId,
-                    deckFileB: potentialPair.deckFile
-                })
-                
-                await poolEntry.destroy()
-                await potentialPair.destroy()
-                
-                const poolsToDeactivate = await Pool.findAll({
-                    where: {
-                        playerId: {[Op.or]: [player.id, opponent.id]}
-                    }
-                }) || []
-    
-                for (let d = 0; d < poolsToDeactivate.length; d++) {
-                    const rPTD = poolsToDeactivate[d]
-                    await rPTD.update({ status: 'inactive' })
-                }
-    
-                const allStats = await Stats.findAll({ 
-                    where: {
-                        formatId: format.id, 
-                        games: { [Op.gte]: 3 },
-                        serverId: '414551319031054346',
-                        isActive: true,
-                        '$player.isHidden$': false
-                    },
-                    include: [Player],
-                    order: [['elo', 'DESC']] 
-                }) || []
-    
-                const p1Index = allStats.findIndex((s) => s.playerId === player.id)
-                const p1Rank = p1Index >= 0 ? `#${p1Index + 1} ` : ''
-                const p2Index = allStats.findIndex((s) => s.playerId === opponent.id)
-                const p2Rank = p2Index >= 0 ? `#${p2Index + 1} ` : ''
-                const content = `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
-                console.log('content:', content)
-                return channel.send({ content: content })   
             }
         }
     }
