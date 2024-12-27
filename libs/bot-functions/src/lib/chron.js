@@ -53,6 +53,7 @@ export const runNightlyTasks = async (client) => {
     await purgeTournamentRoles(client)
     await purgeLocalsAndInternalDecks(client)
     await markInactives()
+    await recalculateStats()
     await updateServers(client)
     await updateSets()
     await downloadNewCards()
@@ -555,8 +556,137 @@ export const lookForAllPotentialPairs = async (client) => {
             }
         }
     }
+}
 
+// RECALCULATE STATS
+export const recalculateStats = async () => {
+    const start = Date.now()
+    const formats = await Format.findAll()
+    for (let i = 0; i < formats.length; i++) {
+        const format = formats[i]
+        const count = await Match.count({ where: { formatName: format.name, serverId: '414551319031054346' }})
+        console.log(`Recalculating data from ${count} ${format.name} ${format.emoji} matches. Please wait...`)
 
+        const allMatches = await Match.findAll({ 
+            where: { formatId: format.id, serverId: '414551319031054346' }, 
+            attributes: ['id', 'formatId', 'winnerId', 'loserId', 'delta', 'createdAt'], 
+            order: [["createdAt", "ASC"]]
+        })
+
+        const allStats = await Stats.findAll({ 
+            where: { formatId: format.id, serverId: '414551319031054346' }, 
+            attributes: ['id', 'formatName', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 'currentStreak', 'bestStreak', 'vanquished', 'playerId', 'serverId'], 
+            include: { model: Player, attributes: ['id', 'name']} 
+        })
+
+        for (let i = 0; i < allStats.length; i++) {
+            const stats = allStats[i]
+            await stats.update({
+                elo: 500.00,
+                bestElo: 500.00,
+                backupElo: null,
+                wins: 0,
+                losses: 0,
+                games: 0,
+                currentStreak: 0,
+                bestStreak: 0,
+                vanquished: 0
+            })
+        }
+
+        for (let i = 0; i < allMatches.length; i++) {
+            try {
+                const match = allMatches[i]
+                const winnerId = match.winnerId
+                const loserId = match.loserId
+                const winnerStats = allStats.find((s) => s.playerId === winnerId)
+                const loserStats = allStats.find((s) => s.playerId === loserId)
+
+                if (!winnerStats) {
+                    const stats = await Stats.create({
+                        playerName: match.winnerName,
+                        playerId: winnerId,
+                        formatName: format.name,
+                        formatId: format.id,
+                        serverId: '414551319031054346',
+                        isInternal: false
+                    })
+
+                    console.log('created new winner stats', winnerId)
+                    allStats.push(stats)
+                    i--
+                    continue
+                }
+    
+                if (!loserStats) {
+                    const stats = await Stats.create({
+                        playerName: match.loserName,
+                        playerId: loserId,
+                        formatName: format.name,
+                        formatId: format.id,
+                        serverId: '414551319031054346',
+                        isInternal: false
+                    })
+
+                    console.log('created new loser stats:', loserId)
+                    allStats.push(stats)
+                    i--
+                    continue
+                }
+    
+                const origEloWinner = winnerStats.elo || 500.00
+                const origEloLoser = loserStats.elo || 500.00
+                const delta = 10 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
+                
+                winnerStats.elo = origEloWinner + delta
+                if ((origEloWinner + delta) > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + delta
+                winnerStats.backupElo = origEloWinner
+                winnerStats.wins++
+                winnerStats.games++
+                winnerStats.currentStreak++
+                if (winnerStats.currentStreak >= winnerStats.bestStreak) winnerStats.bestStreak++
+                await winnerStats.save()
+        
+                loserStats.elo = origEloLoser - delta
+                loserStats.backupElo = origEloLoser
+                loserStats.losses++
+                loserStats.games++
+                loserStats.currentStreak = 0
+                await loserStats.save()
+    
+                match.delta = delta
+                await match.save()
+                console.log(`${format.name} Match ${i+1}: ${winnerStats.player.name} > ${loserStats.player.name}`)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        for (let i = 0; i < allStats.length; i++) {
+            const stats = allStats[i]
+            const victories = await Match.findAll({
+                where: {
+                    winnerId: stats.playerId,
+                    formatId: format.id, 
+                    serverId: '414551319031054346'
+                }
+            })
+
+            const vanquishedIds = []
+            victories.forEach((v) => {
+                if (!vanquishedIds.includes(v.loserId)) vanquishedIds.push(v.loserId)
+            })
+
+            console.log(`${stats.player?.name} (${stats.playerId}) has defeated ${vanquishedIds.length} unique opponents`)
+            await stats.update({ vanquished: vanquishedIds.length })
+        }
+
+        console.log(`Recalculation for ${format.name} Format is complete!`)
+
+    }    	
+
+    console.log(`All recalculations complete!`)
+    return console.log(`recalculateStats() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 

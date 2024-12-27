@@ -27,7 +27,7 @@ export default {
         .setDMPermission(false),
     async execute(interaction) {
         const formatName = interaction.options.getString('format')
-        const kValue = interaction.options.getNumber('k-value')
+        const kValue = interaction.options.getNumber('k-value') || 10
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         if (!isModerator(server, interaction.member)) return await interaction.reply({ content: `You do not have permission to do that.`})

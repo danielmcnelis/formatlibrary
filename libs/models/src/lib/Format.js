@@ -60,8 +60,11 @@ export const Format = db.define('formats', {
   isHighlander: {
     type: Sequelize.BOOLEAN
   },
-  resetDate: {
+  seasonResetDate: {
     type: Sequelize.DATE
+  },
+  useSeasonalElo: {
+    type: Sequelize.BOOLEAN
   }
 })
 

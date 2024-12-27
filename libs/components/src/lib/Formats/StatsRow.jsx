@@ -7,27 +7,29 @@ import './StatsRow.css'
 const getMedal = (elo) => {
   return !elo
     ? 'https://cdn.formatlibrary.com/images/emojis/gold.png'
-    : elo <= 230
+    : elo <= 320
     ? 'https://cdn.formatlibrary.com/images/emojis/mad.png'
-    : elo > 230 && elo <= 290
+    : elo > 320 && elo <= 360
     ? 'https://cdn.formatlibrary.com/images/emojis/sad.png'
-    : elo > 290 && elo <= 350
+    : elo > 360 && elo <= 400
     ? 'https://cdn.formatlibrary.com/images/emojis/rock.png'
-    : elo > 350 && elo <= 410
+    : elo > 400 && elo <= 440
     ? 'https://cdn.formatlibrary.com/images/emojis/bronze.png'
-    : elo > 410 && elo <= 470
+    : elo > 440 && elo <= 480
     ? 'https://cdn.formatlibrary.com/images/emojis/silver.png'
-    : elo > 470 && elo <= 530
+    : elo > 480 && elo <= 520
     ? 'https://cdn.formatlibrary.com/images/emojis/gold.png'
-    : elo > 530 && elo <= 590
+    : elo > 520 && elo <= 560
     ? 'https://cdn.formatlibrary.com/images/emojis/platinum.png'
-    : elo > 590 && elo <= 650
+    : elo > 560 && elo <= 600
     ? 'https://cdn.formatlibrary.com/images/emojis/diamond.png'
-    : elo > 650 && elo <= 710
+    : elo > 600 && elo <= 640
     ? 'https://cdn.formatlibrary.com/images/emojis/master.png'
-    : elo > 710 && elo <= 770
+    : elo > 640 && elo <= 680
     ? 'https://cdn.formatlibrary.com/images/emojis/legend.png'
-    : 'https://cdn.formatlibrary.com/images/emojis/god.png'
+    : elo > 680 && elo <= 720
+    ? 'https://cdn.formatlibrary.com/images/emojis/god.png'
+    : 'https://cdn.formatlibrary.com/images/emojis/ascended.png'
 }
 
 //GET TITLE

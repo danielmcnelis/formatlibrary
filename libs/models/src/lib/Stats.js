@@ -8,16 +8,21 @@ export const Stats = db.define('stats', {
   formatName: {
     type: Sequelize.STRING
   },
-  isSeasonal: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false
-  },
   elo: {
     type: Sequelize.FLOAT,
     defaultValue: 500.0
   },
+  seasonalElo: {
+    type: Sequelize.FLOAT,
+    defaultValue: 500.0
+  },
   backupElo: {
-    type: Sequelize.FLOAT
+    type: Sequelize.FLOAT,
+    defaultValue: 500.0
+  },
+  seasonalBackupElo: {
+    type: Sequelize.FLOAT,
+    defaultValue: 500.0
   },
   bestElo: {
     type: Sequelize.FLOAT,

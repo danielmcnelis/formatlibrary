@@ -97,7 +97,7 @@ export default {
         if (!isTournament || tournament?.isRanked) {
             const origEloWinner = winnerStats.elo || 500.00
             const origEloLoser = loserStats.elo || 500.00
-            const delta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
+            const delta = 10 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
             
             winnerStats.elo = origEloWinner + delta
             if (origEloWinner + delta > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + delta
