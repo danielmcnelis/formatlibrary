@@ -5,11 +5,19 @@ import * as sharp from 'sharp'
 import { Artwork, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Event, Format, Tournament, Match, Matchup, Membership, Player, Pool, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
 import { createMembership, createPlayer, dateToVerbose, s3FileExists, capitalize, checkIfDiscordNameIsTaken } from './utility'
 import { Op } from 'sequelize'
+import { getRatedConfirmation } from '@fl/bot-functions'
 import { Upload } from '@aws-sdk/lib-storage'
 import { S3 } from '@aws-sdk/client-s3'
 import { config } from '@fl/config'
 import * as tcgPlayer from '../../../../tokens/tcgplayer.json'
 const Canvas = require('canvas')
+
+// GET HOURLY COUNTDOWN
+export const getHourlyCountdown = () => {
+	const date = new Date()
+	const remainingMinutes = 60 - date.getMinutes()
+    return remainingMinutes * 60 * 1000
+}
 
 // GET MIDNIGHT COUNTDOWN
 export const getMidnightCountdown = () => {
@@ -27,12 +35,19 @@ export const getRemainingDaysInMonth = () => {
     return remainingDays
 }
 
+// RUN HOURLY TASKS
+export const runHourlyTasks = async (client) => {
+    await cleanUpPools()
+    await lookForAllPotentialPairs(client)
+
+    return setTimeout(() => runHourlyTasks(client), getHourlyCountdown())
+}
+
 // RUN NIGHTLY TASKS
 export const runNightlyTasks = async (client) => {
     await manageSubscriptions(client)
     await refreshExpiredTokens()
     await purgeEntries()
-    await cleanUpPools()
     await assignTournamentRoles(client)
     await purgeTournamentRoles(client)
     await purgeLocalsAndInternalDecks(client)
@@ -434,7 +449,6 @@ export const purgeTournamentRoles = async (client) => {
     return console.log(`purgeTournamentRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
-
 // CLEAN UP POOLS
 export const cleanUpPools = async () => {
     const start = Date.now()
@@ -477,15 +491,144 @@ export const cleanUpPools = async () => {
             console.log(err)
         }
     }
-
-    console.log('twoHoursAgo', twoHoursAgo)
-    console.log('thirtyDaysAgo', thirtyDaysAgo)
-    console.log('poolsToPurge.length', poolsToPurge.length)
-    console.log('poolsToReset.length', poolsToReset.length)
     
     console.log(`purged ${b} rated pools, reset ${c} rated pools, encountered ${e} errors`)
     return console.log(`cleanUpPools() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
+
+// LOOK FOR ALL POTENTIAL PAIRS
+export const lookForAllPotentialPairs = async (client) => {
+    const pools = await Pool.findAll({
+        where: {
+            status: 'pending'
+        },
+        include: [Player, Format]
+    })
+
+    for (let i = 0; i < pools.length; i++) {
+        const pool = pools[i]
+        const player = pool.player
+        const format = pool.format
+        const potentialPairs = await Pool.findAll({ 
+            where: { 
+                formatId: pool.formatId,
+                playerId: {[Op.not]: pool.playerId},
+                status: 'pending'
+            },
+            include: Player,
+            order: [['createdAt', 'ASC']]
+        }) || []
+    
+        for (let i = 0; i < potentialPairs.length; i++) {
+            const potentialPair = potentialPairs[i]
+            const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
+            const tenMinutesAgo = new Date(Date.now() - (10 * 60 * 1000))
+    
+            const isRecentOpponent = await Match.count({
+                where: {
+                    [Op.or]: {
+                        [Op.and]: {
+                            winnerId: potentialPair.playerId,
+                            loserId: pool.playerId
+                        },
+                        [Op.and]: {
+                            winnerId: pool.playerId,
+                            loserId: potentialPair.playerId
+                        },
+                    },
+                    formatId: pool.formatId,
+                    createdAt: {[Op.gte]: tenMinutesAgo }
+                }
+            })
+    
+            if (isRecentOpponent) {
+                continue
+            } else if (potentialPair.updatedAt < twoMinutesAgo) {
+                console.log(`getRatedConfirmation: ${potentialPair.playerName} vs. ${player.name} (${format.name})`)
+                getRatedConfirmation(client, potentialPair.player, player, format)
+                continue
+            } else {
+                const server = await Server.findOne({ where: { id: '414551319031054346' }})
+                const channelId = format.channelId
+                const guild = client.guilds.cache.get('414551319031054346')
+                const channel = guild.channels.cache.get(channelId)
+                const playerDiscordName =  player.discordName
+                const playerGlobalName = player.globalName
+                const member = await guild.members.fetch(player.discordId)
+                const opponent = potentialPair.player
+                const opponentDiscordName =  opponent.discordName
+                const opponentGlobalName = opponent.globalName
+                const opposingMember = await guild.members.fetch(opponent.discordId)
+    
+                opposingMember.user.send(
+                    `New pairing for Rated ${format.name} Format ${format.emoji}!` +
+                    `\nServer: ${server.name} ${server.logo}` +
+                    `\nChannel: <#${channelId}>` +
+                    `\nDiscord Name: ${playerGlobalName ? `${playerGlobalName} (${playerDiscordName})` : playerDiscordName}` +
+                    `\nDuelingbook Name: ${player.duelingBookName}`
+                ).catch((err) => console.log(err))
+    
+                member.user.send(
+                    `New pairing for Rated ${format.name} Format ${format.emoji}!` + 
+                    `\nServer: ${server.name} ${server.logo}` + 
+                    `\nChannel: <#${channelId}>` +
+                    `\nDiscord Name: ${opponentGlobalName ? `${opponentGlobalName} (${opponentDiscordName})` : opponentDiscordName}` +
+                    `\nDuelingbook Name: ${opponent.duelingBookName}`
+                ).catch((err) => console.log(err))
+
+                await Pairing.create({
+                    formatId: format.id,
+                    formatName: format.name,
+                    serverId: server.id,
+                    communityName: server.name,
+                    playerAName: poolEntry.name,
+                    playerAId: poolEntry.playerId,
+                    deckFileA: poolEntry.deckFile,
+                    playerBName: potentialPair.name,
+                    playerBId: potentialPair.playerId,
+                    deckFileB: potentialPair.deckFile
+                })
+                
+                await poolEntry.destroy()
+                await potentialPair.destroy()
+                
+                const poolsToDeactivate = await Pool.findAll({
+                    where: {
+                        playerId: {[Op.or]: [player.id, opponent.id]}
+                    }
+                }) || []
+    
+                for (let d = 0; d < poolsToDeactivate.length; d++) {
+                    const rPTD = poolsToDeactivate[d]
+                    await rPTD.update({ status: 'inactive' })
+                }
+    
+                const allStats = await Stats.findAll({ 
+                    where: {
+                        formatId: format.id, 
+                        games: { [Op.gte]: 3 },
+                        serverId: '414551319031054346',
+                        isActive: true,
+                        '$player.isHidden$': false
+                    },
+                    include: [Player],
+                    order: [['elo', 'DESC']] 
+                }) || []
+    
+                const p1Index = allStats.findIndex((s) => s.playerId === player.id)
+                const p1Rank = p1Index >= 0 ? `#${p1Index + 1} ` : ''
+                const p2Index = allStats.findIndex((s) => s.playerId === opponent.id)
+                const p2Rank = p2Index >= 0 ? `#${p2Index + 1} ` : ''
+                const content = `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
+                console.log('content:', content)
+                return channel.send({ content: content })   
+            }
+        }
+    }
+
+
+}
+
 
 // MANAGE SUBSCRIBERS
 export const manageSubscriptions = async (client) => {

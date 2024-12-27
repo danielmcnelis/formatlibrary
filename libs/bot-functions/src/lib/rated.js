@@ -87,10 +87,10 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
                 [Op.or]: {
                     [Op.and]: {
                         winnerId: player.id,
-                        loserId: player.id
+                        loserId: potentialPair.player.id
                     },
                     [Op.and]: {
-                        winnerId: player.id,
+                        winnerId: potentialPair.player.id,
                         loserId: player.id
                     },
                 },
@@ -179,7 +179,6 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
             return channel.send({ content: content })   
         }
     }
-
 }
 
 // HANDLE RATED CONFIRMATION
