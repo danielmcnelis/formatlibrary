@@ -7,27 +7,27 @@ import './StatsRow.css'
 const getMedal = (elo) => {
   return !elo
     ? 'https://cdn.formatlibrary.com/images/emojis/gold.png'
-    : elo <= 230
+    : elo <= 320
     ? 'https://cdn.formatlibrary.com/images/emojis/mad.png'
-    : elo > 230 && elo <= 290
+    : elo > 320 && elo <= 360
     ? 'https://cdn.formatlibrary.com/images/emojis/sad.png'
-    : elo > 290 && elo <= 350
+    : elo > 360 && elo <= 400
     ? 'https://cdn.formatlibrary.com/images/emojis/rock.png'
-    : elo > 350 && elo <= 410
+    : elo > 400 && elo <= 440
     ? 'https://cdn.formatlibrary.com/images/emojis/bronze.png'
-    : elo > 410 && elo <= 470
+    : elo > 440 && elo <= 480
     ? 'https://cdn.formatlibrary.com/images/emojis/silver.png'
-    : elo > 470 && elo <= 530
+    : elo > 480 && elo <= 520
     ? 'https://cdn.formatlibrary.com/images/emojis/gold.png'
-    : elo > 530 && elo <= 590
+    : elo > 520 && elo <= 560
     ? 'https://cdn.formatlibrary.com/images/emojis/platinum.png'
-    : elo > 590 && elo <= 650
+    : elo > 560 && elo <= 600
     ? 'https://cdn.formatlibrary.com/images/emojis/diamond.png'
-    : elo > 650 && elo <= 710
+    : elo > 600 && elo <= 640
     ? 'https://cdn.formatlibrary.com/images/emojis/master.png'
-    : elo > 710 && elo <= 770
+    : elo > 640 && elo <= 680
     ? 'https://cdn.formatlibrary.com/images/emojis/legend.png'
-    : elo > 710 && elo <= 830
+    : elo > 680 && elo <= 720
     ? 'https://cdn.formatlibrary.com/images/emojis/god.png'
     : 'https://cdn.formatlibrary.com/images/emojis/treeborn.png'
 }
@@ -36,27 +36,27 @@ const getMedal = (elo) => {
 const getTitle = (elo) => {
   return !elo
     ? 'Gold'
-    : elo <= 230
+    : elo <= 320
     ? 'Tilted'
-    : elo > 230 && elo <= 290
+    : elo > 320 && elo <= 360
     ? 'Chump'
-    : elo > 290 && elo <= 350
+    : elo > 360 && elo <= 400
     ? 'Rock'
-    : elo > 350 && elo <= 410
+    : elo > 400 && elo <= 440
     ? 'Bronze'
-    : elo > 410 && elo <= 470
+    : elo > 440 && elo <= 480
     ? 'Silver'
-    : elo > 470 && elo <= 530
+    : elo > 480 && elo <= 520
     ? 'Gold'
-    : elo > 530 && elo <= 590
+    : elo > 520 && elo <= 560
     ? 'Platinum'
-    : elo > 590 && elo <= 650
+    : elo > 560 && elo <= 600
     ? 'Diamond'
-    : elo > 650 && elo <= 710
+    : elo > 600 && elo <= 640
     ? 'Master'
-    : elo > 710 && elo <= 770
+    : elo > 640 && elo <= 680
     ? 'Legend'
-    : elo > 770 && elo <= 830
+    : elo > 680 && elo <= 720
     ? 'Deity'
     : 'Ascended'
 }
