@@ -514,31 +514,31 @@ export const generateRandomString = (length, chars) => {
 export const getMedal = (stats, title = false) => {
     if (title) {
         return !stats ? `Gold ${emojis.gold}`
-        : stats <= 320 ? `Tilted ${emojis.mad}`
-        : (stats > 320 && stats <= 360) ?  `Chump ${emojis.sad}`
-        : (stats > 360 && stats <= 400) ?  `Rock ${emojis.rock}`
-        : (stats > 400 && stats <= 440) ?  `Bronze ${emojis.bronze}`
-        : (stats > 440 && stats <= 480) ?  `Silver ${emojis.silver}`
-        : (stats > 480 && stats <= 520) ?  `Gold ${emojis.gold}`
-        : (stats > 520 && stats <= 560) ?  `Platinum ${emojis.platinum}`
-        : (stats > 560 && stats <= 600) ?  `Diamond ${emojis.diamond}`
-        : (stats > 600 && stats <= 640) ?  `Master ${emojis.master}`
-        : (stats > 640 && stats <= 680) ?  `Legend ${emojis.legend}`
-        : (stats > 680 && stats <= 720) ? `Deity ${emojis.god}`
+        : stats <= 230 ? `Tilted ${emojis.mad}`
+        : (stats > 230 && stats <= 290) ?  `Chump ${emojis.sad}`
+        : (stats > 290 && stats <= 350) ?  `Rock ${emojis.rock}`
+        : (stats > 350 && stats <= 410) ?  `Bronze ${emojis.bronze}`
+        : (stats > 410 && stats <= 470) ?  `Silver ${emojis.silver}`
+        : (stats > 470 && stats <= 530) ?  `Gold ${emojis.gold}`
+        : (stats > 530 && stats <= 590) ?  `Platinum ${emojis.platinum}`
+        : (stats > 590 && stats <= 650) ?  `Diamond ${emojis.diamond}`
+        : (stats > 650 && stats <= 710) ?  `Master ${emojis.master}`
+        : (stats > 710 && stats <= 770) ?  `Legend ${emojis.legend}`
+        : (stats > 770 && stats <= 830) ? `Deity ${emojis.god}`
         : `Ascended ${emojis.treeborn}`
     } else {
         return !stats ? emojis.gold
-        : stats <= 320 ? emojis.mad
-        : (stats > 320 && stats <= 360) ? emojis.sad
-        : (stats > 360 && stats <= 400) ? emojis.rock
-        : (stats > 400 && stats <= 440) ? emojis.bronze
-        : (stats > 440 && stats <= 480) ? emojis.silver
-        : (stats > 480 && stats <= 520) ? emojis.gold
-        : (stats > 520 && stats <= 560) ? emojis.platinum
-        : (stats > 560 && stats <= 600) ? emojis.diamond
-        : (stats > 600 && stats <= 640) ? emojis.master
-        : (stats > 640 && stats <= 680) ? emojis.legend
-        : (stats > 680 && stats <= 720) ? emojis.god
+        : stats <= 230 ? emojis.mad
+        : (stats > 230 && stats <= 290) ? emojis.sad
+        : (stats > 290 && stats <= 350) ? emojis.rock
+        : (stats > 350 && stats <= 410) ? emojis.bronze
+        : (stats > 410 && stats <= 470) ? emojis.silver
+        : (stats > 470 && stats <= 530) ? emojis.gold
+        : (stats > 530 && stats <= 590) ? emojis.platinum
+        : (stats > 590 && stats <= 650) ? emojis.diamond
+        : (stats > 650 && stats <= 710) ? emojis.master
+        : (stats > 710 && stats <= 770) ? emojis.legend
+        : (stats > 770 && stats <= 830) ? emojis.god
         : emojis.treeborn
     }
 }

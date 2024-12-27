@@ -107,11 +107,11 @@ export default {
                 const origEloWinner = winnerStats.elo || 500.00
                 const origEloLoser = loserStats.elo || 500.00
                 
-                const winnerKFactor = winnerStats.games < 30 ? kValue * 4 :
-                    winnerStats.bestElo < 560 ? kValue * 2 : kValue
+                const winnerKFactor = winnerStats.games < 20 ? kValue * 4 :
+                    winnerStats.bestElo < 590 ? kValue * 2 : kValue
     
-                const loserKFactor = loserStats.games < 30 ? kValue * 4 :
-                    loserStats.bestElo < 560 ? kValue * 2 : kValue
+                const loserKFactor = loserStats.games < 20 ? kValue * 4 :
+                    loserStats.bestElo < 590 ? kValue * 2 : kValue
     
                 const winnerDelta = winnerKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
                 const loserDelta = loserKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
