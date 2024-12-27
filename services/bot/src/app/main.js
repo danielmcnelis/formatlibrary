@@ -28,14 +28,13 @@ import { createTopCut, editTieBreakers, getMidnightCountdown,
     assignRoles, createMembership, createPlayer, fetchCardNames, hasPartnerAccess, 
     isModerator, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
     editPointsSystem, runNightlyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, 
-    getKnownAbbreviation, capitalize, removeLeadingZerosFromWords
+    getKnownAbbreviation, capitalize, getHourlyCountdown, runHourlyTasks
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
 import { emojis } from '@fl/bot-emojis'
 import commands from '@fl/bot-commands'
 import { rated } from './routes'
-import { runNightlyTasks } from '../../../../libs/bot-functions/src'
 client.commands = new Collection()
 Object.values(commands.formatLibraryCommands).forEach((command) => client.commands.set(command.data.name, command))
 Object.values(commands.globalCommands).forEach((command) => client.commands.set(command.data.name, command))
@@ -132,9 +131,15 @@ client.on('ready', async() => {
     }
 
     try {
+        // HOURLY TASKS
+        setTimeout(() => runHourlyTasks(client), getHourlyCountdown())
+    } catch (err) {
+        console.log(err)
+    }
+
+    try {
         // NIGHTLY TASKS
-        const midnightCountdown = getMidnightCountdown()
-        setTimeout(() => runNightlyTasks(client), midnightCountdown)
+        setTimeout(() => runNightlyTasks(client),  getMidnightCountdown())
     } catch (err) {
         console.log(err)
     }

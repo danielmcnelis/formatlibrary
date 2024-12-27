@@ -26,7 +26,7 @@ export default {
             // await updateReplays()
             // await updateMatchups()
             // return updateGlobalNames()
-            return lookForAllPotentialPairs()
+            return lookForAllPotentialPairs(client)
             // return runNightlyTasks(client)
             // return runMonthlyTasks(client)
         } else {
