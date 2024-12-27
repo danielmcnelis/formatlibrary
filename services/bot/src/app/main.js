@@ -190,12 +190,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
             return handleTriviaConfirmation(interaction, entryId, isConfirmed)
         } else if (interaction.message?.content?.includes(`I've found a Rated`)) {
             await interaction.update({ components: [] }).catch((err) => console.log(err))
-            console.log('interaction?.message?.timestamp', interaction?.message?.timestamp)
-            const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
-            if (interaction?.message?.timestamp < twoMinutesAgo.getTime()) {
-                console.log('OLD BUTTON')
+            const fiveMinutesAgo = new Date(Date.now() - (5 * 60 * 1000))
+            if (interaction?.message?.timestamp < fiveMinutesAgo.getTime()) {
+                console.log('OLD RATED BUTTON PRESSED -> return and remove button components')
+                return await interaction.message.edit({ components: [] })
             } else {
-                console.log('RECENT BUTTON')
+                console.log('RECENT RATED BUTTON PRESSED -> handleRatedConfirmation()')
             }
             
             const customId = interaction.customId

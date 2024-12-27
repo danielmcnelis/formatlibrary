@@ -20,8 +20,6 @@ export const getRatedConfirmation = async (client, player, opponent, format) => 
         return
     }
 
-    console.log('player.id', player.id)
-
     const yourPool = await Pool.findOne({
         where: {
             playerId: player.id,
@@ -37,7 +35,6 @@ export const getRatedConfirmation = async (client, player, opponent, format) => 
             status: 'pending'
         }
     })
-    console.log('opponent.id', opponent.id)
 
     await yourPool.update({ status: 'confirming' })
  
@@ -67,6 +64,7 @@ export const getRatedConfirmation = async (client, player, opponent, format) => 
         if (unconfirmed) {
             await message.edit({ components: [] }).catch((err) => console.log(err))
             await yourPool.destroy()
+            console.log(`removed ${yourPool.playerName} from the ${yourPool.formatName} rated pool`)
             await message.channel.send({ content: `Sorry, time's up! I've removed you from the ${format.name} Format ${format.emoji} rated pool.`})
         }
     }, 5 * 60 * 1000)
@@ -191,6 +189,7 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
 // HANDLE RATED CONFIRMATION
 export const handleRatedConfirmation = async (client, interaction, isConfirmed, yourPoolId, opponentsPoolId, serverId) => {
     try {
+        console.log('handleRatedConfirmation()')
         const yourPool = await Pool.findOne({ where: { id: yourPoolId }, include: [Format, Player] })
         const format = yourPool.format
         const opponentsPool = await Pool.findOne({ where: { id: opponentsPoolId, status: {[Op.not]: 'inactive'}}, include: Player })
@@ -198,6 +197,7 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
         if (isConfirmed) {
             if (!opponentsPool) {
                 await yourPool.update({ status: 'pending' })
+                console.log(`Sorry, ${yourPool.playerName}, your potential opponent either found a match or left the pool while waiting for you to confirm. I'll put you back in the Rated ${format.name} Format ${format.emoji} Pool.`)
                 return interaction.user.send(`Sorry, your potential opponent either found a match or left the pool while waiting for you to confirm. I'll put you back in the Rated ${format.name} Format ${format.emoji} Pool.`)
             }
     
@@ -212,6 +212,8 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
             const opponentDiscordName =  opponent.discordName
             const opponentGlobalName = opponent.globalName
             const opposingMember = await guild.members.fetch(opponent.discordId)
+
+            console.log(`New Pairing!`)
 
             opposingMember.user.send(
                 `New pairing for Rated ${format.name} Format ${format.emoji}!` +
@@ -274,7 +276,7 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
             const p2Rank = p2Index >= 0 ? `#${p2Index + 1} ` : ''
     
             const content = format.category === `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
-    
+            console.log(`content:`, content)
             return channel.send({ content: content })
         } else {
             await yourPool.destroy()

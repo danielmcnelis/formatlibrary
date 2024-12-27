@@ -545,14 +545,11 @@ export const lookForAllPotentialPairs = async (client) => {
             })
     
             if (isRecentOpponent || playerIds.includes(player.id) || playerIds.includes(potentialPair.playerId)) {
-                console.log('!!isRecentOpponent', !!isRecentOpponent)
-                console.log('playerIds.includes(player.id)', playerIds.includes(player.id))
-                console.log('playerIds.includes(potentialPair.playerId)', playerIds.includes(potentialPair.playerId))
                 continue
             } else {
-                console.log(`getRatedConfirmation: ${potentialPair.player?.name} vs. ${player?.name} (${format.name})`)
                 playerIds.push(player.id)
                 playerIds.push(potentialPair.playerId)
+                console.log(`getRatedConfirmation: ${potentialPair.player?.name} vs. ${player?.name} (${format.name})`)
                 getRatedConfirmation(client, player, potentialPair.player, format)
                 continue
             }
