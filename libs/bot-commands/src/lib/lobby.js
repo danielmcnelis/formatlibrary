@@ -10,8 +10,7 @@ export default {
 		.setDescription('Check the Rated Lobby. 🛎️'),
 	async execute(interaction) {
         await interaction.deferReply()
-        const now = new Date()
-        const oneDayAgo = new Date(now - (24 * 60 * 60 * 1000))
+        const oneDayAgo = new Date() - (24 * 60 * 60 * 1000)
 
         const pools = [...await Pool.findAll({ 
             where: { 
@@ -20,7 +19,7 @@ export default {
             include: Format,
             order: [['createdAt', 'DESC']] 
         })].map((pool) => {
-            const difference = now - pool.createdAt
+            const difference = new Date() - pool.createdAt
             const timeAgo = difference < 1000 * 60 * 60 ? `${Math.round(difference / (1000 * 60))}m ago ${emojis.megaphone}` :
                 `${Math.round(difference / (1000 * 60 * 60))}h ago`
             

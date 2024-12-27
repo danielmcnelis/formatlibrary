@@ -5,8 +5,7 @@ export const PoolRow = (props = {}) => {
     const {format, status, createdAt, color, silhouette} = props
     if (!format || !status || !createdAt) return <div/>
 
-    const now = new Date()
-    const difference = now - new Date(createdAt)
+    const difference = new Date() - new Date(createdAt)
     const timeAgo = difference < 1000 * 60 * 60 ? `${Math.round(difference / (1000 * 60))}m ago` :
         difference < 1000 * 60 * 60 * 24 ? `${Math.round(difference / (1000 * 60 * 60))}h ago` :
         `${Math.round(difference / (1000 * 60 * 60 * 24))}d ago`

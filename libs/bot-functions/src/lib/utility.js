@@ -704,9 +704,8 @@ export const selectMatch = async (interaction, matches, replayExtension = '') =>
     if (matches.length === 0) return false
     if (matches.length === 1) return matches[0]
 
-    const now = Date.now()
     const options = matches.map((match, index) => {
-        const difference = now - match.createdAt
+        const difference = Date.now() - match.createdAt
         const timeAgo = difference < 1000 * 60 * 60 ?  `${Math.round(difference / (1000 * 60))}m ago` :
             difference >= 1000 * 60 * 60 && difference < 1000 * 60 * 60 * 24 ? `${Math.round(difference / (1000 * 60 * 60))}h ago` :
             difference >= 1000 * 60 * 60 * 24 && difference < 1000 * 60 * 60 * 24 * 30 ? `${Math.round(difference / (1000 * 60 * 60 * 24))}d ago` :
