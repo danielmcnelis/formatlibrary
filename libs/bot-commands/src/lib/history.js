@@ -45,8 +45,8 @@ export default {
 
         for (let i = 0; i < matches.length; i++) {
             const match = matches[i]
-            const delta = match.delta
             const sign = match.winnerId === player.id ? 1 : -1
+            const delta = match.winnerId === player.id ? match.winnerDelta : match.loserDelta
             const prevElo = data.slice(-1)[0] 
             const nextElo = prevElo + (sign * delta)
             data.push(nextElo)

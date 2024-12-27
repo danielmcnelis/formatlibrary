@@ -97,10 +97,18 @@ export default {
         if (!isTournament || tournament?.isRanked) {
             const origEloWinner = winnerStats.elo || 500.00
             const origEloLoser = loserStats.elo || 500.00
-            const delta = 10 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
+
+            const winnerKFactor = winnerStats.games < 30 ? 32 :
+                winnerStats.bestElo < 560 ? 16 : 8
+
+            const loserKFactor = loserStats.games < 30 ? 32 :
+                loserStats.bestElo < 560 ? 16 : 8
+
+            const winnerDelta = winnerKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
+            const loserDelta = loserKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
             
-            winnerStats.elo = origEloWinner + delta
-            if (origEloWinner + delta > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + delta
+            winnerStats.elo = origEloWinner + winnerDelta
+            if (origEloWinner + winnerDelta > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + winnerDelta
             winnerStats.backupElo = origEloWinner
             winnerStats.wins++
             winnerStats.games++
@@ -110,7 +118,7 @@ export default {
             if (!await Match.checkIfVanquished(format.id, winningPlayer.id, losingPlayer.id)) winnerStats.vanquished++
             await winnerStats.save()
     
-            loserStats.elo = origEloLoser - delta
+            loserStats.elo = origEloLoser - loserDelta
             loserStats.backupElo = origEloLoser
             loserStats.losses++
             loserStats.games++
@@ -129,7 +137,8 @@ export default {
                 round: challongeMatch?.round,
                 formatName: format.name,
                 formatId: format.id,
-                delta: delta,
+                winnerDelta: winnerDelta,
+                loserDelta: loserDelta,
                 serverId: serverId,
                 isInternal: server.hasInternalLadder
             })

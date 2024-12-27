@@ -39,7 +39,7 @@ export default {
         
         const allMatches = await Match.findAll({ 
             where: { formatId: format.id, serverId: serverId }, 
-            attributes: ['id', 'formatId', 'winnerId', 'loserId', 'delta', 'createdAt'], 
+            attributes: ['id', 'formatId', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'createdAt'], 
             order: [["createdAt", "ASC"]]
         })
 
@@ -106,10 +106,18 @@ export default {
     
                 const origEloWinner = winnerStats.elo || 500.00
                 const origEloLoser = loserStats.elo || 500.00
-                const delta = kValue * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
                 
-                winnerStats.elo = origEloWinner + delta
-                if ((origEloWinner + delta) > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + delta
+                const winnerKFactor = winnerStats.games < 30 ? kValue * 4 :
+                    winnerStats.bestElo < 560 ? kValue * 2 : kValue
+    
+                const loserKFactor = loserStats.games < 30 ? kValue * 4 :
+                    loserStats.bestElo < 560 ? kValue * 2 : kValue
+    
+                const winnerDelta = winnerKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
+                const loserDelta = loserKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
+                
+                winnerStats.elo = origEloWinner + winnerDelta
+                if ((origEloWinner + winnerDelta) > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + winnerDelta
                 winnerStats.backupElo = origEloWinner
                 winnerStats.wins++
                 winnerStats.games++
@@ -117,14 +125,15 @@ export default {
                 if (winnerStats.currentStreak >= winnerStats.bestStreak) winnerStats.bestStreak++
                 await winnerStats.save()
         
-                loserStats.elo = origEloLoser - delta
+                loserStats.elo = origEloLoser - loserDelta
                 loserStats.backupElo = origEloLoser
                 loserStats.losses++
                 loserStats.games++
                 loserStats.currentStreak = 0
                 await loserStats.save()
     
-                match.delta = delta
+                match.winnerDelta = winnerDelta
+                match.loserDelta = loserDelta
                 await match.save()
                 console.log(`${format.name} Match ${i+1}: ${winnerStats.player.name} > ${loserStats.player.name}`)
             } catch (err) {
