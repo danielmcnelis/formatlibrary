@@ -564,7 +564,7 @@ export const recalculateStats = async () => {
     const formats = await Format.findAll({
         order: [["name", "ASC"]]
     })
-
+    
     for (let i = 0; i < formats.length; i++) {
         const format = formats[i]
         const count = await Match.count({ where: { formatName: format.name, serverId: '414551319031054346' }})
@@ -640,11 +640,11 @@ export const recalculateStats = async () => {
                 const origEloWinner = winnerStats.elo || 500.00
                 const origEloLoser = loserStats.elo || 500.00
 
-                const winnerKFactor = winnerStats.games < 20 ? 20 :
-                    winnerStats.bestElo > 590 ? 14 : 8
+                const winnerKFactor = winnerStats.games < 20 ? 32 :
+                    winnerStats.bestElo < 590 ? 16 : 8
 
-                const loserKFactor = loserStats.games < 20 ? 20 :
-                    loserStats.bestElo < 590 ? 14 : 8
+                const loserKFactor = loserStats.games < 20 ? 32 :
+                    loserStats.bestElo < 590 ? 16 : 8
 
                 const winnerDelta = winnerKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
                 const loserDelta = loserKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
