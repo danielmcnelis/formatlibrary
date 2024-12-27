@@ -38,6 +38,7 @@ export const getRemainingDaysInMonth = () => {
 // RUN HOURLY TASKS
 export const runHourlyTasks = async (client) => {
     await cleanUpPools()
+    console.log('???')
     await lookForAllPotentialPairs(client)
 
     return setTimeout(() => runHourlyTasks(client), getHourlyCountdown())
@@ -541,7 +542,6 @@ export const lookForAllPotentialPairs = async (client) => {
                     formatId: pool.formatId,
                     createdAt: {[Op.gte]: tenMinutesAgo }
                 }
-            })
     
             if (isRecentOpponent || playerIds.includes(player.id) || playerIds.includes(potentialPair.playerId)) {
                 continue
