@@ -57,8 +57,8 @@ export const joinRatedPool = async (req, res, next) => {
             const opponent = potentialPair.player
             const ppid = potentialPair.playerId
             
-            const twoMinutesAgo = new Date() - (2 * 60 * 1000)
-            const tenMinutesAgo = new Date() - (10 * 60 * 1000)
+            const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
+            const tenMinutesAgo = new Date(Date.now() - (10 * 60 * 1000))
 
             const yourRecentOpponents = [...await Match.findAll({
                 where: {

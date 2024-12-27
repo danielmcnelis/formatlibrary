@@ -342,7 +342,7 @@ export const updateGlobalNames = async () => {
 export const markInactives = async () => {
     const start = Date.now()
     let b = 0
-    const oneYearAgo = new Date() - (365 * 24 * 60 * 60 * 1000)
+    const oneYearAgo = new Date(Date.now() - (365 * 24 * 60 * 60 * 1000))
     const stats = await Stats.findAll({ where: { isActive:  true }, include: Player })
 
     for (let i = 0; i < stats.length; i++) {
@@ -441,8 +441,8 @@ export const cleanUpPools = async () => {
     let b = 0
     let c = 0
     let e = 0
-    const twoHoursAgo = new Date() - (2 * 60 * 60 * 1000)
-    const thirtyDaysAgo = new Date() - (30 * 24 * 60 * 60 * 1000)
+    const twoHoursAgo = new Date(Date.now() - (2 * 60 * 60 * 1000))
+    const thirtyDaysAgo = new Date(Date.now() - (30 * 24 * 60 * 60 * 1000))
 
     const poolsToPurge = await Pool.findAll({
         where: {

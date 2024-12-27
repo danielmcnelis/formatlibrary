@@ -10,7 +10,7 @@ export default {
 		.setDescription('Check the Rated Lobby. 🛎️'),
 	async execute(interaction) {
         await interaction.deferReply()
-        const oneDayAgo = new Date() - (24 * 60 * 60 * 1000)
+        const oneDayAgo = new Date(Date.now() - (24 * 60 * 60 * 1000))
 
         const pools = [...await Pool.findAll({ 
             where: { 
