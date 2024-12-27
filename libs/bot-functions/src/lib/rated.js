@@ -12,6 +12,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 
 // GET RATED CONFIRMATION
 export const getRatedConfirmation = async (client, player, opponent, format) => {
+    console.log('getRatedConfirmation()')
     const guild = client.guilds.cache.get('414551319031054346')
     const member = await guild.members.fetch(player.discordId)
     if (!member) {

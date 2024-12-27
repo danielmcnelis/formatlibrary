@@ -499,6 +499,7 @@ export const cleanUpPools = async () => {
 
 // LOOK FOR ALL POTENTIAL PAIRS
 export const lookForAllPotentialPairs = async (client) => {
+    console.log('lookForAllPotentialPairs', lookForAllPotentialPairs)
     const pools = await Pool.findAll({
         where: {
             status: 'pending'
@@ -549,7 +550,7 @@ export const lookForAllPotentialPairs = async (client) => {
             } else if (potentialPair.updatedAt < twoMinutesAgo) {
                 playerIds.push(player.id)
                 playerIds.push(potentialPair.playerId)
-                console.log(`getRatedConfirmation: ${potentialPair.player?.name} vs. ${player.name} (${format.name})`)
+                console.log(`getRatedConfirmation: ${potentialPair.player?.name} vs. ${player?.name} (${format.name})`)
                 getRatedConfirmation(client, player, potentialPair.player, format)
                 continue
             } else {
