@@ -20,6 +20,8 @@ export const getRatedConfirmation = async (client, player, opponent, format) => 
         return
     }
 
+    console.log('player.id', player.id)
+
     const yourPool = await Pool.findOne({
         where: {
             playerId: player.id,
@@ -35,6 +37,7 @@ export const getRatedConfirmation = async (client, player, opponent, format) => 
             status: 'pending'
         }
     })
+    console.log('opponent.id', opponent.id)
 
     await yourPool.update({ status: 'confirming' })
  
