@@ -39,9 +39,10 @@ export const LeaderBoard = () => {
       if (!format.name) return
       const fetchData = async () => {
         try {
-            const {data} = await axios.get(`/api/stats/leaders/1000/${format.name.toLowerCase()}`)
+            let {data} = await axios.get(`/api/stats/leaders/1000/${format.name.toLowerCase()}`)
             if (isClassic === 'true') {
                 data.sort((a, b) => b.classicElo - a.classicElo)
+                setLeaderboard(data)
             } else {
                 setLeaderboard(data)
             }
