@@ -586,8 +586,12 @@ export const recalculateStats = async () => {
             const stats = allStats[i]
             await stats.update({
                 elo: 500.00,
+                classicElo: 500.00,
+                seasonalElo: 500.00,
                 bestElo: 500.00,
                 backupElo: null,
+                backupClassicElo: null,
+                backuSeasonalElo: null,
                 wins: 0,
                 losses: 0,
                 games: 0,
@@ -648,7 +652,7 @@ export const recalculateStats = async () => {
 
                 const winnerDelta = winnerKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
                 const loserDelta = loserKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
-                const classicDelta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
+                const classicDelta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, (((winnerStats.classicElo || 500.00) - (loserStats.classicElo || 500.00)) / 400))))))
 
                 winnerStats.elo = origEloWinner + winnerDelta
                 if ((origEloWinner + winnerDelta) > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + winnerDelta
