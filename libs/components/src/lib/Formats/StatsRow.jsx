@@ -62,8 +62,13 @@ const getTitle = (elo) => {
 }
 
 export const StatsRow = (props) => {
-    const {index, stats} = props
-    const {elo, wins, losses, player} = stats
+    const {index, stats, isClassic} = props
+    let {elo, wins, losses, player} = stats
+    if (isClassic === 'true') {
+        console.log('using classic')
+        elo = stats.classicElo
+    }
+
     const navigate = useNavigate()
     
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'

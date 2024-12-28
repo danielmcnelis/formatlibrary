@@ -1,7 +1,9 @@
 import { Router } from 'express'
-import { statsLeaders, statsPlayer } from '../middleware'
+import { classicStatsLeaders, statsLeaders, statsPlayer } from '../middleware'
 
 const router = Router()
+
+router.get('/api/stats/classic-leaders/:limit/:format', classicStatsLeaders)
 
 router.get('/api/stats/leaders/:limit/:format', statsLeaders)
 

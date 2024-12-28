@@ -12,6 +12,10 @@ export const Stats = db.define('stats', {
     type: Sequelize.FLOAT,
     defaultValue: 500.0
   },
+  classicElo: {
+    type: Sequelize.FLOAT,
+    defaultValue: 500.0
+  },
   seasonalElo: {
     type: Sequelize.FLOAT,
     defaultValue: 500.0
@@ -20,7 +24,11 @@ export const Stats = db.define('stats', {
     type: Sequelize.FLOAT,
     defaultValue: 500.0
   },
-  seasonalBackupElo: {
+  backupClassicElo: {
+    type: Sequelize.FLOAT,
+    defaultValue: 500.0
+  },
+  backupSeasonalElo: {
     type: Sequelize.FLOAT,
     defaultValue: 500.0
   },

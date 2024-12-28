@@ -3,7 +3,7 @@ import { useState, useEffect, useLayoutEffect } from 'react'
 import axios from 'axios'
 import { StatsRow } from './StatsRow'
 import { capitalize } from '@fl/utils'
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import './LeaderBoard.css'
 
@@ -11,6 +11,10 @@ export const LeaderBoard = () => {
     const [format, setFormat] = useState({})
     const [leaderboard, setLeaderboard] = useState([])
     const { id } = useParams()
+    const location = useLocation()
+    const isClassic = location?.search?.slice(9)
+    console.log('location?.search', location?.search)
+    console.log('isClassic', isClassic)
     const videoPlaylistId = format?.videoPlaylistId
   
     // USE LAYOUT EFFECT
@@ -35,8 +39,8 @@ export const LeaderBoard = () => {
       if (!format.name) return
       const fetchData = async () => {
         try {
-          const {data} = await axios.get(`/api/stats/leaders/1000/${format.name.toLowerCase()}`)
-          setLeaderboard(data)
+            const {data} = await axios.get(`/api/stats/leaders/1000/${format.name.toLowerCase()}`)
+            setLeaderboard(data)
         } catch (err) {
           console.log(err)
         }
@@ -82,7 +86,7 @@ export const LeaderBoard = () => {
                     {
                         leaderboard.length ? (
                             leaderboard.map((stats, index) => {
-                                return <StatsRow stats={stats} index={index} key={stats.playerId}/>
+                                return <StatsRow stats={stats} isClassic={isClassic} index={index} key={stats.playerId}/>
                             })
                         ) : <tr />
                     }

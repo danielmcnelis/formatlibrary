@@ -28,7 +28,6 @@ export const DeckType = (props) => {
     const [summary, setSummary] = useState({})
     const [matchups, setMatchups] = useState(false)
     const [banlist, setBanList] = useState({})
-    console.log(summary)
     
     const { id } = useParams()
     const location = useLocation()
