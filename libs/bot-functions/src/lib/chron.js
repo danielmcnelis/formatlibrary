@@ -582,8 +582,8 @@ export const recalculateStats = async () => {
             include: { model: Player, attributes: ['id', 'name']} 
         })
 
-        for (let i = 0; i < allStats.length; i++) {
-            const stats = allStats[i]
+        for (let j = 0; j < allStats.length; j++) {
+            const stats = allStats[j]
             await stats.update({
                 elo: 500.00,
                 classicElo: 500.00,
@@ -601,9 +601,9 @@ export const recalculateStats = async () => {
             })
         }
 
-        for (let i = 0; i < allMatches.length; i++) {
+        for (let j = 0; j < allMatches.length; j++) {
             try {
-                const match = allMatches[i]
+                const match = allMatches[j]
                 const winnerId = match.winnerId
                 const loserId = match.loserId
                 const winnerStats = allStats.find((s) => s.playerId === winnerId)
@@ -621,7 +621,7 @@ export const recalculateStats = async () => {
 
                     console.log('created new winner stats', winnerId)
                     allStats.push(stats)
-                    i--
+                    j--
                     continue
                 }
     
@@ -637,7 +637,7 @@ export const recalculateStats = async () => {
 
                     console.log('created new loser stats:', loserId)
                     allStats.push(stats)
-                    i--
+                    j--
                     continue
                 }
     
@@ -684,8 +684,8 @@ export const recalculateStats = async () => {
             }
         }
 
-        for (let i = 0; i < allStats.length; i++) {
-            const stats = allStats[i]
+        for (let j = 0; j < allStats.length; j++) {
+            const stats = allStats[j]
             const victories = await Match.findAll({
                 where: {
                     winnerId: stats.playerId,
@@ -710,6 +710,17 @@ export const recalculateStats = async () => {
     console.log(`All recalculations complete!`)
     return console.log(`recalculateStats() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
+
+// APPLY DECAY
+export const applyDecay = async () => {
+    const start = Date.now()
+    const formats = await Format.findAll({
+        order: [["name", "ASC"]]
+    })
+
+    for (let i = 0)
+}
+
 
 
 // MANAGE SUBSCRIBERS
