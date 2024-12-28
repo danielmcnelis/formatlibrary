@@ -25,8 +25,9 @@ export default {
             // await updateDecks()
             // await updateReplays()
             // await updateMatchups()
+            return recalculateStats()
             // return updateGlobalNames()
-            return markInactives()
+            // return markInactives()
             // return runNightlyTasks(client)
             // return runMonthlyTasks(client)
         } else {
