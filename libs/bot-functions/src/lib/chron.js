@@ -669,7 +669,7 @@ export const recalculateStats = async () => {
         
                 loserStats.elo = origEloLoser - loserDelta
                 loserStats.backupElo = origEloLoser
-                winnerStats.classicElo = origClassicEloLoser - classicDelta
+                loserStats.classicElo = origClassicEloLoser - classicDelta
                 loserStats.losses++
                 loserStats.games++
                 loserStats.currentStreak = 0
