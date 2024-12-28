@@ -98,18 +98,23 @@ export default {
             const origEloWinner = winnerStats.elo || 500.00
             const origEloLoser = loserStats.elo || 500.00
 
-            const winnerKFactor = winnerStats.games < 20 ? 24 :
-                winnerStats.bestElo > 590 ? 12 : 6
+            const winnerKFactor = winnerStats.games < 20 && winnerStats.bestElo < 560 ? 24 :
+                winnerStats.bestElo < 560 ? 16 : 8
 
-            const loserKFactor = loserStats.games < 20 ? 24 :
-                loserStats.bestElo < 590 ? 12 : 6
-
+            const loserKFactor = loserStats.games < 20 && loserStats.bestElo < 560 ? 24 :
+                loserStats.bestElo < 560 ? 16 : 8
+                
             const winnerDelta = winnerKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
             const loserDelta = loserKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
             
+            const origClassicEloWinner = winnerStats.classicElo || 500.00
+            const origClassicEloLoser = loserStats.classicElo || 500.00
+            const classicDelta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origClassicEloWinner - origClassicEloLoser) / 400))))))
+
             winnerStats.elo = origEloWinner + winnerDelta
             if (origEloWinner + winnerDelta > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + winnerDelta
             winnerStats.backupElo = origEloWinner
+            winnerStats.classicElo = origClassicEloWinner + classicDelta
             winnerStats.wins++
             winnerStats.games++
             winnerStats.isActive = true
@@ -120,6 +125,7 @@ export default {
     
             loserStats.elo = origEloLoser - loserDelta
             loserStats.backupElo = origEloLoser
+            loserStats.classicElo = origClassicEloLoser - classicDelta
             loserStats.losses++
             loserStats.games++
             loserStats.isActive = true

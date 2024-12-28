@@ -18,16 +18,9 @@ export default {
                 .setDescription('Format to recalculate.')
                 .setRequired(false)
         )
-        .addNumberOption(num =>
-            num
-                .setName('k-value')
-                .setDescription('The k-value.')
-                .setRequired(false)
-        )
         .setDMPermission(false),
     async execute(interaction) {
         const formatName = interaction.options.getString('format')
-        const kValue = interaction.options.getNumber('k-value') || 10
         const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
         if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
         if (!isModerator(server, interaction.member)) return await interaction.reply({ content: `You do not have permission to do that.`})
@@ -107,18 +100,23 @@ export default {
                 const origEloWinner = winnerStats.elo || 500.00
                 const origEloLoser = loserStats.elo || 500.00
                 
-                const winnerKFactor = winnerStats.games < 20 ? kValue * 4 :
-                    winnerStats.bestElo < 590 ? kValue * 2 : kValue
-    
-                const loserKFactor = loserStats.games < 20 ? kValue * 4 :
-                    loserStats.bestElo < 590 ? kValue * 2 : kValue
+                const winnerKFactor = winnerStats.games < 20 && winnerStats.bestElo < 560 ? 24 :
+                    winnerStats.bestElo < 560 ? 16 : 8
+
+                const loserKFactor = loserStats.games < 20 && loserStats.bestElo < 560 ? 24 :
+                    loserStats.bestElo < 560 ? 16 : 8
     
                 const winnerDelta = winnerKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
                 const loserDelta = loserKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
                 
+                const origClassicEloWinner = winnerStats.classicElo || 500.00
+                const origClassicEloLoser = loserStats.classicElo || 500.00
+                const classicDelta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origClassicEloWinner - origClassicEloLoser) / 400))))))
+
                 winnerStats.elo = origEloWinner + winnerDelta
                 if ((origEloWinner + winnerDelta) > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + winnerDelta
                 winnerStats.backupElo = origEloWinner
+                winnerStats.classicElo = origClassicEloWinner + classicDelta
                 winnerStats.wins++
                 winnerStats.games++
                 winnerStats.currentStreak++
@@ -127,6 +125,7 @@ export default {
         
                 loserStats.elo = origEloLoser - loserDelta
                 loserStats.backupElo = origEloLoser
+                loserStats.classicElo = origClassicEloLoser - classicDelta
                 loserStats.losses++
                 loserStats.games++
                 loserStats.currentStreak = 0

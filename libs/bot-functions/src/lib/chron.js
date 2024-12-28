@@ -358,31 +358,31 @@ export const updateGlobalNames = async () => {
 // MARK INACTIVES
 export const markInactives = async () => {
     const start = Date.now()
-    // let b = 0
-    // const oneYearAgo = new Date(Date.now() - (365 * 24 * 60 * 60 * 1000))
-    // const stats = await Stats.findAll({ where: { isActive:  true }, include: Player })
+    let b = 0
+    const twoYearsAgo = new Date(Date.now() - (2 * 365 * 24 * 60 * 60 * 1000))
+    const stats = await Stats.findAll({ where: { isActive:  true }, include: Player })
 
-    // for (let i = 0; i < stats.length; i++) {
-    //     const s = stats[i]
-    //     const count = await Match.count({ 
-    //         where: {
-    //             formatId: s.formatId,
-    //             [Op.or]: {
-    //                 winnerId: s.playerId,
-    //                 loserId: s.playerId
-    //             },
-    //             createdAt: {[Op.gte]: oneYearAgo}
-    //         }
-    //     })
+    for (let i = 0; i < stats.length; i++) {
+        const s = stats[i]
+        const count = await Match.count({ 
+            where: {
+                formatId: s.formatId,
+                [Op.or]: {
+                    winnerId: s.playerId,
+                    loserId: s.playerId
+                },
+                createdAt: {[Op.gte]: twoYearsAgo}
+            }
+        })
 
-    //     if (!count) { 
-    //         console.log(`Inactivating ${s.player?.name || s.playerId}'s STATS IN ${s.formatName} FORMAT`)
-    //         await s.update({ isActive: false }).catch((err) => console.log(err))
-    //         b++
-    //     }
-    // }
+        if (!count) { 
+            console.log(`Inactivating ${s.player?.name || s.playerId}'s STATS IN ${s.formatName} FORMAT`)
+            await s.update({ isActive: false }).catch((err) => console.log(err))
+            b++
+        }
+    }
 
-    // console.log(`Inactivated ${b} stats rows in the database.`)
+    console.log(`Inactivated ${b} stats rows in the database.`)
     return console.log(`markInactives() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
