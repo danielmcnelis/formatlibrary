@@ -13,8 +13,6 @@ export const LeaderBoard = () => {
     const { id } = useParams()
     const location = useLocation()
     const isClassic = location?.search?.slice(9)
-    console.log('location?.search', location?.search)
-    console.log('isClassic', isClassic)
     const videoPlaylistId = format?.videoPlaylistId
   
     // USE LAYOUT EFFECT
