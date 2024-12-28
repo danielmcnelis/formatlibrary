@@ -652,12 +652,15 @@ export const recalculateStats = async () => {
 
                 const winnerDelta = winnerKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
                 const loserDelta = loserKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
-                const classicDelta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, (((winnerStats.classicElo || 500.00) - (loserStats.classicElo || 500.00)) / 400))))))
+                
+                const origClassicEloWinner = winnerStats.classicElo || 500.00
+                const origClassicEloLoser = loserStats.classicElo || 500.00
+                const classicDelta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origClassicEloWinner - origClassicEloLoser) / 400))))))
 
                 winnerStats.elo = origEloWinner + winnerDelta
                 if ((origEloWinner + winnerDelta) > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + winnerDelta
                 winnerStats.backupElo = origEloWinner
-                winnerStats.classicElo = origEloWinner + classicDelta
+                winnerStats.classicElo = origClassicEloWinner + classicDelta
                 winnerStats.wins++
                 winnerStats.games++
                 winnerStats.currentStreak++
@@ -666,7 +669,7 @@ export const recalculateStats = async () => {
         
                 loserStats.elo = origEloLoser - loserDelta
                 loserStats.backupElo = origEloLoser
-                winnerStats.classicElo = origEloLoser - classicDelta
+                winnerStats.classicElo = origClassicEloLoser - classicDelta
                 loserStats.losses++
                 loserStats.games++
                 loserStats.currentStreak = 0
