@@ -2045,76 +2045,76 @@ const shuffleArray = (arr) => {
 // })()
 
 
-// ;(async () => {
-//     let b = 0
-//     let c = 0
-//     let d = 0
-//     let e = 0
-    
-//     const cards = await Card.findAll()
-//     const sets = await Set.findAll({
-//         where: {
-//             legalDate: null
-//         }
-//     })
-//     const missingCards = []
-
-//     for (let i = 0; i < sets.length; i++) {
-//         const set = sets[i]
-//         await set.update({ legalDate: set.releaseDate })
-//         b++
-//     }
-
-//     for (let i = 0; i < cards.length; i++) {
-//         try {
-//             const card = cards[i]
-//             const prints = await Print.findAll({ 
-//                 where: {
-//                     cardId: card.id,
-//                     '$set.legalDate$': {[Op.not]: null}
-//                 }, 
-//                 include: Set,
-//                 order: [[Set, 'legalDate', 'ASC']]
-//             })
-
-//             if (!prints.length) {
-//                 missingCards.push(card.name)
-//                 continue
-//             }
-
-//             const set = prints[0]?.set
-
-//             if (card.tcgDate === '0000-00-00' || card.tcgDate > set.legalDate) {
-//                 await card.update({ tcgDate: set.legalDate })
-//                 console.log(`${card.name} (${set.name}) was released on ${set.releaseDate} but not legal until ${set.legalDate}`)
-//                 c++
-//             }
-//         } catch (err) {
-//             console.log(err)
-            
-//             e++
-//         }
-//     }
-
-//     console.log(`updated legal dates for ${b} sets`)
-//     console.log(`missing ${d} cards:`, missingCards)
-//     return console.log(`updated legal dates for ${c} cards and encountered ${e} errors`)
-// })()
-
-
 ;(async () => {
     let b = 0
-    const stats = await Stats.findAll({
+    let c = 0
+    let d = 0
+    let e = 0
+    
+    const cards = await Card.findAll()
+    const sets = await Set.findAll({
         where: {
-            isActive: false
+            legalDate: null
         }
     })
+    const missingCards = []
 
-    for (let i = 0; i < stats.length; i++) {
-        const stat = stats[i]
-        await stat.update({ isActive: true })
+    for (let i = 0; i < sets.length; i++) {
+        const set = sets[i]
+        await set.update({ legalDate: set.releaseDate })
         b++
     }
 
-    console.log(`re-activated ${b} player stats`)
+    for (let i = 0; i < cards.length; i++) {
+        try {
+            const card = cards[i]
+            const prints = await Print.findAll({ 
+                where: {
+                    cardId: card.id,
+                    '$set.legalDate$': {[Op.not]: null}
+                }, 
+                include: Set,
+                order: [[Set, 'legalDate', 'ASC']]
+            })
+
+            if (!prints.length) {
+                missingCards.push(card.name)
+                continue
+            }
+
+            const set = prints[0]?.set
+
+            if (card.tcgDate === '0000-00-00' || card.tcgDate > set.legalDate) {
+                await card.update({ tcgDate: set.legalDate })
+                console.log(`${card.name} (${set.name}) was released on ${set.releaseDate} but not legal until ${set.legalDate}`)
+                c++
+            }
+        } catch (err) {
+            console.log(err)
+            
+            e++
+        }
+    }
+
+    console.log(`updated legal dates for ${b} sets`)
+    console.log(`missing ${d} cards:`, missingCards)
+    return console.log(`updated legal dates for ${c} cards and encountered ${e} errors`)
 })()
+
+
+// ;(async () => {
+//     let b = 0
+//     const stats = await Stats.findAll({
+//         where: {
+//             isActive: false
+//         }
+//     })
+
+//     for (let i = 0; i < stats.length; i++) {
+//         const stat = stats[i]
+//         await stat.update({ isActive: true })
+//         b++
+//     }
+
+//     console.log(`re-activated ${b} player stats`)
+// })()
