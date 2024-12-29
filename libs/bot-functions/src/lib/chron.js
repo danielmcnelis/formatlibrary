@@ -723,6 +723,7 @@ export const recalculateStats = async () => {
 
 // APPLY DECAY
 export const applyDecay = async (format, currentDate, nextDate) => {
+    console.log(`apply decay`, format.id, currentDate.getDate(), nextDate.getDate())
     const allStats = await Stats.findAll({
         where: {
             formatId: format.id
@@ -734,7 +735,12 @@ export const applyDecay = async (format, currentDate, nextDate) => {
     const generalMatchesInPeriod = await Match.count({
         where: {
             formatId: format.id,
-            createdAt: {[Op.between]: [currentDate, nextDate]}
+            createdAt: {
+                [Op.and]: [
+                    {[Op.gt]: currentDate},
+                    {[Op.lte]: nextDate}
+                ]
+            }
         }
     })
 
@@ -779,7 +785,12 @@ export const applyDecay = async (format, currentDate, nextDate) => {
             where: {
                 formatId: format.id,
                 isRatedPairing: true,
-                createdAt: {[Op.between]: [currentDate, nextDate]}
+                createdAt: {
+                    [Op.and]: [
+                        {[Op.gt]: currentDate},
+                        {[Op.lte]: nextDate}
+                    ]
+                }
             }
         })
     
