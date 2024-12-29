@@ -730,64 +730,83 @@ export const applyDecay = async (format, currentDate, nextDate) => {
         order: [['playerName', 'ASC']]
     })
 
-    const n = await Match.count({
+    // GENERAL MATCHES
+    const generalMatchesInPeriod = await Match.count({
         where: {
             formatId: format.id,
             createdAt: {[Op.between]: [currentDate, nextDate]}
         }
     })
 
-    const decayRate = Math.pow(Math.E, -1 / (1000 * n))
     const activeGeneralPlayers = []
-    const activeSeasonalPlayers = []
-    
+    const generalDecayRate = Math.pow(Math.E, -1 / (1000 * generalMatchesInPeriod.length))
+
+    for (let i = 0; i < generalMatchesInPeriod; i++) {
+        const {winnerId, loserId} = generalMatchesInPeriod[i]
+        if (!activeGeneralPlayers.includes(winnerId)) {
+            activeGeneralPlayers.push(winnerId)
+        }
+        if (!activeGeneralPlayers.includes(loserId)) {
+            activeGeneralPlayers.push(loserId)
+        } 
+    }
+
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
-        const isActiveInGeneral = await Match.count({
-            where: {
-                [Op.or]: {
-                    winnerId: stats.playerId,
-                    loserId: stats.playerId
-                },
-                createdAt: {[Op.between]: [currentDate, nextDate]}
-            }
-        })
 
-        if (isActiveInGeneral) {
-            activeGeneralPlayers.push(stats.playerName)
-        } else {
-            if (stats.elo > 500) {
-                stats.elo = stats.elo * decayRate
-            }
-        }
-
-        if (format.cuto)
-
-        if (format.useSeasonalElo) {
-            const isActiveInSeasonalPlay = await Match.count({
-                where: {
-                    [Op.or]: {
-                        winnerId: stats.playerId,
-                        loserId: stats.playerId
-                    },
-                    createdAt: {[Op.between]: [currentDate, nextDate]}
-                }
-            })
-    
-            if (isActiveInSeasonalPlay) {
-                activeSeasonalPlayers.push(stats.playerName)
-            } else {
-                if (stats.seasonalElo > 500) {
-                    stats.seasonalElo = stats.seasonalElo * decayRate
-                }
-            }
+        if (
+            !activeGeneralPlayers.includes(stats.playerId) && 
+            generalDecayRate !== 0 &&
+            stats.elo > 500
+        ) {
+            stats.elo = stats.elo * generalDecayRate
         }
 
         await stats.save()
     }
 
-    console.log(`Applied General Decay Rate of ${decayRate} on ${nextDate} to ${format.name} Format for all players except:\n`, activeGeneralPlayers)
-    console.log(`Applied Seasonal Decay Rate of ${decayRate} on ${nextDate} to ${format.name} Format for all players except:\n`, activeSeasonalPlayers)
+    console.log(`Applied General Decay Rate of ${generalDecayRate} on ${nextDate} to ${format.name} Format for all players except:\n`, activeGeneralPlayers)
+
+    // SEASONAL MATCHES
+    if (format.useSeasonalElo) {
+        const seasonalMatchesInPeriod = await Match.count({
+            where: {
+                formatId: format.id,
+                isRatedPairing: true,
+                createdAt: {[Op.between]: [currentDate, nextDate]}
+            }
+        })
+    
+        const activeSeasonalPlayers = []
+        const seasonalDecayRate = Math.pow(Math.E, -1 / (1000 * seasonalMatchesInPeriod.length))
+
+        for (let i = 0; i < seasonalMatchesInPeriod; i++) {
+            const {winnerId, loserId} = seasonalMatchesInPeriod[i]
+            if (!activeSeasonalPlayers.includes(winnerId)) {
+                activeSeasonalPlayers.push(winnerId)
+            }
+            if (!activeSeasonalPlayers.includes(loserId)) {
+                activeSeasonalPlayers.push(loserId)
+            } 
+        }
+
+        for (let i = 0; i < allStats.length; i++) {
+            const stats = allStats[i]
+
+            if (
+                !activeSeasonalPlayers.includes(stats.playerId) && 
+                seasonalDecayRate !== 0 &&
+                stats.seasonalElo > 500
+            ) {
+                stats.seasonalElo = stats.seasonalElo * seasonalDecayRate
+            }
+
+            await stats.save()
+        }
+
+        console.log(`Applied Seasonal Decay Rate of ${seasonalDecayRate} on ${nextDate} to ${format.name} Format for all players except:\n`, activeSeasonalPlayers)
+    }
+
 }
 
 // MANAGE SUBSCRIBERS
