@@ -737,7 +737,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
         }
     })
 
-    const decayRate = Math.pow(Math.E, -1 / (4000 * n))
+    const decayRate = Math.pow(Math.E, -1 / (400 * n))
     const players = []
 
     for (let i = 0; i < allStats.length; i++) {
