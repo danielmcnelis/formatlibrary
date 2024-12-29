@@ -28,16 +28,20 @@ export default {
                 .setRequired(false)
         ),
 	async execute(interaction) {
-        const user = interaction.options.getUser('user') || interaction.user
-        const userIsAuthor = user.id === interaction.user.id
-        const name = interaction.options.getString('name')
-        const [simulator, colName] = interaction.options.getString('simulator').split(', ')
-        const player =  await Player.findOne({ where: { discordId: user.id } })
-        if (userIsAuthor && name) {
-            await player.update({ [colName]: name })
-            return await interaction.reply({ content: `Your ${simulator} username has been set to: ${player[colName]}`})
-        } else {
-            return await interaction.reply({ content: `${userIsAuthor ? 'Your' : `${user.username}'s`} ${simulator} username is: ${player[colName]}`})
+        try {
+            const user = interaction.options.getUser('user') || interaction.user
+            const userIsAuthor = user.id === interaction.user.id
+            const name = interaction.options.getString('name')
+            const [simulator, colName] = interaction.options.getString('simulator').split(', ')
+            const player =  await Player.findOne({ where: { discordId: user.id } })
+            if (userIsAuthor && name) {
+                await player.update({ [colName]: name })
+                return await interaction.reply({ content: `Your ${simulator} username has been set to: ${player[colName]}`})
+            } else {
+                return await interaction.reply({ content: `${userIsAuthor ? 'Your' : `${user.username}'s`} ${simulator} username is: ${player[colName]}`})
+            }
+        } catch (err) {
+            console.log(err)
         }
 	}
 }

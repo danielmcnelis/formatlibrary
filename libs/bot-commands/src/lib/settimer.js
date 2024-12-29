@@ -23,50 +23,54 @@ export default {
         )
         .setDMPermission(false),
     async execute(interaction) {
-        await interaction.deferReply()
-        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isModerator(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
+        try {
+            await interaction.deferReply()
+            const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+            if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+            if (!isModerator(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
 
-        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const tournaments = await Tournament.findByState('underway', format, interaction.guildId, 'ASC')
+            const format = await Format.findByServerOrChannelId(server, interaction.channelId)
+            const tournaments = await Tournament.findByState('underway', format, interaction.guildId, 'ASC')
 
-        if (!tournaments.length && format) return await interaction.editReply({ content: `There are no active ${format.name} ${format.emoji} tournaments.`})
-        if (!tournaments.length && !format) return await interaction.editReply({ content: `There are no active tournaments.`})
-        
-        let hours = interaction.options.getNumber('hours')
-        let minutes = interaction.options.getNumber('minutes')
-        
-        while (minutes >= 60) {
-            hours++
-            minutes-= 60
+            if (!tournaments.length && format) return await interaction.editReply({ content: `There are no active ${format.name} ${format.emoji} tournaments.`})
+            if (!tournaments.length && !format) return await interaction.editReply({ content: `There are no active tournaments.`})
+            
+            let hours = interaction.options.getNumber('hours')
+            let minutes = interaction.options.getNumber('minutes')
+            
+            while (minutes >= 60) {
+                hours++
+                minutes-= 60
+            }
+
+            const tournament = await selectTournament(interaction, tournaments, hours, minutes)
+            if (!tournament) return
+
+            const timestamp = Date.now()
+            const timeRemaining = (hours * 60 * 60 * 1000) + (minutes * 60 * 1000)
+            const deadline = new Date(timestamp + timeRemaining)
+            await tournament.update({ deadline })
+
+            const word1 = hours === 1 ? 'hour' : 'hours'
+            const word2 = minutes === 1 ? 'minute' : 'minutes'
+
+            if (hours < 1) {
+                interaction.editReply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
+            } else {
+                interaction.editReply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${hours} ${word1} and ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
+            }
+
+            if (tournament.isTeamTournament) {
+                sendTeamPairings(interaction.guild, server, tournament, true)
+            } else {
+                sendPairings(interaction.guild, server, tournament, true)
+            }
+
+            return setTimeout(async () => {
+                return await interaction.channel.send(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`)
+            }, timeRemaining)
+        } catch (err) {
+            console.log(err)
         }
-
-        const tournament = await selectTournament(interaction, tournaments, hours, minutes)
-        if (!tournament) return
-
-        const timestamp = Date.now()
-        const timeRemaining = (hours * 60 * 60 * 1000) + (minutes * 60 * 1000)
-        const deadline = new Date(timestamp + timeRemaining)
-        await tournament.update({ deadline })
-
-        const word1 = hours === 1 ? 'hour' : 'hours'
-        const word2 = minutes === 1 ? 'minute' : 'minutes'
-
-        if (hours < 1) {
-            interaction.editReply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
-        } else {
-            interaction.editReply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} The next round begins now! You have ${hours} ${word1} and ${minutes} ${word2} to complete your match. ${emojis.thinkygo}`)
-        }
-
-        if (tournament.isTeamTournament) {
-            sendTeamPairings(interaction.guild, server, tournament, true)
-        } else {
-            sendPairings(interaction.guild, server, tournament, true)
-        }
-
-        return setTimeout(async () => {
-            return await interaction.channel.send(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`)
-        }, timeRemaining)
     }
 }

@@ -16,44 +16,48 @@ export default {
         )
         .setDMPermission(false),
     async execute(interaction) {
-        await interaction.deferReply()
-        const formatLibraryServer = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!isModerator(formatLibraryServer, interaction.member) && !isCommunityPartner(interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.` })
-        
-        const input = interaction.options.getString('tournament')     
-        const event = await Event.findOne({
-            where: { 
-                [Op.or]: {
-                    name: {[Op.iLike]: input},
-                    abbreviation: {[Op.iLike]: input}
+        try {
+            await interaction.deferReply()
+            const formatLibraryServer = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+            if (!isModerator(formatLibraryServer, interaction.member) && !isCommunityPartner(interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.` })
+            
+            const input = interaction.options.getString('tournament')     
+            const event = await Event.findOne({
+                where: { 
+                    [Op.or]: {
+                        name: {[Op.iLike]: input},
+                        abbreviation: {[Op.iLike]: input}
+                    }
+                },
+                include: [Format, { model: Player, as: 'winner' }, Server, { model: Team, as: 'winningTeam' }, { model: Tournament, as: 'primaryTournament' }]
+            })
+
+            if (!event) return await interaction.editReply({ content: `No event found.` })
+
+            const count = await Tournament.count({
+                where:{
+                    id: {[Op.or]: [event.primaryTournamentId, event.topCutTournamentId] },
+                    state: {[Op.not]: 'complete'}
                 }
-            },
-            include: [Format, { model: Player, as: 'winner' }, Server, { model: Team, as: 'winningTeam' }, { model: Tournament, as: 'primaryTournament' }]
-        })
+            })
 
-        if (!event) return await interaction.editReply({ content: `No event found.` })
+            if (count) return await interaction.editReply({ content: `Please use the **/end** command first.` })
+            if (event.display === false) await event.update({ display: true })
 
-        const count = await Tournament.count({
-            where:{
-                id: {[Op.or]: [event.primaryTournamentId, event.topCutTournamentId] },
-                state: {[Op.not]: 'complete'}
+            await interaction.editReply({ content: `Generating coverage for ${event.name}. Please wait.` })
+            await displayDecks(interaction, event)
+            await publishDecks(interaction, event)
+            await displayReplays(interaction, event)
+            await composeThumbnails(interaction, event)
+
+            if (event.primaryTournament) {
+                await generateMatchupData(interaction, event, event.primaryTournament)
             }
-        })
 
-        if (count) return await interaction.editReply({ content: `Please use the **/end** command first.` })
-        if (event.display === false) await event.update({ display: true })
-
-        await interaction.editReply({ content: `Generating coverage for ${event.name}. Please wait.` })
-        await displayDecks(interaction, event)
-        await publishDecks(interaction, event)
-        await displayReplays(interaction, event)
-        await composeThumbnails(interaction, event)
-
-        if (event.primaryTournament) {
-            await generateMatchupData(interaction, event, event.primaryTournament)
+            await composeBlogPost(interaction, event) 
+            return
+        } catch (err) {
+            console.log(err)
         }
-
-        await composeBlogPost(interaction, event) 
-        return
     }
 }

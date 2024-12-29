@@ -17,19 +17,23 @@ export default {
         )
         .setDMPermission(false),
     async execute(interaction) {
-        await interaction.deferReply()
-        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        
-        let format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const tournaments = await Tournament.findByState({[Op.or]:['underway', 'topcut']}, format, interaction.guildId, 'ASC')
-        const tournament = await selectTournament(interaction, tournaments, 'ASC')
-        
-        if (!tournament) {
-            return
-        } else {
-            const discordId = interaction.options.getUser('player').id
-            return getFilm(interaction, tournament.id, discordId)
+        try {
+            await interaction.deferReply()
+            const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+            if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+            
+            let format = await Format.findByServerOrChannelId(server, interaction.channelId)
+            const tournaments = await Tournament.findByState({[Op.or]:['underway', 'topcut']}, format, interaction.guildId, 'ASC')
+            const tournament = await selectTournament(interaction, tournaments, 'ASC')
+            
+            if (!tournament) {
+                return
+            } else {
+                const discordId = interaction.options.getUser('player').id
+                return getFilm(interaction, tournament.id, discordId)
+            }
+        } catch (err) {
+            console.log(err)
         }
     }
 }

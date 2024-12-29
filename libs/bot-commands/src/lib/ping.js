@@ -6,6 +6,10 @@ export default {
 		.setName('ping')
 		.setDescription('Replies with 🏓!'),
 	async execute(interaction) {
-		await interaction.reply({ content: '🏓' })
+        try {
+            await interaction.reply({ content: '🏓' })
+        } catch (err) {
+            console.log(err)
+        }
 	}
 }

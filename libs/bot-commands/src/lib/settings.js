@@ -18,86 +18,94 @@ export default {
         )
         .setDMPermission(false),    
     async autocomplete(interaction) {
-        const focusedValue = interaction.options.getFocused()
-        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isModerator(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
+        try {
+            const focusedValue = interaction.options.getFocused()
+            const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+            const format = await Format.findByServerOrChannelId(server, interaction.channelId)
+            if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+            if (!isModerator(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
 
-        const tournaments = await Tournament.findAll({
-                where: {
-                    [Op.or]: {
-                        name: {[Op.substring]: focusedValue},
-                        abbreviation: {[Op.substring]: focusedValue}
+            const tournaments = await Tournament.findAll({
+                    where: {
+                        [Op.or]: {
+                            name: {[Op.substring]: focusedValue},
+                            abbreviation: {[Op.substring]: focusedValue}
+                        },
+                        state: {[Op.not]: 'complete'},
+                        formatId: format?.id || null,
+                        serverId: server?.id || null
                     },
-                    state: {[Op.not]: 'complete'},
-                    formatId: format?.id || null,
-                    serverId: server?.id || null
-                },
-                limit: 5,
-                order: [["createdAt", "DESC"]]
-            })
+                    limit: 5,
+                    order: [["createdAt", "DESC"]]
+                })
 
-		await interaction.respond(
-			tournaments.map(t => ({ name: t.name, value: t.id })),
-		)
+            await interaction.respond(
+                tournaments.map(t => ({ name: t.name, value: t.id })),
+            )
+        } catch (err) {
+            console.log(err)
+        }
     },      
     async execute(interaction) {
-        const tournamentId = interaction.options.getString('tournament')
-        const tournament = await Tournament.findOne({ where: { id: tournamentId }})
-        if (!tournament) return await interaction.reply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
+        try {
+            const tournamentId = interaction.options.getString('tournament')
+            const tournament = await Tournament.findOne({ where: { id: tournamentId }})
+            if (!tournament) return await interaction.reply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
 
-		const modal = new ModalBuilder()
-            .setCustomId(`settings-${tournamentId}`)
-            .setTitle('Edit Tournament Settings')
+            const modal = new ModalBuilder()
+                .setCustomId(`settings-${tournamentId}`)
+                .setTitle('Edit Tournament Settings')
 
-        const name = new TextInputBuilder()
-            .setCustomId('name')
-            .setLabel('Full name of the tournament?')
-            .setStyle(TextInputStyle.Short)
-            .setPlaceholder(tournament.name)
-            .setRequired(false)
+            const name = new TextInputBuilder()
+                .setCustomId('name')
+                .setLabel('Full name of the tournament?')
+                .setStyle(TextInputStyle.Short)
+                .setPlaceholder(tournament.name)
+                .setRequired(false)
 
-        const url = new TextInputBuilder()
-            .setCustomId('url')
-            .setLabel('Challonge URL for the tournament?')
-            .setStyle(TextInputStyle.Short)
-            .setPlaceholder(tournament.url)
-            .setRequired(false)
+            const url = new TextInputBuilder()
+                .setCustomId('url')
+                .setLabel('Challonge URL for the tournament?')
+                .setStyle(TextInputStyle.Short)
+                .setPlaceholder(tournament.url)
+                .setRequired(false)
 
-        const tournamentType = new TextInputBuilder()
-            .setCustomId('type')
-            .setLabel('Tournament type? (SW, SE, DE, RR)')
-            .setStyle(TextInputStyle.Short)
-            .setPlaceholder(tournament.type)
-            .setRequired(false)
+            const tournamentType = new TextInputBuilder()
+                .setCustomId('type')
+                .setLabel('Tournament type? (SW, SE, DE, RR)')
+                .setStyle(TextInputStyle.Short)
+                .setPlaceholder(tournament.type)
+                .setRequired(false)
 
-        const duration = new TextInputBuilder()
-            .setCustomId('duration')
-            .setLabel('Live or Multi-Day? (L, M)')
-            .setStyle(TextInputStyle.Short)
-            .setPlaceholder(tournament.isLive ? 'live' : 'multi-day')
-            .setRequired(false)
+            const duration = new TextInputBuilder()
+                .setCustomId('duration')
+                .setLabel('Live or Multi-Day? (L, M)')
+                .setStyle(TextInputStyle.Short)
+                .setPlaceholder(tournament.isLive ? 'live' : 'multi-day')
+                .setRequired(false)
 
-        const ranked = new TextInputBuilder()
-            .setCustomId('ranked')
-            .setLabel('Ranked or Unranked? (R, U)')
-            .setStyle(TextInputStyle.Short)
-            .setPlaceholder(!tournament.isRanked ? 'unranked' : 'ranked')
-            .setRequired(false)
-        
-        const nameRow = new ActionRowBuilder().addComponents(name)
-        const urlRow = new ActionRowBuilder().addComponents(url)
-        const durationRow = new ActionRowBuilder().addComponents(duration)
-        
-        if (tournament.state === 'underway') {
-            modal.addComponents(nameRow, urlRow)
-        } else {
-            const tournamentTypeRow = new ActionRowBuilder().addComponents(tournamentType)
-            const rankedRow = new ActionRowBuilder().addComponents(ranked)
-            modal.addComponents(nameRow, urlRow, tournamentTypeRow, durationRow, rankedRow)
+            const ranked = new TextInputBuilder()
+                .setCustomId('ranked')
+                .setLabel('Ranked or Unranked? (R, U)')
+                .setStyle(TextInputStyle.Short)
+                .setPlaceholder(!tournament.isRanked ? 'unranked' : 'ranked')
+                .setRequired(false)
+            
+            const nameRow = new ActionRowBuilder().addComponents(name)
+            const urlRow = new ActionRowBuilder().addComponents(url)
+            const durationRow = new ActionRowBuilder().addComponents(duration)
+            
+            if (tournament.state === 'underway') {
+                modal.addComponents(nameRow, urlRow)
+            } else {
+                const tournamentTypeRow = new ActionRowBuilder().addComponents(tournamentType)
+                const rankedRow = new ActionRowBuilder().addComponents(ranked)
+                modal.addComponents(nameRow, urlRow, tournamentTypeRow, durationRow, rankedRow)
+            }
+
+            return await interaction.showModal(modal)        
+        } catch (err) {
+            console.log(err)
         }
-
-        return await interaction.showModal(modal)        
     }
 }

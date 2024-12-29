@@ -17,58 +17,62 @@ export default {
         )
         .setDMPermission(false),
 	async execute(interaction) {
-        await interaction.deferReply()
-        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        const query = interaction.options.getString('tournament')
-        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isModerator(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
-        const tournament = await Tournament.findByQuery(query, interaction.guildId)
-        if (!tournament) return await interaction.reply({ content: `Could not find tournament: "${query}".`})
-        if (tournament.state === 'complete' && !isProgrammer(interaction.member)) return await interaction.editReply({ content: `This tournament is complete, therefore it may only be deleted by the database manager.`})
-
         try {
-            const tournamentId = server.challongeSubdomain ? `${server.challongeSubdomain}-${tournament.url}` : tournament.id
-            const { status } = await axios({
-                method: 'delete',
-                url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeApiKey}`
-            })
-        
-            if (status === 200) {
-                const entries = await Entry.findAll({ where: { tournamentId: tournament.id }, include: Player })
-                for (let i = 0; i < entries.length; i++) {
-                    try {
-                        const entry = entries[i]
-                        const discordId = entry.player.discordId
-                        const playerId = entry.player.id
-                        await entry.destroy()
-                        
-                        const member = await interaction.guild?.members.fetch(discordId)
-                        if (!member) continue
+            await interaction.deferReply()
+            const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+            const query = interaction.options.getString('tournament')
+            if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+            if (!isModerator(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
+            const tournament = await Tournament.findByQuery(query, interaction.guildId)
+            if (!tournament) return await interaction.reply({ content: `Could not find tournament: "${query}".`})
+            if (tournament.state === 'complete' && !isProgrammer(interaction.member)) return await interaction.editReply({ content: `This tournament is complete, therefore it may only be deleted by the database manager.`})
 
-                        const count = await Entry.count({ 
-                            where: {
-                                playerId: playerId,
-                                '$tournament.serverId$': server.id
-                            },
-                            include: Tournament,
-                        })
+            try {
+                const tournamentId = server.challongeSubdomain ? `${server.challongeSubdomain}-${tournament.url}` : tournament.id
+                const { status } = await axios({
+                    method: 'delete',
+                    url: `https://api.challonge.com/v1/tournaments/${tournamentId}.json?api_key=${server.challongeApiKey}`
+                })
+            
+                if (status === 200) {
+                    const entries = await Entry.findAll({ where: { tournamentId: tournament.id }, include: Player })
+                    for (let i = 0; i < entries.length; i++) {
+                        try {
+                            const entry = entries[i]
+                            const discordId = entry.player.discordId
+                            const playerId = entry.player.id
+                            await entry.destroy()
+                            
+                            const member = await interaction.guild?.members.fetch(discordId)
+                            if (!member) continue
 
-                        if (!count) member.roles.remove(server.tournamentRoleId).catch((err) => console.log(err))
-                    } catch (err) {
-                        console.log(err)
+                            const count = await Entry.count({ 
+                                where: {
+                                    playerId: playerId,
+                                    '$tournament.serverId$': server.id
+                                },
+                                include: Tournament,
+                            })
+
+                            if (!count) member.roles.remove(server.tournamentRoleId).catch((err) => console.log(err))
+                        } catch (err) {
+                            console.log(err)
+                        }
                     }
-                }
 
-                const tournamentName = tournament.name
-                const tournamentLogo = tournament.logo
-                await tournament.destroy()
-                return await interaction.editReply({ content: `Yikes! You deleted ${tournamentName} ${tournamentLogo} from your Challonge account.` })
-            } else {
-                return await interaction.editReply({ content: `Unable to delete tournament from Challonge account.`})
+                    const tournamentName = tournament.name
+                    const tournamentLogo = tournament.logo
+                    await tournament.destroy()
+                    return await interaction.editReply({ content: `Yikes! You deleted ${tournamentName} ${tournamentLogo} from your Challonge account.` })
+                } else {
+                    return await interaction.editReply({ content: `Unable to delete tournament from Challonge account.`})
+                }
+            } catch (err) {
+                console.log(err)
+                return await interaction.editReply({ content: `Error: Unable to delete tournament from Challonge account.`})
             }
         } catch (err) {
             console.log(err)
-            return await interaction.editReply({ content: `Error: Unable to delete tournament from Challonge account.`})
         }
     }
 }

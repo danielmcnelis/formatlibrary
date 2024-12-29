@@ -31,20 +31,24 @@ export default {
 		)
     },            
     async execute(interaction) {
-        await interaction.deferReply()
-        const name = interaction.options.getString('name')
-        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (server.access === 'full') return await interaction.editReply({ content: `This command has no application on Format Library. ${emojis.FL}`})
-        if (hasPartnerAccess(server) && !isModerator(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
-        if (!hasPartnerAccess(server) && !isServerManager(interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that. You must have the "Server Manager" permission to set the format.`})
+        try {
+            await interaction.deferReply()
+            const name = interaction.options.getString('name')
+            const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+            if (server.access === 'full') return await interaction.editReply({ content: `This command has no application on Format Library. ${emojis.FL}`})
+            if (hasPartnerAccess(server) && !isModerator(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
+            if (!hasPartnerAccess(server) && !isServerManager(interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that. You must have the "Server Manager" permission to set the format.`})
 
-        const format = await Format.findOne({ where: { name }})
-        const hadFormatSet = !!server.format
+            const format = await Format.findOne({ where: { name }})
+            const hadFormatSet = !!server.format
 
-        await server.update({
-            formatName: format.name
-        })
+            await server.update({
+                formatName: format.name
+            })
 
-        return await interaction.editReply({ content: `This server's format has been ${hadFormatSet ? 'set' : 'changed'} to: ${format.name} ${format.emoji} Format!`})	 
+            return await interaction.editReply({ content: `This server's format has been ${hadFormatSet ? 'set' : 'changed'} to: ${format.name} ${format.emoji} Format!`})	 
+        } catch (err) {
+            console.log(err)
+        }
     }
 }

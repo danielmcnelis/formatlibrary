@@ -18,43 +18,48 @@ export default {
         )
         .setDMPermission(false),    
     async autocomplete(interaction) {
-        const focusedValue = interaction.options.getFocused()
-        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        if (!isModerator(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
+        try {
+            const focusedValue = interaction.options.getFocused()
+            const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+            const format = await Format.findByServerOrChannelId(server, interaction.channelId)
+            if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+            if (!isModerator(server, interaction.member)) return await interaction.editReply({ content: 'You do not have permission to do that.'})
 
-        const tournaments = await Tournament.findAll({
-                where: {
-                    [Op.or]: {
-                        name: {[Op.substring]: focusedValue},
-                        abbreviation: {[Op.substring]: focusedValue}
+            const tournaments = await Tournament.findAll({
+                    where: {
+                        [Op.or]: {
+                            name: {[Op.substring]: focusedValue},
+                            abbreviation: {[Op.substring]: focusedValue}
+                        },
+                        state: {[Op.not]: 'complete'},
+                        formatId: format?.id || null,
+                        serverId: server?.id || null
                     },
-                    state: {[Op.not]: 'complete'},
-                    formatId: format?.id || null,
-                    serverId: server?.id || null
-                },
-                limit: 5,
-                order: [["createdAt", "DESC"]]
-            })
+                    limit: 5,
+                    order: [["createdAt", "DESC"]]
+                })
 
-		await interaction.respond(
-			tournaments.map(t => ({ name: t.name, value: t.id })),
-		)
+            await interaction.respond(
+                tournaments.map(t => ({ name: t.name, value: t.id })),
+            )
+        } catch (err) {
+            console.log(err)
+        }
     },      
     async execute(interaction) {
-        const tournamentId = interaction.options.getString('tournament')
-        const tournament = await Tournament.findOne({ where: { id: tournamentId }})
-        if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
-        if (tournament.type !== 'swiss') return await interaction.editReply({ content: `The points system can only be edited for Swiss tournaments.`})	
+        try {
+            const tournamentId = interaction.options.getString('tournament')
+            const tournament = await Tournament.findOne({ where: { id: tournamentId }})
+            if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
+            if (tournament.type !== 'swiss') return await interaction.editReply({ content: `The points system can only be edited for Swiss tournaments.`})	
 
-        const placeholder1 = tournament.pointsPerMatchWin || '1.0'
-        const placeholder2 = tournament.pointsPerMatchTie || '0.0'
-        const placeholder3 = tournament.pointsPerBye || '1.0'
+            const placeholder1 = tournament.pointsPerMatchWin || '1.0'
+            const placeholder2 = tournament.pointsPerMatchTie || '0.0'
+            const placeholder3 = tournament.pointsPerBye || '1.0'
 
-		const modal = new ModalBuilder()
-            .setCustomId(`points-${tournamentId}`)
-            .setTitle('Edit Points System')
+            const modal = new ModalBuilder()
+                .setCustomId(`points-${tournamentId}`)
+                .setTitle('Edit Points System')
 
             const pointsPerMatchWin = new TextInputBuilder()
                 .setCustomId('ppwin')
@@ -81,7 +86,10 @@ export default {
             const ppmt = new ActionRowBuilder().addComponents(pointsPerMatchTie)
             const ppb = new ActionRowBuilder().addComponents(pointsPerBye)
             modal.addComponents(ppmw, ppmt, ppb)
-    
-        return await interaction.showModal(modal)        
+        
+            return await interaction.showModal(modal)        
+        } catch (err) {
+            console.log(err)
+        }
     }
 }

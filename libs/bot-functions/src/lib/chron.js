@@ -562,6 +562,9 @@ export const lookForAllPotentialPairs = async (client) => {
 export const recalculateStats = async () => {
     const start = Date.now()
     const formats = await Format.findAll({
+        where: {
+            name: {[Op.gt]: 'Goat'}
+        },
         order: [["name", "ASC"]]
     })
     

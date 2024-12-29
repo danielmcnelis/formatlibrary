@@ -11,38 +11,42 @@ export default {
         .setDescription('Post time remaining in the round. ⏰')
         .setDMPermission(false),
     async execute(interaction) {
-        await interaction.deferReply()
-        const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-        if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-        const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-        const tournaments = await Tournament.findByState('underway', format, interaction.guildId, 'ASC')
-        if (!tournaments.length && format) return await interaction.editReply({ content: `There are no active ${format.name} ${format.emoji} tournaments.`})
-        if (!tournaments.length && !format) return await interaction.editReply({ content: `There are no active tournaments.`})
-        
-        const tournament = await selectTournament(interaction, tournaments)
-        if (!tournament) return
+        try {
+            await interaction.deferReply()
+            const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+            if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
+            const format = await Format.findByServerOrChannelId(server, interaction.channelId)
+            const tournaments = await Tournament.findByState('underway', format, interaction.guildId, 'ASC')
+            if (!tournaments.length && format) return await interaction.editReply({ content: `There are no active ${format.name} ${format.emoji} tournaments.`})
+            if (!tournaments.length && !format) return await interaction.editReply({ content: `There are no active tournaments.`})
+            
+            const tournament = await selectTournament(interaction, tournaments)
+            if (!tournament) return
 
-        const now = new Date()
-        const difference = tournament.deadline - now
+            const now = new Date()
+            const difference = tournament.deadline - now
 
-        if (difference < 0) return await interaction.editReply(`The deadline has passed.`)
-        if (difference < 60 * 1000) return await interaction.editReply(`Remaining time: less than 1 minute.`)
+            if (difference < 0) return await interaction.editReply(`The deadline has passed.`)
+            if (difference < 60 * 1000) return await interaction.editReply(`Remaining time: less than 1 minute.`)
 
-        let hours = Math.floor(difference / (1000 * 60 * 60))
-        const word1 = hours === 1 ? 'hour' : 'hours'
-        let minutes = Math.round((difference - (hours * (1000 * 60 * 60))) / (1000 * 60))
-        
-        while (minutes >= 60) {
-            hours++
-            minutes-= 60
-        }
+            let hours = Math.floor(difference / (1000 * 60 * 60))
+            const word1 = hours === 1 ? 'hour' : 'hours'
+            let minutes = Math.round((difference - (hours * (1000 * 60 * 60))) / (1000 * 60))
+            
+            while (minutes >= 60) {
+                hours++
+                minutes-= 60
+            }
 
-        if (hours < 1) {
-            const word2 = minutes === 1 ? 'minute' : 'minutes'
-            return await interaction.editReply(`Remaining time: ${minutes} ${word2}.`)
-        } else {
-            const word2 = minutes === 1 ? 'minute' : 'minutes'
-            return await interaction.editReply(`Remaining time: ${hours} ${word1} and ${minutes} ${word2}.`)
+            if (hours < 1) {
+                const word2 = minutes === 1 ? 'minute' : 'minutes'
+                return await interaction.editReply(`Remaining time: ${minutes} ${word2}.`)
+            } else {
+                const word2 = minutes === 1 ? 'minute' : 'minutes'
+                return await interaction.editReply(`Remaining time: ${hours} ${word1} and ${minutes} ${word2}.`)
+            }
+        } catch (err) {
+            console.log(err)
         }
     }
 }

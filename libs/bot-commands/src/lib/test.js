@@ -13,25 +13,29 @@ export default {
         .setDescription('Admin Only - Performs a test. 🧪')
         .setDMPermission(false),
     async execute(interaction) {
-        await interaction.deferReply()
-        if (isProgrammer(interaction.member)) {
-            await interaction.editReply(emojis.yellow)
-            // return await manageSubscriptions(client)
-            // await updateMarketPrices()
-            // return await conductCensus(client)
-            // await updateAvatars(client)
-            // await updateDeckThumbs()
-            // await updateDeckTypes()
-            // await updateDecks()
-            // await updateReplays()
-            // await updateMatchups()
-            return recalculateStats()
-            // return updateGlobalNames()
-            // return markInactives()
-            // return runNightlyTasks(client)
-            // return runMonthlyTasks(client)
-        } else {
-            await interaction.editReply('🧪')
+        try {
+            await interaction.deferReply()
+            if (isProgrammer(interaction.member)) {
+                await interaction.editReply(emojis.yellow)
+                // return await manageSubscriptions(client)
+                // await updateMarketPrices()
+                // return await conductCensus(client)
+                // await updateAvatars(client)
+                // await updateDeckThumbs()
+                // await updateDeckTypes()
+                // await updateDecks()
+                // await updateReplays()
+                // await updateMatchups()
+                return recalculateStats()
+                // return updateGlobalNames()
+                // return markInactives()
+                // return runNightlyTasks(client)
+                // return runMonthlyTasks(client)
+            } else {
+                await interaction.editReply('🧪')
+            }
+        } catch (err) {
+            console.log(err)
         }
     }
 }

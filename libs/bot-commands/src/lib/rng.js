@@ -12,8 +12,12 @@ export default {
                 .setRequired(true)
         ),
 	async execute(interaction) {
-        const num = interaction.options.getNumber('number')
-        const result = Math.floor((Math.random() * num) + 1)
-        return await interaction.reply({ content: `You rolled a **${result}** with a ${num}-sided die.`})
+        try {
+            const num = interaction.options.getNumber('number')
+            const result = Math.floor((Math.random() * num) + 1)
+            return await interaction.reply({ content: `You rolled a **${result}** with a ${num}-sided die.`})
+        } catch (err) {
+            console.log(err)
+        }
 	}
 }

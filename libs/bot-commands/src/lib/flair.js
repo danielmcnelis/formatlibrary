@@ -41,32 +41,35 @@ export default {
         )
         .setDMPermission(false),
     async execute(interaction) {
-        const roleId = interaction.options.getString('emoji')
-        const currentRoles = [...(await interaction.member.roles.cache.filter((r) => r.name.includes('(Sub)'))).values()]
-        const privilegedUserIds = ['194147938786738176', '626843317010694176']
+        try {
+            const roleId = interaction.options.getString('emoji')
+            const currentRoles = [...(await interaction.member.roles.cache.filter((r) => r.name.includes('(Sub)'))).values()]
+            const privilegedUserIds = ['194147938786738176', '626843317010694176']
 
-        if (!interaction.member._roles?.includes('1102002844850208810') && !privilegedUserIds.includes(interaction.member.id)) {
-            return await interaction.reply({ content: `Sorry, Subscriber Flair is only available with a Format Library ${emojis.FL} subscription.`})
-        }
+            if (!interaction.member._roles?.includes('1102002844850208810') && !privilegedUserIds.includes(interaction.member.id)) {
+                return await interaction.reply({ content: `Sorry, Subscriber Flair is only available with a Format Library ${emojis.FL} subscription.`})
+            }
 
-        // REMOVE CURRENT SUBSCRIBER ROLES
-        for (let i = 0; i < currentRoles.length; i++) {
-            const role = currentRoles[i]
+            // REMOVE CURRENT SUBSCRIBER ROLES
+            for (let i = 0; i < currentRoles.length; i++) {
+                const role = currentRoles[i]
+                try {
+                    await interaction.member.roles.remove(role.id)
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+
+            // ADD SELECTED SUBSCRIBER ROLE
             try {
-                await interaction.member.roles.remove(role.id)
+                await interaction.member.roles.add(roleId)
+                return await interaction.reply({ content: `Enjoy your new flair! ${emojis.mlady}`})
             } catch (err) {
                 console.log(err)
+                return await interaction.reply({ content: `Error: Unable to add flair.`})
             }
-        }
-
-        // ADD SELECTED SUBSCRIBER ROLE
-        try {
-            await interaction.member.roles.add(roleId)
-            return await interaction.reply({ content: `Enjoy your new flair! ${emojis.mlady}`})
         } catch (err) {
             console.log(err)
-            return await interaction.reply({ content: `Error: Unable to add flair.`})
-        }
-        
+        }  
     }
 }
