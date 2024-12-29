@@ -738,16 +738,22 @@ export const applyDecay = async (format, currentDate, nextDate) => {
         }
     })
 
-    const activeGeneralPlayers = []
+    const activeGeneralPlayerIds = []
+    const activeGeneralPlayerNames = []
     const generalDecayRate = Math.pow(Math.E, -1 / (1000 * generalMatchesInPeriod.length))
 
     for (let i = 0; i < generalMatchesInPeriod.length ; i++) {
-        const {winnerId, loserId} = generalMatchesInPeriod[i]
-        if (!activeGeneralPlayers.includes(winnerId)) {
-            activeGeneralPlayers.push(winnerId)
+        const match = generalMatchesInPeriod[i]
+        const winnerId = match.winnerId
+        const loserId = match.loserId
+        if (i === 0) console.log(`general`, match.id, winnerId, loserId)
+        if (!activeGeneralPlayerIds.includes(winnerId)) {
+            activeGeneralPlayerIds.push(winnerId)
+            activeGeneralPlayerNames.push(winnerName)
         }
-        if (!activeGeneralPlayers.includes(loserId)) {
-            activeGeneralPlayers.push(loserId)
+        if (!activeGeneralPlayerIds.includes(loserId)) {
+            activeGeneralPlayerIds.push(loserId)
+            activeGeneralPlayerNames.push(loserId)
         } 
     }
 
@@ -755,7 +761,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
         const stats = allStats[i]
 
         if (
-            !activeGeneralPlayers.includes(stats.playerId) && 
+            !activeGeneralPlayerIds.includes(stats.playerId) && 
             generalDecayRate !== 0 &&
             stats.elo > 500
         ) {
@@ -765,7 +771,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
         await stats.save()
     }
 
-    console.log(`Applied General Decay Rate of ${generalDecayRate} on ${nextDate} to ${format.name} Format for all players except:\n`, activeGeneralPlayers)
+    console.log(`Applied General Decay Rate of ${generalDecayRate} on ${nextDate} to ${format.name} Format for all players except:\n`, activeGeneralPlayerNames)
 
     // SEASONAL MATCHES
     if (format.useSeasonalElo) {
@@ -777,16 +783,22 @@ export const applyDecay = async (format, currentDate, nextDate) => {
             }
         })
     
-        const activeSeasonalPlayers = []
+        const activeSeasonalPlayerIds = []
+        const activeSeasonalPlayerNames = []
         const seasonalDecayRate = Math.pow(Math.E, -1 / (1000 * seasonalMatchesInPeriod.length))
 
         for (let i = 0; i < seasonalMatchesInPeriod.length ; i++) {
-            const {winnerId, loserId} = seasonalMatchesInPeriod[i]
-            if (!activeSeasonalPlayers.includes(winnerId)) {
-                activeSeasonalPlayers.push(winnerId)
+            const match = seasonalMatchesInPeriod[i]
+            const winnerId = match.winnerId
+            const loserId = match.loserId
+            if (i === 0) console.log(`seasonal`, match.id, winnerId, loserId)
+            if (!activeSeasonalPlayerIds.includes(winnerId)) {
+                activeSeasonalPlayerIds.push(winnerId)
+                activeSeasonalPlayerIds.push(winnerName)
             }
-            if (!activeSeasonalPlayers.includes(loserId)) {
-                activeSeasonalPlayers.push(loserId)
+            if (!activeGeneralPlayerIds.includes(loserId)) {
+                activeGeneralPlayerIds.push(loserId)
+                activeGeneralPlayerNames.push(loserId)
             } 
         }
 
@@ -794,7 +806,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
             const stats = allStats[i]
 
             if (
-                !activeSeasonalPlayers.includes(stats.playerId) && 
+                !activeSeasonalPlayerIds.includes(stats.playerId) && 
                 seasonalDecayRate !== 0 &&
                 stats.seasonalElo > 500
             ) {
@@ -804,7 +816,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
             await stats.save()
         }
 
-        console.log(`Applied Seasonal Decay Rate of ${seasonalDecayRate} on ${nextDate} to ${format.name} Format for all players except:\n`, activeSeasonalPlayers)
+        console.log(`Applied Seasonal Decay Rate of ${seasonalDecayRate} on ${nextDate} to ${format.name} Format for all players except:\n`, activeSeasonalPlayerNames)
     }
 
 }
