@@ -688,7 +688,7 @@ export const recalculateStats = async () => {
                 match.winnerDelta = winnerDelta
                 match.loserDelta = loserDelta
                 await match.save()
-                console.log(`${format.name} Match ${i+1}: ${winnerStats.player.name} > ${loserStats.player.name}`)
+                console.log(`${format.name} Match ${j+1}: ${winnerStats.player.name} > ${loserStats.player.name}`)
             } catch (err) {
                 console.log(err)
             }
@@ -737,7 +737,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
     })
 
     const decayRate = Math.pow(Math.E, -1 / (400 * n))
-    console.log(`${format.name} decay rate on ${nextDate} is: ${decayRate}`)
+    console.log(`${format.name} decay rate between ${currentDate} and ${nextDate} is: ${decayRate}`)
 
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
