@@ -654,11 +654,11 @@ export const recalculateStats = async () => {
                 const origEloWinner = winnerStats.elo || 500.00
                 const origEloLoser = loserStats.elo || 500.00
 
-                const winnerKFactor = winnerStats.games < 20 && winnerStats.bestElo < 560 ? 24 :
-                    winnerStats.bestElo < 560 ? 16 : 8
+                const winnerKFactor = winnerStats.games < 20 && winnerStats.bestElo < 560 ? 25 :
+                    winnerStats.bestElo < 560 ? 16 : 10
 
-                const loserKFactor = loserStats.games < 20 && loserStats.bestElo < 560 ? 24 :
-                    loserStats.bestElo < 560 ? 16 : 8
+                const loserKFactor = loserStats.games < 20 && loserStats.bestElo < 560 ? 25 :
+                    loserStats.bestElo < 560 ? 16 : 10
 
                 const winnerDelta = winnerKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
                 const loserDelta = loserKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
@@ -745,7 +745,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
 
     const activeGeneralPlayerIds = []
     const activeGeneralPlayerNames = []
-    let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriod.length) / 4000)
+    let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriod.length) / 6000)
     if (generalDecayRate < 0.9995) generalDecayRate = 0.9995
 
     for (let i = 0; i < generalMatchesInPeriod.length ; i++) {
@@ -754,10 +754,11 @@ export const applyDecay = async (format, currentDate, nextDate) => {
             activeGeneralPlayerIds.push(winnerId)
             activeGeneralPlayerNames.push(winnerName)
         }
+        
         if (!activeGeneralPlayerIds.includes(loserId)) {
             activeGeneralPlayerIds.push(loserId)
             activeGeneralPlayerNames.push(loserName)
-        } 
+        }
     }
 
     for (let i = 0; i < allStats.length; i++) {
@@ -794,7 +795,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
     
         const activeSeasonalPlayerIds = []
         const activeSeasonalPlayerNames = []
-        let seasonalDecayRate = Math.pow(Math.E, (-1 * seasonalMatchesInPeriod.length) / 1000)
+        let seasonalDecayRate = Math.pow(Math.E, (-1 * seasonalMatchesInPeriod.length) / 600)
         if (seasonalDecayRate > 0.995) generalDecayRate = 0.995
 
         for (let i = 0; i < seasonalMatchesInPeriod.length ; i++) {
