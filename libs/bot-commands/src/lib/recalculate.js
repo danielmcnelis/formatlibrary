@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { isModerator, hasPartnerAccess } from '@fl/bot-functions'
+import { isModerator, hasPartnerAccess, getNextDateAtMidnight, applyDecay } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Format, Match, Player, Server, Stats } from '@fl/models'
 
@@ -31,21 +31,31 @@ export default {
         interaction.reply({ content: `Recalculating data from ${count} ${format.name} ${format.emoji} matches. Please wait...`})
         
         const allMatches = await Match.findAll({ 
-            where: { formatId: format.id, serverId: serverId }, 
+            where: { formatId: format.id, serverId: '414551319031054346' }, 
             attributes: ['id', 'formatId', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'createdAt'], 
             order: [["createdAt", "ASC"]]
         })
-
+        
+        let currentDate = allMatches[0].createdAt
+        let nextDate = getNextDateAtMidnight(currentDate)
+        
         const allStats = await Stats.findAll({ 
-            where: { formatId: format.id, serverId: serverId }, 
-            attributes: ['id', 'formatName', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 'currentStreak', 'bestStreak', 'vanquished', 'playerId', 'serverId'], 
+            where: { formatId: format.id, serverId: '414551319031054346' }, 
+            attributes: [
+                'id', 'formatName', 'formatId', 'elo', 'bestElo', 'backupElo', 
+                'seasonalElo', 'noDecayElo', 'classicElo', 'wins', 'losses', 'games', 
+                'currentStreak', 'bestStreak', 'vanquished', 'playerId', 'serverId'
+            ], 
             include: { model: Player, attributes: ['id', 'name']} 
         })
 
-        for (let i = 0; i < allStats.length; i++) {
-            const stats = allStats[i]
+        for (let j = 0; j < allStats.length; j++) {
+            const stats = allStats[j]
             await stats.update({
                 elo: 500.00,
+                classicElo: 500.00,
+                noDecayElo: 500.00,
+                seasonalElo: 500.00,
                 bestElo: 500.00,
                 backupElo: null,
                 wins: 0,
@@ -57,9 +67,15 @@ export default {
             })
         }
 
-        for (let i = 0; i < allMatches.length; i++) {
+        for (let j = 0; j < allMatches.length; j++) {
             try {
-                const match = allMatches[i]
+                const match = allMatches[j]
+                if (match.createdAt > nextDate) {
+                    await applyDecay(format, currentDate, match.createdAt)
+                    currentDate = match.createdAt
+                    nextDate = getNextDateAtMidnight(currentDate)
+                }
+
                 const winnerId = match.winnerId
                 const loserId = match.loserId
                 const winnerStats = allStats.find((s) => s.playerId === winnerId)
@@ -72,12 +88,12 @@ export default {
                         formatName: format.name,
                         formatId: format.id,
                         serverId: '414551319031054346',
-                        isInternal: server.hasInternalLadder
+                        isInternal: false
                     })
 
                     console.log('created new winner stats', winnerId)
                     allStats.push(stats)
-                    i--
+                    j--
                     continue
                 }
     
@@ -88,24 +104,24 @@ export default {
                         formatName: format.name,
                         formatId: format.id,
                         serverId: '414551319031054346',
-                        isInternal: server.hasInternalLadder
+                        isInternal: false
                     })
 
                     console.log('created new loser stats:', loserId)
                     allStats.push(stats)
-                    i--
+                    j--
                     continue
                 }
     
                 const origEloWinner = winnerStats.elo || 500.00
                 const origEloLoser = loserStats.elo || 500.00
-                
+
                 const winnerKFactor = winnerStats.games < 20 && winnerStats.bestElo < 560 ? 25 :
                     winnerStats.bestElo < 560 ? 16 : 10
 
                 const loserKFactor = loserStats.games < 20 && loserStats.bestElo < 560 ? 25 :
                     loserStats.bestElo < 560 ? 16 : 10
-    
+
                 const winnerDelta = winnerKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
                 const loserDelta = loserKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
                 
@@ -134,19 +150,19 @@ export default {
                 match.winnerDelta = winnerDelta
                 match.loserDelta = loserDelta
                 await match.save()
-                console.log(`${format.name} Match ${i+1}: ${winnerStats.player.name} > ${loserStats.player.name}`)
+                console.log(`${format.name} Match ${j+1}: ${winnerStats.player.name} > ${loserStats.player.name}`)
             } catch (err) {
                 console.log(err)
             }
         }
 
-        for (let i = 0; i < allStats.length; i++) {
-            const stats = allStats[i]
+        for (let j = 0; j < allStats.length; j++) {
+            const stats = allStats[j]
             const victories = await Match.findAll({
                 where: {
                     winnerId: stats.playerId,
                     formatId: format.id, 
-                    serverId: serverId
+                    serverId: '414551319031054346'
                 }
             })
 
@@ -159,6 +175,7 @@ export default {
             await stats.update({ vanquished: vanquishedIds.length })
         }
 
+        console.log(`Recalculation for ${format.name} Format is complete!`)
         return await interaction.channel.send({ content: `Recalculation complete!`})	
     }
 }
