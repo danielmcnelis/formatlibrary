@@ -745,8 +745,8 @@ export const applyDecay = async (format, currentDate, nextDate) => {
 
     const activeGeneralPlayerIds = []
     const activeGeneralPlayerNames = []
-    let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriod.length) / 5000)
-    if (generalDecayRate < 0.9993) generalDecayRate = 0.9993
+    let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriod.length) / 4500)
+    if (generalDecayRate < 0.99925) generalDecayRate = 0.99925
 
     for (let i = 0; i < generalMatchesInPeriod.length ; i++) {
         const {winnerId, winnerName, loserId, loserName} = generalMatchesInPeriod[i]
