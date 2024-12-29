@@ -743,6 +743,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
             }
         }
     })
+    console.log('generalMatchesInPeriod.length', generalMatchesInPeriod.length)
 
     const activeGeneralPlayerIds = []
     const activeGeneralPlayerNames = []
@@ -797,7 +798,8 @@ export const applyDecay = async (format, currentDate, nextDate) => {
         const activeSeasonalPlayerIds = []
         const activeSeasonalPlayerNames = []
         const seasonalDecayRate = Math.pow(Math.E, -1 / (1000 * seasonalMatchesInPeriod.length))
-
+        console.log('seasonalMatchesInPeriod.length', seasonalMatchesInPeriod.length)
+        
         for (let i = 0; i < seasonalMatchesInPeriod.length ; i++) {
             const match = seasonalMatchesInPeriod[i]
             const winnerId = match.winnerId
