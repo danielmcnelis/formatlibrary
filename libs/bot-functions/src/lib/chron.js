@@ -3,7 +3,7 @@ import axios from 'axios'
 import * as fs from 'fs'
 import * as sharp from 'sharp'
 import { Artwork, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Event, Format, Tournament, Match, Matchup, Membership, Player, Pool, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
-import { createMembership, createPlayer, dateToVerbose, s3FileExists, capitalize, checkIfDiscordNameIsTaken, getFifteenthOfNextMonth, countDaysInBetweenDates } from './utility'
+import { createMembership, createPlayer, dateToVerbose, s3FileExists, capitalize, checkIfDiscordNameIsTaken, getNextDateAtMidnight, countDaysInBetweenDates } from './utility'
 import { Op } from 'sequelize'
 import { getRatedConfirmation } from '@fl/bot-functions'
 import { Upload } from '@aws-sdk/lib-storage'
@@ -578,7 +578,7 @@ export const recalculateStats = async () => {
 
         if (!allMatches.length) continue
         let currentDate = allMatches[0].createdAt
-        let nextDate = getFifteenthOfNextMonth(currentDate)
+        let nextDate = getNextDateAtMidnight(currentDate)
 
         const allStats = await Stats.findAll({ 
             where: { formatId: format.id, serverId: '414551319031054346' }, 
@@ -611,7 +611,7 @@ export const recalculateStats = async () => {
                 if (match.createdAt > nextDate) {
                     await applyDecay(format, currentDate, match.createdAt)
                     currentDate = match.createdAt
-                    nextDate = getFifteenthOfNextMonth(currentDate)
+                    nextDate = getNextDateAtMidnight(currentDate)
                 }
 
                 const winnerId = match.winnerId
@@ -737,29 +737,53 @@ export const applyDecay = async (format, currentDate, nextDate) => {
         }
     })
 
-    const decayRate = Math.pow(Math.E, -1 / (400 * n))
-    const players = []
+    const decayRate = Math.pow(Math.E, -1 / (1000 * n))
+    const activeGeneralPlayers = []
+    const activeSeasonalPlayers = []
 
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
+        const isActiveInGeneral = await Match.count({
+            where: {
+                [Op.or]: {
+                    winnerId: stats.playerId,
+                    loserId: stats.playerId
+                },
+                createdAt: {[Op.between]: [currentDate, nextDate]}
+            }
+        })
 
-        if (stats.elo > 500) {
-            stats.elo = stats.elo * decayRate
+        if (isActiveInGeneral) {
+            activeGeneralPlayers.push(stats.playerName)
         } else {
-            stats.elo = stats.elo * 1 / decayRate
+            if (stats.elo > 500) {
+                stats.elo = stats.elo * decayRate
+            }
         }
 
-        if (stats.seasonalElo > 500) {
-            stats.seasonalElo = stats.seasonalElo * decayRate
+        const isActiveInSeasonalPlay = await Match.count({
+            where: {
+                [Op.or]: {
+                    winnerId: stats.playerId,
+                    loserId: stats.playerId
+                },
+                createdAt: {[Op.between]: [currentDate, nextDate]}
+            }
+        })
+
+        if (isActiveInSeasonalPlay) {
+            activeSeasonalPlayers.push(stats.playerName)
         } else {
-            stats.seasonalElo = stats.seasonalElo * 1 / decayRate
+            if (stats.seasonalElo > 500) {
+                stats.seasonalElo = stats.seasonalElo * decayRate
+            }
         }
 
         await stats.save()
-        players.push(stats.playerName)
     }
 
-    console.log(`Applied Decay Rate of ${decayRate} on ${nextDate} to ${format.name} Format`)
+    console.log(`Applied General Decay Rate of ${decayRate} on ${nextDate} to ${format.name} Format for all players except:\n`, activeGeneralPlayers)
+    console.log(`Applied Seasonal Decay Rate of ${decayRate} on ${nextDate} to ${format.name} Format for all players except:\n`, activeSeasonalPlayers)
 }
 
 // MANAGE SUBSCRIBERS
