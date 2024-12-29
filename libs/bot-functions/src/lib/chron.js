@@ -608,11 +608,11 @@ export const recalculateStats = async () => {
         for (let j = 0; j < allMatches.length; j++) {
             try {
                 const match = allMatches[j]
-                // if (match.createdAt > nextDate) {
-                //     await applyDecay(format, currentDate, match.createdAt)
-                //     currentDate = match.createdAt
-                //     nextDate = getNextDateAtMidnight(currentDate)
-                // }
+                if (match.createdAt > nextDate) {
+                    await applyDecay(format, currentDate, match.createdAt)
+                    currentDate = match.createdAt
+                    nextDate = getNextDateAtMidnight(currentDate)
+                }
 
                 const winnerId = match.winnerId
                 const loserId = match.loserId
