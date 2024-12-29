@@ -726,7 +726,8 @@ export const applyDecay = async (format, currentDate, nextDate) => {
     const allStats = await Stats.findAll({
         where: {
             formatId: format.id
-        }
+        },
+        order: [['playerName', 'ASC']]
     })
 
     const n = await Match.count({
@@ -737,7 +738,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
     })
 
     const decayRate = Math.pow(Math.E, -1 / (400 * n))
-    console.log(`${format.name} decay rate for ${nextDate}: ${decayRate}`)
+    const players = []
 
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
@@ -745,8 +746,9 @@ export const applyDecay = async (format, currentDate, nextDate) => {
             elo: stats.elo * decayRate,
             seasonalElo: stats.elo * decayRate
         })
-        console.log(`applied decay to:`, stats.playerName)
+        players.push(stats.playerName)
     }
+    console.log(`Applied a ${format.name} Decay Rate of ${decayRate} on ${nextDate} to:\n`, players)
 }
 
 
