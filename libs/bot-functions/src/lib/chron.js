@@ -608,11 +608,11 @@ export const recalculateStats = async () => {
         for (let j = 0; j < allMatches.length; j++) {
             try {
                 const match = allMatches[j]
-                if (match.createdAt > nextDate) {
-                    await applyDecay(format, currentDate, match.createdAt)
-                    currentDate = match.createdAt
-                    nextDate = getNextDateAtMidnight(currentDate)
-                }
+                // if (match.createdAt > nextDate) {
+                //     await applyDecay(format, currentDate, match.createdAt)
+                //     currentDate = match.createdAt
+                //     nextDate = getNextDateAtMidnight(currentDate)
+                // }
 
                 const winnerId = match.winnerId
                 const loserId = match.loserId
@@ -742,13 +742,23 @@ export const applyDecay = async (format, currentDate, nextDate) => {
 
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
-        await stats.update({
-            elo: stats.elo * decayRate,
-            seasonalElo: stats.elo * decayRate
-        })
+
+        if (stats.elo > 500) {
+            stats.elo = stats.elo * decayRate
+        } else {
+            stats.elo * 1 / decayRate
+        }
+
+        if (stats.seasonalElo > 500) {
+            stats.seasonalElo = stats.seasonalElo * decayRate
+        } else {
+            stats.seasonalElo * 1 / decayRate
+        }
+
+        await stats.save()
         players.push(stats.playerName)
     }
-    console.log(`Applied a ${format.name} Decay Rate of ${decayRate} on ${nextDate} to:\n`, players)
+    console.log(`Applied Decay Rate of ${decayRate} on ${nextDate} to ${format.name} Format)
 }
 
 
