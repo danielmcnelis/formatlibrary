@@ -609,7 +609,7 @@ export const recalculateStats = async () => {
             try {
                 const match = allMatches[j]
                 if (match.createdAt > nextDate) {
-                    await applyDecay(format, match.createdAt, currentDate)
+                    await applyDecay(format, currentDate, match.createdAt)
                     currentDate = match.createdAt
                     nextDate = getNextDateAtMidnight(currentDate)
                 }
