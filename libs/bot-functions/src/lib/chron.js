@@ -737,7 +737,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
     })
 
     const decayRate = Math.pow(Math.E, -1 / (400 * n))
-    console.log(`${format.name} decay rate between ${currentDate} and ${nextDate} is: ${decayRate}`)
+    console.log(`${format.name} decay rate for ${nextDate}: ${decayRate}`)
 
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
@@ -745,6 +745,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
             elo: stats.elo * decayRate,
             seasonalElo: stats.elo * decayRate
         })
+        console.log(`applied decay to:`, stats.playerName)
     }
 }
 
