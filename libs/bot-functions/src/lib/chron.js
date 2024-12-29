@@ -582,7 +582,11 @@ export const recalculateStats = async () => {
 
         const allStats = await Stats.findAll({ 
             where: { formatId: format.id, serverId: '414551319031054346' }, 
-            attributes: ['id', 'formatName', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 'currentStreak', 'bestStreak', 'vanquished', 'playerId', 'serverId'], 
+            attributes: [
+                'id', 'formatName', 'formatId', 'elo', 'bestElo', 'backupElo', 
+                'seasonalElo', 'noDecayElo', 'classicElo', 'wins', 'losses', 'games', 
+                'currentStreak', 'bestStreak', 'vanquished', 'playerId', 'serverId'
+            ], 
             include: { model: Player, attributes: ['id', 'name']} 
         })
 
@@ -591,11 +595,10 @@ export const recalculateStats = async () => {
             await stats.update({
                 elo: 500.00,
                 classicElo: 500.00,
+                noDecayElo: 500.00,
                 seasonalElo: 500.00,
                 bestElo: 500.00,
                 backupElo: null,
-                backupClassicElo: null,
-                backuSeasonalElo: null,
                 wins: 0,
                 losses: 0,
                 games: 0,
