@@ -723,7 +723,6 @@ export const recalculateStats = async () => {
 
 // APPLY DECAY
 export const applyDecay = async (format, currentDate, nextDate) => {
-    console.log(`apply decay`, format.id, currentDate.getDate(), nextDate.getDate())
     const allStats = await Stats.findAll({
         where: {
             formatId: format.id
@@ -732,7 +731,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
     })
 
     // GENERAL MATCHES
-    const generalMatchesInPeriod = await Match.count({
+    const generalMatchesInPeriod = await Match.findAll({
         where: {
             formatId: format.id,
             createdAt: {
@@ -743,7 +742,6 @@ export const applyDecay = async (format, currentDate, nextDate) => {
             }
         }
     })
-    console.log('generalMatchesInPeriod.length', generalMatchesInPeriod.length)
 
     const activeGeneralPlayerIds = []
     const activeGeneralPlayerNames = []
@@ -753,7 +751,6 @@ export const applyDecay = async (format, currentDate, nextDate) => {
         const match = generalMatchesInPeriod[i]
         const winnerId = match.winnerId
         const loserId = match.loserId
-        if (i === 0) console.log(`general`, match.id, winnerId, loserId)
         if (!activeGeneralPlayerIds.includes(winnerId)) {
             activeGeneralPlayerIds.push(winnerId)
             activeGeneralPlayerNames.push(winnerName)
@@ -782,7 +779,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
 
     // SEASONAL MATCHES
     if (format.useSeasonalElo) {
-        const seasonalMatchesInPeriod = await Match.count({
+        const seasonalMatchesInPeriod = await Match.findAll({
             where: {
                 formatId: format.id,
                 isRatedPairing: true,
@@ -799,7 +796,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
         const activeSeasonalPlayerNames = []
         const seasonalDecayRate = Math.pow(Math.E, -1 / (1000 * seasonalMatchesInPeriod.length))
         console.log('seasonalMatchesInPeriod.length', seasonalMatchesInPeriod.length)
-        
+
         for (let i = 0; i < seasonalMatchesInPeriod.length ; i++) {
             const match = seasonalMatchesInPeriod[i]
             const winnerId = match.winnerId
