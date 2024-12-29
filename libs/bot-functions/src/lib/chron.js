@@ -740,7 +740,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
     const decayRate = Math.pow(Math.E, -1 / (1000 * n))
     const activeGeneralPlayers = []
     const activeSeasonalPlayers = []
-
+    
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
         const isActiveInGeneral = await Match.count({
@@ -761,21 +761,25 @@ export const applyDecay = async (format, currentDate, nextDate) => {
             }
         }
 
-        const isActiveInSeasonalPlay = await Match.count({
-            where: {
-                [Op.or]: {
-                    winnerId: stats.playerId,
-                    loserId: stats.playerId
-                },
-                createdAt: {[Op.between]: [currentDate, nextDate]}
-            }
-        })
+        if (format.cuto)
 
-        if (isActiveInSeasonalPlay) {
-            activeSeasonalPlayers.push(stats.playerName)
-        } else {
-            if (stats.seasonalElo > 500) {
-                stats.seasonalElo = stats.seasonalElo * decayRate
+        if (format.useSeasonalElo) {
+            const isActiveInSeasonalPlay = await Match.count({
+                where: {
+                    [Op.or]: {
+                        winnerId: stats.playerId,
+                        loserId: stats.playerId
+                    },
+                    createdAt: {[Op.between]: [currentDate, nextDate]}
+                }
+            })
+    
+            if (isActiveInSeasonalPlay) {
+                activeSeasonalPlayers.push(stats.playerName)
+            } else {
+                if (stats.seasonalElo > 500) {
+                    stats.seasonalElo = stats.seasonalElo * decayRate
+                }
             }
         }
 
