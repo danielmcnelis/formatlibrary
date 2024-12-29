@@ -741,7 +741,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
     const activeGeneralPlayers = []
     const generalDecayRate = Math.pow(Math.E, -1 / (1000 * generalMatchesInPeriod.length))
 
-    for (let i = 0; i < generalMatchesInPeriod; i++) {
+    for (let i = 0; i < generalMatchesInPeriod.length ; i++) {
         const {winnerId, loserId} = generalMatchesInPeriod[i]
         if (!activeGeneralPlayers.includes(winnerId)) {
             activeGeneralPlayers.push(winnerId)
@@ -780,7 +780,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
         const activeSeasonalPlayers = []
         const seasonalDecayRate = Math.pow(Math.E, -1 / (1000 * seasonalMatchesInPeriod.length))
 
-        for (let i = 0; i < seasonalMatchesInPeriod; i++) {
+        for (let i = 0; i < seasonalMatchesInPeriod.length ; i++) {
             const {winnerId, loserId} = seasonalMatchesInPeriod[i]
             if (!activeSeasonalPlayers.includes(winnerId)) {
                 activeSeasonalPlayers.push(winnerId)
