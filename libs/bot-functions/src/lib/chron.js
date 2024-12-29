@@ -748,16 +748,14 @@ export const applyDecay = async (format, currentDate, nextDate) => {
     const generalDecayRate = Math.pow(Math.E, -1 / (1000 * generalMatchesInPeriod.length))
 
     for (let i = 0; i < generalMatchesInPeriod.length ; i++) {
-        const match = generalMatchesInPeriod[i]
-        const winnerId = match.winnerId
-        const loserId = match.loserId
+        const {winnerId, winnerName, loserId, loserName} = generalMatchesInPeriod[i]
         if (!activeGeneralPlayerIds.includes(winnerId)) {
             activeGeneralPlayerIds.push(winnerId)
             activeGeneralPlayerNames.push(winnerName)
         }
         if (!activeGeneralPlayerIds.includes(loserId)) {
             activeGeneralPlayerIds.push(loserId)
-            activeGeneralPlayerNames.push(loserId)
+            activeGeneralPlayerNames.push(loserName)
         } 
     }
 
@@ -798,17 +796,14 @@ export const applyDecay = async (format, currentDate, nextDate) => {
         console.log('seasonalMatchesInPeriod.length', seasonalMatchesInPeriod.length)
 
         for (let i = 0; i < seasonalMatchesInPeriod.length ; i++) {
-            const match = seasonalMatchesInPeriod[i]
-            const winnerId = match.winnerId
-            const loserId = match.loserId
-            if (i === 0) console.log(`seasonal`, match.id, winnerId, loserId)
+            const {winnerId, winnerName, loserId, loserName} = generalMatchesInPeriod[i]
             if (!activeSeasonalPlayerIds.includes(winnerId)) {
                 activeSeasonalPlayerIds.push(winnerId)
                 activeSeasonalPlayerIds.push(winnerName)
             }
             if (!activeGeneralPlayerIds.includes(loserId)) {
                 activeGeneralPlayerIds.push(loserId)
-                activeGeneralPlayerNames.push(loserId)
+                activeGeneralPlayerNames.push(loserName)
             } 
         }
 
