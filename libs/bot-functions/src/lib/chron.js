@@ -731,7 +731,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
 
     const n = await Match.count({
         where: {
-            formatId: formatId,
+            formatId: format.id,
             createdAt: {[Op.between]: [currentDate, nextDate]}
         }
     })
