@@ -11,6 +11,17 @@ import { emojis, rarities } from '@fl/bot-emojis'
 import { config } from '@fl/config'
 import { HeadObjectCommand, S3Client } from '@aws-sdk/client-s3'
 
+// GET NEXT DATE AT MIDNIGHT
+export const getNextDateAtMidnight = (date) => {
+    const nextDay = new Date(date)
+    nextDay.setDate(date.getDate() + 1)
+    nextDay.setHours(0, 0, 0, 0)
+    return nextDay
+}
+
+// COUNT DAYS BETWEEN DATES
+export const countDaysInBetweenDates = (d1, d2) => Math.abs(d2.getTime() - d1.getTime()) / (24 * 60 * 60 * 1000)
+
 //DATE TO SIMPLE
 export const dateToSimple = (date = 'N/A') => {
     const year = typeof date === 'string' ? date.slice(2, 4) : date.getFullYear().slice(2, 4)

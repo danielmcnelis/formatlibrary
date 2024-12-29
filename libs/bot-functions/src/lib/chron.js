@@ -3,7 +3,7 @@ import axios from 'axios'
 import * as fs from 'fs'
 import * as sharp from 'sharp'
 import { Artwork, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Event, Format, Tournament, Match, Matchup, Membership, Player, Pool, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
-import { createMembership, createPlayer, dateToVerbose, s3FileExists, capitalize, checkIfDiscordNameIsTaken } from './utility'
+import { createMembership, createPlayer, dateToVerbose, s3FileExists, capitalize, checkIfDiscordNameIsTaken, getNextDateAtMidnight, countDaysInBetweenDates } from './utility'
 import { Op } from 'sequelize'
 import { getRatedConfirmation } from '@fl/bot-functions'
 import { Upload } from '@aws-sdk/lib-storage'
@@ -576,6 +576,10 @@ export const recalculateStats = async () => {
             order: [["createdAt", "ASC"]]
         })
 
+        if (!allMatches.length) continue
+        let currentDate = allMatches[0].createdAt
+        let nextDate = getNextDateAtMidnight(currentDate)
+
         const allStats = await Stats.findAll({ 
             where: { formatId: format.id, serverId: '414551319031054346' }, 
             attributes: ['id', 'formatName', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 'currentStreak', 'bestStreak', 'vanquished', 'playerId', 'serverId'], 
@@ -604,6 +608,12 @@ export const recalculateStats = async () => {
         for (let j = 0; j < allMatches.length; j++) {
             try {
                 const match = allMatches[j]
+                if (match.createdAt > nextDate) {
+                    await applyDecay(format, match.createdAt, currentDate)
+                    currentDate = match.createdAt
+                    nextDate = getNextDateAtMidnight(currentDate)
+                }
+
                 const winnerId = match.winnerId
                 const loserId = match.loserId
                 const winnerStats = allStats.find((s) => s.playerId === winnerId)
@@ -712,13 +722,30 @@ export const recalculateStats = async () => {
 }
 
 // APPLY DECAY
-export const applyDecay = async () => {
-    const start = Date.now()
-    const formats = await Format.findAll({
-        order: [["name", "ASC"]]
+export const applyDecay = async (format, currentDate, nextDate) => {
+    const allStats = await Stats.findAll({
+        where: {
+            formatId: format.id
+        }
     })
 
-    for (let i = 0)
+    const n = await Match.count({
+        where: {
+            formatId: formatId,
+            createdAt: {[Op.between]: [currentDate, nextDate]}
+        }
+    })
+
+    const decayRate = Math.pow(Math.E, -1 / (400 * n))
+    console.log(`${format.name} decay rate on ${nextDate} is: ${decayRate}`)
+
+    for (let i = 0; i < allStats.length; i++) {
+        const stats = allStats[i]
+        await stats.update({
+            elo: stats.elo * decayRate,
+            seasonalElo: stats.elo * decayRate
+        })
+    }
 }
 
 
