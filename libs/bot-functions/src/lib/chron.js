@@ -758,10 +758,9 @@ export const applyDecay = async (format, currentDate, nextDate) => {
         await stats.save()
         players.push(stats.playerName)
     }
-    console.log(`Applied Decay Rate of ${decayRate} on ${nextDate} to ${format.name} Format)
+
+    console.log(`Applied Decay Rate of ${decayRate} on ${nextDate} to ${format.name} Format`)
 }
-
-
 
 // MANAGE SUBSCRIBERS
 export const manageSubscriptions = async (client) => {
