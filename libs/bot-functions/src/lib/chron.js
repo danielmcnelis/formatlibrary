@@ -3,7 +3,7 @@ import axios from 'axios'
 import * as fs from 'fs'
 import * as sharp from 'sharp'
 import { Artwork, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Event, Format, Tournament, Match, Matchup, Membership, Player, Pool, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
-import { createMembership, createPlayer, dateToVerbose, s3FileExists, capitalize, checkIfDiscordNameIsTaken, getNextDateAtMidnight, countDaysInBetweenDates } from './utility'
+import { createMembership, createPlayer, dateToVerbose, s3FileExists, capitalize, checkIfDiscordNameIsTaken, getFifteenthOfNextMonth, countDaysInBetweenDates } from './utility'
 import { Op } from 'sequelize'
 import { getRatedConfirmation } from '@fl/bot-functions'
 import { Upload } from '@aws-sdk/lib-storage'
@@ -578,7 +578,7 @@ export const recalculateStats = async () => {
 
         if (!allMatches.length) continue
         let currentDate = allMatches[0].createdAt
-        let nextDate = getNextDateAtMidnight(currentDate)
+        let nextDate = getFifteenthOfNextMonth(currentDate)
 
         const allStats = await Stats.findAll({ 
             where: { formatId: format.id, serverId: '414551319031054346' }, 
@@ -608,11 +608,11 @@ export const recalculateStats = async () => {
         for (let j = 0; j < allMatches.length; j++) {
             try {
                 const match = allMatches[j]
-                // if (match.createdAt > nextDate) {
-                //     await applyDecay(format, currentDate, match.createdAt)
-                //     currentDate = match.createdAt
-                //     nextDate = getNextDateAtMidnight(currentDate)
-                // }
+                if (match.createdAt > nextDate) {
+                    await applyDecay(format, currentDate, match.createdAt)
+                    currentDate = match.createdAt
+                    nextDate = getFifteenthOfNextMonth(currentDate)
+                }
 
                 const winnerId = match.winnerId
                 const loserId = match.loserId
@@ -746,13 +746,13 @@ export const applyDecay = async (format, currentDate, nextDate) => {
         if (stats.elo > 500) {
             stats.elo = stats.elo * decayRate
         } else {
-            stats.elo * 1 / decayRate
+            stats.elo = stats.elo * 1 / decayRate
         }
 
         if (stats.seasonalElo > 500) {
             stats.seasonalElo = stats.seasonalElo * decayRate
         } else {
-            stats.seasonalElo * 1 / decayRate
+            stats.seasonalElo = stats.seasonalElo * 1 / decayRate
         }
 
         await stats.save()

@@ -19,6 +19,15 @@ export const getNextDateAtMidnight = (date) => {
     return nextDay
 }
 
+// GET FIFTEENTH OF NEXT MONTH
+export const getFifteenthOfNextMonth = (date = new Date()) => {
+    const nextMonth = new Date(date)
+      nextMonth.setMonth(date.getMonth() + 1)
+      nextMonth.setDate(15)
+      nextMonth.setHours(0, 0, 0, 0)
+    return nextMonth
+  }
+
 // COUNT DAYS BETWEEN DATES
 export const countDaysInBetweenDates = (d1, d2) => Math.abs(d2.getTime() - d1.getTime()) / (24 * 60 * 60 * 1000)
 
