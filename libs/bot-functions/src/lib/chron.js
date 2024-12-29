@@ -736,8 +736,8 @@ export const applyDecay = async (format, currentDate, nextDate) => {
             formatId: format.id,
             createdAt: {
                 [Op.and]: [
-                    {[Op.gt]: currentDate},
-                    {[Op.lte]: nextDate}
+                    {[Op.gte]: currentDate},
+                    {[Op.lt]: nextDate}
                 ]
             }
         }
@@ -783,8 +783,8 @@ export const applyDecay = async (format, currentDate, nextDate) => {
                 isRatedPairing: true,
                 createdAt: {
                     [Op.and]: [
-                        {[Op.gt]: currentDate},
-                        {[Op.lte]: nextDate}
+                        {[Op.gte]: currentDate},
+                        {[Op.lt]: nextDate}
                     ]
                 }
             }
