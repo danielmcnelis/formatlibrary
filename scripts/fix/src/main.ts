@@ -2120,23 +2120,45 @@ const shuffleArray = (arr) => {
 // })()
 
 
+// ;(async () => {
+//     let b = 0
+//     const tournaments = await Tournament.findAll({
+//         where: {
+//             serverId: {[Op.not]: null}
+//         },
+//         include: Server
+//     })
+
+//     for (let i = 0; i < tournaments.length; i++) {
+//         const tournament = tournaments[i]
+//         if (tournament.communityName !== tournament.server.communityName) {
+//             await tournament.update({ communityName: tournament.server.communityName })
+//             console.log(`changing the ${tournament.name} community name to ${tournament.server.communityName}`)
+//             b++
+//         }
+//     }
+
+//     console.log(`updated ${b} tournaments `)
+// })()
+
+
 ;(async () => {
     let b = 0
-    const tournaments = await Tournament.findAll({
+    const events = await Event.findAll({
         where: {
             serverId: {[Op.not]: null}
         },
         include: Server
     })
 
-    for (let i = 0; i < tournaments.length; i++) {
-        const tournament = tournaments[i]
-        if (tournament.communityName !== tournament.server.communityName) {
-            await tournament.update({ communityName: tournament.server.communityName })
-            console.log(`changing the ${tournament.name} community name to ${tournament.server.communityName}`)
+    for (let i = 0; i < events.length; i++) {
+        const event = events[i]
+        if (event.communityName !== event.server.communityName) {
+            await event.update({ communityName: event.server.communityName })
+            console.log(`changing the ${event.name} community name to ${event.server.communityName}`)
             b++
         }
     }
 
-    console.log(`updated ${b} tournaments `)
+    console.log(`updated ${b} events `)
 })()
