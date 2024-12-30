@@ -2131,9 +2131,11 @@ const shuffleArray = (arr) => {
 
     for (let i = 0; i < tournaments.length; i++) {
         const tournament = tournaments[i]
-        await tournament.update({ communityName: tournament.server.communityName })
-        console.log(`changing the ${tournament.name} community name to ${tournament.server.communityName}`)
-        b++
+        if (tournament.communityName !== tournament.server.communityName) {
+            await tournament.update({ communityName: tournament.server.communityName })
+            console.log(`changing the ${tournament.name} community name to ${tournament.server.communityName}`)
+            b++
+        }
     }
 
     console.log(`updated ${b} tournaments `)
