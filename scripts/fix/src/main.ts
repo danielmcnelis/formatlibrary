@@ -2102,19 +2102,39 @@ const shuffleArray = (arr) => {
 // })()
 
 
+// ;(async () => {
+//     let b = 0
+//     const stats = await Stats.findAll({
+//         where: {
+//             isActive: false
+//         }
+//     })
+
+//     for (let i = 0; i < stats.length; i++) {
+//         const stat = stats[i]
+//         await stat.update({ isActive: true })
+//         b++
+//     }
+
+//     console.log(`re-activated ${b} player stats`)
+// })()
+
+
 ;(async () => {
     let b = 0
-    const stats = await Stats.findAll({
+    const tournaments = await Tournament.findAll({
         where: {
-            isActive: false
-        }
+            serverId: {[Op.not]: null}
+        },
+        include: Server
     })
 
-    for (let i = 0; i < stats.length; i++) {
-        const stat = stats[i]
-        await stat.update({ isActive: true })
+    for (let i = 0; i < tournaments.length; i++) {
+        const tournament = tournaments[i]
+        await tournament.update({ communityName: tournament.server.communityName })
+        console.log(`changing the ${tournament.name} community name to ${tournament.server.communityName}`)
         b++
     }
 
-    console.log(`re-activated ${b} player stats`)
+    console.log(`updated ${b} tournaments `)
 })()
