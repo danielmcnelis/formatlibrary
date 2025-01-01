@@ -122,15 +122,14 @@ import './StatsRow.css'
 
 
 export const StatsRow = (props) => {
-    const {index, stats, isClassic} = props
-    let {elo, wins, losses, player} = stats
-    if (isClassic === 'true') {
-        console.log('using classic')
-        elo = stats.classicElo
-    }
+    const {index, stats, statsType, eloType, winsType, lossesType} = props
+    const {player} = stats
+    const elo = stats[eloType]
+    const wins = stats[winsType]
+    const losses = stats[lossesType]
 
-    const medal = isClassic === 'true' ? getClassicMedal(elo) : getMedal(elo)
-    const title = isClassic === 'true' ? getClassicTitle(elo) : getTitle(elo)
+    const medal = statsType === 'classic' ? getClassicMedal(elo) : getMedal(elo)
+    const title = statsType === 'classic' ? getClassicTitle(elo) : getTitle(elo)
 
     const navigate = useNavigate()
     

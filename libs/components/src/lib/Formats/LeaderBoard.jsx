@@ -12,8 +12,11 @@ export const LeaderBoard = () => {
     const [leaderboard, setLeaderboard] = useState([])
     const { id } = useParams()
     const location = useLocation()
-    const isClassic = location?.search?.slice(9)
+    const statsType = location?.search?.slice(5)
     const videoPlaylistId = format?.videoPlaylistId
+    let [eloType, winsType, lossesType] = statsType === 'seasonal' ? 
+        ['seasonalElo', 'seasonalWins', 'seasonalLosses'] :
+        ['elo', 'wins', 'losses']
   
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
@@ -38,10 +41,14 @@ export const LeaderBoard = () => {
       const fetchData = async () => {
         try {
             let {data} = await axios.get(`/api/stats/leaders/1000/${format.name.toLowerCase()}`)
-            if (isClassic === 'true') {
+            if (statsType === 'seasonal') {
+                data.sort((a, b) => b.seasonalElo - a.seasonalElo)
+                setLeaderboard(data)
+            } else if (statsType === 'classic') {
                 data.sort((a, b) => b.classicElo - a.classicElo)
                 setLeaderboard(data)
             } else {
+                data.sort((a, b) => b.elo - a.elo)
                 setLeaderboard(data)
             }
         } catch (err) {
@@ -89,7 +96,15 @@ export const LeaderBoard = () => {
                     {
                         leaderboard.length ? (
                             leaderboard.map((stats, index) => {
-                                return <StatsRow stats={stats} isClassic={isClassic} index={index} key={stats.playerId}/>
+                                return <StatsRow 
+                                    stats={stats} 
+                                    statsType={statsType} 
+                                    eloType={eloType} 
+                                    winsType={winsType} 
+                                    lossesType={lossesType} 
+                                    index={index} 
+                                    key={stats.playerId}
+                                />
                             })
                         ) : <tr />
                     }

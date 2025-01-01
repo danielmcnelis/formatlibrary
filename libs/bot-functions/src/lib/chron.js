@@ -586,8 +586,10 @@ export const recalculateStats = async () => {
         const allStats = await Stats.findAll({ 
             where: { formatId: format.id, serverId: '414551319031054346' }, 
             attributes: [
-                'id', 'formatName', 'formatId', 'elo', 'bestElo', 'backupElo', 
-                'seasonalElo', 'noDecayElo', 'classicElo', 'wins', 'losses', 'games', 
+                'id', 'formatName', 'formatId', 
+                'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 
+                'seasonalElo', 'seasonalBestElo', 'seasonalBackupElo', 
+                'seasonalWins', 'seasonalLosses', 'seasonalGames', 
                 'currentStreak', 'bestStreak', 'vanquished', 'playerId', 'serverId'
             ], 
             include: { model: Player, attributes: ['id', 'name']} 
@@ -597,14 +599,19 @@ export const recalculateStats = async () => {
             const stats = allStats[j]
             await stats.update({
                 elo: 500.00,
-                classicElo: 500.00,
-                noDecayElo: 500.00,
-                seasonalElo: 500.00,
                 bestElo: 500.00,
                 backupElo: null,
                 wins: 0,
                 losses: 0,
                 games: 0,
+                seasonalElo: 500.00,
+                bestSeasonalElo: 500.00,
+                backupSeasonalElo: null,
+                seasonalWins: 0,
+                seasonalLosses: 0,
+                seasonalGames: 0,
+                classicElo: 500.00,
+                backupClassicElo: null,
                 currentStreak: 0,
                 bestStreak: 0,
                 vanquished: 0
@@ -657,43 +664,9 @@ export const recalculateStats = async () => {
                     continue
                 }
     
-                const origEloWinner = winnerStats.elo || 500.00
-                const origEloLoser = loserStats.elo || 500.00
-
-                const winnerKFactor = winnerStats.games < 20 && winnerStats.bestElo < 560 ? 24 :
-                    winnerStats.bestElo < 560 ? 16 : 8
-
-                const loserKFactor = loserStats.games < 20 && loserStats.bestElo < 560 ? 24 :
-                    loserStats.bestElo < 560 ? 16 : 8
-
-                const winnerDelta = winnerKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
-                const loserDelta = loserKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
-                
-                const origClassicEloWinner = winnerStats.classicElo || 500.00
-                const origClassicEloLoser = loserStats.classicElo || 500.00
-                const classicDelta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origClassicEloWinner - origClassicEloLoser) / 400))))))
-
-                winnerStats.elo = origEloWinner + winnerDelta
-                if ((origEloWinner + winnerDelta) > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + winnerDelta
-                winnerStats.backupElo = origEloWinner
-                winnerStats.classicElo = origClassicEloWinner + classicDelta
-                winnerStats.wins++
-                winnerStats.games++
-                winnerStats.currentStreak++
-                if (winnerStats.currentStreak >= winnerStats.bestStreak) winnerStats.bestStreak++
-                await winnerStats.save()
-        
-                loserStats.elo = origEloLoser - loserDelta
-                loserStats.backupElo = origEloLoser
-                loserStats.classicElo = origClassicEloLoser - classicDelta
-                loserStats.losses++
-                loserStats.games++
-                loserStats.currentStreak = 0
-                await loserStats.save()
-    
-                match.winnerDelta = winnerDelta
-                match.loserDelta = loserDelta
-                await match.save()
+                const [winnerDelta, loserDelta] = await updateGeneralStats(winnerStats, loserStats)
+                if (match.isSeasonal && format.seasonResetDate < match.createdAt) await updateSeasonalStats(winnerStats, loserStats)
+                await match.update({ winnerDelta, loserDelta })
                 console.log(`${format.name} Match ${j+1}: ${winnerStats.player.name} > ${loserStats.player.name}`)
             } catch (err) {
                 console.log(err)
@@ -726,6 +699,8 @@ export const recalculateStats = async () => {
     console.log(`All recalculations complete!`)
     return console.log(`recalculateStats() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
+
+
 
 // APPLY DECAY
 export const applyDecay = async (format, currentDate, nextDate) => {

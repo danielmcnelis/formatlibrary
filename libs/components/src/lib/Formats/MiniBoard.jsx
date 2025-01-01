@@ -10,14 +10,28 @@ export const MiniBoard = (props) => {
     const { format, limit } = props
     const [miniboard, setMiniBoard] = useState([])
     const navigate = useNavigate()
+    const statsType = location?.search?.slice(5)
+    const videoPlaylistId = format?.videoPlaylistId
+    let [eloType, winsType, lossesType] = statsType === 'seasonal' ? 
+        ['seasonalElo', 'seasonalWins', 'seasonalLosses'] :
+        ['elo', 'wins', 'losses']
     const goToLeaderBoard = () => navigate(`/leaderboards/${format.name.toLowerCase()}`)
 
     // USE EFFECT FETCH DATA
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const {data} = await axios.get(`/api/stats/leaders/${limit}/${format.name.toLowerCase()}`)
-          setMiniBoard(data)
+          let {data} = await axios.get(`/api/stats/leaders/${limit}/${format.name.toLowerCase()}`)
+          if (statsType === 'seasonal') {
+              data.sort((a, b) => b.seasonalElo - a.seasonalElo)
+              setMiniBoard(data)
+          } else if (statsType === 'classic') {
+              data.sort((a, b) => b.classicElo - a.classicElo)
+              setMiniBoard(data)
+          } else {
+              data.sort((a, b) => b.elo - a.elo)
+              setMiniBoard(data)
+          }
         } catch (err) {
           console.log(err)
         }
@@ -54,8 +68,16 @@ export const MiniBoard = (props) => {
               {
                   miniboard.length ? (
                       miniboard.map((stats, index) => {
-                          return <StatsRow stats={stats} index={index} key={stats.playerId}/>
-                      })
+                        return <StatsRow 
+                                stats={stats} 
+                                statsType={statsType} 
+                                eloType={eloType} 
+                                winsType={winsType} 
+                                lossesType={lossesType} 
+                                index={index} 
+                                key={stats.playerId}
+                            />
+                    })
                   ) : <tr />
               }
             </tbody>

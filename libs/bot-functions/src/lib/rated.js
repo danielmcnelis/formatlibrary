@@ -580,3 +580,75 @@ export const sendRatedPairingNotifications = async (client, player, opponent, fo
         console.log(err)
     }
 }
+
+// GET ELO K-FACTOR
+export const getEloKFactor = (games, bestElo) => {
+    if (games < 20 && bestElo < 560) {
+        return 25
+    } else if (bestElo < 560) {
+        return 16
+    } else {
+        return 8
+    }
+}
+
+// GET ELO DELTA
+export const getEloDelta = (kFactor, winnersElo, losersElo) => {
+    return kFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((winnersElo - losersElo) / 400))))))
+}
+
+// UPDATE GENERAL STATS
+export const updateGeneralStats = async (winnerStats, loserStats) => {
+    const winnerKFactor = getEloKFactor(winnerStats.games, winnerStats.bestElo)
+    const loserKFactor = getEloKFactor(loserStats.games, loserStats.bestElo)
+    const winnerDelta = getEloDelta(winnerKFactor, winnerStats.elo, loserStats.elo)
+    const loserDelta = getEloDelta(loserKFactor, winnerStats.elo, loserStats.elo)
+    const classicDelta = getEloDelta(20, winnerStats.elo, loserStats.elo)
+    
+    await winnerStats.update({
+        elo: winnerStats.elo + winnerDelta,
+        backupElo: winnerStats.elo,
+        bestElo: Math.max(winnerStats.elo + winnerDelta, winnerStats.bestElo),
+        classicElo: winnerStats.classicElo + classicDelta,
+        backupClassicElo: winnerStats.classicElo,
+        wins: winnerStats.wins + 1,
+        games: winnerStats.games + 1,
+        currentStreak: winnerStats.currentStreak + 1,
+        bestStreak: Math.max(winnerStats.currentStreak, winnerStats.bestStreak)
+    })
+
+    await loserStats.update({
+        elo: loserStats.elo - loserDelta,
+        backupElo: loserStats.elo,
+        classicElo: loserStats.classicElo + classicDelta,
+        backupClassicElo: loserStats.classicElo,
+        losses: loserStats.losses + 1,
+        games: loserStats.games + 1,
+        currentStreak: 0
+    })
+
+    return [winnerDelta, loserDelta, classicDelta]
+}
+
+// UPDATE SEASONAL STATS
+export const updateSeasonalStats = async (winnerStats, loserStats) => {
+    const winnerKFactor = getEloKFactor(winnerStats.seasonalGames, winnerStats.seasonalBestElo)
+    const loserKFactor = getEloKFactor(loserStats.seasonalGames, loserStats.seasonalBestElo)
+    const winnerDelta = getEloDelta(winnerKFactor, winnerStats.seasonalElo, loserStats.seasonalElo)
+    const loserDelta = getEloDelta(loserKFactor, winnerStats.seasonalElo, loserStats.seasonalElo)
+    
+    await winnerStats.update({
+        seasonalElo: winnerStats.seasonalElo + winnerDelta,
+        backupSeasonalElo: winnerStats.seasonalElo,
+        bestSeasonalElo: Math.max(winnerStats.seasonalElo + winnerDelta, winnerStats.bestSeasonalElo),
+        seasonalWins: winnerStats.wins + 1,
+        seasonalGames: winnerStats.games + 1
+    })
+
+    await loserStats.update({
+        elo: loserStats.seasonalElo - loserDelta,
+        backupSeasonalElo: loserStats.seasonalElo,
+        seasonalLosses: loserStats.losses + 1,
+        seasonalGames: loserStats.games + 1
+    })
+}

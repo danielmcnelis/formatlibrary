@@ -20,7 +20,7 @@ export default {
             const serverId = server.hasInternalLadder ? server.id : '414551319031054346'
             const matches = await Match.findAll({ where: { formatId: format.id, serverId: serverId }, order: [['createdAt', 'DESC']]})
             const authorIsMod = isModerator(server, interaction.member)
-            const match = authorIsMod ? await selectMatch(interaction, matches.slice(0, 10)) : matches[0]
+            const match = authorIsMod ? await selectMatch(interaction, matches.slice(0, 25)) : matches[0]
 
             if (match) {
                 return undoMatch(interaction, server, match.id, authorIsMod)

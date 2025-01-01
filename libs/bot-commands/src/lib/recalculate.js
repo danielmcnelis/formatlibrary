@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { isModerator, hasPartnerAccess, getNextDateAtMidnight, applyDecay } from '@fl/bot-functions'
+import { isModerator, hasPartnerAccess, getNextDateAtMidnight, applyDecay, updateGeneralStats, updateSeasonalStats } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Format, Match, Player, Server, Stats } from '@fl/models'
 
@@ -54,14 +54,19 @@ export default {
                 const stats = allStats[j]
                 await stats.update({
                     elo: 500.00,
-                    classicElo: 500.00,
-                    noDecayElo: 500.00,
-                    seasonalElo: 500.00,
                     bestElo: 500.00,
                     backupElo: null,
                     wins: 0,
                     losses: 0,
                     games: 0,
+                    seasonalElo: 500.00,
+                    bestSeasonalElo: 500.00,
+                    backupSeasonalElo: null,
+                    seasonalWins: 0,
+                    seasonalLosses: 0,
+                    seasonalGames: 0,
+                    classicElo: 500.00,
+                    backupClassicElo: null,
                     currentStreak: 0,
                     bestStreak: 0,
                     vanquished: 0
@@ -113,44 +118,10 @@ export default {
                         j--
                         continue
                     }
-        
-                    const origEloWinner = winnerStats.elo || 500.00
-                    const origEloLoser = loserStats.elo || 500.00
 
-                    const winnerKFactor = winnerStats.games < 20 && winnerStats.bestElo < 560 ? 25 :
-                        winnerStats.bestElo < 560 ? 16 : 10
-
-                    const loserKFactor = loserStats.games < 20 && loserStats.bestElo < 560 ? 25 :
-                        loserStats.bestElo < 560 ? 16 : 10
-
-                    const winnerDelta = winnerKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
-                    const loserDelta = loserKFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origEloWinner - origEloLoser) / 400))))))
-                    
-                    const origClassicEloWinner = winnerStats.classicElo || 500.00
-                    const origClassicEloLoser = loserStats.classicElo || 500.00
-                    const classicDelta = 20 * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((origClassicEloWinner - origClassicEloLoser) / 400))))))
-
-                    winnerStats.elo = origEloWinner + winnerDelta
-                    if ((origEloWinner + winnerDelta) > winnerStats.bestElo) winnerStats.bestElo = origEloWinner + winnerDelta
-                    winnerStats.backupElo = origEloWinner
-                    winnerStats.classicElo = origClassicEloWinner + classicDelta
-                    winnerStats.wins++
-                    winnerStats.games++
-                    winnerStats.currentStreak++
-                    if (winnerStats.currentStreak >= winnerStats.bestStreak) winnerStats.bestStreak++
-                    await winnerStats.save()
-            
-                    loserStats.elo = origEloLoser - loserDelta
-                    loserStats.backupElo = origEloLoser
-                    loserStats.classicElo = origClassicEloLoser - classicDelta
-                    loserStats.losses++
-                    loserStats.games++
-                    loserStats.currentStreak = 0
-                    await loserStats.save()
-        
-                    match.winnerDelta = winnerDelta
-                    match.loserDelta = loserDelta
-                    await match.save()
+                    const [winnerDelta, loserDelta] = await updateGeneralStats(winnerStats, loserStats)
+                    if (match.isSeasonal && format.seasonResetDate < match.createdAt) await updateSeasonalStats(winnerStats, loserStats)
+                    await match.update({ winnerDelta, loserDelta })
                     console.log(`${format.name} Match ${j+1}: ${winnerStats.player.name} > ${loserStats.player.name}`)
                 } catch (err) {
                     console.log(err)

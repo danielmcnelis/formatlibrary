@@ -18,6 +18,7 @@ export default {
         .setDMPermission(false),
     async execute(interaction) {
         try {
+            const now = new Date()
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
             if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
             const user = interaction.options.getUser('player') || interaction.user
@@ -74,34 +75,34 @@ export default {
                     } 
                 })
 
-                const allStats = await Stats.findAll({ 
-                        where: {
-                            formatId: format.id, 
-                            games: { [Op.gte]: 3 },
-                            serverId: serverId,
-                            isActive: true,
-                            '$player.isHidden$': false
-                        },
-                        include: [Player],
-                        order: [['elo', 'DESC']] 
-                    })
+                const [elo, wins, losses, eloType, gamesType, statsType] = !server.hasInternalLadder && format.useSeasonalElo && format.seasonResetDate < now ? 
+                    [stats.seasonalElo, stats.seasonalWins, stats.seasonalLosses, 'seasonalElo', 'seasonalGames', 'Seasonal '] : 
+                    [stats.elo, stats.wins, stats.losses, 'elo', 'games', '']
 
+                const allStats = await Stats.findAll({ 
+                    where: {
+                        formatId: format.id, 
+                        [gamesType]: { [Op.gte]: 3 },
+                        serverId: serverId,
+                        isActive: true,
+                        '$player.isHidden$': false
+                    },
+                    include: [Player],
+                    order: [[eloType, 'DESC']] 
+                })
 
                 const index = allStats.findIndex((s) => s.playerId === player.id)
                 const rank = stats && index >= 0 ? `#${index + 1} out of ${allStats.length}` : `N/A`
-                const elo = stats ? stats.elo.toFixed(2) : `500.00`
                 const medal = getMedal(elo, true)
-                const wins = stats ? stats.wins : 0
-                const losses = stats ? stats.losses : 0
                 const winrate = wins || losses ? `${(100 * wins / (wins + losses)).toFixed(2)}%` : 'N/A'		
 
                 return await interaction.reply({ content: 
-                    `${format.emoji} --- ${format.name} Stats --- ${format.emoji}`
+                    `${format.emoji} --- ${statsType}${format.name} Stats --- ${format.emoji}`
                     + `${server.hasInternalLadder ? `\nServer: ${server.name}` : ''}`
-                    + `\nName: ${player.name}`
+                    + `\nName: ${stats.playerName}`
                     + `\nMedal: ${medal}`
                     + `\nRanking: ${rank}`
-                    + `\nElo Rating: ${elo}`
+                    + `\nElo Rating: ${elo.toFixed(2) || '500.00'}`
                     + `\nWins: ${wins}, Losses: ${losses}`
                     + `\nWin Rate: ${winrate}`
                 })
