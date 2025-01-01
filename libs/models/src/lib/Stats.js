@@ -42,6 +42,10 @@ export const Stats = db.define('stats', {
         type: Sequelize.FLOAT,
         defaultValue: 500.0
     },
+    bestSeasonalElo: {
+        type: Sequelize.FLOAT,
+        defaultValue: 500.0
+    },
     backupSeasonalElo: {
         type: Sequelize.FLOAT,
         defaultValue: null

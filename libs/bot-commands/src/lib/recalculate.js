@@ -44,7 +44,7 @@ export default {
                 where: { formatId: format.id, serverId: '414551319031054346' }, 
                 attributes: [
                     'id', 'formatName', 'formatId', 'elo', 'bestElo', 'backupElo', 
-                    'seasonalElo', 'noDecayElo', 'classicElo', 'wins', 'losses', 'games', 
+                    'seasonalElo', 'classicElo', 'wins', 'losses', 'games', 
                     'currentStreak', 'bestStreak', 'vanquished', 'playerId', 'serverId'
                 ], 
                 include: { model: Player, attributes: ['id', 'name']} 
