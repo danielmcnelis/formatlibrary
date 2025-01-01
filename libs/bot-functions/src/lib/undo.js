@@ -47,6 +47,10 @@ export const undoMatch = async (interaction, server, matchId, authorIsMod) => {
         winnerStats.wins--
         winnerStats.games--
 
+        console.log('match.isSeasonal', match.isSeasonal)
+        console.log('match.format.seasonResetDate', match.format.seasonResetDate)
+        console.log('match.createdAt', match.createdAt)
+        console.log('match.format.seasonResetDate < match.createdAt', match.format.seasonResetDate < match.createdAt)
         if (match.isSeasonal && match.format.seasonResetDate < match.createdAt) {
             winnerStats.seasonalWins--
             winnerStats.seasonalGames--
@@ -63,7 +67,7 @@ export const undoMatch = async (interaction, server, matchId, authorIsMod) => {
         loserStats.losses--
         loserStats.games--
 
-        if (match.isSeasonal) {
+        if (match.isSeasonal && match.format.seasonResetDate < match.createdAt) {
             loserStats.seasonaLosses--
             loserStats.seasonalGames--
             loserStats.seasonalElo = loserStats.backupSeasonalElo

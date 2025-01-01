@@ -588,7 +588,7 @@ export const recalculateStats = async () => {
             attributes: [
                 'id', 'formatName', 'formatId', 
                 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 
-                'seasonalElo', 'bestSeasonalElo', 'seasonalBackupElo', 
+                'seasonalElo', 'bestSeasonalElo', 'backupSeasonalElo', 
                 'seasonalWins', 'seasonalLosses', 'seasonalGames', 
                 'currentStreak', 'bestStreak', 'vanquished', 'playerId', 'serverId'
             ], 

@@ -56,6 +56,10 @@ export const Match = db.define('matches', {
     isInternal: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
+    },
+    isSeasonal: {
+        type: Sequelize.BOOLEAN,   
+        defaultValue: false
     }
 })
 
