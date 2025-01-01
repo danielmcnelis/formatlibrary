@@ -117,13 +117,10 @@ export default {
                 }
             })
 
-            console.log('!!pairing', !!pairing)
-            const isRated = (isTournament && tournament?.isRanked) || server.hasRatedPermission || server.hasInternalLadder
-            console.log('isRated', isRated)
             const isSeasonal = pairing && format.useSeasonalElo && format.seasonResetDate < now
-            console.log('isSeasonal', isSeasonal)
+            const isRated = (isTournament && tournament?.isRanked) || server.hasRatedPermission || server.hasInternalLadder || isSeasonal
 
-            if (isRated || isSeasonal) { 
+            if (isRated) { 
                 const [winnerDelta, loserDelta, classicDelta] = await updateGeneralStats(winnerStats, loserStats)
                 match = await Match.create({
                     winnerName: winningPlayer.name,
@@ -202,7 +199,7 @@ export default {
                 }, 5 * 60 * 1000)
             }
 
-            const content = `${losingPlayer.name}, your ${isRated || isSeasonal ? 'Rated ' : 'Unrated '}${isSeasonal ? 'Seasonal ' : ''}${server.hasInternalLadder ? 'Internal ' : ''}${format.name} Format ${format.emoji} ${isTournament ? 'Tournament ' : ''}loss to <@${winningPlayer.discordId}> has been recorded.`
+            const content = `${losingPlayer.name}, your ${isRated ? 'Rated ' : 'Unrated '}${server.hasInternalLadder ? 'Internal ' : ''}${format.name} Format ${format.emoji} ${isSeasonal ? 'Seasonal ' : isTournament ? 'Tournament ' : ''}loss to <@${winningPlayer.discordId}> has been recorded.`
             return await interaction.editReply({ content })
         } catch (err) {
             console.log(err)
