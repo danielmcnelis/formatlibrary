@@ -21,6 +21,10 @@ export const Match = db.define('matches', {
     loserId: {
         type: Sequelize.STRING
     },
+    classicDelta: {
+        type: Sequelize.FLOAT,  
+        defaultValue: 10.00
+    },
     winnerDelta: {
         type: Sequelize.FLOAT,  
         defaultValue: 10.00
