@@ -2,7 +2,7 @@
 import axios from 'axios'
 import * as fs from 'fs'
 import * as sharp from 'sharp'
-import { Artwork, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Event, Format, Tournament, Match, Matchup, Membership, Player, Pool, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
+import { Artwork, BlogPost, Card, ChronRecord, Deck, DeckThumb, DeckType, Entry, Event, Format, Tournament, Match, Matchup, Membership, Player, Pool, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
 import { createMembership, createPlayer, dateToVerbose, s3FileExists, capitalize, checkIfDiscordNameIsTaken, getNextDateAtMidnight, countDaysInBetweenDates } from './utility'
 import { Op } from 'sequelize'
 import { getRatedConfirmation } from '@fl/bot-functions'
@@ -38,7 +38,6 @@ export const getRemainingDaysInMonth = () => {
 // RUN HOURLY TASKS
 export const runHourlyTasks = async (client) => {
     await cleanUpPools()
-    console.log('???')
     await lookForAllPotentialPairs(client)
 
     return setTimeout(() => runHourlyTasks(client), getHourlyCountdown())
@@ -105,6 +104,10 @@ export const refreshExpiredTokens = async () => {
 // UPDATE AVATARS
 export const updateAvatars = async (client) => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'updateAvatars',
+        status: 'underway'
+    })
     const servers = await Server.findAll({ order: [['size', 'DESC']]})
     const discordIds = []
     for (let s = 0; s < servers.length; s++) {
@@ -164,6 +167,11 @@ export const updateAvatars = async (client) => {
         console.log(`updated ${count} avatars for ${server.name}`)
     }
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     return console.log(`updateAvatars() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
@@ -171,6 +179,10 @@ export const updateAvatars = async (client) => {
 // CONDUCT CENSUS
 export const conductCensus = async (client) => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'conductCensus',
+        status: 'underway'
+    })
     // Update every player's username and tag to match their Discord account.
     // It also creates new players if they are not in the database (i.e. they joined while bot was down).
     const servers = await Server.findAll({
@@ -280,6 +292,11 @@ export const conductCensus = async (client) => {
         )
     }
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     return console.log(`conductCensus() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
@@ -287,6 +304,10 @@ export const conductCensus = async (client) => {
 // UPDATE GLOBAL NAMES
 export const updateGlobalNames = async () => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'updateGlobalNames',
+        status: 'underway'
+    })
     // Update active player's global names to match their Discord account. 
     // Prioritize by most active player.
     // If global name is taken, do not update it.
@@ -350,6 +371,11 @@ export const updateGlobalNames = async () => {
         }
     }
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     console.log(`Monthly Task Complete: Updated ${updateCount} global names.`)
     return console.log(`updateGlobalNames() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
@@ -358,6 +384,10 @@ export const updateGlobalNames = async () => {
 // MARK INACTIVES
 // export const markInactives = async () => {
 //     const start = Date.now()
+    // const chronRecord = await ChronRecord.create({
+    //     function: 'markInactives',
+    //     status: 'underway'
+    // })
 //     let b = 0
 //     const twoYearsAgo = new Date(Date.now() - (2 * 365 * 24 * 60 * 60 * 1000))
 //     const stats = await Stats.findAll({ where: { isActive:  true }, include: Player })
@@ -389,6 +419,10 @@ export const updateGlobalNames = async () => {
 // PURGE ENTRIES
 export const purgeEntries = async () => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'purgeEntries',
+        status: 'underway'
+    })
     let count = 0
     try {
         const entries = await Entry.findAll({ include: Tournament })
@@ -411,6 +445,10 @@ export const purgeEntries = async () => {
 // PURGE TOURNAMENT PARTICIPANT ROLES
 export const purgeTournamentRoles = async (client) => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'purgeTournamentRoles',
+        status: 'underway'
+    })
     const servers = await Server.findAll()
     for (let s = 0; s < servers.length; s++) {
         try {
@@ -448,12 +486,21 @@ export const purgeTournamentRoles = async (client) => {
         }
     }
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     return console.log(`purgeTournamentRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // CLEAN UP POOLS
 export const cleanUpPools = async () => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'cleanUpPools',
+        status: 'underway'
+    })
     let b = 0
     let c = 0
     let e = 0
@@ -494,6 +541,11 @@ export const cleanUpPools = async () => {
         }
     }
     
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     console.log(`purged ${b} rated pools, reset ${c} rated pools, encountered ${e} errors`)
     return console.log(`cleanUpPools() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
@@ -561,6 +613,10 @@ export const lookForAllPotentialPairs = async (client) => {
 // RECALCULATE STATS
 export const recalculateStats = async () => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'recalculateStats',
+        status: 'underway'
+    })
     const formats = await Format.findAll({
         where: {
             name: {[Op.gt]: 'Goat'}
@@ -696,6 +752,11 @@ export const recalculateStats = async () => {
 
     }    	
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     console.log(`All recalculations complete!`)
     return console.log(`recalculateStats() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
@@ -814,6 +875,11 @@ export const applyDecay = async (format, currentDate, nextDate) => {
 // MANAGE SUBSCRIBERS
 export const manageSubscriptions = async (client) => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'manageSubscriptions',
+        status: 'underway'
+    })
+
     let a = 0
     let b = 0
     const premiumRoleId = '1102002847056400464'
@@ -853,6 +919,16 @@ export const manageSubscriptions = async (client) => {
         }
     }
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     console.log(`added ${b} new subscriptions and removed ${a} old subscriptions`)
     return console.log(`manageSubscriptions() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
@@ -860,6 +936,10 @@ export const manageSubscriptions = async (client) => {
 // ASSIGN TOURNAMENT PARTICIPANT ROLES
 export const assignTournamentRoles = async (client) => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'assignTournamentRoles',
+        status: 'underway'
+    })
     const servers = await Server.findAll()
     for (let s = 0; s < servers.length; s++) {
         try {
@@ -897,12 +977,22 @@ export const assignTournamentRoles = async (client) => {
         }
     }
 
+
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     return console.log(`assignTournamentRoles() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // UPDATE DECK TYPES
 export const updateDeckTypes = async () => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'updateDeckTypes',
+        status: 'underway'
+    })
     let b = 0
 
     // UPDATE USER DECKS LABELED AS "OTHER"
@@ -934,6 +1024,11 @@ export const updateDeckTypes = async () => {
         }
     }
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     console.log(`updated ${b} decks with suggested deck-types`)
     return console.log(`updateDeckTypes() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
@@ -941,6 +1036,10 @@ export const updateDeckTypes = async () => {
 // UPDATE MARKET PRICES
 export const updateMarketPrices = async () => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'updateMarketPrices',
+        status: 'underway'
+    })
     let b = 0 
     let c = 0
     const prints = await Print.findAll({
@@ -1004,6 +1103,11 @@ export const updateMarketPrices = async () => {
             console.log(err)
         }
     }
+
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
 
     console.log(`created ${b} new prices and checked ${c} other(s)`)
     return console.log(`updateMarketPrices() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
@@ -1161,6 +1265,11 @@ export const updatePrints = async (set, groupId) => {
         }
     }
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     return console.log(`created ${b} new prints for ${set.name}, couldn't find ${c} cards, encountered ${e} errors`)
 }
 
@@ -1297,6 +1406,10 @@ export const downloadCardImage = async (id) => {
 // DOWNLOAD ALT ARTWORKS
 export const downloadAltArtworks = async () => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'downloadAltArtworks',
+        status: 'underway'
+    })
     let b = 0
     let c = 0
     let e = 0
@@ -1401,6 +1514,11 @@ export const downloadAltArtworks = async () => {
         }
     }
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     console.log(`Saved ${b} original artworks, ${c} new artworks, encountered ${e} errors`)
     return console.log(`downloadAltArtworks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
@@ -1500,6 +1618,10 @@ export const downloadCardArtworks = async () => {
 // DOWNLOAD NEW CARDS
 export const downloadNewCards = async () => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'downloadNewCards',
+        status: 'underway'
+    })
     let b = 0
     let c = 0
     let t = 0
@@ -1678,6 +1800,11 @@ export const downloadNewCards = async () => {
         }
     }
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     console.log(`Found ${b} new cards, ${c} new names, ${t} new TCG cards, ${o} new OCG cards, ${p} new Speed Duel cards, encountered ${e} errors`)
     return console.log(`downloadNewCards() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
@@ -1686,6 +1813,10 @@ export const downloadNewCards = async () => {
 // PURGE LOCALS AND INTERNAL DECKS
 export const purgeLocalsAndInternalDecks = async () => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'purgeLocalsAndInternalDecks',
+        status: 'underway'
+    })
     let b = 0
     let e = 0
     const decks = await Deck.findAll({
@@ -1706,6 +1837,11 @@ export const purgeLocalsAndInternalDecks = async () => {
         }
     }
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     console.log(`Purged ${b} locals and internal tournament decks, encountered ${e} errors`)
     return console.log(`purgeLocalsAndInternalDecks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
@@ -1714,6 +1850,10 @@ export const purgeLocalsAndInternalDecks = async () => {
 // PURGE BETA CARDS
 export const purgeBetaCards = async () => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'purgeBetaCards',
+        status: 'underway'
+    })
     let b = 0
     let e = 0
     const { data } = await axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?misc=yes')
@@ -1757,6 +1897,11 @@ export const purgeBetaCards = async () => {
         }
     }
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     console.log(`Purged ${b} beta cards, encountered ${e} errors`)
     return console.log(`purgeBetaCards() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
@@ -1765,6 +1910,10 @@ export const purgeBetaCards = async () => {
 // UPDATE SETS
 export const updateSets = async () => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'updateSets',
+        status: 'underway'
+    })
     let b = 0
     let c = 0
     const { data } = await axios.get('https://db.ygoprodeck.com/api/v7/cardsets.php')
@@ -1829,11 +1978,16 @@ export const updateSets = async () => {
         }
     }
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     console.log(`created ${b} new sets and updated ${c} other(s)`)
     return console.log(`updateSets() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
-// DRAW SET BANNED
+// DRAW SET BANNER
 export const drawSetBanner = async (set) => {
     const prints = await Print.findAll({
         where: {
@@ -1901,6 +2055,10 @@ export const drawSetBanner = async (set) => {
 // UPDATE SERVERS
 export const updateServers = async (client) => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'updateServers',
+        status: 'underway'
+    })
     const guilds = [...client.guilds.cache.values()]
 
     for (let i = 0; i < guilds.length; i++) {
@@ -1972,6 +2130,11 @@ export const updateServers = async (client) => {
         }
     }
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
     return console.log(`updateServers() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
@@ -1979,6 +2142,10 @@ export const updateServers = async (client) => {
 // UPDATE DECKS
 export const updateDecks = async () => {
     const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'updateDecks',
+        status: 'underway'
+    })
     let b = 0
     let e = 0
     const decks = await Deck.findAll({ include: DeckType })
@@ -1998,6 +2165,11 @@ export const updateDecks = async () => {
             console.log(err)
         }
     }
+
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
 
     console.log(`updated ${b} decks, encountered ${e} errors`)
     return console.log(`updateDecks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)

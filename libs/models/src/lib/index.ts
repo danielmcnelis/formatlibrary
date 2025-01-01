@@ -6,6 +6,7 @@ import { Artwork } from './Artwork'
 import { BlogPost } from './BlogPost'
 import { CardDeckType } from './CardDeckType'
 import { Card } from './Card'
+import { ChronRecord } from './ChronRecord'
 import { Cube } from './Cube'
 import { Deck } from './Deck'
 import { DeckTypeArchetype } from './DeckTypeArchetype'
@@ -445,6 +446,7 @@ export {
   BlogPost,
   Card,
   CardDeckType,
+  ChronRecord,
   Cube,
   Deck,
   DeckTypeArchetype,
