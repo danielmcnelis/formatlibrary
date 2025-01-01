@@ -10,11 +10,12 @@ export const MiniBoard = (props) => {
     const { format, limit } = props
     const [miniboard, setMiniBoard] = useState([])
     const navigate = useNavigate()
-    const statsType = location?.search?.slice(5)
+    const statsType = format.useSeasonal ? 'seasonal' : 'general'
     const videoPlaylistId = format?.videoPlaylistId
-    let [eloType, winsType, lossesType] = statsType === 'seasonal' ? 
+    let [eloType, winsType, lossesType, url] = statsType === 'seasonal' ? 
         ['seasonalElo', 'seasonalWins', 'seasonalLosses'] :
         ['elo', 'wins', 'losses']
+    
     const goToLeaderBoard = () => navigate(`/leaderboards/${format.name.toLowerCase()}`)
 
     // USE EFFECT FETCH DATA

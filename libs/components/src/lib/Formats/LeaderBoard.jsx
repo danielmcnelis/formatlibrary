@@ -12,7 +12,7 @@ export const LeaderBoard = () => {
     const [leaderboard, setLeaderboard] = useState([])
     const { id } = useParams()
     const location = useLocation()
-    const statsType = location?.search?.slice(5)
+    const statsType = location?.search?.slice(6)
     console.log('statsType', statsType)
     const videoPlaylistId = format?.videoPlaylistId
     let [eloType, winsType, lossesType] = statsType === 'seasonal' ? 
