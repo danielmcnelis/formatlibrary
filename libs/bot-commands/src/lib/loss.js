@@ -44,7 +44,7 @@ export default {
             if (losingPlayer.isHidden) return await interaction.reply(`You are not allowed to play in the Format Library rated system.`)
             if (winningPlayer.isHidden) return await interaction.reply(`That user is not allowed to play in the Format Library rated system.`)
             
-            const winnerStats = await Stats.findOrCreate({
+            const winnerStats = [...await Stats.findOrCreate({
                 where: {
                     playerName: winningPlayer.name, 
                     playerId: winningPlayer.id, 
@@ -53,11 +53,11 @@ export default {
                     serverId: serverId, 
                     isInternal: server.hasInternalLadder
                 }
-            })[0]
+            })][0]
 
             console.log('winnerStats', winnerStats)
 
-            const loserStats = await Stats.findOrCreate({
+            const loserStats = [...await Stats.findOrCreate({
                 where: {
                     playerName: losingPlayer.name, 
                     playerId: losingPlayer.id, 
@@ -66,7 +66,7 @@ export default {
                     serverId: serverId, 
                     isInternal: server.hasInternalLadder
                 }
-            })[0]
+            })][0]
 
 
             console.log('loserStats', loserStats)

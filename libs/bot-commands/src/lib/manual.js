@@ -58,7 +58,7 @@ export default {
             if (winningPlayer.isHidden) return await interaction.reply(`Sorry, <@${winnerDiscordId}> is not allowed to play in the Format Library rated system.`)
             if (losingPlayer.isHidden) return await interaction.reply(`Sorry, <@${loserDiscordId}> is not allowed to play in the Format Library rated system.`)
 
-            const winnerStats = await Stats.findOrCreate({
+            const winnerStats = [...await Stats.findOrCreate({
                 where: {
                     playerName: winningPlayer.name, 
                     playerId: winningPlayer.id, 
@@ -67,9 +67,9 @@ export default {
                     serverId: serverId, 
                     isInternal: server.hasInternalLadder
                 }
-            })
+            })][0]
 
-            const loserStats = await Stats.findOrCreate({
+            const loserStats = [...await Stats.findOrCreate({
                 where: {
                     playerName: losingPlayer.name, 
                     playerId: losingPlayer.id, 
@@ -78,7 +78,7 @@ export default {
                     serverId: serverId, 
                     isInternal: server.hasInternalLadder
                 }
-            })
+            })][0]
             
             const activeTournament = await Tournament.count({ where: { state: 'underway', serverId: interaction.guildId, formatName: {[Op.or]: [format.name, 'Multiple']} }}) 
             let isTournament, winningEntry, losingEntry, tournament, tournamentId, match, challongeMatch
