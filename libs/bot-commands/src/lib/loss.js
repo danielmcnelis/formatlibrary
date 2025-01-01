@@ -53,7 +53,7 @@ export default {
                     serverId: serverId, 
                     isInternal: server.hasInternalLadder
                 }
-            })
+            })[0]
 
             console.log('winnerStats', winnerStats)
 
@@ -66,7 +66,7 @@ export default {
                     serverId: serverId, 
                     isInternal: server.hasInternalLadder
                 }
-            })
+            })[0]
 
 
             console.log('loserStats', loserStats)
