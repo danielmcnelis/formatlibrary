@@ -30,6 +30,7 @@ export default {
         .setDMPermission(false),
     async execute(interaction) {
         try {
+            const now = new Date()
             await interaction.deferReply()
             const winner = interaction.options.getUser('winner')
             const winningMember = await interaction.guild?.members.fetch(winner.id).catch((err) => console.log(err))
@@ -109,7 +110,6 @@ export default {
                     const tournament = await selectTournament(interaction, tournaments, interaction.user.id)
                     if (tournament) {
                         isTournament = true
-                        tournamentId = tournament.id
                         challongeMatch = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament, format) :
                             await processMatchResult(server, interaction, winner, winningPlayer, loser, losingPlayer, tournament, format)
                         if (!challongeMatch) return
@@ -128,11 +128,13 @@ export default {
                 }
             })
 
-
+            console.log('!!pairing', !!pairing)
             const isRated = (isTournament && tournament?.isRanked) || server.hasRatedPermission || server.hasInternalLadder
-            const isSeasonal = pairing && format.useSeasonalElo && now < format.seasonResetDate
+            console.log('isRated', isRated)
+            const isSeasonal = pairing && format.useSeasonalElo && format.seasonResetDate < now
+            console.log('isSeasonal', isSeasonal)
 
-            if (isRated) { 
+            if (isRated || isSeasonal) { 
                 const [winnerDelta, loserDelta, classicDelta] = await updateGeneralStats(winnerStats, loserStats)
                 match = await Match.create({
                     winnerName: winningPlayer.name,
@@ -153,9 +155,11 @@ export default {
                     isInternal: server.hasInternalLadder,
                     serverId: serverId
                 })
-            } else if (isSeasonal) {
+            }
+            
+            if (isSeasonal) {
                 await updateSeasonalStats(winnerStats, loserStats)
-            } else if (!isTournament) {
+            } else if (!isRated && !isTournament) {
                 return await interaction.editReply({ content: `Sorry, outside of tournaments and war leagues, rated matches may only be played via the official rated pool.`})
             }
 

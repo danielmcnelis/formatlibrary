@@ -117,10 +117,13 @@ export default {
                 }
             })
 
+            console.log('!!pairing', !!pairing)
             const isRated = (isTournament && tournament?.isRanked) || server.hasRatedPermission || server.hasInternalLadder
-            const isSeasonal = pairing && format.useSeasonalElo && now < format.seasonResetDate
+            console.log('isRated', isRated)
+            const isSeasonal = pairing && format.useSeasonalElo && format.seasonResetDate < now
+            console.log('isSeasonal', isSeasonal)
 
-            if (isRated) { 
+            if (isRated || isSeasonal) { 
                 const [winnerDelta, loserDelta, classicDelta] = await updateGeneralStats(winnerStats, loserStats)
                 match = await Match.create({
                     winnerName: winningPlayer.name,
@@ -141,12 +144,14 @@ export default {
                     isInternal: server.hasInternalLadder,
                     serverId: serverId
                 })
-            } else if (isSeasonal) {
-                await updateSeasonalStats(winnerStats, loserStats)
-            } else if (!isTournament) {
-                return await interaction.editReply({ content: `Sorry, outside of tournaments and war leagues, rated matches may only be played via the official rated pool. Try using the **/rated** command by DM'ing it to me.`})
             }
-                
+            
+            if (isSeasonal) {
+                await updateSeasonalStats(winnerStats, loserStats)
+            } else if (!isRated && !isTournament) {
+                return await interaction.editReply({ content: `Sorry, outside of tournaments and war leagues, rated matches may only be played via the official rated pool.`})
+            }
+
             if (pairing) {
                 const winnerIsPlayerA = pairing.playerAId === winningPlayer.id
                 const winningDeckFile = winnerIsPlayerA ? pairing.deckFileA : pairing.deckFileB
