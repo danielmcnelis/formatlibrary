@@ -67,6 +67,9 @@ export const Server = db.define('servers', {
   },
   logoName: {
     type: Sequelize.STRING
+  },
+  hasRatedPermission: {
+    type: Sequelize.BOOLEAN
   }
 })
 
