@@ -55,6 +55,8 @@ export default {
                 }
             })
 
+            console.log('winnerStats', winnerStats)
+
             const loserStats = await Stats.findOrCreate({
                 where: {
                     playerName: losingPlayer.name, 
@@ -65,6 +67,9 @@ export default {
                     isInternal: server.hasInternalLadder
                 }
             })
+
+
+            console.log('loserStats', loserStats)
 
             const activeTournament = await Tournament.count({ where: { state: 'underway', serverId: interaction.guildId, formatName: {[Op.or]: [format.name, 'Multiple']} }}) 
             let isTournament, winningEntry, losingEntry, tournament, match, challongeMatch
