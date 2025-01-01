@@ -55,8 +55,6 @@ export default {
                 }
             })][0]
 
-            console.log('winnerStats', winnerStats)
-
             const loserStats = [...await Stats.findOrCreate({
                 where: {
                     playerName: losingPlayer.name, 
@@ -67,9 +65,6 @@ export default {
                     isInternal: server.hasInternalLadder
                 }
             })][0]
-
-
-            console.log('loserStats', loserStats)
 
             const activeTournament = await Tournament.count({ where: { state: 'underway', serverId: interaction.guildId, formatName: {[Op.or]: [format.name, 'Multiple']} }}) 
             let isTournament, winningEntry, losingEntry, tournament, match, challongeMatch
@@ -207,7 +202,7 @@ export default {
                 }, 5 * 60 * 1000)
             }
 
-            const content = `${losingPlayer.name}, your ${isRated ? 'Rated ' : 'Unrated '}${isSeasonal ? 'Seasonal ' : ''}${server.hasInternalLadder ? 'Internal ' : ''}${format.name} Format ${format.emoji} ${isTournament ? 'Tournament ' : ''}loss to <@${winningPlayer.discordId}> has been recorded.`
+            const content = `${losingPlayer.name}, your ${isRated || isSeasonal ? 'Rated ' : 'Unrated '}${isSeasonal ? 'Seasonal ' : ''}${server.hasInternalLadder ? 'Internal ' : ''}${format.name} Format ${format.emoji} ${isTournament ? 'Tournament ' : ''}loss to <@${winningPlayer.discordId}> has been recorded.`
             return await interaction.editReply({ content })
         } catch (err) {
             console.log(err)

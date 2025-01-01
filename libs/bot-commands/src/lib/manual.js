@@ -81,7 +81,7 @@ export default {
             })][0]
             
             const activeTournament = await Tournament.count({ where: { state: 'underway', serverId: interaction.guildId, formatName: {[Op.or]: [format.name, 'Multiple']} }}) 
-            let isTournament, winningEntry, losingEntry, tournament, tournamentId, match, challongeMatch
+            let isTournament, winningEntry, losingEntry, tournament, match, challongeMatch
 
             if (activeTournament) {
                 const loserTournamentIds = [...await Entry.findByPlayerIdAndFormatId(losingPlayer.id, format.id)].map((e) => e.tournamentId)
@@ -216,7 +216,7 @@ export default {
                 }, 5 * 60 * 1000)
             }
             
-            const content = `A manual ${isRated ? 'Rated ' : 'Unrated '}${server.hasInternalLadder ? 'Internal ' : ''}${format.name} Format ${format.emoji} ${isSeasonal ? 'Seasonal ' : isTournament ? 'Tournament ' : ''}loss by <@${losingPlayer.discordId}> to <@${winningPlayer.discordId}> has been recorded.`
+            const content = `A manual ${isRated || isSeasonal ? 'Rated ' : 'Unrated '}${server.hasInternalLadder ? 'Internal ' : ''}${format.name} Format ${format.emoji} ${isSeasonal ? 'Seasonal ' : isTournament ? 'Tournament ' : ''}loss by <@${losingPlayer.discordId}> to <@${winningPlayer.discordId}> has been recorded.`
             return await interaction.editReply({ content })
         } catch (err) {
             console.log(err)

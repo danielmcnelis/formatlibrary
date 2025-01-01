@@ -608,7 +608,7 @@ export const updateGeneralStats = async (winnerStats, loserStats) => {
     await winnerStats.update({
         elo: winnerStats.elo + winnerDelta,
         backupElo: winnerStats.elo,
-        bestElo: Math.max(winnerStats.elo + winnerDelta, winnerStats.bestElo),
+        bestElo: Math.max((winnerStats.elo + winnerDelta), winnerStats.bestElo),
         classicElo: winnerStats.classicElo + classicDelta,
         backupClassicElo: winnerStats.classicElo,
         wins: winnerStats.wins + 1,
@@ -640,15 +640,15 @@ export const updateSeasonalStats = async (winnerStats, loserStats) => {
     await winnerStats.update({
         seasonalElo: winnerStats.seasonalElo + winnerDelta,
         backupSeasonalElo: winnerStats.seasonalElo,
-        bestSeasonalElo: Math.max(winnerStats.seasonalElo + winnerDelta, winnerStats.bestSeasonalElo),
-        seasonalWins: winnerStats.wins + 1,
-        seasonalGames: winnerStats.games + 1
+        bestSeasonalElo: Math.max((winnerStats.seasonalElo + winnerDelta), winnerStats.bestSeasonalElo),
+        seasonalWins: winnerStats.seasonalWins + 1,
+        seasonalGames: winnerStats.seasonalGames + 1
     })
 
     await loserStats.update({
-        elo: loserStats.seasonalElo - loserDelta,
+        seasonalElo: loserStats.seasonalElo - loserDelta,
         backupSeasonalElo: loserStats.seasonalElo,
-        seasonalLosses: loserStats.losses + 1,
-        seasonalGames: loserStats.games + 1
+        seasonalLosses: loserStats.seasonalLosses + 1,
+        seasonalGames: loserStats.seasonalGames + 1
     })
 }
