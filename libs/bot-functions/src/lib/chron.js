@@ -45,30 +45,44 @@ export const runHourlyTasks = async (client) => {
 
 // RUN NIGHTLY TASKS
 export const runNightlyTasks = async (client) => {
-    await manageSubscriptions(client)
-    await purgeEntries()
-    await purgeTournamentRoles(client)
-    await assignTournamentRoles(client)
-    await purgeLocalsAndInternalDecks(client)
-    await refreshExpiredTokens()
-    await updateSets()
-    await updateDecks()
-    await updateDeckTypes()
-    await downloadNewCards()
-    await downloadAltArtworks()
-    await updateServers(client)
-    await conductCensus(client)
-    await updateAvatars(client)
-    await updateMarketPrices()
-    // await markInactives()
-    await recalculateStats()
-     
-    // MONTHLY TASKS
-    const remainingDaysInMonth = getRemainingDaysInMonth()
-    if (remainingDaysInMonth === 1) {
-        await runMonthlyTasks(client)
+    try {
+        const index = await ChronRecord.findAll({
+            where: {
+                status: 'complete'
+            }
+        })
+        
+        const tasks = [
+            manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
+            purgeLocalsAndInternalDecks, refreshExpiredTokens, updateSets, updateDecks,
+            updateDeckTypes, downloadNewCards, downloadAltArtworks, updateServers, conductCensus,
+            recalculateStats, updateAvatars, updateMarketPrices
+        ]
+    
+        for (let i = index; i < tasks.length; i++) {
+            await tasks[index](client)
+    
+            if (i === tasks.length - 1) {
+                const records = await ChronRecord.findAll({
+                    where: {
+                        status: 'complete'
+                    }
+                })
+    
+                for (let j = 0; j < records.length; j++) {
+                    await records[j].update({ status: 'archived' })
+                }
+    
+                const remainingDaysInMonth = getRemainingDaysInMonth()
+                if (remainingDaysInMonth === 1) {
+                    await runMonthlyTasks(client)
+                }
+            }
+        }
+    } catch (err) {
+        console.log(err)
     }
-
+    
     return setTimeout(() => runNightlyTasks(client), getMidnightCountdown())
 }
 
