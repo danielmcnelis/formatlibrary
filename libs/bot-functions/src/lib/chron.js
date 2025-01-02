@@ -517,10 +517,7 @@ export const purgeTournamentRoles = async (client) => {
 // CLEAN UP POOLS
 export const cleanUpPools = async () => {
     const start = Date.now()
-    const chronRecord = await ChronRecord.create({
-        function: 'cleanUpPools',
-        status: 'underway'
-    })
+    
     let b = 0
     let c = 0
     let e = 0
@@ -560,11 +557,6 @@ export const cleanUpPools = async () => {
             console.log(err)
         }
     }
-    
-    await chronRecord.update({
-        status: 'complete',
-        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
-    })
 
     console.log(`purged ${b} rated pools, reset ${c} rated pools, encountered ${e} errors`)
     return console.log(`cleanUpPools() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
