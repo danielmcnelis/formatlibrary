@@ -199,7 +199,9 @@ export default {
                 }, 5 * 60 * 1000)
             }
 
-            const content = `${losingPlayer.name}, your ${isRated ? 'Rated ' : 'Unrated '}${server.hasInternalLadder ? 'Internal ' : ''}${format.name} Format ${format.emoji} ${isSeasonal ? 'Seasonal ' : isTournament ? 'Tournament ' : ''}loss to <@${winningPlayer.discordId}> has been recorded.`
+            const month = now.getMonth()
+            const season = month === 11 || month < 2 ? '<:winter:1324163611131904093>' : month < 5 ? '<:spring:1324167225887817920>' : month < 8 ? '<:summer:1324167546303414324>' : '<:autumn:1324158718543269918>'
+            const content = `${losingPlayer.name}, your ${isSeasonal ? `Seasonal ${season} ` : server.hasInternalLadder ? 'Internal ' : ''}${format.name} Format ${format.emoji} ${isRated && isTournament ? 'Tournament 🏆 ' : !isRated && isTournament ? 'Unrated Tournament 🏆 ' :''}loss to <@${winningPlayer.discordId}> has been recorded.`
             return await interaction.editReply({ content })
         } catch (err) {
             console.log(err)
