@@ -806,9 +806,9 @@ export const applyDecay = async (formatId, currentDate, nextDate, useSeasonalElo
                     {[Op.gte]: currentDate},
                     {[Op.lt]: nextDate}
                 ]
-            },
-            attributes: ['formatId', 'createdAt', 'winnerId', 'loserId']
-        }
+            }
+        },
+        attributes: ['formatId', 'createdAt', 'winnerId', 'loserId']
     })
 
     const activeGeneralPlayerIds = []
@@ -851,9 +851,9 @@ export const applyDecay = async (formatId, currentDate, nextDate, useSeasonalElo
                         {[Op.gte]: currentDate},
                         {[Op.lt]: nextDate}
                     ]
-                },
-                attributes: ['winnerId', 'loserId', 'formatId', 'isSeasonal', 'createdAt']
-            }
+                }
+            },
+            attributes: ['winnerId', 'loserId', 'formatId', 'isSeasonal', 'createdAt']
         })
     
         const activeSeasonalPlayerIds = []
