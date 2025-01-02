@@ -617,10 +617,8 @@ export const recalculateStats = async () => {
         function: 'recalculateStats',
         status: 'underway'
     })
+
     const formats = await Format.findAll({
-        where: {
-            name: {[Op.gt]: 'Goat'}
-        },
         order: [["name", "ASC"]]
     })
     
