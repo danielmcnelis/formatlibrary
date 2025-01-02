@@ -26,9 +26,9 @@ export default {
                 // await updateDecks()
                 // await updateReplays()
                 // await updateMatchups()
-                return recalculateStats()
+                // return recalculateStats()
                 // return updateGlobalNames()
-                // return runNightlyTasks(client)
+                return runNightlyTasks(client)
                 // return runMonthlyTasks(client)
             } else {
                 await interaction.editReply('🧪')
