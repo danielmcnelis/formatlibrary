@@ -788,13 +788,13 @@ export const applyDecay = async (formatId, currentDate, nextDate, useSeasonalElo
                 seasonalElo: {[Op.gte]: 500}
             }
         },
-        attributes: ['formatId', 'playerId', 'elo', 'seasonalElo']
+        attributes: ['id', 'formatId', 'playerId', 'elo', 'seasonalElo']
     }) : await Stats.findAll({
         where: {
             formatId: formatId,
             elo: {[Op.gte]: 500}
         },
-        attributes: ['formatId', 'playerId', 'elo']
+        attributes: ['id', 'formatId', 'playerId', 'elo']
     })
 
     // GENERAL MATCHES
