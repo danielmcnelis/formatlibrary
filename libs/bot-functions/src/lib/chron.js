@@ -51,12 +51,13 @@ export const runNightlyTasks = async (client) => {
                 status: 'complete'
             }
         })
+        console.log('index', index)
         
         const tasks = [
             manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
             purgeLocalsAndInternalDecks, refreshExpiredTokens, updateSets, updateDecks,
             updateDeckTypes, downloadNewCards, downloadAltArtworks, updateServers, conductCensus,
-            recalculateStats, updateAvatars, updateMarketPrices
+            updateAvatars, updateMarketPrices, recalculateStats
         ]
     
         for (let i = index; i < tasks.length; i++) {
