@@ -581,7 +581,7 @@ export const sendRatedPairingNotifications = async (client, player, opponent, fo
 }
 
 // GET ELO K-FACTOR
-export const getEloKFactor = (games, bestElo) => {
+export const getKFactor = (games, bestElo) => {
     if (games < 20 && bestElo < 560) {
         return 24
     } else if (bestElo < 560) {
@@ -596,10 +596,15 @@ export const getEloDelta = (kFactor, winnersElo, losersElo) => {
     return kFactor * (1 - (1 - 1 / ( 1 + (Math.pow(10, ((winnersElo - losersElo) / 400))))))
 }
 
+// GET SEASON
+export const getSeason = (month) => {
+    return month === 11 || month < 2 ? '<:winter:1324163611131904093>' : month < 5 ? '<:spring:1324167225887817920>' : month < 8 ? '<:summer:1324167546303414324>' : '<:autumn:1324158718543269918>'
+}
+
 // UPDATE GENERAL STATS
 export const updateGeneralStats = async (winnerStats, loserStats) => {
-    const winnerKFactor = getEloKFactor(winnerStats.games, winnerStats.bestElo)
-    const loserKFactor = getEloKFactor(loserStats.games, loserStats.bestElo)
+    const winnerKFactor = getKFactor(winnerStats.games, winnerStats.bestElo)
+    const loserKFactor = getKFactor(loserStats.games, loserStats.bestElo)
     const winnerDelta = getEloDelta(winnerKFactor, winnerStats.elo, loserStats.elo)
     const loserDelta = getEloDelta(loserKFactor, winnerStats.elo, loserStats.elo)
     const classicDelta = getEloDelta(20, winnerStats.elo, loserStats.elo)
@@ -631,8 +636,8 @@ export const updateGeneralStats = async (winnerStats, loserStats) => {
 
 // UPDATE SEASONAL STATS
 export const updateSeasonalStats = async (winnerStats, loserStats) => {
-    const winnerKFactor = getEloKFactor(winnerStats.seasonalGames, winnerStats.bestSeasonalElo)
-    const loserKFactor = getEloKFactor(loserStats.seasonalGames, loserStats.bestSeasonalElo)
+    const winnerKFactor = getKFactor(winnerStats.seasonalGames, winnerStats.bestSeasonalElo)
+    const loserKFactor = getKFactor(loserStats.seasonalGames, loserStats.bestSeasonalElo)
     const winnerDelta = getEloDelta(winnerKFactor, winnerStats.seasonalElo, loserStats.seasonalElo)
     const loserDelta = getEloDelta(loserKFactor, winnerStats.seasonalElo, loserStats.seasonalElo)
     

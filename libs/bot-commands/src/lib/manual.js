@@ -4,7 +4,7 @@ import { SlashCommandBuilder } from 'discord.js'
 import { 
     createPlayer, getDeckType, isModerator, isNewUser, hasPartnerAccess, lookForPotentialPairs, 
     checkPairing, getMatches, processMatchResult, processTeamResult, selectTournament,
-    updateGeneralStats, updateSeasonalStats
+    updateGeneralStats, updateSeasonalStats, getSeason
 } from '@fl/bot-functions'
 
 import { emojis } from '@fl/bot-emojis'
@@ -150,7 +150,8 @@ export default {
                     isRatedPairing: !!pairing && !isTournament,
                     isSeasonal: isSeasonal,
                     isInternal: server.hasInternalLadder,
-                    serverId: serverId
+                    serverId: serverId,
+                    pairingId: pairing?.id
                 })
             }
             
@@ -209,8 +210,7 @@ export default {
                 }, 5 * 60 * 1000)
             }
             
-            const month = now.getMonth()
-            const season = month === 11 || month < 2 ? '<:winter:1324163611131904093>' : month < 5 ? '<:spring:1324167225887817920>' : month < 8 ? '<:summer:1324167546303414324>' : '<:autumn:1324158718543269918>'
+            const season = getSeason(now.getMonth())
             const content = `A manual ${isSeasonal ? `Seasonal ${season} ` : server.hasInternalLadder ? 'Internal ' : ''}${format.name} Format ${format.emoji} ${isRated && isTournament ? 'Tournament 🏆 ' : !isRated && isTournament ? 'Unrated Tournament 🏆 ' :''}loss by <@${losingPlayer.discordId}> to <@${winningPlayer.discordId}> has been recorded.`
             return await interaction.editReply({ content })
         } catch (err) {

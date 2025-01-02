@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { hasPartnerAccess, getMedal, urlize } from '@fl/bot-functions'
+import { hasPartnerAccess, getMedal, urlize, getSeason} from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { Format, Player, Server, Stats } from '@fl/models'
 import { Op } from 'sequelize'
@@ -19,8 +19,9 @@ export default {
             if (!format) return await interaction.reply({ content: `Try using **/leaderboard** in channels like: <#414575168174948372> or <#629464112749084673>.`})
             const serverId = server.hasInternalLadder ? server.id : '414551319031054346'
 
+            const season = getSeason(now.getMonth())
             const [eloType, gamesType, statsType] = !server.hasInternalLadder && format.useSeasonalElo && format.seasonResetDate < now ? 
-                ['seasonalElo', 'seasonalGames', 'Seasonal '] : 
+                ['seasonalElo', 'seasonalGames', `Seasonal ${season} `] : 
                 ['elo', 'games', '']
 
             const stats = await Stats.findAll({ 

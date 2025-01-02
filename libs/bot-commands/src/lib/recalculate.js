@@ -1,8 +1,8 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { isModerator, hasPartnerAccess, getNextDateAtMidnight, applyDecay, updateGeneralStats, updateSeasonalStats } from '@fl/bot-functions'
+import { isModerator, hasPartnerAccess, recalculateFormatStats } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
-import { Format, Match, Player, Server, Stats } from '@fl/models'
+import { Format, Match, Server } from '@fl/models'
 
 // RECALCULATE
 // Use this command to recalculate every player's Elo from scratch.
@@ -31,123 +31,7 @@ export default {
             const count = await Match.count({ where: { formatName: format.name, serverId: serverId }})
             interaction.reply({ content: `Recalculating data from ${count} ${format.name} ${format.emoji} matches. Please wait...`})
             
-            const allMatches = await Match.findAll({ 
-                where: { formatId: format.id, serverId: '414551319031054346' }, 
-                attributes: ['id', 'formatId', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'createdAt'], 
-                order: [["createdAt", "ASC"]]
-            })
-            
-            let currentDate = allMatches[0].createdAt
-            let nextDate = getNextDateAtMidnight(currentDate)
-            
-            const allStats = await Stats.findAll({ 
-                where: { formatId: format.id, serverId: '414551319031054346' }, 
-                attributes: [
-                    'id', 'formatName', 'formatId', 'elo', 'bestElo', 'backupElo', 
-                    'seasonalElo', 'classicElo', 'wins', 'losses', 'games', 
-                    'currentStreak', 'bestStreak', 'vanquished', 'playerId', 'serverId'
-                ], 
-                include: { model: Player, attributes: ['id', 'name']} 
-            })
-
-            for (let j = 0; j < allStats.length; j++) {
-                const stats = allStats[j]
-                await stats.update({
-                    elo: 500.00,
-                    bestElo: 500.00,
-                    backupElo: null,
-                    wins: 0,
-                    losses: 0,
-                    games: 0,
-                    seasonalElo: 500.00,
-                    bestSeasonalElo: 500.00,
-                    backupSeasonalElo: null,
-                    seasonalWins: 0,
-                    seasonalLosses: 0,
-                    seasonalGames: 0,
-                    classicElo: 500.00,
-                    backupClassicElo: null,
-                    currentStreak: 0,
-                    bestStreak: 0,
-                    vanquished: 0
-                })
-            }
-
-            for (let j = 0; j < allMatches.length; j++) {
-                try {
-                    const match = allMatches[j]
-                    if (match.createdAt > nextDate) {
-                        await applyDecay(format, currentDate, match.createdAt)
-                        currentDate = match.createdAt
-                        nextDate = getNextDateAtMidnight(currentDate)
-                    }
-
-                    const winnerId = match.winnerId
-                    const loserId = match.loserId
-                    const winnerStats = allStats.find((s) => s.playerId === winnerId)
-                    const loserStats = allStats.find((s) => s.playerId === loserId)
-
-                    if (!winnerStats) {
-                        const stats = await Stats.create({
-                            playerName: match.winnerName,
-                            playerId: winnerId,
-                            formatName: format.name,
-                            formatId: format.id,
-                            serverId: '414551319031054346',
-                            isInternal: false
-                        })
-
-                        console.log('created new winner stats', winnerId)
-                        allStats.push(stats)
-                        j--
-                        continue
-                    }
-        
-                    if (!loserStats) {
-                        const stats = await Stats.create({
-                            playerName: match.loserName,
-                            playerId: loserId,
-                            formatName: format.name,
-                            formatId: format.id,
-                            serverId: '414551319031054346',
-                            isInternal: false
-                        })
-
-                        console.log('created new loser stats:', loserId)
-                        allStats.push(stats)
-                        j--
-                        continue
-                    }
-
-                    const [winnerDelta, loserDelta] = await updateGeneralStats(winnerStats, loserStats)
-                    if (match.isSeasonal && format.seasonResetDate < match.createdAt) await updateSeasonalStats(winnerStats, loserStats)
-                    await match.update({ winnerDelta, loserDelta })
-                    console.log(`${format.name} Match ${j+1}: ${winnerStats.player.name} > ${loserStats.player.name}`)
-                } catch (err) {
-                    console.log(err)
-                }
-            }
-
-            for (let j = 0; j < allStats.length; j++) {
-                const stats = allStats[j]
-                const victories = await Match.findAll({
-                    where: {
-                        winnerId: stats.playerId,
-                        formatId: format.id, 
-                        serverId: '414551319031054346'
-                    }
-                })
-
-                const vanquishedIds = []
-                victories.forEach((v) => {
-                    if (!vanquishedIds.includes(v.loserId)) vanquishedIds.push(v.loserId)
-                })
-
-                console.log(`${stats.player?.name} (${stats.playerId}) has defeated ${vanquishedIds.length} unique opponents`)
-                await stats.update({ vanquished: vanquishedIds.length })
-            }
-
-            console.log(`Recalculation for ${format.name} Format is complete!`)
+            await recalculateFormatStats(format)
             return await interaction.channel.send({ content: `Recalculation complete!`})	
         } catch (err) {
             console.log(err)
