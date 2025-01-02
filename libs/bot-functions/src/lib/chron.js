@@ -438,6 +438,11 @@ export const purgeEntries = async () => {
         console.log(err)
     }
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+    
     console.log(`Purged ${count} old tournament entries from the database.`)
     return console.log(`purgeEntries() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
@@ -578,7 +583,7 @@ export const lookForAllPotentialPairs = async (client) => {
     
         for (let i = 0; i < potentialPairs.length; i++) {
             const potentialPair = potentialPairs[i]
-            const tenMinutesAgo = new Date(Date.now() - (10 * 60 * 1000))
+            const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
     
             const isRecentOpponent = await Match.count({
                 where: {
@@ -593,7 +598,7 @@ export const lookForAllPotentialPairs = async (client) => {
                         },
                     },
                     formatId: pool.formatId,
-                    createdAt: {[Op.gte]: tenMinutesAgo }
+                    createdAt: {[Op.gte]: twoMinutesAgo }
                 }
             })
     
@@ -831,7 +836,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
         const activeSeasonalPlayerIds = []
         const activeSeasonalPlayerNames = []
         let seasonalDecayRate = Math.pow(Math.E, (-1 * seasonalMatchesInPeriod.length) / 600)
-        if (seasonalDecayRate > 0.9975) generalDecayRate = 0.9975
+        if (seasonalDecayRate > 0.99) generalDecayRate = 0.99
 
         for (let i = 0; i < seasonalMatchesInPeriod.length ; i++) {
             const {winnerId, winnerName, loserId, loserName} = seasonalMatchesInPeriod[i]
@@ -1257,11 +1262,6 @@ export const updatePrints = async (set, groupId) => {
             e++
         }
     }
-
-    await chronRecord.update({
-        status: 'complete',
-        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
-    })
 
     return console.log(`created ${b} new prints for ${set.name}, couldn't find ${c} cards, encountered ${e} errors`)
 }

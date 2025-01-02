@@ -58,7 +58,6 @@ export const joinRatedPool = async (req, res, next) => {
             const ppid = potentialPair.playerId
             
             const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
-            const tenMinutesAgo = new Date(Date.now() - (10 * 60 * 1000))
 
             const yourRecentOpponents = [...await Match.findAll({
                 where: {
@@ -67,7 +66,7 @@ export const joinRatedPool = async (req, res, next) => {
                         loserId: player.id
                     },
                     formatName: format.name,
-                    createdAt: {[Op.gte]: tenMinutesAgo }
+                    createdAt: {[Op.gte]: twoMinutesAgo }
                 }
             })].map((m) => {
                 if (player.id === m.winnerId) {

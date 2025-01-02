@@ -149,7 +149,7 @@ export default {
                 return await interaction.editReply({ content: `Sorry, outside of tournaments and war leagues, rated matches may only be played via the official rated pool.`})
             }
 
-            if (pairing) {
+            if (!isTournament && pairing) {
                 const winnerIsPlayerA = pairing.playerAId === winningPlayer.id
                 const winningDeckFile = winnerIsPlayerA ? pairing.deckFileA : pairing.deckFileB
                 const losingDeckFile = winnerIsPlayerA ? pairing.deckFileB : pairing.deckFileA

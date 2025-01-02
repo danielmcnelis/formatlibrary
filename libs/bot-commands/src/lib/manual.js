@@ -160,43 +160,39 @@ export default {
                 return await interaction.editReply({ content: `Sorry, outside of tournaments and war leagues, rated matches may only be played via the official rated pool.`})
             }
 
-            if (!isTournament) {
-                if (pairing) {
-                    const winnerIsPlayerA = pairing.playerAId === winningPlayer.id
-                    const winningDeckFile = winnerIsPlayerA ? pairing.deckFileA : pairing.deckFileB
-                    const losingDeckFile = winnerIsPlayerA ? pairing.deckFileB : pairing.deckFileA
-                    const winningDeckType = await getDeckType(winningDeckFile, format.name)
-                    const losingDeckType = await getDeckType(losingDeckFile, format.name)
+            if (!isTournament && pairing) {
+                const winnerIsPlayerA = pairing.playerAId === winningPlayer.id
+                const winningDeckFile = winnerIsPlayerA ? pairing.deckFileA : pairing.deckFileB
+                const losingDeckFile = winnerIsPlayerA ? pairing.deckFileB : pairing.deckFileA
+                const winningDeckType = await getDeckType(winningDeckFile, format.name)
+                const losingDeckType = await getDeckType(losingDeckFile, format.name)
 
-                    await Matchup.create({
-                        winningDeckTypeName: winningDeckType?.name,
-                        losingDeckTypeName: losingDeckType?.name,
-                        winningDeckTypeId: winningDeckType?.id,
-                        losingDeckTypeId: losingDeckType?.id,
-                        formatId: format.id,
-                        formatName: format.name,
-                        matchId: match.id,
-                        pairingId: pairing.id,
-                        source: 'pool'
-                    })
+                await Matchup.create({
+                    winningDeckTypeName: winningDeckType?.name,
+                    losingDeckTypeName: losingDeckType?.name,
+                    winningDeckTypeId: winningDeckType?.id,
+                    losingDeckTypeId: losingDeckType?.id,
+                    formatId: format.id,
+                    formatName: format.name,
+                    matchId: match.id,
+                    pairingId: pairing.id,
+                    source: 'pool'
+                })
 
-                    await pairing.update({ status: 'complete' })
-                } else {
-                    return await interaction.editReply({ content: `Sorry, aside from tournaments, rated matches may only be played via the official rated pool.`})
+                await pairing.update({ status: 'complete' })
+
+                const poolsToUpdate = await Pool.findAll({
+                    where: {
+                        playerId: {[Op.or]: [winningPlayer.id, losingPlayer.id]},
+                        status: 'inactive'
+                    }
+                }) || []
+
+                for (let d = 0; d < poolsToUpdate.length; d++) {
+                    const rPTU = poolsToUpdate[d]
+                    await rPTU.update({ status: 'pending' })
+                    lookForPotentialPairs(client, interaction, rPTU, rPTU.player, rPTU.format)
                 }
-            }
-
-            const poolsToUpdate = await Pool.findAll({
-                where: {
-                    playerId: {[Op.or]: [winningPlayer.id, losingPlayer.id]},
-                    status: 'inactive'
-                }
-            }) || []
-
-            for (let d = 0; d < poolsToUpdate.length; d++) {
-                const rPTU = poolsToUpdate[d]
-                await rPTU.update({ status: 'pending' })
-                lookForPotentialPairs(client, interaction, rPTU, rPTU.player, rPTU.format)
             }
 
             if (isTournament && tournament.isRanked) {
