@@ -642,11 +642,9 @@ export const recalculateStats = async () => {
         const allStats = await Stats.findAll({ 
             where: { formatId: format.id, serverId: '414551319031054346' }, 
             attributes: [
-                'id', 'formatName', 'formatId', 
-                'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 
-                'seasonalElo', 'bestSeasonalElo', 'backupSeasonalElo', 
-                'seasonalWins', 'seasonalLosses', 'seasonalGames', 
-                'currentStreak', 'bestStreak', 'vanquished', 'playerId', 'serverId'
+                'id', 'formatName', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 
+                'seasonalElo', 'bestSeasonalElo', 'backupSeasonalElo', 'seasonalWins', 'seasonalLosses', 'seasonalGames', 
+                'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerId', 'serverId'
             ], 
             include: { model: Player, attributes: ['id', 'name']} 
         })
@@ -721,8 +719,8 @@ export const recalculateStats = async () => {
                 }
     
                 const [winnerDelta, loserDelta] = await updateGeneralStats(winnerStats, loserStats)
-                if (match.isSeasonal && format.seasonResetDate < match.createdAt) await updateSeasonalStats(winnerStats, loserStats)
                 await match.update({ winnerDelta, loserDelta })
+                if (match.isSeasonal && format.seasonResetDate < match.createdAt) await updateSeasonalStats(winnerStats, loserStats)
                 console.log(`${format.name} Match ${j+1}: ${winnerStats.player.name} > ${loserStats.player.name}`)
             } catch (err) {
                 console.log(err)
@@ -749,8 +747,7 @@ export const recalculateStats = async () => {
         }
 
         console.log(`Recalculation for ${format.name} Format is complete!`)
-
-    }    	
+    }
 
     await chronRecord.update({
         status: 'complete',
@@ -768,8 +765,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
     const allStats = await Stats.findAll({
         where: {
             formatId: format.id
-        },
-        order: [['playerName', 'ASC']]
+        }
     })
 
     // GENERAL MATCHES
@@ -805,7 +801,6 @@ export const applyDecay = async (format, currentDate, nextDate) => {
 
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
-
         if (
             !activeGeneralPlayerIds.includes(stats.playerId) && 
             generalDecayRate !== 0 &&
@@ -821,7 +816,7 @@ export const applyDecay = async (format, currentDate, nextDate) => {
     console.log(`Applied General Decay Rate of ${generalDecayRate} on ${nextDate} to ${format.name} Format for all players except:\n`, activeGeneralPlayerNames)
 
     // SEASONAL MATCHES
-    if (format.useSeasonalElo) {
+    if (format.useSeasonalElo && format.resetSeasonDate < nextDate) {
         const seasonalMatchesInPeriod = await Match.findAll({
             where: {
                 formatId: format.id,
@@ -841,14 +836,14 @@ export const applyDecay = async (format, currentDate, nextDate) => {
         if (seasonalDecayRate > 0.9975) generalDecayRate = 0.9975
 
         for (let i = 0; i < seasonalMatchesInPeriod.length ; i++) {
-            const {winnerId, winnerName, loserId, loserName} = generalMatchesInPeriod[i]
+            const {winnerId, winnerName, loserId, loserName} = seasonalMatchesInPeriod[i]
             if (!activeSeasonalPlayerIds.includes(winnerId)) {
                 activeSeasonalPlayerIds.push(winnerId)
                 activeSeasonalPlayerIds.push(winnerName)
             }
-            if (!activeGeneralPlayerIds.includes(loserId)) {
-                activeGeneralPlayerIds.push(loserId)
-                activeGeneralPlayerNames.push(loserName)
+            if (!activeSeasonalPlayerIds.includes(loserId)) {
+                activeSeasonalPlayerIds.push(loserId)
+                activeSeasonalPlayerIds.push(loserName)
             } 
         }
 
@@ -856,9 +851,9 @@ export const applyDecay = async (format, currentDate, nextDate) => {
             const stats = allStats[i]
 
             if (
+                stats.seasonalElo > 500 &&
                 !activeSeasonalPlayerIds.includes(stats.playerId) && 
-                seasonalDecayRate !== 0 &&
-                stats.seasonalElo > 500
+                seasonalDecayRate !== 0
             ) {
                 stats.seasonalElo = stats.seasonalElo * seasonalDecayRate
                 if (stats.seasonalElo < 500) stats.seasonalElo = 500
