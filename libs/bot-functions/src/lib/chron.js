@@ -46,7 +46,7 @@ export const runHourlyTasks = async (client) => {
 // RUN NIGHTLY TASKS
 export const runNightlyTasks = async (client) => {
     try {
-        const index = await ChronRecord.findAll({
+        const index = await ChronRecord.count({
             where: {
                 status: 'complete'
             }
