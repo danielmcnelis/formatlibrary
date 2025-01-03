@@ -80,54 +80,55 @@ export const LeaderBoard = () => {
             }
             <div className="body">
                 <div id="leaderboard" className="leaderboard">
-                {
-                    statsType === 'seasonal' ? (
-                        <div className="subcategory-title-flexbox">
-                            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
-                            <h1 className={`leaderboard-title`}>Seasonal</h1>
-                            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${season}.png`} alt={season || 'season'}/>
-                            <h1 className={`leaderboard-title`}>{capitalize(format.name, true)} Leaderboard</h1>
-                            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
-                        </div>
-                    ) : (
-                        <div className="subcategory-title-flexbox">
-                            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
-                            <h1 className={`leaderboard-title`}>{capitalize(format.name, true)} Leaderboard</h1>
-                            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
-                        </div>
-                    )
-                }
-                </div>
-                <table id="leaderboard-table">
-                    <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Player</th>
-                        <th>Elo</th>
-                        <th>Medal</th>
-                        <th>Wins</th>
-                        <th>Losses</th>
-                        <th>Win Rate</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+                    <div>
                     {
-                        leaderboard.length ? (
-                            leaderboard.map((stats, index) => {
-                                return <StatsRow 
-                                    stats={stats} 
-                                    statsType={statsType} 
-                                    eloType={eloType} 
-                                    winsType={winsType} 
-                                    lossesType={lossesType} 
-                                    index={index} 
-                                    key={stats.playerId}
-                                />
-                            })
-                        ) : <tr />
+                        statsType === 'seasonal' ? (
+                            <div className="subcategory-title-flexbox">
+                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                                <h1 className={`leaderboard-title`}>Seasonal</h1>
+                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${season}.png`} alt={season || 'season'}/>
+                                <h1 className={`leaderboard-title`}>{capitalize(format.name, true)} Leaderboard</h1>
+                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                            </div>
+                        ) : (
+                            <div className="subcategory-title-flexbox">
+                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                                <h1 className={`leaderboard-title`}>{capitalize(format.name, true)} Leaderboard</h1>
+                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                            </div>
+                        )
                     }
-                    </tbody>
-                </table>
+                    </div>
+                    <table id="leaderboard-table">
+                        <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Player</th>
+                            <th>Elo</th>
+                            <th>Medal</th>
+                            <th>Wins</th>
+                            <th>Losses</th>
+                            <th>Win Rate</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {
+                            leaderboard.length ? (
+                                leaderboard.map((stats, index) => {
+                                    return <StatsRow 
+                                        stats={stats} 
+                                        statsType={statsType} 
+                                        eloType={eloType} 
+                                        winsType={winsType} 
+                                        lossesType={lossesType} 
+                                        index={index} 
+                                        key={stats.playerId}
+                                    />
+                                })
+                            ) : <tr />
+                        }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </>
