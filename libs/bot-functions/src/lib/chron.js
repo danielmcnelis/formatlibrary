@@ -1407,6 +1407,7 @@ export const downloadCardImage = async (id) => {
             params: { Bucket: 'formatlibrary', Key: `images/cards/${id}.jpg`, Body: fullCardImage, ContentType: `image/jpg` },
         }).done()
         console.log('imageUri', imageUri)
+        
         return true
     } catch (err) {
         console.log(err)
@@ -1765,14 +1766,25 @@ export const downloadNewCards = async () => {
                 console.log(`New name and/or ID: ${card.name} (${card.ypdId}) is now: ${name} (${id})`)
                 
                 const success = await downloadCardImage(id)
-                const artworkId = success ? id : null
+                let artwork
+                try {
+                    artwork = success ? await Artwork.findOrCreate({
+                        where: {
+                            cardName: card.name,
+                            cardId: card.id,
+                            artworkId: id
+                        }
+                    })[0] : null
+                } catch (err) {
+                    console.log(err)
+                }
 
                 await card.update({
                     name: name,
                     cleanName: cleanName,
                     konamiCode: konamiCode,
                     ypdId: id,
-                    artworkId: artworkId,
+                    artworkId: artwork ? id : null,
                     description: datum.desc,
                     isTcgLegal: isTcgLegal,
                     isOcgLegal: isOcgLegal,

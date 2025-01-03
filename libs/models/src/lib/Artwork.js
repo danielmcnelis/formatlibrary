@@ -14,6 +14,6 @@ export const Artwork = db.define('artworks', {
   },
   isOriginal: {
     type: Sequelize.BOOLEAN,
-    defaultValue: false
+    defaultValue: true
   }
 })
