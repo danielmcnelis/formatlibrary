@@ -7,7 +7,7 @@ export const formatsName = async (req, res, next) => {
       where: {
         name: { [Op.iLike]: req.params.name.replace(' ', '_').replace('-', '_') }
       },
-      attributes: ['id', 'name', 'icon', 'date', 'banlist', 'category', 'eventName', 'description', 'isPopular', 'isSpotlight', 'videoEmbed', 'videoPlaylistId', 'useSeasonal', 'seasonResetDate']
+      attributes: ['id', 'name', 'icon', 'date', 'banlist', 'category', 'eventName', 'description', 'isPopular', 'isSpotlight', 'videoEmbed', 'videoPlaylistId', 'useSeasonalElo', 'seasonResetDate']
     })
 
     const deckCount = await Deck.count({
