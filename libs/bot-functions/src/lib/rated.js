@@ -85,6 +85,7 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
     for (let i = 0; i < potentialPairs.length; i++) {
         const potentialPair = potentialPairs[i]
         const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
+        const tenMinutesAgo = new Date(Date.now() - (10 * 60 * 1000))
 
         const isRecentOpponent = await Match.count({
             where: {
@@ -99,7 +100,7 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
                     },
                 },
                 formatId: format.id,
-                createdAt: {[Op.gte]: twoMinutesAgo }
+                createdAt: {[Op.gte]: tenMinutesAgo }
             }
         })
 
