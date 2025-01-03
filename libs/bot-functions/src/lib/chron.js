@@ -1716,7 +1716,7 @@ export const downloadNewCards = async () => {
             }
 
             if (!card) {
-                const success = await downloadCardImage(id, cardName, card.id, true)
+                const success = await downloadCardImage(id, name, card.id, true)
                 console.log(`Image saved (${name})`)
 
                 await Card.create({
