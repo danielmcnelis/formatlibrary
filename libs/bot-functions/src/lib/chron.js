@@ -1470,7 +1470,7 @@ export const downloadAltArtworks = async () => {
                 if (count) {
                     console.log(`artwork is already saved, id: ${image.id}`)
                 } else if (artworkId === card.artworkId) {
-                    await Artwork.create({
+                    await Artwork.findOrCreate({
                         cardName: card.name,
                         cardId: card.id,
                         artworkId: card.artworkId,
@@ -1506,7 +1506,7 @@ export const downloadAltArtworks = async () => {
                         console.log('artworkUri', artworkUri)
 
                         if (imageUri && artworkUri) {
-                            await Artwork.create({
+                            await Artwork.findOrCreate({
                                 cardName: card.name,
                                 cardId: card.id,
                                 artworkId: artworkId
