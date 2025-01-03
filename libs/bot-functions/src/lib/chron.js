@@ -52,13 +52,12 @@ export const runNightlyTasks = async (client) => {
                 status: 'complete'
             }
         })
-        console.log('index', index)
         
         const tasks = [
             manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
-            purgeLocalsAndInternalDecks, refreshExpiredTokens, updateSets, updateDecks,
+            purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, updateSets, updateDecks,
             updateDeckTypes, downloadNewCards, downloadAltArtworks, updateServers, conductCensus,
-            updateAvatars, updateMarketPrices, recalculateAllStats
+            updateAvatars, updateMarketPrices
         ]
     
         for (let i = index; i < tasks.length; i++) {
@@ -1645,6 +1644,10 @@ export const downloadNewCards = async () => {
         const name = datum.name
         const cleanName = datum.name.replaceAll(/['"]/g, '').split(/[^A-Za-z0-9]/).filter((e) => e.length).join(' ')
 
+        if (name.includes('Ryzeal')) {
+            console.log('datum', datum)
+        }
+
         try {
             const card = await Card.findOne({
                 where: {
@@ -1654,6 +1657,7 @@ export const downloadNewCards = async () => {
                     ]
                 }
             })
+
     
             let konamiCode = id
             while (konamiCode.length < 8) konamiCode = '0' + konamiCode
@@ -1688,6 +1692,16 @@ export const downloadNewCards = async () => {
             const isSpeedLegal = datum.misc_info[0]?.formats?.includes('Speed Duel')
             const tcgDate = category !== 'Skill' ? datum.misc_info[0]?.tcg_date || null : null
             const ocgDate = category !== 'Skill' ? datum.misc_info[0]?.ocg_date || null : null
+
+            if (name.includes('Ryzeal')) {
+                console.log('!!card', !!card)
+                console.log('card.name', card.name)
+                console.log(`card && (card.name !== name || card.ypdId !== id || card.cleanName !== cleanName)`, card && (card.name !== name || card.ypdId !== id || card.cleanName !== cleanName))
+                console.log(`tcgDate`, tcgDate)
+                console.log(`card && (!card.tcgDate || !card.isTcgLegal) && tcgDate`, card && (!card.tcgDate || !card.isTcgLegal) && tcgDate)
+                console.log(`ocgDate`, ocgDate)
+                console.log(`isSpeedLegal`, isSpeedLegal)
+            }
 
             if (!card) {
                 await Card.create({

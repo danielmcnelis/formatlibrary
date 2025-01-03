@@ -1,6 +1,6 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
-import { recalculateStats, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckTypes, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runHourlyTasks } from '@fl/bot-functions'
+import { recalculateStats, downloadNewCards, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckTypes, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runHourlyTasks } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { Match, Tournament, Server, TriviaQuestion } from '@fl/models'
@@ -24,11 +24,11 @@ export default {
                 // await updateDeckThumbs()
                 // await updateDeckTypes()
                 // await updateDecks()
-                // await updateReplays()
+                await downloadNewCards(client)
                 // await updateMatchups()
                 // return recalculateStats()
                 // return updateGlobalNames()
-                return runNightlyTasks(client)
+                // return runNightlyTasks(client)
                 // return runMonthlyTasks(client)
             } else {
                 await interaction.editReply('🧪')
