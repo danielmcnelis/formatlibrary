@@ -122,11 +122,8 @@ import './StatsRow.css'
 
 
 export const StatsRow = (props) => {
-    const {index, stats, statsType, eloType, winsType, lossesType} = props
-    const {player} = stats
-    const elo = stats[eloType]
-    const wins = stats[winsType]
-    const losses = stats[lossesType]
+    const {index, stats, statsType} = props
+    const {elo, wins, losses, player} = stats
 
     const medal = statsType === 'classic' ? getClassicMedal(elo) : getMedal(elo)
     const title = statsType === 'classic' ? getClassicTitle(elo) : getTitle(elo)

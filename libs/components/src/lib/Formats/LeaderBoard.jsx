@@ -19,9 +19,6 @@ export const LeaderBoard = () => {
     const location = useLocation()
     const statsType = location?.search?.slice(6)
     const videoPlaylistId = format?.videoPlaylistId
-    let [eloType, winsType, lossesType, season] = statsType === 'seasonal' ? 
-        ['seasonalElo', 'seasonalWins', 'seasonalLosses', getSeason(new Date().getMonth())] :
-        ['elo', 'wins', 'losses', '']
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
@@ -42,18 +39,17 @@ export const LeaderBoard = () => {
   
     // USE EFFECT FETCH DATA
     useEffect(() => {
-      if (!format.name) return
+      if (!format?.name) return
       const fetchData = async () => {
         try {
-            let {data} = await axios.get(`/api/stats/leaders/1000/${format.name.toLowerCase()}`)
             if (statsType === 'seasonal') {
-                data.sort((a, b) => b.seasonalElo - a.seasonalElo)
+                const {data} = await axios.get(`/api/stats/seasonal-leaders/1000/${format.name.toLowerCase()}`)
                 setLeaderboard(data)
-            } else if (statsType === 'classic') {
-                data.sort((a, b) => b.classicElo - a.classicElo)
+            } if (statsType === 'classic') {
+                const {data} = await axios.get(`/api/stats/classic-leaders/1000/${format.name.toLowerCase()}`)
                 setLeaderboard(data)
             } else {
-                data.sort((a, b) => b.elo - a.elo)
+                const {data} = await axios.get(`/api/stats/general-leaders/1000/${format.name.toLowerCase()}`)
                 setLeaderboard(data)
             }
         } catch (err) {
@@ -85,15 +81,15 @@ export const LeaderBoard = () => {
                         statsType === 'seasonal' ? (
                             <div className="subcategory-title-flexbox">
                                 <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
-                                <h1 className={`leaderboard-title`}>Seasonal</h1>
+                                <h2>Seasonal</h2>
                                 <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${season}.png`} alt={season || 'season'}/>
-                                <h1 className={`leaderboard-title`}>{capitalize(format.name, true)} Leaderboard</h1>
+                                <h2>{capitalize(format.name, true)} Leaderboard</h2>
                                 <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
                             </div>
                         ) : (
                             <div className="subcategory-title-flexbox">
                                 <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
-                                <h1 className={`leaderboard-title`}>{capitalize(format.name, true)} Leaderboard</h1>
+                                <h2>{capitalize(format.name, true)} Leaderboard</h2>
                                 <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
                             </div>
                         )
@@ -118,9 +114,6 @@ export const LeaderBoard = () => {
                                     return <StatsRow 
                                         stats={stats} 
                                         statsType={statsType} 
-                                        eloType={eloType} 
-                                        winsType={winsType} 
-                                        lossesType={lossesType} 
                                         index={index} 
                                         key={stats.playerId}
                                     />

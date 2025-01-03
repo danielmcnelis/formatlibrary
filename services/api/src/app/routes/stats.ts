@@ -1,9 +1,13 @@
 import { Router } from 'express'
-import { statsLeaders, statsPlayer } from '../middleware'
+import { getClassicLeaderboard, getGeneralLeaderboard, getSeasonalLeaderboard, statsPlayer } from '../middleware'
 
 const router = Router()
 
-router.get('/api/stats/leaders/:limit/:format', statsLeaders)
+router.get('/api/stats/classic-leaders/:limit/:format', getClassicLeaderboard)
+
+router.get('/api/stats/general-leaders/:limit/:format', getGeneralLeaderboard)
+
+router.get('/api/stats/seasonal-leaders/:limit/:format', getSeasonalLeaderboard)
 
 router.get('/api/stats/:playerId', statsPlayer)
 
