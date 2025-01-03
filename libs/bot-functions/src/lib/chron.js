@@ -1370,7 +1370,7 @@ export const getColor = (type = '') => {
 }
 
 // DOWNLOAD CARD IMAGE
-export const downloadCardImage = async (id) => {
+export const downloadCardImage = async (artworkId, cardName, cardId, isOriginal) => {
     const s3 = new S3({
         region: config.s3.region,
         credentials: {
@@ -1382,13 +1382,13 @@ export const downloadCardImage = async (id) => {
     try {
         const {data: croppedCardImage} = await axios({
             method: 'GET',
-            url: `https://images.ygoprodeck.com/images/cards_cropped/${id}.jpg`,
+            url: `https://images.ygoprodeck.com/images/cards_cropped/${artworkId}.jpg`,
             responseType: 'stream'
         })
     
         const { Location: artworkUri} = await new Upload({
             client: s3,
-            params: { Bucket: 'formatlibrary', Key: `images/artworks/${id}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` },
+            params: { Bucket: 'formatlibrary', Key: `images/artworks/${artworkId}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` },
         }).done()
         console.log('artworkUri', artworkUri)
     } catch (err) {
@@ -1398,15 +1398,24 @@ export const downloadCardImage = async (id) => {
     try {
         const {data: fullCardImage} = await axios({
             method: 'GET',
-            url: `https://images.ygoprodeck.com/images/cards/${id}.jpg`,
+            url: `https://images.ygoprodeck.com/images/cards/${artworkId}.jpg`,
             responseType: 'stream'
         })
     
         const { Location: imageUri} = await new Upload({
             client: s3,
-            params: { Bucket: 'formatlibrary', Key: `images/cards/${id}.jpg`, Body: fullCardImage, ContentType: `image/jpg` },
+            params: { Bucket: 'formatlibrary', Key: `images/cards/${artworkId}.jpg`, Body: fullCardImage, ContentType: `image/jpg` },
         }).done()
         console.log('imageUri', imageUri)
+
+        await Artwork.findOrCreate({
+            where: {
+                artworkId,
+                cardName,
+                cardId,
+                isOriginal
+            }
+        })
         
         return true
     } catch (err) {
@@ -1707,12 +1716,15 @@ export const downloadNewCards = async () => {
             }
 
             if (!card) {
+                const success = await downloadCardImage(id, cardName, card.id, true)
+                console.log(`Image saved (${name})`)
+
                 await Card.create({
                     name: name,
                     cleanName: cleanName,
                     konamiCode: konamiCode,
                     ypdId: id,
-                    artworkId: id,
+                    artworkId: success ? id : null,
                     isTcgLegal: isTcgLegal,
                     isOcgLegal: isOcgLegal,
                     isSpeedLegal: isSpeedLegal,
@@ -1759,53 +1771,40 @@ export const downloadNewCards = async () => {
                 })
                 b++
                 console.log(`New card: ${name} (TCG Date: ${datum.misc_info[0]?.tcg_date}, OCG Date: ${datum.misc_info[0]?.ocg_date})`)
-                await downloadCardImage(id)
-                console.log(`Image saved (${name})`)
             } else if (card && (card.name !== name || card.ypdId !== id || card.cleanName !== cleanName)) {
                 c++
+
                 console.log(`New name and/or ID: ${card.name} (${card.ypdId}) is now: ${name} (${id})`)
-                
-                const success = await downloadCardImage(id)
-                let artwork
-                try {
-                    artwork = success ? await Artwork.findOrCreate({
-                        where: {
-                            cardName: card.name,
-                            cardId: card.id,
-                            artworkId: id
-                        }
-                    })[0] : null
-                } catch (err) {
-                    console.log(err)
-                }
+                const success = await downloadCardImage(id, cardName, card.id, true)
+                console.log(`Image saved (${name})`)
 
                 await card.update({
                     name: name,
                     cleanName: cleanName,
                     konamiCode: konamiCode,
                     ypdId: id,
-                    artworkId: artwork ? id : null,
+                    artworkId: success ? id : null,
                     description: datum.desc,
                     isTcgLegal: isTcgLegal,
                     isOcgLegal: isOcgLegal,
                     tcgDate: tcgDate,
                     ocgDate: ocgDate
                 })
-
-                console.log(`Image saved (${datum.name})`)
             } else if (card && (!card.tcgDate || !card.isTcgLegal) && tcgDate) {
+                console.log(`New TCG Card: ${card.name}`)
+                const success = await downloadCardImage(id, cardName, card.id, true)
+                console.log(`Image saved (${name})`)
+
                 await card.update({
                     name: name,
                     cleanName: cleanName,
+                    artworkId: success ? id : null,
                     description: datum.desc,
                     tcgDate: tcgDate,
                     isTcgLegal: true
                 })
 
                 t++
-                console.log(`New TCG Card: ${card.name}`)
-                await downloadCardImage(id)
-                console.log(`Image saved (${card.name})`)
             } else if (card && (!card.ocgDate || !card.isOcgLegal) && ocgDate) {
                 await card.update({
                     ocgDate: ocgDate,
