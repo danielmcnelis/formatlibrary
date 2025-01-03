@@ -26,12 +26,6 @@ export const LeaderBoard = () => {
   
     // USE EFFECT FETCH DATA
     useEffect(() => {
-  
-      fetchData()
-    }, [])
-  
-    // USE EFFECT FETCH DATA
-    useEffect(() => {
       if (!format?.name) return
       const fetchData = async () => {
         try {

@@ -8,9 +8,11 @@ import './MiniBoard.css'
 
 export const MiniBoard = (props) => {
     const { format, limit } = props
+    console.log('format', format)
     const [miniboard, setMiniBoard] = useState([])
     const navigate = useNavigate()
-    const statsType = format.useSeasonalElo && format.seasonResetDate < new Date() ? 'seasonal' : 'general'
+    const now = new Date()
+    const statsType = format.useSeasonalElo && format.seasonResetDate < now ? 'seasonal' : 'general'
     const videoPlaylistId = format?.videoPlaylistId
     const url = statsType === 'seasonal' ? `/leaderboards/${format.name.toLowerCase()}?type=seasonal` :
         `/leaderboards/${format.name.toLowerCase()}`
