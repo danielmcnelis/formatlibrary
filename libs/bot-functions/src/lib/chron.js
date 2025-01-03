@@ -1380,22 +1380,6 @@ export const downloadCardImage = async (id) => {
     })
 
     try {
-        const {data: fullCardImage} = await axios({
-            method: 'GET',
-            url: `https://images.ygoprodeck.com/images/cards/${id}.jpg`,
-            responseType: 'stream'
-        })
-    
-        const { Location: imageUri} = await new Upload({
-            client: s3,
-            params: { Bucket: 'formatlibrary', Key: `images/cards/${id}.jpg`, Body: fullCardImage, ContentType: `image/jpg` },
-        }).done()
-        console.log('imageUri', imageUri)
-    } catch (err) {
-        console.log(err)
-    }
-
-    try {
         const {data: croppedCardImage} = await axios({
             method: 'GET',
             url: `https://images.ygoprodeck.com/images/cards_cropped/${id}.jpg`,
@@ -1409,6 +1393,24 @@ export const downloadCardImage = async (id) => {
         console.log('artworkUri', artworkUri)
     } catch (err) {
         console.log(err)
+    }
+
+    try {
+        const {data: fullCardImage} = await axios({
+            method: 'GET',
+            url: `https://images.ygoprodeck.com/images/cards/${id}.jpg`,
+            responseType: 'stream'
+        })
+    
+        const { Location: imageUri} = await new Upload({
+            client: s3,
+            params: { Bucket: 'formatlibrary', Key: `images/cards/${id}.jpg`, Body: fullCardImage, ContentType: `image/jpg` },
+        }).done()
+        console.log('imageUri', imageUri)
+        return true
+    } catch (err) {
+        console.log(err)
+        return false
     }
 }
 
@@ -1762,12 +1764,15 @@ export const downloadNewCards = async () => {
                 c++
                 console.log(`New name and/or ID: ${card.name} (${card.ypdId}) is now: ${name} (${id})`)
                 
+                const success = await downloadCardImage(id)
+                const artworkId = success ? id : null
+
                 await card.update({
                     name: name,
                     cleanName: cleanName,
                     konamiCode: konamiCode,
                     ypdId: id,
-                    artworkId: id,
+                    artworkId: artworkId,
                     description: datum.desc,
                     isTcgLegal: isTcgLegal,
                     isOcgLegal: isOcgLegal,
@@ -1775,7 +1780,6 @@ export const downloadNewCards = async () => {
                     ocgDate: ocgDate
                 })
 
-                await downloadCardImage(id)
                 console.log(`Image saved (${datum.name})`)
             } else if (card && (!card.tcgDate || !card.isTcgLegal) && tcgDate) {
                 await card.update({
