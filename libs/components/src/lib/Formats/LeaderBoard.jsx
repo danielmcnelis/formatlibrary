@@ -19,6 +19,7 @@ export const LeaderBoard = () => {
     const location = useLocation()
     const statsType = location?.search?.slice(6)
     const videoPlaylistId = format?.videoPlaylistId
+    const season = getSeason(new Date().getMonth())
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])

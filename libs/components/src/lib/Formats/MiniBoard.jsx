@@ -12,27 +12,25 @@ export const MiniBoard = (props) => {
     const navigate = useNavigate()
     const statsType = format.useSeasonal ? 'seasonal' : 'general'
     const videoPlaylistId = format?.videoPlaylistId
-    let [eloType, winsType, lossesType, url] = statsType === 'seasonal' ? 
-        ['seasonalElo', 'seasonalWins', 'seasonalLosses'] :
-        ['elo', 'wins', 'losses']
+    const url = statsType === 'seasonal' ? `/leaderboards/${format.name.toLowerCase()}?type=seasonal` :
+        `/leaderboards/${format.name.toLowerCase()}`
     
-    const goToLeaderBoard = () => navigate(`/leaderboards/${format.name.toLowerCase()}`)
+    const goToLeaderBoard = () => navigate(url)
 
     // USE EFFECT FETCH DATA
     useEffect(() => {
       const fetchData = async () => {
         try {
-          let {data} = await axios.get(`/api/stats/leaders/${limit}/${format.name.toLowerCase()}`)
-          if (statsType === 'seasonal') {
-              data.sort((a, b) => b.seasonalElo - a.seasonalElo)
-              setMiniBoard(data)
-          } else if (statsType === 'classic') {
-              data.sort((a, b) => b.classicElo - a.classicElo)
-              setMiniBoard(data)
-          } else {
-              data.sort((a, b) => b.elo - a.elo)
-              setMiniBoard(data)
-          }
+            if (statsType === 'seasonal') {
+                const {data} = await axios.get(`/api/stats/seasonal-leaders/${limit}/${format.name.toLowerCase()}`)
+                setMiniBoard(data)
+            } if (statsType === 'classic') {
+                const {data} = await axios.get(`/api/stats/classic-leaders/${limit}/${format.name.toLowerCase()}`)
+                setMiniBoard(data)
+            } else {
+                const {data} = await axios.get(`/api/stats/general-leaders/${limit}/${format.name.toLowerCase()}`)
+                setMiniBoard(data)
+            }
         } catch (err) {
           console.log(err)
         }
@@ -72,9 +70,6 @@ export const MiniBoard = (props) => {
                         return <StatsRow 
                                 stats={stats} 
                                 statsType={statsType} 
-                                eloType={eloType} 
-                                winsType={winsType} 
-                                lossesType={lossesType} 
                                 index={index} 
                                 key={stats.playerId}
                             />

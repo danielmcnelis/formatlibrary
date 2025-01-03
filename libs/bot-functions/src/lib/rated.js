@@ -163,17 +163,21 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
                 await rPTD.update({ status: 'inactive' })
             }
 
+            const now = new Date()
+            const isSeasonal = format.seasonResetDate < now
+            const eloType = isSeasonal ? 'seasonalElo' : 'elo'
+
             const allStats = await Stats.findAll({ 
                 where: {
                     formatId: format.id, 
                     games: { [Op.gte]: 3 },
                     serverId: '414551319031054346',
-                    isActive: true,
                     '$player.isHidden$': false
                 },
                 include: [Player],
-                order: [['elo', 'DESC']] 
+                order: [[eloType, 'DESC']] 
             }) || []
+
 
             const p1Index = allStats.findIndex((s) => s.playerId === player.id)
             const p1Rank = p1Index >= 0 ? `#${p1Index + 1} ` : ''
@@ -258,6 +262,10 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
                 await rPTD.update({ status: 'inactive' })
             }
     
+            const now = new Date()
+            const isSeasonal = format.seasonResetDate < now
+            const eloType = isSeasonal ? 'seasonalElo' : 'elo'
+
             const allStats = await Stats.findAll({ 
                 where: {
                     formatId: format.id, 
@@ -267,7 +275,7 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
                     '$player.isHidden$': false
                 },
                 include: [Player],
-                order: [['elo', 'DESC']] 
+                order: [[eloType, 'DESC']] 
             }) || []
     
             const p1Index = allStats.findIndex((s) => s.playerId === player.id)
@@ -276,7 +284,6 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
             const p2Rank = p2Index >= 0 ? `#${p2Index + 1} ` : ''
     
             const content = `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
-            console.log(`content:`, content)
             return channel.send({ content: content })
         } else {
             await yourPool.destroy()
@@ -556,6 +563,10 @@ export const sendRatedPairingNotifications = async (client, player, opponent, fo
         const guild = client.guilds.cache.get('414551319031054346')
         const channel = guild.channels.cache.get(format.channelId)
     
+        const now = new Date()
+        const isSeasonal = format.seasonResetDate < now
+        const eloType = isSeasonal ? 'seasonalElo' : 'elo'
+
         const allStats = await Stats.findAll({ 
             where: {
                 formatId: format.id, 
@@ -565,7 +576,7 @@ export const sendRatedPairingNotifications = async (client, player, opponent, fo
                 '$player.isHidden$': false
             },
             include: [Player],
-            order: [['elo', 'DESC']] 
+            order: [[eloType, 'DESC']] 
         }) || []
     
         const p1Index = allStats.findIndex((s) => s.playerId === player.id)
