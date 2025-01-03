@@ -762,7 +762,7 @@ export const recalculateAllStats = async () => {
     
     for (let i = 0; i < formats.length; i++) {
         const format = formats[i]
-        recalculateFormatStats(format)
+        await recalculateFormatStats(format)
     }
 
     await chronRecord.update({

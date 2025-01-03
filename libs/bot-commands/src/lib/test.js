@@ -24,12 +24,11 @@ export default {
                 // await updateDeckThumbs()
                 // await updateDeckTypes()
                 // await updateDecks()
-                await downloadNewCards(client)
+                // await downloadNewCards(client)
                 // await updateMatchups()
                 // return recalculateStats()
                 // return updateGlobalNames()
-                // return runNightlyTasks(client)
-                // return runMonthlyTasks(client)
+                return runMonthlyTasks(client)
             } else {
                 await interaction.editReply('🧪')
             }
