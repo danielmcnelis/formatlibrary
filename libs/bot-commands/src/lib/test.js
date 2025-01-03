@@ -28,7 +28,8 @@ export default {
                 // await updateMatchups()
                 // return recalculateStats()
                 // return updateGlobalNames()
-                return runMonthlyTasks(client)
+                return runNightlyTasks(client)
+                // return runMonthlyTasks(client)
             } else {
                 await interaction.editReply('🧪')
             }
