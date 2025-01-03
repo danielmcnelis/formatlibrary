@@ -34,7 +34,7 @@ export const SingleCard = (props) => {
     // DOWNLOAD CARD IMAGE
     const downloadCardImage = async () => {
         try {
-            const {data:{success}} = await axios.post(`/api/images/update-card?artworkId=${card.artworkId}`)
+            const {data:{success}} = await axios.post(`/api/images/update-card?artworkId=${card.artworkId || card.id}`)
             if (success) alert(`Success! New Image: /images/cards/${card.artworkId}`)
         } catch (err) {
             console.log(err)

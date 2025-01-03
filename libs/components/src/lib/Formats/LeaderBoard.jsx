@@ -6,6 +6,14 @@ import { capitalize } from '@fl/utils'
 import { useParams, useLocation } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import './LeaderBoard.css'
+import { getSeason } from '@fl/bot-f<div class="header">
+
+
+
+  // GET SEASON
+  const getSeason = (month) => {
+      return month === 11 || month < 2 ? 'winter' : month < 5 ? 'spring' : month < 8 ? 'summer' : 'autumm'
+  }
 
 export const LeaderBoard = () => {
     const [format, setFormat] = useState({})
@@ -13,12 +21,11 @@ export const LeaderBoard = () => {
     const { id } = useParams()
     const location = useLocation()
     const statsType = location?.search?.slice(6)
-    console.log('statsType', statsType)
     const videoPlaylistId = format?.videoPlaylistId
-    let [eloType, winsType, lossesType] = statsType === 'seasonal' ? 
-        ['seasonalElo', 'seasonalWins', 'seasonalLosses'] :
-        ['elo', 'wins', 'losses']
-  
+    let [eloType, winsType, lossesType, season] = statsType === 'seasonal' ? 
+        ['seasonalElo', 'seasonalWins', 'seasonalLosses', getSeason(new Date().getMonth())] :
+        ['elo', 'wins', 'losses', '']
+
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
   
@@ -60,7 +67,7 @@ export const LeaderBoard = () => {
       fetchData()
     }, [format])
   
-    if (!leaderboard.length) return <div></div>
+    if (!leaderboard.length) return <div/>
   
     return (
         <>
@@ -76,10 +83,23 @@ export const LeaderBoard = () => {
             }
             <div className="body">
                 <div id="leaderboard" className="leaderboard">
-                <div className="subcategory-title-flexbox">
-                    <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
-                    <h1 className="leaderboard-title">{capitalize(format.name, true)} Leaderboard</h1>
-                    <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                {
+                    statsType === 'seasonal' ? (
+                        <div className="subcategory-title-flexbox">
+                            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                            <h1 className={`leaderboard-title`}>Seasonal</h1>
+                            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${season}.png`} alt={season || 'season'}/>
+                            <h1 className={`leaderboard-title`}>{capitalize(format.name, true)} Leaderboard</h1>
+                            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                        </div>
+                    ) : (
+                        <div className="subcategory-title-flexbox">
+                            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                            <h1 className={`leaderboard-title`}>{capitalize(format.name, true)} Leaderboard</h1>
+                            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                        </div>
+                    )
+                }
                 </div>
                 <table id="leaderboard-table">
                     <thead>
