@@ -33,13 +33,13 @@ export const LeaderBoard = () => {
             setFormat(formatData)
 
             if (statsType === 'seasonal') {
-                const {data} = await axios.get(`/api/stats/seasonal-leaders/1000/${format.name.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/seasonal-leaders/1000/${formatData.name.toLowerCase()}`)
                 setLeaderboard(data)
             } else if (statsType === 'classic') {
-                const {data} = await axios.get(`/api/stats/classic-leaders/1000/${format.name.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/classic-leaders/1000/${formatData.name.toLowerCase()}`)
                 setLeaderboard(data)
             } else {
-                const {data} = await axios.get(`/api/stats/general-leaders/1000/${format.name.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/general-leaders/1000/${formatData.name.toLowerCase()}`)
                 setLeaderboard(data)
             }
         } catch (err) {
