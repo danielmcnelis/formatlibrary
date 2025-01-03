@@ -6,9 +6,6 @@ import { capitalize } from '@fl/utils'
 import { useParams, useLocation } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import './LeaderBoard.css'
-import { getSeason } from '@fl/bot-f<div class="header">
-
-
 
   // GET SEASON
   const getSeason = (month) => {
