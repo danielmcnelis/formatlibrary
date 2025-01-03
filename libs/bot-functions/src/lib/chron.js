@@ -47,11 +47,11 @@ export const runHourlyTasks = async (client) => {
 // RUN NIGHTLY TASKS
 export const runNightlyTasks = async (client) => {
     try {
-        const index = await ChronRecord.count({
-            where: {
-                status: 'complete'
-            }
-        })
+        // const index = await ChronRecord.count({
+        //     where: {
+        //         status: 'complete'
+        //     }
+        // })
         
         const tasks = [
             manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
@@ -60,8 +60,8 @@ export const runNightlyTasks = async (client) => {
             updateAvatars, updateMarketPrices
         ]
     
-        for (let i = index; i < tasks.length; i++) {
-            await tasks[index](client)
+        for (let i = 0; i < tasks.length; i++) {
+            await tasks[i](client)
     
             if (i === tasks.length - 1) {
                 const records = await ChronRecord.findAll({
