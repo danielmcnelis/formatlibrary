@@ -26,14 +26,6 @@ export const LeaderBoard = () => {
   
     // USE EFFECT FETCH DATA
     useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const {data} = await axios.get(`/api/formats/${id}`)
-          setFormat(data.format)
-        } catch (err) {
-          console.log(err)
-        }
-      }
   
       fetchData()
     }, [])
@@ -43,10 +35,13 @@ export const LeaderBoard = () => {
       if (!format?.name) return
       const fetchData = async () => {
         try {
+            const {data: formatData} = await axios.get(`/api/formats/${id}`)
+            setFormat(formatData)
+
             if (statsType === 'seasonal') {
                 const {data} = await axios.get(`/api/stats/seasonal-leaders/1000/${format.name.toLowerCase()}`)
                 setLeaderboard(data)
-            } if (statsType === 'classic') {
+            } else if (statsType === 'classic') {
                 const {data} = await axios.get(`/api/stats/classic-leaders/1000/${format.name.toLowerCase()}`)
                 setLeaderboard(data)
             } else {
@@ -59,7 +54,7 @@ export const LeaderBoard = () => {
       }
   
       fetchData()
-    }, [format])
+    }, [])
   
     if (!leaderboard.length) return <div/>
   
@@ -82,9 +77,9 @@ export const LeaderBoard = () => {
                         statsType === 'seasonal' ? (
                             <div className="subcategory-title-flexbox">
                                 <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
-                                <h2>Seasonal</h2>
+                                <h1>Seasonal</h1>
                                 <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${season}.png`} alt={season || 'season'}/>
-                                <h2>{capitalize(format.name, true)} Leaderboard</h2>
+                                <h1>{capitalize(format.name, true)} Leaderboard</h1>
                                 <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
                             </div>
                         ) : (
