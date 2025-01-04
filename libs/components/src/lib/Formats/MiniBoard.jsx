@@ -1,6 +1,6 @@
 
-import { useState, useEffect, useParams } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { StatsRow } from './StatsRow'
 import { capitalize } from '@fl/utils'
