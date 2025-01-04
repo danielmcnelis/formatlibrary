@@ -63,6 +63,7 @@ export default {
                 const format = await Format.findByServerOrChannelId(server, interaction.channelId)
                 if (!format) return await interaction.reply({ content: `Try using **/stats** in channels like: <#414575168174948372> or <#629464112749084673>.`})
                 
+                const season = getSeason(now.getMonth())
                 const [eloType, winsType, lossesType, gamesType, statsType] = !server.hasInternalLadder && format.useSeasonalElo && format.seasonResetDate < now ? 
                     ['seasonalElo', 'seasonalWins', 'seasonalLosses', 'seasonalGames', `Seasonal ${season} `] : 
                     ['elo', 'wins', 'losses', 'games', '']
@@ -75,8 +76,6 @@ export default {
                     } 
                 }) || {}
 
-                const season = getSeason(now.getMonth())
-                    
                 console.log(`[eloType, elo, wins, losses, games, statsType]`, [eloType, stats[eloType], stats[winsType], stats[lossesType], stats[gamesType], statsType])
 
                 const allStats = await Stats.findAll({ 

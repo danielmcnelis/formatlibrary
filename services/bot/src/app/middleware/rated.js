@@ -59,9 +59,11 @@ export const joinRatedPool = async (req, res, next) => {
             
             const now = new Date()
             const isSeasonal = format.useSeasonalElo && format.seasonResetDate < now
+            console.log('isSeasonal', isSeasonal)
             const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
-            const cutoff = isSeasonal ? new Date(now - (20 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
-            
+            const cutoff = isSeasonal ? new Date(now - (30 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
+            console.log('cutoff', cutoff)
+
             const isRecentOpponent = await Match.count({
                 where: {
                     [Op.or]: {
@@ -80,7 +82,23 @@ export const joinRatedPool = async (req, res, next) => {
             })
     
             if (isRecentOpponent) {
-                console.log(`<!> ${player.name} and ${potentialPair.playerName} are recent opponents <!>`)
+                const recentMatch = await Match.findOne({
+                    where: {
+                        [Op.or]: {
+                            [Op.and]: {
+                                winnerId: player.id,
+                                loserId: potentialPair.player.id
+                            },
+                            [Op.and]: {
+                                winnerId: potentialPair.player.id,
+                                loserId: player.id
+                            },
+                        },
+                        formatId: format.id,
+                        createdAt: {[Op.gte]: cutoff }
+                    }
+                })
+                console.log(`<!> ${player.playerName} and ${potentialPair.playerName} are recent opponents. Match reported at ${recentMatch.createdAt}<!>`)
                 continue
             } else if (potentialPair.updatedAt < twoMinutesAgo) {
                 await getRatedConfirmation(client, opponent, player, format)

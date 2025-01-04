@@ -592,7 +592,9 @@ export const lookForAllPotentialPairs = async (client) => {
             const potentialPair = potentialPairs[i]
             const now = new Date()
             const isSeasonal = format.useSeasonalElo && format.seasonResetDate < now
-            const cutoff = isSeasonal ? new Date(now - (20 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
+            console.log('isSeasonal', isSeasonal)
+            const cutoff = isSeasonal ? new Date(now - (30 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
+            console.log('cutoff', cutoff)
     
             const isRecentOpponent = await Match.count({
                 where: {
@@ -612,7 +614,24 @@ export const lookForAllPotentialPairs = async (client) => {
             })
 
             if (isRecentOpponent) {
-                console.log(`<!> ${pool.playerName} and ${potentialPair.playerName} are recent opponents <!>`)
+                const recentMatch = await Match.findOne({ where: { 
+                    where: {
+                        [Op.or]: {
+                            [Op.and]: {
+                                winnerId: potentialPair.playerId,
+                                loserId: pool.playerId
+                            },
+                            [Op.and]: {
+                                winnerId: pool.playerId,
+                                loserId: potentialPair.playerId
+                            },
+                        },
+                        formatId: pool.formatId,
+                        createdAt: {[Op.gte]: cutoff }
+                    }
+                }})
+                console.log(`<!> ${pool.playerName} and ${potentialPair.playerName} are recent opponents. Match reported at ${recentMatch.createdAt}<!>`)
+                continue
             } else if (playerIds.includes(player.id)) {
                 console.log(`<!> ${pool.playerName} has already been sent a confirmation notification <!>`)
                 continue
