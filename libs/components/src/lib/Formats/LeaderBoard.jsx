@@ -45,13 +45,13 @@ export const LeaderBoard = () => {
         if (!format.name || !statsType) return
         try {
             if (statsType === 'seasonal') {
-                const {data} = await axios.get(`/api/stats/seasonal-leaders/1000/${format.name.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/seasonal-leaders/1000/${id}`)
                 setLeaderboard(data)
             } else if (statsType === 'classic') {
-                const {data} = await axios.get(`/api/stats/classic-leaders/1000/${format.name.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/classic-leaders/1000/${id}`)
                 setLeaderboard(data)
             } else {
-                const {data} = await axios.get(`/api/stats/general-leaders/1000/${format.name.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/general-leaders/1000/${id}`)
                 setLeaderboard(data)
             }
         } catch (err) {
