@@ -8,12 +8,11 @@ import './MiniBoard.css'
 
 export const MiniBoard = (props) => {
     const { format, limit } = props
-    console.log('format', format)
     const [miniboard, setMiniBoard] = useState([])
     const navigate = useNavigate()
     const now = new Date()
     const statsType = format.useSeasonalElo && format.seasonResetDate < now ? 'seasonal' : 'general'
-    const videoPlaylistId = format?.videoPlaylistId
+    // const videoPlaylistId = format?.videoPlaylistId
     const url = statsType === 'seasonal' ? `/leaderboards/${format.name.toLowerCase()}?type=seasonal` :
         `/leaderboards/${format.name.toLowerCase()}`
     
@@ -39,19 +38,19 @@ export const MiniBoard = (props) => {
       }
   
       fetchData()
-    }, [format, limit])
+    }, [format, limit, statsType])
   
     if (!format || !limit) return
-    if (!miniboard.length) return <div></div>
+    if (!miniboard.length) return <div/>
   
     return (
       <div>
         <div className="divider"/> 
         <div id="leaderboard" className="miniboard">
           <div onClick={() => goToLeaderBoard()} className="miniboard-title-flexbox">
-            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`}/>
+            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt="format-icon"/>
             <h2 className="subheading">{capitalize(format.name, true)} Leaderboard</h2>
-            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`}/>
+            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt="format-icon"/>
           </div>
           <table id="miniboard-table">
             <thead>
