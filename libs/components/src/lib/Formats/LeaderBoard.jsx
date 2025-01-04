@@ -20,6 +20,12 @@ export const LeaderBoard = () => {
     const statsType = location?.search?.slice(6)
     const videoPlaylistId = format?.videoPlaylistId
     const season = getSeason(new Date().getMonth())
+    console.log('format', format)
+    console.log('leaderboard', leaderboard)
+    console.log('id', id)
+    console.log('location', location)
+    console.log('statsType', statsType)
+    console.log('season', season)
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
@@ -29,8 +35,10 @@ export const LeaderBoard = () => {
       const fetchData = async () => {
         try {
             const {data: formatData} = await axios.get(`/api/formats/${id}`)
+            console.log('formatData', formatData)
             setFormat(formatData)
 
+            console.log('statsType in fetch', statsType)
             if (statsType === 'seasonal') {
                 const {data} = await axios.get(`/api/stats/seasonal-leaders/1000/${formatData.format.name.toLowerCase()}`)
                 setLeaderboard(data)
@@ -38,6 +46,7 @@ export const LeaderBoard = () => {
                 const {data} = await axios.get(`/api/stats/classic-leaders/1000/${formatData.name.format.toLowerCase()}`)
                 setLeaderboard(data)
             } else {
+                console.log('HELLO WORLD????')
                 const {data} = await axios.get(`/api/stats/general-leaders/1000/${formatData.name.format.toLowerCase()}`)
                 setLeaderboard(data)
             }
