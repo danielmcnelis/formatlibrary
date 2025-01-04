@@ -607,7 +607,7 @@ export const lookForAllPotentialPairs = async (client) => {
                         },
                     },
                     formatId: pool.formatId,
-                    createdAt: {[Op.lte]: cutoff }
+                    createdAt: {[Op.gte]: cutoff }
                 }
             })
     

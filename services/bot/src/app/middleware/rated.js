@@ -75,7 +75,7 @@ export const joinRatedPool = async (req, res, next) => {
                         },
                     },
                     formatId: format.id,
-                    createdAt: {[Op.lte]: cutoff }
+                    createdAt: {[Op.gte]: cutoff }
                 }
             })
     
