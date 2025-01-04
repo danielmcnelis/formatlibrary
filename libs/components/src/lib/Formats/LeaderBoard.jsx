@@ -14,6 +14,7 @@ import './LeaderBoard.css'
 
 export const LeaderBoard = () => {
     const [format, setFormat] = useState({})
+    console.log('format in leaderboard', format)
     const [leaderboard, setLeaderboard] = useState([])
     const { id } = useParams()
     const location = useLocation()
@@ -49,7 +50,7 @@ export const LeaderBoard = () => {
       fetchData()
     }, [id, statsType, format])
   
-    if (!leaderboard.length) return <div/>
+    if (!format.id || !leaderboard.length) return <div/>
   
     return (
         <>

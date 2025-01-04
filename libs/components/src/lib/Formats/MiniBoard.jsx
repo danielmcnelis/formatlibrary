@@ -12,7 +12,9 @@ export const MiniBoard = (props) => {
     const [miniboard, setMiniBoard] = useState([])
     const navigate = useNavigate()
     const now = new Date()
+    console.log(`format.seasonResetDate < now`, format.seasonResetDate < now)
     const statsType = format.seasonResetDate < now ? 'seasonal' : 'general'
+    console.log(`statsType in miniboard`, statsType)
     // const videoPlaylistId = format?.videoPlaylistId
     const url = statsType === 'seasonal' ? `/leaderboards/${format?.name?.toLowerCase()}?type=seasonal` :
         `/leaderboards/${format?.name?.toLowerCase()}`
