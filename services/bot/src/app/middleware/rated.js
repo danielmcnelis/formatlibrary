@@ -80,6 +80,7 @@ export const joinRatedPool = async (req, res, next) => {
             })
     
             if (isRecentOpponent) {
+                console.log(`<!> ${player.name} and ${potentialPair.playerName} are recent opponents <!>`)
                 continue
             } else if (potentialPair.updatedAt < twoMinutesAgo) {
                 await getRatedConfirmation(client, opponent, player, format)

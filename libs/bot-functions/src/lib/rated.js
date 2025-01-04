@@ -107,6 +107,7 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
         })
 
         if (isRecentOpponent) {
+            console.log(`<!> ${player.name} and ${potentialPair.playerName} are recent opponents <!>`)
             continue
         } else if (potentialPair.updatedAt < twoMinutesAgo) {
             getRatedConfirmation(client, potentialPair.player, player, format)

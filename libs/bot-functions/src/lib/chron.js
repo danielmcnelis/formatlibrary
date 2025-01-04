@@ -610,8 +610,14 @@ export const lookForAllPotentialPairs = async (client) => {
                     createdAt: {[Op.gte]: cutoff }
                 }
             })
-    
-            if (isRecentOpponent || playerIds.includes(player.id) || playerIds.includes(potentialPair.playerId)) {
+
+            if (isRecentOpponent) {
+                console.log(`<!> ${pool.playerName} and ${potentialPair.playerName} are recent opponents <!>`)
+            } else if (playerIds.includes(player.id)) {
+                console.log(`<!> ${pool.playerName} has already been sent a confirmation notification <!>`)
+                continue
+            } else if (playerIds.includes(potentialPair.playerId)) {
+                console.log(`<!> ${potentialPair.playerName} has already been sent a confirmation notification <!>`)
                 continue
             } else {
                 playerIds.push(player.id)
