@@ -20,6 +20,16 @@ export const LeaderBoard = () => {
     const statsType = location?.search?.slice(6)
     const videoPlaylistId = format?.videoPlaylistId
     const season = getSeason(new Date().getMonth())
+    console.log('format', format)
+    console.log('leaderboard', leaderboard)
+    console.log('id', id)
+    console.log('location', location)
+    console.log('statsType', statsType)
+    console.log('season', season)
+    console.log('statsType', statsType)
+    console.log('statsType', statsType)
+    console.log('statsType', statsType)
+    console.log('statsType', statsType)
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])

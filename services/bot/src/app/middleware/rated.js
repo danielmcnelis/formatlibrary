@@ -57,27 +57,29 @@ export const joinRatedPool = async (req, res, next) => {
             const opponent = potentialPair.player
             const ppid = potentialPair.playerId
             
+            const now = new Date()
+            const isSeasonal = format.useSeasonalElo && format.seasonResetDate < now
             const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
-            const tenMinutesAgo = new Date(Date.now() - (10 * 60 * 1000))
-
-            const yourRecentOpponents = [...await Match.findAll({
+            const cutoff = isSeasonal ? new Date(now - (20 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
+            
+            const isRecentOpponent = await Match.count({
                 where: {
                     [Op.or]: {
-                        winnerId: player.id,
-                        loserId: player.id
+                        [Op.and]: {
+                            winnerId: player.id,
+                            loserId: potentialPair.player.id
+                        },
+                        [Op.and]: {
+                            winnerId: potentialPair.player.id,
+                            loserId: player.id
+                        },
                     },
-                    formatName: format.name,
-                    createdAt: {[Op.gte]: tenMinutesAgo }
+                    formatId: format.id,
+                    createdAt: {[Op.lte]: cutoff }
                 }
-            })].map((m) => {
-                if (player.id === m.winnerId) {
-                    return m.loserId
-                } else {
-                    return m.winnerId
-                }
-            }) || []
-
-            if (yourRecentOpponents.includes(ppid)) {
+            })
+    
+            if (isRecentOpponent) {
                 continue
             } else if (potentialPair.updatedAt < twoMinutesAgo) {
                 await getRatedConfirmation(client, opponent, player, format)

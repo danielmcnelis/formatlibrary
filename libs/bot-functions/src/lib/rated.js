@@ -84,8 +84,10 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
 
     for (let i = 0; i < potentialPairs.length; i++) {
         const potentialPair = potentialPairs[i]
+        const now = new Date()
+        const isSeasonal = format.useSeasonalElo && format.seasonResetDate < now
         const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
-        const tenMinutesAgo = new Date(Date.now() - (10 * 60 * 1000))
+        const cutoff = isSeasonal ? new Date(now - (20 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
 
         const isRecentOpponent = await Match.count({
             where: {
@@ -100,7 +102,7 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
                     },
                 },
                 formatId: format.id,
-                createdAt: {[Op.gte]: tenMinutesAgo }
+                createdAt: {[Op.lte]: cutoff }
             }
         })
 
