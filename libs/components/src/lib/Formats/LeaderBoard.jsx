@@ -16,6 +16,8 @@ export const LeaderBoard = () => {
     const [format, setFormat] = useState({})
     const [leaderboard, setLeaderboard] = useState([])
     const {id, statsType} = useParams()
+    console.log('id', id)
+    console.log('statsType', statsType)
     const videoPlaylistId = format?.videoPlaylistId
     const season = getSeason(new Date().getMonth())
 
