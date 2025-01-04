@@ -15,7 +15,7 @@ export const MiniBoard = (props) => {
     const statsType = format.useSeasonalElo ? 'seasonal' : 'general'
     console.log(`statsType in miniboard`, statsType)
     // const videoPlaylistId = format?.videoPlaylistId
-    const url = statsType === 'seasonal' ? `/leaderboards/${format?.name?.toLowerCase()}?type=seasonal` :
+    const url = statsType === 'seasonal' ? `/leaderboards/${format?.name?.toLowerCase()}/seasonal` :
         `/leaderboards/${format?.name?.toLowerCase()}`
     
     console.log(`url in miniboard`, url)

@@ -15,9 +15,7 @@ import './LeaderBoard.css'
 export const LeaderBoard = () => {
     const [format, setFormat] = useState({})
     const [leaderboard, setLeaderboard] = useState([])
-    console.log('leaderboard', leaderboard)
-    const location = useLocation()
-    const statsType = location?.search?.slice(6)
+    const {id, statsType} = useParams()
     const videoPlaylistId = format?.videoPlaylistId
     const season = getSeason(new Date().getMonth())
 
