@@ -36,7 +36,6 @@ export const LeaderBoard = () => {
   
     // USE EFFECT FETCH DATA
     useEffect(() => {
-      if (!format?.name) return
       const fetchData = async () => {
         try {
             const {data: formatData} = await axios.get(`/api/formats/${id}`)
@@ -58,7 +57,7 @@ export const LeaderBoard = () => {
       }
   
       fetchData()
-    }, [])
+    }, [id, statsType])
   
     if (!leaderboard.length) return <div/>
   
