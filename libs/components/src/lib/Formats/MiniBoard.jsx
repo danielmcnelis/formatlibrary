@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useParams } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { StatsRow } from './StatsRow'
@@ -7,18 +7,18 @@ import { capitalize } from '@fl/utils'
 import './MiniBoard.css'
 
 export const MiniBoard = (props) => {
-    const { format, limit } = props
-    console.log('format in miniboard', format)
+    const { format } = props
     const [miniboard, setMiniBoard] = useState([])
+    const { id } = useParams()
     const navigate = useNavigate()
     const now = new Date()
-    console.log(`format.seasonResetDate < now`, format.seasonResetDate < now)
     const statsType = format.seasonResetDate < now ? 'seasonal' : 'general'
     console.log(`statsType in miniboard`, statsType)
     // const videoPlaylistId = format?.videoPlaylistId
     const url = statsType === 'seasonal' ? `/leaderboards/${format?.name?.toLowerCase()}?type=seasonal` :
         `/leaderboards/${format?.name?.toLowerCase()}`
     
+    console.log(`url in miniboard`, url)
     const goToLeaderBoard = () => navigate(url)
 
     // USE EFFECT FETCH DATA
@@ -26,10 +26,10 @@ export const MiniBoard = (props) => {
       const fetchData = async () => {
         try {
             if (statsType === 'seasonal') {
-                const {data} = await axios.get(`/api/stats/seasonal-leaders/${limit}/${format?.name?.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/seasonal-leaders/10/${id}`)
                 setMiniBoard(data)
             } else {
-                const {data} = await axios.get(`/api/stats/general-leaders/${limit}/${format?.name?.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/general-leaders/10/${id}`)
                 setMiniBoard(data)
             }
         } catch (err) {
@@ -38,9 +38,9 @@ export const MiniBoard = (props) => {
       }
   
       fetchData()
-    }, [statsType])
+    }, [id, statsType])
   
-    if (!format || !limit || !miniboard.length) return <div/>
+    if (!format || !miniboard.length) return <div/>
   
     return (
       <div>
