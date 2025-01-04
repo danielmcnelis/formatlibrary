@@ -13,8 +13,8 @@ export const MiniBoard = (props) => {
     const now = new Date()
     const statsType = format.useSeasonalElo && format.seasonResetDate < now ? 'seasonal' : 'general'
     // const videoPlaylistId = format?.videoPlaylistId
-    const url = statsType === 'seasonal' ? `/leaderboards/${format.name.toLowerCase()}?type=seasonal` :
-        `/leaderboards/${format.name.toLowerCase()}`
+    const url = statsType === 'seasonal' ? `/leaderboards/${format?.name?.toLowerCase()}?type=seasonal` :
+        `/leaderboards/${format?.name?.toLowerCase()}`
     
     const goToLeaderBoard = () => navigate(url)
 
