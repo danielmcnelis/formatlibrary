@@ -169,11 +169,12 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
             const now = new Date()
             const isSeasonal = format.seasonResetDate < now
             const eloType = isSeasonal ? 'seasonalElo' : 'elo'
+            const gamesType = isSeasonal ? 'seasonalGames' : 'games'
 
             const allStats = await Stats.findAll({ 
                 where: {
                     formatId: format.id, 
-                    games: { [Op.gte]: 3 },
+                    [gamesType]: { [Op.gte]: 3 },
                     serverId: '414551319031054346',
                     '$player.isHidden$': false
                 },
@@ -268,11 +269,12 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
             const now = new Date()
             const isSeasonal = format.seasonResetDate < now
             const eloType = isSeasonal ? 'seasonalElo' : 'elo'
+            const gamesType = isSeasonal ? 'seasonalGames' : 'games'
 
             const allStats = await Stats.findAll({ 
                 where: {
                     formatId: format.id, 
-                    games: { [Op.gte]: 3 },
+                    [gamesType]: { [Op.gte]: 3 },
                     serverId: '414551319031054346',
                     isActive: true,
                     '$player.isHidden$': false
@@ -569,11 +571,12 @@ export const sendRatedPairingNotifications = async (client, player, opponent, fo
         const now = new Date()
         const isSeasonal = format.seasonResetDate < now
         const eloType = isSeasonal ? 'seasonalElo' : 'elo'
+        const gamesType = isSeasonal ? 'seasonalGames' : 'games'
 
         const allStats = await Stats.findAll({ 
             where: {
                 formatId: format.id, 
-                games: { [Op.gte]: 3 },
+                [gamesType]: { [Op.gte]: 3 },
                 serverId: '414551319031054346',
                 isActive: true,
                 '$player.isHidden$': false
