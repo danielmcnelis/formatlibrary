@@ -20,12 +20,6 @@ export const LeaderBoard = () => {
     const statsType = location?.search?.slice(6)
     const videoPlaylistId = format?.videoPlaylistId
     const season = getSeason(new Date().getMonth())
-    console.log('format', format)
-    console.log('leaderboard', leaderboard)
-    console.log('id', id)
-    console.log('location', location)
-    console.log('statsType', statsType)
-    console.log('season', season)
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
@@ -35,19 +29,16 @@ export const LeaderBoard = () => {
       const fetchData = async () => {
         try {
             const {data: formatData} = await axios.get(`/api/formats/${id}`)
-            console.log('formatData', formatData)
             setFormat(formatData)
 
-            console.log('statsType in fetch', statsType)
             if (statsType === 'seasonal') {
                 const {data} = await axios.get(`/api/stats/seasonal-leaders/1000/${formatData.format.name.toLowerCase()}`)
                 setLeaderboard(data)
             } else if (statsType === 'classic') {
-                const {data} = await axios.get(`/api/stats/classic-leaders/1000/${formatData.name.format.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/classic-leaders/1000/${formatData.format.name.toLowerCase()}`)
                 setLeaderboard(data)
             } else {
-                console.log('HELLO WORLD????')
-                const {data} = await axios.get(`/api/stats/general-leaders/1000/${formatData.name.format.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/general-leaders/1000/${formatData.format.name.toLowerCase()}`)
                 setLeaderboard(data)
             }
         } catch (err) {
@@ -56,7 +47,7 @@ export const LeaderBoard = () => {
       }
   
       fetchData()
-    }, [id, statsType])
+    }, [id, statsType, format])
   
     if (!leaderboard.length) return <div/>
   
@@ -78,17 +69,17 @@ export const LeaderBoard = () => {
                     {
                         statsType === 'seasonal' ? (
                             <div className="subcategory-title-flexbox">
-                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt="format-icon"/>
                                 <h1>Seasonal</h1>
-                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${season}.png`} alt={season || 'season'}/>
+                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${season}.png`} alt="season"/>
                                 <h1>{capitalize(format.name, true)} Leaderboard</h1>
-                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt="format-icon"/>
                             </div>
                         ) : (
                             <div className="subcategory-title-flexbox">
-                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt="format-icon"/>
                                 <h2>{capitalize(format.name, true)} Leaderboard</h2>
-                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt="format-icon"/>
                             </div>
                         )
                     }

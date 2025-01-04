@@ -8,10 +8,11 @@ import './MiniBoard.css'
 
 export const MiniBoard = (props) => {
     const { format, limit } = props
+    console.log('format in miniboard', format)
     const [miniboard, setMiniBoard] = useState([])
     const navigate = useNavigate()
     const now = new Date()
-    const statsType = format.useSeasonalElo && format.seasonResetDate < now ? 'seasonal' : 'general'
+    const statsType = format.seasonResetDate < now ? 'seasonal' : 'general'
     // const videoPlaylistId = format?.videoPlaylistId
     const url = statsType === 'seasonal' ? `/leaderboards/${format?.name?.toLowerCase()}?type=seasonal` :
         `/leaderboards/${format?.name?.toLowerCase()}`
@@ -23,13 +24,10 @@ export const MiniBoard = (props) => {
       const fetchData = async () => {
         try {
             if (statsType === 'seasonal') {
-                const {data} = await axios.get(`/api/stats/seasonal-leaders/${limit}/${format.name.toLowerCase()}`)
-                setMiniBoard(data)
-            } if (statsType === 'classic') {
-                const {data} = await axios.get(`/api/stats/classic-leaders/${limit}/${format.name.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/seasonal-leaders/${limit}/${format?.name?.toLowerCase()}`)
                 setMiniBoard(data)
             } else {
-                const {data} = await axios.get(`/api/stats/general-leaders/${limit}/${format.name.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/general-leaders/${limit}/${format?.name?.toLowerCase()}`)
                 setMiniBoard(data)
             }
         } catch (err) {
