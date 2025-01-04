@@ -9,6 +9,7 @@ import './MiniBoard.css'
 export const MiniBoard = (props) => {
     const { format } = props
     const [miniboard, setMiniBoard] = useState([])
+    console.log('miniboard', miniboard)
     const { id } = useParams()
     const navigate = useNavigate()
     const now = new Date()

@@ -52,7 +52,6 @@ export const getSeasonalLeaderboard = async (req, res, next) => {
     const stats = await Stats.findAll({
       where: {
         formatName: { [Op.iLike]: req.params.format.replace(' ', '_').replace('-', '_') },
-        games: { [Op.gte]: 3 },
         seasonalGames: { [Op.gte]: 3 },
         serverId: '414551319031054346',
         '$player.isHidden$': false
