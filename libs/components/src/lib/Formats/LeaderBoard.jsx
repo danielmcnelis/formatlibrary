@@ -14,7 +14,6 @@ import './LeaderBoard.css'
 
 export const LeaderBoard = () => {
     const [format, setFormat] = useState({})
-    console.log('format in leaderboard', format)
     const [leaderboard, setLeaderboard] = useState([])
     const { id } = useParams()
     const location = useLocation()
@@ -27,19 +26,30 @@ export const LeaderBoard = () => {
   
     // USE EFFECT FETCH DATA
     useEffect(() => {
+        const fetchData = async () => {
+          try {
+              const {data: formatData} = await axios.get(`/api/formats/${id}`)
+              setFormat(formatData)
+          } catch (err) {
+            console.log(err)
+          }
+        }
+    
+        fetchData()
+      }, [id])
+      
+    // USE EFFECT FETCH DATA
+    useEffect(() => {
       const fetchData = async () => {
         try {
-            const {data: formatData} = await axios.get(`/api/formats/${id}`)
-            setFormat(formatData)
-
             if (statsType === 'seasonal') {
-                const {data} = await axios.get(`/api/stats/seasonal-leaders/1000/${formatData.format.name.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/seasonal-leaders/1000/${format?.name?.toLowerCase()}`)
                 setLeaderboard(data)
             } else if (statsType === 'classic') {
-                const {data} = await axios.get(`/api/stats/classic-leaders/1000/${formatData.format.name.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/classic-leaders/1000/${format?.name?.toLowerCase()}`)
                 setLeaderboard(data)
             } else {
-                const {data} = await axios.get(`/api/stats/general-leaders/1000/${formatData.format.name.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/general-leaders/1000/${format?.name?.toLowerCase()}`)
                 setLeaderboard(data)
             }
         } catch (err) {
@@ -48,7 +58,7 @@ export const LeaderBoard = () => {
       }
   
       fetchData()
-    }, [id, statsType, format])
+    }, [statsType, format])
   
     if (!format.id || !leaderboard.length) return <div/>
   

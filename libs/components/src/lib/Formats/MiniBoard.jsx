@@ -38,10 +38,9 @@ export const MiniBoard = (props) => {
       }
   
       fetchData()
-    }, [format, limit, statsType])
+    }, [statsType])
   
-    if (!format || !limit) return
-    if (!miniboard.length) return <div/>
+    if (!format || !limit || !miniboard.length) return <div/>
   
     return (
       <div>
