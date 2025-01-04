@@ -48,9 +48,9 @@ export default {
             }
             
             if ((!server.hasInternalLadder && format.useSeasonalElo && format.seasonResetDate < now)) {
-                if (!server.hasInternalLadder) results.push(`\nFull Leaderboard: https://formatlibrary.com/leaderboards/${urlize(format.name)}?type=seasonal`)
+                if (!server.hasInternalLadder) results.push(`\nFull Leaderboard: https://formatlibrary.com/leaderboards/${urlize(format.name)}/seasonal`)
             } else {
-                if (!server.hasInternalLadder) results.push(`\nFull Leaderboard: https://formatlibrary.com/leaderboards/${urlize(format.name)}?type=all-time`)
+                if (!server.hasInternalLadder) results.push(`\nFull Leaderboard: https://formatlibrary.com/leaderboards/${urlize(format.name)}`)
             }
             await interaction.reply({ content: results.join('\n') })
         } catch (err) {

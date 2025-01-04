@@ -94,6 +94,7 @@ export const Router = (props) => {
 					<Route path="/goat-rulings" element={<Navigate to="/formats/goat" />} />
 					<Route path="/formats/" element=<Page roles={roles} disableAds={disableAds} element= <FormatMenu /> /> />
 					<Route path="/formats/:id" element=<Page roles={roles} disableAds={disableAds} element= <FormatIntro roles={roles}/> /> />
+					<Route path="/leaderboards/:id" element=<Page roles={roles} disableAds={disableAds} element= <LeaderBoard /> /> />
 					<Route path="/leaderboards/:id/:statsType" element=<Page roles={roles} disableAds={disableAds} element= <LeaderBoard /> /> />
 					<Route path="/replays/" element=<Page roles={roles} disableAds={disableAds} element= <ReplayTable roles={roles}/> /> />
                     <Route path="/start-draft/" element=<Page roles={roles} disableAds={disableAds} element= <DraftLauncher/> /> />
