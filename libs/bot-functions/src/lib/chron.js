@@ -14,9 +14,9 @@ import { format } from 'path'
 const Canvas = require('canvas')
 
 // GET HOURLY COUNTDOWN
-export const getTensCountdown = () => {
-	const now = new Date()
-	const remainingMinutes = Math.ceil(now.getMinutes() / 10) * 10 - now.getMinutes()
+export const getHourlyCountdown = () => {
+	const date = new Date()
+	const remainingMinutes = 60 - date.getMinutes()
     return remainingMinutes * 60 * 1000
 }
 
@@ -41,7 +41,7 @@ export const runHourlyTasks = async (client) => {
     await cleanUpPools()
     await lookForAllPotentialPairs(client)
 
-    return setTimeout(() => runHourlyTasks(client), getTensCountdown())
+    return setTimeout(() => runHourlyTasks(client), getHourlyCountdown())
 }
 
 // RUN NIGHTLY TASKS

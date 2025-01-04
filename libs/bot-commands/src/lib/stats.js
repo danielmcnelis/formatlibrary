@@ -63,29 +63,27 @@ export default {
                 const format = await Format.findByServerOrChannelId(server, interaction.channelId)
                 if (!format) return await interaction.reply({ content: `Try using **/stats** in channels like: <#414575168174948372> or <#629464112749084673>.`})
                 
+                const [eloType, winsType, lossesType, gamesType, statsType] = !server.hasInternalLadder && format.useSeasonalElo && format.seasonResetDate < now ? 
+                    ['seasonalElo', 'seasonalWins', 'seasonalLosses', 'seasonalGames', `Seasonal ${season} `] : 
+                    ['elo', 'wins', 'losses', 'games', '']
+
                 const stats = Stats.findOne({ 
                     where: { 
                         playerId: player.id, 
                         formatId: format.id, 
-                        [Op.or]: [
-                            { wins: { [Op.not]: null } }, 
-                            { losses: { [Op.not]: null } }, 
-                        ],
                         serverId: serverId
                     } 
-                })
+                }) || {}
 
                 const season = getSeason(now.getMonth())
-                const [elo, wins, losses, eloType, gamesType, statsType] = !server.hasInternalLadder && format.useSeasonalElo && format.seasonResetDate < now ? 
-                    [stats.seasonalElo, stats.seasonalWins, stats.seasonalLosses, 'seasonalElo', 'seasonalGames', `Seasonal ${season} `] : 
-                    [stats.elo, stats.wins, stats.losses, 'elo', 'games', '']
+                    
+                console.log(`[eloType, elo, wins, losses, games, statsType]`, [eloType, stats[eloType], stats[winsType], stats[lossesType], stats[gamesType], statsType])
 
                 const allStats = await Stats.findAll({ 
                     where: {
                         formatId: format.id, 
                         [gamesType]: { [Op.gte]: 3 },
                         serverId: serverId,
-                        isActive: true,
                         '$player.isHidden$': false
                     },
                     include: [Player],
@@ -93,9 +91,9 @@ export default {
                 })
 
                 const index = allStats.findIndex((s) => s.playerId === player.id)
-                const rank = stats && index >= 0 ? `#${index + 1} out of ${allStats.length}` : `N/A`
-                const medal = getMedal(elo, true)
-                const winrate = wins || losses ? `${(100 * wins / (wins + losses)).toFixed(2)}%` : 'N/A'		
+                const rank = stats.id && index >= 0 ? `#${index + 1} out of ${allStats.length}` : `N/A`
+                const medal = getMedal(stats[eloType], true)
+                const winrate = stats[winsType] || stats[lossesType] ? `${(100 * stats?.[winsType] / (stats[winsType] + stats[lossesType])).toFixed(2)}%` : 'N/A'		
 
                 return await interaction.reply({ content: 
                     `${format.emoji} --- ${statsType}${format.name} Stats --- ${format.emoji}`
@@ -103,8 +101,8 @@ export default {
                     + `\nName: ${stats.playerName}`
                     + `\nMedal: ${medal}`
                     + `\nRanking: ${rank}`
-                    + `\nElo Rating: ${elo.toFixed(2) || '500.00'}`
-                    + `\nWins: ${wins}, Losses: ${losses}`
+                    + `\nElo Rating: ${stats[eloType].toFixed(2) || '500.00'}`
+                    + `\nWins: ${stats[winsType]}, Losses: ${stats[lossesType]}`
                     + `\nWin Rate: ${winrate}`
                 })
             }

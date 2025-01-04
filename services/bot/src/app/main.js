@@ -28,7 +28,7 @@ import { createTopCut, editTieBreakers, getMidnightCountdown,
     assignRoles, createMembership, createPlayer, fetchCardNames, hasPartnerAccess, 
     isModerator, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
     editPointsSystem, runNightlyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, 
-    getKnownAbbreviation, capitalize, getTensCountdown, runHourlyTasks
+    getKnownAbbreviation, capitalize, getHourlyCountdown, runHourlyTasks
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
@@ -132,7 +132,7 @@ client.on('ready', async() => {
 
     try {
         // HOURLY TASKS
-        setTimeout(() => runHourlyTasks(client), getTensCountdown())
+        setTimeout(() => runHourlyTasks(client), getHourlyCountdown())
     } catch (err) {
         console.log(err)
     }
