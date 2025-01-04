@@ -16,7 +16,6 @@ export const LeaderBoard = () => {
     const [format, setFormat] = useState({})
     const [leaderboard, setLeaderboard] = useState([])
     console.log('leaderboard', leaderboard)
-    const { id } = useParams()
     const location = useLocation()
     const statsType = location?.search?.slice(6)
     const videoPlaylistId = format?.videoPlaylistId
@@ -43,15 +42,16 @@ export const LeaderBoard = () => {
     useEffect(() => {
       const fetchData = async () => {
         if (!format.name || !statsType) return
+        console.log('format.name', format.name, statsType)
         try {
             if (statsType === 'seasonal') {
-                const {data} = await axios.get(`/api/stats/seasonal-leaders/1000/${id}`)
+                const {data} = await axios.get(`/api/stats/seasonal-leaders/1000/${format.name}`)
                 setLeaderboard(data)
             } else if (statsType === 'classic') {
-                const {data} = await axios.get(`/api/stats/classic-leaders/1000/${id}`)
+                const {data} = await axios.get(`/api/stats/classic-leaders/1000/${format.name}`)
                 setLeaderboard(data)
             } else {
-                const {data} = await axios.get(`/api/stats/general-leaders/1000/${id}`)
+                const {data} = await axios.get(`/api/stats/general-leaders/1000/${format.name}`)
                 setLeaderboard(data)
             }
         } catch (err) {
