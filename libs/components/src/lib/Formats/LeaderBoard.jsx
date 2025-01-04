@@ -3,7 +3,7 @@ import { useState, useEffect, useLayoutEffect } from 'react'
 import axios from 'axios'
 import { StatsRow } from './StatsRow'
 import { capitalize } from '@fl/utils'
-import { useParams, useLocation } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import './LeaderBoard.css'
 
@@ -14,7 +14,9 @@ import './LeaderBoard.css'
 
 export const LeaderBoard = () => {
     const [format, setFormat] = useState({})
+    console.log('format', format)
     const [leaderboard, setLeaderboard] = useState([])
+    console.log('leaderboard', leaderboard)
     const {id, statsType} = useParams()
     console.log('id', id)
     console.log('statsType', statsType)
