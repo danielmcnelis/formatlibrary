@@ -43,17 +43,15 @@ export const LeaderBoard = () => {
     // USE EFFECT FETCH DATA
     useEffect(() => {
       const fetchData = async () => {
-        if (!format.name) return
-        console.log('format.name', format.name)
         try {
             if (statsType === 'seasonal') {
-                const {data} = await axios.get(`/api/stats/seasonal-leaders/1000/${format.name.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/seasonal-leaders/1000/${id.toLowerCase()}`)
                 setLeaderboard(data)
             } else if (statsType === 'classic') {
-                const {data} = await axios.get(`/api/stats/classic-leaders/1000/${format.name.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/classic-leaders/1000/${id.toLowerCase()}`)
                 setLeaderboard(data)
             } else {
-                const {data} = await axios.get(`/api/stats/general-leaders/1000/${format.name.toLowerCase()}`)
+                const {data} = await axios.get(`/api/stats/general-leaders/1000/${id.toLowerCase()}`)
                 setLeaderboard(data)
             }
         } catch (err) {
@@ -62,7 +60,7 @@ export const LeaderBoard = () => {
       }
   
       fetchData()
-    }, [format, statsType])
+    }, [id, statsType])
   
     if (!format.id || !leaderboard.length) return <div/>
   
