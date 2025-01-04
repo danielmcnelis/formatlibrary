@@ -68,7 +68,7 @@ export default {
                     ['seasonalElo', 'seasonalWins', 'seasonalLosses', 'seasonalGames', `Seasonal ${season} `] : 
                     ['elo', 'wins', 'losses', 'games', '']
 
-                const stats = Stats.findOne({ 
+                const stats = await Stats.findOne({ 
                     where: { 
                         playerId: player.id, 
                         formatId: format.id, 
