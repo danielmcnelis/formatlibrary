@@ -31,7 +31,7 @@ export const LeaderBoard = () => {
         const fetchData = async () => {
           try {
               const {data} = await axios.get(`/api/formats/${id}`)
-              setFormat(data)
+              setFormat(data.format)
           } catch (err) {
             console.log(err)
           }
