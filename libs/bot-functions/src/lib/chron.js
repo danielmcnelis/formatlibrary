@@ -1670,6 +1670,8 @@ export const downloadMissingCardImages = async () => {
     let a = 0
     let b = 0
     let c = 0
+    let d = 0
+    let e = 0
 
     const s3 = new S3({
         region: config.s3.region,
@@ -1692,18 +1694,27 @@ export const downloadMissingCardImages = async () => {
             for (let j = 0; j < artworks.length; j++) {
                 const artworkId = artworks[j].artworkId
                 if (!await s3FileExists(`images/cards/${artworkId}.jpg`)) {
-                    await uploadFullCardImage(s3, artworkId)
-                    a++
+                    if (await uploadFullCardImage(s3, artworkId)) {
+                        a++
+                    } else {
+                        d++
+                    }
                 }
     
                 if (!await s3FileExists(`images/medium_cards/${artworkId}.jpg`)) {
-                    await uploadMediumCardImage(s3, artworkId)
-                    b++
+                   if (await uploadMediumCardImage(s3, artworkId)) {
+                        b++
+                    } else {
+                        d++
+                    }
                 }
     
                 if (!await s3FileExists(`images/artworks/${artworkId}.jpg`)) {
-                    await uploadCroppedImage(s3, artworkId)
-                    c++
+                    if (await uploadCroppedImage(s3, artworkId)) {
+                        c++
+                    } else {
+                        d++
+                    }
                 }
             }
         } catch (err) {
@@ -1711,8 +1722,8 @@ export const downloadMissingCardImages = async () => {
             e++
         }
     }
-    
-    console.log(`Saved ${a} full sized card images, ${b} medium sized card images, ${c} cropped artwork images, encountered ${e} errors`)
+
+    console.log(`Saved ${a} full sized card images, ${b} medium sized card images, ${c} cropped artwork images, encountered ${d} download/upload errors and ${e} loop errors`)
     return console.log(`downloadAltArtworks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
@@ -1777,7 +1788,6 @@ export const downloadNewCards = async () => {
         const name = datum.name
         const cleanName = datum.name.replaceAll(/['"]/g, '').split(/[^A-Za-z0-9]/).filter((e) => e.length).join(' ')
         const images = datum.card_images
-        const imageIds = datum.card_images?.map((image) => image.id)
 
         if (name.includes('Ryzeal')) {
             console.log('datum', datum)
