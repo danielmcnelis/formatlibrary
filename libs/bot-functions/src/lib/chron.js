@@ -1696,7 +1696,7 @@ export const downloadMissingCardImages = async () => {
                 }
     
                 if (!await s3FileExists(`images/artworks/${artworkId}.jpg`)) {
-                    await uploadArtworkImage(s3, artworkId)
+                    await uploadCroppedImage(s3, artworkId)
                 }
             }
         } catch (err) {
