@@ -127,15 +127,15 @@ export const Navigation = (props) => {
                 }
             </div>
         </div>
-            {/* <div className="announcement-banner">
+            <div className="announcement-banner">
                 <h2>
                     <a
                         className="inherit-color" 
                         href="https://discord.com/events/414551319031054346/1306285681026400407"
                         rel="noreferrer"
                         target="_blank"
-                    >Tournament Alert: Edison Worlds LCQs - Dec 7 @ 12pm EST, Dec 8 @ 11am EST</a></h2>
-            </div> */}
+                    >The 1st Ladder Qualifier Season for 2025 Edison Worlds is underway! Join our Discord to play!</a></h2>
+            </div>
         </>
     )
 }
