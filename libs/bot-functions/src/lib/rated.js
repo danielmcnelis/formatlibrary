@@ -51,6 +51,7 @@ export const getRatedConfirmation = async (client, player, opponent, format) => 
             .setStyle(ButtonStyle.Primary)
         )
 
+    console.log('rated 54: member', member)
     const message = await member.user.send({ content: `I've found a Rated ${format.name} Format ${format.emoji} opponent for you. Do you still wish to play?`, components: [row] })
 
     setTimeout(async () => {

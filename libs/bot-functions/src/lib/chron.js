@@ -11,6 +11,7 @@ import { S3 } from '@aws-sdk/client-s3'
 import { config } from '@fl/config'
 import * as tcgPlayer from '../../../../tokens/tcgplayer.json'
 import { format } from 'path'
+import card from '../../../bot-commands/src/lib/card'
 const Canvas = require('canvas')
 
 // GET HOURLY COUNTDOWN
@@ -55,9 +56,9 @@ export const runNightlyTasks = async (client) => {
         
         const tasks = [
             manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
-            purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, updateSets, updateDecks,
-            updateDeckTypes, downloadNewCards, downloadAltArtworks, updateServers, conductCensus,
-            updateAvatars, updateMarketPrices
+            purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, updateSets, 
+            updateDecks, updateDeckTypes, downloadNewCards, downloadAltArtworks, downloadMissingCardImages, 
+            updateServers, conductCensus, updateAvatars, updateMarketPrices
         ]
     
         for (let i = 0; i < tasks.length; i++) {
@@ -1396,54 +1397,44 @@ export const getColor = (type = '') => {
     return color
 }
 
-// DOWNLOAD CARD IMAGE
-export const downloadCardImage = async (artworkId, cardName, cardId, isOriginal) => {
-    const s3 = new S3({
-        region: config.s3.region,
-        credentials: {
-            accessKeyId: config.s3.credentials.accessKeyId,
-            secretAccessKey: config.s3.credentials.secretAccessKey
-        },
+// CREATE ARTWORK
+export const findOrCreateArtwork = async (artworkId, cardName, cardId, isOriginal) => {
+    const artwork = await Artwork.findOrCreate({
+        where: {
+            artworkId,
+            cardName,
+            cardId,
+            isOriginal
+        }
     })
 
+    return artwork
+}
+
+
+// UPLOAD CARD IMAGES
+export const uploadCardImages = async (s3, artworkId) => {
+    const fullSuccess = await uploadFullCardImage(s3, artworkId)
+    const mediumSuccess = await uploadMediumCardImage(s3, artworkId)
+    const croppedSuccess = await uploadCroppedImage(s3, artworkId)
+    return [fullSuccess, mediumSuccess, croppedSuccess]
+}
+
+
+// DOWNLOAD CROPPED IMAGE AND UPLOAD TO ARTWORK FOLDER
+export const uploadCroppedImage = async (s3, artworkId) => {
     try {
         const {data: croppedCardImage} = await axios({
             method: 'GET',
             url: `https://images.ygoprodeck.com/images/cards_cropped/${artworkId}.jpg`,
             responseType: 'stream'
         })
-    
+        
         const { Location: artworkUri} = await new Upload({
             client: s3,
             params: { Bucket: 'formatlibrary', Key: `images/artworks/${artworkId}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` },
         }).done()
-        console.log('artworkUri', artworkUri)
-    } catch (err) {
-        console.log(err)
-    }
-
-    try {
-        const {data: fullCardImage} = await axios({
-            method: 'GET',
-            url: `https://images.ygoprodeck.com/images/cards/${artworkId}.jpg`,
-            responseType: 'stream'
-        })
-    
-        const { Location: imageUri} = await new Upload({
-            client: s3,
-            params: { Bucket: 'formatlibrary', Key: `images/cards/${artworkId}.jpg`, Body: fullCardImage, ContentType: `image/jpg` },
-        }).done()
-        console.log('imageUri', imageUri)
-
-        await Artwork.findOrCreate({
-            where: {
-                artworkId,
-                cardName,
-                cardId,
-                isOriginal
-            }
-        })
-        
+        console.log('artwork image uri', artworkUri)
         return true
     } catch (err) {
         console.log(err)
@@ -1451,6 +1442,49 @@ export const downloadCardImage = async (artworkId, cardName, cardId, isOriginal)
     }
 }
 
+// DOWNLOAD CARD IMAGE, RESIZE, AND UPLOAD TO MEDIUM CARDS FOLDER
+export const uploadMediumCardImage = async (s3, artworkId) => {
+   try {
+        const {data: fullCardImage} = await axios({
+            method: 'GET',
+            url: `https://images.ygoprodeck.com/images/cards/${artworkId}.jpg`,
+            responseType: 'stream'
+        })
+
+        const mediumCardImage = fullCardImage.pipe(sharp().resize(144, 210).jpeg())
+        const { Location: imageUri} = await new Upload({
+            client: s3,
+            params: { Bucket: 'formatlibrary', Key: `images/medium_cards/${artworkId}.jpg`, Body: mediumCardImage, ContentType: `image/jpg` },
+        }).done()
+        console.log('medium card image uri', imageUri)
+        return true
+    } catch (err) {
+        console.log(err)
+        return false
+    }
+}
+
+// DOWNLOAD CARD IMAGE AND UPLOAD TO CARDS FOLDER
+export const uploadFullCardImage = async (s3, artworkId, cardName, cardId) => {
+    const {data: fullCardImage} = await axios({
+        method: 'GET',
+        url: `https://images.ygoprodeck.com/images/cards/${artworkId}.jpg`,
+        responseType: 'stream'
+    })
+
+    try {
+        const { Location: imageUri} = await new Upload({
+            client: s3,
+            params: { Bucket: 'formatlibrary', Key: `images/cards/${artworkId}.jpg`, Body: fullCardImage, ContentType: `image/jpg` },
+        }).done()
+        console.log('card image uri', imageUri)
+        return true
+    } catch (err) {
+        console.log(err)
+        return false
+    }
+}
+ 
 // DOWNLOAD ALT ARTWORKS
 export const downloadAltArtworks = async () => {
     const start = Date.now()
@@ -1629,7 +1663,51 @@ export const downloadOriginalArtworks = async () => {
     return console.log(`Saved ${b} original artworks, encountered ${e} errors`)
 }
 
+// DOWNLOAD MISSING CARD IMAGES
+export const downloadMissingCardImages = async () => {
+    const cards = await Card.findAll({ include: Artwork })
 
+    const s3 = new S3({
+        region: config.s3.region,
+        credentials: {
+            accessKeyId: config.s3.credentials.accessKeyId,
+            secretAccessKey: config.s3.credentials.secretAccessKey
+        },
+    })
+    
+    for (let i = 0; i < cards.length; i++) {
+        try {
+            const card = cards[i]
+            const artworks = card.artworks
+            console.log('artworks', artworks)
+            continue
+    
+            if (!artworks || !artworks.length) {
+                const artwork = await findOrCreateArtwork(card.ypdId, card.name, card.id, true)
+                artworks.push(artwork)
+            }
+    
+            for (let j = 0; j < artworks.length; j++) {
+                const artworkId = artworks[j].id
+                if (!await s3FileExists(`images/cards/${artworkId}.jpg`)) {
+                    await uploadFullCardImage(s3, artworkId)
+                }
+    
+                if (!await s3FileExists(`images/medium_cards/${artworkId}.jpg`)) {
+                    await uploadMediumCardImage(s3, artworkId)
+                }
+    
+                if (!await s3FileExists(`images/artworks/${artworkId}.jpg`)) {
+                    await uploadArtworkImage(s3, artworkId)
+                }
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    return
+}
 
 // DOWNLOAD CARD ARTWORK
 export const downloadCardArtworks = async () => {
@@ -1670,6 +1748,15 @@ export const downloadNewCards = async () => {
         function: 'downloadNewCards',
         status: 'underway'
     })
+
+    const s3 = new S3({
+        region: config.s3.region,
+        credentials: {
+            accessKeyId: config.s3.credentials.accessKeyId,
+            secretAccessKey: config.s3.credentials.secretAccessKey
+        },
+    })
+
     let b = 0
     let c = 0
     let t = 0
@@ -1682,6 +1769,8 @@ export const downloadNewCards = async () => {
         const id = datum.id.toString()
         const name = datum.name
         const cleanName = datum.name.replaceAll(/['"]/g, '').split(/[^A-Za-z0-9]/).filter((e) => e.length).join(' ')
+        const images = datum.card_images
+        const imageIds = datum.card_images?.map((image) => image.id)
 
         if (name.includes('Ryzeal')) {
             console.log('datum', datum)
@@ -1743,15 +1832,11 @@ export const downloadNewCards = async () => {
             }
 
             if (!card) {
-                const success = await downloadCardImage(id, name, id, true)
-                console.log(`Image saved (${name})`)
-
                 await Card.create({
                     name: name,
                     cleanName: cleanName,
                     konamiCode: konamiCode,
                     ypdId: id,
-                    artworkId: success ? id : null,
                     isTcgLegal: isTcgLegal,
                     isOcgLegal: isOcgLegal,
                     isSpeedLegal: isSpeedLegal,
@@ -1796,21 +1881,45 @@ export const downloadNewCards = async () => {
                     color: getColor(datum.type),
                     sortPriority: getSortPriority(datum.type)
                 })
+
                 b++
                 console.log(`New card: ${name} (TCG Date: ${datum.misc_info[0]?.tcg_date}, OCG Date: ${datum.misc_info[0]?.ocg_date})`)
+                
+                for (let i = 0; i < images.length; i++) {
+                    const cardImageId = images[i].id
+                    const isOriginal = i === 0
+                    const artwork = await findOrCreateArtwork(cardImageId, cardName, card.id, isOriginal)
+                    
+                    if (isOriginal && artwork?.id) {
+                        await card.update({ artworkId: artwork?.id })
+                    }
+
+                    successes = await uploadCardImages(s3, cardImageId)
+                    if (successes[0]) console.log(`Image saved (${name})`)
+                }
             } else if (card && (card.name !== name || card.ypdId !== id || card.cleanName !== cleanName)) {
                 c++
 
+                for (let i = 0; i < images.length; i++) {
+                    const cardImageId = images[i].id
+                    const isOriginal = i === 0
+                    const artwork = await findOrCreateArtwork(cardImageId, cardName, card.id, isOriginal)
+                    
+                    if (isOriginal && artwork?.id) {
+                        await card.update({ artworkId: artwork?.id })
+                    }
+
+                    successes = await uploadCardImages(s3, cardImageId)
+                    if (successes[0]) console.log(`Image saved (${name})`)
+                }
+
                 console.log(`New name and/or ID: ${card.name} (${card.ypdId}) is now: ${name} (${id})`)
-                const success = await downloadCardImage(id, cardName, card.id, true)
-                console.log(`Image saved (${name})`)
 
                 await card.update({
                     name: name,
                     cleanName: cleanName,
                     konamiCode: konamiCode,
                     ypdId: id,
-                    artworkId: success ? id : null,
                     description: datum.desc,
                     isTcgLegal: isTcgLegal,
                     isOcgLegal: isOcgLegal,
@@ -1819,13 +1928,23 @@ export const downloadNewCards = async () => {
                 })
             } else if (card && (!card.tcgDate || !card.isTcgLegal) && tcgDate) {
                 console.log(`New TCG Card: ${card.name}`)
-                const success = await downloadCardImage(id, cardName, card.id, true)
-                console.log(`Image saved (${name})`)
+                
+                for (let i = 0; i < images.length; i++) {
+                    const cardImageId = images[i].id
+                    const isOriginal = i === 0
+                    const artwork = await findOrCreateArtwork(cardImageId, cardName, card.id, isOriginal)
+                    
+                    if (isOriginal && artwork?.id) {
+                        await card.update({ artworkId: artwork?.id })
+                    }
+
+                    successes = await uploadCardImages(s3, cardImageId)
+                    if (successes[0]) console.log(`Image saved (${name})`)
+                }
 
                 await card.update({
                     name: name,
                     cleanName: cleanName,
-                    artworkId: success ? id : null,
                     description: datum.desc,
                     tcgDate: tcgDate,
                     isTcgLegal: true
