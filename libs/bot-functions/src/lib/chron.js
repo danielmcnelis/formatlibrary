@@ -1686,7 +1686,7 @@ export const downloadMissingCardImages = async () => {
             }
     
             for (let j = 0; j < artworks.length; j++) {
-                const artworkId = artworks[j].id
+                const artworkId = artworks[j].artworkId
                 if (!await s3FileExists(`images/cards/${artworkId}.jpg`)) {
                     await uploadFullCardImage(s3, artworkId)
                 }
