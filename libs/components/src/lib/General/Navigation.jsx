@@ -131,7 +131,7 @@ export const Navigation = (props) => {
                 <h2>
                     <a
                         className="inherit-color" 
-                        href="https://discord.com/events/414551319031054346/1306285681026400407"
+                        href="https://discord.com/invite/formatlibrary"
                         rel="noreferrer"
                         target="_blank"
                     >The new Ladder Qualifier season for Edison Worlds is underway! Click to join.</a></h2>
