@@ -1679,8 +1679,6 @@ export const downloadMissingCardImages = async () => {
         try {
             const card = cards[i]
             const artworks = card.artworks?.map((artwork) => artwork.dataValues)
-            console.log('artworks', artworks)
-            continue
     
             if (!artworks || !artworks.length) {
                 const artwork = await findOrCreateArtwork(card.ypdId, card.name, card.id, true)
