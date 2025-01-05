@@ -134,7 +134,7 @@ export const Navigation = (props) => {
                         href="https://discord.com/events/414551319031054346/1306285681026400407"
                         rel="noreferrer"
                         target="_blank"
-                    >The 1st Ladder Qualifier Season for 2025 Edison Worlds is underway! Join our Discord to play!</a></h2>
+                    >The new Ladder Qualifier season for Edison Worlds is underway! Click to join.</a></h2>
             </div>
         </>
     )
