@@ -1678,7 +1678,7 @@ export const downloadMissingCardImages = async () => {
     for (let i = 0; i < cards.length; i++) {
         try {
             const card = cards[i]
-            const artworks = card.artworks
+            const artworks = card.artworks?.map((artwork) => artwork.artworks?.dataValues)
             console.log('artworks', artworks)
             continue
     
