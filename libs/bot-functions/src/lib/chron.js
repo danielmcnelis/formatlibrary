@@ -1665,7 +1665,11 @@ export const downloadOriginalArtworks = async () => {
 
 // DOWNLOAD MISSING CARD IMAGES
 export const downloadMissingCardImages = async () => {
+    const start = new Date()
     const cards = await Card.findAll({ include: Artwork })
+    let a = 0
+    let b = 0
+    let c = 0
 
     const s3 = new S3({
         region: config.s3.region,
@@ -1689,22 +1693,27 @@ export const downloadMissingCardImages = async () => {
                 const artworkId = artworks[j].artworkId
                 if (!await s3FileExists(`images/cards/${artworkId}.jpg`)) {
                     await uploadFullCardImage(s3, artworkId)
+                    a++
                 }
     
                 if (!await s3FileExists(`images/medium_cards/${artworkId}.jpg`)) {
                     await uploadMediumCardImage(s3, artworkId)
+                    b++
                 }
     
                 if (!await s3FileExists(`images/artworks/${artworkId}.jpg`)) {
                     await uploadCroppedImage(s3, artworkId)
+                    c++
                 }
             }
         } catch (err) {
             console.log(err)
+            e++
         }
     }
-
-    return
+    
+    console.log(`Saved ${a} full sized card images, ${b} medium sized card images, ${c} cropped artwork images, encountered ${e} errors`)
+    return console.log(`downloadAltArtworks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // DOWNLOAD CARD ARTWORK
