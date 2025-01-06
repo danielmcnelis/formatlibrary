@@ -2146,31 +2146,54 @@ const shuffleArray = (arr) => {
 ;(async () => {
     let b = 0
     let e = 0
-    const { data } = await axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?misc=yes')
 
-    const s3 = new S3({
-        region: config.s3.region,
-        credentials: {
-            accessKeyId: config.s3.credentials.accessKeyId,
-            secretAccessKey: config.s3.credentials.secretAccessKey
-        }
-    })
-
-    for (let i = 0; i < data.data.length; i++) {
-        const datum = data.data[i]
-        const betaId = datum.misc_info[0]?.beta_id?.toString()
-        if (!betaId) continue
-
+    const cards = await Card.findAll()
+    for (let i = 0; i < cards.length;i++) {
         try {
-            const data = await s3.send(new DeleteObjectCommand({ Bucket: 'formatlibrary', Key: `images/artworks/${betaId}.jpg`}))
-            console.log("Success. Object deleted.", data)
-            b++
+            const card = cards[i]
+            
+            // if (card.konamiCode !== card.artworkId) {
+            //     console.log(`${card.name} ${card.konamiCode} - ${card.artworkId}`)
+            // }
+    
+            let konamiCode = card.konamiCode
+            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+            await card.update({konamiCode})
         } catch (err) {
-            console.log(err)
-            e++
+            continue
         }
     }
-
-    console.log(`deleted ${b} beta card images, encountered ${e} errors`)
 })()
+
+
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+//     const { data } = await axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?misc=yes')
+
+//     const s3 = new S3({
+//         region: config.s3.region,
+//         credentials: {
+//             accessKeyId: config.s3.credentials.accessKeyId,
+//             secretAccessKey: config.s3.credentials.secretAccessKey
+//         }
+//     })
+
+//     for (let i = 0; i < data.data.length; i++) {
+//         const datum = data.data[i]
+//         const betaId = datum.misc_info[0]?.beta_id?.toString()
+//         if (!betaId) continue
+
+//         try {
+//             const data = await s3.send(new DeleteObjectCommand({ Bucket: 'formatlibrary', Key: `images/artworks/${betaId}.jpg`}))
+//             console.log("Success. Object deleted.", data)
+//             b++
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     console.log(`deleted ${b} beta card images, encountered ${e} errors`)
+// })()
 
