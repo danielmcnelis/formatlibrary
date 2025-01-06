@@ -28,7 +28,8 @@ export default {
                 // await updateMatchups()
                 // return recalculateStats()
                 await purgeBetaCards(client)
-                return downloadMissingCardImages()
+                return await downloadNewCards(client)
+                // return downloadMissingCardImages()
                 // return runNightlyTasks(client)
                 // return runMonthlyTasks(client)
             } else {
