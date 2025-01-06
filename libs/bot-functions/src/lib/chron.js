@@ -1929,7 +1929,7 @@ export const downloadNewCards = async () => {
                     tcgDate: tcgDate,
                     ocgDate: ocgDate
                 })
-            } else if (card && tcgDate && (!card.tcgDate || !card.isTcgLegal || checkTimeBetweenDates(start, new Date(tcgDate), 365 * 5))) {
+            } else if (card && tcgDate && (!card.tcgDate || !card.isTcgLegal || checkTimeBetweenDates(new Date(), new Date(tcgDate), 365 * 5))) {
                 console.log(`New TCG Card: ${card.name}`)
                 
                 for (let i = 0; i < images.length; i++) {
@@ -1954,7 +1954,7 @@ export const downloadNewCards = async () => {
                 })
 
                 t++
-            } else if (card && ocgDate && (!card.ocgDate || !card.isOcgLegal || checkTimeBetweenDates(start, new Date(ocgDate), 365 * 5))) {
+            } else if (card && ocgDate && (!card.ocgDate || !card.isOcgLegal || checkTimeBetweenDates(new Date(), new Date(ocgDate), 365 * 5))) {
                 await card.update({
                     ocgDate: ocgDate,
                     isOcgLegal: true  
