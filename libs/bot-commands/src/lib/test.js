@@ -1,6 +1,6 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
-import { purgeBetaCards, downloadMissingCardImages, recalculateStats, downloadNewCards, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckTypes, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runHourlyTasks } from '@fl/bot-functions'
+import { downloadOriginalArtworks, purgeBetaCards, downloadMissingCardImages, recalculateStats, downloadNewCards, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckTypes, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runHourlyTasks } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { Match, Tournament, Server, TriviaQuestion } from '@fl/models'
@@ -28,7 +28,7 @@ export default {
                 // await updateMatchups()
                 // return recalculateStats()
                 // await purgeBetaCards(client)
-                return await downloadNewCards(client)
+                return await downloadOriginalArtworks(client)
                 // return downloadMissingCardImages()
                 // return runNightlyTasks(client)
                 // return runMonthlyTasks(client)

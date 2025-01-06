@@ -885,7 +885,7 @@ export const applyDecay = async (formatId, currentDate, nextDate, useSeasonalElo
     
         const activeSeasonalPlayerIds = []
         let seasonalDecayRate = Math.pow(Math.E, (-1 * seasonalMatchesInPeriod.length) / 600)
-        if (seasonalDecayRate > 0.9925) generalDecayRate = 0.9925
+        if (seasonalDecayRate > 0.993) generalDecayRate = 0.993
 
         for (let i = 0; i < seasonalMatchesInPeriod.length ; i++) {
             const {winnerId, loserId} = seasonalMatchesInPeriod[i]
@@ -894,7 +894,7 @@ export const applyDecay = async (formatId, currentDate, nextDate, useSeasonalElo
             }
             if (!activeSeasonalPlayerIds.includes(loserId)) {
                 activeSeasonalPlayerIds.push(loserId)
-            } 
+            }
         }
 
         for (let i = 0; i < allStats.length; i++) {
@@ -1626,8 +1626,10 @@ export const downloadOriginalArtworks = async () => {
         include: Card
     })
 
+
     for (let i = 0; i < artworks.length; i++) {
         const artwork = artworks[i]
+        await artwork.card.update({ konamiCode: artwork.artworkId })
 
         try {
             const {data: fullCardImage} = await axios({
@@ -1900,7 +1902,7 @@ export const downloadNewCards = async () => {
                     const successes = await uploadCardImages(s3, cardImageId)
                     if (successes[0]) console.log(`Image saved (${name})`)
                 }
-            } else if (card && (card.name !== name || card.konamiCode !== konamiCode || card.ypdId !== id || card.cleanName !== cleanName || !card.artworkId || (checkTimeBetweenDates(new Date(), new Date(tcgDate), 365 * 5) && card.ypdId !== card.artworkId))) {
+            } else if (card && (card.name !== name || card.konamiCode !== konamiCode || card.ypdId !== id || card.cleanName !== cleanName || !card.artworkId || (checkTimeBetweenDates(new Date(), new Date(tcgDate), 7) && card.ypdId !== card.artworkId))) {
                 c++
 
                 for (let i = 0; i < images.length; i++) {
@@ -1930,7 +1932,7 @@ export const downloadNewCards = async () => {
                     tcgDate: tcgDate,
                     ocgDate: ocgDate
                 })
-            } else if (card && tcgDate && (!card.tcgDate || !card.isTcgLegal || checkTimeBetweenDates(new Date(), new Date(tcgDate), 365 * 5))) {
+            } else if (card && tcgDate && (!card.tcgDate || !card.isTcgLegal || checkTimeBetweenDates(new Date(), new Date(tcgDate), 7))) {
                 console.log(`New TCG Card: ${card.name}`)
                 
                 for (let i = 0; i < images.length; i++) {
@@ -1955,7 +1957,7 @@ export const downloadNewCards = async () => {
                 })
 
                 t++
-            } else if (card && ocgDate && (!card.ocgDate || !card.isOcgLegal || checkTimeBetweenDates(new Date(), new Date(ocgDate), 365 * 5))) {
+            } else if (card && ocgDate && (!card.ocgDate || !card.isOcgLegal || checkTimeBetweenDates(new Date(), new Date(ocgDate), 7))) {
                 await card.update({
                     ocgDate: ocgDate,
                     isOcgLegal: true  
