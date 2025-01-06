@@ -1789,10 +1789,6 @@ export const downloadNewCards = async () => {
         const cleanName = datum.name.replaceAll(/['"]/g, '').split(/[^A-Za-z0-9]/).filter((e) => e.length).join(' ')
         const images = datum.card_images
 
-        if (name.includes('Ryzeal')) {
-            console.log('datum', datum)
-        }
-
         try {
             const card = await Card.findOne({
                 where: {
@@ -1837,16 +1833,6 @@ export const downloadNewCards = async () => {
             const isSpeedLegal = datum.misc_info[0]?.formats?.includes('Speed Duel')
             const tcgDate = category !== 'Skill' ? datum.misc_info[0]?.tcg_date || null : null
             const ocgDate = category !== 'Skill' ? datum.misc_info[0]?.ocg_date || null : null
-
-            if (name.includes('Ryzeal')) {
-                console.log('!!card', !!card)
-                console.log('card.name', card.name)
-                console.log(`card && (card.name !== name || card.ypdId !== id || card.cleanName !== cleanName)`, card && (card.name !== name || card.ypdId !== id || card.cleanName !== cleanName))
-                console.log(`tcgDate`, tcgDate)
-                console.log(`card && (!card.tcgDate || !card.isTcgLegal) && tcgDate`, card && (!card.tcgDate || !card.isTcgLegal) && tcgDate)
-                console.log(`ocgDate`, ocgDate)
-                console.log(`isSpeedLegal`, isSpeedLegal)
-            }
 
             if (!card) {
                 await Card.create({
@@ -1914,7 +1900,7 @@ export const downloadNewCards = async () => {
                     successes = await uploadCardImages(s3, cardImageId)
                     if (successes[0]) console.log(`Image saved (${name})`)
                 }
-            } else if (card && (card.name !== name || card.ypdId !== id || card.cleanName !== cleanName)) {
+            } else if (card && (card.name !== name || card.konamiCode !== konamiCode || card.ypdId !== id || card.cleanName !== cleanName)) {
                 c++
 
                 for (let i = 0; i < images.length; i++) {
@@ -1943,7 +1929,7 @@ export const downloadNewCards = async () => {
                     tcgDate: tcgDate,
                     ocgDate: ocgDate
                 })
-            } else if (card && (!card.tcgDate || !card.isTcgLegal) && tcgDate) {
+            } else if (card && tcgDate && (!card.tcgDate || !card.isTcgLegal || checkTimeBetweenDates(start, new Date(tcgDate), 365 * 5))) {
                 console.log(`New TCG Card: ${card.name}`)
                 
                 for (let i = 0; i < images.length; i++) {
@@ -1968,7 +1954,7 @@ export const downloadNewCards = async () => {
                 })
 
                 t++
-            } else if (card && (!card.ocgDate || !card.isOcgLegal) && ocgDate) {
+            } else if (card && ocgDate && (!card.ocgDate || !card.isOcgLegal || checkTimeBetweenDates(start, new Date(ocgDate), 365 * 5))) {
                 await card.update({
                     ocgDate: ocgDate,
                     isOcgLegal: true  

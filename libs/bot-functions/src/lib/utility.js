@@ -817,3 +817,6 @@ export const s3FileExists = async (filePath) => {
         return false
     }
 }
+
+// CHECK DIFFERENCE BETWEEN DATES
+export const checkTimeBetweenDates = (d1, d2, days) => Math.abs(d1.getTime() - d2.getTime()) < days * 24 * 60 * 60 * 1000
