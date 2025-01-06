@@ -1399,7 +1399,7 @@ export const getColor = (type = '') => {
 
 // CREATE ARTWORK
 export const findOrCreateArtwork = async (artworkId, cardName, cardId, isOriginal) => {
-    const artwork = await Artwork.findOrCreate({
+    const [artwork] = await Artwork.findOrCreate({
         where: {
             artworkId,
             cardName,
@@ -1909,6 +1909,7 @@ export const downloadNewCards = async () => {
                     const artwork = await findOrCreateArtwork(cardImageId.toString(), name, card.id, isOriginal)
                     
                     if (isOriginal && artwork?.artworkId) {
+                        console.log('isOriginal && artwork?.artworkId', isOriginal && artwork?.artworkId)
                         await card.update({ artworkId: artwork?.artworkId })
                     }
 

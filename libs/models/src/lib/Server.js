@@ -76,6 +76,6 @@ export const Server = db.define('servers', {
 Server.findById = async (id) => await Server.findOne({ where: { id }})
 
 Server.findOrCreateByIdOrName = async (id, name) => {
-    const server = await Server.findOrCreate({ where: { id, name }})
-    return server?.[0]
+    const [server] = await Server.findOrCreate({ where: { id, name }})
+    return server
 }
