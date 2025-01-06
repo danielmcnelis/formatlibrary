@@ -1900,7 +1900,7 @@ export const downloadNewCards = async () => {
                     const successes = await uploadCardImages(s3, cardImageId)
                     if (successes[0]) console.log(`Image saved (${name})`)
                 }
-            } else if (card && (card.name !== name || card.konamiCode !== konamiCode || card.ypdId !== id || card.cleanName !== cleanName)) {
+            } else if (card && (card.name !== name || card.konamiCode !== konamiCode || card.ypdId !== id || card.cleanName !== cleanName || !card.artworkId || (checkTimeBetweenDates(new Date(), new Date(tcgDate), 365 * 5) && card.ypdId !== card.artworkId))) {
                 c++
 
                 for (let i = 0; i < images.length; i++) {
