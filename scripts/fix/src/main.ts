@@ -8,6 +8,7 @@ import * as fs from 'fs'
 import { parse } from 'csv-parse'
 import { iso2ToCountries } from '@fl/utils'
 import { S3, DeleteObjectCommand } from '@aws-sdk/client-s3'
+import { statuses } from './ocg-banlists.json' 
 
 //SHUFFLE ARRAY
 const shuffleArray = (arr) => {
@@ -2143,27 +2144,29 @@ const shuffleArray = (arr) => {
 // })()
 
 
-;(async () => {
-    let b = 0
-    let e = 0
+// ;(async () => {
+//     let b = 0
+//     let e = 0
 
-    const cards = await Card.findAll()
-    for (let i = 0; i < cards.length;i++) {
-        try {
-            const card = cards[i]
+//     const cards = await Card.findAll()
+//     for (let i = 0; i < cards.length;i++) {
+//         try {
+//             const card = cards[i]
             
-            // if (card.konamiCode !== card.artworkId) {
-            //     console.log(`${card.name} ${card.konamiCode} - ${card.artworkId}`)
-            // }
+//             let artworkId = card.artworkId
+//             while (artworkId.length < 8) artworkId = '0' + artworkId 
+//             if (card.konamiCode !== artworkId) {
+//                 console.log(`${card.name}, ${card.konamiCode}, ${artworkId}`)
+//             }
     
-            let konamiCode = card.konamiCode
-            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-            await card.update({konamiCode})
-        } catch (err) {
-            continue
-        }
-    }
-})()
+//             let konamiCode = card.konamiCode
+//             while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+//             await card.update({konamiCode})
+//         } catch (err) {
+//             continue
+//         }
+//     }
+// })()
 
 
 // ;(async () => {
@@ -2197,3 +2200,37 @@ const shuffleArray = (arr) => {
 //     console.log(`deleted ${b} beta card images, encountered ${e} errors`)
 // })()
 
+
+;(async () => {
+    let b = 0
+    let e = 0
+    
+    for (let i = 0; i < statuses.length; i++) {
+        try {
+            const data = statuses[i]
+            const card = await Card.findOne({
+                where: {
+                    name: data.cardName
+                }
+            })
+            
+            await Status.create({
+                cardName: data.cardName,
+                cardId: card.id,
+                restriction: data.restriction,
+                previous: data.previous,
+                date: data.date,
+                banlist: data.banlist,
+                category: 'OCG'
+            })
+
+            console.log(`new status: ${data.cardName} = ${data.restriction} (was ${data.previous})`)
+           b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    console.log(`created ${b} ocg statuses, encountered ${e} errors`)
+})()

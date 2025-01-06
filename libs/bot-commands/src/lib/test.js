@@ -28,9 +28,9 @@ export default {
                 // await updateMatchups()
                 // return recalculateStats()
                 // await purgeBetaCards(client)
-                return await downloadOriginalArtworks(client)
+                // return await downloadOriginalArtworks(client)
                 // return downloadMissingCardImages()
-                // return runNightlyTasks(client)
+                return runNightlyTasks(client)
                 // return runMonthlyTasks(client)
             } else {
                 await interaction.editReply('🧪')

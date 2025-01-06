@@ -1800,7 +1800,6 @@ export const downloadNewCards = async () => {
                     ]
                 }
             })
-
     
             let konamiCode = id
             while (konamiCode.length < 8) konamiCode = '0' + konamiCode
@@ -1902,7 +1901,7 @@ export const downloadNewCards = async () => {
                     const successes = await uploadCardImages(s3, cardImageId)
                     if (successes[0]) console.log(`Image saved (${name})`)
                 }
-            } else if (card && (card.name !== name || card.konamiCode !== konamiCode || card.ypdId !== id || card.cleanName !== cleanName || !card.artworkId || (checkTimeBetweenDates(new Date(), new Date(tcgDate), 7) && card.ypdId !== card.artworkId))) {
+            } else if (card && (card.name !== name || card.ypdId !== id || card.cleanName !== cleanName || !card.artworkId || (checkTimeBetweenDates(new Date(), new Date(tcgDate), 7) && card.ypdId !== card.artworkId))) {
                 c++
 
                 for (let i = 0; i < images.length; i++) {
@@ -1911,7 +1910,6 @@ export const downloadNewCards = async () => {
                     const artwork = await findOrCreateArtwork(cardImageId.toString(), name, card.id, isOriginal)
                     
                     if (isOriginal && artwork?.artworkId) {
-                        console.log('isOriginal && artwork?.artworkId', isOriginal && artwork?.artworkId)
                         await card.update({ artworkId: artwork?.artworkId })
                     }
 
