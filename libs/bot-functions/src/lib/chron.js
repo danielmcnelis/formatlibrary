@@ -1611,13 +1611,13 @@ export const downloadOriginalArtworks = async () => {
     let b = 0
     let e = 0
 
-    const s3 = new S3({
-        region: config.s3.region,
-        credentials: {
-            accessKeyId: config.s3.credentials.accessKeyId,
-            secretAccessKey: config.s3.credentials.secretAccessKey
-        },
-    })
+    // const s3 = new S3({
+    //     region: config.s3.region,
+    //     credentials: {
+    //         accessKeyId: config.s3.credentials.accessKeyId,
+    //         secretAccessKey: config.s3.credentials.secretAccessKey
+    //     },
+    // })
     
     const artworks = await Artwork.findAll({
         where: {
@@ -1631,35 +1631,35 @@ export const downloadOriginalArtworks = async () => {
         const artwork = artworks[i]
         await artwork.card.update({ konamiCode: artwork.artworkId })
 
-        try {
-            const {data: fullCardImage} = await axios({
-                method: 'GET',
-                url: `https://images.ygoprodeck.com/images/cards/${artwork.card.artworkId}.jpg`,
-                responseType: 'stream'
-            })
+        // try {
+        //     const {data: fullCardImage} = await axios({
+        //         method: 'GET',
+        //         url: `https://images.ygoprodeck.com/images/cards/${artwork.card.artworkId}.jpg`,
+        //         responseType: 'stream'
+        //     })
         
-            const { Location: imageUri} = await new Upload({
-                client: s3,
-                params: { Bucket: 'formatlibrary', Key: `images/cards/${artwork.card.artworkId}.jpg`, Body: fullCardImage, ContentType: `image/jpg` },
-            }).done()
-            console.log('imageUri', imageUri)
+        //     const { Location: imageUri} = await new Upload({
+        //         client: s3,
+        //         params: { Bucket: 'formatlibrary', Key: `images/cards/${artwork.card.artworkId}.jpg`, Body: fullCardImage, ContentType: `image/jpg` },
+        //     }).done()
+        //     console.log('imageUri', imageUri)
 
-            const {data: croppedCardImage} = await axios({
-                method: 'GET',
-                url: `https://images.ygoprodeck.com/images/cards_cropped/${artwork.card.artworkId}.jpg`,
-                responseType: 'stream'
-            })
+        //     const {data: croppedCardImage} = await axios({
+        //         method: 'GET',
+        //         url: `https://images.ygoprodeck.com/images/cards_cropped/${artwork.card.artworkId}.jpg`,
+        //         responseType: 'stream'
+        //     })
         
-            const { Location: artworkUri} = await new Upload({
-                client: s3,
-                params: { Bucket: 'formatlibrary', Key: `images/artworks/${artwork.card.artworkId}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` },
-            }).done()
-            console.log('artworkUri', artworkUri)
+        //     const { Location: artworkUri} = await new Upload({
+        //         client: s3,
+        //         params: { Bucket: 'formatlibrary', Key: `images/artworks/${artwork.card.artworkId}.jpg`, Body: croppedCardImage, ContentType: `image/jpg` },
+        //     }).done()
+        //     console.log('artworkUri', artworkUri)
 
-            b++
-        } catch (err) {
-            console.log(err)
-        }
+        //     b++
+        // } catch (err) {
+        //     console.log(err)
+        // }
     }
 
     return console.log(`Saved ${b} original artworks, encountered ${e} errors`)
