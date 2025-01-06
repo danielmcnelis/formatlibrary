@@ -1897,7 +1897,7 @@ export const downloadNewCards = async () => {
                         await card.update({ artworkId: artwork?.artworkId })
                     }
 
-                    successes = await uploadCardImages(s3, cardImageId)
+                    const successes = await uploadCardImages(s3, cardImageId)
                     if (successes[0]) console.log(`Image saved (${name})`)
                 }
             } else if (card && (card.name !== name || card.konamiCode !== konamiCode || card.ypdId !== id || card.cleanName !== cleanName)) {
@@ -1912,7 +1912,7 @@ export const downloadNewCards = async () => {
                         await card.update({ artworkId: artwork?.artworkId })
                     }
 
-                    successes = await uploadCardImages(s3, cardImageId)
+                    const successes = await uploadCardImages(s3, cardImageId)
                     if (successes[0]) console.log(`Image saved (${name})`)
                 }
 
@@ -1941,7 +1941,7 @@ export const downloadNewCards = async () => {
                         await card.update({ artworkId: artwork?.artworkId })
                     }
 
-                    successes = await uploadCardImages(s3, cardImageId)
+                    const successes = await uploadCardImages(s3, cardImageId)
                     if (successes[0]) console.log(`Image saved (${name})`)
                 }
 
