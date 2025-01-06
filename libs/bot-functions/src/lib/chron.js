@@ -1891,7 +1891,7 @@ export const downloadNewCards = async () => {
                 for (let i = 0; i < images.length; i++) {
                     const cardImageId = images[i].id
                     const isOriginal = i === 0
-                    const artwork = await findOrCreateArtwork(cardImageId, cardName, card.id, isOriginal)
+                    const artwork = await findOrCreateArtwork(cardImageId, name, card.id, isOriginal)
                     
                     if (isOriginal && artwork?.id) {
                         await card.update({ artworkId: artwork?.id })
@@ -1906,7 +1906,7 @@ export const downloadNewCards = async () => {
                 for (let i = 0; i < images.length; i++) {
                     const cardImageId = images[i].id
                     const isOriginal = i === 0
-                    const artwork = await findOrCreateArtwork(cardImageId, cardName, card.id, isOriginal)
+                    const artwork = await findOrCreateArtwork(cardImageId, name, card.id, isOriginal)
                     
                     if (isOriginal && artwork?.id) {
                         await card.update({ artworkId: artwork?.id })
@@ -1935,7 +1935,7 @@ export const downloadNewCards = async () => {
                 for (let i = 0; i < images.length; i++) {
                     const cardImageId = images[i].id
                     const isOriginal = i === 0
-                    const artwork = await findOrCreateArtwork(cardImageId, cardName, card.id, isOriginal)
+                    const artwork = await findOrCreateArtwork(cardImageId, name, card.id, isOriginal)
                     
                     if (isOriginal && artwork?.id) {
                         await card.update({ artworkId: artwork?.id })
