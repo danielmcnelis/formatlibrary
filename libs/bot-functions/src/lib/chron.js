@@ -1893,8 +1893,8 @@ export const downloadNewCards = async () => {
                     const isOriginal = i === 0
                     const artwork = await findOrCreateArtwork(cardImageId, name, card.id?.toString(), isOriginal)
                     
-                    if (isOriginal && artwork?.id) {
-                        await card.update({ artworkId: artwork?.id })
+                    if (isOriginal && artwork?.artworkId) {
+                        await card.update({ artworkId: artwork?.artworkId })
                     }
 
                     successes = await uploadCardImages(s3, cardImageId)
@@ -1908,8 +1908,8 @@ export const downloadNewCards = async () => {
                     const isOriginal = i === 0
                     const artwork = await findOrCreateArtwork(cardImageId, name, card.id?.toString(), isOriginal)
                     
-                    if (isOriginal && artwork?.id) {
-                        await card.update({ artworkId: artwork?.id })
+                    if (isOriginal && artwork?.artworkId) {
+                        await card.update({ artworkId: artwork?.artworkId })
                     }
 
                     successes = await uploadCardImages(s3, cardImageId)
@@ -1937,8 +1937,8 @@ export const downloadNewCards = async () => {
                     const isOriginal = i === 0
                     const artwork = await findOrCreateArtwork(cardImageId, name, card.id?.toString(), isOriginal)
                     
-                    if (isOriginal && artwork?.id) {
-                        await card.update({ artworkId: artwork?.id })
+                    if (isOriginal && artwork?.artworkId) {
+                        await card.update({ artworkId: artwork?.artworkId })
                     }
 
                     successes = await uploadCardImages(s3, cardImageId)
