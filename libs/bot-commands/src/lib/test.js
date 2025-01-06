@@ -27,7 +27,7 @@ export default {
                 // await downloadNewCards(client)
                 // await updateMatchups()
                 // return recalculateStats()
-                await purgeBetaCards(client)
+                // await purgeBetaCards(client)
                 return await downloadNewCards(client)
                 // return downloadMissingCardImages()
                 // return runNightlyTasks(client)
