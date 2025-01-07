@@ -311,7 +311,7 @@ export const composeBlogPost = async (interaction, event) => {
                 formatId: event.formatId,
                 communityName: event.communityName,
                 serverInviteLink: event.server?.inviteLink,
-                serverId: event.server?.serverId,
+                serverId: event.serverId,
             })
         
             return await interaction.channel.send(`Composed blogpost for ${event.name}.`)
@@ -406,7 +406,7 @@ export const composeBlogPost = async (interaction, event) => {
                 formatId: event.formatId,
                 communityName: event.communityName ,
                 serverInviteLink: event.server?.inviteLink,
-                serverId: event.server?.serverId
+                serverId: event.serverId
             })
         
             const buffer = canvas.toBuffer('image/png')
