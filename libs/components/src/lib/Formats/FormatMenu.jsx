@@ -68,7 +68,7 @@ export const FormatMenu = () => {
                     <h1 className="format-menu-title">5D's Formats</h1>
                     <div className="format-menu">
                         {
-                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === '5D's').map((format) => <FormatButton key={format.id} format={format}  />)
+                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === '5D\'s').map((format) => <FormatButton key={format.id} format={format}  />)
                         }
                     </div>
                     <div className="divider"/>
