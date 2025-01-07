@@ -331,7 +331,7 @@ export const composeBlogPost = async (interaction, event) => {
         
             if (!decks.length) return await interaction.channel.send(`No decks found for ${event.formatName}.`)
                      
-            const freqs = decks.reduce((acc, curr) => (acc[curr.type] ? acc[curr.type]++ : acc[curr.type] = 1, acc), {})
+            const freqs = decks.reduce((acc, curr) => (acc[curr.deckTypeName] ? acc[curr.deckTypeName]++ : acc[curr.deckTypeName] = 1, acc), {})
             const popularDecks = Object.entries(freqs).sort((a, b) => b[1] - a[1]).map((e) => e[0]).slice(0, 6)
            
             // const playerPfpUrl = await s3FileExists(`images/pfps/${event.winner.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.discordId}.png` :
