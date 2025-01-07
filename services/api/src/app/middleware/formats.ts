@@ -55,7 +55,7 @@ export const formatsAll = async (req, res, next) => {
         },
         isHighlander: false
       },
-      attributes: ['id', 'name', 'icon', 'date', 'banlist', 'category', 'eventName', 'description', 'isPopular', 'isSpotlight'],
+      attributes: ['id', 'name', 'icon', 'date', 'banlist', 'category', 'era', 'eventName', 'description', 'isPopular', 'isSpotlight'],
       order: [
         ['isPopular', 'DESC'],
         ['isSpotlight', 'DESC'],
