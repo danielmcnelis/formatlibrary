@@ -2133,29 +2133,29 @@ const shuffleArray = (arr) => {
 // })()
 
 
-// ;(async () => {
-//     let b = 0
-//     let e = 0
+;(async () => {
+    let b = 0
+    let e = 0
 
-//     const cards = await Card.findAll()
-//     for (let i = 0; i < cards.length;i++) {
-//         try {
-//             const card = cards[i]
+    const cards = await Card.findAll()
+    for (let i = 0; i < cards.length;i++) {
+        try {
+            const card = cards[i]
             
-//             let artworkId = card.artworkId
-//             while (artworkId.length < 8) artworkId = '0' + artworkId 
-//             if (card.konamiCode !== artworkId) {
-//                 console.log(`${card.name}, ${card.konamiCode}, ${artworkId}`)
-//             }
+            let artworkId = card.artworkId
+            while (artworkId.length < 8) artworkId = '0' + artworkId 
+            if (card.konamiCode !== artworkId) {
+                console.log(`${card.name}, ${card.konamiCode}, ${artworkId}`)
+            }
     
-//             let konamiCode = card.konamiCode
-//             while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-//             await card.update({konamiCode})
-//         } catch (err) {
-//             continue
-//         }
-//     }
-// })()
+            let konamiCode = card.konamiCode
+            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+            await card.update({konamiCode})
+        } catch (err) {
+            continue
+        }
+    }
+})()
 
 
 // ;(async () => {
@@ -2225,51 +2225,51 @@ const shuffleArray = (arr) => {
 // })()
 
 
-;(async () => {
-    let b = 0
-    let e = 0
+// ;(async () => {
+//     let b = 0
+//     let e = 0
 
-    const statuses = await Status.findAll({
-        where: {
-            category: 'OCG'
-        }
-    })
+//     const statuses = await Status.findAll({
+//         where: {
+//             category: 'OCG'
+//         }
+//     })
 
-    const banlists = [...new Set([...await Status.findAll({
-        where: {
-            category: 'OCG'
-        },
-        order: [['date', 'ASC']]
-    })].map((s) => s.banlist))]
-    console.log('banlists', banlists)
+//     const banlists = [...new Set([...await Status.findAll({
+//         where: {
+//             category: 'OCG'
+//         },
+//         order: [['date', 'ASC']]
+//     })].map((s) => s.banlist))]
+//     console.log('banlists', banlists)
     
-    for (let i = 0; i < banlists.length; i++) {
-        try {
-            const banlist = banlists[i]
-            const {date} = await Status.findOne({
-                where: {
-                    banlist: banlist,
-                    category: 'OCG'
-                }
-            }) 
+//     for (let i = 0; i < banlists.length; i++) {
+//         try {
+//             const banlist = banlists[i]
+//             const {date} = await Status.findOne({
+//                 where: {
+//                     banlist: banlist,
+//                     category: 'OCG'
+//                 }
+//             }) 
             
-            // console.log(`new format: ${banlist} - ${date}`)
-            // continue
-            const format = await Format.create({
-                name: banlist,
-                cleanName: banlist,
-                banlist: banlist,
-                date: date,
-                category: 'OCG'
-            })
+//             // console.log(`new format: ${banlist} - ${date}`)
+//             // continue
+//             const format = await Format.create({
+//                 name: banlist,
+//                 cleanName: banlist,
+//                 banlist: banlist,
+//                 date: date,
+//                 category: 'OCG'
+//             })
 
-            console.log(`new format: ${format.name} - ${format.date}`)
-           b++
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
+//             console.log(`new format: ${format.name} - ${format.date}`)
+//            b++
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
 
-    console.log(`created ${b} ocg statuses, encountered ${e} errors`)
-})()
+//     console.log(`created ${b} ocg formats, encountered ${e} errors`)
+// })()
