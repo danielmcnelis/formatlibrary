@@ -33,10 +33,10 @@ import {
  UserPortal
 } from '@fl/components'
 
-import { SocketProvider } from '@fl/context'
-import {config} from '@fl/config'
-import io from 'socket.io-client'
-const socket = io(config.siteUrl, { transports: ["websocket"] })
+// import { SocketProvider } from '@fl/context'
+// import {config} from '@fl/config'
+// import io from 'socket.io-client'
+// const socket = io(config.siteUrl, { transports: ["websocket"] })
 
 const AdsTxtRedirect = () => {
  window.location.href = 'https://ads.adthrive.com/sites/66e1eae5fdcedc15a412ead6/ads.txt';
@@ -60,8 +60,8 @@ export const Router = (props) => {
 					<Route path="/cube-maker" element=<Page roles={roles} disableAds={true} element=<CubeMaker /> /> />
 					<Route path="/rated-lobby" element=<Page roles={roles} disableAds={disableAds} element=<RatedLobby /> /> />
 					<Route path="/cubes/:id" element=<Page roles={roles} disableAds={disableAds} element=<CubeBrowser /> /> />
-					{/* <Route path="/drafts/:id" element=<Page roles={roles} disableAds={disableAds} element= <DraftLobby/> /> /> */}
-					<Route path="/drafts/:id" element=<Page roles={roles} disableAds={disableAds} element= <SocketProvider value={socket}><DraftLobby/></SocketProvider> /> />
+					<Route path="/drafts/:id" element=<Page roles={roles} disableAds={disableAds} element= <DraftLobby/> /> />
+					{/* <Route path="/drafts/:id" element=<Page roles={roles} disableAds={disableAds} element= <SocketProvider value={socket}><DraftLobby/></SocketProvider> /> /> */}
 					<Route path="/sealed/:id" element=<Page roles={roles} disableAds={disableAds} element= <SealedLobby/> /> />
 					<Route path="/format-maker" element=<Page roles={roles} disableAds={disableAds} element=<FormatMaker /> /> />
 					<Route path="/great-library.html" element=<Page roles={roles} disableAds={disableAds} element= <CardTable /> /> />
@@ -97,8 +97,8 @@ export const Router = (props) => {
 					<Route path="/leaderboards/:id" element=<Page roles={roles} disableAds={disableAds} element= <LeaderBoard /> /> />
 					<Route path="/leaderboards/:id/:statsType" element=<Page roles={roles} disableAds={disableAds} element= <LeaderBoard /> /> />
 					<Route path="/replays/" element=<Page roles={roles} disableAds={disableAds} element= <ReplayTable roles={roles}/> /> />
-                    {/* <Route path="/start-draft/" element=<Page roles={roles} disableAds={disableAds} element= <DraftLauncher/> /> /> */}
-                    <Route path="/start-draft/" element=<Page roles={roles} disableAds={disableAds} element= <SocketProvider value={socket}><DraftLauncher/></SocketProvider> /> />
+                    <Route path="/start-draft/" element=<Page roles={roles} disableAds={disableAds} element= <DraftLauncher/> /> />
+                    {/* <Route path="/start-draft/" element=<Page roles={roles} disableAds={disableAds} element= <SocketProvider value={socket}><DraftLauncher/></SocketProvider> /> /> */}
 					<Route path="/start-sealed/" element=<Page roles={roles} disableAds={disableAds} element= <SealedLauncher /> /> />
 					<Route path="/banlists/:id" element=<Page roles={roles} disableAds={disableAds} element= <SingleBanList /> /> />
 					<Route path="/players/:id" element=<Page roles={roles} disableAds={disableAds} element= <PlayerProfile /> /> />
