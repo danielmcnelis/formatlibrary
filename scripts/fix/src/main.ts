@@ -2246,8 +2246,8 @@ const shuffleArray = (arr) => {
                 }
             }) 
             
-            // console.log(`new format: ${banlist} - ${date}`)
-            // continue
+            console.log(`new format: ${banlist} - ${date}`)
+            continue
             const format = await Format.create({
                 name: banlist,
                 cleanName: banlist,
