@@ -169,13 +169,13 @@ export const banlistsCreate = async (req, res, next) => {
 
     for (let i = 0; i < changes.length; i++) {
       try {
-        const c = changes[i]
-        const card = await Card.findOne({ where: { name: c.name } })
+        const change = changes[i]
+        const card = await Card.findOne({ where: { name: change.name } })
         await Status.create({
-          cardName: c.name,
+          cardName: change.name,
           cardId: card.id,
-          restriction: c.newStatus,
-          previous: c.prevStatus,
+          restriction: change.restriction,
+          previous: change.previous,
           date: `${year}-${month}-${day}`,
           banlist: banlist,
           category: category
@@ -187,7 +187,7 @@ export const banlistsCreate = async (req, res, next) => {
       }
     }
 
-    const prevStatuses = await Status.findAll({
+    const previousStatuses = await Status.findAll({
       where: {
         banlist: req.body.previousBanlist,
         restriction: {[Op.not]: 'unlimited'},
@@ -195,8 +195,8 @@ export const banlistsCreate = async (req, res, next) => {
       }
     })
 
-    for (let i = 0; i < prevStatuses.length; i++) {
-      const ps = prevStatuses[i]
+    for (let i = 0; i < previousStatuses.length; i++) {
+      const ps = previousStatuses[i]
       const statusIsChanging = await Status.count({
         where: {
           cardName: ps.cardName,
@@ -210,6 +210,7 @@ export const banlistsCreate = async (req, res, next) => {
           await Status.create({
             cardName: ps.cardName,
             restriction: ps.restriction,
+            previous: ps.restriction,
             cardId: ps.cardId,
             date: `${year}-${month}-${day}`,
             banlist: banlist,

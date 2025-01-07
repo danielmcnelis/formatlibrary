@@ -12,13 +12,13 @@ export const BanListCreator = () => {
     const [changes, setChanges] = useState([])
     const [banlists, setBanlists] = useState([])
     const [card, setCard] = useState(null)
-    const [prevStatus, setPrevStatus] = useState(null)
-    const [newStatus, setNewStatus] = useState(null)
+    const [previous, setPreviousStatus] = useState(null)
+    const [restriction, setNewStatus] = useState(null)
     const [cards, setCards] = useState([])
 
     let currentYear = new Date().getFullYear()
     const years = []
-    while (currentYear >= 2002) {
+    while (currentYear >= 1999) {
         years.push(currentYear)
         currentYear--
     }
@@ -31,12 +31,15 @@ export const BanListCreator = () => {
         setPreviousBanlist(null)  
         setChanges([])  
         setCard(null)  
-        setPrevStatus(null)  
+        setPreviousStatus(null)  
         setNewStatus(null) 
         setCards([])   
 
-        document.getElementById('card').value = null
-        document.getElementById('new-status').value = null
+        document.getElementById('card').value = ""
+        document.getElementById('new-status').value = ""
+        document.getElementById('year').value = ""
+        document.getElementById('month').value = ""
+        document.getElementById('day').value = ""
     }
 
     // CREATE
@@ -76,24 +79,23 @@ export const BanListCreator = () => {
             }
         })
 
-        if (data) setPrevStatus(data.restriction)
+        if (data) setPreviousStatus(data.restriction)
     }
 
     // ADD CHANGE
     const addChange = async () => {
         const change = {
             name: card,
-            prevStatus: prevStatus,
-            newStatus: newStatus
+            previous: previous,
+            restriction: restriction
         }
 
         setChanges([...changes, change])
-        document.getElementById('card').value = null
-        document.getElementById('new-status').value = null
-        document.getElementById('prev-status').value = null
+        document.getElementById('card').value = ""
+        document.getElementById('new-status').value = ""
         setCard(null)
         setCards([])
-        setPrevStatus(null)
+        setPreviousStatus(null)
         setNewStatus(null)
     }
 
@@ -196,8 +198,8 @@ export const BanListCreator = () => {
                     changes.map((c, index) => (
                         <tr>
                             <td>{c.name}</td>
-                            <td>{c.prevStatus ? capitalize(c.prevStatus) : 'N/A'}</td>
-                            <td>{capitalize(c.newStatus)}</td>
+                            <td>{c.previous ? capitalize(c.previous) : 'N/A'}</td>
+                            <td>{capitalize(c.restriction)}</td>
                             <td><div onClick={() => deleteChange(index)}>Delete</div></td>
                         </tr>
                     ))
@@ -223,7 +225,7 @@ export const BanListCreator = () => {
                             </select>
                         </td>
                         
-                        <td className="align-top">{prevStatus ? capitalize(prevStatus) : 'N/A'}</td>
+                        <td className="align-top">{previous ? capitalize(previous) : 'N/A'}</td>
                         
                         <td>
                             <select
@@ -243,13 +245,13 @@ export const BanListCreator = () => {
                 </tbody>
             </table>
 
-            <a
+            <div
                 className="admin-button"
                 type="submit"
                 onClick={() => create()}
             >
                 Submit
-            </a>
+            </div>
         </div>
     )
 }

@@ -39,26 +39,71 @@ export const FormatMenu = () => {
                 <h1 className="format-menu-title">Popular Formats</h1>
                 <div className="format-menu">
                     {
-                        formats.filter((f) => f.isPopular).map((format) => <FormatButton key={format.id} format={format}  />)
+                        formats.filter((format) => format.isPopular).map((format) => <FormatButton key={format.id} format={format}  />)
                     }
                 </div>
-                
                 <div className="divider"/>
-
                 <div className="non-popular-formats">
                     <h1 className="format-menu-title">Spotlight Formats</h1>
                     <div className="format-menu">
                         {
-                        formats.filter((f) => f.isSpotlight).map((format) => <FormatButton key={format.id} format={format}  />)
+                        formats.filter((format) => format.isSpotlight).map((format) => <FormatButton key={format.id} format={format}  />)
                         }
                     </div>
-                    
                     <div className="divider"/>
-            
-                    <h1 className="format-menu-title">Other Formats</h1>
+                    <h1 className="format-menu-title">DM Formats</h1>
                     <div className="format-menu">
                         {
-                        formats.filter((f) => !f.isPopular && !f.isSpotlight).map((format) => <FormatButton key={format.id} format={format}  />)
+                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === 'DM').map((format) => <FormatButton key={format.id} format={format}  />)
+                        }
+                    </div>
+                    <div className="divider"/>
+                    <h1 className="format-menu-title">GX Formats</h1>
+                    <div className="format-menu">
+                        {
+                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === 'GX').map((format) => <FormatButton key={format.id} format={format}  />)
+                        }
+                    </div>
+                    <div className="divider"/>
+                    <h1 className="format-menu-title">5D's Formats</h1>
+                    <div className="format-menu">
+                        {
+                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === '5D's').map((format) => <FormatButton key={format.id} format={format}  />)
+                        }
+                    </div>
+                    <div className="divider"/>
+                    <h1 className="format-menu-title">ZEXAL Formats</h1>
+                    <div className="format-menu">
+                        {
+                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === 'ZEXAL').map((format) => <FormatButton key={format.id} format={format}  />)
+                        }
+                    </div>
+                    <div className="divider"/>
+                    <h1 className="format-menu-title">ARC-V Formats</h1>
+                    <div className="format-menu">
+                        {
+                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === 'ARC-V').map((format) => <FormatButton key={format.id} format={format}  />)
+                        }
+                    </div>
+                    <div className="divider"/>
+                    <h1 className="format-menu-title">VRAINS Formats</h1>
+                    <div className="format-menu">
+                        {
+                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === 'VRAINS').map((format) => <FormatButton key={format.id} format={format}  />)
+                        }
+                    </div>
+                    <div className="divider"/>
+                    <h1 className="format-menu-title">Series 11 Formats</h1>
+                    <div className="format-menu">
+                        {
+                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === 'Series 11').map((format) => <FormatButton key={format.id} format={format}  />)
+                        }
+                    </div>
+                    <div className="divider"/>
+                    <h1 className="format-menu-title">Series 12 Formats</h1>
+                    <div className="format-menu">
+                        {
+                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === 'Series 12').map((format) => <FormatButton key={format.id} format={format}  />)
                         }
                     </div>
                 </div>
