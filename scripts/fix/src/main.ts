@@ -2137,24 +2137,22 @@ const shuffleArray = (arr) => {
     let b = 0
     let e = 0
 
-    const cards = await Card.findAll()
-    for (let i = 0; i < cards.length;i++) {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    const statuses = await Status.findAll()
+    for (let i = 0; i < statuses.length;i++) {
         try {
-            const card = cards[i]
-            
-            let artworkId = card.artworkId
-            while (artworkId.length < 8) artworkId = '0' + artworkId 
-            if (card.konamiCode !== artworkId) {
-                console.log(`${card.name}, ${card.konamiCode}, ${artworkId}`)
-            }
-    
-            let konamiCode = card.konamiCode
-            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-            await card.update({konamiCode})
+            const status = statuses[i]
+        
+            const banlist = status.banlist.split('-').map((e) => `${months[e[1]-1]} ${e[0]}`)
+            await status.update({banlist})
+            b++
         } catch (err) {
+            e++
             continue
         }
     }
+
+    return console.log(`updated ${b} banlists, encountered ${e} errors`)
 })()
 
 
