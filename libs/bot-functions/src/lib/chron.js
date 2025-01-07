@@ -671,7 +671,7 @@ export const recalculateFormatStats = async (format) => {
             'id', 'formatName', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 
             'seasonalElo', 'bestSeasonalElo', 'backupSeasonalElo', 'seasonalWins', 'seasonalLosses', 'seasonalGames', 
             'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerId', 'serverId'
-        ], 
+        ],
         include: { model: Player, attributes: ['id', 'name']} 
     })
 

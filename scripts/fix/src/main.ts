@@ -8,7 +8,7 @@ import * as fs from 'fs'
 import { parse } from 'csv-parse'
 import { iso2ToCountries } from '@fl/utils'
 import { S3, DeleteObjectCommand } from '@aws-sdk/client-s3'
-import { statuses } from './ocg-banlists.json' 
+// import { statuses } from './ocg-banlists.json' 
 
 //SHUFFLE ARRAY
 const shuffleArray = (arr) => {
@@ -1696,52 +1696,52 @@ const shuffleArray = (arr) => {
 // })()
 
 
-;(async () => { 
-    let b = 0
-    b = 0
-    const blogposts = await BlogPost.findAll({ 
-        where: { 
-            winningTeamId: null
-        },
-        include: [Event, Format, Server, { model: Player, as: 'winner' }]
-    })
+// ;(async () => { 
+//     let b = 0
+//     b = 0
+//     const blogposts = await BlogPost.findAll({ 
+//         where: { 
+//             winningTeamId: null
+//         },
+//         include: [Event, Format, Server, { model: Player, as: 'winner' }]
+//     })
 
 
-    for (let i = 0; i < blogposts.length; i++) {
-        try {
-            const blogpost = blogposts[i]
+//     for (let i = 0; i < blogposts.length; i++) {
+//         try {
+//             const blogpost = blogposts[i]
             
-            const deck = await Deck.findOne({
-                where: {
-                    eventId: blogpost.eventId,
-                    placement: 1
-                }
-            })
+//             const deck = await Deck.findOne({
+//                 where: {
+//                     eventId: blogpost.eventId,
+//                     placement: 1
+//                 }
+//             })
 
-            const decks = await Deck.findAll({ 
-                where: {
-                    formatId: blogpost.formatId
-                }
-            })
+//             const decks = await Deck.findAll({ 
+//                 where: {
+//                     formatId: blogpost.formatId
+//                 }
+//             })
                      
-            const sortFn = (a, b) => b[1] - a[1]
+//             const sortFn = (a, b) => b[1] - a[1]
 
-            const freqs = (decks || []).reduce((acc, curr) => (acc[curr.deckTypeName] ? acc[curr.deckTypeName]++ : acc[curr.deckTypeName] = 1, acc), {})
-            const popularDecks = Object.entries(freqs).sort(sortFn).map((e) => e[0]).slice(0, 6)
+//             const freqs = (decks || []).reduce((acc, curr) => (acc[curr.deckTypeName] ? acc[curr.deckTypeName]++ : acc[curr.deckTypeName] = 1, acc), {})
+//             const popularDecks = Object.entries(freqs).sort(sortFn).map((e) => e[0]).slice(0, 6)
             
-            console.log(`updating blogpost for ${blogpost.eventAbbreviation}, popular decktype: ${blogpost.winningDeckTypeIsPopular} -> ${popularDecks.includes(deck.deckTypeName)}`)
-            await blogpost.update({ 
-                winningDeckTypeIsPopular: popularDecks.includes(deck.deckTypeName),
-                serverId: blogpost.server?.id
-            })
-            b++
-        } catch (err) {
-            console.log('blogpost error', err)
-        }
-    }
+//             console.log(`updating blogpost for ${blogpost.eventAbbreviation}, popular decktype: ${blogpost.winningDeckTypeIsPopular} -> ${popularDecks.includes(deck.deckTypeName)}`)
+//             await blogpost.update({ 
+//                 winningDeckTypeIsPopular: popularDecks.includes(deck.deckTypeName),
+//                 serverId: blogpost.server?.id
+//             })
+//             b++
+//         } catch (err) {
+//             console.log('blogpost error', err)
+//         }
+//     }
 
-    return console.log('updated blogposts:', b)
-})()
+//     return console.log('updated blogposts:', b)
+// })()
 
 
 // ;(async () => { 
@@ -2223,3 +2223,46 @@ const shuffleArray = (arr) => {
 
 //     console.log(`created ${b} ocg statuses, encountered ${e} errors`)
 // })()
+
+
+;(async () => {
+    let b = 0
+    let e = 0
+
+    const banlists = [...new Set([...await Status.findAll({
+        where: {
+            category: 'OCG'
+        },
+        order: [['date', 'ASC']]
+    })].map((s) => s.banlist))]
+    console.log('banlists', banlists)
+    
+    for (let i = 0; i < banlists.length; i++) {
+        try {
+            const banlist = banlists[i]
+            const {date} = await Status.findOne({
+                where: {
+                    banlist: banlist
+                }
+            }) 
+            
+            console.log(`new format: ${banlist} - ${date}`)
+            continue
+            const format = await Format.create({
+                name: banlist,
+                cleanName: banlist,
+                banlist: banlist,
+                date: date,
+                category: 'OCG'
+            })
+
+            console.log(`new format: ${format.name} - ${format.date}`)
+           b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    console.log(`created ${b} ocg statuses, encountered ${e} errors`)
+})()
