@@ -2248,12 +2248,13 @@ const shuffleArray = (arr) => {
             const banlist = banlists[i]
             const {date} = await Status.findOne({
                 where: {
-                    banlist: banlist
+                    banlist: banlist,
+                    category: 'OCG'
                 }
             }) 
             
-            console.log(`new format: ${banlist} - ${date}`)
-            continue
+            // console.log(`new format: ${banlist} - ${date}`)
+            // continue
             const format = await Format.create({
                 name: banlist,
                 cleanName: banlist,
