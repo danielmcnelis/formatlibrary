@@ -2142,11 +2142,13 @@ const shuffleArray = (arr) => {
     for (let i = 0; i < statuses.length;i++) {
         try {
             const status = statuses[i]
-        
-            const banlist = status.banlist.split('-').map((e) => `${months[e[1]-1]} ${e[0]}`)
+            const [year, month] = status.banlist.split('-')
+            const banlist = `${months[month-1]} ${year}`
+            console.log(banlist)
             await status.update({banlist})
             b++
         } catch (err) {
+            console.log(err)
             e++
             continue
         }
