@@ -168,6 +168,7 @@ export const banlistsCreate = async (req, res, next) => {
     console.log(req.body)
     const {month, day, year, changes, category} = req.body
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    const banlist = `${months[(Number(month)-1)]} ${year}`
     let b = 0
 
     for (let i = 0; i < changes.length; i++) {
@@ -180,7 +181,7 @@ export const banlistsCreate = async (req, res, next) => {
           restriction: change.restriction,
           previous: change.previous,
           date: `${year}-${month}-${day}`,
-          banlist: `${months[(Number(month)-1)]} ${year}`,
+          banlist: banlist,
           category: category
         })
 
