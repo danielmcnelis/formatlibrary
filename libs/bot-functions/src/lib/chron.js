@@ -1630,6 +1630,7 @@ export const downloadOriginalArtworks = async () => {
     for (let i = 0; i < artworks.length; i++) {
         const artwork = artworks[i]
         await artwork.card.update({ konamiCode: artwork.artworkId })
+        b++
 
         // try {
         //     const {data: fullCardImage} = await axios({
