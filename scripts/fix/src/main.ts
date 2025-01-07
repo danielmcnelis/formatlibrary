@@ -2229,6 +2229,12 @@ const shuffleArray = (arr) => {
     let b = 0
     let e = 0
 
+    const statuses = await Status.findAll({
+        where: {
+            category: 'OCG'
+        }
+    })
+
     const banlists = [...new Set([...await Status.findAll({
         where: {
             category: 'OCG'
@@ -2246,8 +2252,8 @@ const shuffleArray = (arr) => {
                 }
             }) 
             
-            // console.log(`new format: ${banlist} - ${date}`)
-            // continue
+            console.log(`new format: ${banlist} - ${date}`)
+            continue
             const format = await Format.create({
                 name: banlist,
                 cleanName: banlist,
