@@ -1728,7 +1728,8 @@ const shuffleArray = (arr) => {
 
             const freqs = (decks || []).reduce((acc, curr) => (acc[curr.deckTypeName] ? acc[curr.deckTypeName]++ : acc[curr.deckTypeName] = 1, acc), {})
             const popularDecks = Object.entries(freqs).sort(sortFn).map((e) => e[0]).slice(0, 6)
-
+            
+            console.log(`updating blogpost for ${blogpost.eventAbbreviation}, popular decktype: ${blogpost.winningDeckTypeIsPopular} -> ${popularDecks.includes(deck.deckTypeName)}`)
             await blogpost.update({ 
                 winningDeckTypeIsPopular: popularDecks.includes(deck.deckTypeName),
                 serverId: blogpost.server?.id
@@ -1739,8 +1740,7 @@ const shuffleArray = (arr) => {
         }
     }
 
-    console.log('updated blogpost:', b)
-    return
+    return console.log('updated blogposts:', b)
 })()
 
 
