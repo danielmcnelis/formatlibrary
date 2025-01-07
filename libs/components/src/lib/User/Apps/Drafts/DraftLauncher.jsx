@@ -130,7 +130,7 @@ export const DraftLauncher = () => {
                     <option value="">{`Select ${type === 'cube' ? 'Cube': 'Booster'}:`}</option>
                     {
                         type === 'cube' ? (
-                            cubes.map((c, index) => <option value={index}>{c.name} by {c.builder}</option>)
+                            cubes.map((c, index) => <option value={index}>{c.name} by {c.builderName}</option>)
                         ) : (
                             boosters.map((b, index) => <option value={index}>{b.name}</option>)
                         )
