@@ -30,6 +30,7 @@ export const BanListCreator = () => {
         setYear(null)  
         setPreviousBanlist(null)  
         setChanges([])  
+        setBanlists([])  
         setCard(null)  
         setPreviousStatus(null)  
         setNewStatus(null) 
@@ -113,7 +114,7 @@ export const BanListCreator = () => {
         }
         
         fetchBanlists()
-    }, [])
+    }, [category])
 
     return (
         <div className="admin-portal">

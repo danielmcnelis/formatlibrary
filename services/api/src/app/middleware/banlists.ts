@@ -3,13 +3,16 @@ import {Op} from 'sequelize'
 
 export const banlistsAll = async (req, res, next) => {
   try {
+    console.log('req.query', req.query)
     const category = req.query?.category || 'TCG'
+    console.log('category', category)
     const onlyUnique = (value, index, self) => self.indexOf(value) === index
     const banlists = [...(await Status.findAll({ where: { category }}))]
       .map((s) => s.banlist)
       .filter(onlyUnique)
       .sort()
 
+    console.log('banlists', banlists)
     res.json(banlists)
   } catch (err) {
     next(err)
