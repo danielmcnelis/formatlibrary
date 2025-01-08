@@ -76,13 +76,10 @@ export const FormatMenu = (props) => {
                     {
                         popularFormats.length ? (
                             <>
-                                <h1 className="format-menu-title">Popular Formats</h1>
-                                <div className="format-menu">
                                 {
                                     popularFormats.map((format) => <FormatButton key={format.id} format={format}  />)
                                 }
-                                </div>
-                                <div className="divider"/>
+sss                                <div className="divider"/>
                             </>
                         ) : ''
                     }
