@@ -180,9 +180,9 @@ export default {
                 }) || []
 
                 for (let d = 0; d < poolsToUpdate.length; d++) {
-                    const rPTU = poolsToUpdate[d]
-                    await rPTU.update({ status: 'pending' })
-                    lookForPotentialPairs(client, interaction, rPTU, rPTU.player, rPTU.format)
+                    const pool = poolsToUpdate[d]
+                    await pool.update({ status: 'pending' })
+                    lookForPotentialPairs(client, interaction, pool, pool.player, pool.format)
                 }
             }
 

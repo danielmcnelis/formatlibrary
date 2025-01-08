@@ -38,11 +38,11 @@ export const joinRatedPool = async (req, res, next) => {
                 status: 'pending',
                 formatId: format.id
             },
-            include: Player,
+            include: [Player, Format],
             order: [['createdAt', 'ASC']]
         }) || []
 
-        await sendRatedJoinNotifications(client, player, format, deck, isResubmission)
+        if (!isResubmission) await sendRatedJoinNotifications(client, player, format, deck, isResubmission)
 
         if (!potentialPairs.length) {
             if (!isResubmission) {
@@ -59,10 +59,11 @@ export const joinRatedPool = async (req, res, next) => {
             
             const now = new Date()
             const isSeasonal = format.useSeasonalElo && format.seasonResetDate < now
-            console.log('isSeasonal', isSeasonal)
+            console.log('62 isSeasonal', isSeasonal)
             const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
             const cutoff = isSeasonal ? new Date(now - (30 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
-            console.log('cutoff', cutoff)
+            console.log('65 now', now)
+            console.log('66 cutoff', cutoff)
 
             const isRecentOpponent = await Match.count({
                 where: {
@@ -101,9 +102,11 @@ export const joinRatedPool = async (req, res, next) => {
                 console.log(`<!> ${player.playerName} and ${potentialPair.playerName} are recent opponents. Match reported at ${recentMatch.createdAt}<!>`)
                 continue
             } else if (potentialPair.updatedAt < twoMinutesAgo) {
+                console.log(`<!> ${player.playerName} and ${potentialPair.playerName} are NOT recent opponents. Getting confirmation from ${potentialPair.playerName} <!>`)
                 await getRatedConfirmation(client, opponent, player, format)
                 continue
             } else {
+                console.log(`<!> ${player.playerName} and ${potentialPair.playerName} are NOT recent opponents. Creating New Pairing <!>`)
                 await sendRatedPairingNotifications(client, player, opponent, format)
 
                 const pairing = await Pairing.create({

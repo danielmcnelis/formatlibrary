@@ -13,3 +13,56 @@
     align-items: center;
     justify-content: center;
   }
+
+
+  #category-toggle-TCG {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: rgb(119, 119, 48);
+    padding: 2px;
+    margin: 0px 0.2vw;
+    border-radius: 24px;
+    width: 48px !important; 
+    height: 24px;
+}
+
+#category-toggle-OCG {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    background-color: rgb(44, 35, 121);
+    padding: 2px;
+    margin: 0px 0.2vw;
+    border-radius: 24px;
+    width: 48px;
+    height: 24px;
+}
+
+
+#category-toggle-inner-circle-TCG {
+    background: url("https://cdn.formatlibrary.com/images/emojis/white-checkmark.png") no-repeat center;
+    background-size: 16px;
+    background-color: rgb(192, 182, 96);
+    border-radius: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+#category-toggle-inner-circle-OCG {
+    background: url("https://cdn.formatlibrary.com/images/emojis/black-x.png") no-repeat center;
+    background-size: 16px;
+    background-color: rgb(115, 84, 193);
+    border-radius: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+#category-toggle-TCG:hover {
+    cursor: pointer;
+}
+
+#category-toggle-OCG:hover {
+    cursor: pointer;
+}

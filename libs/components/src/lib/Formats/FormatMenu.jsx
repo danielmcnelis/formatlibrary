@@ -5,8 +5,30 @@ import { FormatButton } from './FormatButton'
 import { Helmet } from 'react-helmet'
 import './FormatMenu.css'
 
-export const FormatMenu = () => {
+export const FormatMenu = (props) => {
     const [formats, setFormats] = useState(null)
+    const [category, setCategory] = useState('TCG')
+
+    const isContentManager = props.roles?.contentManager
+    const popularFormats = formats.filter((format) => format.category === category && format.isPopular)
+    const spotlightFormats = formats.filter((format) => format.category === category && format.isSpotlight)
+    const dmFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'DM')
+    const gxFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'GX')
+    const fiveDsFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === '5D\'s')
+    const zexalFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'ZEXAL')
+    const arcVFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'ARC-V')
+    const vrainsFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'VRAINS')
+    const sevensFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'SEVENS')
+    const goRushFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'GO RUSH!!')
+
+    // SWITCH CATEGORY
+    const switchCategory = async () => {
+        if (category === 'TCG') {
+            setCategory('OCG')
+        } else {
+            setCategory('TCG')
+        }
+    }
   
     // USE EFFECT SET FORMATS
     useEffect(() => {
@@ -36,75 +58,90 @@ export const FormatMenu = () => {
             {/* Default Gaming Playlist */}
             <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             <div className="body">
-                <h1 className="format-menu-title">Popular Formats</h1>
+                {
+                    isContentManager ? (
+                        <div className='horizontal-space-between-flexbox'>
+                            <h1 className="format-menu-title">Popular Formats</h1>
+                            <div className='horizontal-space-between-flexbox' >
+                                <h2>{category}</h2>
+                                <div 
+                                    id={`category-toggle-${category}`} 
+                                    onClick={() => switchCategory()}
+                                >
+                                    <div id={`category-toggle-inner-circle-${category}`}></div>
+                                </div>
+                            </div>
+                        </div>
+                    ) : <h1 className="format-menu-title">Popular Formats</h1>
+                }
                 <div className="format-menu">
-                    {
-                        formats.filter((format) => format.isPopular).map((format) => <FormatButton key={format.id} format={format}  />)
-                    }
+                {
+                    popularFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                }
                 </div>
                 <div className="divider"/>
                 <div className="non-popular-formats">
                     <h1 className="format-menu-title">Spotlight Formats</h1>
                     <div className="format-menu">
-                        {
-                        formats.filter((format) => format.isSpotlight).map((format) => <FormatButton key={format.id} format={format}  />)
-                        }
+                    {
+                        spotlightFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                    }
                     </div>
                     <div className="divider"/>
                     <h1 className="format-menu-title">DM Formats</h1>
                     <div className="format-menu">
-                        {
-                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === 'DM').map((format) => <FormatButton key={format.id} format={format}  />)
-                        }
+                    {
+                        dmFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                    }
                     </div>
                     <div className="divider"/>
                     <h1 className="format-menu-title">GX Formats</h1>
                     <div className="format-menu">
-                        {
-                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === 'GX').map((format) => <FormatButton key={format.id} format={format}  />)
-                        }
+                    {
+                        gxFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                    }
                     </div>
                     <div className="divider"/>
                     <h1 className="format-menu-title">5D's Formats</h1>
                     <div className="format-menu">
-                        {
-                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === '5D\'s').map((format) => <FormatButton key={format.id} format={format}  />)
-                        }
+                    {
+                        fiveDsFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                    }
                     </div>
                     <div className="divider"/>
                     <h1 className="format-menu-title">ZEXAL Formats</h1>
                     <div className="format-menu">
-                        {
-                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === 'ZEXAL').map((format) => <FormatButton key={format.id} format={format}  />)
-                        }
+                    {
+                        zexalFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                    }
                     </div>
                     <div className="divider"/>
                     <h1 className="format-menu-title">ARC-V Formats</h1>
                     <div className="format-menu">
-                        {
-                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === 'ARC-V').map((format) => <FormatButton key={format.id} format={format}  />)
-                        }
+                    {
+                        arcVFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                    }
                     </div>
                     <div className="divider"/>
                     <h1 className="format-menu-title">VRAINS Formats</h1>
                     <div className="format-menu">
-                        {
-                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === 'VRAINS').map((format) => <FormatButton key={format.id} format={format}  />)
-                        }
+                    {
+                        vrainsFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                    }
                     </div>
                     <div className="divider"/>
-                    <h1 className="format-menu-title">Series 11 Formats</h1>
+                    <h1 className="format-menu-title">SEVENS Formats</h1>
                     <div className="format-menu">
-                        {
-                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === 'Series 11').map((format) => <FormatButton key={format.id} format={format}  />)
-                        }
+                    {
+                        sevensFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                    }
                     </div>
                     <div className="divider"/>
-                    <h1 className="format-menu-title">Series 12 Formats</h1>
+                    <h1 className="format-menu-title">GO RUSH!! Formats</h1>
                     <div className="format-menu">
-                        {
-                        formats.filter((format) => !format.isPopular && !format.isSpotlight && format.era === 'Series 12').map((format) => <FormatButton key={format.id} format={format}  />)
-                        }
+                    {
+                        goRushFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                    }
                     </div>
                 </div>
                 <br/>

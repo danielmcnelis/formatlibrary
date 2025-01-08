@@ -78,7 +78,7 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
             status: 'pending',
             formatId: format.id
         },
-        include: Player,
+        include: [Player, Format],
         order: [['createdAt', 'ASC']]
     }) || []
 
@@ -86,10 +86,11 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
         const potentialPair = potentialPairs[i]
         const now = new Date()
         const isSeasonal = format.useSeasonalElo && format.seasonResetDate < now
-        console.log('isSeasonal', isSeasonal)
+        console.log('89 isSeasonal', isSeasonal)
         const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
         const cutoff = isSeasonal ? new Date(now - (30 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
-        console.log('cutoff', cutoff)
+        console.log('92 now', now)
+        console.log('93 cutoff', cutoff)
 
         const isRecentOpponent = await Match.count({
             where: {
@@ -125,12 +126,14 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
                     createdAt: {[Op.gte]: cutoff }
                 }
             })                
-            console.log(`<!> ${player.playerName} and ${potentialPair.playerName} are recent opponents. Match reported at ${recentMatch.createdAt}<!>`)
+            console.log(`<!> ${player.playerName} and ${potentialPair.playerName} are recent opponents. Match reported at ${recentMatch.createdAt} <!>`)
             continue
         } else if (potentialPair.updatedAt < twoMinutesAgo) {
+            console.log(`<!> ${player.playerName} and ${potentialPair.playerName} are NOT recent opponents. Getting confirmation from ${potentialPair.playerName} <!>`)
             getRatedConfirmation(client, potentialPair.player, player, format)
             continue
         } else {
+            console.log(`<!> ${player.playerName} and ${potentialPair.playerName} are NOT recent opponents. Creating New Pairing <!>`)
             const server = await Server.findOne({ where: { id: '414551319031054346' }})
             const channelId = format.channelId
             const guild = client.guilds.cache.get('414551319031054346')
