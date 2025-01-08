@@ -75,9 +75,19 @@ export const FormatMenu = (props) => {
                     ) : <h1 className="format-menu-title">Popular Formats</h1>
                 }
                 <div className="format-menu">
-                {
-                    popularFormats.map((format) => <FormatButton key={format.id} format={format}  />)
-                }
+                    {
+                        popularFormats.length ? (
+                            <>
+                                <h1 className="format-menu-title">Popular Formats</h1>
+                                <div className="format-menu">
+                                {
+                                    popularFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                                }
+                                </div>
+                                <div className="divider"/>
+                            </>
+                        ) : ''
+                    }
                 </div>
                 <div className="divider"/>
                 <div className="non-popular-formats">
