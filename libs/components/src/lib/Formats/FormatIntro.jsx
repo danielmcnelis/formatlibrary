@@ -21,7 +21,7 @@ export const FormatIntro = (props) => {
     const videoPlaylistId = format?.videoPlaylistId
   
     // SWITCH SPOTLIGHT
-    const  = async () => {
+    const switchSpotlight = async () => {
         try {
             if (format.isSpotlight) {
                 const {data} = await axios.post(`/api/formats/update?id=${format.id}`, { ...format, isSpotlight: false })
