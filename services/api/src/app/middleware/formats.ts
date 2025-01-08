@@ -51,7 +51,7 @@ export const formatsAll = async (req, res, next) => {
       where: {
         [Op.or]: {
           isSpotlight: true,
-          category: 'TCG'
+          category: {[Op.or]: ['TCG', 'OCG']}
         },
         isHighlander: false
       },
