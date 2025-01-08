@@ -10,16 +10,16 @@ export const FormatMenu = (props) => {
     const [category, setCategory] = useState('TCG')
 
     const isContentManager = props.roles?.contentManager
-    const popularFormats = formats.filter((format) => format.category === category && format.isPopular)
-    const spotlightFormats = formats.filter((format) => format.category === category && format.isSpotlight)
-    const dmFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'DM')
-    const gxFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'GX')
-    const fiveDsFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === '5D\'s')
-    const zexalFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'ZEXAL')
-    const arcVFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'ARC-V')
-    const vrainsFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'VRAINS')
-    const sevensFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'SEVENS')
-    const goRushFormats = formats.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'GO RUSH!!')
+    const popularFormats = formats?.filter((format) => format.category === category && format.isPopular)
+    const spotlightFormats = formats?.filter((format) => format.category === category && format.isSpotlight)
+    const dmFormats = formats?.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'DM')
+    const gxFormats = formats?.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'GX')
+    const fiveDsFormats = formats?.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === '5D\'s')
+    const zexalFormats = formats?.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'ZEXAL')
+    const arcVFormats = formats?.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'ARC-V')
+    const vrainsFormats = formats?.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'VRAINS')
+    const sevensFormats = formats?.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'SEVENS')
+    const goRushFormats = formats?.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'GO RUSH!!')
 
     // SWITCH CATEGORY
     const switchCategory = async () => {
