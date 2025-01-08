@@ -60,19 +60,16 @@ export const FormatMenu = (props) => {
             <div className="body">
                 {
                     isContentManager ? (
-                        <>
-                            <div>
-                                <h2>{category}</h2>
-                                <div 
-                                    id={`category-toggle-${category}`} 
-                                    onClick={() => switchCategory()}
-                                >
-                                    <div id={`category-toggle-inner-circle-${category}`}></div>
-                                </div>
+                        <div style={{"float":"right"}}>
+                            <h2>{category}</h2>
+                            <div 
+                                id={`category-toggle-${category}`} 
+                                onClick={() => switchCategory()}
+                            >
+                                <div id={`category-toggle-inner-circle-${category}`}></div>
                             </div>
-                            <h1 className="format-menu-title">Popular Formats</h1>
-                        </>
-                    ) : <h1 className="format-menu-title">Popular Formats</h1>
+                        </div>
+                    ) : ""
                 }
                 <div className="format-menu">
                     {
