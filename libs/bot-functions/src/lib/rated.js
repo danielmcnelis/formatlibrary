@@ -86,13 +86,11 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
         const potentialPair = potentialPairs[i]
         const now = new Date()
         const isSeasonal = format.useSeasonalElo && format.seasonResetDate < now
-        console.log('89 isSeasonal', isSeasonal)
         const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
         const cutoff = isSeasonal ? new Date(now - (30 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
-        console.log('92 now', now)
-        console.log('93 cutoff', cutoff)
+        console.log('line 91 now', now, '\ntwoMinutesAgo', twoMinutesAgo, '\nisSeasonal', isSeasonal, '\ncutoff', cutoff)
 
-        const isRecentOpponent = await Match.count({
+        const mostRecentMatch = await Match.findOne({
             where: {
                 [Op.or]: {
                     [Op.and]: {
@@ -104,36 +102,20 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
                         loserId: player.id
                     },
                 },
-                formatId: format.id,
-                createdAt: {[Op.gte]: cutoff }
-            }
-        })
+                formatId: format.id
+            },
+            order: [['createdAt', 'DESC']]
+        })             
 
-        if (isRecentOpponent) {
-            const recentMatch = await Match.findOne({
-                where: {
-                    [Op.or]: {
-                        [Op.and]: {
-                            winnerId: player.id,
-                            loserId: potentialPair.player.id
-                        },
-                        [Op.and]: {
-                            winnerId: potentialPair.player.id,
-                            loserId: player.id
-                        },
-                    },
-                    formatId: format.id,
-                    createdAt: {[Op.gte]: cutoff }
-                }
-            })                
-            console.log(`<!> ${player.playerName} and ${potentialPair.playerName} are recent opponents. Match reported at ${recentMatch.createdAt} <!>`)
+        if (cutoff < mostRecentMatch?.createdAt) {   
+            console.log(`<!> ${player.name} and ${potentialPair.playerName} are RECENT opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Look for another opponent <!>`)
             continue
         } else if (potentialPair.updatedAt < twoMinutesAgo) {
-            console.log(`<!> ${player.playerName} and ${potentialPair.playerName} are NOT recent opponents. Getting confirmation from ${potentialPair.playerName} <!>`)
+            console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Getting confirmation from ${potentialPair.playerName} <!>`)
             getRatedConfirmation(client, potentialPair.player, player, format)
             continue
         } else {
-            console.log(`<!> ${player.playerName} and ${potentialPair.playerName} are NOT recent opponents. Creating New Pairing <!>`)
+            console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Creating New Pairing <!>`)
             const server = await Server.findOne({ where: { id: '414551319031054346' }})
             const channelId = format.channelId
             const guild = client.guilds.cache.get('414551319031054346')

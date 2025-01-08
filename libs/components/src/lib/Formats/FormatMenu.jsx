@@ -142,7 +142,7 @@ export const FormatMenu = (props) => {
                     </div>
                     <div className="divider"/>
                     <h1 className="format-menu-title">SEVENS Formats</h1>
-                    <div className="format-menu">
+                    <div classNaxme="format-menu">
                     {
                         sevensFormats.map((format) => <FormatButton key={format.id} format={format}  />)
                     }
