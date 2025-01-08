@@ -61,7 +61,7 @@ export const FormatMenu = (props) => {
                 {
                     isContentManager ? (
                         <>
-                            <div className='horizontal-space-between-flexbox' >
+                            <div>
                                 <h2>{category}</h2>
                                 <div 
                                     id={`category-toggle-${category}`} 
