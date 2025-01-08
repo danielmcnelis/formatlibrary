@@ -58,7 +58,6 @@ export const FormatMenu = (props) => {
             {/* Default Gaming Playlist */}
             <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             <div className="body">
-            <h1 className="format-menu-title">Popular Formats</h1>
                 {
                     isContentManager ? (
                         <div style={{"float":"right", "padding":"0px 24px"}}>
@@ -72,92 +71,139 @@ export const FormatMenu = (props) => {
                         </div>
                     ) : ""
                 }
-                <div className="format-menu">
-                    {
-                        popularFormats.length ? (
-                            <>
-                                {
-                                    popularFormats.map((format) => <FormatButton key={format.id} format={format}  />)
-                                }
-                                <div className="divider"/>
-                            </>
-                        ) : ''
-                    }
-                </div>
-                <div className="divider"/>
-                <div className="non-popular-formats">
-                    {
-                        spotlightFormats.length ? (
-                            <>
-                                <h1 className="format-menu-title">Spotlight Formats</h1>
-                                <div className="format-menu">
-                                {
-                                    spotlightFormats.map((format) => <FormatButton key={format.id} format={format}  />)
-                                }
-                                </div>
-                                <div className="divider"/>
-                            </>
-                        ) : ''
-                    }
-                    <h1 className="format-menu-title">DM Formats</h1>
-                    <div className="format-menu">
-                    {
-                        dmFormats.map((format) => <FormatButton key={format.id} format={format}  />)
-                    }
-                    </div>
-                    <div className="divider"/>
-                    <h1 className="format-menu-title">GX Formats</h1>
-                    <div className="format-menu">
-                    {
-                        gxFormats.map((format) => <FormatButton key={format.id} format={format}  />)
-                    }
-                    </div>
-                    <div className="divider"/>
-                    <h1 className="format-menu-title">5D's Formats</h1>
-                    <div className="format-menu">
-                    {
-                        fiveDsFormats.map((format) => <FormatButton key={format.id} format={format}  />)
-                    }
-                    </div>
-                    <div className="divider"/>
-                    <h1 className="format-menu-title">ZEXAL Formats</h1>
-                    <div className="format-menu">
-                    {
-                        zexalFormats.map((format) => <FormatButton key={format.id} format={format}  />)
-                    }
-                    </div>
-                    <div className="divider"/>
-                    <h1 className="format-menu-title">ARC-V Formats</h1>
-                    <div className="format-menu">
-                    {
-                        arcVFormats.map((format) => <FormatButton key={format.id} format={format}  />)
-                    }
-                    </div>
-                    <div className="divider"/>
-                    <h1 className="format-menu-title">VRAINS Formats</h1>
-                    <div className="format-menu">
-                    {
-                        vrainsFormats.map((format) => <FormatButton key={format.id} format={format}  />)
-                    }
-                    </div>
-                    <div className="divider"/>
-                    <h1 className="format-menu-title">SEVENS Formats</h1>
-                    <div classNaxme="format-menu">
-                    {
-                        sevensFormats.map((format) => <FormatButton key={format.id} format={format}  />)
-                    }
-                    </div>
-                    <div className="divider"/>
-                    <h1 className="format-menu-title">GO RUSH!! Formats</h1>
-                    <div className="format-menu">
-                    {
-                        goRushFormats.map((format) => <FormatButton key={format.id} format={format}  />)
-                    }
-                    </div>
-                </div>
+                
+                {
+                    popularFormats.length ? (
+                        <>
+                            <h1 className="format-menu-title">Popular Formats</h1>
+                            <div className="format-menu">
+                            {
+                                popularFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                            }
+                            </div>
+                            <div className="divider"/>
+                        </>
+                    ) : ''
+                }
+                {
+                    spotlightFormats.length ? (
+                        <>
+                            <h1 className="format-menu-title">Spotlight Formats</h1>
+                            <div className="format-menu">
+                            {
+                                spotlightFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                            }
+                            </div>
+                            <div className="divider"/>
+                        </>
+                    ) : ''
+                }
+                {
+                    dmFormats.length ? (
+                        <>
+                            <h1 className="format-menu-title">DM Formats</h1>
+                            <div className="format-menu">
+                            {
+                                dmFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                            }
+                            </div>
+                            <div className="divider"/>
+                        </>
+                    ) : ''
+                }
+                {
+                    gxFormats.length ? (
+                        <>
+                            <h1 className="format-menu-title">GX Formats</h1>
+                            <div className="format-menu">
+                            {
+                                gxFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                            }
+                            </div>
+                            <div className="divider"/>
+                        </>
+                    ) : ''
+                }
+                {
+                    fiveDsFormats.length ? (
+                        <>
+                            <h1 className="format-menu-title">5D's Formats</h1>
+                            <div className="format-menu">
+                            {
+                                fiveDsFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                            }
+                            </div>
+                            <div className="divider"/>
+                        </>
+                    ) : ''
+                }
+                {
+                    zexalFormats.length ? (
+                        <>
+                            <h1 className="format-menu-title">ZEXAL Formats</h1>
+                            <div className="format-menu">
+                            {
+                                zexalFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                            }
+                            </div>
+                            <div className="divider"/>
+                        </>
+                    ) : ''
+                }
+                {
+                    arcVFormats.length ? (
+                        <>
+                            <h1 className="format-menu-title">ARC-V Formats</h1>
+                            <div className="format-menu">
+                            {
+                                arcVFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                            }
+                            </div>
+                            <div className="divider"/>
+                        </>
+                    ) : ''
+                }
+                {
+                    vrainsFormats.length ? (
+                        <>
+                            <h1 className="format-menu-title">VRAINS Formats</h1>
+                            <div className="format-menu">
+                            {
+                                vrainsFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                            }
+                            </div>
+                            <div className="divider"/>
+                        </>
+                    ) : ''
+                }
+                {
+                    sevensFormats.length ? (
+                        <>
+                            <h1 className="format-menu-title">SEVENS Formats</h1>
+                            <div className="format-menu">
+                            {
+                                sevensFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                            }
+                            </div>
+                            <div className="divider"/>
+                        </>
+                    ) : ''
+                }
+                {
+                    goRushFormats.length ? (
+                        <>
+                            <h1 className="format-menu-title">SEVENS Formats</h1>
+                            <div className="format-menu">
+                            {
+                                goRushFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                            }
+                            </div>
+                            <div className="divider"/>
+                        </>
+                    ) : ''
+                }
                 <br/>
             </div>
         </>
-
     )
 }
