@@ -60,8 +60,7 @@ export const FormatMenu = (props) => {
             <div className="body">
                 {
                     isContentManager ? (
-                        <div className='horizontal-space-between-flexbox'>
-                            <h1 className="format-menu-title">Popular Formats</h1>
+                        <>
                             <div className='horizontal-space-between-flexbox' >
                                 <h2>{category}</h2>
                                 <div 
@@ -71,7 +70,8 @@ export const FormatMenu = (props) => {
                                     <div id={`category-toggle-inner-circle-${category}`}></div>
                                 </div>
                             </div>
-                        </div>
+                            <h1 className="format-menu-title">Popular Formats</h1>
+                        </>
                     ) : <h1 className="format-menu-title">Popular Formats</h1>
                 }
                 <div className="format-menu">
@@ -81,13 +81,19 @@ export const FormatMenu = (props) => {
                 </div>
                 <div className="divider"/>
                 <div className="non-popular-formats">
-                    <h1 className="format-menu-title">Spotlight Formats</h1>
-                    <div className="format-menu">
                     {
-                        spotlightFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                        spotlightFormats.length ? (
+                            <>
+                                <h1 className="format-menu-title">Spotlight Formats</h1>
+                                <div className="format-menu">
+                                {
+                                    spotlightFormats.map((format) => <FormatButton key={format.id} format={format}  />)
+                                }
+                                </div>
+                                <div className="divider"/>
+                            </>
+                        ) : ''
                     }
-                    </div>
-                    <div className="divider"/>
                     <h1 className="format-menu-title">DM Formats</h1>
                     <div className="format-menu">
                     {
