@@ -58,9 +58,10 @@ export const FormatMenu = (props) => {
             {/* Default Gaming Playlist */}
             <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             <div className="body">
+            <h1 className="format-menu-title">Popular Formats</h1>
                 {
                     isContentManager ? (
-                        <div style={{"float":"right"}}>
+                        <div style={{"float":"right", "padding":"0px 24px"}}>
                             <h2>{category}</h2>
                             <div 
                                 id={`category-toggle-${category}`} 
