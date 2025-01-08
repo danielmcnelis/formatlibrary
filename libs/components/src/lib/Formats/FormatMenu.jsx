@@ -79,7 +79,7 @@ export const FormatMenu = (props) => {
                                 {
                                     popularFormats.map((format) => <FormatButton key={format.id} format={format}  />)
                                 }
-sss                                <div className="divider"/>
+                                <div className="divider"/>
                             </>
                         ) : ''
                     }
