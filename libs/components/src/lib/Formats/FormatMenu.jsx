@@ -59,17 +59,20 @@ export const FormatMenu = (props) => {
             <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             <div className="body">
                 {
-                    isContentManager ? (
-                        <div style={{"float":"right", "padding":"0px 100px 0px 10px"}}>
-                            <h2>{category}</h2>
-                            <div 
-                                id={`category-toggle-${category}`} 
-                                onClick={() => switchCategory()}
-                            >
-                                <div id={`category-toggle-inner-circle-${category}`}></div>
+                    // isContentManager ? (
+                        <>
+                            <div style={{"float":"right", "padding":"0px 100px 0px 10px"}}>
+                                <h2>{category}</h2>
+                                <div 
+                                    id={`category-toggle-${category}`} 
+                                    onClick={() => switchCategory()}
+                                >
+                                    <div id={`category-toggle-inner-circle-${category}`}></div>
+                                </div>
                             </div>
-                        </div>
-                    ) : ""
+                            <br/>
+                        </>
+                    // ) : ""
                 }
                 {
                     popularFormats.length ? (
