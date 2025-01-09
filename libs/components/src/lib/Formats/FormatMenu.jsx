@@ -61,7 +61,7 @@ export const FormatMenu = (props) => {
                 {
                     // isContentManager ? (
                         <>
-                            <div style={{"position":"fixed", "top":"10px", "right":"100px", "padding":"10px"}}>
+                            <div style={{"position":"fixed", "top":"40px", "right":"30px", "padding":"10px"}}>
                                 <h2>{category}</h2>
                                 <div 
                                     id={`category-toggle-${category}`} 
