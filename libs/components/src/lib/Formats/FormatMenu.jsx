@@ -60,7 +60,7 @@ export const FormatMenu = (props) => {
             <div className="body">
                 {
                     isContentManager ? (
-                        <div style={{"float":"right", "padding":"0px 24px"}}>
+                        <div style={{"float":"right", "padding":"0px 100px 0px 10px"}}>
                             <h2>{category}</h2>
                             <div 
                                 id={`category-toggle-${category}`} 
@@ -71,7 +71,6 @@ export const FormatMenu = (props) => {
                         </div>
                     ) : ""
                 }
-                
                 {
                     popularFormats.length ? (
                         <>
