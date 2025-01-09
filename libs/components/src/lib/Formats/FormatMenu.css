@@ -19,7 +19,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    background-color: rgb(119, 119, 48);
+    background-color: rgb(204, 175, 34);
     padding: 2px;
     margin: 0px 0.2vw;
     border-radius: 24px;
@@ -32,7 +32,7 @@
     align-items: center;
     justify-content: flex-end;
     flex-wrap: nowrap;
-    background-color: rgb(44, 35, 121);
+    background-color: rgb(77, 67, 165);
     padding: 2px;
     margin: 0px 0.2vw;
     border-radius: 24px;
@@ -44,7 +44,7 @@
 #category-toggle-inner-circle-TCG {
     background: url("https://cdn.formatlibrary.com/images/emojis/white-checkmark.png") no-repeat center;
     background-size: 16px;
-    background-color: rgb(192, 182, 96);
+    background-color: rgb(214, 190, 93);
     border-radius: 24px;
     width: 24px;
     height: 24px;
@@ -53,7 +53,7 @@
 #category-toggle-inner-circle-OCG {
     background: url("https://cdn.formatlibrary.com/images/emojis/black-x.png") no-repeat center;
     background-size: 16px;
-    background-color: rgb(115, 84, 193);
+    background-color: rgb(142, 113, 213);
     border-radius: 24px;
     width: 24px;
     height: 24px;
