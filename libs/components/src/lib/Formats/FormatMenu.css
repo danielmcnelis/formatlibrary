@@ -19,7 +19,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    background-color: rgb(204, 175, 34);
+    background-color: rgb(146, 94, 48);
     padding: 2px;
     margin: 0px 0.2vw;
     border-radius: 24px;
@@ -44,7 +44,7 @@
 #category-toggle-inner-circle-TCG {
     background: url("https://cdn.formatlibrary.com/images/emojis/white-checkmark.png") no-repeat center;
     background-size: 16px;
-    background-color: rgb(146, 126, 48);
+    background-color: rgb(204, 128, 34);
     border-radius: 24px;
     width: 24px;
     height: 24px;
