@@ -814,8 +814,7 @@ export const applyDecay = async (formatId, formatName, currentDate, nextDate, us
                     {[Op.lt]: nextDate}
                 ]
             }
-        },
-        attributes: ['formatId', 'createdAt', 'winnerId', 'loserId']
+        }
     })
 
     let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriodCount) / 20000)
@@ -838,6 +837,7 @@ export const applyDecay = async (formatId, formatName, currentDate, nextDate, us
                 }
             }
         })
+
         if (stats.elo > 500 && !activeInPeriod) {
             stats.elo = stats.elo * generalDecayRate
             if (stats.elo < 500) stats.elo = 500
