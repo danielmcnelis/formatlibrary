@@ -193,7 +193,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const customId = interaction.customId
             const isConfirmed = customId.charAt(0) === 'Y'
             const opponentIsConfirmed = customId.charAt(1) === 'Y'
-            const ids = customId.slice(2).split('-')
+            const ids = customId.slice(3).split('-')
             const yourPoolId = ids[0]
             const opponentsPoolId = ids[1]
             if (isConfirmed && !opponentIsConfirmed) {

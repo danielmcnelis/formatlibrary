@@ -137,7 +137,7 @@ export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, pl
     
     const player2Pool = await Pool.findOne({
         where: {
-            id: player2PoolId
+            id: Number(player2PoolId)
         },
         include: [Format, Player]
     })
@@ -312,9 +312,9 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
 // HANDLE RATED CONFIRMATION
 export const handleRatedConfirmation = async (client, interaction, isConfirmed, yourPoolId, opponentsPoolId) => {
     try {
-        const yourPool = await Pool.findOne({ where: { id: yourPoolId }, include: [Format, Player] })
+        const yourPool = await Pool.findOne({ where: { id: Number(yourPoolId) }, include: [Format, Player] })
         const format = yourPool.format
-        const opponentsPool = await Pool.findOne({ where: { id: opponentsPoolId, status: {[Op.not]: 'inactive'}}, include: Player })
+        const opponentsPool = await Pool.findOne({ where: { id: Number(opponentsPoolId), status: {[Op.not]: 'inactive'}}, include: Player })
         
         if (isConfirmed) {
             if (!opponentsPool) {

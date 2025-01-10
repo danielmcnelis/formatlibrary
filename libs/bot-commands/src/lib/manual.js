@@ -186,7 +186,8 @@ export default {
                     where: {
                         playerId: {[Op.or]: [winningPlayer.id, losingPlayer.id]},
                         status: 'inactive'
-                    }
+                    },
+                    include: [Player, Format]
                 }) || []
 
                 for (let d = 0; d < poolsToUpdate.length; d++) {
