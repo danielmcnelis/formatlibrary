@@ -714,7 +714,7 @@ export const recalculateFormatStats = async (format) => {
 
             const loserStats = [...await Stats.findOrCreate({
                 where: {
-                    playerName: match.winnerName,
+                    playerName: match.loserName,
                     playerId: match.loserId,
                     formatName: format.name,
                     formatId: format.id,
