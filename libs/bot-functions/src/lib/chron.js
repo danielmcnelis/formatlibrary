@@ -701,7 +701,7 @@ export const recalculateFormatStats = async (format) => {
                 nextDate = getNextDateAtMidnight(currentDate)
             }
 
-            const winnerStats = await Stats.findOrCreate({
+            const winnerStats = [...await Stats.findOrCreate({
                 where: {
                     playerName: match.winnerName,
                     playerId: match.winnerId,
@@ -710,9 +710,9 @@ export const recalculateFormatStats = async (format) => {
                     serverId: '414551319031054346',
                     isInternal: false
                 }
-            })[0]
+            })][0]
 
-            const loserStats = await Stats.findOrCreate({
+            const loserStats = [...await Stats.findOrCreate({
                 where: {
                     playerName: match.winnerName,
                     playerId: match.loserId,
@@ -721,7 +721,7 @@ export const recalculateFormatStats = async (format) => {
                     serverId: '414551319031054346',
                     isInternal: false
                 }
-            })[0]
+            })][0]
 
             const [winnerDelta, loserDelta, classicDelta] = await updateGeneralStats(winnerStats, loserStats)
             await match.update({ winnerDelta, loserDelta, classicDelta })
