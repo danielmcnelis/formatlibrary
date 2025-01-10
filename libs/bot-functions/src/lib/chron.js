@@ -740,7 +740,7 @@ export const recalculateFormatStats = async (format) => {
                 formatId: format.id, 
                 serverId: '414551319031054346'
             },
-            attributes: ['winnerId', 'loserId', ]
+            attributes: ['winnerId', 'loserId', 'formatId', 'serverId']
         })
 
         const vanquishedIds = []
