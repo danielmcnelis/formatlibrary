@@ -838,6 +838,8 @@ export const applyDecay = async (formatId, formatName, currentDate, nextDate, us
             }
         })
 
+        console.log(`${stats.playerName} was ${!!activeInPeriod ? 'active' : 'inactive'} between ${currentDate.toDateString()} and ${nextDate.toDateString()}`)
+
         if (stats.elo > 500 && !activeInPeriod) {
             stats.elo = stats.elo * generalDecayRate
             if (stats.elo < 500) stats.elo = 500
@@ -884,6 +886,7 @@ export const applyDecay = async (formatId, formatName, currentDate, nextDate, us
                 }
             })
 
+            console.log(`${stats.playerName} was seasonally ${!!activeInPeriod ? 'active' : 'inactive'} between ${currentDate.toDateString()} and ${nextDate.toDateString()}`)
             if (stats.seasonalElo > 500 && !activeInPeriod) {
                 stats.seasonalElo = stats.seasonalElo * seasonalDecayRate
                 if (stats.seasonalElo < 500) stats.seasonalElo = 500
