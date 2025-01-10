@@ -836,7 +836,7 @@ export const applyDecay = async (formatId, formatName, currentDate, nextDate, us
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
         const activeInPeriod = generalActivePlayerIds.includes(stats.playerId)
-        console.log(`${stats.playerName} was ${!!activeInPeriod ? 'active' : 'inactive'} between ${currentDate.toDateString()} and ${nextDate.toDateString()}`)
+        // console.log(`${stats.playerName} was ${!!activeInPeriod ? 'active' : 'inactive'} between ${currentDate.toDateString()} and ${nextDate.toDateString()}`)
 
         if (stats.elo > 500 && !activeInPeriod) {
             stats.elo = stats.elo * generalDecayRate
