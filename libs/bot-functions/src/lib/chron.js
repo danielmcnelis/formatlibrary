@@ -726,7 +726,7 @@ export const recalculateFormatStats = async (format) => {
             const [winnerDelta, loserDelta, classicDelta] = await updateGeneralStats(winnerStats, loserStats)
             await match.update({ winnerDelta, loserDelta, classicDelta })
             if (match.isSeasonal && format.seasonResetDate < match.createdAt) await updateSeasonalStats(winnerStats, loserStats)
-            console.log(`${format.name} Match ${j+1}: ${winnerStats.player.name} > ${loserStats.player.name}`)
+            console.log(`${format.name} Match ${j+1}: ${winnerStats.playerName} > ${loserStats.playerName}`)
         } catch (err) {
             console.log(err)
         }
