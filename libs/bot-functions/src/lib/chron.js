@@ -795,17 +795,17 @@ export const applyDecay = async (formatId, formatName, currentDate, nextDate, us
                 seasonalElo: {[Op.gte]: 500}
             }
         },
-        attributes: ['id', 'formatId', 'playerId', 'elo', 'seasonalElo']
+        attributes: ['id', 'formatId', 'playerName', 'playerId', 'elo', 'seasonalElo']
     }) : await Stats.findAll({
         where: {
             formatId: formatId,
             elo: {[Op.gte]: 500}
         },
-        attributes: ['id', 'formatId', 'playerId', 'elo']
+        attributes: ['id', 'formatId', 'playerName', 'playerId', 'elo']
     })
 
     // GENERAL MATCHES
-    const generalMatchesInPeriodCount = await Match.count({
+    const activeMatchesInPeriod = await Match.findAll({
         where: {
             formatId: formatId,
             createdAt: {
@@ -814,30 +814,28 @@ export const applyDecay = async (formatId, formatName, currentDate, nextDate, us
                     {[Op.lt]: nextDate}
                 ]
             }
-        }
+        },
+        attributes: ['winnerId', 'loserId', 'formatId', 'createdAt']
     })
 
-    let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriodCount) / 20000)
+    let generalDecayRate = Math.pow(Math.E, (-1 * activeMatchesInPeriod.length) / 20000)
     if (generalDecayRate < 0.9995) generalDecayRate = 0.9995
+
+    const generalActivePlayerIds = []
+    for (let i = 0; i < activeMatchesInPeriod.length; i++) {
+        const match = activeMatchesInPeriod[0]
+        if (!generalActivePlayerIds.includes(match.winnerId)) {
+            generalActivePlayerIds.push(match.winnerId)
+        }
+
+        if (!generalActivePlayerIds.includes(match.loserId)) {
+            generalActivePlayerIds.push(match.loserId)
+        }
+    }
 
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
-        const activeInPeriod = await Match.count({
-            where: {
-                [Op.or]: [
-                    {winnerId: stats.playerId},
-                    {loserId: stats.playerId}
-                ],
-                formatId: formatId,
-                createdAt: {
-                    [Op.and]: [
-                        {[Op.gte]: currentDate},
-                        {[Op.lt]: nextDate}
-                    ]
-                }
-            }
-        })
-
+        const activeInPeriod = generalActivePlayerIds.includes(stats.playerId)
         console.log(`${stats.playerName} was ${!!activeInPeriod ? 'active' : 'inactive'} between ${currentDate.toDateString()} and ${nextDate.toDateString()}`)
 
         if (stats.elo > 500 && !activeInPeriod) {
