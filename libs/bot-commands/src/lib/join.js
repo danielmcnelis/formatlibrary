@@ -118,19 +118,19 @@ export default {
                 
                 return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `<@${player.discordId}> resubmitted their deck list for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
             } else if (!entry && !tournament.isTeamTournament) {
-                if (tournament.isPremiumTournament && player.subscriberTier === 'Premium') {
-                    const alreadyEntered = await Entry.count({
-                        where: {
-                            playerId: player.id,
-                            '$tournament.isPremiumTournament$': true
-                        },
-                        include: Tournament
-                    })
+                // if (tournament.isPremiumTournament && player.subscriberTier === 'Premium') {
+                //     const alreadyEntered = await Entry.count({
+                //         where: {
+                //             playerId: player.id,
+                //             '$tournament.isPremiumTournament$': true
+                //         },
+                //         include: Tournament
+                //     })
 
-                    if (alreadyEntered > 2) {
-                        return interaction.member.send({ content: `Sorry, you may only enter two (2) Premium Tournaments this month with your current subscription.`})
-                    }
-                }
+                //     if (alreadyEntered > 2) {
+                //         return interaction.member.send({ content: `Sorry, you may only enter two (2) Premium Tournaments this month with your current subscription.`})
+                //     }
+                // }
         
                 try {
                     entry = await Entry.create({
