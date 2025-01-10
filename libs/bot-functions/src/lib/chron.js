@@ -5,13 +5,12 @@ import * as sharp from 'sharp'
 import { Artwork, BlogPost, Card, ChronRecord, Deck, DeckThumb, DeckType, Entry, Event, Format, Tournament, Match, Matchup, Membership, Player, Pool, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
 import { checkTimeBetweenDates, createMembership, createPlayer, dateToVerbose, s3FileExists, capitalize, checkIfDiscordNameIsTaken, getNextDateAtMidnight, countDaysInBetweenDates } from './utility'
 import { Op } from 'sequelize'
-import { getRatedConfirmation, updateGeneralStats, updateSeasonalStats } from '@fl/bot-functions'
+import { getFirstOfTwoRatedConfirmations, updateGeneralStats, updateSeasonalStats } from '@fl/bot-functions'
 import { Upload } from '@aws-sdk/lib-storage'
 import { S3 } from '@aws-sdk/client-s3'
 import { config } from '@fl/config'
 import * as tcgPlayer from '../../../../tokens/tcgplayer.json'
 import { format } from 'path'
-import card from '../../../bot-commands/src/lib/card'
 const Canvas = require('canvas')
 
 // GET HOURLY COUNTDOWN
@@ -565,7 +564,6 @@ export const cleanUpPools = async () => {
 
 // LOOK FOR ALL POTENTIAL PAIRS
 export const lookForAllPotentialPairs = async (client) => {
-    console.log('lookForAllPotentialPairs()')
     const pools = await Pool.findAll({
         where: {
             status: 'pending'
@@ -593,57 +591,30 @@ export const lookForAllPotentialPairs = async (client) => {
             const potentialPair = potentialPairs[i]
             const now = new Date()
             const isSeasonal = format.useSeasonalElo && format.seasonResetDate < now
-            console.log('isSeasonal', isSeasonal)
             const cutoff = isSeasonal ? new Date(now - (30 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
-            console.log('cutoff', cutoff)
     
-            const isRecentOpponent = await Match.count({
+            const mostRecentMatch = await Match.findOne({
                 where: {
-                    [Op.or]: {
-                        [Op.and]: {
-                            winnerId: potentialPair.playerId,
-                            loserId: pool.playerId
-                        },
-                        [Op.and]: {
-                            winnerId: pool.playerId,
-                            loserId: potentialPair.playerId
-                        },
-                    },
-                    formatId: pool.formatId,
-                    createdAt: {[Op.gte]: cutoff }
-                }
+                    [Op.or]: [
+                        { winnerId: player.id, loserId: potentialPair.playerId },
+                        { loserId: player.id, winnerId: potentialPair.playerId },
+                    ],
+                    formatId: pool.formatId
+                },
+                order: [['createdAt', 'DESC']]
             })
 
-            if (isRecentOpponent) {
-                const recentMatch = await Match.findOne({ where: { 
-                    where: {
-                        [Op.or]: {
-                            [Op.and]: {
-                                winnerId: potentialPair.playerId,
-                                loserId: pool.playerId
-                            },
-                            [Op.and]: {
-                                winnerId: pool.playerId,
-                                loserId: potentialPair.playerId
-                            },
-                        },
-                        formatId: pool.formatId,
-                        createdAt: {[Op.gte]: cutoff }
-                    }
-                }})
+            if (mostRecentMatch && cutoff < mostRecentMatch?.createdAt) {
                 console.log(`<!> ${pool.playerName} and ${potentialPair.playerName} are recent opponents. Match reported at ${recentMatch.createdAt}<!>`)
                 continue
-            } else if (playerIds.includes(player.id)) {
-                console.log(`<!> ${pool.playerName} has already been sent a confirmation notification <!>`)
-                continue
-            } else if (playerIds.includes(potentialPair.playerId)) {
-                console.log(`<!> ${potentialPair.playerName} has already been sent a confirmation notification <!>`)
+            } else if (playerIds.includes(player.id) || playerIds.includes(potentialPair.playerId)) {
+                console.log(`<!> ${pool.playerName} and/or ${potentialPair.playerName} have already been sent a confirmation notification <!>`)
                 continue
             } else {
                 playerIds.push(player.id)
                 playerIds.push(potentialPair.playerId)
-                console.log(`getRatedConfirmation: ${potentialPair.player?.name} vs. ${player?.name} (${format.name})`)
-                getRatedConfirmation(client, player, potentialPair.player, format)
+                console.log(`getFirstOfTwoRatedConfirmations from ${player?.name} (${format.name})`)
+                getFirstOfTwoRatedConfirmations(client, player, potentialPair.player, format)
                 continue
             }
         }

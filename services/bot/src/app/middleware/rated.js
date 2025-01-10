@@ -61,28 +61,21 @@ export const joinRatedPool = async (req, res, next) => {
             const isSeasonal = format.useSeasonalElo && format.seasonResetDate < now
             const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
             const cutoff = isSeasonal ? new Date(now - (30 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
-            console.log('line 64 now', now, '\ntwoMinutesAgo', twoMinutesAgo, '\nisSeasonal', isSeasonal, '\ncutoff', cutoff)
 
             const mostRecentMatch = await Match.findOne({
                 where: {
-                    [Op.or]: {
-                        [Op.and]: {
-                            winnerId: player.id,
-                            loserId: potentialPair.player.id
-                        },
-                        [Op.and]: {
-                            winnerId: potentialPair.player.id,
-                            loserId: player.id
-                        },
-                    },
+                    [Op.or]: [
+                        { winnerId: player.id, loserId: potentialPair.playerId },
+                        { loserId: player.id, winnerId: potentialPair.playerId },
+                    ],
                     formatId: format.id
                 },
                 order: [['createdAt', 'DESC']]
-            })             
+            })            
     
-            if (cutoff < mostRecentMatch?.createdAt) { 
+            if (mostRecentMatch && cutoff < mostRecentMatch?.createdAt) { 
                 console.log(`<!> ${player.name} and ${potentialPair.playerName} are RECENT opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Look for another opponent <!>`)
-            continue
+                continue
             } else if (potentialPair.updatedAt < twoMinutesAgo) {
                 console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Getting confirmation from ${potentialPair.playerName} <!>`)
                 await getRatedConfirmation(client, opponent, player, format)

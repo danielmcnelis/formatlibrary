@@ -26,7 +26,6 @@ export default {
                 // await updateDecks()
                 // await downloadNewCards(client)
                 // await updateMatchups()
-                // return recalculateStats()
                 // await purgeBetaCards(client)
                 return await downloadOriginalArtworks(client)
                 // return downloadMissingCardImages()

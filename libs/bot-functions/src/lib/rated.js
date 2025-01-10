@@ -40,13 +40,13 @@ export const getRatedConfirmation = async (client, player, opponent, format) => 
  
     const row = new ActionRowBuilder()
         .addComponents(new ButtonBuilder()
-            .setCustomId(`Y-${yourPool.id}-${opponentsPool.id}-414551319031054346`)
+            .setCustomId(`YY-${yourPool.id}-${opponentsPool.id}-414551319031054346`)
             .setLabel('Yes')
             .setStyle(ButtonStyle.Primary)
         )
 
         .addComponents(new ButtonBuilder()
-            .setCustomId(`N-${yourPool.id}-${opponentsPool.id}-414551319031054346`)
+            .setCustomId(`NY-${yourPool.id}-${opponentsPool.id}-414551319031054346`)
             .setLabel('No')
             .setStyle(ButtonStyle.Primary)
         )
@@ -70,6 +70,124 @@ export const getRatedConfirmation = async (client, player, opponent, format) => 
     }, 5 * 60 * 1000)
 }
 
+
+// GET FIRST PLAYER RATED CONFIRMATION
+export const getFirstOfTwoRatedConfirmations = async (client, player, opponent, format) => {
+    console.log('getRatedConfirmation()')
+    const guild = client.guilds.cache.get('414551319031054346')
+    const member = await guild.members.fetch(player.discordId)
+    if (!member) {
+        console.log(`player ${player.name} is no longer a member of format library, so they cannot play rated`)
+        return
+    }
+
+    const yourPool = await Pool.findOne({
+        where: {
+            playerId: player.id,
+            formatId: format.id,
+            status: 'pending'
+        }
+    })
+    
+    const opponentsPool = await Pool.findOne({
+        where: {
+            playerId: opponent.id,
+            formatId: format.id,
+            status: 'pending'
+        }
+    })
+
+    await yourPool.update({ status: 'confirming' })
+ 
+    const row = new ActionRowBuilder()
+        .addComponents(new ButtonBuilder()
+            .setCustomId(`YN-${yourPool.id}-${opponentsPool.id}`)
+            .setLabel('Yes')
+            .setStyle(ButtonStyle.Primary)
+        )
+
+        .addComponents(new ButtonBuilder()
+            .setCustomId(`NN-${yourPool.id}-${opponentsPool.id}`)
+            .setLabel('No')
+            .setStyle(ButtonStyle.Primary)
+        )
+
+    const message = await member.user.send({ content: `I've found a Rated ${format.name} Format ${format.emoji} opponent for you. Do you still wish to play?`, components: [row] })
+
+    setTimeout(async () => {
+        const unconfirmed = await Pool.count({
+            where: {
+                id: yourPool.id,
+                status: 'confirming'
+            }
+        })
+
+        if (unconfirmed) {
+            await message.edit({ components: [] }).catch((err) => console.log(err))
+            await yourPool.destroy()
+            console.log(`removed ${yourPool.playerName} from the ${yourPool.formatName} rated pool`)
+            await message.channel.send({ content: `Sorry, time's up! I've removed you from the ${format.name} Format ${format.emoji} rated pool.`})
+        }
+    }, 5 * 60 * 1000)
+}
+
+// GET FIRST PLAYER RATED CONFIRMATION  
+export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, player2PoolId) => {
+    console.log('getSecondOfTwoRatedConfirmations()')
+    
+    const player2Pool = await Pool.findOne({
+        where: {
+            id: player2PoolId
+        },
+        include: [Format, Player]
+    })
+
+    const player = player2Pool?.player
+    const format = player2Pool?.format
+
+    const guild = client.guilds.cache.get('414551319031054346')
+    
+    const member = await guild.members.fetch(player?.discordId)
+    if (!member) {
+        console.log(`player ${player?.name} is no longer a member of format library, so they cannot play rated`)
+        return
+    }
+
+    await player2Pool.update({ status: 'confirming' })
+ 
+    const row = new ActionRowBuilder()
+        .addComponents(new ButtonBuilder()
+            .setCustomId(`YY-${player1PoolId}-${player2PoolId}`)
+            .setLabel('Yes')
+            .setStyle(ButtonStyle.Primary)
+        )
+
+        .addComponents(new ButtonBuilder()
+            .setCustomId(`NY-${player1PoolId}-${player2PoolId}`)
+            .setLabel('No')
+            .setStyle(ButtonStyle.Primary)
+        )
+
+    const message = await member.user.send({ content: `I've found a Rated ${format?.name} Format ${format?.emoji} opponent for you. Do you still wish to play?`, components: [row] })
+
+    setTimeout(async () => {
+        const unconfirmed = await Pool.count({
+            where: {
+                id: player2PoolId,
+                status: 'confirming'
+            }
+        })
+
+        if (unconfirmed) {
+            await message.edit({ components: [] }).catch((err) => console.log(err))
+            await player2Pool.destroy()
+            console.log(`removed ${player?.name} from the ${format?.name} rated pool`)
+            await message.channel.send({ content: `Sorry, time's up! I've removed you from the ${format?.name} Format ${format?.emoji} rated pool.`})
+        }
+    }, 5 * 60 * 1000)
+}
+
+
 // LOOK FOR POTENTIAL PAIRS
 export const lookForPotentialPairs = async (client, interaction, poolEntry, player, format) => {
     const potentialPairs = await Pool.findAll({ 
@@ -88,20 +206,13 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
         const isSeasonal = format.useSeasonalElo && format.seasonResetDate < now
         const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
         const cutoff = isSeasonal ? new Date(now - (30 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
-        console.log('line 91 now', now, '\ntwoMinutesAgo', twoMinutesAgo, '\nisSeasonal', isSeasonal, '\ncutoff', cutoff)
 
         const mostRecentMatch = await Match.findOne({
             where: {
-                [Op.or]: {
-                    [Op.and]: {
-                        winnerId: player.id,
-                        loserId: potentialPair.player.id
-                    },
-                    [Op.and]: {
-                        winnerId: potentialPair.player.id,
-                        loserId: player.id
-                    },
-                },
+                [Op.or]: [
+                    { winnerId: player.id, loserId: potentialPair.playerId },
+                    { loserId: player.id, winnerId: potentialPair.playerId },
+                ],
                 formatId: format.id
             },
             order: [['createdAt', 'DESC']]
@@ -199,9 +310,8 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
 }
 
 // HANDLE RATED CONFIRMATION
-export const handleRatedConfirmation = async (client, interaction, isConfirmed, yourPoolId, opponentsPoolId, serverId) => {
+export const handleRatedConfirmation = async (client, interaction, isConfirmed, yourPoolId, opponentsPoolId) => {
     try {
-        console.log('handleRatedConfirmation()')
         const yourPool = await Pool.findOne({ where: { id: yourPoolId }, include: [Format, Player] })
         const format = yourPool.format
         const opponentsPool = await Pool.findOne({ where: { id: opponentsPoolId, status: {[Op.not]: 'inactive'}}, include: Player })
@@ -215,7 +325,7 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
     
             const server = await Server.findOne({ where: { id: '414551319031054346' }})
             const channelId = format.channelId
-            const guild = client.guilds.cache.get(serverId)
+            const guild = client.guilds.cache.get('414551319031054346')
             const channel = guild.channels.cache.get(channelId)
             const player = yourPool.player
             const playerDiscordName =  player.discordName

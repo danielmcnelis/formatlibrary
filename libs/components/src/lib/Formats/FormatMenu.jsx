@@ -194,7 +194,7 @@ export const FormatMenu = (props) => {
                 {
                     goRushFormats.length ? (
                         <>
-                            <h1 className="format-menu-title">SEVENS Formats</h1>
+                            <h1 className="format-menu-title">GO RUSH!! Formats</h1>
                             <div className="format-menu">
                             {
                                 goRushFormats.map((format) => <FormatButton key={format.id} format={format}  />)

@@ -20,7 +20,7 @@ import { config } from '@fl/config'
 import { Format, Match, Membership, Player, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
-import { createTopCut, editTieBreakers, getMidnightCountdown, 
+import { createTopCut, editTieBreakers, getMidnightCountdown, getSecondOfTwoRatedConfirmations,
     postStandings, checkTimer, closeTournament, createTournament, 
     dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
@@ -192,11 +192,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
             await interaction.update({ components: [] }).catch((err) => console.log(err))
             const customId = interaction.customId
             const isConfirmed = customId.charAt(0) === 'Y'
+            const opponentIsConfirmed = customId.charAt(1) === 'Y'
             const ids = customId.slice(2).split('-')
             const yourPoolId = ids[0]
             const opponentsPoolId = ids[1]
-            const serverId = ids[2]
-            return handleRatedConfirmation(client, interaction, isConfirmed, yourPoolId, opponentsPoolId, serverId)
+            if (isConfirmed && !opponentIsConfirmed) {
+                return getSecondOfTwoRatedConfirmations(client, interaction, yourPoolId, opponentsPoolId)
+            } else {
+                return handleRatedConfirmation(client, interaction, isConfirmed, yourPoolId, opponentsPoolId)
+            }
         } else if (interaction.message?.content?.includes('Should this tournament be seeded')) {
             await interaction.message.edit({ components: [] }).catch((err) => console.log(err))
             const [answer, userId, tournamentId] = interaction.customId?.split('-') || []

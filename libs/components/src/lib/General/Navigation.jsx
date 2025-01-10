@@ -127,15 +127,15 @@ export const Navigation = (props) => {
                 }
             </div>
         </div>
-            {/* <div className="announcement-banner">
+            <div className="announcement-banner">
                 <h2>
                     <a
                         className="inherit-color" 
-                        href="https://discord.com/invite/formatlibrary"
+                        href="https://docs.google.com/forms/d/e/1FAIpQLScj-fC6DPfYjCrSDdznu0b7rzPW1vJ4wlP8J_91SLUgkKNmCQ/viewform?usp=sharing"
                         rel="noreferrer"
                         target="_blank"
-                    >The new Ladder Qualifier season for Edison Worlds is underway! Click to join.</a></h2>
-            </div> */}
+                    >Applications to host 2025 Edison WCQs are open! Click to apply.</a></h2>
+            </div>
         </>
     )
 }

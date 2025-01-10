@@ -100,7 +100,7 @@ export default {
                     + `\nName: ${stats.playerName}`
                     + `\nMedal: ${medal}`
                     + `\nRanking: ${rank}`
-                    + `\nElo Rating: ${stats[eloType].toFixed(2) || '500.00'}`
+                    + `\nElo Rating: ${stats[eloType]?.toFixed(2) || '500.00'}`
                     + `\nWins: ${stats[winsType]}, Losses: ${stats[lossesType]}`
                     + `\nWin Rate: ${winrate}`
                 })
