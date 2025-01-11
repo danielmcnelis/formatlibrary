@@ -114,7 +114,7 @@ export default {
         const formats = await Format.findAll({
             where: {
                 name: {[Op.substring]: focusedValue},
-                category: {[Op.not]: {[Op.or]:['discontinued', 'multiple']}}
+                category: {[Op.notIn]: ['discontinued', 'multiple']}
             },
             limit: 5,
             order: [["isPopular", "DESC", "isSpotlight", "DESC", "name", "ASC"]]
