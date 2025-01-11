@@ -117,7 +117,7 @@ export default {
                 category: {[Op.notIn]: ['discontinued', 'multiple']}
             },
             limit: 4,
-            order: [["useSeasonal", "DESC"], ["isPopular", "DESC"], ["isSpotlight", "DESC"], ["name", "ASC"]]
+            order: [["useSeasonalElo", "DESC"], ["isPopular", "DESC"], ["isSpotlight", "DESC"], ["name", "ASC"]]
         }) 
         await interaction.respond(
             formats.map(f => ({ name: f.name, value: f.name })),
