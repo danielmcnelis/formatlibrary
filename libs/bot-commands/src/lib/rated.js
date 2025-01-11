@@ -120,7 +120,7 @@ export default {
             order: [["isPopular", "DESC"], ["isSpotlight", "DESC"], ["name", "ASC"]]
         }) 
         await interaction.respond(
-            formats.map(f => ({ name: f.name, value: f.id })),
+            formats.map(f => ({ name: f.name, value: f.id.toString() })),
         )
     },
     async execute(interaction) {
