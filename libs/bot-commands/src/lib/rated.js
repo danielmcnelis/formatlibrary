@@ -112,7 +112,7 @@ export default {
         const focusedValue = interaction.options.getFocused()
         const formats = await Format.findAll({
             where: {
-                name: {[Op.substring]: focusedValue},
+                name: {[Op.iLike]: focusedValue + '%'},
                 category: {[Op.notIn]: ['discontinued', 'multiple']}
             },
             limit: 4,
@@ -140,7 +140,8 @@ export default {
             if (!format) {
                 return await interaction.editReply(`Hmm... I could not find a format called "${formatName}".`)
             } else {
-                await interaction.editReply(`So, you want to play ${format.name} Format ${format.emoji}.\n🥸`)
+                await interaction.editReply(`So, you want to play ${format.name} Format. ${format.emoji}`)
+                await interaction.channel.send(`🥸`)
                 return getRatedInformation(interaction, player, format)
             }
         } catch (err) {
