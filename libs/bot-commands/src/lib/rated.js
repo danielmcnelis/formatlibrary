@@ -7,9 +7,8 @@ import { askForSimName, drawDeck, lookForPotentialPairs, getRatedFormat, getNewR
 import { client } from '../client'
 import { emojis } from '@fl/bot-emojis'
 
-const getRatedInformation = async (interaction, player, formatName) => {
+const getRatedInformation = async (interaction, player, format) => {
     try {
-
         const access = format.channelId ? 'full' : 'partner'
 
         const yourServers = [...await Membership.findAll({ 
