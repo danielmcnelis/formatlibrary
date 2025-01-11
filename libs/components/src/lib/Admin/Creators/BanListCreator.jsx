@@ -10,7 +10,6 @@ export const BanListCreator = () => {
     const [previousBanlist, setPreviousBanlist] = useState(null)
     const [category, setCategory] = useState('TCG')
     const [changes, setChanges] = useState([])
-    console.log('changes', changes)
     const [banlists, setBanlists] = useState([])
     const [card, setCard] = useState(null)
     const [previous, setPreviousStatus] = useState(null)
@@ -177,7 +176,7 @@ export const BanListCreator = () => {
             <label>Previous List:
                 <select
                     id="previous-banlist"
-                    onChange={(e) => setPreviousBanlist(e.target.value || null)}
+                    onChange={(e) =>  setPreviousBanlist(e.target.value || null)}
                 >
                 <option value=""></option>
                 {
