@@ -133,8 +133,9 @@ export default {
 
             const format = await Format.findOne({
                 where: {
-                    name: {[Op.iLike]: formatName}
-                }
+                    name: {[Op.iLike]: formatName + '%'}
+                },
+                order: [["useSeasonalElo", "DESC"], ["isPopular", "DESC"], ["isSpotlight", "DESC"], ["name", "ASC"]]
             })
 
             if (!format) {
