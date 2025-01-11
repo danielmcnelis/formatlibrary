@@ -628,7 +628,7 @@ export const recalculateFormatStats = async (format) => {
 
     const allMatches = await Match.findAll({ 
         where: { formatId: format.id, serverId: '414551319031054346' }, 
-        attributes: ['id', 'formatId', 'winnerName', 'loserName', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'classicDelta', 'createdAt', 'isSeasonal'], 
+        attributes: ['id', 'formatId', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'classicDelta', 'createdAt', 'isSeasonal'], 
         order: [["createdAt", "ASC"]]
     })
 
@@ -651,8 +651,8 @@ export const recalculateFormatStats = async (format) => {
     })
 
     if (format.useSeasonalElo) {
-        for (let j = 0; j < allStats.length; j++) {
-            const stats = allStats[j]
+        for (let i = 0; i < allStats.length; i++) {
+            const stats = allStats[i]
             await stats.update({
                 elo: 500.00,
                 bestElo: 500.00,
@@ -674,8 +674,8 @@ export const recalculateFormatStats = async (format) => {
             })
         }
     } else {
-        for (let j = 0; j < allStats.length; j++) {
-            const stats = allStats[j]
+        for (let i = 0; i < allStats.length; i++) {
+            const stats = allStats[i]
             await stats.update({
                 elo: 500.00,
                 bestElo: 500.00,
@@ -692,9 +692,9 @@ export const recalculateFormatStats = async (format) => {
         }
     }
 
-    for (let j = 0; j < allMatches.length; j++) {
+    for (let i = 0; i < allMatches.length; i++) {
         try {
-            const match = allMatches[j]
+            const match = allMatches[i]
             if (match.createdAt > nextDate) {
                 await applyDecay(format.id, format.name, currentDate, match.createdAt, format.useSeasonalElo, format.seasonResetDate)
                 currentDate = match.createdAt
@@ -732,8 +732,8 @@ export const recalculateFormatStats = async (format) => {
         }
     }
 
-    for (let j = 0; j < allStats.length; j++) {
-        const stats = allStats[j]
+    for (let i = 0; i < allStats.length; i++) {
+        const stats = allStats[i]
         const victories = await Match.findAll({
             where: {
                 winnerId: stats.playerId,
@@ -765,6 +765,7 @@ export const recalculateAllStats = async () => {
     })
 
     const formats = await Format.findAll({
+        attributes: ['id', 'name'],
         order: [["name", "ASC"]]
     })
     
@@ -805,7 +806,7 @@ export const applyDecay = async (formatId, formatName, currentDate, nextDate, us
     })
 
     // GENERAL MATCHES
-    const activeMatchesInPeriod = await Match.findAll({
+    const generalMatchesInPeriod = await Match.findAll({
         where: {
             formatId: formatId,
             createdAt: {
@@ -818,12 +819,12 @@ export const applyDecay = async (formatId, formatName, currentDate, nextDate, us
         attributes: ['winnerId', 'loserId', 'formatId', 'createdAt']
     })
 
-    let generalDecayRate = Math.pow(Math.E, (-1 * activeMatchesInPeriod.length) / 20000)
+    let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriod.length) / 20000)
     if (generalDecayRate < 0.9995) generalDecayRate = 0.9995
 
     const generalActivePlayerIds = []
-    for (let i = 0; i < activeMatchesInPeriod.length; i++) {
-        const match = activeMatchesInPeriod[0]
+    for (let i = 0; i < generalMatchesInPeriod.length; i++) {
+        const match = generalMatchesInPeriod[i]
         if (!generalActivePlayerIds.includes(match.winnerId)) {
             generalActivePlayerIds.push(match.winnerId)
         }
@@ -849,7 +850,7 @@ export const applyDecay = async (formatId, formatName, currentDate, nextDate, us
 
     // SEASONAL MATCHES
     if (applyToSeasonal) {
-        const seasonalMatchesInPeriodCount = await Match.count({
+        const seasonalMatchesInPeriod = await Match.findAll({
             where: {
                 formatId: formatId,
                 isSeasonal: true,
@@ -859,33 +860,30 @@ export const applyDecay = async (formatId, formatName, currentDate, nextDate, us
                         {[Op.lt]: nextDate}
                     ]
                 }
-            }
+            },
+            attributes: ['winnerId', 'loserId', 'formatId', 'createdAt']
         })
     
-        let seasonalDecayRate = Math.pow(Math.E, (-1 * seasonalMatchesInPeriodCount) / 600)
-        if (seasonalDecayRate < 0.993) seasonalDecayRate = 0.993
+        const activeSeasonalPlayerIds = []
+        let seasonalDecayRate = Math.pow(Math.E, (-1 * seasonalMatchesInPeriod.length) / 600)
+        if (seasonalDecayRate < 0.993) generalDecayRate = 0.993
+
+        for (let i = 0; i < seasonalMatchesInPeriod.length; i++) {
+            const {winnerId, loserId} = seasonalMatchesInPeriod[i]
+            if (!activeSeasonalPlayerIds.includes(winnerId)) {
+                activeSeasonalPlayerIds.push(winnerId)
+            }
+            if (!activeSeasonalPlayerIds.includes(loserId)) {
+                activeSeasonalPlayerIds.push(loserId)
+            } 
+        }
 
         for (let i = 0; i < allStats.length; i++) {
             const stats = allStats[i]
-            const activeInPeriod = await Match.count({
-                where: {
-                    [Op.or]: [
-                        {winnerId: stats.playerId},
-                        {loserId: stats.playerId}
-                    ],
-                    formatId: formatId,
-                    isSeasonal: true,
-                    createdAt: {
-                        [Op.and]: [
-                            {[Op.gte]: currentDate},
-                            {[Op.lt]: nextDate}
-                        ]
-                    }
-                }
-            })
-
-            console.log(`${stats.playerName} was seasonally ${!!activeInPeriod ? 'active' : 'inactive'} between ${currentDate.toDateString()} and ${nextDate.toDateString()}`)
-            if (stats.seasonalElo > 500 && !activeInPeriod) {
+            if (
+                stats.seasonalElo > 500 &&
+                !activeSeasonalPlayerIds.includes(stats.playerId) 
+            ) {
                 stats.seasonalElo = stats.seasonalElo * seasonalDecayRate
                 if (stats.seasonalElo < 500) stats.seasonalElo = 500
                 await stats.save()
