@@ -1,16 +1,15 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Deck, Match, Membership, Pairing, Player, Pool, Server, Stats } from '@fl/models'
+import { Deck, Format, Match, Membership, Pairing, Player, Pool, Server, Stats } from '@fl/models'
 import { Op } from 'sequelize'
 import { askForSimName, drawDeck, lookForPotentialPairs, getRatedFormat, getNewRatedDeck, getPreviousRatedDeck } from '@fl/bot-functions'
-import axios from 'axios'
+// import axios from 'axios'
 import { client } from '../client'
 import { emojis } from '@fl/bot-emojis'
 
-const getRatedInformation = async (interaction, player) => {
+const getRatedInformation = async (interaction, player, formatId) => {
     try {
-        const format = await getRatedFormat(interaction)
-        if (!format) return await interaction.user.send({ content: `Please specify a valid format.`})
+        const format = await Format.findById(formatId)
         const access = format.channelId ? 'full' : 'partner'
 
         const yourServers = [...await Membership.findAll({ 
@@ -103,13 +102,34 @@ const getRatedInformation = async (interaction, player) => {
 export default {
     data: new SlashCommandBuilder()
         .setName('rated')
-        .setDescription('Join the rated pool for any format. 🎮'),
+        .setDescription('Join the rated pool for any format. 🎮')
+		.addStringOption(option =>
+			option.setName('format')
+				.setDescription('Enter format name')
+				.setAutocomplete(true)
+                .setRequired(true)
+        ),
+    async autocomplete(interaction) {
+        const focusedValue = interaction.options.getFocused()
+        const formats = await Format.findAll({
+            where: {
+                name: {[Op.substring]: focusedValue},
+                category: {[Op.not]: {[Op.or]:['discontinued', 'multiple']}}
+            },
+            limit: 5,
+            order: [["isPopular", "DESC", "isSpotlight", "DESC", "name", "ASC"]]
+        }) 
+        await interaction.respond(
+            formats.map(f => ({ name: f.name, value: f.id })),
+        )
+    },
     async execute(interaction) {
         try {
             if (interaction.guildId) return await interaction.reply(`Try using **/rated** by DM'ing it to me.`)
             const player = await Player.findOne({ where: { discordId: interaction.user.id } })
             if (!player) return await interaction.reply(`You are not in the database. Please join the Format Library Discord server to register.`)
             if (player.isHidden) return await interaction.reply(`You are not allowed is not allowed to play in the Format Library rated system.`)
+            
             interaction.reply('🥸')
             return getRatedInformation(interaction, player)
         } catch (err) {

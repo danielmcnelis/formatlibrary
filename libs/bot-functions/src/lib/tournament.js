@@ -90,7 +90,7 @@ export const askForTimeZone = async (member, player, override = false, error = f
 export const getDeckList = async (member, player, format, override = false, unranked = false) => {            
     const filter = m => m.author.id === member.user.id
     const pronoun = override ? `${player.name}'s` : 'your'
-    const message = await member.send({ content: `Please either (1) upload a **__YDK File__** or (2) copy and paste a **__YDKe Code__** for ${pronoun} tournament deck.`}).catch((err) => console.log(err))
+    const message = await member.send({ content: `Please either upload a **__YDK file__** or copy and paste a **__YDKe code__** for ${pronoun} tournament deck.`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     return await message.channel.awaitMessages({
         filter,
@@ -164,7 +164,7 @@ export const getDeckList = async (member, player, format, override = false, unra
                 return { url, ydk }
             }
         } else {
-            member.send({ content: "Sorry, I only accept YDK Files or YDKe Codes."}).catch((err) => console.log(err))    
+            member.send({ content: "Sorry, I only accept **__YDK files__** or **__YDKe codes__**."}).catch((err) => console.log(err))    
             return false  
         }
     }).catch((err) => {
@@ -181,7 +181,7 @@ export const getSpeedDeckList = async (member, player, format, override = false)
 
     const filter = m => m.author.id === member.user.id
     const pronoun = override ? `${player.name}'s` : 'your'
-    const message = await member.send({ content: `Please provide a **__YDK File__** for ${pronoun} tournament deck.`}).catch((err) => console.log(err))
+    const message = await member.send({ content: `Please either upload a **__YDK file__** or copy and paste a **__YDKe code__** for ${pronoun} tournament deck.`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     return await message.channel.awaitMessages({
         filter,
@@ -252,11 +252,8 @@ export const getSpeedDeckList = async (member, player, format, override = false)
                 member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck is perfectly legal. ${emojis.legend}`}).catch((err) => console.log(err))
                 return { url, ydk }
             }
-        } else if (ydke) {
-            member.send({ content: "Sorry, I only accept YDK Files."}).catch((err) => console.log(err))    
-            return false  
         } else {
-            member.send({ content: "Sorry, I only accept YDK Files or YDKe Codes."}).catch((err) => console.log(err))    
+            member.send({ content: "Sorry, I only accept **__YDK files__** or **__YDKe codes__**."}).catch((err) => console.log(err))    
             return false  
         }
     }).catch((err) => {

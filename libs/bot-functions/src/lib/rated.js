@@ -507,7 +507,7 @@ export const getPreviousRatedDeck = async (user, yourRatedDecks, format) => {
 //GET NEW RATED DECK
 export const getNewRatedDeck = async (user, player, format) => {   
     const filter = m => m.author.id === user.id
-    const message = await user.send({ content: `Please provide a **__YDK File__** for your Rated Deck.`}).catch((err) => console.log(err))
+    const message = await user.send({ content: `Please either upload a **__YDK file__** or copy and paste a **__YDKe code__** for your Rated Deck.`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     return await message.channel.awaitMessages({
         filter,
@@ -584,7 +584,7 @@ export const getNewRatedDeck = async (user, player, format) => {
                 return newRatedDeck
             }
         } else {
-            user.send({ content: "Sorry, I only accept YDK Files or YDKe Codes."}).catch((err) => console.log(err))    
+            user.send({ content: "Sorry, I only accept **__YDK files__** or **__YDKe codes__**."}).catch((err) => console.log(err))    
             return false  
         }
     }).catch((err) => {

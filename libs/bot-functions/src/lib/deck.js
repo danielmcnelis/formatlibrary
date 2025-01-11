@@ -159,7 +159,7 @@ export const getIssues = async (deckArr, format) => {
 //CHECK DECK LIST
 export const checkDeckList = async (member, format) => {  
     const filter = m => m.author.id === member.user.id
-    const message = await member.send({ content: `Please provide a **__YDK File__** for the ${format.name} Format ${format.emoji} deck you would like to check.`}).catch((err) => console.log(err))
+    const message = await member.send({ content: `Please either upload a **__YDK file__** or copy and paste a **__YDKe code__** for the ${format.name} Format ${format.emoji} deck you would like to check.`}).catch((err) => console.log(err))
     if (!message || !message.channel) return {}
     return await message.channel.awaitMessages({
         filter,
@@ -213,7 +213,7 @@ export const checkDeckList = async (member, format) => {
                 return await member.send({ content: `Congrats, your ${format.name} Format deck is perfectly legal! ${format.emoji}`}).catch((err) => console.log(err))
             }
         } else {
-            member.send({ content: "Sorry, I only accept YDK Files."}).catch((err) => console.log(err))    
+            member.send({ content: "Sorry, I only accept **__YDK files__** or **__YDKe codes__**."}).catch((err) => console.log(err))    
             return false  
         }
     }).catch(err => {
@@ -226,7 +226,7 @@ export const checkDeckList = async (member, format) => {
 //CHECK SPEED DECK LIST
 export const checkSpeedDeckList = async (member, format, skillCard) => {  
     const filter = m => m.author.id === member.user.id
-    const message = await member.send({ content: `Please provide a **__YDK File__** for the ${format.name} Format ${format.emoji} deck you would like to check.`}).catch((err) => console.log(err))
+    const message = await member.send({ content: `Please either upload a **__YDK file__** or copy and paste a **__YDKe code__** for the ${format.name} Format ${format.emoji} deck you would like to check.`}).catch((err) => console.log(err))
     if (!message || !message.channel) return {}
     return await message.channel.awaitMessages({
         filter,
@@ -278,7 +278,7 @@ export const checkSpeedDeckList = async (member, format, skillCard) => {
                 return await member.send({ content: `Congrats, your ${format.name} Format deck is perfectly legal! ${format.emoji}`}).catch((err) => console.log(err))
             }
         } else {
-            member.send({ content: "Sorry, I only accept YDK Files."}).catch((err) => console.log(err))    
+            member.send({ content: "Sorry, I only accept **__YDK files__** or **__YDKe codes__**."}).catch((err) => console.log(err))    
             return false  
         }
     }).catch(err => {
