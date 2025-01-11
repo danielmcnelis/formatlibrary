@@ -705,7 +705,7 @@ export const recalculateFormatStats = async (format) => {
             const loserId = match.loserId
             const winnerStats = allStats.find((s) => s.playerId === winnerId)
             const loserStats = allStats.find((s) => s.playerId === loserId)
-            
+
             if (!winnerStats) {
                 const stats = await Stats.create({
                     playerName: match.winnerName,
@@ -741,7 +741,7 @@ export const recalculateFormatStats = async (format) => {
             const [winnerDelta, loserDelta, classicDelta] = await updateGeneralStats(winnerStats, loserStats)
             await match.update({ winnerDelta, loserDelta, classicDelta })
             if (match.isSeasonal && format.seasonResetDate < match.createdAt) await updateSeasonalStats(winnerStats, loserStats)
-            console.log(`${format.name} Match ${j+1}: ${winnerStats.playerName} > ${loserStats.playerName}`)
+            console.log(`${format.name} Match ${i+1}: ${winnerStats.playerName} > ${loserStats.playerName}`)
         } catch (err) {
             console.log(err)
         }
