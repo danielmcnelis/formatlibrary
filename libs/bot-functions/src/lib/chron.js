@@ -701,27 +701,42 @@ export const recalculateFormatStats = async (format) => {
                 nextDate = getNextDateAtMidnight(currentDate)
             }
 
-            const winnerStats = [...await Stats.findOrCreate({
-                where: {
+            const winnerId = match.winnerId
+            const loserId = match.loserId
+            const winnerStats = allStats.find((s) => s.playerId === winnerId)
+            const loserStats = allStats.find((s) => s.playerId === loserId)
+            
+            if (!winnerStats) {
+                const stats = await Stats.create({
                     playerName: match.winnerName,
-                    playerId: match.winnerId,
+                    playerId: winnerId,
                     formatName: format.name,
                     formatId: format.id,
                     serverId: '414551319031054346',
                     isInternal: false
-                }
-            })][0]
+                })
 
-            const loserStats = [...await Stats.findOrCreate({
-                where: {
+                console.log('created new winner stats', winnerId)
+                allStats.push(stats)
+                j--
+                continue
+            }
+
+            if (!loserStats) {
+                const stats = await Stats.create({
                     playerName: match.loserName,
-                    playerId: match.loserId,
+                    playerId: loserId,
                     formatName: format.name,
                     formatId: format.id,
                     serverId: '414551319031054346',
                     isInternal: false
-                }
-            })][0]
+                })
+
+                console.log('created new loser stats:', loserId)
+                allStats.push(stats)
+                j--
+                continue
+            }
 
             const [winnerDelta, loserDelta, classicDelta] = await updateGeneralStats(winnerStats, loserStats)
             await match.update({ winnerDelta, loserDelta, classicDelta })
