@@ -218,15 +218,15 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
             order: [['createdAt', 'DESC']]
         })             
 
-        if (cutoff < mostRecentMatch?.createdAt) {   
+        if (mostRecentMatch && cutoff < mostRecentMatch?.createdAt) {   
             console.log(`<!> ${player.name} and ${potentialPair.playerName} are RECENT opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Look for another opponent <!>`)
             continue
         } else if (potentialPair.updatedAt < twoMinutesAgo) {
-            console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Getting confirmation from ${potentialPair.playerName} <!>`)
+            console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. ${mostRecentMatch ? `Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}`: `They have never played`}. Getting confirmation from ${potentialPair.playerName} <!>`)
             getRatedConfirmation(client, potentialPair.player, player, format)
             continue
         } else {
-            console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Creating New Pairing <!>`)
+            console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. ${mostRecentMatch ? `Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}`: `They have never played`}. Creating New Pairing <!>`)
             const server = await Server.findOne({ where: { id: '414551319031054346' }})
             const channelId = format.channelId
             const guild = client.guilds.cache.get('414551319031054346')
