@@ -131,7 +131,9 @@ export default {
             if (player.isHidden) return await interaction.reply(`You are not allowed is not allowed to play in the Format Library rated system.`)
             
             interaction.reply('🥸')
-            return getRatedInformation(interaction, player)
+
+            const formatId = interaction.options.getString('format')
+            return getRatedInformation(interaction, player, formatId)
         } catch (err) {
             console.log(err)
         }
