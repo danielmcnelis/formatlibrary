@@ -10,10 +10,11 @@ export const BanListCreator = () => {
     const [previousBanlist, setPreviousBanlist] = useState(null)
     const [category, setCategory] = useState('TCG')
     const [changes, setChanges] = useState([])
+    console.log('changes', changes)
     const [banlists, setBanlists] = useState([])
     const [card, setCard] = useState(null)
     const [previous, setPreviousStatus] = useState(null)
-    const [restriction, setNewStatus] = useState(null)
+    const [restriction, setRestriction] = useState(null)
     const [cards, setCards] = useState([])
 
     let currentYear = new Date().getFullYear()
@@ -33,11 +34,11 @@ export const BanListCreator = () => {
         setBanlists([])  
         setCard(null)  
         setPreviousStatus(null)  
-        setNewStatus(null) 
+        setRestriction(null) 
         setCards([])   
 
         document.getElementById('card').value = ""
-        document.getElementById('new-status').value = ""
+        document.getElementById('restriction').value = ""
         document.getElementById('year').value = ""
         document.getElementById('month').value = ""
         document.getElementById('day').value = ""
@@ -92,12 +93,10 @@ export const BanListCreator = () => {
         }
 
         setChanges([...changes, change])
-        document.getElementById('card').value = ""
-        document.getElementById('new-status').value = ""
         setCard(null)
         setCards([])
         setPreviousStatus(null)
-        setNewStatus(null)
+        setRestriction(null)
     }
 
     // DELETE CHANGE
@@ -231,9 +230,9 @@ export const BanListCreator = () => {
                         
                         <td>
                             <select
-                                id="new-status"
+                                id="restriction"
                                 defaultValue=""
-                                onChange={(e) => setNewStatus(e.target.value || null)}
+                                onChange={(e) => setRestriction(e.target.value || null)}
                             >
                                 <option value=""></option>
                                 <option value="forbidden">Forbidden</option>

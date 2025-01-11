@@ -165,7 +165,7 @@ export const banlistsSimpleDate = async (req, res, next) => {
 
 export const banlistsCreate = async (req, res, next) => {
   try {
-    console.log(req.body)
+    console.log('req.body', req.body)
     const {month, day, year, changes, category} = req.body
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     const banlist = `${months[(Number(month)-1)]} ${year}`

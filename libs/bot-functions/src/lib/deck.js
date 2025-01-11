@@ -167,8 +167,18 @@ export const checkDeckList = async (member, format) => {
         time: 30000
     }).then(async collected => {
         const url = collected.first()?.attachments?.first()?.url
+        const ydke = collected.first()?.content
+        let ydk
+
         if (url) {
-            const {data: ydk} = await axios.get(url)
+            const {data} = await axios.get(url)
+            ydk = data
+        } else {
+            const {data} = await axios.put(`https://formatlibrary.com/api/decks/convert-ydke-to-ydk`, { ydke: ydke })
+            ydk = data                
+        }
+
+        if (ydk) {
             const main = ydk.split('#main')[1].split('#extra')[0].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
             const extra = ydk.split('#extra')[1].split('!side')[0].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
             const side = ydk.split('!side')[1].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)    

@@ -80,6 +80,39 @@ export default {
                     )
 
                 return await interaction.editReply({ content: `Do you wish to create a top cut for this tournament?`, components: [row] })
+            } else if (!tournament.isRanked || tournament.isInternal) {
+                const entries = await Entry.findAll({ where: { tournamentId: tournament.id }, include: Player })
+                for (let i = 0; i < entries.length; i++) {
+                    try {
+                        const entry = entries[i]
+                        const playerName = entry.playerName
+                        const playerId = entry.playerId
+                        const discordId = entry.player.discordId	
+                        console.log(`Deleting ${entry.playerName}'s entry for ${event.name}.`)
+                        await entry.destroy()
+    
+                        const count = await Entry.count({ 
+                            where: {
+                                playerId: playerId,
+                                isActive: true,
+                                '$tournament.serverId$': server.id
+                            },
+                            include: Tournament,
+                        })
+    
+                        if (!count) {
+                            const member = await interaction.guild?.members.fetch(discordId)
+                            if (!member) continue
+                            console.log(`Removing ${playerName}'s tournament role on ${server.name}.`)
+                            member.roles.remove(server.tournamentRoleId)
+                        }
+                    } catch (err) {
+                        console.log(err)
+                    }
+                }
+    
+                await tournament.update({ state: 'complete' })
+                return await interaction.editReply({ content: `Congrats! The results of ${tournament.name} ${tournament.logo} have been finalized. Since this was either an unranked or internal tournament, there will be no FormatLibrary.com coverage.`})
             } else if (!tournament.isTopCutTournament) {
                 // If tournament is not a top cut tournament, find or create an event
                 let event = await Event.findOne({ where: { primaryTournamentId: tournament.id }})
