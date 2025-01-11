@@ -142,7 +142,6 @@ export default {
                 return await interaction.editReply(`Hmm... I could not find a format called "${formatName}".`)
             } else {
                 await interaction.editReply(`So, you want to play ${format.name} Format. ${format.emoji}`)
-                await interaction.channel.send(`🥸`)
                 return getRatedInformation(interaction, player, format)
             }
         } catch (err) {
