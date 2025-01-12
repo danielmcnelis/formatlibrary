@@ -700,9 +700,9 @@ export const recalculateFormatStats = async (format) => {
         try {
             const match = allMatches[i]
             if (match.createdAt > nextDate) {
-                await applyGeneralDecay(format.id, format.name, currentDate, match.createdAt)
-                currentDate = match.createdAt
-                nextDate = getNextDateAtMidnight(currentDate)
+                await applyGeneralDecay(format.id, format.name,  currentMonth || currentDate, match.createdAt)
+                currentMonth = nextMonth
+                nextMonth = getStartOfNextMonthAtMidnight(currentMonth)
             }
 
             if (match.createdAt > nextSunday) {
@@ -835,7 +835,8 @@ export const applyGeneralDecay = async (formatId, formatName, currentDate, nextD
         attributes: ['winnerId', 'loserId', 'formatId', 'createdAt']
     })
 
-    let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriod.length) / 20000)
+    const days = Math.floor((nextDate.getTime() - currentDate.getTime()) / 1000 * 60 * 60 * 24)
+    let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriod.length) / (days * 20000))
     if (generalDecayRate < 0.9995) generalDecayRate = 0.9995
 
     const generalActivePlayerIds = []
@@ -850,14 +851,33 @@ export const applyGeneralDecay = async (formatId, formatName, currentDate, nextD
         }
     }
 
+    const generalGamesPlayed = {}
+    for (let i = 0; i < generalMatchesInPeriod.length; i++) {
+        const match = generalMatchesInPeriod[i]
+
+        if (generalGamesPlayed[match.winnerId]) {
+            generalGamesPlayed[match.winnerId] = generalGamesPlayed[match.winnerId] + 1
+        } else {
+            generalGamesPlayed[match.winnerId] = 1
+        }
+
+        if (generalGamesPlayed[match.loserId]) {
+            generalGamesPlayed[match.loserId] = generalGamesPlayed[match.loserId] + 1
+        } else {
+            generalGamesPlayed[match.loserId] = 1
+        }
+    }
+
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
-        const activeInPeriod = generalActivePlayerIds.includes(stats.playerId)
-        // console.log(`${stats.playerName} was ${!!activeInPeriod ? 'active' : 'inactive'} between ${currentDate.toDateString()} and ${nextDate.toDateString()}`)
+        const n = generalGamesPlayed[stats.playerId] || 0
+        const shields = n > days ? days : n
 
-        if (stats.elo > 500 && !activeInPeriod) {
-            stats.elo = stats.elo * generalDecayRate
-            if (stats.elo < 500) stats.elo = 500
+        if (
+            stats.elo > 500
+        ) {
+            stats.elo = stats.seasonalElo * Math.pow(generalDecayRate, days - shields)
+            if (stats.seasonalElo < 500) stats.seasonalElo = 500
             await stats.save()
         }
     }
@@ -920,10 +940,9 @@ export const applySeasonalDecay = async (formatId, formatName, currentDate, next
         const shields = n > days ? days : n
 
         if (
-            stats.seasonalElo > 500 &&
-            !activeSeasonalPlayerIds.includes(stats.playerId) 
+            stats.seasonalElo > 500
         ) {
-            stats.seasonalElo = stats.seasonalElo * Math.pow(seasonalDecayRate, 7 - shields)
+            stats.seasonalElo = stats.seasonalElo * Math.pow(seasonalDecayRate, days - shields)
             if (stats.seasonalElo < 500) stats.seasonalElo = 500
             await stats.save()
         }
