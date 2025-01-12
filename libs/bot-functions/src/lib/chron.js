@@ -699,14 +699,14 @@ export const recalculateFormatStats = async (format) => {
     for (let i = 0; i < allMatches.length; i++) {
         try {
             const match = allMatches[i]
-            if (match.createdAt > nextDate) {
-                await applyGeneralDecay(format.id, format.name,  currentMonth || currentDate, match.createdAt)
+            if (match.createdAt > nextMonth) {
+                await applyGeneralDecay(format.id, format.name,  currentMonth || currentDate, nextMonth)
                 currentMonth = nextMonth
                 nextMonth = getStartOfNextMonthAtMidnight(currentMonth)
             }
 
             if (match.createdAt > nextSunday) {
-                await applySeasonalDecay(format.id, format.name, currentSunday || currentDate, match.createdAt)
+                await applySeasonalDecay(format.id, format.name, currentSunday || currentDate, nextSunday)
                 currentSunday = nextSunday
                 nextSunday = getNextSundayAtMidnight(currentSunday)
             }
