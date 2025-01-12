@@ -876,8 +876,8 @@ export const applyGeneralDecay = async (formatId, formatName, currentDate, nextD
         if (
             stats.elo > 500
         ) {
-            stats.elo = stats.seasonalElo * Math.pow(generalDecayRate, days - shields)
-            if (stats.seasonalElo < 500) stats.seasonalElo = 500
+            stats.elo = stats.elo * Math.pow(generalDecayRate, days - shields)
+            if (stats.elo < 500) stats.elo = 500
             await stats.save()
         }
     }
