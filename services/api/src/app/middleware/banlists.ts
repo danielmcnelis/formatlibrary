@@ -179,7 +179,7 @@ export const banlistsCreate = async (req, res, next) => {
           cardName: change.name,
           cardId: card.id,
           restriction: change.restriction,
-          previous: change.previous,
+          previous: change.previous || 'unlimited',
           date: `${year}-${month}-${day}`,
           banlist: banlist,
           category: category

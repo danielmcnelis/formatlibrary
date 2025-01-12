@@ -12,9 +12,10 @@ export const BanListCreator = () => {
     const [changes, setChanges] = useState([])
     const [banlists, setBanlists] = useState([])
     const [card, setCard] = useState(null)
-    const [previous, setPreviousStatus] = useState(null)
+    const [previous, setPrevious] = useState(null)
     const [restriction, setRestriction] = useState(null)
     const [cards, setCards] = useState([])
+    console.log('changes', changes)
 
     let currentYear = new Date().getFullYear()
     const years = []
@@ -32,12 +33,13 @@ export const BanListCreator = () => {
         setChanges([])  
         setBanlists([])  
         setCard(null)  
-        setPreviousStatus(null)  
+        setPrevious(null)  
         setRestriction(null) 
         setCards([])   
 
         document.getElementById('card').value = ""
         document.getElementById('restriction').value = ""
+        document.getElementById('previous-status').value = ""
         document.getElementById('year').value = ""
         document.getElementById('month').value = ""
         document.getElementById('day').value = ""
@@ -80,7 +82,7 @@ export const BanListCreator = () => {
             }
         })
 
-        if (data) setPreviousStatus(data.restriction)
+        if (data) setPrevious(data.restriction)
     }
 
     // ADD CHANGE
@@ -94,8 +96,11 @@ export const BanListCreator = () => {
         setChanges([...changes, change])
         setCard(null)
         setCards([])
-        setPreviousStatus(null)
+        setPrevious(null)
         setRestriction(null)
+        document.getElementById('card').value = ""
+        document.getElementById('restriction').value = ""
+        document.getElementById('previous-status').value = ""
     }
 
     // DELETE CHANGE
@@ -225,7 +230,7 @@ export const BanListCreator = () => {
                             </select>
                         </td>
                         
-                        <td className="align-top">{previous ? capitalize(previous) : 'N/A'}</td>
+                        <td id="previous-status" className="align-top">{previous ? capitalize(previous) : 'N/A'}</td>
                         
                         <td>
                             <select
