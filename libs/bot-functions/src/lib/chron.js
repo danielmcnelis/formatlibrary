@@ -842,6 +842,8 @@ export const applyGeneralDecay = async (formatId, formatName, currentDate, nextD
     })
 
     const days = Math.floor((nextDate.getTime() - currentDate.getTime()) / 1000 * 60 * 60 * 24)
+    console.log('days', days)
+    console.log('generalMatchesInPeriod.length', generalMatchesInPeriod.length)
     let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriod.length) / (days * 20000))
     if (generalDecayRate < 0.9995) generalDecayRate = 0.9995
 
@@ -878,6 +880,7 @@ export const applyGeneralDecay = async (formatId, formatName, currentDate, nextD
         const stats = allStats[i]
         const n = generalGamesPlayed[stats.playerId] || 0
         const shields = n > days ? days : n
+        console.log(`${stats.playerName}'s shields:`, shields, 'out of', days)
 
         if (
             stats.elo > 500
