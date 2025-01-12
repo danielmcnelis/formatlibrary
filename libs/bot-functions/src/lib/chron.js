@@ -638,7 +638,7 @@ export const recalculateFormatStats = async (format) => {
     let currentSunday
     let currentMonth
     // let nextDate = getNextDateAtMidnight(currentDate)
-    let nextSunday = getNextSundayAtMidnight(firstDayOfSeason)
+    let nextSunday = firstDayOfSeason ? getNextSundayAtMidnight(firstDayOfSeason) : null
     let nextMonth = getStartOfNextMonthAtMidnight(currentDate)
 
     const attributes = format.useSeasonalElo ? [
