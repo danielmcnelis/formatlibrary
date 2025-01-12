@@ -634,10 +634,11 @@ export const recalculateFormatStats = async (format) => {
 
     if (!allMatches.length) return console.log(`No matches for ${format.name}.`)
     let currentDate = allMatches[0].createdAt
+    let firstDayOfSeason = format.seasonResetDate
     let currentSunday
     let currentMonth
-    let nextDate = getNextDateAtMidnight(currentDate)
-    let nextSunday = getNextSundayAtMidnight(currentDate)
+    // let nextDate = getNextDateAtMidnight(currentDate)
+    let nextSunday = getNextSundayAtMidnight(firstDayOfSeason)
     let nextMonth = getStartOfNextMonthAtMidnight(currentDate)
 
     const attributes = format.useSeasonalElo ? [
@@ -699,14 +700,19 @@ export const recalculateFormatStats = async (format) => {
     for (let i = 0; i < allMatches.length; i++) {
         try {
             const match = allMatches[i]
-            if (match.createdAt > nextMonth) {
+            // if (!firstSeasonalDate && match.isSeasonal) {
+            //     firstSeasonalDate = match.createdAt
+            //     firstSunday = getNextSundayAtMidnight(format.seasonResetDate)
+            // }
+            
+            if (nextMonth < match.createdAt) {
                 await applyGeneralDecay(format.id, format.name,  currentMonth || currentDate, nextMonth)
                 currentMonth = nextMonth
                 nextMonth = getStartOfNextMonthAtMidnight(currentMonth)
             }
 
-            if (match.createdAt > nextSunday) {
-                await applySeasonalDecay(format.id, format.name, currentSunday || currentDate, nextSunday)
+            if (match.isSeasonal && format.useSeasonalElo && nextSunday < match.createdAt) {
+                await applySeasonalDecay(format.id, format.name, currentSunday || firstDayOfSeason, nextSunday)
                 currentSunday = nextSunday
                 nextSunday = getNextSundayAtMidnight(currentSunday)
             }
