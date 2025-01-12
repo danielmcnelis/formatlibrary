@@ -2,11 +2,12 @@
 import { useState } from 'react'
 import { styled, alpha } from '@mui/system'
 import {Slider, sliderClasses } from '@mui/base/Slider'
+
 import './Slider.css'
 
 const StyledSlider = styled(Slider)(
   ({ theme }) => `
-  color: '#FC7A0E'
+    color: '#FC7A0E';
   height: 6px;
   width: 100%;
   padding: 16px 0;
@@ -23,9 +24,10 @@ const StyledSlider = styled(Slider)(
   &.${sliderClasses.disabled} { 
     pointer-events: none;
     cursor: default;
-    color: '#FC7A0E'
+    color: '#FC7A0E';
     opacity: 0.5;
   }
+
 
   & .${sliderClasses.rail} {
     display: block;
@@ -75,7 +77,7 @@ const StyledSlider = styled(Slider)(
   
   & .${sliderClasses.valueLabel} {
     font-size: 14px;
-    display: block;
+    display: block !important;
     position: relative;
     top: -1.6em;
     text-align: center;
@@ -89,6 +91,7 @@ function valuetext(value) {
 }
 
 export const ModdedSlider = (props) => {
+    console.log('props', props)
     const [sliders, setSliders] = useState([])
     const display = props.disabled ? 'on' : 'auto'
   

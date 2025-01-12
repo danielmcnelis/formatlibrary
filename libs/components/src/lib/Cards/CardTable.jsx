@@ -12,6 +12,7 @@ import { capitalize } from '@fl/utils'
 import { useMediaQuery } from 'react-responsive'
 import { useLocation } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
+// import { Slider, RangeSlider } from 'rsuite';
 import './CardTable.css' 
 
 const now = new Date()
@@ -818,7 +819,7 @@ export const CardTable = () => {
                                         symbol="https://cdn.formatlibrary.com/images/emojis/calendar.png"
                                         label="Year"
                                         step={1}
-                                        min={2002}
+                                        min={queryParams?.region === 'ocg' ? 1999 : 2002}
                                         max={new Date().getFullYear()}
                                         disabled={!!format.date}
                                         sliders = {sliders}

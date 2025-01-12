@@ -19,6 +19,21 @@ export const getNextDateAtMidnight = (date) => {
     return nextDay
 }
 
+// GET NEXT SUNDAY AT MIDNIGHT
+export const getNextSundayAtMidnight = (currentDate) => {
+    const remainingDays = 7 - currentDate.getDay()
+    const nextSunday = new Date(currentDate)
+    nextSunday.setDate(currentDate.getDate() + remainingDays)
+    nextSunday.setHours(0, 0, 0, 0)
+    return nextSunday
+}
+
+// GET START OF NEXT MONTH AT MIDNIGHT
+export const getStartOfNextMonthAtMidnight = (currentDate) => {
+    const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1); 
+    return nextMonth
+}
+
 // GET FIFTEENTH OF NEXT MONTH
 export const getFifteenthOfNextMonth = (date = new Date()) => {
     const nextMonth = new Date(date)
