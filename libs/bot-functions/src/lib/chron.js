@@ -841,7 +841,7 @@ export const applyGeneralDecay = async (formatId, formatName, currentDate, nextD
         attributes: ['winnerId', 'loserId', 'formatId', 'createdAt']
     })
 
-    const days = Math.floor((nextDate.getTime() - currentDate.getTime()) / 1000 * 60 * 60 * 24)
+    const days = Math.floor((nextDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24))
     console.log('days', days)
     console.log('generalMatchesInPeriod.length', generalMatchesInPeriod.length)
     let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriod.length) / (days * 20000))
