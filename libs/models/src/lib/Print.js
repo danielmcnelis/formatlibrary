@@ -43,5 +43,11 @@ export const Print = db.define('prints', {
   },
   tcgPlayerUrl: {
     type: Sequelize.TEXT
+  },
+  legalOnRelease: {
+    type: Sequelize.BOOLEAN
+  },
+  legalDate: {
+    type: Sequelize.STRING
   }
 })
