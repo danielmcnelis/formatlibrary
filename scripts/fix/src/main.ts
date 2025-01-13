@@ -2285,12 +2285,13 @@ const shuffleArray = (arr) => {
                 setId: {[Op.not]: null},
                 cardId: {[Op.not]: null}
             },
-            include: [Set, Card]
+            include: Set
         })
     
         for (let i = 0; i < prints.length;i++) {
             try {
                 const print = prints[i]
+                console.log('print.setId', print.setId)
                 const legalOnRelease = !!print.set?.legalDate
                 const legalDate = print.set?.legalDate
                 await print.update({ legalOnRelease, legalDate })
