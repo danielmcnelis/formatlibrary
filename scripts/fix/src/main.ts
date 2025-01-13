@@ -2344,37 +2344,72 @@ const shuffleArray = (arr) => {
 // })()
 
 
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+//     const formats = []
+//     const tournamentNames = []
+
+//     const tournaments = await Tournament.findAll({
+//         where: {
+//             isRanked: false
+//         }
+//     })
+
+//     for (let i = 0; i < tournaments.length; i++) {
+//         const tournament = tournaments[i]
+//         if (!formats.includes(tournament.formatName)) formats.push(tournament.formatName)
+//             tournamentNames.push(tournament.name)
+//         const matches = await Match.findAll({
+//             where: {
+//                 tournamentId: tournament.id
+//             }
+//         })
+
+//         for (let j = 0; j < matches.length; j++) {
+//             const match = matches[j]
+//             console.log(`destroying match ${match.id}: ${match.winnerName} > ${match.loserName} (${tournament.name})`)
+//             await match.destroy()
+//             b++
+//         }
+//     }
+
+//     console.log('formats', formats)
+//     console.log('tournamentNames', tournamentNames)
+//     return console.log(`destroyed ${b} matches from ${tournaments.length}, encountered ${e} errors`)
+// })()
+
 ;(async () => {
-    let b = 0
+    let d = 0
     let e = 0
-    const formats = []
-    const tournamentNames = []
+    const playerNames = []
 
-    const tournaments = await Tournament.findAll({
-        where: {
-            isRanked: false
-        }
-    })
+    const allStats = await Stats.findAll({ include: Player })
 
-    for (let i = 0; i < tournaments.length; i++) {
-        const tournament = tournaments[i]
-        if (!formats.includes(tournament.formatName)) formats.push(tournament.formatName)
-            tournamentNames.push(tournament.name)
-        const matches = await Match.findAll({
-            where: {
-                tournamentId: tournament.id
+    for (let i = 0; i < allStats.length; i++) {
+        try {
+            const stats = allStats[i]
+            if (!stats.playerName) await stats.update({playerName: stats.player.name})
+            const duplicates = await Stats.findAll({
+                where: {
+                    id: {[Op.not]: stats.id},
+                    playerId: stats.playerId,
+                    formatId: stats.formatId
+                }
+            })
+
+            if (duplicates.length) playerNames.push([stats.playerName, stats.formatName, duplicates.length])
+
+            for (let j = 0; j < duplicates.length; j++) {
+                await duplicates[j].destroy()
+                d++
             }
-        })
-
-        for (let j = 0; j < matches.length; j++) {
-            const match = matches[j]
-            console.log(`destroying match ${match.id}: ${match.winnerName} > ${match.loserName} (${tournament.name})`)
-            await match.destroy()
-            b++
+        } catch (err) {
+            console.log(err)
+            e++
         }
     }
 
-    console.log('formats', formats)
-    console.log('tournamentNames', tournamentNames)
-    return console.log(`destroyed ${b} matches from ${tournaments.length}, encountered ${e} errors`)
+    console.log('affected players:\n', playerNames.join('\n'))
+    return console.log(`destroyed ${d} duplicates, encountered ${e} errors`)
 })()
