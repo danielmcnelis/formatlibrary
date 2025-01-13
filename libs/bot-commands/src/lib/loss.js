@@ -118,7 +118,18 @@ export default {
             })
 
             const isSeasonal = pairing && format.useSeasonalElo && format.seasonResetDate < now
-            const isRated = (isTournament && tournament?.isRanked) || server.hasRatedPermission || server.hasInternalLadder || isSeasonal
+            let isRated 
+            
+            if (isTournament) {
+                if (tournament.isRated) {
+                    isRated = true
+                } else {
+                    isRated = false
+                }
+            } else if (server.hasRatedPermission || server.hasInternalLadder || isSeasonal) {
+                isRated = true
+            }
+             
 
             if (isRated) { 
                 const [winnerDelta, loserDelta, classicDelta] = await updateGeneralStats(winnerStats, loserStats)
