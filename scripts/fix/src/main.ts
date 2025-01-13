@@ -2329,6 +2329,7 @@ const shuffleArray = (arr) => {
                 a++
             } else if (firstLegalPrint.legalDate > card.tcgDate) {
                 console.log(`Type 2 Discrepancy: ${card.name}'s first legal print ${firstLegalPrint.cardCode} was legal on ${firstLegalPrint.legalDate}. The card is listed as tcgLegal on ${card.tcgDate}.`)
+                await card.update({ tcgDate: firstLegalPrint.legalDate })
                 b++
             // } else {
             //    console.log(`${card.name}'s first legal print ${firstLegalPrint.cardCode} matches its tcg legal date: ${card.tcgDate}`)
@@ -2339,5 +2340,5 @@ const shuffleArray = (arr) => {
         }
     }
 
-    return console.log(`found ${a} type 1 discrepancies and ${b} type 2 discrepancies, encountered ${e} errors`)
+    return console.log(`found ${a} type 1 discrepancies and updated ${b} type 2 discrepancies, encountered ${e} errors`)
 })()
