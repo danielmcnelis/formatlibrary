@@ -2291,9 +2291,8 @@ const shuffleArray = (arr) => {
         for (let i = 0; i < prints.length;i++) {
             try {
                 const print = prints[i]
-                console.log('print.setId', print.setId)
-                const legalOnRelease = !!print.set?.legalDate
-                const legalDate = print.set?.legalDate
+                const legalOnRelease = !!print['set'].legalDate
+                const legalDate = print['set'].legalDate
                 await print.update({ legalOnRelease, legalDate })
                 b++
             } catch (err) {
