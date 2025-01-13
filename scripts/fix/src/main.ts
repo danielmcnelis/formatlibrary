@@ -2368,6 +2368,7 @@ const shuffleArray = (arr) => {
 
         for (let j = 0; j < matches.length; j++) {
             const match = matches[j]
+            console.log(`destroying match ${match.id}: ${match.winnerName} > ${match.loserName} (${tournament.name})`)
             await match.destroy()
             b++
         }
