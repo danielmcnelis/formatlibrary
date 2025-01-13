@@ -700,10 +700,6 @@ export const recalculateFormatStats = async (format) => {
     for (let i = 0; i < allMatches.length; i++) {
         try {
             const match = allMatches[i]
-            // if (!firstSeasonalDate && match.isSeasonal) {
-            //     firstSeasonalDate = match.createdAt
-            //     firstSunday = getNextSundayAtMidnight(format.seasonResetDate)
-            // }
             
             if (nextMonth < match.createdAt) {
                 await applyGeneralDecay(format.id, format.name,  currentMonth || currentDate, nextMonth)
@@ -711,7 +707,7 @@ export const recalculateFormatStats = async (format) => {
                 nextMonth = getStartOfNextMonthAtMidnight(currentMonth)
             }
 
-            if (match.isSeasonal && format.useSeasonalElo && nextSunday < match.createdAt) {
+            if (match.isSeasonal && format.useSeasonalElo && format.seasonResetDate < match.createdAt && nextSunday < match.createdAt) {
                 await applySeasonalDecay(format.id, format.name, currentSunday || firstDayOfSeason, nextSunday)
                 currentSunday = nextSunday
                 nextSunday = getNextSundayAtMidnight(currentSunday)
