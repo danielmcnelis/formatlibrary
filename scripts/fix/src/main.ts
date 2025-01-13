@@ -2326,8 +2326,8 @@ const shuffleArray = (arr) => {
                 console.log(`Type 1 Discrepancy: ${card.name}'s first legal print ${firstLegalPrint.cardCode} was legal on ${firstLegalPrint.legalDate}. The card is listed as tcgLegal on ${card.tcgDate}.`)
             } else if (firstLegalPrint.legalDate > card.tcgDate) {
                 console.log(`Type 2 Discrepancy: ${card.name}'s first legal print ${firstLegalPrint.cardCode} was legal on ${firstLegalPrint.legalDate}. The card is listed as tcgLegal on ${card.tcgDate}.`)
-            } else {
-                console.log(`${card.name}'s first legal print ${firstLegalPrint.cardCode} matches its tcg legal date: ${card.tcgDate}`)
+            // } else {
+            //    console.log(`${card.name}'s first legal print ${firstLegalPrint.cardCode} matches its tcg legal date: ${card.tcgDate}`)
             }
         } catch (err) {
             console.log(err)
