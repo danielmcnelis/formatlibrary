@@ -5,6 +5,7 @@ import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { Match, Tournament, Server, TriviaQuestion } from '@fl/models'
 import axios from 'axios'
+import { recalculateAllStats } from '../../../bot-functions/src'
 // import { config } from '@fl/config'
 
 export default {
@@ -27,9 +28,9 @@ export default {
                 // await downloadNewCards(client)
                 // await updateMatchups()
                 // await purgeBetaCards(client)
-                return await downloadOriginalArtworks(client)
+                // return await downloadOriginalArtworks(client)
                 // return downloadMissingCardImages()
-                // return runNightlyTasks(client)
+                return recalculateAllStats()
                 // return runMonthlyTasks(client)
             } else {
                 await interaction.editReply('🧪')
