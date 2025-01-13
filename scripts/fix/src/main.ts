@@ -2280,14 +2280,18 @@ const shuffleArray = (arr) => {
     let e = 0
 
     const prints = await Print.findAll({
+        where: {
+            setId: {[Op.not]: null},
+            cardId: {[Op.not]: null}
+        },
         include: [Set, Card]
     })
 
     for (let i = 0; i < prints.length;i++) {
         try {
             const print = prints[i]
-            const legalOnRelease = !!print.set.legalDate
-            const legalDate = print.set.legalDate
+            const legalOnRelease = !!print.set?.legalDate
+            const legalDate = print.set?.legalDate
             await print.update({ legalOnRelease, legalDate })
             b++
         } catch (err) {
