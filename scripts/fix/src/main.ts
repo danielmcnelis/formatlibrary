@@ -2279,53 +2279,58 @@ const shuffleArray = (arr) => {
     let b = 0
     let e = 0
 
-    const prints = await Print.findAll({
-        where: {
-            setId: {[Op.not]: null},
-            cardId: {[Op.not]: null}
-        },
-        include: [Set, Card]
-    })
-
-    for (let i = 0; i < prints.length;i++) {
-        try {
-            const print = prints[i]
-            const legalOnRelease = !!print.set?.legalDate
-            const legalDate = print.set?.legalDate
-            await print.update({ legalOnRelease, legalDate })
-            b++
-        } catch (err) {
-            console.log(err)
-            e++
-            continue
-        }
-    }
-
-    const cards = await Card.findAll({
-        where: {
-            tcgLegal: true,
-            tcgDate: {[Op.not]: null}
-        }
-    })
-    
-    for (let i = 0; i < cards.length; i++) {
-        const card = cards[i]
+    try {
         const prints = await Print.findAll({
             where: {
-                cardId: card.id,
-                legalOnRelease: true
+                setId: {[Op.not]: null},
+                cardId: {[Op.not]: null}
             },
-            order: [['legalDate', 'ASC']]
+            include: [Set, Card]
+        })
+    
+        for (let i = 0; i < prints.length;i++) {
+            try {
+                const print = prints[i]
+                const legalOnRelease = !!print.set?.legalDate
+                const legalDate = print.set?.legalDate
+                await print.update({ legalOnRelease, legalDate })
+                b++
+            } catch (err) {
+                console.log(err)
+                e++
+                continue
+            }
+        }
+    
+        const cards = await Card.findAll({
+            where: {
+                tcgLegal: true,
+                tcgDate: {[Op.not]: null}
+            }
         })
         
-        const firstLegalPrint = prints[i]
-
-        if (firstLegalPrint.legalDate < card.tcgDate) {
-            console.log(`Type 1 Discrepancy: ${card.name}'s first legal print ${firstLegalPrint.cardCode} was legal on ${firstLegalPrint.legalDate}. The card is listed as tcgLegal on ${card.tcgDate}.`)
-        } else if (firstLegalPrint.legalDate > card.tcgDate) {
-            console.log(`Type 2 Discrepancy: ${card.name}'s first legal print ${firstLegalPrint.cardCode} was legal on ${firstLegalPrint.legalDate}. The card is listed as tcgLegal on ${card.tcgDate}.`)
+        for (let i = 0; i < cards.length; i++) {
+            const card = cards[i]
+            const prints = await Print.findAll({
+                where: {
+                    cardId: card.id,
+                    legalOnRelease: true
+                },
+                order: [['legalDate', 'ASC']]
+            })
+            
+            const firstLegalPrint = prints[i]
+    
+            if (firstLegalPrint.legalDate < card.tcgDate) {
+                console.log(`Type 1 Discrepancy: ${card.name}'s first legal print ${firstLegalPrint.cardCode} was legal on ${firstLegalPrint.legalDate}. The card is listed as tcgLegal on ${card.tcgDate}.`)
+            } else if (firstLegalPrint.legalDate > card.tcgDate) {
+                console.log(`Type 2 Discrepancy: ${card.name}'s first legal print ${firstLegalPrint.cardCode} was legal on ${firstLegalPrint.legalDate}. The card is listed as tcgLegal on ${card.tcgDate}.`)
+            }
         }
+    } catch (err) {
+        console.log(err)
     }
+
 
     return console.log(`updated ${b} prints, encountered ${e} errors`)
 })()
