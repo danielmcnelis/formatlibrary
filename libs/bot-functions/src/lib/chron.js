@@ -623,7 +623,7 @@ export const lookForAllPotentialPairs = async (client) => {
 
 // RECALCULATE FORMAT STATS
 export const recalculateFormatStats = async (format) => {
-    const count = await Match.count({ where: { formatName: format.name, serverId: '414551319031054346' }})
+    const count = await Match.count({ where: { formatName: format.name, serverId: '414551319031054346', isSeasonal: true }})
     console.log(`Recalculating data from ${count} ${format.name} ${format.emoji} matches. Please wait...`)
 
     const allMatches = await Match.findAll({ 
@@ -837,7 +837,7 @@ export const applyGeneralDecay = async (formatId, formatName, currentDate, nextD
         attributes: ['winnerId', 'loserId', 'formatId', 'createdAt']
     })
 
-    const days = Math.floor((nextDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24))
+    const days = Math.ceil((nextDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24))
     console.log('days', days)
     console.log('generalMatchesInPeriod.length', generalMatchesInPeriod.length)
     let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriod.length) / (days * 20000))
@@ -916,11 +916,11 @@ export const applySeasonalDecay = async (formatId, formatName, currentDate, next
         attributes: ['winnerId', 'loserId', 'formatId', 'createdAt']
     })
 
-    const days = Math.floor((nextDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24))
+    const days = Math.ceil((nextDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24))
     console.log('days', days)
     console.log('seasonalMatchesInPeriod.length', seasonalMatchesInPeriod.length)
     let seasonalDecayRate = Math.pow(Math.E, (-1 * seasonalMatchesInPeriod.length) / (days * 600))
-    if (seasonalDecayRate < 0.993) generalDecayRate = 0.993
+    if (seasonalDecayRate < 0.993) seasonalDecayRate = 0.993
 
     const seasonalGamesPlayed = {}
     for (let i = 0; i < seasonalMatchesInPeriod.length; i++) {
