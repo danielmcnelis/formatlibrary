@@ -2303,7 +2303,7 @@ const shuffleArray = (arr) => {
 
     const cards = await Card.findAll({
         where: {
-            tcgLegal: true,
+            isTcgLegal: true,
             tcgDate: {[Op.not]: null}
         }
     })
