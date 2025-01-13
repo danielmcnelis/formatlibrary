@@ -2133,29 +2133,29 @@ const shuffleArray = (arr) => {
 // })()
 
 
-;(async () => {
-    let b = 0
-    let e = 0
+// ;(async () => {
+//     let b = 0
+//     let e = 0
 
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    const statuses = await Status.findAll()
-    for (let i = 0; i < statuses.length;i++) {
-        try {
-            const status = statuses[i]
-            const [year, month] = status.banlist.split('-')
-            const banlist = `${months[month-1]} ${year}`
-            console.log(banlist)
-            await status.update({banlist})
-            b++
-        } catch (err) {
-            console.log(err)
-            e++
-            continue
-        }
-    }
+//     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+//     const statuses = await Status.findAll()
+//     for (let i = 0; i < statuses.length;i++) {
+//         try {
+//             const status = statuses[i]
+//             const [year, month] = status.banlist.split('-')
+//             const banlist = `${months[month-1]} ${year}`
+//             console.log(banlist)
+//             await status.update({banlist})
+//             b++
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//             continue
+//         }
+//     }
 
-    return console.log(`updated ${b} banlists, encountered ${e} errors`)
-})()
+//     return console.log(`updated ${b} banlists, encountered ${e} errors`)
+// })()
 
 
 // ;(async () => {
@@ -2273,3 +2273,55 @@ const shuffleArray = (arr) => {
 
 //     console.log(`created ${b} ocg formats, encountered ${e} errors`)
 // })()
+
+
+;(async () => {
+    let b = 0
+    let e = 0
+
+    const prints = await Print.findAll({
+        include: [Set, Card]
+    })
+
+    for (let i = 0; i < prints.length;i++) {
+        try {
+            const print = prints[i]
+            const legalOnRelease = !!print.set.legalDate
+            const legalDate = print.set.legalDate
+            await print.update({ legalOnRelease, legalDate })
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+            continue
+        }
+    }
+
+    const cards = await Card.findAll({
+        where: {
+            tcgLegal: true,
+            tcgDate: {[Op.not]: null}
+        }
+    })
+    
+    for (let i = 0; i < cards.length; i++) {
+        const card = cards[i]
+        const prints = await Print.findAll({
+            where: {
+                cardId: card.id,
+                legalOnRelease: true
+            },
+            order: [['legalDate', 'ASC']]
+        })
+        
+        const firstLegalPrint = prints[i]
+
+        if (firstLegalPrint.legalDate < card.tcgDate) {
+            console.log(`Type 1 Discrepancy: ${card.name}'s first legal print ${firstLegalPrint.cardCode} was legal on ${firstLegalPrint.legalDate}. The card is listed as tcgLegal on ${card.tcgDate}.`)
+        } else if (firstLegalPrint.legalDate > card.tcgDate) {
+            console.log(`Type 2 Discrepancy: ${card.name}'s first legal print ${firstLegalPrint.cardCode} was legal on ${firstLegalPrint.legalDate}. The card is listed as tcgLegal on ${card.tcgDate}.`)
+        }
+    }
+
+    return console.log(`updated ${b} prints, encountered ${e} errors`)
+})()
