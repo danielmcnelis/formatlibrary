@@ -1,4 +1,4 @@
-import { Artwork, Alius, Card, Cube, Deck, DeckType, DeckThumb, Entry, Event, Format, Match, Membership, Pairing, Player, Pool, Print, Replay, Ruling, Server, Stats, Status, Team, Tournament, BlogPost, Matchup } from '@fl/models'
+import { Artwork, Alius, Card, Cube, Deck, DeckType, DeckThumb, Entry, Event, Format, Match, Membership, Pairing, Player, Pool, Print, Replay, Ruling, Server, Set, Stats, Status, Team, Tournament, BlogPost, Matchup } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { config } from '@fl/config'
