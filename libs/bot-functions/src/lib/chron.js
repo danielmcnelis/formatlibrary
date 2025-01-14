@@ -731,7 +731,7 @@ export const recalculateFormatStats = async (format) => {
 
                 console.log('created new winner stats', winnerId)
                 allStats.push(stats)
-                j--
+                i--
                 continue
             }
 
@@ -747,7 +747,7 @@ export const recalculateFormatStats = async (format) => {
 
                 console.log('created new loser stats:', loserId)
                 allStats.push(stats)
-                j--
+                i--
                 continue
             }
 
