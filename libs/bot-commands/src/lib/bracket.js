@@ -23,7 +23,7 @@ export default {
                 results.push(`Name: ${tournament.name} ${tournament.logo}` +
                     `\nFormat: ${tournament.formatName} ${tournament.emoji}` + 
                     `\nBracket: <https://challonge.com/${tournament.url}>` +
-                    `\nType: ${capitalize(tournament.type, true)}${!tournament.isRanked ? ' (Unranked)' : ''}` +
+                    `\nType: ${capitalize(tournament.type, true)}${!tournament.isRated ? ' (Unranked)' : ''}` +
                     `${tournament.type === 'swiss' && tournament.state === 'underway' ? `\nDetails: ${tournament.rounds} Rounds - ${tournament.topCutSize ? `Top ${tournament.topCutSize}` : `No Playoff` }` : ''}` +
                     `\nStatus: ${capitalize(tournament.state, true)}`
                 )

@@ -602,7 +602,7 @@ export const joinTournament = async (interaction, tournamentId) => {
     const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
-    const data = await getDeckList(interaction.member, player, tournament.format || format, false, !tournament.isRanked)
+    const data = await getDeckList(interaction.member, player, tournament.format || format, false, !tournament.isRated)
     if (!data) return
 
     if (!entry && tournament.isTeamTournament && team) {
@@ -770,7 +770,7 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
     const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
-    const data = await getDeckList(interaction.member, player, tournament.format, true, !tournament.isRanked)
+    const data = await getDeckList(interaction.member, player, tournament.format, true, !tournament.isRated)
 
     if (!data) return
 
@@ -2483,7 +2483,7 @@ export const autoRegisterTopCut = async (server, tournament, topCutTournament, s
 }
 
 // CREATE TOURNAMENT
-export const createTournament = async (interaction, formatName, name, abbreviation, tournament_type, channelName, isRanked, isLive) => {
+export const createTournament = async (interaction, formatName, name, abbreviation, tournament_type, channelName, isRated, isLive) => {
     const server = await Server.findOne({ where: { id: interaction.guildId }})
     const format = await Format.findOne({
         where: {
@@ -2565,7 +2565,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 serverId: interaction.guildId,
                 communityName: server.communityName,
                 isLive: isLive,
-                isRanked: isRanked,
+                isRated: isRated,
                 pointsPerMatchWin: '1.0',
                 pointsPerMatchTie: '0.0',
                 pointsPerBye: '1.0',
@@ -2578,7 +2578,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 `You created a new tournament:` + 
                 `\nName: ${name} ${logo}` + 
                 `\nFormat: ${format.name} ${format.emoji}` + 
-                `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ? ' (Unranked)' : ''}` +
+                `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRated ? ' (Unranked)' : ''}` +
                 tournament_type === 'swiss' ? `\nTie Breakers: TB1: OWP, TB2: OOWP, TB3: N/A` : '' +
                 `\nBracket: https://challonge.com/${data.tournament.url}`
             })
@@ -2631,7 +2631,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     serverId: interaction.guildId,
                     communityName: server.communityName,
                     isLive: isLive,
-                    isRanked: isRanked,
+                    isRated: isRated,
                     pointsPerMatchWin: '1.0',
                     pointsPerMatchTie: '0.0',
                     pointsPerBye: '1.0',
@@ -2644,7 +2644,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     `You created a new tournament:` + 
                     `\nName: ${name} ${logo}` + 
                     `\nFormat: ${format.name} ${format.emoji}` + 
-                    `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ? ' (Unranked)' : ''}` +
+                    `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRated ? ' (Unranked)' : ''}` +
                     tournament_type === 'swiss' ? `\nTie Breakers: TB1: OWP, TB2: OOWP, TB3: N/A` : '' +
                     `\nBracket: https://challonge.com/${data.tournament.url}`
                 })
@@ -2657,7 +2657,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
 }
 
 // UPDATE TOURNAMENT
-export const updateTournament = async (interaction, tournamentId, name, tournament_type, url, isRanked, isLive) => {
+export const updateTournament = async (interaction, tournamentId, name, tournament_type, url, isRated, isLive) => {
     const server = await Server.findOne({ where: { id: interaction.guildId }})
     const tournament = await Tournament.findOne({
         where: {
@@ -2666,7 +2666,7 @@ export const updateTournament = async (interaction, tournamentId, name, tourname
     })
 
     if (interaction.fields.fields.get('ranked')) {
-        await tournament.update({ isRanked: isRanked })
+        await tournament.update({ isRated: isRated })
     } 
 
     if (interaction.fields.fields.get('duration')) {
@@ -2696,7 +2696,7 @@ export const updateTournament = async (interaction, tournamentId, name, tourname
             return await interaction.editReply({ content: 
                 `Updated tournament settings:` + 
                 `\nName: ${data.tournament.name} ${tournament.logo}` + 
-                `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRanked ? ' (Unranked)' : ''}` +
+                `\nType: ${tournament.isLive ? 'Live' : 'Multi-Day'}, ${capitalize(data.tournament.tournament_type, true)}${!tournament.isRated ? ' (Unranked)' : ''}` +
                 `\nBracket: https://challonge.com/${data.tournament.url}`
             })
         } else {

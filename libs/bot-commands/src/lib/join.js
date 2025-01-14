@@ -77,7 +77,7 @@ export default {
             if (!simName) return
 
             const data = format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
-                await getDeckList(interaction.member, player, format, false, !tournament.isRanked)
+                await getDeckList(interaction.member, player, format, false, !tournament.isRated)
 
             if (!data) return
 

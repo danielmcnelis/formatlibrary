@@ -80,7 +80,7 @@ export default {
                     )
 
                 return await interaction.editReply({ content: `Do you wish to create a top cut for this tournament?`, components: [row] })
-            } else if (!tournament.isRanked || tournament.isInternal) {
+            } else if (!tournament.isRated || tournament.isInternal) {
                 const entries = await Entry.findAll({ where: { tournamentId: tournament.id }, include: Player })
                 for (let i = 0; i < entries.length; i++) {
                     try {

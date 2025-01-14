@@ -33,7 +33,7 @@ export const Tournament = db.define('tournaments', {
     type: Sequelize.BOOLEAN,
     defaultValue: true
   },
-  isRanked: {
+  isRated: {
     type: Sequelize.BOOLEAN,
     defaultValue: true
   },

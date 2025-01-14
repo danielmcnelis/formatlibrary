@@ -131,9 +131,9 @@ export default {
             const isSeasonal = pairing && format.useSeasonalElo && format.seasonResetDate < now
             let isRated 
             
-            if (isTournament && tournament.isRanked) {
+            if (isTournament && tournament.isRated) {
                 isRated = true
-            } else if (isTournament && !tournament.isRanked) {
+            } else if (isTournament && !tournament.isRated) {
                 isRated = false
             } else if (server.hasRatedPermission || server.hasInternalLadder || isSeasonal) {
                 isRated = true
@@ -205,7 +205,7 @@ export default {
                 }
             }
 
-            if (isTournament && tournament.isRanked) {
+            if (isTournament && tournament.isRated) {
                 setTimeout(async () => {
                     const count = await Replay.count({
                         where: {

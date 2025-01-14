@@ -88,7 +88,7 @@ export default {
                 .setCustomId('ranked')
                 .setLabel('Ranked or Unranked? (R, U)')
                 .setStyle(TextInputStyle.Short)
-                .setPlaceholder(!tournament.isRanked ? 'unranked' : 'ranked')
+                .setPlaceholder(!tournament.isRated ? 'unranked' : 'ranked')
                 .setRequired(false)
             
             const nameRow = new ActionRowBuilder().addComponents(name)

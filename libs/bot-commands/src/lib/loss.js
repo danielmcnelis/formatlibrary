@@ -197,7 +197,7 @@ export default {
                 }
             }
 
-            if (isTournament && tournament.isRanked) {
+            if (isTournament && tournament.isRated) {
                 setTimeout(async () => {
                     const count = await Replay.count({
                         where: {

@@ -1840,7 +1840,7 @@ const shuffleArray = (arr) => {
 //     for (let i = 0; i < tournaments.length; i++) {
 //         try {
 //             const tournament = tournaments[i]
-//             await tournament.update({ isRanked: !tournament.isRanked})
+//             await tournament.update({ isRated: !tournament.isRated})
 //             b++
 //         } catch (err) {
 //             console.log('tournament error', err)
@@ -2352,7 +2352,7 @@ const shuffleArray = (arr) => {
 
 //     const tournaments = await Tournament.findAll({
 //         where: {
-//             isRanked: false
+//             isRated: false
 //         }
 //     })
 

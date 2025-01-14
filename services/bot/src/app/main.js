@@ -263,13 +263,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
             
             const decipherRankedInput = (input = '') => !input.toLowerCase()?.includes('u')
             const decipherDurationInput = (input = '') => !input.toLowerCase()?.includes('m')
-            const isRanked = interaction.fields.fields.get('ranked') ? decipherRankedInput(interaction.fields.getTextInputValue('ranked')) : true
+            const isRated = interaction.fields.fields.get('ranked') ? decipherRankedInput(interaction.fields.getTextInputValue('ranked')) : true
             const isLive = interaction.fields.fields.get('duration') ? decipherDurationInput(interaction.fields.getTextInputValue('duration')) : true
             
             const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
             const channelName = interaction.fields.fields.get('channelName') ? interaction.fields.getTextInputValue('channelName') : null
         
-            return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, isRanked, isLive)
+            return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, isRated, isLive)
         } else if (interaction.customId?.includes('settings')) {
             const name = capitalize(interaction.fields.getTextInputValue('name'))
 
@@ -291,14 +291,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const decipherRankedInput = (input = '') => !input.toLowerCase()?.includes('u')
             const decipherDurationInput = (input = '') => !input.toLowerCase()?.includes('m')
     
-            let tournament_type, isRanked, isLive
+            let tournament_type, isRated, isLive
 
             if (interaction.fields.fields.get('type')) {
                 tournament_type = decipherTournamentTypeInput(interaction.fields.getTextInputValue('type'))
             }
 
             if (interaction.fields.fields.get('ranked')) {
-                isRanked = decipherRankedInput(interaction.fields.getTextInputValue('ranked'))
+                isRated = decipherRankedInput(interaction.fields.getTextInputValue('ranked'))
             }
 
             if (interaction.fields.fields.get('duration')) {
@@ -308,7 +308,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const url = interaction.fields.getTextInputValue('url')
             const tournamentId = interaction.customId?.split('-')[1]
     
-            return updateTournament(interaction, tournamentId, name, tournament_type, url, isRanked, isLive)
+            return updateTournament(interaction, tournamentId, name, tournament_type, url, isRated, isLive)
         } else if (interaction.customId?.includes('tiebreakers')) {
             const decipherTieBreakerInput = (input = '') => {
                 input = input.toLowerCase()
