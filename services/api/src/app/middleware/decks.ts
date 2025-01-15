@@ -123,7 +123,7 @@ export const updateDeckLabels = async (req, res, next) => {
                 'rating'
             ],
             include: [
-                { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'videoEmbed', 'videoEmbed', 'videoPlaylistId'] },
+                { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'videoEmbed', 'videoPlaylistId'] },
                 { model: Player, as: 'builder', attributes: ['id', 'name', 'discordId', 'discordPfp'] }
             ]
         })
