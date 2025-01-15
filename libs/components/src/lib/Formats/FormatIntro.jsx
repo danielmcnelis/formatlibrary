@@ -21,6 +21,7 @@ export const FormatIntro = (props) => {
     const [inEditMode, setInEditMode] = useState(false)
     const { id } = useParams()
     const videoEmbed = format?.videoEmbed
+    console.log(`videoEmbed`, videoEmbed)
   
     // USE EFFECT
     useEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop), [inEditMode])
@@ -76,12 +77,6 @@ export const FormatIntro = (props) => {
                 <meta name="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
             </Helmet>
             <div className="body">
-                <div className="centered-content-flexbox">
-                {
-                    videoEmbed ? parse(videoEmbed) :
-                    <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
-                }
-                </div>
             <div className="format-icon-flexbox">
             <div className="format-text">
                 <h1>{format.name} Format</h1>
@@ -166,6 +161,11 @@ export const FormatIntro = (props) => {
                 </div>
             ) : ''
             }
+            <div className="centered-content-flexbox">
+            {
+                videoEmbed ? parse(videoEmbed) : null
+            }
+            </div>
             <PopularDecks id="popular-decks" formatName={format.name}/>
             <RecentEvents id="recent-events" formatName={format.name}/>
             <MiniBoard limit={10} format={format}/>
