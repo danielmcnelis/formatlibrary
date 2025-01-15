@@ -44,27 +44,44 @@ export default {
             if (losingPlayer.isHidden) return await interaction.reply(`You are not allowed to play in the Format Library rated system.`)
             if (winningPlayer.isHidden) return await interaction.reply(`That user is not allowed to play in the Format Library rated system.`)
             
-            const winnerStats = [...await Stats.findOrCreate({
+            let winnerStats = await Stats.findOne({
                 where: {
+                    playerId: winningPlayer.id, 
+                    formatId: format.id, 
+                    serverId: serverId, 
+                }
+            })
+
+            if (!winnerStats) {
+                winnerStats = await Stats.create({
                     playerName: winningPlayer.name, 
                     playerId: winningPlayer.id, 
                     formatName: format.name, 
                     formatId: format.id, 
                     serverId: serverId, 
                     isInternal: server.hasInternalLadder
-                }
-            })][0]
+                })
+            }
 
-            const loserStats = [...await Stats.findOrCreate({
+
+            let loserStats = await Stats.findOne({
                 where: {
+                    playerId: losingPlayer.id, 
+                    formatId: format.id, 
+                    serverId: serverId, 
+                }
+            })
+
+            if (!loserStats) {
+                loserStats = await Stats.create({
                     playerName: losingPlayer.name, 
                     playerId: losingPlayer.id, 
                     formatName: format.name, 
                     formatId: format.id, 
                     serverId: serverId, 
                     isInternal: server.hasInternalLadder
-                }
-            })][0]
+                })
+            }
 
             const activeTournament = await Tournament.count({ where: { state: 'underway', serverId: interaction.guildId, formatName: {[Op.or]: [format.name, 'Multiple']} }}) 
             let isTournament, winningEntry, losingEntry, tournament, match, challongeMatch
