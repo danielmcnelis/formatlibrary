@@ -11,7 +11,7 @@ export const FormatButton = (props) => {
     const period = month !== 'May' ? '.' : ''
     const year = format.banlist?.split(" ")[1]
     const description = format.category === 'OCG' ? 
-        `${(new Date(format.banlist).getMonth() + 1).toString().padStart(2, '0')}${format.banlist?.slice(-2)} Banlist` : 
+        `${format.banlist?.slice(-2)}${(new Date(format.banlist).getMonth() + 1).toString().padStart(2, '0')} Banlist` : 
         `${month}${period} ${year}`
   
     return (
