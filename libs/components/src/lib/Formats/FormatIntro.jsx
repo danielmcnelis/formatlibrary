@@ -144,6 +144,7 @@ export const FormatIntro = (props) => {
                 <li>
                 <a href={`/formats/${urlize(format.name)}#banlist`}>Ban List</a>
                 </li>
+                </div>
                 {
                     isContentManager ? (
                         !inEditMode ? (                        
@@ -154,7 +155,7 @@ export const FormatIntro = (props) => {
                         ) : (
                             <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} alt={format.icon}/>
                         )
-                    ) : null
+                    ) : ''
                 }
             </div>
             {
@@ -170,7 +171,7 @@ export const FormatIntro = (props) => {
             <div className="divider"/>
             <BanList id="banlist" format={format}/>
         </div>
-        </>
+    </>
 
     )
 }
