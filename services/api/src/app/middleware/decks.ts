@@ -413,7 +413,7 @@ export const decksGallery = async (req, res, next) => {
       where: {
         cleanName: { [Op.iLike]: req.params.format.replaceAll(' ', '_').replaceAll('-', '_') }
       },
-      attributes: ['id', 'name', 'icon', 'ideoEmbed', 'videoPlaylistId']
+      attributes: ['id', 'name', 'icon', 'videoEmbed', 'videoPlaylistId']
     })
 
     const decks = await Deck.findAll({
@@ -931,7 +931,7 @@ export const getDeckData = async (filter) => {
             'rating'
         ],
         include: [
-            { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'ideoEmbed', 'videoPlaylistId'] },
+            { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'videoEmbed', 'videoPlaylistId'] },
             { model: Player, as: 'builder', attributes: ['id', 'name', 'discordId', 'discordPfp'] }
         ]
     })

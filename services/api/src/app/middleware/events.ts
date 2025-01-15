@@ -11,7 +11,7 @@ export const eventsGallery = async (req, res, next) => {
         where: {
           name: { [Op.iLike]: req.params.format }
         },
-        attributes: ['id', 'name', 'icon', 'ideoEmbed', 'videoPlaylistId']
+        attributes: ['id', 'name', 'icon', 'videoEmbed', 'videoPlaylistId']
       })
   
       if (!format) return false
@@ -182,7 +182,7 @@ export const getEventById = async (req, res, next) => {
         { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp', 'pfp']},
         { model: Team, as: 'winningTeam', attributes: ['id', 'name', 'captainId', 'playerAId', 'playerBId', 'playerCId']},
         { model: Server, attributes: ['id', 'inviteLink'] },
-        { model: Format, attributes: ['id', 'name', 'icon', 'ideoEmbed', 'videoPlaylistId'] },
+        { model: Format, attributes: ['id', 'name', 'icon', 'videoEmbed', 'videoPlaylistId'] },
       ]
     })
     
@@ -361,7 +361,7 @@ export const getEventByIdAsSubscriber = async (req, res, next) => {
           { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp', 'pfp']},
           { model: Team, as: 'winningTeam', attributes: ['id', 'name', 'captainId', 'playerAId', 'playerBId', 'playerCId']},
           { model: Server, attributes: ['id', 'inviteLink'] },
-          { model: Format, attributes: ['id', 'name', 'icon', 'ideoEmbed', 'videoPlaylistId'] },
+          { model: Format, attributes: ['id', 'name', 'icon', 'videoEmbed', 'videoPlaylistId'] },
         ]
       })
       
