@@ -9,6 +9,7 @@ import { RecentEvents } from '../Events/RecentEvents'
 import { useParams } from 'react-router-dom'
 import { urlize } from '@fl/utils'
 import { Helmet } from 'react-helmet'
+import parse from 'html-react-parser';
 import './FormatIntro.css'
 
 export const FormatIntro = (props) => {
@@ -77,7 +78,7 @@ export const FormatIntro = (props) => {
             <div className="body">
                 <div className="centered-content-flexbox">
                 {
-                    videoEmbed ? videoEmbed :
+                    videoEmbed ? parse(videoEmbed) :
                     <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
                 }
                 </div>
