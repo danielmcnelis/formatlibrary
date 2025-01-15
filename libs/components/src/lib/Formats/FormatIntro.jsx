@@ -9,7 +9,7 @@ import { RecentEvents } from '../Events/RecentEvents'
 import { useParams } from 'react-router-dom'
 import { urlize } from '@fl/utils'
 import { Helmet } from 'react-helmet'
-import parse from 'html-react-parser';
+// import parse from 'html-react-parser';
 import './FormatIntro.css'
 
 export const FormatIntro = (props) => {
@@ -20,8 +20,10 @@ export const FormatIntro = (props) => {
     const [statsCount, setStatsCount] = useState(0)
     const [inEditMode, setInEditMode] = useState(false)
     const { id } = useParams()
-    const videoEmbed = format?.videoEmbed
-    console.log(`videoEmbed`, videoEmbed)
+    const videoId = format?.videoId
+    // const videoName = format?.videoName
+    console.log(`videoId`, videoId)
+    // console.log(`videoName`, videoName)
   
     // USE EFFECT
     useEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop), [inEditMode])
@@ -76,6 +78,7 @@ export const FormatIntro = (props) => {
                 <meta name="image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
                 <meta name="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
             </Helmet>
+
             <div className="body">
             <div className="format-icon-flexbox">
             <div className="format-text">
@@ -155,17 +158,25 @@ export const FormatIntro = (props) => {
                 }
             </div>
             {
-            format.description ? (
-                <div className="mobile-only">
-                <p className="format-desc">{format.description}</p>
-                </div>
-            ) : ''
+                format.description ? (
+                    <div className="mobile-only">
+                    <p className="format-desc">{format.description}</p>
+                    </div>
+                ) : ''
             }
-            <div className="centered-content-flexbox">
             {
-                videoEmbed ? parse(videoEmbed) : null
+                videoId ? (
+                    <div className="centered-content-flexbox">
+                        <div itemscope itemtype="http://schema.org/VideoObject" data-video-id={videoId} data-player-type="default" override-embed="default" class="adthrive-video-player in-post">
+                            <meta itemprop="uploadDate" content="2024-10-25T01:56:50+00:00" />
+                            <meta itemprop="name" content={`Guide to ${format.name} Format`} />
+                            <meta itemprop="description" content={`A Guide to ${format.name} Format Decks, Cards, History, and Metagame.`} />
+                            <meta itemprop="thumbnailUrl" content={`https://content.jwplatform.com/thumbs/${videoId}-720.jpg`}/>
+                            <meta itemprop="contentUrl" content={`https://content.jwplatform.com/videos/${videoId}.mp4`} />
+                        </div>
+                    </div>
+                ) : null
             }
-            </div>
             <PopularDecks id="popular-decks" formatName={format.name}/>
             <RecentEvents id="recent-events" formatName={format.name}/>
             <MiniBoard limit={10} format={format}/>

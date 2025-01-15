@@ -123,7 +123,7 @@ export const updateDeckLabels = async (req, res, next) => {
                 'rating'
             ],
             include: [
-                { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'videoEmbed', 'videoPlaylistId'] },
+                { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'videoName', 'videoId', 'videoPlaylistId'] },
                 { model: Player, as: 'builder', attributes: ['id', 'name', 'discordId', 'discordPfp'] }
             ]
         })
@@ -413,7 +413,7 @@ export const decksGallery = async (req, res, next) => {
       where: {
         cleanName: { [Op.iLike]: req.params.format.replaceAll(' ', '_').replaceAll('-', '_') }
       },
-      attributes: ['id', 'name', 'icon', 'videoEmbed', 'videoPlaylistId']
+      attributes: ['id', 'name', 'icon', 'videoName', 'videoId', 'videoPlaylistId']
     })
 
     const decks = await Deck.findAll({
@@ -931,7 +931,7 @@ export const getDeckData = async (filter) => {
             'rating'
         ],
         include: [
-            { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'videoEmbed', 'videoPlaylistId'] },
+            { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'videoName', 'videoId', 'videoPlaylistId'] },
             { model: Player, as: 'builder', attributes: ['id', 'name', 'discordId', 'discordPfp'] }
         ]
     })

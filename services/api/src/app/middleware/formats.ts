@@ -9,7 +9,7 @@ export const formatsName = async (req, res, next) => {
       },
       attributes: [
         'id', 'name', 'icon', 'date', 'banlist', 'category', 'eventName', 'description', 
-        'isPopular', 'isSpotlight', 'videoEmbed', 'videoPlaylistId', 'useSeasonalElo', 'seasonResetDate'
+        'isPopular', 'isSpotlight', 'videoName', 'videoId', 'videoPlaylistId', 'useSeasonalElo', 'seasonResetDate'
       ]
     })
 

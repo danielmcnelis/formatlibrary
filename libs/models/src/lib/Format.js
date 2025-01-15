@@ -31,6 +31,12 @@ export const Format = db.define('formats', {
   blurb: {
     type: Sequelize.TEXT
   },
+  videoId: {
+    type: Sequelize.STRING
+  },
+  videoName: {
+    type: Sequelize.STRING
+  },
   videoEmbed: {
     type: Sequelize.TEXT
   },
