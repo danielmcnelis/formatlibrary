@@ -18,6 +18,12 @@
     margin: 10px 0px 10px 30px;
   }
 
+  .centered-vertical-flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    }
+
   .format-text {
     width: 70%;
   }

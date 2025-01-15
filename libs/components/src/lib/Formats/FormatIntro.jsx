@@ -144,7 +144,7 @@ export const FormatIntro = (props) => {
                 {
                     isContentManager ? (
                         !inEditMode ? (                        
-                            <div className="centered-content-flexbox" style={{margin: '24px 0px'}}>
+                            <div className="centered-vertical-flex" style={{margin: '24px 0px'}}>
                                 <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} alt={format.icon}/>
                                 <div className="downloadButton" style={{width: '150px'}} onClick={()=> setInEditMode(true)}>Edit Mode</div>
                             </div>
