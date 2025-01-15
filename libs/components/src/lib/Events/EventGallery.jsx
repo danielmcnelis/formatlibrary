@@ -11,7 +11,7 @@ export const EventGallery = () => {
     const [winners, setWinners] = useState([])
     const [format, setFormat] = useState({})
     const { id } = useParams()
-    const videoPlaylistId = format?.videoPlaylistId
+    // const videoPlaylistId = format?.videoPlaylistId
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0))
@@ -43,7 +43,7 @@ export const EventGallery = () => {
                 <meta name="og:description" content={`A complete list of recent and historic ${format?.name} Format Yu-Gi-Oh! tournaments, both online and in-person. Includes detailed tournament coverage.`}/>
             </Helmet>
             {
-                videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
+                // videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
                 <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             }
             <div className="body">

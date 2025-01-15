@@ -10,7 +10,7 @@ export const DeckGallery = () => {
     const [deckTypes, setDeckTypes] = useState([])
     const [format, setFormat] = useState({})
     const { id } = useParams()
-    const videoPlaylistId = format?.videoPlaylistId
+    // const videoEmbed = format?.videoEmbed
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0))
@@ -40,11 +40,11 @@ export const DeckGallery = () => {
                 <meta name="description" content={`A complete list of Yu-Gi-Oh! decks played in ${format?.name} Format. Includes example decklists and breakdowns of card choices, popularity, and performance.`}/>
                 <meta name="og:description" content={`A complete list of Yu-Gi-Oh! decks played in ${format?.name} Format. Includes example decklists and breakdowns of card choices, popularity, and performance.`}/>
             </Helmet>
-            {
-                videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
-                <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
-            }
             <div className="body">
+                {
+                    // videoEmbed ? videoEmbed :
+                    <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+                }
                 <div id="popular-decks" className="popular-decks">
                     <div className="subcategory-title-flexbox">
                         <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>

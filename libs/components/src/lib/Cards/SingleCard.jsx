@@ -26,7 +26,7 @@ export const SingleCard = (props) => {
     })
     const { card, statuses, prints, rulings } = data || {}
     const { id } = useParams()
-    const videoPlaylistId = getEraVideoPlaylistId(card?.tcgDate)
+    // const videoPlaylistId = getEraVideoPlaylistId(card?.tcgDate)
 
     // USE EFFECT
     useEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop), [inEditMode])
@@ -144,7 +144,7 @@ export const SingleCard = (props) => {
                 <meta name="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${card.artworkId}.jpg`}/>
             </Helmet>
             {
-                videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
+                // videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
                 <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             }
             <div className="body">

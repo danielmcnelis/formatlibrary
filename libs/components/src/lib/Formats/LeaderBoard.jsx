@@ -14,13 +14,9 @@ import './LeaderBoard.css'
 
 export const LeaderBoard = () => {
     const [format, setFormat] = useState({})
-    console.log('format', format)
     const [leaderboard, setLeaderboard] = useState([])
-    console.log('leaderboard', leaderboard)
     const {id, statsType} = useParams()
-    console.log('id', id)
-    console.log('statsType', statsType)
-    const videoPlaylistId = format?.videoPlaylistId
+    // const videoPlaylistId = format?.videoPlaylistId
     const season = getSeason(new Date().getMonth())
 
     // USE LAYOUT EFFECT
@@ -73,7 +69,7 @@ export const LeaderBoard = () => {
                 <meta name="og:description" content={`Live rankings of online ${format?.name} Format Yu-Gi-Oh! players.`}/>
             </Helmet>
             {
-                videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
+                // videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
                 <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             }
             <div className="body">

@@ -17,9 +17,13 @@ export const FormatIntro = (props) => {
     const [deckCount, setDeckCount] = useState(0)
     const [eventCount, setEventCount] = useState(0)
     const [statsCount, setStatsCount] = useState(0)
+    const [inEditMode, setInEditMode] = useState(false)
     const { id } = useParams()
-    const videoPlaylistId = format?.videoPlaylistId
+    const videoEmbed = format?.videoEmbed
   
+    // USE EFFECT
+    useEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop), [inEditMode])
+
     // SWITCH SPOTLIGHT
     const switchSpotlight = async () => {
         try {
@@ -34,6 +38,7 @@ export const FormatIntro = (props) => {
             console.log(err)
         }
     }
+    
             
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0))
@@ -69,11 +74,13 @@ export const FormatIntro = (props) => {
                 <meta name="image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
                 <meta name="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${format.logo}.png`}/>
             </Helmet>
-            {
-                videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
-                <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
-            }
             <div className="body">
+                <div className="centered-content-flexbox">
+                {
+                    videoEmbed ? videoEmbed :
+                    <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+                }
+                </div>
             <div className="format-icon-flexbox">
             <div className="format-text">
                 <h1>{format.name} Format</h1>
@@ -90,7 +97,6 @@ export const FormatIntro = (props) => {
                                     <div id={`spotlight-toggle-inner-circle-${format?.isSpotlight}`}></div>
                                 </div>
                             </div>
-                            
                         </div>
                     ) : <h2>{format.eventName}</h2>
                 }
@@ -138,8 +144,18 @@ export const FormatIntro = (props) => {
                 <li>
                 <a href={`/formats/${urlize(format.name)}#banlist`}>Ban List</a>
                 </li>
-            </div>
-            <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} alt={format.icon}/>
+                {
+                    isContentManager ? (
+                        !inEditMode ? (                        
+                            <div className="centered-content-flexbox" style={{margin: '24px 0px'}}>
+                                <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} alt={format.icon}/>
+                                <div className="downloadButton" style={{width: '150px'}} onClick={()=> setInEditMode(true)}>Edit Mode</div>
+                            </div>
+                        ) : (
+                            <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} alt={format.icon}/>
+                        )
+                    ) : null
+                }
             </div>
             {
             format.description ? (

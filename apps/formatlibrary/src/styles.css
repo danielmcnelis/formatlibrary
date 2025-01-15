@@ -420,7 +420,12 @@
   select option {
     font-weight: normal;
   }
-    
+        
+    .centered-content-flexbox {
+        display: flex;
+        justify-content: center;
+    }
+
   html,
   body {
     height: 100%;

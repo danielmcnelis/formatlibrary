@@ -46,7 +46,7 @@ export const SingleDeck = (props) => {
 
     const navigate = useNavigate()
     const { id } = useParams()
-    const videoPlaylistId = deck?.format?.videoPlaylistId
+    // const videoPlaylistId = deck?.format?.videoPlaylistId
     
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0), [])
@@ -271,7 +271,7 @@ export const SingleDeck = (props) => {
             />
         </Helmet>
         {
-            videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
+            // videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
             <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
         }
         <div className="body">

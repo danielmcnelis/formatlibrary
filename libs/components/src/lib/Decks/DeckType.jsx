@@ -32,7 +32,7 @@ export const DeckType = (props) => {
     const { id } = useParams()
     const location = useLocation()
     const format = location?.search?.slice(8) || summary?.format?.name
-    const videoPlaylistId = summary?.format?.videoPlaylistId
+    // const videoPlaylistId = summary?.format?.videoPlaylistId
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
@@ -112,7 +112,7 @@ export const DeckType = (props) => {
                 <meta name="og:description" content={`Example decklists and detailed breakdown of cards used in ${summary.deckType} decks for Yu-Gi-Oh!'s ${summary?.format?.name} Format.`}/>
             </Helmet>
             {
-                videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
+                // videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
                 <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             }
             <div className="body">

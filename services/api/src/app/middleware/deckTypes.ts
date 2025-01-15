@@ -285,7 +285,7 @@ export const deckTypesSummary = async (req, res, next) => {
             where: {
                 name: { [Op.iLike]: req.query.format.replaceAll('-', '_') }
             },
-            attributes: ['id', 'name', 'banlist', 'date', 'icon', 'videoPlaylistId']
+            attributes: ['id', 'name', 'banlist', 'date', 'icon', 'ideoEmbed', 'videoPlaylistId']
         })
     } else {
         const deckThumb = await DeckThumb.findOne({
