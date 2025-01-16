@@ -119,7 +119,7 @@ export const Router = (props) => {
 					<Route path="/mar-2009---synchro-cat" element={<Navigate to="/formats/cat" />} />
 					<Route path="/mar-2010---edison" element={<Navigate to="/formats/edison" />} />
 					<Route path="/july-2010---glad-beast" element={<Navigate to="/formats/frog" />} />
-					<Route path="/oct-2011---tengu-plant" element={<Navigate to="/formats/tengu-plant" />} />
+					<Route path="/oct-2011---tengu-plant" element={<Navigate to="/formats/tengu" />} />
 					<Route path="/dec-2012---wind-up" element={<Navigate to="/formats/wind-up" />} />
 					<Route path="/mar-2013---baby-ruler" element={<Navigate to="/formats/baby-ruler" />} />
 					<Route path="/sep-2013---ravine-ruler" element={<Navigate to="/formats/ravine-ruler" />} />

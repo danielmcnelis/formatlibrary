@@ -31,8 +31,6 @@ export default {
             const winningMember = await interaction.guild?.members.fetch(winningUser.id).catch((err) => console.log(err))
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
             if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
-            const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-            if (!format) return await interaction.editReply({ content: `Try using **/loss** in channels like: <#414575168174948372> or <#629464112749084673>.`})
             if (winningUser.id === interaction.user.id) return await interaction.editReply({ content: `You cannot lose a match to yourself.`})
             
             if (await isNewUser(winningUser.id)) await createPlayer(winningMember)
@@ -43,6 +41,43 @@ export default {
             if (winningUser.bot) return await interaction.editReply({ content: `Sorry, Bots do not play ${format.name} Format... *yet*.`})
             if (losingPlayer.isHidden) return await interaction.reply(`You are not allowed to play in the Format Library rated system.`)
             if (winningPlayer.isHidden) return await interaction.reply(`That user is not allowed to play in the Format Library rated system.`)
+                
+            let format = await Format.findByServerOrChannelId(server, interaction.channelId)
+
+            // Special condition to determine format in the OCG channel on Format Library server
+            if (interaction.channelId === '1326708952309698621') {
+                try {
+                    let activeOcgPairing = await Pairing.findOne({
+                        where: {
+                            [Op.or]: [
+                                {playerAId: winningPlayer.id, playerBid: losingPlayer.id},
+                                {playerAId: losingPlayer.id, playerBid: winningPlayer.id}
+                            ],                            
+                            status: 'active',
+                            '$format.category$': 'OCG'
+                        },
+                        include: Format
+                    })
+
+                    const activeOcgTournament = await Tournament.findOne({
+                        where: {
+                            '$format.category$': 'OCG',
+                            state: 'underway'
+                        },
+                        include: Format
+                    })
+
+                    if (activeOcgPairing) {
+                        format = activeOcgPairing.format
+                    } else if (activeOcgTournament) {
+                        format = activeOcgTournament.format
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+
+            if (!format) return await interaction.editReply({ content: `Try using **/loss** in channels like: <#414575168174948372> or <#629464112749084673>.`})
             
             let winnerStats = await Stats.findOne({
                 where: {

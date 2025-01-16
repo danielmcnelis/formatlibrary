@@ -66,6 +66,9 @@ export const Format = db.define('formats', {
   isHighlander: {
     type: Sequelize.BOOLEAN
   },
+  sortPriority: {
+    type: Sequelize.INTEGER
+  },
   seasonResetDate: {
     type: Sequelize.DATE
   },

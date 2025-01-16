@@ -113,10 +113,11 @@ export default {
         const formats = await Format.findAll({
             where: {
                 name: {[Op.iLike]: focusedValue + '%'},
-                category: {[Op.notIn]: ['discontinued', 'multiple']}
+                category: {[Op.notIn]: ['discontinued', 'multiple']},
+                isHighlander: false
             },
             limit: 4,
-            order: [["useSeasonalElo", "DESC"], ["isPopular", "DESC"], ["isSpotlight", "DESC"], ["name", "ASC"]]
+            order: [["useSeasonalElo", "DESC"], ["sortPriority", "ASC"], ["isSpotlight", "DESC"], ["name", "ASC"]]
         }) 
         await interaction.respond(
             formats.map(f => ({ name: f.name, value: f.name })),
@@ -139,7 +140,12 @@ export default {
             })
 
             if (!format) {
-                return await interaction.editReply(`Hmm... I could not find a format called "${formatName}".`)
+                if (formatName) {
+                    await interaction.editReply(`Hmm... I could not find a format called "${formatName}".`)
+                    return getRatedFormat(interaction)
+                } else {
+                    return getRatedFormat(interaction)
+                }
             } else {
                 await interaction.editReply(`So, you want to play ${format.name} Format. ${format.emoji}`)
                 return getRatedInformation(interaction, player, format)
