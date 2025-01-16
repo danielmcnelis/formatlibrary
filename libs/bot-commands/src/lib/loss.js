@@ -178,7 +178,7 @@ export default {
                 } else {
                     isRated = false
                 }
-            } else if (server.hasRatedPermission || server.hasInternalLadder || isSeasonal) {
+            } else if (server.hasRatedPermission || server.hasInternalLadder || isSeasonal || pairing) {
                 isRated = true
             }
              
