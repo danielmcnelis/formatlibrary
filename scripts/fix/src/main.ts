@@ -2379,37 +2379,58 @@ const shuffleArray = (arr) => {
 //     return console.log(`destroyed ${b} matches from ${tournaments.length}, encountered ${e} errors`)
 // })()
 
+// ;(async () => {
+//     let d = 0
+//     let e = 0
+//     const playerNames = []
+
+//     const allStats = await Stats.findAll({ where: {serverId: '414551319031054346'}, include: Player })
+
+//     for (let i = 0; i < allStats.length; i++) {
+//         try {
+//             const stats = allStats[i]
+//             if (!stats.playerName) await stats.update({playerName: stats.player.name})
+//             const duplicates = await Stats.findAll({
+//                 where: {
+//                     id: {[Op.not]: stats.id},
+//                     playerId: stats.playerId,
+//                     formatId: stats.formatId
+//                 }
+//             })
+
+//             if (duplicates.length) playerNames.push([stats.playerName, stats.formatName, duplicates.length])
+
+//             for (let j = 0; j < duplicates.length; j++) {
+//                 await duplicates[j].destroy()
+//                 d++
+//             }
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     console.log('affected players:\n', playerNames.join('\n'))
+//     return console.log(`destroyed ${d} duplicates, encountered ${e} errors`)
+// })()
+
 ;(async () => {
     let d = 0
     let e = 0
-    const playerNames = []
+    
+    const servers = await Server.findAll({ where: { formatName: {[Op.not]: null} }})
 
-    const allStats = await Stats.findAll({ include: Player })
-
-    for (let i = 0; i < allStats.length; i++) {
-        try {
-            const stats = allStats[i]
-            if (!stats.playerName) await stats.update({playerName: stats.player.name})
-            const duplicates = await Stats.findAll({
-                where: {
-                    id: {[Op.not]: stats.id},
-                    playerId: stats.playerId,
-                    formatId: stats.formatId
-                }
-            })
-
-            if (duplicates.length) playerNames.push([stats.playerName, stats.formatName, duplicates.length])
-
-            for (let j = 0; j < duplicates.length; j++) {
-                await duplicates[j].destroy()
-                d++
-            }
-        } catch (err) {
-            console.log(err)
-            e++
+    try {
+        for (let i = 0; i < servers.length; i++) {
+            const server = servers[i]
+            const format = await Format.findOne({ where: { name: server.formatName }})
+            await server.update({ formatId: format?.id })
+            d++
         }
+    } catch (err) {
+        console.log(err)
+        e++
     }
 
-    console.log('affected players:\n', playerNames.join('\n'))
-    return console.log(`destroyed ${d} duplicates, encountered ${e} errors`)
+    return console.log(`updated the formatId in ${d} servers, encountered ${e} errors`)
 })()

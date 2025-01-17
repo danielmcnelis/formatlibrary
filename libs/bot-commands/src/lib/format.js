@@ -23,7 +23,7 @@ export default {
                 cleanName: {[Op.iLike]: '%' + focusedValue.toLowerCase() + '%'}
             },
             limit: 5,
-            order: [["isPopular", "DESC"], ["name", "ASC"]]
+            order: [["sortPriority", "ASC"], ["name", "ASC"]]
         })
     
 		await interaction.respond(
@@ -38,15 +38,8 @@ export default {
             if (server.access === 'full') return await interaction.editReply({ content: `This command has no application on Format Library. ${emojis.FL}`})
             if (hasPartnerAccess(server) && !isModerator(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
             if (!hasPartnerAccess(server) && !isServerManager(interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that. You must have the "Server Manager" permission to set the format.`})
-
             const format = await Format.findOne({ where: { name }})
-            const hadFormatSet = !!server.format
-
-            await server.update({
-                formatName: format.name
-            })
-
-            return await interaction.editReply({ content: `This server's format has been ${hadFormatSet ? 'set' : 'changed'} to: ${format.name} ${format.emoji} Format!`})	 
+            return await interaction.editReply({ content: `This server's format has been set to: ${format.name} ${format.emoji} Format!`})	 
         } catch (err) {
             console.log(err)
         }

@@ -81,9 +81,9 @@ export default {
             
             let winnerStats = await Stats.findOne({
                 where: {
-                    playerId: winningPlayer.id, 
-                    formatId: format.id, 
-                    serverId: serverId, 
+                    playerId: winningPlayer.id,
+                    formatId: format.id,
+                    serverId: serverId,
                 }
             })
 
