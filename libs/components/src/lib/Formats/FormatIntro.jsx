@@ -9,7 +9,7 @@ import { RecentEvents } from '../Events/RecentEvents'
 import { useParams } from 'react-router-dom'
 import { urlize } from '@fl/utils'
 import { Helmet } from 'react-helmet'
-// import parse from 'html-react-parser';
+import parse from 'html-react-parser';
 import './FormatIntro.css'
 
 export const FormatIntro = (props) => {
@@ -21,9 +21,9 @@ export const FormatIntro = (props) => {
     const [inEditMode, setInEditMode] = useState(false)
     const { id } = useParams()
     const videoId = format?.videoId
-    // const videoName = format?.videoName
+    const videoEmbed = format?.videoEmbed
     console.log(`videoId`, videoId)
-    // console.log(`videoName`, videoName)
+    console.log(`videoEmbed`, videoEmbed)
   
     // USE EFFECT
     useEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop), [inEditMode])
@@ -165,16 +165,17 @@ export const FormatIntro = (props) => {
                 ) : ''
             }
             {
-                videoId ? (
-                    <div className="centered-content-flexbox">
-                        <div itemscope itemtype="http://schema.org/VideoObject" data-video-id={videoId} data-player-type="default" override-embed="default" class="adthrive-video-player in-post">
-                            <meta itemprop="uploadDate" content="2024-10-25T01:56:50+00:00" />
-                            <meta itemprop="name" content={`Guide to ${format.name} Format`} />
-                            <meta itemprop="description" content={`A Guide to ${format.name} Format Decks, Cards, History, and Metagame.`} />
-                            <meta itemprop="thumbnailUrl" content={`https://content.jwplatform.com/thumbs/${videoId}-720.jpg`}/>
-                            <meta itemprop="contentUrl" content={`https://content.jwplatform.com/videos/${videoId}.mp4`} />
-                        </div>
-                    </div>
+                videoEmbed ? (
+                    parse(videoEmbed)
+                    // <div className="centered-content-flexbox">
+                    //     <div itemscope itemtype="http://schema.org/VideoObject" data-video-id={videoId} data-player-type="default" override-embed="default" class="adthrive-video-player in-post">
+                    //         {/* <meta itemprop="uploadDate" content="2024-10-25T01:56:50+00:00" /> */}
+                    //         <meta itemprop="name" content={`Guide to ${format.name} Format`} />
+                    //         <meta itemprop="description" content={`A Guide to ${format.name} Format Decks, Cards, History, and Metagame.`} />
+                    //         <meta itemprop="thumbnailUrl" content={`https://content.jwplatform.com/thumbs/${videoId}-720.jpg`}/>
+                    //         <meta itemprop="contentUrl" content={`https://content.jwplatform.com/videos/${videoId}.mp4`} />
+                    //     </div>
+                    // </div>
                 ) : null
             }
             <PopularDecks id="popular-decks" formatName={format.name}/>
