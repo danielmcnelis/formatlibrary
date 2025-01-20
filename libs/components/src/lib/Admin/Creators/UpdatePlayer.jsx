@@ -64,7 +64,7 @@ export const UpdatePlayer = () => {
 
     // FIND PLAYERS
     const findPlayers = async (query) => {
-        const {data} = await axios.get(`/api/players/query/${query}`)
+        const {data} = await axios.get(`/api/players/partial-name/${query}`)
         setPlayers(data)
         setPlayer(data[0])
     }
@@ -77,7 +77,7 @@ export const UpdatePlayer = () => {
 
     // FIND CARDS
     const findCards = async (query) => {
-        const {data} = await axios.get(`/api/cards/query/${query}`)
+        const {data} = await axios.get(`/api/cards/partial-name/${query}`)
         setCards(data)
         setCard(data[0])
     }

@@ -166,16 +166,16 @@ export default {
                 }
         
                 // If event information is incomplete, get and save that information
-                if (event && (!event.size || !event.startDate || !event.endDate)) {
+                if (event && (!event.size || !event.startedAt || !event.endDate)) {
                     try {
                         const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`)
                         const size = event.size || data.tournament.participants_count
-                        const startDate = data.tournament.started_at ? `${data.tournament.started_at.slice(0, 10)} ${data.tournament.started_at.slice(11, 26)}` : ''
+                        const startedAt = data.tournament.started_at ? `${data.tournament.started_at.slice(0, 10)} ${data.tournament.started_at.slice(11, 26)}` : ''
                         const endDate = data.tournament.completed_at ? `${data.tournament.completed_at.slice(0, 10)} ${data.tournament.completed_at.slice(11, 26)}` : ''
         
                         await event.update({
                             size,
-                            startDate,
+                            startedAt,
                             endDate
                         })
         
@@ -306,12 +306,12 @@ export default {
                         const { data: primaryTournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}.json?api_key=${server.challongeApiKey}`)
                         const { data: topCutTournamentData } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`)
                         const size = primaryTournamentData.tournament.participants_count || event.size
-                        const startDate = primaryTournamentData.tournament.started_at ? `${primaryTournamentData.tournament.started_at.slice(0, 10)} ${primaryTournamentData.tournament.started_at.slice(11, 26)}` : ''
+                        const startedAt = primaryTournamentData.tournament.started_at ? `${primaryTournamentData.tournament.started_at.slice(0, 10)} ${primaryTournamentData.tournament.started_at.slice(11, 26)}` : ''
                         const endDate = topCutTournamentData.tournament.completed_at ? `${topCutTournamentData.tournament.completed_at.slice(0, 10)} ${topCutTournamentData.tournament.completed_at.slice(11, 26)}` : ''
         
                         await event.update({
                             size,
-                            startDate,
+                            startedAt,
                             endDate
                         })
         

@@ -28,6 +28,7 @@ export const Builder = () => {
     // const [cuts, setCuts] = useState([])
     const [card, setCard] = useState({})
     const [format, setFormat] = useState({})
+    console.log('format', format)
     const [controlPanelDeckType, setControlPanelDeckType] = useState(null)
     const [controlPanelFormat, setControlPanelFormat] = useState(null)
     const [formats, setFormats] = useState([])
@@ -411,7 +412,7 @@ export const Builder = () => {
     }
 
     // HANDLE DECK TYPE SELECT
-    const handleDeckTypeSelect = async (e) => {
+    const handldDeckTypeSelect = async (e) => {
         try {
             const { data } = await axios.get(`/api/deckTypes/${e.target.value}`)
 
@@ -462,12 +463,14 @@ useEffect(() => {
                 }
             })
 
-            const {data: deckTypeData} = await axios.get(`/api/decktypes/`)
-            const {data: formatData} = await axios.get(`/api/formats`)
+            const {data: deckTypeData} = await axios.get(`/api/deckTypes/`)
+            const {data: formatsData} = await axios.get(`/api/formats`)
+            const {data: formatData} = await axios.get(`/api/formats/advanced`)
 
             setDecks(decksData)
             setDeckTypes(deckTypeData)
-            setFormats(formatData)
+            setFormats(formatsData)
+            setFormat(formatData)
 
             if (location.state) {
                 const { deck, format, origin, skeleton } = location.state
@@ -531,7 +534,7 @@ useEffect(() => {
     if (!format.banlist) return
     const fetchData = async () => {
       try {
-        const {data} = await axios.get(`/api/banlists/simple/${format.banlist}?category=${format.category || 'TCG'}`)
+        const {data} = await axios.get(`/api/banlists/${format.banlist}?category=${format.category || 'TCG'}`)
         setBanlist(data)
       } catch (err) {
         console.log(err)
@@ -677,7 +680,7 @@ useEffect(() => {
                                 id="deck-type" 
                                 aria-label="Deck Type:" 
                                 defaultValue={deck.deckTypeName}
-                                onChange={(e) => handleDeckTypeSelect(e)}
+                                onChange={(e) => handldDeckTypeSelect(e)}
                             >
                             <option key="None" value="">None</option>
                             {

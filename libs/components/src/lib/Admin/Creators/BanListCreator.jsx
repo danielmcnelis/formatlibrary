@@ -64,7 +64,7 @@ export const BanListCreator = () => {
 
     // FIND CARDS
     const findCards = async (query) => {
-        const {data} = await axios.get(`/api/cards/query/${query}`) 
+        const {data} = await axios.get(`/api/cards/partial-name/${query}`) 
         setCards(data)
         if (data[0]) {  
             setCard(data[0].name)
@@ -74,7 +74,7 @@ export const BanListCreator = () => {
 
     // GET STATUS
     const getStatus = async (name) => {
-        const {data} = await axios.get(`/api/statuses/query`, {
+        const {data} = await axios.get(`/api/statuses`, {
             headers: {
                 name: name,
                 category: category,

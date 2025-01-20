@@ -21,11 +21,11 @@ export const getPlayerRoles = async (req, res, next) => {
       }
 }
 
-export const playersQuery = async (req, res, next) => {
+export const getPlayersByPartialName = async (req, res, next) => {
   try {
     const players = await Player.findAll({
       where: {
-        name: { [Op.substring]: req.params.query }
+        name: { [Op.iLike]: '%' + req.params.query + '%'}
       },
       attributes: ['id', 'name', 'discordId', 'discordPfp', 'firstName', 'lastName'],
       order: [['name', 'ASC']]
@@ -37,7 +37,7 @@ export const playersQuery = async (req, res, next) => {
   }
 }
 
-export const playersId = async (req, res, next) => {
+export const getPlayerById = async (req, res, next) => {
   try {
     const player = await Player.findOne({
         where: {
@@ -64,7 +64,7 @@ export const playersId = async (req, res, next) => {
   }
 }
 
-export const playersAll = async (req, res, next) => {
+export const getPlayers = async (req, res, next) => {
   try {
     const players = await Player.findAll({
       attributes: ['id', 'name', 'discordId', 'discordPfp', 'firstName', 'lastName', 'duelingBookName'],
@@ -77,7 +77,7 @@ export const playersAll = async (req, res, next) => {
   }
 }
 
-export const playersPassword = async (req, res, next) => {
+export const updatePassword = async (req, res, next) => {
     try {
         const player = await Player.findOne({ 
             where: {
@@ -103,7 +103,7 @@ export const playersPassword = async (req, res, next) => {
     }
 }
 
-export const playersUpdateId = async (req, res, next) => {
+export const updatePlayer = async (req, res, next) => {
     try {
         const player = await Player.findOne({ 
             where: {
@@ -171,7 +171,7 @@ export const adminPlayerUpdate = async (req, res, next) => {
 }
 
 
-export const playersCreate = async (req, res, next) => {
+export const createPlayer = async (req, res, next) => {
     try {
         if (req.body.pfp) {
             const buffer = Buffer.from(req.body.pfp.replace(/^data:image\/\w+;base64,/, ''), 'base64')

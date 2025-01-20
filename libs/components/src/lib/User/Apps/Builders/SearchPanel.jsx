@@ -350,9 +350,11 @@ export const SearchPanel = (props) => {
                 const month = format.date ? parseInt(format.date.slice(6, 7)) : 12
                 const day = format.date ? parseInt(format.date.slice(-2)) : 31
 
-                const {data: banlistData} = await axios.get(`/api/banlists/simple/${format.banlist || 'sep23'}?category=${format.category || 'TCG'}`)
-                
-                setBanlist(banlistData)
+                if (format.banlist) {
+                    const {data: banlistData} = await axios.get(`/api/banlists/${format.banlist}?category=${format.category || 'TCG'}`)
+                    setBanlist(banlistData || {})
+                }
+
                 setCutoff(format.date || `${year}-12-31`)
                 setSliders({ ...sliders, year, month, day })
             } catch (err) {
@@ -504,7 +506,7 @@ export const SearchPanel = (props) => {
                     className="filter"
                     onChange={(e) => updateFormat(e)}
                 >
-                <option key="Current" value="">Current</option>
+                <option key="Advanced" value="">Advanced</option>
                 {
                     props.formats?.filter((f) => !!f.date).map((f) => <option key={f.name} value={f.name}>{f.name}</option>)
                 }

@@ -6,8 +6,8 @@ import './DeckThumbnail.css'
 export const DeckThumbnail = (props) => {
     const {deckType, formatName} = props
     if (!deckType) return <div/>
-    const deckTypeLink = formatName ? urlize(`/decktypes/${deckType.name}?format=${formatName}`) : 
-        urlize(`/decktypes/${deckType.name}`)
+    const deckTypeLink = formatName ? urlize(`/deckTypes/${deckType.name}?format=${formatName}`) : 
+        urlize(`/deckTypes/${deckType.name}`)
   
     return (
         <div 

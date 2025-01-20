@@ -42,7 +42,7 @@ export const SingleCard = (props) => {
     }
 
     // UPDATE CARD INFO
-    const updateCardInfo = async () => {
+    const updateCard = async () => {
         try {
             await axios.post(`/api/cards/update?id=${card.id}`, { ...card })
             setInEditMode(false)
@@ -157,7 +157,7 @@ export const SingleCard = (props) => {
                                 !inEditMode ? (
                                     <div className="downloadButton" style={{width: '150px'}} onClick={()=> setInEditMode(true)}>Edit Mode</div>
                                 ) : (
-                                    <div className="downloadButton" style={{width: '150px'}} onClick={()=> updateCardInfo()}>Save Changes</div>
+                                    <div className="downloadButton" style={{width: '150px'}} onClick={()=> updateCard()}>Save Changes</div>
                                 )
                             ) : null
                         }

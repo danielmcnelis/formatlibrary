@@ -1,10 +1,10 @@
 import { Router } from 'express'
-import { imagesCreate, imagesUpdateCard } from '../middleware'
+import { createImage, updateCardImage } from '../middleware'
 
 const router = Router()
 
-router.post('/api/images/update-card', imagesUpdateCard)
+router.post('/api/images/update-card', updateCardImage)
 
-router.post('/api/images/create', imagesCreate)
+router.post('/api/images/create', createImage)
 
 export default router

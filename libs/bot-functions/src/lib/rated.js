@@ -464,7 +464,7 @@ export const getRatedFormat = async (interaction) => {
             }
         }) || await Format.findOne({
             where: {
-                cleanName: {[Op.substring]: response },
+                cleanName: {[Op.iLike]: '%' + response + '%' },
             }
         })
 

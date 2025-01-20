@@ -119,11 +119,11 @@ export const SingleDeck = (props) => {
   }, [id, isAdmin, isSubscriber])
 
 
-  // USE EFFECT SET DECKTYPES
+  // USE EFFECT SET DeckTypes
   useEffect(() => {
     const fetchDeckTypes = async () => {
       try {
-        const {data} = await axios.get(`/api/decktypes/`)
+        const {data} = await axios.get(`/api/deckTypes/`)
         setDeckTypes(data)
       } catch (err) {
         console.log(err)
@@ -139,7 +139,7 @@ export const SingleDeck = (props) => {
         if (!deck || !deck.format) return
         const fetchData = async () => {
         try {
-            const {data} = await axios.get(`/api/banlists/simple/${deck.format.banlist}?category=${deck.format.category || 'TCG'}`)
+            const {data} = await axios.get(`/api/banlists/${deck.format.banlist}?category=${deck.format.category || 'TCG'}`)
             setBanlist(data)
         } catch (err) {
             console.log(err)
@@ -300,7 +300,7 @@ export const SingleDeck = (props) => {
 
                 !inEditMode ? (
                         <div 
-                            onClick={() => {window.location.href=`/decktypes/${deck.deckTypeName.toLowerCase().replace(/\s/g, '-')}?format=${deck.formatName.toLowerCase().replace(/\s/g, '_')}`}}
+                            onClick={() => {window.location.href=`/deckTypes/${deck.deckTypeName.toLowerCase().replace(/\s/g, '-')}?format=${deck.formatName.toLowerCase().replace(/\s/g, '_')}`}}
                         >
                             <div className="single-deck-title">{deck.deckTypeName || deck.name}</div>
                         </div>

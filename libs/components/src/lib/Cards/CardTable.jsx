@@ -31,6 +31,7 @@ export const CardTable = () => {
     const [formats, setFormats] = useState([])
     const [format, setFormat] = useState({})
     const [banlist, setBanlist] = useState({})
+    console.log('banlist', banlist)
     const [boosters, setBoosters] = useState([])
     const [booster, setBooster] = useState(null)
     const [advanced, setAdvanced] = useState(false)
@@ -258,7 +259,7 @@ export const CardTable = () => {
       if (!formatName) {
         document.getElementById('format').value = ""
         setCutoff(`${now.getFullYear()}-12-31`)
-        const {data} = await axios.get(`/api/formats/current`)
+        const {data} = await axios.get(`/api/formats/advanced`)
         setFormat(data.format)
       }
   
@@ -345,12 +346,14 @@ export const CardTable = () => {
     const updateFormat = useCallback(async (e) => {
       if (e.target.value.length) {
         const {data: formatData} = await axios.get(`/api/formats/${e.target.value}`) 
+        
         setFormat(formatData.format)
         setQueryParams({...queryParams, region: formatData.format?.category?.toLowerCase() })
         const category = formatData?.format?.category || 'TCG'
-        const {data: banlistData} = await axios.get(`/api/banlists/simple/${formatData.format.banlist || 'sep23'}?category=${category}`)
 
+        const {data: banlistData} = await axios.get(`/api/banlists/${formatData.format?.banlist?.toLowerCase()?.replaceAll(' ', '-')}?category=${category}`)
         setBanlist(banlistData)
+
         const year = formatData.format.date ? parseInt(formatData.format.date.slice(0, 4)) : now.getFullYear()
         const month = formatData.format.date ? parseInt(formatData.format.date.slice(5, 7)) : 12
         const day = formatData.format.date ? parseInt(formatData.format.date.slice(-2)) : 31
@@ -594,7 +597,7 @@ export const CardTable = () => {
                                     onChange={(e) => updateFormat(e)}
                                     disabled={!!formatName}
                                 >
-                                    <option key="Current" value="">Current</option>
+                                    <option key="Advanced" value="">Advanced</option>
                                     {
                                         formats.filter((f) => !!f.date).map((f) => <option key={f.name} value={f.name.toLowerCase()}>{capitalize(f.name, true)}</option>)
                                     }
@@ -676,7 +679,7 @@ export const CardTable = () => {
                                     onChange={(e) => updateFormat(e)}
                                     disabled={!!formatName}
                                 >
-                                    <option key="Current" value="">Current</option>
+                                    <option key="Advanced" value="">Advanced</option>
                                     {
                                         formats.filter((f) => !!f.date).map((f) => <option key={f.name} value={f.name.toLowerCase()}>{capitalize(f.name, true)}</option>)
                                     }

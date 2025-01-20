@@ -1,16 +1,16 @@
 import { Router } from 'express'
-import { deckTypes, deckTypesCreate, deckTypesDownload, deckTypesName, deckTypesSummary } from '../middleware'
+import { getDeckTypes, createDeckType, downloadDeckType, getDeckTypeByName, getDeckTypeSummary } from '../middleware'
 
 const router = Router()
 
-router.get('/api/deckTypes/summary', deckTypesSummary)
+router.get('/api/deckTypes/summary', getDeckTypeSummary)
 
-router.get('/api/deckTypes/download', deckTypesDownload)
+router.get('/api/deckTypes/download', downloadDeckType)
 
-router.get('/api/deckTypes/:name', deckTypesName)
+router.get('/api/deckTypes/:name', getDeckTypeByName)
 
-router.get('/api/deckTypes/', deckTypes)
+router.get('/api/deckTypes/', getDeckTypes)
 
-router.post('/api/deckTypes/create', deckTypesCreate)
+router.post('/api/deckTypes/create', createDeckType)
 
 export default router

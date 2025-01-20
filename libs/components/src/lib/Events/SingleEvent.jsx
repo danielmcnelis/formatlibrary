@@ -286,7 +286,7 @@ export const SingleEvent = (props) => {
                         <td className="desktop-only">
                         <div className="single-event-cell">
                             <div 
-                                onClick={() => {window.location.href=`/decktypes/${topDecks[0]?.deckTypeName?.toLowerCase()?.replace(/\s/g, '-')}?format=${event.format.name}`}}                                 
+                                onClick={() => {window.location.href=`/deckTypes/${topDecks[0]?.deckTypeName?.toLowerCase()?.replace(/\s/g, '-')}?format=${event.format.name}`}}                                 
                             >
                                 <div className="winning-deck-link" style={{paddingRight:'7px'}}><b>Winning Deck:</b> {capitalize(topDecks[0] ? topDecks[0].deckTypeName : '', true)}</div> 
                             </div>
@@ -294,8 +294,8 @@ export const SingleEvent = (props) => {
                         </td>
                         <td>
                         <div className="single-event-cell">
-                            <div className="desktop-only"><b>Date:</b> {dateToVerbose(event.startDate, false, false)}</div>
-                            <div id="single-event-uploaded-mobile" className="mobile-only"><b>Date:</b> {dateToSimple(event.startDate)}</div>
+                            <div className="desktop-only"><b>Date:</b> {dateToVerbose(event.startedAt, false, false)}</div>
+                            <div id="single-event-uploaded-mobile" className="mobile-only"><b>Date:</b> {dateToSimple(event.startedAt)}</div>
                         </div>
                         </td>
                     </tr>

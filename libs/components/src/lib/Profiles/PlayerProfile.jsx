@@ -68,7 +68,7 @@ export const PlayerProfile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`/api/decks/frequent/${player.id}`)
+        const { data } = await axios.get(`/api/decks/favorite/${player.id}`)
         setDeckTypes(data)
       } catch (err) {
         console.log(err)

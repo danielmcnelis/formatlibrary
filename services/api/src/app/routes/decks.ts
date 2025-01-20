@@ -1,28 +1,28 @@
 import { Router } from 'express'
 import {
   authenticate,
-  decksDeleteId,
-  decksUpdateId,
-  decksPublishId,
-  decksUnpublishId,
-  decksShareId,
-  decksBuilderId,
-  decksMyDecks,
-  decksReadYdk,
-  decksPopular,
-  decksGallery,
-  decksFrequent,
-  decksPlayer,
-  decksLike,
-  decksDownload,
-  getDeckByIdAsAdmin,
-  getDeckByIdAsSubscriber,
-  getDeckByIdAsRegularUser,
+  deleteDeck,
+  updateDeck,
+  publishDeck,
+  unpublishDeck,
+  shareDeck,
+  openDeckInBuilder,
+  getMyDecks,
+  readDeckYdk,
+  getPopularDecks,
+  getDeckGallery,
+  getFavoriteDecks,
+  getPublicDecks,
+  likeDeck,
+  downloadDeck,
+  getDeckAsAdmin,
+  getDeckBySubscriber,
+  getDeckAsRegularUser,
   getDecksAsAdmin,
   getDecksAsSubscriber,
   getDecksAsRegularUser,
   countDecks,
-  decksCreate,
+  createDeck,
   updateDeckLabels,
   convertTextToYDK,
   convertYDKeToYDK
@@ -30,56 +30,56 @@ import {
 
 const router = Router()
 
-router.put('/api/decks/read-ydk', decksReadYdk)
+router.put('/api/decks/read-ydk', readDeckYdk)
 
 router.put('/api/decks/convert-ydke-to-ydk', convertYDKeToYDK)
 
-router.delete('/api/decks/delete/:id', decksDeleteId)
+router.delete('/api/decks/delete/:id', deleteDeck)
 
-router.put('/api/decks/update/:id', decksUpdateId)
+router.put('/api/decks/update/:id', updateDeck)
 
-router.put('/api/decks/publish/:id', decksPublishId)
+router.put('/api/decks/publish/:id', publishDeck)
 
-router.put('/api/decks/unpublish/:id', decksUnpublishId)
+router.put('/api/decks/unpublish/:id', unpublishDeck)
 
-router.put('/api/decks/share/:id', decksShareId)
+router.put('/api/decks/share/:id', shareDeck)
 
-router.get('/api/decks/deck-builder/:id', decksBuilderId)
+router.get('/api/decks/deck-builder/:id', openDeckInBuilder)
 
-router.get('/api/decks/my-decks', [authenticate, decksMyDecks])
+router.get('/api/decks/my-decks', [authenticate, getMyDecks])
 
-router.get('/api/decks/popular/:format', decksPopular)
+router.get('/api/decks/popular/:format', getPopularDecks)
 
-router.get('/api/decks/gallery/:format', decksGallery)
+router.get('/api/decks/gallery/:format', getDeckGallery)
 
-router.get('/api/decks/frequent/:id', decksFrequent)
+router.get('/api/decks/favorite/:id', getFavoriteDecks)
 
-router.get('/api/decks/player/:id', decksPlayer)
+router.get('/api/decks/player/:id', getPublicDecks)
 
-router.get('/api/decks/like/:id', decksLike)
+router.get('/api/decks/like/:id', likeDeck)
 
 router.post('/api/decks/text-to-ydk/', convertTextToYDK)
 
-router.get('/api/decks/download/subscriber/:id', [authenticate, decksDownload])
+router.get('/api/decks/download/subscriber/:id', [authenticate, downloadDeck])
 
-router.get('/api/decks/download/:id', decksDownload)
+router.get('/api/decks/download/:id', downloadDeck)
 
 router.get('/api/decks/count', countDecks)
 
-router.get('/api/decks/admin/:id', [authenticate, getDeckByIdAsAdmin])
+router.get('/api/decks/admin/:id', [authenticate, getDeckAsAdmin])
 
-router.get('/api/decks/subscriber/:id', [authenticate, getDeckByIdAsSubscriber])
+router.get('/api/decks/subscriber/:id', [authenticate, getDeckBySubscriber])
 
 router.get('/api/decks/admin', [authenticate, getDecksAsAdmin])
 
 router.get('/api/decks/subscriber', [authenticate, getDecksAsSubscriber])
 
-router.get('/api/decks/:id', getDeckByIdAsRegularUser)
+router.get('/api/decks/:id', getDeckAsRegularUser)
 
 router.get('/api/decks/', getDecksAsRegularUser)
 
 router.post('/api/decks/labels', [authenticate, updateDeckLabels])
 
-router.post('/api/decks/create', decksCreate)
+router.post('/api/decks/create', createDeck)
 
 export default router

@@ -1,20 +1,20 @@
 import { Router } from 'express'
-import { authenticate, getPlayerRoles, playersQuery, playersPassword, playersCreate, playersId, playersAll, playersUpdateId } from '../middleware'
+import { authenticate, getPlayerRoles, getPlayersByPartialName, updatePassword, createPlayer, getPlayerById, getPlayers, updatePlayer } from '../middleware'
 
 const router = Router()
 
-router.get('/api/players/query/:query', playersQuery)
+router.get('/api/players/partial-name/:query', getPlayersByPartialName)
 
-router.put('/api/players/update/:id', playersUpdateId)
+router.put('/api/players/update/:id', updatePlayer)
 
-router.put('/api/players/password/:id', playersPassword)
+router.put('/api/players/password/:id', updatePassword)
 
 router.get('/api/players/roles', [authenticate, getPlayerRoles])
 
-router.get('/api/players/:id', playersId)
+router.get('/api/players/:id', getPlayerById)
 
-router.get('/api/players/', playersAll)
+router.get('/api/players/', getPlayers)
 
-router.post('/api/players/create', playersCreate)
+router.post('/api/players/create', createPlayer)
 
 export default router

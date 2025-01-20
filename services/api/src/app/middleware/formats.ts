@@ -1,7 +1,7 @@
 import { Format, Deck, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 
-export const formatsName = async (req, res, next) => {
+export const getFormatByName = async (req, res, next) => {
   try {
     const format = await Format.findOne({
       where: {
@@ -45,7 +45,7 @@ export const formatsName = async (req, res, next) => {
   }
 }
 
-export const formatsAll = async (req, res, next) => {
+export const getFormats = async (req, res, next) => {
   try {
     const formats = await Format.findAll({
       where: {

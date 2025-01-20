@@ -2,7 +2,7 @@ import { Artwork, Card, Deck, DeckThumb, DeckType, Format, Player } from '@fl/mo
 import { Op } from 'sequelize'
 const FuzzySet = require('fuzzyset')
 
-export const decksReadYdk = async (req, res, next) => {
+export const readDeckYdk = async (req, res, next) => {
     try {
         const main = []
         const extra = []
@@ -82,7 +82,7 @@ export const decksReadYdk = async (req, res, next) => {
     }
 }
 
-export const decksDeleteId = async (req, res, next) => {
+export const deleteDeck = async (req, res, next) => {
     try {
         const deck = await Deck.findOne({ 
             where: {
@@ -136,7 +136,7 @@ export const updateDeckLabels = async (req, res, next) => {
 }
 
 
-export const decksUpdateId = async (req, res, next) => {
+export const updateDeck = async (req, res, next) => {
     try {
         const deck = await Deck.findOne({ 
             where: {
@@ -166,7 +166,7 @@ export const decksUpdateId = async (req, res, next) => {
     }
 }
 
-export const decksPublishId = async (req, res, next) => {
+export const publishDeck = async (req, res, next) => {
     try {
         const deck = await Deck.findOne({ 
             where: {
@@ -181,7 +181,7 @@ export const decksPublishId = async (req, res, next) => {
     }
 }
 
-export const decksUnpublishId = async (req, res, next) => {
+export const unpublishDeck = async (req, res, next) => {
     try {
         const deck = await Deck.findOne({ 
             where: {
@@ -196,7 +196,7 @@ export const decksUnpublishId = async (req, res, next) => {
     }
 }
 
-export const decksShareId = async (req, res, next) => {
+export const shareDeck = async (req, res, next) => {
     try { 
         const deck = await Deck.findOne({ 
             where: {
@@ -217,7 +217,7 @@ export const decksShareId = async (req, res, next) => {
     }
 }
 
-export const decksBuilderId = async (req, res, next) => {
+export const openDeckInBuilder = async (req, res, next) => {
     try {
         const deck = await Deck.findOne({ 
             where: {
@@ -309,7 +309,7 @@ export const decksBuilderId = async (req, res, next) => {
     }
 }
 
-export const decksMyDecks = async (req, res, next) => {
+export const getMyDecks = async (req, res, next) => {
     const playerId = req.user?.playerId
 
     try {
@@ -338,7 +338,7 @@ export const decksMyDecks = async (req, res, next) => {
     }
 }
 
-export const decksPopular = async (req, res, next) => {
+export const getPopularDecks = async (req, res, next) => {
   try {
     const format = await Format.findOne({
         where: {
@@ -407,7 +407,7 @@ export const decksPopular = async (req, res, next) => {
   }
 }
 
-export const decksGallery = async (req, res, next) => {
+export const getDeckGallery = async (req, res, next) => {
   try {
     const format = await Format.findOne({
       where: {
@@ -481,7 +481,7 @@ export const decksGallery = async (req, res, next) => {
   }
 }
 
-export const decksFrequent = async (req, res, next) => {
+export const getFavoriteDecks = async (req, res, next) => {
   try {
     const decks = await Deck.findAll({
       where: {
@@ -552,7 +552,7 @@ export const decksFrequent = async (req, res, next) => {
   }
 }
 
-export const decksPlayer = async (req, res, next) => {
+export const getPublicDecks = async (req, res, next) => {
   try {
     const decks = await Deck.findAll({
       where: {
@@ -573,7 +573,7 @@ export const decksPlayer = async (req, res, next) => {
   }
 }
 
-export const decksLike = async (req, res, next) => {
+export const likeDeck = async (req, res, next) => {
   try {
     const deck = await Deck.findOne({
       where: {
@@ -590,7 +590,7 @@ export const decksLike = async (req, res, next) => {
   }
 }
 
-export const decksDownload = async (req, res, next) => {
+export const downloadDeck = async (req, res, next) => {
     try {
       const deck = await Deck.findOne({
         where: {
@@ -833,7 +833,7 @@ const findDecks = async (req, display, limit, page) => {
 //         linkExpiresAt: {[Op.gte]: new Date()}
 //     },
 
-export const getDeckByIdAsAdmin = async (req, res, next) => {
+export const getDeckAsAdmin = async (req, res, next) => {
     try {
         const id = parseInt(req.params.id)
         const shareLink = req.params.id
@@ -857,7 +857,7 @@ export const getDeckByIdAsAdmin = async (req, res, next) => {
     }
 }
 
-export const getDeckByIdAsSubscriber = async (req, res, next) => {
+export const getDeckBySubscriber = async (req, res, next) => {
     try {
         const id = parseInt(req.params.id)
         const shareLink = req.params.id
@@ -882,7 +882,7 @@ export const getDeckByIdAsSubscriber = async (req, res, next) => {
     }
 }
 
-export const getDeckByIdAsRegularUser = async (req, res, next) => {
+export const getDeckAsRegularUser = async (req, res, next) => {
     try {
         const id = parseInt(req.params.id)
         const shareLink = req.params.id
@@ -1069,7 +1069,7 @@ export const convertYDKeToYDK = async (req, res, next) => {
     }
 } 
 
-export const decksCreate = async (req, res, next) => {
+export const createDeck = async (req, res, next) => {
   try {
     const format = await Format.findOne({ where: { name: { [Op.iLike]: req.body.format || req.body.formatName } } })
     const player = await Player.findOne({ where: { id: req.body.builderId } })

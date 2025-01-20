@@ -55,7 +55,7 @@ export const DeckCreator = () => {
                 ydk: ydk,
                 eventAbbreviation: event.abbreviation,
                 eventId: event.id,
-                publishDate: event.startDate,
+                publishDate: event.startedAt,
                 placement: placement,
                 origin: 'event',
                 communityName: communityName,
@@ -83,7 +83,7 @@ export const DeckCreator = () => {
     }
 
     const findPlayers = async (query) => {
-        const {data} = await axios.get(`/api/players/query/${query}`)
+        const {data} = await axios.get(`/api/players/partial-name/${query}`)
         setPlayers(data)
         setPlayer(data[0])
     }
@@ -106,7 +106,7 @@ export const DeckCreator = () => {
     // USE EFFECT
     useEffect(() => {
         const fetchDeckTypes = async () => {
-            const {data} = await axios.get(`/api/decktypes/`)
+            const {data} = await axios.get(`/api/deckTypes/`)
             setDeckTypes(data)
         }
         

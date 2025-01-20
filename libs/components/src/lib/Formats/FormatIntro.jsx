@@ -165,18 +165,7 @@ export const FormatIntro = (props) => {
                 ) : ''
             }
             {
-                videoEmbed ? (
-                    parse(videoEmbed)
-                    // <div className="centered-content-flexbox">
-                    //     <div itemscope itemtype="http://schema.org/VideoObject" data-video-id={videoId} data-player-type="default" override-embed="default" class="adthrive-video-player in-post">
-                    //         {/* <meta itemprop="uploadDate" content="2024-10-25T01:56:50+00:00" /> */}
-                    //         <meta itemprop="name" content={`Guide to ${format.name} Format`} />
-                    //         <meta itemprop="description" content={`A Guide to ${format.name} Format Decks, Cards, History, and Metagame.`} />
-                    //         <meta itemprop="thumbnailUrl" content={`https://content.jwplatform.com/thumbs/${videoId}-720.jpg`}/>
-                    //         <meta itemprop="contentUrl" content={`https://content.jwplatform.com/videos/${videoId}.mp4`} />
-                    //     </div>
-                    // </div>
-                ) : null
+                videoEmbed ? parse(videoEmbed) : null
             }
             <PopularDecks id="popular-decks" formatName={format.name}/>
             <RecentEvents id="recent-events" formatName={format.name}/>

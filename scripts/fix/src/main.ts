@@ -124,7 +124,7 @@ const shuffleArray = (arr) => {
 //         }
 //     }
 
-//     console.log(`deleted ${l} DeckTypes without a corresponding Deck`)
+//     console.log(`deleted ${l} deckTypes without a corresponding Deck`)
 // })()
     
 // ;(async () => {
@@ -2418,13 +2418,15 @@ const shuffleArray = (arr) => {
     let d = 0
     let e = 0
     
-    const servers = await Server.findAll({ where: { formatName: {[Op.not]: null} }})
+    const tournaments = await Tournament.findAll({ where: { isRated: false }})
 
     try {
-        for (let i = 0; i < servers.length; i++) {
-            const server = servers[i]
-            const format = await Format.findOne({ where: { name: server.formatName }})
-            await server.update({ formatId: format?.id })
+        for (let i = 0; i < tournaments.length; i++) {
+            const tournament = tournaments[i]
+            const associatedTournament = await Tournament.findOne({ where: { id: tournament.associatedTournamentId }})
+            if (associatedTournament?.isRated) console.log(`assocciated tournament ${associatedTournament.name} is Rated but should not be`)
+            const event = await Event.findOne({ where: { primaryTournamentId: tournament.id }})
+            if (event) console.log(`tournament ${tournament.name} has an event ${event?.name} but it should not`)
             d++
         }
     } catch (err) {
@@ -2432,5 +2434,6 @@ const shuffleArray = (arr) => {
         e++
     }
 
-    return console.log(`updated the formatId in ${d} servers, encountered ${e} errors`)
+    return
+    // return console.log(`updated the formatId in ${d} servers, encountered ${e} errors`)
 })()

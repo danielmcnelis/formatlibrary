@@ -5,7 +5,7 @@ import { S3 } from '@aws-sdk/client-s3';
 import { config } from '@fl/config'
 
 // IMAGES UPDATE CARD
-export const imagesUpdateCard = async (req, res, next) => {
+export const updateCardImage = async (req, res, next) => {
     try {
         const {data: fullCardImage} = await axios({
             method: 'GET',
@@ -59,7 +59,7 @@ export const imagesUpdateCard = async (req, res, next) => {
 }
 
 // IMAGES CREATE
-export const imagesCreate = async (req, res, next) => {
+export const createImage = async (req, res, next) => {
   try {
     const image = req.body.image
     const buffer = Buffer.from(image.replace(/^data:image\/\w+;base64,/, ''), 'base64')

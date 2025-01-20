@@ -17,12 +17,12 @@ export const EventCreator = () => {
   const [players, setPlayers] = useState([])
   const [referenceUrl, setReferenceUrl] = useState(null)
   const [size, setSize] = useState(null)
-  const [startDate, setStartDate] = useState(null)
+  const [startedAt, setstartedAt] = useState(null)
   const [tournamentId, setTournamentId] = useState(null)
   const [tournamentType, setTournamentType] = useState(true)
   const [url, setUrl] = useState(null)
 
-  const slice = startDate ? startDate.slice(0, 10) : null
+  const slice = startedAt ? startedAt.slice(0, 10) : null
 
   // RESET
   const reset = async () => {
@@ -39,7 +39,7 @@ export const EventCreator = () => {
     setPlayers([])
     setReferenceUrl(null)
     setSize(null)
-    setStartDate(null)
+    setstartedAt(null)
     setTournamentId(null)
     setTournamentType(true)
     setUrl(null)
@@ -71,7 +71,7 @@ export const EventCreator = () => {
     //if (!bracket) return alert('Please upload a Bracket PNG file.')
     if (!tournamentId && url.includes('challonge')) return alert('Tournament not found on Challonge.')
     if (!player) return alert('No Winner Found.')
-    if (!startDate) return alert('Please select a Start Date.')
+    if (!startedAt) return alert('Please select a Start Date.')
 
     try {
       const { data } = await axios.post('/api/events/create', {
@@ -89,7 +89,7 @@ export const EventCreator = () => {
         type: tournamentType,
         winner: player.name || player.name,
         playerId: player.id,
-        startDate: startDate,
+        startedAt: startedAt,
         endDate: endDate,
         bracket: bracket
       })
@@ -118,7 +118,7 @@ export const EventCreator = () => {
 
         setChallongeName(data.name)
         setSize(data.participants_count)
-        setStartDate(data.started_at)
+        setstartedAt(data.started_at)
         setEndDate(data.completed_at)
         setTournamentId(data.id.toString())
       } catch (err) {
@@ -136,7 +136,7 @@ export const EventCreator = () => {
 
   // FIND PLAYERS
   const findPlayers = async (query) => {
-    const { data } = await axios.get(`/api/players/query/${query}`)
+    const { data } = await axios.get(`/api/players/partial-name/${query}`)
     setPlayers(data)
     setPlayer(data[0])
   }
@@ -269,12 +269,12 @@ export const EventCreator = () => {
       <label>
         Start Date:
         <input
-          id="startDate"
+          id="startedAt"
           value={slice || 'mm-dd-yyyy'}
           type="date"
           onChange={(e) => {
             setEndDate(e.target.value + ' 00:00:00+00')
-            setStartDate(e.target.value + ' 00:00:00+00')
+            setstartedAt(e.target.value + ' 00:00:00+00')
           }}
         />
       </label>

@@ -123,7 +123,8 @@ export default {
                 if (data?.tournament?.state === 'underway') {
                     await tournament.update({ state: 'underway' })
                     interaction.editReply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${tournament.url} ${tournament.emoji}`})
-                    
+                    await tournament.update({ startedAt: data?.tournament?.started_at })
+
                     if (tournament.isTeamTournament) {
                         return sendTeamPairings(interaction.guild, server, tournament, false)
                     } else {

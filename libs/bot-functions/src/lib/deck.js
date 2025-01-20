@@ -67,7 +67,7 @@ export const getIssues = async (deckArr, format) => {
     const year = now.getFullYear()
     const month = (now.getMonth() + 1).toString().padStart(2, '0')
     const day = now.getDate().toString().padStart(2, '0')
-    const formatDate = format.name === 'Current' || format.name === 'Traditional' ? `${year}-${month}-${day}` : format.date
+    const formatDate = format.name === 'Advanced' || format.name === 'Traditional' ? `${year}-${month}-${day}` : format.date
 
     const cardIds = format.category === 'Custom' ? [...await Card.findAll()].map(c => c.konamiCode) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: formatDate } }})].map(c => c.konamiCode)
     const forbiddenIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'forbidden' }, include: Card })].map(s => s.card.konamiCode)
@@ -97,7 +97,7 @@ export const getIssues = async (deckArr, format) => {
         const key = keys[i]
         let konamiCode = keys[i]
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode 
-        if (konamiCode === '00000000' && format.name === 'Current') continue
+        if (konamiCode === '00000000' && format.name === 'Advanced') continue
         if (!cardIds.includes(konamiCode)) {
             const card = await Card.findOne({ where: { konamiCode: konamiCode } })
             if (card) {

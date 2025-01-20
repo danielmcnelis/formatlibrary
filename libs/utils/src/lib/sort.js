@@ -102,15 +102,15 @@ export const categoryDESC = (a, b) => {
   return 0
 }
 
-export const startDateASC = (a, b) => {
-  if (a.startDate < b.startDate) return -1
-  if (a.startDate > b.startDate) return 1
+export const startedAtASC = (a, b) => {
+  if (a.startedAt < b.startedAt) return -1
+  if (a.startedAt > b.startedAt) return 1
   return 0
 }
 
-export const startDateDESC = (a, b) => {
-  if (a.startDate < b.startDate) return 1
-  if (a.startDate > b.startDate) return -1
+export const startedAtDESC = (a, b) => {
+  if (a.startedAt < b.startedAt) return 1
+  if (a.startedAt > b.startedAt) return -1
   return 0
 }
 

@@ -174,7 +174,7 @@ export const getCard = async (query, fuzzyCards, format) => {
 
     const firstPrint = print ? `${rarities[print.rarity]} ${print.set.name}` : null 
     const dateType = format?.category?.toLowerCase() + 'Date'
-    const legal = format && card[dateType] && (card[dateType] <= format.date || format.name === 'Traditional' || format.name === 'Current')
+    const legal = format && card[dateType] && (card[dateType] <= format.date || format.name === 'Traditional' || format.name === 'Advanced')
     const position = format?.name === 'Traditional' && legal && status && status.restriction === 'Forbidden' ? 'limited' :
         legal && status ? status.restriction :
         legal && !status ? 'unlimited' :

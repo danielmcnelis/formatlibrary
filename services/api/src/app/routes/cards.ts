@@ -1,18 +1,18 @@
 import { Router } from 'express'
-import { cards, cardsCount, cardsCreate, cardsId, cardsQuery, updateCardInfo } from '../middleware'
+import { getCards, countCards, createCard, getCardById, getCardsByPartialName, updateCard } from '../middleware'
 
 const router = Router()
 
-router.get('/api/cards/query/:query', cardsQuery)
+router.get('/api/cards/partial-name/:query', getCardsByPartialName)
 
-router.get('/api/cards/count', cardsCount)
+router.get('/api/cards/count', countCards)
 
-router.get('/api/cards/:id', cardsId)
+router.get('/api/cards/:id', getCardById)
 
-router.get('/api/cards', cards)
+router.get('/api/cards', getCards)
 
-router.post('/api/cards/create', cardsCreate)
+router.post('/api/cards/create', createCard)
 
-router.post('/api/cards/update', updateCardInfo)
+router.post('/api/cards/update', updateCard)
 
 export default router

@@ -56,7 +56,7 @@ export const DeckType = (props) => {
                 setMatchups(matchupData)
 
                 if (summaryData?.format) {
-                    const {data: banlistData} = await axios.get(`/api/banlists/simple/${summaryData?.format?.banlist}?category=${summaryData?.format?.category || 'TCG'}`)
+                    const {data: banlistData} = await axios.get(`/api/banlists/${summaryData?.format?.banlist}?category=${summaryData?.format?.category || 'TCG'}`)
                     setBanList(banlistData)
                 }
             } catch (err) {

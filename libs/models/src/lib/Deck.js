@@ -227,7 +227,7 @@ Deck.find = async (filter = {}, limit = 12, page = 1, sort = []) => {
 Deck.verifyLegality = async (ydk, formatName, formatDate, formatBanlist, formatCategory = 'tcg') => { 
     const legalType = formatCategory?.toLowerCase() + 'Legal'
     const dateType = formatCategory?.toLowerCase() + 'Date'
-    const cardIds = formatName === 'Current' ? [...await Card.findAll({ where: { [legalType]: true }})].map(c => c.konamiCode) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: formatDate } }})].map(c => c.konamiCode)
+    const cardIds = formatName === 'Advanced' ? [...await Card.findAll({ where: { [legalType]: true }})].map(c => c.konamiCode) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: formatDate } }})].map(c => c.konamiCode)
     const forbiddenIds = [...await Status.findAll({ where: { banlist: formatBanlist, category: formatCategory, restriction: 'forbidden' }, include: Card })].map(s => s.card.konamiCode)
     const limitedIds = [...await Status.findAll({ where: { banlist: formatBanlist, category: formatCategory, restriction: 'limited' }, include: Card })].map(s => s.card.konamiCode)
     const semiIds = [...await Status.findAll({ where: { banlist: formatBanlist, category: formatCategory, restriction: 'semi-limited' }, include: Card })].map(s => s.card.konamiCode)

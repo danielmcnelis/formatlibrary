@@ -58,9 +58,9 @@ export const Router = (props) => {
 					<Route path="/pack-simulator" element=<Page roles={roles} element=<PackSimulator /> /> />
 					<Route path="/settings" element=<Page roles={roles} disableAds={true} element=<Settings /> /> />
 					<Route path="/cube-maker" element=<Page roles={roles} disableAds={true} element=<CubeMaker /> /> />
-					<Route path="/rated-lobby" element=<Page roles={roles} disableAds={disableAds} element=<RatedLobby /> /> />
-					<Route path="/cubes/:id" element=<Page roles={roles} disableAds={disableAds} element=<CubeBrowser /> /> />
-					<Route path="/drafts/:id" element=<Page roles={roles} disableAds={disableAds} element= <DraftLobby/> /> />
+					<Route path="/rated-lobby" element=<Page roles={roles} disableAds={true} element=<RatedLobby /> /> />
+					<Route path="/cubes/:id" element=<Page roles={roles} disableAds={true} element=<CubeBrowser /> /> />
+					<Route path="/drafts/:id" element=<Page roles={roles} disableAds={true} element= <DraftLobby/> /> />
 					{/* <Route path="/drafts/:id" element=<Page roles={roles} disableAds={disableAds} element= <SocketProvider value={socket}><DraftLobby/></SocketProvider> /> /> */}
 					<Route path="/sealed/:id" element=<Page roles={roles} disableAds={disableAds} element= <SealedLobby/> /> />
 					<Route path="/format-maker" element=<Page roles={roles} disableAds={disableAds} element=<FormatMaker /> /> />
@@ -80,7 +80,7 @@ export const Router = (props) => {
 					<Route path="/goat-deck-gallery" element={<Navigate to="/deck-gallery/Goat" />} />
 					<Route path="/decks/" element=<Page roles={roles} disableAds={disableAds} element= <DeckTable roles={roles}/> /> />
 					<Route path="/decks/:id" element=<Page roles={roles} disableAds={disableAds} element= <SingleDeck roles={roles}/> /> />
-					<Route path="/decktypes/:id" element=<Page roles={roles} disableAds={disableAds} element= <DeckType roles={roles}/> /> />
+					<Route path="/deckTypes/:id" element=<Page roles={roles} disableAds={disableAds} element= <DeckType roles={roles}/> /> />
 					<Route path="/deck-gallery/:id" element=<Page roles={roles} disableAds={disableAds} element= <DeckGallery /> /> />
 					<Route path="/events/" element=<Page roles={roles} disableAds={disableAds} element= <EventTable /> /> />
 					<Route path="/events/:id" element=<Page roles={roles} disableAds={disableAds} element= <SingleEvent roles={roles}/> /> />

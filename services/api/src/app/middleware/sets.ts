@@ -59,7 +59,7 @@ export const getDraftable = async (req, res, next) => {
   }
 
 // GET CORE
-export const getCore = async (req, res, next) => {
+export const getCoreSets = async (req, res, next) => {
     try {
       const sets = await Set.findAll({
         where: {

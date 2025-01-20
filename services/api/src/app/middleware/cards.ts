@@ -2,11 +2,11 @@ import { Card, Format, Print, Ruling, Set, Status } from '@fl/models'
 import { Op } from 'sequelize'
 import * as fs from 'fs'
 
-export const cardsQuery = async (req, res, next) => {
+export const getCardsByPartialName = async (req, res, next) => {
   try {
     const cards = await Card.findAll({
       where: {
-        name: { [Op.substring]: req.params.query }
+        name: { [Op.iLike]: '%' + req.params.query + '%'}
       },
       attributes: ['name', 'cleanName', 'artworkId'],
       order: [['name', 'ASC']]
@@ -18,7 +18,7 @@ export const cardsQuery = async (req, res, next) => {
   }
 }
 
-export const cardsCount = async (req, res, next) => {
+export const countCards = async (req, res, next) => {
     try {
         const booster = req.query.booster
 
@@ -36,7 +36,7 @@ export const cardsCount = async (req, res, next) => {
     }
 }
 
-export const cards = async (req, res, next) => {
+export const getCards = async (req, res, next) => {
     try {
         const limit = parseInt(req.query.limit || 10)
         if (limit > 100) return res.json({})
@@ -67,7 +67,7 @@ export const cards = async (req, res, next) => {
     }
 }
 
-export const cardsId = async (req, res, next) => {
+export const getCardById = async (req, res, next) => {
     const id = req.params.id.replaceAll('%2F', '/')
         .replaceAll('%3F', '?')
         .replaceAll('%23', '#')
@@ -150,7 +150,7 @@ export const cardsId = async (req, res, next) => {
     }
 }
 
-export const updateCardInfo = async (req, res, next) => {
+export const updateCard = async (req, res, next) => {
     try {
         const card = await Card.findOne({
             where: {
@@ -165,7 +165,7 @@ export const updateCardInfo = async (req, res, next) => {
     }
 }
 
-export const cardsCreate = async (req, res, next) => {
+export const createCard = async (req, res, next) => {
     try {
         if (req.body.image) {
             const buffer = req.body.image

@@ -3,7 +3,7 @@ import { Op } from 'sequelize'
 import axios from 'axios'
 import * as fs from 'fs'
 
-export const deckTypes = async (req, res, next) => {
+export const getDeckTypes = async (req, res, next) => {
   try {
     const deckTypes = await DeckType.findAll({
       attributes: ['id', 'name', 'category'],
@@ -16,7 +16,7 @@ export const deckTypes = async (req, res, next) => {
   }
 }
 
-export const deckTypesName = async (req, res, next) => {
+export const getDeckTypeByName = async (req, res, next) => {
     try {
         const deckType = await DeckType.findOne({
             where: { 
@@ -32,7 +32,7 @@ export const deckTypesName = async (req, res, next) => {
     }
 }
 
-export const deckTypesDownload = async (req, res, next) => {
+export const downloadDeckType = async (req, res, next) => {
     try {
       const format = await Format.findOne({
         where: {
@@ -270,7 +270,7 @@ export const deckTypesDownload = async (req, res, next) => {
   }
 
   
-export const deckTypesSummary = async (req, res, next) => {
+export const getDeckTypeSummary = async (req, res, next) => {
   try {
     const deckType = await DeckType.findOne({
         where: {
@@ -520,7 +520,7 @@ export const deckTypesSummary = async (req, res, next) => {
   }
 }
 
-export const deckTypesCreate = async (req, res, next) => {
+export const createDeckType = async (req, res, next) => {
   try {
     const deckType =
       (await DeckType.findOne({

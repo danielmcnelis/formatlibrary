@@ -67,7 +67,7 @@ export const Event = db.define('events', {
   seriesId: {
     type: Sequelize.INTEGER
   },
-  startDate: {
+  startedAt: {
     type: Sequelize.DATE
   },
   endDate: {

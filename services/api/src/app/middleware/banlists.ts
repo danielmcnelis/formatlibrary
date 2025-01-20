@@ -1,27 +1,25 @@
 import { Card, Status } from '@fl/models'
 import {Op} from 'sequelize'
 
-export const banlistsAll = async (req, res, next) => {
+export const getAllBanlists = async (req, res, next) => {
   try {
-    console.log('req.query', req.query)
     const category = req.query?.category || 'TCG'
-    console.log('category', category)
     const onlyUnique = (value, index, self) => self.indexOf(value) === index
     const banlists = [...(await Status.findAll({ where: { category }}))]
       .map((s) => s.banlist)
       .filter(onlyUnique)
       .sort()
 
-    console.log('banlists', banlists)
     res.json(banlists)
   } catch (err) {
     next(err)
   }
 }
 
-export const banlistsDate = async (req, res, next) => {
+export const getBanlistByDate = async (req, res, next) => {
   try {
     const date = req.params?.date?.replaceAll('-', ' ')
+    console.log('date', date)
     const category = req.query?.category || 'TCG'
 
     const forbidden = await Status.findAll({
@@ -141,31 +139,30 @@ export const banlistsDate = async (req, res, next) => {
   }
 }
 
-export const banlistsSimpleDate = async (req, res, next) => {
+// export const banlistsSimpleDate = async (req, res, next) => {
+//   try {
+//     const {date} = req.params
+//     const category = req.query?.category || 'TCG'
+
+//     const statuses = [
+//       ...(await Status.findAll({
+//         where: {
+//           banlist: date,
+//           category: category
+//         },
+//         attributes: ['cardId', 'restriction']
+//       }))
+//     ].map((s) => [s.cardId, s.restriction])
+
+//     const banlist = Object.fromEntries(statuses)
+//     res.json(banlist)
+//   } catch (err) {
+//     next(err)
+//   }
+// }
+
+export const createNewBanlist = async (req, res, next) => {
   try {
-    const {date} = req.params
-    const category = req.query?.category || 'TCG'
-
-    const statuses = [
-      ...(await Status.findAll({
-        where: {
-          banlist: date,
-          category: category
-        },
-        attributes: ['cardId', 'restriction']
-      }))
-    ].map((s) => [s.cardId, s.restriction])
-
-    const banlist = Object.fromEntries(statuses)
-    res.json(banlist)
-  } catch (err) {
-    next(err)
-  }
-}
-
-export const banlistsCreate = async (req, res, next) => {
-  try {
-    console.log('req.body', req.body)
     const {month, day, year, changes, category} = req.body
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     const banlist = `${months[(Number(month)-1)]} ${year}`

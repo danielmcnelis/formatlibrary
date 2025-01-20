@@ -17,7 +17,7 @@ export const EventTable = (props) => {
     const [format, setFormat] = useState(null)
     const [formats, setFormats] = useState([])
     const [page, setPage] = useState(1)
-    const [sortBy, setSortBy] = useState('startDate:desc')
+    const [sortBy, setSortBy] = useState('startedAt:desc')
     const [total, setTotal] = useState(0)
     const [view, setView] = useState('table')
 
@@ -77,7 +77,7 @@ export const EventTable = (props) => {
       setPage(1)
       setFormat(null)
       setEvents(events)
-      setSortBy('startDate:desc')
+      setSortBy('startedAt:desc')
       setQueryParams({
         name: null,
         winner: null
@@ -106,7 +106,7 @@ export const EventTable = (props) => {
     // USE EFFECT
     useEffect(() => {
         const fetchData = async () => {
-            const {data: eventData} = await axios.get(`/api/events?page=1&limit=10&sortBy=startDate:desc`)
+            const {data: eventData} = await axios.get(`/api/events?page=1&limit=10&sortBy=startedAt:desc`)
             setEvents(eventData)
         
             const {data: formatData} = await axios.get(`/api/formats/`)
@@ -219,12 +219,12 @@ export const EventTable = (props) => {
         
                     <select
                     id="sortSelector"
-                    defaultValue="startDate:desc"
+                    defaultValue="startedAt:desc"
                     style={{width: '230px'}}
                     onChange={(e) => {setSortBy(e.target.value); setPage(1)}}
                     >
-                    <option value="startDate:desc">Date: New ⮕ Old</option>
-                    <option value="startDate:asc">Date: Old ⮕ New</option>
+                    <option value="startedAt:desc">Date: New ⮕ Old</option>
+                    <option value="startedAt:asc">Date: Old ⮕ New</option>
                     <option value="name:asc">Event: A ⮕ Z</option>
                     <option value="name:desc">Event: Z ⮕ A</option>
                     </select>
@@ -400,12 +400,12 @@ export const EventTable = (props) => {
         
                     <select
                     id="sortSelector"
-                    defaultValue="startDate:desc"
+                    defaultValue="startedAt:desc"
                     style={{width: '230px'}}
                     onChange={() => sortEvents()}
                     >
-                    <option value="startDate:desc">Sort Date: New ⮕ Old</option>
-                    <option value="startDate:asc">Sort Date: Old ⮕ New</option>
+                    <option value="startedAt:desc">Sort Date: New ⮕ Old</option>
+                    <option value="startedAt:asc">Sort Date: Old ⮕ New</option>
                     <option value="name:asc">Sort Event: A ⮕ Z</option>
                     <option value="name:desc">Sort Event: Z ⮕ A</option>
                     <option value="size:desc">Sort Size: Large ⮕ Small </option>

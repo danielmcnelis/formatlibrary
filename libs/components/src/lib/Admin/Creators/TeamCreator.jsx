@@ -74,7 +74,7 @@ export const TeamCreator = () => {
 
     // FIND PLAYERS
     const findPlayers = async (query, slot) => {
-        const {data} = await axios.get(`/api/players/query/${query}`)
+        const {data} = await axios.get(`/api/players/partial-name/${query}`)
         if (slot === 'captain') {
             setCaptains(data)
             setCaptain(data[0])

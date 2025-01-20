@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import { statusesQuery } from '../middleware'
+import { getStatuses } from '../middleware'
 
 const router = Router()
 
-router.get('/api/statuses/query', statusesQuery)
+router.get('/api/statuses/', getStatuses)
 
 export default router

@@ -5,7 +5,7 @@ import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
 import { config } from '@fl/config'
 
-export const eventsGallery = async (req, res, next) => {
+export const getEventGallery = async (req, res, next) => {
     try {
       const format = await Format.findOne({
         where: {
@@ -78,7 +78,7 @@ export const getEvents = async (req, res, next) => {
             const [field, value] = val.split(':')
             reduced.push([field, value])
             return reduced
-        }, []) : [['startDate', 'desc']]
+        }, []) : [['startedAt', 'desc']]
 
         const events = await Event.find(filter, limit, page, sort)
         res.json(events)
@@ -87,7 +87,7 @@ export const getEvents = async (req, res, next) => {
     }
 }
 
-export const eventsCommunity = async (req, res, next) => {
+export const getEventCommunity = async (req, res, next) => {
   try {
     const events = await Event.findAll({
       where: {
@@ -104,7 +104,7 @@ export const eventsCommunity = async (req, res, next) => {
         'winnerName',
         'winnerId',
         'communityName',
-        'startDate',
+        'startedAt',
         'endDate'
       ],
       include: [
@@ -112,7 +112,7 @@ export const eventsCommunity = async (req, res, next) => {
         { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp', 'pfp']},
         { model: Team, as: 'winningTeam', attributes: ['id', 'name', 'captainId', 'playerAId', 'playerBId', 'playerCId']}
       ],
-      order: [['startDate', 'DESC']]
+      order: [['startedAt', 'DESC']]
     })
 
     console.log('events', events)
@@ -123,21 +123,21 @@ export const eventsCommunity = async (req, res, next) => {
   }
 }
 
-export const eventsRecent = async (req, res, next) => {
+export const getRecentEvents = async (req, res, next) => {
   try {
     const events = await Event.findAll({
       where: {
         display: true,
         formatName: { [Op.iLike]: req.params.format }
       },
-      // attributes: ['id', 'name', 'abbreviation', 'winnerName', 'winnerId', 'communityName', 'startDate', 'endDate'],
+      // attributes: ['id', 'name', 'abbreviation', 'winnerName', 'winnerId', 'communityName', 'startedAt', 'endDate'],
       include: [
         { model: Format, attributes: ['id', 'name', 'icon'] },
         { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp', 'pfp']},
         { model: Team, as: 'winningTeam', attributes: ['id', 'name', 'captainId', 'playerAId', 'playerBId', 'playerCId']}
       ],
       attributes: { exclude: ['createdAt', 'updatedAt'] },
-      order: [['startDate', 'DESC']],
+      order: [['startedAt', 'DESC']],
       limit: 6
     })
 
@@ -175,7 +175,7 @@ export const getEventById = async (req, res, next) => {
         'winnerId',
         'communityName',
         'serverId',
-        'startDate',
+        'startedAt',
         'endDate'
       ],
       include: [
@@ -354,7 +354,7 @@ export const getEventByIdAsSubscriber = async (req, res, next) => {
           'winnerId',
           'communityName',
           'serverId',
-          'startDate',
+          'startedAt',
           'endDate'
         ],
         include: [
@@ -510,7 +510,7 @@ export const getEventByIdAsSubscriber = async (req, res, next) => {
     }
   }
 
-export const eventsCreate = async (req, res, next) => {
+export const createEvents = async (req, res, next) => {
   try {
     if (req.body.bracket) {
         const buffer = Buffer.from(req.body.bracket.replace(/^data:image\/\w+;base64,/, ''), 'base64')
@@ -549,7 +549,7 @@ export const eventsCreate = async (req, res, next) => {
         channelId: req.body.channelId,
         serverId: req.body.serverId,
         state: 'complete',
-        startDate: req.body.startDate
+        startedAt: req.body.startedAt
       })
     }
 
@@ -569,7 +569,7 @@ export const eventsCreate = async (req, res, next) => {
       winnerId: req.body.playerId,
       communityName: req.body.communityName,
       emoji: req.body.emoji,
-      startDate: req.body.startDate,
+      startedAt: req.body.startedAt,
       endDate: req.body.endDate
     })
 

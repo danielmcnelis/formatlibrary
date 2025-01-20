@@ -11,7 +11,7 @@ const generateRandomString = (length, chars) => {
 }
 
 // TOURNAMENTS CHALLONGE
-export const tournamentsChallonge = async (req, res, next) => {
+export const getTournamentByChallongeName = async (req, res, next) => {
   try {
     const { data } = await axios.get(
       `https://api.challonge.com/v1/tournaments/${req.params.name}.json?api_key=${

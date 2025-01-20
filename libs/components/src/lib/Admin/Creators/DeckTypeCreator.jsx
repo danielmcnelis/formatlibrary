@@ -38,7 +38,7 @@ export const DeckTypeCreator = () => {
         if (!rightCard) return alert('Please assign a Card for the Right Thumbnail Image.')
         
         try {
-            const { data } = await axios.post('/api/decktypes/create', {
+            const { data } = await axios.post('/api/deckTypes/create', {
                 name: name,
                 category: category,
                 formatName: format.name,
@@ -60,7 +60,7 @@ export const DeckTypeCreator = () => {
 
     // FIND CARDS
     const findCards = async (query, location) => {
-        const {data} = await axios.get(`/api/cards/query/${query}`)
+        const {data} = await axios.get(`/api/cards/partial-name/${query}`)
         if (location === 'left') {
             setLeftCards(data)
             setLeftCard(data[0])

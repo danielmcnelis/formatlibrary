@@ -74,7 +74,7 @@ export const EventRow = (props) => {
                 onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
             >
                 <div className="date-cell">
-                    {event.startDate ? event.startDate.substring(0, 10) : ''}
+                    {event.startedAt ? event.startedAt.substring(0, 10) : ''}
                 </div>
             </div>
           </td>

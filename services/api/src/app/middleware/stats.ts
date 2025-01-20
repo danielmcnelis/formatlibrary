@@ -70,7 +70,7 @@ export const getSeasonalLeaderboard = async (req, res, next) => {
   }
 }
 
-export const statsPlayer = async (req, res, next) => {
+export const getStatsByPlayerId = async (req, res, next) => {
   try {
     const stats = await Stats.findAll({
       where: {

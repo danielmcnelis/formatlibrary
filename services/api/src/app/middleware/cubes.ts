@@ -5,7 +5,7 @@ import { S3 } from '@aws-sdk/client-s3';
 import { config } from '@fl/config'
 
 // CUBES ID
-export const cubesId = async (req, res, next) => {
+export const getCubeById = async (req, res, next) => {
     try {
       const id = parseInt(req.params.id)
       const view = req.query?.view
@@ -93,7 +93,7 @@ export const cubesId = async (req, res, next) => {
     }
   }
 
-export const cubesReadYdk = async (req, res, next) => {
+export const readCubeYdk = async (req, res, next) => {
     try {
         const cardPool = []
         const konamiCodes = req.body.ydk.split('#main')[1].split('#extra')[0].split(/[\s]+/).filter((e) => e.length)
@@ -152,7 +152,7 @@ export const getMyCubes = async (req, res, next) => {
 }
 
 
-export const cubesUpdateId = async (req, res, next) => {
+export const updateCube = async (req, res, next) => {
     try {
         const cube = await Cube.findOne({ 
             where: {
@@ -172,7 +172,7 @@ export const cubesUpdateId = async (req, res, next) => {
     }
 }
 
-export const cubesCreate = async (req, res, next) => {
+export const createCube = async (req, res, next) => {
     try {
       const player = await Player.findOne({ where: { id: req.body.builderId } })
   
@@ -190,7 +190,7 @@ export const cubesCreate = async (req, res, next) => {
     }
   }
 
-export const cubesAll = async (req, res, next) => {
+export const getAllCubes = async (req, res, next) => {
   try {    
       const cubes = await Cube.findAll({
           where: {

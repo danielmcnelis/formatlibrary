@@ -18,7 +18,7 @@ export const Matchup = (props) => {
 
       return (
         <div 
-            onClick={() => {window.location.href=`/decktypes/${deckType.toLowerCase().replace(/\s/g, '-')}?format=${format}`}}
+            onClick={() => {window.location.href=`/deckTypes/${deckType.toLowerCase().replace(/\s/g, '-')}?format=${format}`}}
             key={deckType} 
             className="matchup-cell" 
             style={{backgroundColor}}

@@ -77,7 +77,7 @@ export const createDecks = async (event, participants, standings = [], topCutSiz
                         ydk: entry.ydk,
                         placement: placement,
                         eventAbbreviation: event.abbreviation,
-                        eventDate: event.startDate,
+                        eventDate: event.startedAt,
                         communityName: event.communityName,
                         eventId: event.id,
                         origin: 'event',
