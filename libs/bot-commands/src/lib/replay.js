@@ -51,7 +51,7 @@ export default {
                     formatId: {[Op.or]: [format?.id, null]}
                 },
                 limit: 5,
-                order: [["startedAt", "DESC", "createdAt", "DESC"]]
+                order: [["startedAt", "DESC"], ["createdAt", "DESC"]]
             }) : memberIsMod ?
                 await Tournament.findAll({
                     where: {
@@ -64,7 +64,7 @@ export default {
                         serverId: server?.id || null
                     },
                     limit: 5,
-                    order: [["startedAt", "DESC", "createdAt", "DESC"]]
+                    order: [["startedAt", "DESC"], ["createdAt", "DESC"]]
                 })
             : await Tournament.findAll({
                 where: {
@@ -77,7 +77,7 @@ export default {
                     serverId: server?.id || null
                 },
                 limit: 5,
-                order: [["startedAt", "DESC", "createdAt", "DESC"]]
+                order: [["startedAt", "DESC"], ["createdAt", "DESC"]]
             })
 
             await interaction.respond(
