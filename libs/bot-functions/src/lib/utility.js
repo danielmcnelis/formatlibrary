@@ -135,7 +135,7 @@ export const getCard = async (query, fuzzyCards, format) => {
 
     if (!card) return false
 
-    const recentPrint = format?.date ? await Print.findOne({
+    const recentPrint = format?.date && format?.category !== 'OCG' ? await Print.findOne({
         where: {
             cardId: card.id,
             description: {[Op.not]: null},
@@ -218,11 +218,21 @@ export const getCard = async (query, fuzzyCards, format) => {
         dateToVerbose(card[dateType], true, false, true) : 
         card.tcgDate || 'OCG Only'
 
-    let labels = [
-		`\nRelease Date: ${releaseDate}`,
-		`\nFirst Print: ${firstPrint || (format?.category === 'Speed' ? 'N/A' : 'OCG Only')}`,
-        `${format && format?.name ? `\n${format?.name} ${format?.emoji} Status: ${capitalize(position, true)} ${indicator}` : ''}`
-    ]
+    let labels = []
+
+    if (format?.category) {
+        labels.push(`\n${format.category} Release Date: ${releaseDate}`)
+    } else {
+        labels.push(`\nRelease Date: ${releaseDate}`)
+    }
+
+    if (format?.category !== 'OCG' && format?.category !== 'Custom') {
+        labels.push(`\nFirst Print: ${firstPrint || (format?.category === 'Speed' ? 'N/A' : 'OCG Only')}`)
+    }
+
+    if (format?.name) {
+        `\n${format?.name} ${format?.emoji} Status: ${capitalize(position, true)} ${indicator}`
+    }
 
     if (card.category === 'Monster') {
         labels = [

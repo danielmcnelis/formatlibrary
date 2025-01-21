@@ -89,6 +89,9 @@ export const config = {
         apiKey: process.env.CLOUDINARY_API_KEY,
         apiSecret: process.env.CLOUDINARY_API_SECRET,
         apiEnvar: process.env.CLOUDINARY_API_ENVAR
+    },
+    stripe: {
+        clientSecret: process.env.CLIENT_SECRET
     }
   }
   
