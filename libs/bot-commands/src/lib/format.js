@@ -39,6 +39,9 @@ export default {
             if (hasPartnerAccess(server) && !isModerator(server, interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that.`})
             if (!hasPartnerAccess(server) && !isServerManager(interaction.member)) return await interaction.editReply({ content: `You do not have permission to do that. You must have the "Server Manager" permission to set the format.`})
             const format = await Format.findOne({ where: { name }})
+            if (format) {
+                await server.update({ formatName: format.name, formatId: format.id, format})
+            }
             return await interaction.editReply({ content: `This server's format has been set to: ${format.name} ${format.emoji} Format!`})	 
         } catch (err) {
             console.log(err)

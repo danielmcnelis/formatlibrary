@@ -637,16 +637,19 @@ export const recalculateFormatStats = async (format) => {
 
     const servers = await Server.findAll({
         where: {
-            [Op.or]: {
-                id: '414551319031054346',
-                hasInternalLadder: true
-            },
+            [Op.or]: [
+                {id: '414551319031054346'},
+                {hasInternalLadder: true}
+            ],
             formatId: format.id
         }
     })
 
+    console.log('servers.length', servers.length)
+
     for (let z = 0; z < servers.length; z++) {
         const server = servers[z]
+        console.log('server.name', server.name)
         const allStats = await Stats.findAll({ 
             where: { formatId: format.id, serverId: server.id }, 
             attributes: attributes
@@ -658,7 +661,11 @@ export const recalculateFormatStats = async (format) => {
             order: [["createdAt", "ASC"]]
         })
 
-        if (!allMatches.length) return console.log(`No matches for ${format.name}.`)
+        if (!allMatches.length) { 
+            console.log(`No matches for ${format.name}.`)
+            continue
+        }
+
         // const today = new Date()
         let currentDate = allMatches[0].createdAt
         let firstDayOfSeason = format.seasonResetDate
@@ -792,8 +799,6 @@ export const recalculateFormatStats = async (format) => {
             await stats.update({ vanquished: vanquishedIds.length })
         }
     }
-
-
 
     return console.log(`Recalculation for ${format.name} Format is complete!`)
 }
