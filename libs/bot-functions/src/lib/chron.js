@@ -638,12 +638,17 @@ export const recalculateFormatStats = async (format) => {
     const servers = await Server.findAll({
         where: {
             [Op.or]: [
-                {id: '414551319031054346'},
-                {hasInternalLadder: true}
+                {
+                    id: '414551319031054346'
+                },
+                {
+                    hasInternalLadder: true,
+                    formatId: format.id
+                }
             ],
-            formatId: format.id
         }
     })
+    console.log('servers.length', servers.length)
 
     for (let z = 0; z < servers.length; z++) {
         const server = servers[z]
