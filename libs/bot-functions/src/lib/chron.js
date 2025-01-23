@@ -638,8 +638,8 @@ export const recalculateFormatStats = async (format) => {
     const servers = await Server.findAll({
         where: {
             [Op.or]: [
-                {id: '414551319031054346'},
-                {hasInternalLadder: true}
+                { winnerId: oldPlayer.id },
+                { loserId: oldPlayer.id }
             ],
             formatId: format.id
         }
