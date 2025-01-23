@@ -648,7 +648,6 @@ export const recalculateFormatStats = async (format) => {
             ],
         }
     })
-    console.log('servers.length', servers.length)
 
     for (let z = 0; z < servers.length; z++) {
         const server = servers[z]

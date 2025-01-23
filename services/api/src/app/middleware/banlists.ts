@@ -172,11 +172,12 @@ export const createNewBanlist = async (req, res, next) => {
       try {
         const change = changes[i]
         const card = await Card.findOne({ where: { name: change.name } })
+        const previous = change.previous && change.previous !== 'no longer on list' ? change.previous : 'unlimited'
         await Status.create({
           cardName: change.name,
           cardId: card.id,
           restriction: change.restriction,
-          previous: change.previous || 'unlimited',
+          previous: previous,
           date: `${year}-${month}-${day}`,
           banlist: banlist,
           category: category
@@ -191,7 +192,7 @@ export const createNewBanlist = async (req, res, next) => {
     const previousStatuses = await Status.findAll({
       where: {
         banlist: req.body.previousBanlist,
-        restriction: {[Op.not]: 'unlimited'},
+        restriction: {[Op.notIn]: ['unlimited', 'no longer on list']},
         category: category
       }
     })
