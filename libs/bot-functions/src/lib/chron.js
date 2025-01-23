@@ -638,14 +638,12 @@ export const recalculateFormatStats = async (format) => {
     const servers = await Server.findAll({
         where: {
             [Op.or]: [
-                { winnerId: oldPlayer.id },
-                { loserId: oldPlayer.id }
+                {id: '414551319031054346'},
+                {hasInternalLadder: true}
             ],
             formatId: format.id
         }
     })
-
-    console.log('servers.length', servers.length)
 
     for (let z = 0; z < servers.length; z++) {
         const server = servers[z]
@@ -656,8 +654,8 @@ export const recalculateFormatStats = async (format) => {
         })
 
         const allMatches = await Match.findAll({ 
-            where: { formatId: format.id, serverId: '414551319031054346' }, 
-            attributes: ['id', 'formatId', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'classicDelta', 'createdAt', 'isSeasonal'], 
+            where: { formatId: format.id, serverId: server.id }, 
+            attributes: ['id', 'formatId', 'winnerName', 'loserName', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'classicDelta', 'createdAt', 'isSeasonal'], 
             order: [["createdAt", "ASC"]]
         })
 
