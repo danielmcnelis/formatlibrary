@@ -2,16 +2,23 @@ import { Card, Status } from '@fl/models'
 import {Op} from 'sequelize'
 
 export const getAllBanlists = async (req, res, next) => {
+    console.log('getAllBanlists()')
   try {
     const category = req.query?.category || 'TCG'
     const onlyUnique = (value, index, self) => self.indexOf(value) === index
-    const banlists = [...(await Status.findAll({ where: {[Op.iLike]: category}}))]
+    const banlists = [...(await Status.findAll({ 
+            where: {
+                category: {[Op.iLike]: category}
+            }
+        }
+    ))]
       .map((s) => s.banlist)
       .filter(onlyUnique)
       .sort()
 
     res.json(banlists)
   } catch (err) {
+    console.log('!!!')
     next(err)
   }
 }
