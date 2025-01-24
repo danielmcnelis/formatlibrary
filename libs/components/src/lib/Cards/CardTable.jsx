@@ -445,7 +445,7 @@ export const CardTable = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const {data: banlistData} = await axios.get(`/api/banlists/cards/${format?.banlist || 'september 2024'}?category=${format?.category || 'tcg'}`)
+            const {data: banlistData} = await axios.get(`/api/banlists/cards/${format?.banlist || 'december 2024'}?category=${format?.category || 'tcg'}`)
             setBanlist(banlistData)
         }
 
