@@ -261,7 +261,7 @@ export const openDeckInBuilder = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'cleanName', 'id',  'konamiCode', 'artworkId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id',  'konamiCode', 'artworkId', 'sortPriority', 'description'],
             })
 
             if (!card) continue
@@ -275,7 +275,7 @@ export const openDeckInBuilder = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'cleanName', 'id',  'konamiCode', 'artworkId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id',  'konamiCode', 'artworkId', 'sortPriority', 'description'],
             })
 
             if (!card) continue
@@ -289,7 +289,7 @@ export const openDeckInBuilder = async (req, res, next) => {
                 where: { 
                     konamiCode: konamiCode
                 },
-                attributes: ['name', 'cleanName', 'id',  'konamiCode', 'artworkId', 'sortPriority'],
+                attributes: ['name', 'cleanName', 'id',  'konamiCode', 'artworkId', 'sortPriority', 'description'],
             })
             
             if (!card) continue

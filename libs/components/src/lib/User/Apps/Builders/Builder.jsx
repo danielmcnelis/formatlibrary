@@ -452,6 +452,7 @@ export const Builder = () => {
 
   // USE EFFECT SET DECK
 useEffect(() => {
+    console.log('useEffect 455')
     const fetchData = async () => {
         try {
             const accessToken = getCookie('access')
@@ -512,6 +513,7 @@ useEffect(() => {
 
   // USE EFFECT SET DECK
   useEffect(() => {
+    console.log('useEffect 516')
     const fetchData = async () => {
         if (decks.length && id) {
             try {
@@ -526,10 +528,11 @@ useEffect(() => {
     }
 
     fetchData()
-  }, [decks, format, id])
+  }, [decks, id])
 
   // USE EFFECT SET BANLIST
   useEffect(() => {
+    console.log('useEffect 535')
     if (!format.banlist) return
     const fetchData = async () => {
       try {
@@ -845,12 +848,12 @@ useEffect(() => {
                     {
                         deck.main.length < 40 ? [...Array(40 - deck.main.length)].map((x, i) => (
                             <Droppable locale="main" index={i}>
-                                <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>
+                                <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${deck.main.length + i}`}/>
                             </Droppable>
                         )) :
                         deck.main.length % 10 ? [...Array(10 -  deck.main.length % 10)].map((x, i) => (
                             <Droppable locale="main" index={i}>
-                                <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${i}`}/>
+                                <EmptySlot className="card-image" width='72px' height='107px' padding='1px' margin='0px' key={`main-${40 + i}`}/>
                             </Droppable>   
                         )) :
                         ''
@@ -864,7 +867,7 @@ useEffect(() => {
                         {
                             deck.side.map((card, index) => {
                                 if (!card) {
-                                    return <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`side-${index}`}/>
+                                    return <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' index={index} key={`side-${index}`}/>
                                 } else {
                                     return (
                                         <Draggable>
@@ -889,7 +892,7 @@ useEffect(() => {
                             })              
                         }
                         {
-                            [...Array(15 - deck.side.length)].map((x, i) => <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`side-${i}`}/>)
+                            [...Array(15 - deck.side.length)].map((x, i) => <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`side-${i + deck.side.length}`}/>)
                         }
                         </div>
                     </div>
@@ -901,7 +904,7 @@ useEffect(() => {
                         {
                             deck.extra.map((card, index) => {
                                 if (!card) {
-                                    return <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`extra-${index}`}/>
+                                    return <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' index={index} key={`extra-${index}`}/>
                                 } else {
                                     return (
                                         <Draggable>
@@ -927,8 +930,8 @@ useEffect(() => {
                             })
                         }
                         {
-                            deck.extra.length < 15 ? [...Array(15 - deck.extra.length)].map((x, i) => <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`extra-${i}`}/>) :
-                            deck.extra.length % 15 ? [...Array(15 -  deck.extra.length % 15)].map((x, i) => <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`extra-${i}`}/>) :
+                            deck.extra.length < 15 ? [...Array(15 - deck.extra.length)].map((x, i) => <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`extra-${i + deck.extra.length}`}/>) :
+                            deck.extra.length % 15 ? [...Array(15 -  deck.extra.length % 15)].map((x, i) => <EmptySlot className="card-image" width='48px' height='71px' padding='0.5px' margin='0px' key={`extra-${i + deck.extra.length}`}/>) :
                             ''
                         }
                         </div>

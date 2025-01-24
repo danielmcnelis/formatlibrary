@@ -56,13 +56,13 @@
   }
 
   .SearchPanel {
-    margin: 0px 15px 0px 5px;
+    margin: 0px 2px;
 }
 
   
 .searchButton {
     display: inline-block;
-    padding: 0.36em 0.84em;
+    /* padding: 0.36em 0.84em; */
     border: 1px solid #000000;
     border-radius: 0.5em;
     margin: 0.1em 0.5em 0.2em 0.5em;
@@ -85,8 +85,7 @@
   }
 
   #builderGalleryFlexBox {
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0px auto;
     display: flex;
     width: 260px;
     max-width: 260px;

@@ -2,7 +2,6 @@ import { Card, Status } from '@fl/models'
 import {Op} from 'sequelize'
 
 export const getAllBanlists = async (req, res, next) => {
-    console.log('getAllBanlists()')
   try {
     const category = req.query?.category || 'TCG'
     const onlyUnique = (value, index, self) => self.indexOf(value) === index
@@ -18,7 +17,6 @@ export const getAllBanlists = async (req, res, next) => {
 
     res.json(banlists)
   } catch (err) {
-    console.log('!!!')
     next(err)
   }
 }
