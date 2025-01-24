@@ -20,11 +20,9 @@ export const FormatIntro = (props) => {
     const [statsCount, setStatsCount] = useState(0)
     const [inEditMode, setInEditMode] = useState(false)
     const { id } = useParams()
-    const videoId = format?.videoId
+    // const videoId = format?.videoId
     const videoEmbed = format?.videoEmbed
-    console.log(`videoId`, videoId)
-    console.log(`videoEmbed`, videoEmbed)
-  
+    
     // USE EFFECT
     useEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop), [inEditMode])
 

@@ -28,7 +28,6 @@ export const Builder = () => {
     // const [cuts, setCuts] = useState([])
     const [card, setCard] = useState({})
     const [format, setFormat] = useState({})
-    console.log('format', format)
     const [controlPanelDeckType, setControlPanelDeckType] = useState(null)
     const [controlPanelFormat, setControlPanelFormat] = useState(null)
     const [formats, setFormats] = useState([])
@@ -534,7 +533,7 @@ useEffect(() => {
     if (!format.banlist) return
     const fetchData = async () => {
       try {
-        const {data} = await axios.get(`/api/banlists/${format.banlist}?category=${format.category || 'TCG'}`)
+        const {data} = await axios.get(`/api/banlists/cards/${format.banlist}?category=${format.category || 'TCG'}`)
         setBanlist(data)
       } catch (err) {
         console.log(err)

@@ -20,7 +20,7 @@ const App = () => {
         subscriber: false
     })
     const [clientSecret, setClientSecret] = useState()
-    console.log('clientSecret', clientSecret)
+    // console.log('clientSecret', clientSecret)
     
     const [checkedSubscription, setCheckedSubscription] = useState(false)  
     const adBlockDetected = useDetectAdBlock()
@@ -30,8 +30,8 @@ const App = () => {
     useEffect(() => {
         const fetchClientSecret = async () => {
             const { data } = await axios.get(`/api/stripe/payment`)
-            console.log('data', data)
-            console.log('data.client_secret', data.client_secret)
+            // console.log('data', data)
+            // console.log('data.client_secret', data.client_secret)
             return setClientSecret(data.client_secret)
         }
 

@@ -31,7 +31,6 @@ export const CardTable = () => {
     const [formats, setFormats] = useState([])
     const [format, setFormat] = useState({})
     const [banlist, setBanlist] = useState({})
-    console.log('banlist', banlist)
     const [boosters, setBoosters] = useState([])
     const [booster, setBooster] = useState(null)
     const [advanced, setAdvanced] = useState(false)
@@ -259,8 +258,10 @@ export const CardTable = () => {
       if (!formatName) {
         document.getElementById('format').value = ""
         setCutoff(`${now.getFullYear()}-12-31`)
-        const {data} = await axios.get(`/api/formats/advanced`)
-        setFormat(data.format)
+        const {data: formatData} = await axios.get(`/api/formats/advanced`)
+        setFormat(formatData?.format)
+        const {data: banlistData} = await axios.get(`/api/banlists/cards/advanced?category=tcg`)
+        setBanlist(banlistData)
       }
   
       setBooster(null)
@@ -351,7 +352,7 @@ export const CardTable = () => {
         setQueryParams({...queryParams, region: formatData.format?.category?.toLowerCase() })
         const category = formatData?.format?.category || 'TCG'
 
-        const {data: banlistData} = await axios.get(`/api/banlists/${formatData.format?.banlist?.toLowerCase()?.replaceAll(' ', '-')}?category=${category}`)
+        const {data: banlistData} = await axios.get(`/api/banlists/cards/${formatData.format?.banlist?.toLowerCase()?.replaceAll(' ', '-')}?category=${category}`)
         setBanlist(banlistData)
 
         const year = formatData.format.date ? parseInt(formatData.format.date.slice(0, 4)) : now.getFullYear()
@@ -441,6 +442,24 @@ export const CardTable = () => {
         count()
         search()
     }, [page, cardsPerPage, sortBy, cutoff, format, booster, sliders.atk, sliders.def, sliders.level, queryParams, groupParams, iconParams, attributeParams, typeParams, count, search])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const {data: banlistData} = await axios.get(`/api/banlists/cards/${format?.banlist || 'september 2024'}?category=${format?.category || 'tcg'}`)
+            setBanlist(banlistData)
+        }
+
+        fetchData()
+    }, [format])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const {data: formatData} = await axios.get(`/api/formats/${formatName || 'advanced'}`)
+            setFormat(formatData?.format)
+        }
+
+        fetchData()
+    }, [])
 
     const advancedButtons = {
       icon: [

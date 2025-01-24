@@ -4,7 +4,6 @@ import './AdvButton.css'
 //ADVANCED SEARCH BUTTONS
 export const AdvButton = (props) => {
     const { id, display, buttonClass, clicked, removeFilter, applyFilter } = props
-    console.log('adv button id', camelize(id))
      
     return (
       clicked ? (

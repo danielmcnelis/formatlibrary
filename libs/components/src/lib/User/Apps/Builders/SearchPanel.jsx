@@ -351,7 +351,7 @@ export const SearchPanel = (props) => {
                 const day = format.date ? parseInt(format.date.slice(-2)) : 31
 
                 if (format.banlist) {
-                    const {data: banlistData} = await axios.get(`/api/banlists/${format.banlist}?category=${format.category || 'TCG'}`)
+                    const {data: banlistData} = await axios.get(`/api/banlists/cards/${format.banlist}?category=${format.category || 'TCG'}`)
                     setBanlist(banlistData || {})
                 }
 

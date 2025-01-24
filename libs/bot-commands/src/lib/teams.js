@@ -90,10 +90,7 @@ export default {
             freeAgents.forEach((freeAgent) => results.push(freeAgent.playerName))
 
             const channel = interaction.guild?.channels?.cache?.get(server.botSpamChannelId) || interaction.channel
-            console.log(`channel.id`, channel.id)
-            console.log(`interaction.channel?.id`, interaction.channel?.id)
-            console.log(`server.botSpamChannelId`, server.botSpamChannelId)
-            console.log(`server.botSpamChannelId === channel.id && interaction.channel?.id !== server.botSpamChannelId`, server.botSpamChannelId === channel.id && interaction.channel?.id !== server.botSpamChannelId)
+            
             if (server.botSpamChannelId === channel.id && interaction.channel?.id !== server.botSpamChannelId) {
                 await interaction.editReply(`Please visit <#${channel.id}> to view the ${tournament.name} teams. ${tournament.logo}`)
                 await channel.send({ content: `${tournament.name} ${tournament.logo} - Teams ${tournament.emoji}`}) 

@@ -5,7 +5,7 @@ export const getAllBanlists = async (req, res, next) => {
   try {
     const category = req.query?.category || 'TCG'
     const onlyUnique = (value, index, self) => self.indexOf(value) === index
-    const banlists = [...(await Status.findAll({ where: { category }}))]
+    const banlists = [...(await Status.findAll({ where: {[Op.iLike]: category}}))]
       .map((s) => s.banlist)
       .filter(onlyUnique)
       .sort()
@@ -19,13 +19,12 @@ export const getAllBanlists = async (req, res, next) => {
 export const getBanlistByDate = async (req, res, next) => {
   try {
     const date = req.params?.date?.replaceAll('-', ' ')
-    console.log('date', date)
     const category = req.query?.category || 'TCG'
 
     const forbidden = await Status.findAll({
       where: {
         banlist: {[Op.iLike]: date},
-        category: category,
+        category: {[Op.iLike]: category},
         restriction: 'forbidden'
       },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
@@ -39,7 +38,7 @@ export const getBanlistByDate = async (req, res, next) => {
     const limited = await Status.findAll({
       where: {
         banlist: {[Op.iLike]: date},
-        category: category,
+        category: {[Op.iLike]: category},
         restriction: 'limited'
       },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
@@ -53,7 +52,7 @@ export const getBanlistByDate = async (req, res, next) => {
     const semiLimited = await Status.findAll({
         where: {
             banlist: {[Op.iLike]: date},
-            category: category,
+            category: {[Op.iLike]: category},
             restriction: 'semi-limited'
         },
         attributes: { exclude: ['createdAt', 'updatedAt'] },
@@ -67,7 +66,7 @@ export const getBanlistByDate = async (req, res, next) => {
     const unlimited = await Status.findAll({
       where: {
         banlist: {[Op.iLike]: date},
-        category: category,
+        category: {[Op.iLike]: category},
         restriction: 'no longer on list'
       },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
@@ -81,7 +80,7 @@ export const getBanlistByDate = async (req, res, next) => {
     const limited1 = await Status.findAll({
         where: {
             banlist: {[Op.iLike]: date},
-            category: category,
+            category: {[Op.iLike]: category},
             restriction: 'limited-1'
         },
         attributes: { exclude: ['createdAt', 'updatedAt'] },
@@ -96,7 +95,7 @@ export const getBanlistByDate = async (req, res, next) => {
     const limited2 = await Status.findAll({
         where: {
             banlist: {[Op.iLike]: date},
-            category: category,
+            category: {[Op.iLike]: category},
             restriction: 'limited-2'
         },
         attributes: { exclude: ['createdAt', 'updatedAt'] },
@@ -111,7 +110,7 @@ export const getBanlistByDate = async (req, res, next) => {
     const limited3 = await Status.findAll({
         where: {
             banlist: {[Op.iLike]: date},
-            category: category,
+            category: {[Op.iLike]: category},
             restriction: 'limited-3'
         },
         attributes: { exclude: ['createdAt', 'updatedAt'] },
@@ -139,27 +138,27 @@ export const getBanlistByDate = async (req, res, next) => {
   }
 }
 
-// export const banlistsSimpleDate = async (req, res, next) => {
-//   try {
-//     const {date} = req.params
-//     const category = req.query?.category || 'TCG'
+export const getBanlistAsCardsByDate = async (req, res, next) => {
+  try {
+    const {date} = req.params
+    const category = req.query?.category || 'TCG'
 
-//     const statuses = [
-//       ...(await Status.findAll({
-//         where: {
-//           banlist: date,
-//           category: category
-//         },
-//         attributes: ['cardId', 'restriction']
-//       }))
-//     ].map((s) => [s.cardId, s.restriction])
+    const statuses = [
+      ...(await Status.findAll({
+        where: {
+          banlist: {[Op.iLike]: date},
+          category: {[Op.iLike]: category}
+        },
+        attributes: ['cardId', 'restriction']
+      }))
+    ].map((s) => [s.cardId, s.restriction])
 
-//     const banlist = Object.fromEntries(statuses)
-//     res.json(banlist)
-//   } catch (err) {
-//     next(err)
-//   }
-// }
+    const banlist = Object.fromEntries(statuses)
+    res.json(banlist)
+  } catch (err) {
+    next(err)
+  }
+}
 
 export const createNewBanlist = async (req, res, next) => {
   try {

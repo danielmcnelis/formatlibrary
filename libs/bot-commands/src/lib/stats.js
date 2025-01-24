@@ -76,8 +76,6 @@ export default {
                     } 
                 }) || {}
 
-                console.log(`[eloType, elo, wins, losses, games, statsType]`, [eloType, stats[eloType], stats[winsType], stats[lossesType], stats[gamesType], statsType])
-
                 const allStats = await Stats.findAll({ 
                     where: {
                         formatId: format.id, 

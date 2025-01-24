@@ -9,16 +9,13 @@ import './MiniBoard.css'
 export const MiniBoard = (props) => {
     const { format } = props
     const [miniboard, setMiniBoard] = useState([])
-    console.log('miniboard', miniboard)
     const { id } = useParams()
     const navigate = useNavigate()
     const statsType = format.useSeasonalElo ? 'seasonal' : 'general'
-    console.log(`statsType in miniboard`, statsType)
     // const videoPlaylistId = format?.videoPlaylistId
     const url = statsType === 'seasonal' ? `/leaderboards/${format?.name?.toLowerCase()}/seasonal` :
         `/leaderboards/${format?.name?.toLowerCase()}`
     
-    console.log(`url in miniboard`, url)
     const goToLeaderBoard = () => navigate(url)
 
     // USE EFFECT FETCH DATA

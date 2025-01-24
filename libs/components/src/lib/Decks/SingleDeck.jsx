@@ -139,7 +139,7 @@ export const SingleDeck = (props) => {
         if (!deck || !deck.format) return
         const fetchData = async () => {
         try {
-            const {data} = await axios.get(`/api/banlists/${deck.format.banlist}?category=${deck.format.category || 'TCG'}`)
+            const {data} = await axios.get(`/api/banlists/cards/${deck.format.banlist}?category=${deck.format.category || 'TCG'}`)
             setBanlist(data)
         } catch (err) {
             console.log(err)
