@@ -119,6 +119,11 @@ export const getDeckList = async (member, player, format, override = false, unra
                 member.send(`I'm sorry, your deck must contain at least ${minimum} cards.`).catch((err) => console.log(err))    
                 return false 
             }
+            
+            if (format.category === 'OCG' && format.date < '2000-04-20' && side?.length > 10) {
+                member.send(`I'm sorry, before Series 2, your side deck cannot contain more than 10 cards.`).catch((err) => console.log(err))    
+                return false 
+            }
 
             const deckArr = [...main, ...extra, ...side,]
             const issues = await getIssues(deckArr, format)
