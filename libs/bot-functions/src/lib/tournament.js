@@ -1499,8 +1499,8 @@ export const processMatchResult = async (server, interaction, winner, winningPla
             if (loserEliminated) {
                 return await interaction.channel.send({ content: `${losingPlayer.name}, You are eliminated from the tournament. Better luck next time!`})
             } else if (loserNextOpponent) {
-                const loserNextOpponentGlobalName = loserNextOpponent.globalName
-                const loserNextOpponentDiscordName = loserNextOpponent.discordName
+                const loserNextOpponentGlobalName = loserNextOpponent.player.globalName
+                const loserNextOpponentDiscordName = loserNextOpponent.player.discordName
                 try {
                     loser.send(
                         `New pairing for ${tournament.name}! ${tournament.logo}` +
