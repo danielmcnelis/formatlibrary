@@ -74,34 +74,47 @@ export default {
                         formatId: format.id, 
                         serverId: serverId
                     } 
-                }) || {}
-
-                const allStats = await Stats.findAll({ 
-                    where: {
-                        formatId: format.id, 
-                        [gamesType]: { [Op.gte]: 3 },
-                        serverId: serverId,
-                        '$player.isHidden$': false
-                    },
-                    include: [Player],
-                    order: [[eloType, 'DESC']] 
                 })
 
-                const index = allStats.findIndex((s) => s.playerId === player.id)
-                const rank = stats.id && index >= 0 ? `#${index + 1} out of ${allStats.length}` : `N/A`
-                const medal = getMedal(stats[eloType], true)
-                const winrate = stats[winsType] || stats[lossesType] ? `${(100 * stats?.[winsType] / (stats[winsType] + stats[lossesType])).toFixed(2)}%` : 'N/A'		
-
-                return await interaction.reply({ content: 
-                    `${format.emoji} --- ${statsType}${format.name} Stats --- ${format.emoji}`
-                    + `${server.hasInternalLadder ? `\nServer: ${server.name}` : ''}`
-                    + `\nName: ${stats.playerName}`
-                    + `\nMedal: ${medal}`
-                    + `\nRanking: ${rank}`
-                    + `\nElo Rating: ${stats[eloType]?.toFixed(2) || '500.00'}`
-                    + `\nWins: ${stats[winsType]}, Losses: ${stats[lossesType]}`
-                    + `\nWin Rate: ${winrate}`
-                })
+                if (!stats) {
+                    return await interaction.reply({ content: 
+                        `${format.emoji} --- ${statsType}${format.name} Stats --- ${format.emoji}`
+                        + `${server.hasInternalLadder ? `\nServer: ${server.name}` : ''}`
+                        + `\nName: ${player.name}`
+                        + `\nMedal: Gold ${emojis.gold}`
+                        + `\nRanking: N/A`
+                        + `\nElo Rating: 500.00`
+                        + `\nWins: 0, Losses: 0`
+                        + `\nWin Rate: N/A`
+                    })
+                } else {
+                    const allStats = await Stats.findAll({ 
+                        where: {
+                            formatId: format.id, 
+                            [gamesType]: { [Op.gte]: 3 },
+                            serverId: serverId,
+                            '$player.isHidden$': false
+                        },
+                        include: [Player],
+                        order: [[eloType, 'DESC']] 
+                    })
+    
+                    const index = allStats.findIndex((s) => s.playerId === player.id)
+                    const rank = stats.id && index >= 0 ? `#${index + 1} out of ${allStats.length}` : `N/A`
+                    const medal = getMedal(stats[eloType], true)
+                    const winrate = stats[winsType] || stats[lossesType] ? `${(100 * stats?.[winsType] / (stats[winsType] + stats[lossesType])).toFixed(2)}%` : 'N/A'		
+    
+                    return await interaction.reply({ content: 
+                        `${format.emoji} --- ${statsType}${format.name} Stats --- ${format.emoji}`
+                        + `${server.hasInternalLadder ? `\nServer: ${server.name}` : ''}`
+                        + `\nName: ${stats.playerName}`
+                        + `\nMedal: ${medal}`
+                        + `\nRanking: ${rank}`
+                        + `\nElo Rating: ${stats[eloType]?.toFixed(2) || '500.00'}`
+                        + `\nWins: ${stats[winsType]}, Losses: ${stats[lossesType]}`
+                        + `\nWin Rate: ${winrate}`
+                    })
+                }
             }
         } catch (err) {
             console.log(err)
