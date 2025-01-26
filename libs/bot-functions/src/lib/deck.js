@@ -189,6 +189,11 @@ export const checkDeckList = async (member, format) => {
                 return false 
             }
 
+            if (format.category === 'OCG' && format.date < '2000-04-20' && side?.length > 10) {
+                member.send(`I'm sorry, before Series 2, your side deck cannot contain more than 10 cards.`).catch((err) => console.log(err))    
+                return false 
+            }
+
             const deckArr = [...main, ...extra, ...side,]
             const issues = await getIssues(deckArr, format)
             if (!issues) return false
@@ -253,6 +258,11 @@ export const checkSpeedDeckList = async (member, format, skillCard) => {
 
             if (main?.length < minimum) {
                 member.send(`I'm sorry, your deck must contain at least ${minimum} cards.`).catch((err) => console.log(err))    
+                return false
+            }
+
+            if (side?.length > 6) {
+                member.send(`I'm sorry, your side deck cannot contain more than 6 cards.`).catch((err) => console.log(err))    
                 return false 
             }
 
