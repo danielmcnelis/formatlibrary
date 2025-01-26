@@ -60,7 +60,7 @@ export const joinRatedPool = async (req, res, next) => {
             const now = new Date()
             const isSeasonal = format.useSeasonalElo && format.seasonResetDate < now
             const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
-            const cutoff = isSeasonal ? new Date(now - (30 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
+            const cutoff = isSeasonal ? new Date(now - (15 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
 
             const mostRecentMatch = await Match.findOne({
                 where: {

@@ -1045,6 +1045,87 @@ export const manageSubscriptions = async (client) => {
     return console.log(`manageSubscriptions() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
+// ASSIGN SEASONAL LADDER ROLES
+export const assignSeasonalLadderRoles = async (client) => {
+    const guild = client.guilds.cache.get('414551319031054346')
+    const edisonLadderPlayersRoleId = '1333089910563016704'
+    const hatLadderPlayersRoleId = '1333090132991148072'
+    const goatLadderPlayersRoleId = '1333090182819483831'
+    const tenguLadderPlayersRoleId = '1333090222262452284'
+
+    const edisonLadderPlayers = await Stats.findAll({
+        where: {
+            formatName: 'Edison',
+            seasonalGames: {[Op.gt]: 0}
+        },
+        include: Player
+    })
+
+    for (let i = 0; i < edisonLadderPlayers.length; i++) {
+        try {
+            const {player} = edisonLadderPlayers[i]
+            const member = await guild.members.fetch(player?.discordId)
+            member.roles.add(edisonLadderPlayersRoleId)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const hatLadderPlayers = await Stats.findAll({
+        where: {
+            formatName: 'HAT',
+            seasonalGames: {[Op.gt]: 0}
+        },
+        include: Player
+    })
+
+    for (let i = 0; i < hatLadderPlayers.length; i++) {
+        try {
+            const {player} = hatLadderPlayers[i]
+            const member = await guild.members.fetch(player?.discordId)
+            member.roles.add(hatLadderPlayersRoleId)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const goatLadderPlayers = await Stats.findAll({
+        where: {
+            formatName: 'Goat',
+            seasonalGames: {[Op.gt]: 0}
+        },
+        include: Player
+    })
+
+    for (let i = 0; i < goatLadderPlayers.length; i++) {
+        try {
+            const {player} = goatLadderPlayers[i]
+            const member = await guild.members.fetch(player?.discordId)
+            member.roles.add(goatLadderPlayersRoleId)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const tenguLadderPlayers = await Stats.findAll({
+        where: {
+            formatName: 'Tengu',
+            seasonalGames: {[Op.gt]: 0}
+        },
+        include: Player
+    })
+
+    for (let i = 0; i < tenguLadderPlayers.length; i++) {
+        try {
+            const {player} = tenguLadderPlayers[i]
+            const member = await guild.members.fetch(player?.discordId)
+            member.roles.add(tenguLadderPlayersRoleId)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+}
+
 // ASSIGN TOURNAMENT PARTICIPANT ROLES
 export const assignTournamentRoles = async (client) => {
     const start = Date.now()

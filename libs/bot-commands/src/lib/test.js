@@ -1,11 +1,12 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
-import { downloadOriginalArtworks, purgeBetaCards, downloadMissingCardImages, recalculateStats, downloadNewCards, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckType, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runHourlyTasks } from '@fl/bot-functions'
+import { assignSeasonalLadderRoles, downloadOriginalArtworks, purgeBetaCards, downloadMissingCardImages, recalculateStats, downloadNewCards, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckType, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runHourlyTasks } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { Match, Tournament, Server, TriviaQuestion } from '@fl/models'
 import axios from 'axios'
 import { recalculateAllStats } from '../../../bot-functions/src'
+import { Stats } from '../../../models/src'
 // import { config } from '@fl/config'
 
 export default {
@@ -30,8 +31,9 @@ export default {
                 // await purgeBetaCards(client)
                 // return await downloadOriginalArtworks(client)
                 // return downloadMissingCardImages()
-                return recalculateAllStats()
+                // return recalculateAllStats()
                 // return runMonthlyTasks(client)
+                return assignSeasonalLadderRoles(client)
             } else {
                 await interaction.editReply('🧪')
             }
