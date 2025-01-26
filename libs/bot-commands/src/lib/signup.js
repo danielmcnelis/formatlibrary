@@ -126,7 +126,9 @@ export default {
                 }
 
                 await entry.update({ participantId: participant.id })
-                member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
+                if (server.tournamentRoleId) {
+                    member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
+                }
                 interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
                 return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament?.name}! ${tournament.logo}`}).catch((err) => console.log(err))
             } else if (!entry && tournament.isTeamTournament && team) {

@@ -1133,7 +1133,13 @@ export const assignTournamentRoles = async (client) => {
         function: 'assignTournamentRoles',
         status: 'underway'
     })
-    const servers = await Server.findAll()
+    
+    const servers = await Server.findAll({
+        where: {
+            tournamentRoleId: {[Op.not]: null}
+        }
+    })
+
     for (let s = 0; s < servers.length; s++) {
         try {
             let b = 0

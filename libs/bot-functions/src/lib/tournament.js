@@ -635,7 +635,9 @@ export const joinTournament = async (interaction, tournamentId) => {
         }
 
         const deckAttachments = await drawDeck(data.ydk) || []
-        interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
+        if (server.tournamentRoleId) {
+            interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
+        }
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
@@ -685,7 +687,9 @@ export const joinTournament = async (interaction, tournamentId) => {
         await entry.update({ participantId: participant.id })
 
         const deckAttachments = await drawDeck(data.ydk) || []
-        interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
+        if (server.tournamentRoleId) {
+            interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
+        }
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
@@ -704,7 +708,9 @@ export const joinTournament = async (interaction, tournamentId) => {
         })
 
         const deckAttachments = await drawDeck(data.ydk) || []
-        interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
+        if (server.tournamentRoleId) {
+            interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
+        }
         interaction.member.send({ content: `Thanks! I have all the information we need from you. Good luck in ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
@@ -729,7 +735,9 @@ export const joinTournament = async (interaction, tournamentId) => {
 
         await entry.update({ url: data.url, ydk: data.ydk || data.opdk })
         const deckAttachments = await drawDeck(data.ydk) || []
-        interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
+        if (server.tournamentRoleId) {
+            interaction.member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
+        }
         interaction.member.send({ content: `Thanks! I have your updated deck list for ${tournament.name}! ${tournament.logo}`})
         deckAttachments.forEach((attachment, index) => {
             if (index === 0) {
@@ -798,7 +806,9 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
         if (!participant) return await interaction.member.send({ content: `${emojis.high_alert} Error: Unable to register on Challonge for ${tournament.name}. ${tournament.logo}`})        
         await entry.update({ participantId: participant.id })
 
-        member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
+        if (server.tournamentRoleId) {
+            member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
+        }
         interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
         return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else if (entry && entry.isActive === false) {
@@ -812,7 +822,9 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
             isActive: true
         })
 
-        member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
+        if (server.tournamentRoleId) {
+            member.roles.add(server.tournamentRoleId).catch((err) => console.log(err))
+        }
         interaction.member.send({ content: `Thanks! I have all the information we need for ${player.name}.` }).catch((err) => console.log(err))
         return await interaction.guild?.channels.cache.get(tournament.channelId).send({ content: `A moderator signed up <@${player.discordId}> for ${tournament.name}! ${tournament.logo}`}).catch((err) => console.log(err))
     } else if (entry && entry.isActive === true) {
@@ -983,7 +995,7 @@ export const removeParticipant = async (server, interaction, member, entry, tour
         })
 
         // REMOVE TOURNAMENT PARTICIPANT ROLE IF NOT IN ANY OTHER TOURNAMENTS ON THE SERVER
-        if (!count) member?.roles?.remove(server.tournamentRoleId)
+        if (!count && server.tournamentRoleId) member?.roles?.remove(server.tournamentRoleId)
 
         // NOTIFY OPPONENT IF MATCH WAS OPEN
         if (opponentEntry) {
@@ -1474,7 +1486,7 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                 include: Tournament
             })
 
-            if (member && !count) member.roles.remove(server.tournamentRoleId).catch((err) => console.log(err))
+            if (member && !count && server.tournamentRoleId) member.roles.remove(server.tournamentRoleId).catch((err) => console.log(err))
         }
 
         const loserNextMatch = loserEliminated ? null : findNextMatch(updatedMatchesArr, matchId, losingEntry.participantId)
@@ -1685,7 +1697,7 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
                         include: Tournament
                     })
     
-                    if (member && !count) member.roles.remove(server.tournamentRoleId).catch((err) => console.log(err))
+                    if (member && !count && server.tournamentRoleId) member.roles.remove(server.tournamentRoleId).catch((err) => console.log(err))
                 }
             }
 
@@ -3331,7 +3343,8 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
                     const discordId = entry.player.discordId	
                     console.log(`Deleting ${entry.playerName}'s entry for ${event.name}.`)
                     await entry.destroy()
-
+                    
+                    if (!server.tournamentRoleId) continue
                     const count = await Entry.count({ 
                         where: {
                             playerId: playerId,
@@ -3484,6 +3497,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
                     console.log(`Deleting ${entry.playerName}'s entry for ${tournament.name}.`)
                     await entry.destroy()
 
+                    if (!server.tournamentRoleId) continue
                     const count = await Entry.count({ 
                         where: {
                             playerId: playerId,
@@ -3652,6 +3666,7 @@ export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId
                 console.log(`Deleting ${entry.playerName}'s entry for ${event.name}.`)
                 await entry.destroy()
 
+                if (!server.tournamentRoleId) continue
                 const count = await Entry.count({ 
                     where: {
                         playerId: playerId,

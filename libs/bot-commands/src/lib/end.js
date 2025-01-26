@@ -91,6 +91,8 @@ export default {
                         console.log(`Deleting ${entry.playerName}'s entry for ${event.name}.`)
                         await entry.destroy()
     
+                        if (!server.tournamentRoleId) continue
+                            
                         const count = await Entry.count({ 
                             where: {
                                 playerId: playerId,
@@ -221,6 +223,8 @@ export default {
                             console.log(`Deleting ${entry.playerName}'s entry for ${event.name}.`)
                             await entry.destroy()
         
+                            if (!server.tournamentRoleId) continue
+                            
                             const count = await Entry.count({ 
                                 where: {
                                     playerId: playerId,
@@ -373,6 +377,8 @@ export default {
                             console.log(`Deleting ${entry.playerName}'s entry for ${tournament.name}.`)
                             await entry.destroy()
         
+                            if (!server.tournamentRoleId) continue
+                            
                             const count = await Entry.count({ 
                                 where: {
                                     playerId: playerId,

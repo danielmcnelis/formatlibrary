@@ -5,7 +5,7 @@ import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { Match, Tournament, Server, TriviaQuestion } from '@fl/models'
 import axios from 'axios'
-import { recalculateAllStats } from '../../../bot-functions/src'
+import { assignTournamentRoles, recalculateAllStats } from '../../../bot-functions/src'
 import { Stats } from '../../../models/src'
 // import { config } from '@fl/config'
 
@@ -33,6 +33,7 @@ export default {
                 // return downloadMissingCardImages()
                 // return recalculateAllStats()
                 // return runMonthlyTasks(client)
+                await assignTournamentRoles(client)
                 return assignSeasonalLadderRoles(client)
             } else {
                 await interaction.editReply('🧪')

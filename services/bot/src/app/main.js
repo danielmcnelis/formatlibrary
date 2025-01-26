@@ -512,11 +512,11 @@ client.on('guildMemberAdd', async (member) => {
                 attributes: ['emoji']
             })
 
-            return channel.send({ content: `${member}, Welcome to the ${guild.name} ${server.logo} Discord server. ${format?.emoji || emojis.legend}`})
+            return channel.send({ content: `${member}, Welcome to the ${guild.name}${server.logo ? ' ' + server.logo : ''} Discord server. ${format?.emoji || emojis.legend}`})
         } else {
             await assignRoles(guild, member)
             if (!channel) return
-            return channel.send({ content: `${member}, Welcome back to the ${guild.name} ${server.logo} Discord server! We missed you. ${emojis.soldier}`})
+            return channel.send({ content: `${member}, Welcome back to the ${guild.name}${server.logo ? ' ' + server.logo : ''}  Discord server! We missed you. ${emojis.soldier}`})
         }
     } catch (err) {
         console.log(err)

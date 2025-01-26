@@ -43,6 +43,8 @@ export default {
                             const playerId = entry.player.id
                             await entry.destroy()
                             
+                            if (!server.tournamentRoleId) continue
+                            
                             const member = await interaction.guild?.members.fetch(discordId)
                             if (!member) continue
 
