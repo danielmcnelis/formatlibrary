@@ -21,3 +21,13 @@ export const paymentIntent = async (req, res, next) => {
         next(err)
     }
 }
+
+export const receiveStripeWebhooks = async (req, res, next) => {
+    try {
+        console.log('req', req)
+    } catch (err) {
+        next(err)
+    }
+}
+
+

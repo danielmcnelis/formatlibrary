@@ -20,10 +20,12 @@
   }
   
   .deckThumbnail-image {
-    width: 30% !important;
+    width: 30%;
     aspect-ratio: 1/1;
     margin: 0px 2px;
     border: 1px solid white;
+    object-fit: cover;
+    object-position: 0 0;
   }
 
 @media only screen and (max-width: 1000px) {

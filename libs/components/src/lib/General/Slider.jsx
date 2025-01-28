@@ -1,100 +1,67 @@
 
 import { useState } from 'react'
-import { styled, alpha } from '@mui/system'
-import {Slider, sliderClasses } from '@mui/base/Slider'
-
+import Slider from '@mui/material/Slider'
+import { alpha, styled } from "@mui/material/styles"
 import './Slider.css'
 
-const StyledSlider = styled(Slider)(
-  ({ theme }) => `
-    color: '#FC7A0E';
-  height: 6px;
-  width: 100%;
-  padding: 16px 0;
-  display: inline-block;
-  position: relative;
-  cursor: pointer;
-  touch-action: none;
-  -webkit-tap-highlight-color: transparent;
-
-  &:hover {
-    opacity: 1;
-  }
-
-  &.${sliderClasses.disabled} { 
-    pointer-events: none;
-    cursor: default;
-    color: '#FC7A0E';
-    opacity: 0.5;
-  }
-
-
-  & .${sliderClasses.rail} {
-    display: block;
-    position: absolute;
-    width: 100%;
-    height: 4px;
-    border-radius: 2px;
-    background-color: currentColor;
-    opacity: 0.4;
-  }
-
-  & .${sliderClasses.track} {
-    display: block;
-    position: absolute;
-    height: 4px;
-    border-radius: 2px;
-    background-color: currentColor;
-  }
-
-  & .${sliderClasses.thumb} {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    margin-left: -6px;
-    margin-top: -6px;
-    box-sizing: border-box;
-    border-radius: 50%;
-    outline: 0;
-    border: 3px solid currentColor;
-    background-color: #fff;
-
-    :hover,
-    &.${sliderClasses.focusVisible} {
-      box-shadow: 0 0 0 0.25rem ${alpha(
-        '#B5C0C8',
-        0.15,
-      )};
+const StyledSlider = styled(Slider)(({theme}) => ({
+    color: 'var(--text-secondary)',
+    height: '4px',
+    width: '100%',
+    padding: '16px 0px',
+    display: 'inline-block',
+    position: 'relative',
+    cursor: 'pointer',
+    "&:hover": {
+        opacity: 1
+    },
+    ".MuiSlider-rail": {
+        display: "block",
+        position: "absolute",
+        width: "100%",
+        height: "4px",
+        "border-radius": "2px",
+        "background-color": 'currentColor',
+        opacity: 0.4
+    },
+    "&.MuiSlider-track": {
+        display: 'block',
+        position: 'absolute',
+        height: '4px',
+        'border-radius': '2px',
+        'background-color': 'currentColor'
+    },
+    ".MuiSlider-thumb": {
+        position: 'absolute',
+        width: '16px',
+        height: '16px',
+        // 'margin-left': '-6px',
+        // 'margin-top': '-6px',
+        // 'box-sizing': 'border-box',
+        'border-radius': '50%',
+        'outline': '0',
+        'border': '3px solid currentColor',
+        'background-color': 'var(--text-secondary)'
+    },
+    "&.active": {
+        'box-shadow': `0 0 0 0.25rem ${alpha(
+          '#B5C0C8',
+          0.3,
+        )}`
+    },
+    ".MuiSlider-valueLabel": {
+        'font-size': '14px',
+        // display: 'auto',
+        // position: 'relative',
+        // top: '-1.6em',
+        'text-align': 'center',
     }
-
-    &.${sliderClasses.active} {
-      box-shadow: 0 0 0 0.25rem ${alpha(
-        '#B5C0C8',
-        0.3,
-      )};
-    }
-  }
-  
-  & .${sliderClasses.valueLabel} {
-    font-size: 14px;
-    display: block !important;
-    position: relative;
-    top: -1.6em;
-    text-align: center;
-    transform: translateX(-50%);
-  }
-`,
-);
-
-function valuetext(value) {
-  return `${value}`;
-}
+}))
 
 export const ModdedSlider = (props) => {
-    console.log('props', props)
     const [sliders, setSliders] = useState([])
-    const display = props.disabled ? 'on' : 'auto'
-  
+    const display = props.display || props.disabled ? 'on' : 'auto'
+
     const points =
       props.type === 'range-slider'
         ? [props.min, props.max]
@@ -138,16 +105,16 @@ export const ModdedSlider = (props) => {
 
         <StyledSlider
             style={{margin: '0px 0px 0px 12px', maxWidth: props.maxWidth}}
-            getAriaLabel={() => props.label}
+            aria-label={props.label}
+            disabled={props.disabled}
+            getAriaValueText={() => `${value}`}
+            onChange={handleChange}
+            onChangeCommitted={() => handleCommit(props.id, value)}
+            valueLabelDisplay={display}
             value={props.defaultValue || value}
             step={props.step}
             min={props.min}
             max={props.max}
-            disabled={props.disabled}
-            onChange={handleChange}
-            onChangeCommitted={() => handleCommit(props.id, value)}
-            valueLabelDisplay={display}
-            getAriaValueText={valuetext}
         />
     </div>
   )

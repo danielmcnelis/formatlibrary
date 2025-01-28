@@ -145,13 +145,12 @@ export const getCard = async (query, fuzzyCards, format) => {
         order: [[Set, 'releaseDate', 'DESC']]
     }) : null
 
+    console.log('format', format)
     const status = format ? await Status.findOne({ 
         where: { 
-            banlist: format.banlist,
-            category: format.category,
-            cardName: {
-                [Op.iLike]: card_name
-            }
+            banlist: {[Op.iLike]: format.banlist},
+            category: {[Op.iLike]: format.category},
+            cardName: {[Op.iLike]: card_name}
         }
     }) : null
 

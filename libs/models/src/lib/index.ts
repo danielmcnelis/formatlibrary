@@ -1,4 +1,5 @@
 
+import { db } from './db'
 import { Alius } from './Alius'
 import { Archetype } from './Archetype'
 import { Article } from './Article'
@@ -7,6 +8,7 @@ import { BlogPost } from './BlogPost'
 import { CardDeckType } from './CardDeckType'
 import { Card } from './Card'
 import { ChronRecord } from './ChronRecord'
+import { Community } from './Community'
 import { Cube } from './Cube'
 import { Deck } from './Deck'
 import { DeckTypeArchetype } from './DeckTypeArchetype'
@@ -439,6 +441,7 @@ Video.belongsTo(Player)
 Player.hasMany(Video)
 
 export {
+  db,
   Alius,
   Archetype,
   Article,
@@ -447,6 +450,7 @@ export {
   Card,
   CardDeckType,
   ChronRecord,
+  Community,
   Cube,
   Deck,
   DeckTypeArchetype,
@@ -459,6 +463,11 @@ export {
   Event,
   Format,
   Inventory,
+  LikedArticle,
+  LikedCube,
+  LikedDeck,
+  LikedFormat,
+  LikedVideo,
   Match,
   Matchup,
   Membership,

@@ -44,6 +44,7 @@ export const CardTable = () => {
       atk: [0, 5000],
       def: [0, 5000]
     })
+    console.log('sliders', sliders)
   
     const [queryParams, setQueryParams] = useState({
       name: null,
@@ -805,6 +806,7 @@ export const CardTable = () => {
                                         sliders = {sliders}
                                         setSliders = {setSliders}
                                         defaultValue = {sliders.level}
+                                        display = {sliders.level[0] !== 1 || sliders.level[1] !== 12}
                                     />
 
                                     <ModdedSlider
@@ -818,6 +820,7 @@ export const CardTable = () => {
                                         sliders = {sliders}
                                         setSliders = {setSliders}
                                         defaultValue = {sliders.atk}
+                                        display = {sliders.atk[0] !== 0 || sliders.atk[1] !== 5000}
                                     />
 
                                     <ModdedSlider
@@ -831,6 +834,7 @@ export const CardTable = () => {
                                         sliders = {sliders}
                                         setSliders = {setSliders}
                                         defaultValue = {sliders.def}
+                                        display = {sliders.def[0] !== 0 || sliders.def[1] !== 5000}
                                     />
                                 </div>
                     
