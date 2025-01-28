@@ -234,6 +234,7 @@ export const getCard = async (query, fuzzyCards, format) => {
         labels.push(`\nFirst Print: ${firstPrint || (format?.category === 'Speed' ? 'N/A' : 'OCG Only')}`)
     }
 
+    console.log('format?.name', format?.name)
     if (format?.name) {
         `\n${format?.name} ${format?.emoji} Status: ${capitalize(position, true)} ${indicator}`
     }
@@ -252,6 +253,8 @@ export const getCard = async (query, fuzzyCards, format) => {
             ...labels
         ]
     }
+
+    console.log('labels', labels)
 
 	const stats = card.category === "Monster" ? 
 			`ATK: ${card.atk === null ? '?' : card.atk} ${emojis.ATK}` + 
