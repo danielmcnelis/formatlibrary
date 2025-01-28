@@ -145,11 +145,10 @@ export const getCard = async (query, fuzzyCards, format) => {
         order: [[Set, 'releaseDate', 'DESC']]
     }) : null
 
-    console.log('format', format)
     const status = format ? await Status.findOne({ 
         where: { 
-            banlist: {[Op.iLike]: format.banlist},
-            category: {[Op.iLike]: format.category},
+            banlist: {[Op.iLike]: format?.banlist},
+            category: {[Op.iLike]: format?.category},
             cardName: {[Op.iLike]: card_name}
         }
     }) : null
@@ -172,7 +171,7 @@ export const getCard = async (query, fuzzyCards, format) => {
         })
 
     const firstPrint = print ? `${rarities[print.rarity]} ${print.set.name}` : null 
-    const dateType = format?.category?.toLowerCase() + 'Date'
+    const dateType = format?.category?.toLowerCase() + 'ReleaseDate'
     const legal = format && card[dateType] && (card[dateType] <= format.date || format.name === 'Traditional' || format.name === 'Advanced')
     const position = format?.name === 'Traditional' && legal && status && status.restriction === 'Forbidden' ? 'limited' :
         legal && status ? status.restriction :
