@@ -56,7 +56,7 @@ export const receiveStripeWebhooks = async (req, res, next) => {
                 }
             })
 
-            subscription = await subscription.create({
+            subscription = await Subscription.create({
                 id: stripeSubscription.id,
                 playerName: player?.name,
                 playerId: player?.id,
