@@ -3,6 +3,7 @@
 import stripe from 'stripe'
 // const stripe = Stripe
 import {config} from '@fl/config'
+import { Player, Subscription } from '@fl/models'
 const Stripe = new stripe(config.stripe.clientSecret)
 // import {Elements} from '@stripe/react-stripe-js'
 // import {loadStripe} from '@stripe/stripe-js'
@@ -36,8 +37,40 @@ export const receiveStripeWebhooks = async (req, res, next) => {
         const invoice = await Stripe.invoices.retrieve(invoiceId)
         const subscriptionId = invoice.subscription.toString()
         console.log('invoice', invoice)
-        const subscription = await Stripe.subscriptions.retrieve(subscriptionId)
-        console.log('subscription', subscription)
+        const stripeSubscription = await Stripe.subscriptions.retrieve(subscriptionId)
+        console.log('stripeSubscription', stripeSubscription)
+        let subscription = await Subscription.findOne({
+            where: {
+                id: stripeSubscription.id
+            }
+        })
+
+        if (subscription) {
+            await subscription.update({
+
+            })
+        } else {
+            const player = await Player.findOne({
+                where: {
+                    email: invoice.customer_email
+                }
+            })
+
+            subscription = await subscription.create({
+                id: stripeSubscription.id,
+                playerName: player?.name,
+                playerId: player?.id,
+                customerName: invoice.customer_name,
+                customerEmail: invoice.customer_email,
+                customerId: stripeSubscription.customer,
+                tier: stripeSubscription?.items.data[0].plan.product,
+                status: stripeSubscription.status,
+                currentPeriodStart: stripeSubscription.current_period_start,
+                currentPeriodEnd: stripeSubscription.current_period_end,
+                endedAt: stripeSubscription.ended_at
+            })
+        }
+
     } catch (err) {
         next(err)
     }

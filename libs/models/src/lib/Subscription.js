@@ -3,11 +3,8 @@ import { Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const Subscription = db.define('subscriptions', {
-  formatName: {
+  id: {
     type: Sequelize.STRING
-  },
-  formatId: {
-    type: Sequelize.INTEGER
   },
   playerName: {
     type: Sequelize.STRING
@@ -15,12 +12,28 @@ export const Subscription = db.define('subscriptions', {
   playerId: {
     type: Sequelize.STRING
   },
-  eventNotifications: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: true
+  customerName: {
+    type: Sequelize.STRING
   },
-  poolNotifications: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false
+  customerEmail: {
+    type: Sequelize.STRING
+  },
+  customerId: {
+    type: Sequelize.STRING
+  },
+  tier: {
+    type: Sequelize.STRING
+  },
+  status: {
+    type: Sequelize.STRING
+  },
+  currentPeriodStart: {
+    type: Sequelize.DATE
+  },
+  currentPeriodEnd: {
+    type: Sequelize.DATE
+  },
+  endedAt: {
+    type: Sequelize.DATE
   }
 })
