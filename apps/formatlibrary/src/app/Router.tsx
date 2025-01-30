@@ -53,7 +53,7 @@ export const Router = (props) => {
                     <Route path='/ads.txt' element=<AdsTxtRedirect /> />
 					<Route path="/home" element=<Page roles={roles} disableAds={disableAds} element=<Home /> /> />
                     <Route path="/auth/"/>
-					<Route path="/apps" element=<Page roles={roles} disableAds={disableAds} element=<UserPortal /> /> />
+					<Route path="/apps" element=<Page roles={roles} disableAds={disableAds} element=<UserPortal roles={roles}/> /> />
 					<Route path="/deck-builder" element=<Page roles={roles} disableAds={true} element=<Builder /> /> />
 					<Route path="/deck-builder/:id" element=<Page roles={roles} disableAds={true} element=<Builder /> /> />
 					<Route path="/pack-simulator" element=<Page roles={roles} element=<PackSimulator /> /> />

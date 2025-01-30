@@ -56,11 +56,10 @@ export const getFormats = async (req, res, next) => {
         isHighlander: false
       },
       attributes: ['id', 'name', 'icon', 'date', 'banlist', 'category', 'era', 'eventName', 'description', 'isPopular', 'isSpotlight', 'useSeasonalElo', 'sortPriority'],
-      order: [
-        ["useSeasonalElo", "DESC"], 
+      order: [ 
         ["sortPriority", "ASC"], 
         ["isSpotlight", "DESC"], 
-        ["name", "ASC"]
+        ["date", "ASC"]
       ]
     })
 

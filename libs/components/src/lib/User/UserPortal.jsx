@@ -3,7 +3,7 @@ import { PortalButton } from './PortalButton'
 import { Helmet } from 'react-helmet'
 import './UserPortal.css'
 
-export const UserPortal = () => {
+export const UserPortal = (props) => {
     return (
         <>
             <Helmet>
@@ -21,7 +21,7 @@ export const UserPortal = () => {
                     <PortalButton label="Deck Builder" to="/deck-builder" icon="/emojis/deckbox.png" />
                     <PortalButton label="Pack Simulator" to="/pack-simulator" icon="/artworks/LOB.jpg" />
                     <PortalButton label="Draft App" to="/start-draft" icon="/emojis/cube.png" />
-                    <PortalButton label="Sealed App" to="/start-sealed" icon="/artworks/back.png" />
+                    <PortalButton label="Sealed App" to="/start-sealed" icon="/emojis/seal.png" />
                 </div>
             </div>
         </>

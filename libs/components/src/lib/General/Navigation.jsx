@@ -17,8 +17,9 @@ const toggle = () => {
 
 // NAVIGATION
 export const Navigation = (props) => {
-    const isContentManager = props.roles?.contentManager
     const { switchTheme, theme } = props
+    const isContentManager = props.roles?.contentManager
+    const isSubscriber = props.roles?.subscriber
 
     return (
         <>
@@ -55,9 +56,20 @@ export const Navigation = (props) => {
                         </div>
                     ) : ''
                 }
+            </div>
+            <div id="nav-menu">
                 <div id={`theme-toggle-${theme}`} onClick={() => switchTheme()}>
                     <div id={`theme-toggle-inner-circle-${theme}`}></div>
                 </div>
+                {/* {
+                    isSubscriber ? (
+                        null
+                    ) : (
+                        <a href="/products/">
+                            <h1 id="subscribe" className="nav-header">SUBSCRIBE</h1>
+                        </a>
+                    )
+                } */}
                 {
                     playerId ? (
                         <a href="/settings/">
@@ -107,13 +119,6 @@ export const Navigation = (props) => {
                 <div onClick={() => {window.location.href="/apps/"}}>
                     <h3 className="hamburger-header">Apps</h3>
                 </div>
-                {
-                    isContentManager ? (
-                        <div onClick={() => {window.location.href="/admin-portal/"}}>
-                            <h3 className="hamburger-header">Admin</h3>
-                        </div>
-                    ) : ''
-                }
                 {
                     playerId ? (
                         <a href="/auth/logout/">

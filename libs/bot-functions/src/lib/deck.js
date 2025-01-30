@@ -357,14 +357,72 @@ export const getDeckType = async (deckfile, formatName) => {
     if (!main) return
     const primaryDeckArr = main.split(/[\s]+/).filter(el => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '').sort()
 
-    const labeledDecks = await Deck.findAll({
+    const format = await Format.findOne({
+        where: {
+            name: {[Op.iLike]: formatName}
+        }
+    })
+
+    const priorFormats = await Format.findAll({
+        where: {
+            date: {[Op.lt]: format.date}
+        },
+        order: [['date', 'DESC']]
+    })
+
+    const laterFormats = await Format.findAll({
+        where: {
+            date: {[Op.gt]: format.date}
+        },
+        order: [['date', 'ASC']]
+    })
+
+    const interleaveArrays = (arr1, arr2) => {
+        const result = []
+        const maxLength = Math.max(arr1.length, arr2.length)
+      
+        for (let i = 0; i < maxLength; i++) {
+          if (i < arr1.length) {
+            result.push(arr1[i])
+          }
+          if (i < arr2.length) {
+            result.push(arr2[i])
+          }
+        }
+      
+        return result
+    }
+
+    const nearbyFormats = interleaveArrays(priorFormats, laterFormats)
+
+    let labeledDecks = await Deck.findAll({
         where: {
             deckTypeName: {[Op.not]: 'Other' },
             deckTypeId: {[Op.not]: null },
-            formatName: formatName
+            formatId: format.id
         },
-        include: DeckType
+        include: DeckType,
+        limit: 5000,
+        order: [['createdAt', 'DESC']]
     })
+
+    while (labeledDecks.length < 5000) {
+        for (let i = 0; i < nearbyFormats.length; i++) {
+            const nearbyFormat = nearbyFormats[i]
+            const additionalDecks = await Deck.findAll({
+                where: {
+                    deckTypeName: {[Op.not]: 'Other' },
+                    deckTypeId: {[Op.not]: null },
+                    formatId: nearbyFormat.id
+                },
+                include: DeckType,
+                limit: 5000 - labeledDecks.length,
+                order: [['createdAt', 'DESC']]
+            })
+
+            labeledDecks = [...labeledDecks, ...additionalDecks]
+        }
+    }
 
     const similarityScores = []
 
@@ -388,7 +446,7 @@ export const getDeckType = async (deckfile, formatName) => {
         }
     })
     
-    if (similarityScores[0]?.[0] > 0.5) {
+    if (similarityScores[0]?.[0] > 0.65) {
         return similarityScores[0][1]  
     } else {
         const deckType = await DeckType.findOne({ where: { name: 'Other' }})

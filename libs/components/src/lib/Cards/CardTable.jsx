@@ -127,8 +127,8 @@ export const CardTable = () => {
     
     // CHANGE CARDS PER PAGE
     const changeCardsPerPage = (e) => {
-      setCardsPerPage(Number(e.target.value))
-      setPage(1)
+        setCardsPerPage(Number(e.target.value))
+        setPage(1)
     }
     
     // COUNT

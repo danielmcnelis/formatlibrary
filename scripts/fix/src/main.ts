@@ -3,10 +3,9 @@ import { Op } from 'sequelize'
 import axios from 'axios'
 import { config } from '@fl/config'
 import Canvas = require('canvas')
-import { capitalize, getRoundName } from '@fl/utils'
+import { capitalize, iso2ToCountries, getRoundName } from '@fl/utils'
 import * as fs from 'fs'
 import { parse } from 'csv-parse'
-import { iso2ToCountries } from '@fl/utils'
 import { S3, DeleteObjectCommand } from '@aws-sdk/client-s3'
 // import { statuses } from './ocg-banlists.json' 
 
@@ -2414,23 +2413,165 @@ const shuffleArray = (arr) => {
 //     return console.log(`destroyed ${d} duplicates, encountered ${e} errors`)
 // })()
 
+// ;(async () => {
+//     let d = 0
+//     let e = 0
+    
+//     const servers = await Server.findAll({ where: { formatName: {[Op.not]:null}}})
+
+//     try {
+//         for (let i = 0; i < servers.length; i++) {
+//             const server = servers[i]
+//             const format = await Format.findOne({ where: { name: server.formatName }})
+//             await server.update({ formatId: format.id })
+//             d++
+//         }
+//     } catch (err) {
+//         console.log(err)
+//         e++
+//     }
+
+//     return console.log(`updated the formatId in ${d} servers, encountered ${e} errors`)
+// })()
+
+// COMPARE DECKS
+export const compareDecks = (arr1, arr2) => {
+    let score = 0
+    let avgSize = (arr1.length + arr2.length) / 2
+
+    for (let i = 0; i < arr1.length; i++) {
+        const id = arr1[i]
+        const index = arr2.indexOf(id)
+        if (index !== -1) {
+            score++
+            arr2.splice(index, 1)
+        }
+    }
+
+    return score / avgSize
+}
+
+//GET DECK TYPE
+export const getDeckType = async (deckfile, formatName) => {
+    const main = deckfile?.split('#extra')[0]
+    if (!main) return
+    const primaryDeckArr = main.split(/[\s]+/).filter(el => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '').sort()
+
+    const format = await Format.findOne({
+        where: {
+            name: {[Op.iLike]: formatName}
+        }
+    })
+
+    const priorFormats = await Format.findAll({
+        where: {
+            date: {[Op.lt]: format.date}
+        },
+        order: [['date', 'DESC']]
+    })
+
+
+    const laterFormats = await Format.findAll({
+        where: {
+            date: {[Op.gt]: format.date}
+        },
+        order: [['date', 'ASC']]
+    })
+
+    const interleaveArrays = (arr1, arr2) => {
+        const result = []
+        const maxLength = Math.max(arr1.length, arr2.length)
+      
+        for (let i = 0; i < maxLength; i++) {
+          if (i < arr1.length) {
+            result.push(arr1[i])
+          }
+          if (i < arr2.length) {
+            result.push(arr2[i])
+          }
+        }
+      
+        return result
+    }
+
+    const nearbyFormats = interleaveArrays(priorFormats, laterFormats)
+
+    let labeledDecks = await Deck.findAll({
+        where: {
+            deckTypeName: {[Op.not]: 'Other' },
+            deckTypeId: {[Op.not]: null },
+            formatId: format.id
+        },
+        include: DeckType,
+        limit: 1000,
+        order: [['createdAt', 'DESC']]
+    })
+
+    if (labeledDecks.length < 1000) {
+        for (let i = 0; i < nearbyFormats.length; i++) {
+            const nearbyFormat = nearbyFormats[i]
+            const additionalDecks = await Deck.findAll({
+                where: {
+                    deckTypeName: {[Op.not]: 'Other' },
+                    deckTypeId: {[Op.not]: null },
+                    formatId: nearbyFormat.id
+                },
+                include: DeckType,
+                limit: 1000 - labeledDecks.length,
+                order: [['createdAt', 'DESC']]
+            })
+
+            labeledDecks = [...labeledDecks, ...additionalDecks]
+        }
+    }
+
+    const similarityScores = []
+
+    for (let i = 0; i < labeledDecks.length; i++) {
+        const otherDeck = labeledDecks[i]
+        const otherMain = otherDeck.ydk.split('#extra')[0]
+        if (!otherMain) continue
+        const comparisonDeckArr = otherMain.split(/[\s]+/).filter(el => el.charAt(0) !== '#' && el.charAt(0) !== '!' && el !== '').sort()
+
+        const score = compareDecks(primaryDeckArr, comparisonDeckArr)
+        similarityScores.push([score, otherDeck.deckType])
+    }
+
+    similarityScores.sort((a, b) => {
+        if (a[0] > b[0]) {
+            return -1
+        } else if (a[0] < b[0]) {
+            return 1
+        } else {
+            return 0
+        }
+    })
+    
+    if (similarityScores[0]?.[0] > 0.65) {
+        return similarityScores[0][1]  
+    }
+}
+
 ;(async () => {
     let d = 0
     let e = 0
     
-    const servers = await Server.findAll({ where: { formatName: {[Op.not]:null}}})
-
+    const decks = await Deck.findAll({ where: { formatName: {[Op.not]: null}, origin: 'event', deckTypeId: {[Op.or]: [null, 124]}}, order: [['id', 'ASC']]})
     try {
-        for (let i = 0; i < servers.length; i++) {
-            const server = servers[i]
-            const format = await Format.findOne({ where: { name: server.formatName }})
-            await server.update({ formatId: format.id })
-            d++
+        for (let i = 0; i < decks.length; i++) {
+            const deck = decks[i]
+            console.log('getting decktype for:', deck.id)
+            const deckType = await getDeckType(deck.ydk, deck.formatName)
+            if (deckType?.id && deckType.id !== deck.deckTypeId) {
+                console.log('new deckType:', deck.deckTypeName, '->', deckType.name)
+                await deck.update({ deckTypeName: deckType.name, deckTypeId: deckType.id, category: deckType.category })
+                d++
+            }
         }
     } catch (err) {
         console.log(err)
         e++
     }
 
-    return console.log(`updated the formatId in ${d} servers, encountered ${e} errors`)
+    return console.log(`updated the ${d} decks, encountered ${e} errors`)
 })()

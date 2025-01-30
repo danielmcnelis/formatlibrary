@@ -3,13 +3,13 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { getCookie } from '@fl/utils'
 import { useDetectAdBlock } from 'adblock-detect-react'
-import {Elements} from '@stripe/react-stripe-js'
-import {loadStripe} from '@stripe/stripe-js'
-import { client } from 'libs/bot-functions/src/client'
+// import {Elements} from '@stripe/react-stripe-js'
+// import {loadStripe} from '@stripe/stripe-js'
+// import { client } from 'libs/bot-functions/src/client'
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
-const stripePromise = loadStripe('pk_test_51LIfMzI2hSs9VrZuvedTsVTHy91Julkndoa3ngNSu57SEDslvLipAGD1FaZ2L6vQ4fp4RWwIejgKgcfKISQZFazW00DTWtDgVz');
+// const stripePromise = loadStripe('pk_test_51LIfMzI2hSs9VrZuvedTsVTHy91Julkndoa3ngNSu57SEDslvLipAGD1FaZ2L6vQ4fp4RWwIejgKgcfKISQZFazW00DTWtDgVz');
 
 const App = () => {
     const playerId = getCookie('playerId')
@@ -19,22 +19,22 @@ const App = () => {
         contentManager: false, 
         subscriber: false
     })
-    const [clientSecret, setClientSecret] = useState()
-    console.log('clientSecret', clientSecret)
+    // const [clientSecret, setClientSecret] = useState()
+    // console.log('clientSecret', clientSecret)
     
     const [checkedSubscription, setCheckedSubscription] = useState(false)  
     const adBlockDetected = useDetectAdBlock()
     const [showReminder, setShowReminder] = useState(false) 
 
     // USE EFFECT
-    useEffect(() => {
-        const fetchClientSecret = async () => {
-            const { data } = await axios.get(`/api/stripe/payment`)
-            return setClientSecret(data.client_secret)
-        }
+    // useEffect(() => {
+    //     const fetchClientSecret = async () => {
+    //         const { data } = await axios.get(`/api/stripe/payment`)
+    //         return setClientSecret(data.client_secret)
+    //     }
 
-        fetchClientSecret()
-    }, [])
+    //     fetchClientSecret()
+    // }, [])
 
     // USE EFFECT
     useEffect(() => {
@@ -84,11 +84,11 @@ const App = () => {
     // const disableAds = checkedSubscription && roles.subscriber
     const disableAds = playerId && (!checkedSubscription || (checkedSubscription && roles.subscriber))
 
-    const options = { clientSecret }
-    if (!clientSecret) return <div/>
+    // const options = { clientSecret }
+    // if (!clientSecret) return <div/>
       
   return (
-    <Elements stripe={stripePromise} options={options}>
+    // <Elements stripe={stripePromise} options={options}>
         <div className="app">
             {
                 playerId && !checkedSubscription ? (<Router disableAds={disableAds}/>) :
@@ -121,7 +121,7 @@ const App = () => {
                     ) : (<Router disableAds={disableAds} roles={roles}/>)
             }
         </div>
-    </Elements>
+    // </Elements>
     )
 }
 
