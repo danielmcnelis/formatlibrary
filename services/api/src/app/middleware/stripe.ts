@@ -15,7 +15,7 @@ const Stripe = new stripe(config.stripe.clientSecret)
 
 export const paymentIntent = async (req, res, next) => {
     try {
-        const intent = await s.paymentIntents.create({
+        const intent = await Stripe.paymentIntents.create({
             amount: 1099,
             currency: 'usd',
             automatic_payment_methods: {
