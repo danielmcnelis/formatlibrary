@@ -4,6 +4,7 @@ import { db } from './db'
 
 export const Subscription = db.define('subscriptions', {
   id: {
+    primaryKey: true,
     type: Sequelize.STRING
   },
   playerName: {
