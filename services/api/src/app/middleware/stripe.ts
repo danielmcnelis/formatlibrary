@@ -35,10 +35,14 @@ export const receiveStripeWebhooks = async (req, res, next) => {
         const {data} = req.body
         console.log('data', data)
         // console.log('req.body.data.object', req.body.data.object)
-        const subscriptionId = req.body.data.object.id
+        const invoiceId = req.body.data.object.invoice
         // const stripe = require('stripe')('sk_test_51LIfMzI2hSs9VrZuFmtxDKAkWCkCgXPdtEQWnL8tciHFaOkoedx5E3vLP8tdhxwNLb5t6vzAfs0jc3AQc82nArUx00RtdCMVaU')
-        const subscription = await Stripe.subscriptions.retrieve(subscriptionId)
-        console.log('subscription', subscription)
+        // const stripe = require('stripe')('sk_test_51LIfMzI2hSs9VrZuFmtxDKAkWCkCgXPdtEQWnL8tciHFaOkoedx5E3vLP8tdhxwNLb5t6vzAfs0jc3AQc82nArUx00RtdCMVaU');
+
+        const invoice = await Stripe.invoices.retrieve(invoiceId)
+        console.log('invoice', invoice)
+        console.log('/////////////////////////////////////')
+        console.log('subscription', invoice?.subscription)
     } catch (err) {
         next(err)
     }
