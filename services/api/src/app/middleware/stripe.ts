@@ -3,7 +3,15 @@
 import stripe from 'stripe'
 // const stripe = Stripe
 import {config} from '@fl/config'
-const s = new stripe(config.stripe.clientSecret)
+const Stripe = new stripe(config.stripe.clientSecret)
+// import {Elements} from '@stripe/react-stripe-js'
+// import {loadStripe} from '@stripe/stripe-js'
+// import { client } from 'libs/bot-functions/src/client'
+
+// Make sure to call `loadStripe` outside of a component’s render to avoid
+// recreating the `Stripe` object on every render.
+// const stripePromise = loadStripe('pk_test_51LIfMzI2hSs9VrZuvedTsVTHy91Julkndoa3ngNSu57SEDslvLipAGD1FaZ2L6vQ4fp4RWwIejgKgcfKISQZFazW00DTWtDgVz');
+
 
 export const paymentIntent = async (req, res, next) => {
     try {
@@ -24,7 +32,13 @@ export const paymentIntent = async (req, res, next) => {
 
 export const receiveStripeWebhooks = async (req, res, next) => {
     try {
-        console.log('req', req)
+        const {data} = req.body
+        console.log('data', data)
+        // console.log('req.body.data.object', req.body.data.object)
+        const subscriptionId = req.body.data.object.id
+        // const stripe = require('stripe')('sk_test_51LIfMzI2hSs9VrZuFmtxDKAkWCkCgXPdtEQWnL8tciHFaOkoedx5E3vLP8tdhxwNLb5t6vzAfs0jc3AQc82nArUx00RtdCMVaU')
+        const subscription = await Stripe.subscriptions.retrieve(subscriptionId)
+        console.log('subscription', subscription)
     } catch (err) {
         next(err)
     }
