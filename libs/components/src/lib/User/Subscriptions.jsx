@@ -12,6 +12,7 @@ export const Subscriptions = () => {
             </Helmet>
             <div className="body">
                 <h2>FormatLibrary.com Subscription Tiers</h2>
+                <p className=".centered-content-flexbox"><i>Important: Sign-up using the email connected to your Discord account!</i></p>
                 <div className="horizontal-products-flex" style={{margin: '20px 20%'}}>
                     <div>
                         <stripe-buy-button
@@ -31,7 +32,7 @@ export const Subscriptions = () => {
                                 Free entry to monthly $100 tournament (rotating formats)
                             </li>
                             <li>
-                                Choose Discord "flair" from 25 custom Yu-Gi-Oh! emojis
+                                Add Discord "flair" from 25 custom Yu-Gi-Oh! emojis
                             </li>
                         </ul>
                     </div>
@@ -56,7 +57,7 @@ export const Subscriptions = () => {
                                 Free entry to monthly Edison World Championship Qualifiers
                             </li>
                             <li>
-                                Choose Discord "flair" from 25 custom Yu-Gi-Oh! emojis
+                                Add Discord "flair" from 25 custom Yu-Gi-Oh! emojis
                             </li>
                         </ul>
                     </div>

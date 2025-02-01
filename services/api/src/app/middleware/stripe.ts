@@ -47,9 +47,11 @@ export const receiveStripeWebhooks = async (req, res, next) => {
         const product = await Stripe.products.retrieve(stripeSubscription?.items.data[0].plan.product.toString())
         console.log('product', product)
 
+        const tier = product?.name?.toString().replace('Format Library ', '')
+
         if (subscription) {
             await subscription.update({
-                tier: product?.name?.toString().replace('Format Library ', ''),
+                tier: tier,
                 status: stripeSubscription.status,
                 currentPeriodStart: stripeSubscription.current_period_start,
                 currentPeriodEnd: stripeSubscription.current_period_end,
@@ -62,6 +64,13 @@ export const receiveStripeWebhooks = async (req, res, next) => {
                 }
             }) : null
 
+            if (stripeSubscription.status === 'active') {
+                await player.update({
+                    subscriber: true,
+                    subscriberTier: tier,
+                })
+            }
+
             subscription = await Subscription.create({
                 id: stripeSubscription.id,
                 playerName: player?.name,
@@ -69,7 +78,7 @@ export const receiveStripeWebhooks = async (req, res, next) => {
                 customerName: invoice.customer_name,
                 customerEmail: invoice.customer_email,
                 customerId: stripeSubscription.customer,
-                tier: product?.name?.toString().replace('Format Library ', ''),
+                tier: tier,
                 status: stripeSubscription.status,
                 currentPeriodStart: stripeSubscription.current_period_start,
                 currentPeriodEnd: stripeSubscription.current_period_end,
