@@ -36,7 +36,6 @@ export const receiveStripeWebhooks = async (req, res, next) => {
         const invoiceId = req.body.data.object.invoice.toString()
         const invoice = await Stripe.invoices.retrieve(invoiceId)
         const subscriptionId = invoice.subscription.toString()
-        console.log('invoice', invoice)
         const stripeSubscription = await Stripe.subscriptions.retrieve(subscriptionId)
         console.log('stripeSubscription', stripeSubscription)
         let subscription = await Subscription.findOne({
@@ -45,16 +44,23 @@ export const receiveStripeWebhooks = async (req, res, next) => {
             }
         })
 
+        const product = await Stripe.products.retrieve(stripeSubscription?.items.data[0].plan.product.toString())
+        console.log('product', product)
+
         if (subscription) {
             await subscription.update({
-
+                tier: product?.name?.toString().replace('Format Library ', ''),
+                status: stripeSubscription.status,
+                currentPeriodStart: stripeSubscription.current_period_start,
+                currentPeriodEnd: stripeSubscription.current_period_end,
+                endedAt: stripeSubscription.ended_at
             })
         } else {
-            const player = await Player.findOne({
+            const player = invoice.customer_email ? await Player.findOne({
                 where: {
                     email: invoice.customer_email
                 }
-            })
+            }) : null
 
             subscription = await Subscription.create({
                 id: stripeSubscription.id,
@@ -63,14 +69,13 @@ export const receiveStripeWebhooks = async (req, res, next) => {
                 customerName: invoice.customer_name,
                 customerEmail: invoice.customer_email,
                 customerId: stripeSubscription.customer,
-                tier: stripeSubscription?.items.data[0].plan.product,
+                tier: product?.name?.toString().replace('Format Library ', ''),
                 status: stripeSubscription.status,
                 currentPeriodStart: stripeSubscription.current_period_start,
                 currentPeriodEnd: stripeSubscription.current_period_end,
                 endedAt: stripeSubscription.ended_at
             })
         }
-
     } catch (err) {
         next(err)
     }

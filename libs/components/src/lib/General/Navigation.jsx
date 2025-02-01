@@ -61,15 +61,17 @@ export const Navigation = (props) => {
                 <div id={`theme-toggle-${theme}`} onClick={() => switchTheme()}>
                     <div id={`theme-toggle-inner-circle-${theme}`}></div>
                 </div>
-                {/* {
+                {
                     isSubscriber ? (
-                        null
+                        <a href="/manage-subscription">
+                            <h1 id="subscribe" className="nav-header">MANAGE SUBSCRIPTION</h1>
+                        </a>
                     ) : (
-                        <a href="/products/">
+                        <a href="/subscribe">
                             <h1 id="subscribe" className="nav-header">SUBSCRIBE</h1>
                         </a>
                     )
-                } */}
+                }
                 {
                     playerId ? (
                         <a href="/settings/">

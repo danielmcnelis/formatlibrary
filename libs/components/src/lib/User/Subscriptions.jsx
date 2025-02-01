@@ -1,10 +1,10 @@
 
 import './PortalButton.css'
 import { Helmet } from 'react-helmet'
-import './Products.css'
+import './Subscriptions.css'
 
-//PRODUCTS 
-export const Products = () => {
+//SUBSCRIPTIONS 
+export const Subscriptions = () => {
     return (
         <>
             <Helmet>
