@@ -64,7 +64,7 @@ export const Navigation = (props) => {
                 {
                     isSubscriber ? (
                         <a href="/subscribe">
-                            <h1 id="subscribe" className="nav-header">MANAGE SUB</h1>
+                            <h1 id="subscribe" className="nav-header">SUBSCRIPTION</h1>
                         </a>
                     ) : (
                         <a href="/subscribe">
@@ -138,10 +138,10 @@ export const Navigation = (props) => {
                 <h2>
                     <a
                         className="inherit-color" 
-                        href="https://docs.google.com/forms/d/e/1FAIpQLScj-fC6DPfYjCrSDdznu0b7rzPW1vJ4wlP8J_91SLUgkKNmCQ/viewform?usp=sharing"
+                        href="https://discord.com/channels/414551319031054346/414577532969418753/1333529424078835732"
                         rel="noreferrer"
                         target="_blank"
-                    >Applications to host 2025 Edison WCQs are open! Click to apply.</a></h2>
+                    >The 2025 HAT Format Seasonal Ladder Begins Now! Click to Play.</a></h2>
             </div>
         </>
     )
