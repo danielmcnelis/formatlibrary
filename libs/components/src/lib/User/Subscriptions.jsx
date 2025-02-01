@@ -16,7 +16,7 @@ export const Subscriptions = () => {
                 <div className="horizontal-products-flex" style={{margin: '20px 20%'}}>
                     <div>
                         <stripe-buy-button
-                            buy-button-id="buy_btn_1QmJ73I2hSs9VrZuRj2C9Xi0"
+                            buy-button-id="buy_btn_1Qnl1UI2hSs9VrZuCUsVQp3Q"
                             publishable-key="pk_live_51LIfMzI2hSs9VrZuWjHlUvJ8zOkyDrNFZ1AEkOpDOoCvdcNcpqyJV0Xne7JDmVUir9Rz7VkD9NjzUaR3Ykcz17hg00AbKIB6VY"
                         >
                         </stripe-buy-button>
@@ -38,9 +38,9 @@ export const Subscriptions = () => {
                     </div>
                     <div>
                         <stripe-buy-button
-                            buy-button-id="buy_btn_1QmJOfI2hSs9VrZuOjWV2HrN"
-                            publishable-key="pk_live_51LIfMzI2hSs9VrZuWjHlUvJ8zOkyDrNFZ1AEkOpDOoCvdcNcpqyJV0Xne7JDmVUir9Rz7VkD9NjzUaR3Ykcz17hg00AbKIB6VY"
-                            >
+                           buy-button-id="buy_btn_1Qnl0UI2hSs9VrZuMfyJdF6x"
+                           publishable-key="pk_live_51LIfMzI2hSs9VrZuWjHlUvJ8zOkyDrNFZ1AEkOpDOoCvdcNcpqyJV0Xne7JDmVUir9Rz7VkD9NjzUaR3Ykcz17hg00AbKIB6VY"
+                        >
                         </stripe-buy-button>
                         <ul>
                             <h3>Premium Perks</h3>
