@@ -134,10 +134,11 @@ export const getFirstOfTwoRatedConfirmations = async (client, player, opponent, 
 // GET FIRST PLAYER RATED CONFIRMATION  
 export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, player2PoolId) => {
     console.log('getSecondOfTwoRatedConfirmations()')
+    console.log('player2PoolId', player2PoolId)
     
     const player2Pool = await Pool.findOne({
         where: {
-            id: Number(player2PoolId)
+            id: player2PoolId
         },
         include: [Format, Player]
     })
