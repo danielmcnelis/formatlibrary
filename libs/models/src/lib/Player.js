@@ -18,6 +18,9 @@ export const Player = db.define('players', {
   email: {
     type: Sequelize.STRING
   },
+  alternateEmail: {
+    type: Sequelize.STRING
+  },
   pfp: {
     type: Sequelize.STRING
   },
