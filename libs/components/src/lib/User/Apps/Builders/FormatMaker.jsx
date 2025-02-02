@@ -167,7 +167,7 @@ export const FormatMaker = () => {
 
     // UPDATE FORMAT
     const updateFormat = async (formatName) => {
-        const {data} = await axios.get(`/api/formats/${formatName}`) 
+        const {data} = await axios.get(`/api/formats/${formatName.toLowerCase().replace(' ', '-')}`) 
         setFormat(data.format)
     }
 

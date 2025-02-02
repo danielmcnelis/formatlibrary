@@ -34,9 +34,14 @@ export const paymentIntent = async (req, res, next) => {
 
 export const receiveStripeWebhooks = async (req, res, next) => {
     try {
-        const invoiceId = req.body.data.object.invoice.toString()
+        console.log('receiveStripeWebhooks req', req)
+        console.log('req.body.data.object.', req.body.data.object)
+        const invoiceId = req.body.data.object.invoice?.toString()
+        console.log('invoiceId', invoiceId)
         const invoice = await Stripe.invoices.retrieve(invoiceId)
-        const subscriptionId = invoice.subscription.toString()
+        console.log('invoice', invoice)
+        const subscriptionId = invoice.subscription?.toString()
+        console.log('subscriptionId', subscriptionId)
         const stripeSubscription = await Stripe.subscriptions.retrieve(subscriptionId)
         console.log('stripeSubscription', stripeSubscription)
         let subscription = await Subscription.findOne({
@@ -47,8 +52,11 @@ export const receiveStripeWebhooks = async (req, res, next) => {
 
         const product = await Stripe.products.retrieve(stripeSubscription?.items.data[0].plan.product.toString())
         console.log('product', product)
+        console.log('invoice.customer_name', invoice.customer_name)
+        console.log('invoice.customer_email', invoice.customer_email)
 
         const tier = product?.name?.toString().replace('Format Library ', '')
+        console.log('tier', tier)
 
         if (subscription) {
             await subscription.update({

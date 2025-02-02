@@ -298,7 +298,7 @@ export const SearchPanel = (props) => {
     // UPDATE FORMAT
     const updateFormat = async (e) => {
         if (e.target.value.length) {
-            const {data} = await axios.get(`/api/formats/${e.target.value}`) 
+            const {data} = await axios.get(`/api/formats/${e.target.value.toLowerCase().replace(' ', '-')}`) 
             props.setFormat(data.format)
         } else {
             props.setFormat({})

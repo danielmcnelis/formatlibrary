@@ -347,7 +347,7 @@ export const CardTable = () => {
     // UPDATE FORMAT
     const updateFormat = useCallback(async (e) => {
       if (e.target.value.length) {
-        const {data: formatData} = await axios.get(`/api/formats/${e.target.value}`) 
+        const {data: formatData} = await axios.get(`/api/formats/${e.target.value.toLowerCase().replace(' ', '-')}`) 
         
         setFormat(formatData.format)
         setQueryParams({...queryParams, region: formatData.format?.category?.toLowerCase() })
@@ -455,7 +455,7 @@ export const CardTable = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const {data: formatData} = await axios.get(`/api/formats/${formatName || 'advanced'}`)
+            const {data: formatData} = await axios.get(`/api/formats/${(formatName || 'advanced').toLowerCase().replace(' ', '-')}`)
             setFormat(formatData?.format)
         }
 
