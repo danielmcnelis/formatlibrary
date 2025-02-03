@@ -2430,11 +2430,10 @@ const shuffleArray = (arr) => {
             const server = servers[i]
             console.log('server.communityName', server.communityName)
             await Community.create({
-                where: {
-                    name: server.communityName,
-                    serverName: server.name,
-                    serverId: server.id,
-                }
+                name: server.communityName,
+                logo: server.communityName,
+                serverName: server.name,
+                serverId: server.id,
             })
             d++
         }
