@@ -4,7 +4,7 @@ import { db } from './db'
 export const Community = db.define('communities', {
   id: {
     primaryKey: true,
-    type: Sequelize.STRING
+    type: Sequelize.INTEGER
   },
   name: {
     type: Sequelize.STRING,
