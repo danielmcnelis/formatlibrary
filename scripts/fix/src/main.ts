@@ -2428,7 +2428,6 @@ const shuffleArray = (arr) => {
     try {
         for (let i = 0; i < servers.length; i++) {
             const server = servers[i]
-            console.log('server.communityName', server.communityName)
             await Community.create({
                 name: server.communityName,
                 logo: server.communityName,
@@ -2444,127 +2443,134 @@ const shuffleArray = (arr) => {
 
     const events = await Event.findAll({ where: { display: true, isTeamEvent: false }, include: Server })
     for (let i = 0; i < events.length; i++) {
-        const event = events[i]
-        const blogpost = await BlogPost.findOne({
-            where: {
-                eventId: event.id
-            }
-        })
-
-        if (!blogpost) {
-            const deck = await Deck.findOne({
+        try {
+            const event = events[i]
+            const blogpost = await BlogPost.findOne({
                 where: {
-                    eventId: event.id,
-                    placement: 1
+                    eventId: event.id
                 }
             })
-        
-            const decks = await Deck.findAll({ 
-                where: {
-                    formatId: event.formatId
-                }
-            })
-        
-            if (!decks.length) {
-                console.log(`No decks found for ${event.formatName}.`)
-                continue
-            }
-                     
-            const freqs = decks.reduce((acc, curr) => (acc[curr.deckTypeName] ? acc[curr.deckTypeName]++ : acc[curr.deckTypeName] = 1, acc), {})
-            const popularDecks = Object.entries(freqs).sort((a:any, b:any) => b[1] - a[1]).map((e) => e[0]).slice(0, 6)
-           
-            // const playerPfpUrl = await s3FileExists(`images/pfps/${event.winner.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.discordId}.png` :
-            //     await s3FileExists(`images/pfps/${event.winner.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.globalName}.png` :
-            //     await s3FileExists(`images/pfps/${event.winner.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.discordName}.png` :
-            //     await s3FileExists(`images/pfps/${event.winner.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.name}.png` :
-            //     `https://cdn.formatlibrary.com/images/pfps/discord-default-red.png`
+    
+            if (!blogpost) {
+                const deck = await Deck.findOne({
+                    where: {
+                        eventId: event.id,
+                        placement: 1
+                    }
+                })
+                console.log('eventName', event.name)
+                console.log('deck', !!deck)
             
-            // const serverLogoUrl = event.server?.logoName ? `https://cdn.formatlibrary.com/images/logos/${event.server?.logoName.replaceAll('+', '%2B')}.png` :
-            //     event.server?.discordIconId ? `https://cdn.discordapp.com/icons/${event.server?.id}/${event.server.discordIconId}.webp?size=240` :
-            //     await s3FileExists(`images/logos/${event.community}.png`) ? `https://cdn.formatlibrary.com/images/logos/${event.community}.png` :
-            //     'https://cdn.formatlibrary.com/images/artworks/71625222.jpg'
-    
-                
-            const main = []
-            const mainKonamiCodes = deck.ydk
-                .split('#main')[1]
-                .split('#extra')[0]
-                .split(/[\s]+/)
-                .filter((e) => e.length)
-                .map((e) => e.trim())
-    
-            for (let i = 0; i < mainKonamiCodes.length; i++) {
-                let konamiCode = mainKonamiCodes[i]
-                while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-                const card = await Card.findOne({ where: { konamiCode }})
-                if (!card) continue
-                main.push(card)
-            }
-    
-            main.sort((a:any, b:any) => {
-                if (a.sortPriority > b.sortPriority) {
-                    return 1
-                } else if (b.sortPriority > a.sortPriority) {
-                    return -1
-                } else if (a.name > b.name) {
-                    return 1
-                } else if (b.name > a.name) {
-                    return -1
-                } else {
-                    return 0
+                const decks = await Deck.findAll({ 
+                    where: {
+                        formatId: event.formatId
+                    }
+                })
+            
+                if (!decks.length) {
+                    console.log(`No decks found for ${event.formatName}.`)
+                    continue
                 }
-            })
-    
-            const rows = Math.ceil(main.length / 10)
-            const card_width = 72
-            const card_height = 105
-            const canvas = Canvas.createCanvas((card_width * 10) + 9, (card_height * rows) + rows - 1)
-            const context = canvas.getContext('2d')
+                         
+                const freqs = decks.reduce((acc, curr) => (acc[curr.deckTypeName] ? acc[curr.deckTypeName]++ : acc[curr.deckTypeName] = 1, acc), {})
+                const popularDecks = Object.entries(freqs).sort((a:any, b:any) => b[1] - a[1]).map((e) => e[0]).slice(0, 6)
+               
+                // const playerPfpUrl = await s3FileExists(`images/pfps/${event.winner.discordId}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.discordId}.png` :
+                //     await s3FileExists(`images/pfps/${event.winner.globalName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.globalName}.png` :
+                //     await s3FileExists(`images/pfps/${event.winner.discordName}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.discordName}.png` :
+                //     await s3FileExists(`images/pfps/${event.winner.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner.name}.png` :
+                //     `https://cdn.formatlibrary.com/images/pfps/discord-default-red.png`
+                
+                // const serverLogoUrl = event.server?.logoName ? `https://cdn.formatlibrary.com/images/logos/${event.server?.logoName.replaceAll('+', '%2B')}.png` :
+                //     event.server?.discordIconId ? `https://cdn.discordapp.com/icons/${event.server?.id}/${event.server.discordIconId}.webp?size=240` :
+                //     await s3FileExists(`images/logos/${event.community}.png`) ? `https://cdn.formatlibrary.com/images/logos/${event.community}.png` :
+                //     'https://cdn.formatlibrary.com/images/artworks/71625222.jpg'
         
-            for (let i = 0; i < main.length; i++) {
-                const card = main[i]
-                const row = Math.floor(i / 10)
-                const col = i % 10
-                const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`) 
-                context.drawImage(image, (card_width + 1) * col, row * (card_height + 1), card_width, card_height)
+                    
+                const main = []
+                const mainKonamiCodes = deck.ydk
+                    .split('#main')[1]
+                    .split('#extra')[0]
+                    .split(/[\s]+/)
+                    .filter((e) => e.length)
+                    .map((e) => e.trim())
+        
+                for (let i = 0; i < mainKonamiCodes.length; i++) {
+                    let konamiCode = mainKonamiCodes[i]
+                    while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+                    const card = await Card.findOne({ where: { konamiCode }})
+                    if (!card) continue
+                    main.push(card)
+                }
+        
+                main.sort((a:any, b:any) => {
+                    if (a.sortPriority > b.sortPriority) {
+                        return 1
+                    } else if (b.sortPriority > a.sortPriority) {
+                        return -1
+                    } else if (a.name > b.name) {
+                        return 1
+                    } else if (b.name > a.name) {
+                        return -1
+                    } else {
+                        return 0
+                    }
+                })
+        
+                const rows = Math.ceil(main.length / 10)
+                const card_width = 72
+                const card_height = 105
+                const canvas = Canvas.createCanvas((card_width * 10) + 9, (card_height * rows) + rows - 1)
+                const context = canvas.getContext('2d')
+            
+                for (let i = 0; i < main.length; i++) {
+                    const card = main[i]
+                    const row = Math.floor(i / 10)
+                    const col = i % 10
+                    const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`) 
+                    context.drawImage(image, (card_width + 1) * col, row * (card_height + 1), card_width, card_height)
+                }
+            
+                await BlogPost.create({
+                    eventName: event.name,
+                    eventAbbreviation: event.abbreviation,
+                    eventDate: event.endDate,
+                    eventId: event.id,
+                    winnerName: event.winnerName,
+                    winnerPfp: event.winner?.discordId,
+                    winnerId: event.winnerId,
+                    winningDeckTypeName: deck.deckTypeName,
+                    winningDeckTypeIsPopular: popularDecks.includes(deck.deckTypeName),
+                    winningDeckId: deck.id,
+                    formatName: event.formatName,
+                    formatIcon: event.format?.icon, 
+                    formatId: event.formatId,
+                    communityName: event.communityName,
+                    communityId: event.communityId,
+                    serverInviteLink: event.server?.inviteLink,
+                    serverId: event.serverId
+                })
+            
+                const buffer = canvas.toBuffer('image/png')
+                const s3 = new S3({
+                    region: config.s3.region,
+                    credentials: {
+                        accessKeyId: config.s3.credentials.accessKeyId,
+                        secretAccessKey: config.s3.credentials.secretAccessKey
+                    },
+                })
+        
+                const { Location: uri} = await new Upload({
+                    client: s3,
+                    params: { Bucket: 'formatlibrary', Key: `images/decks/previews/${deck.id}.png`, Body: buffer, ContentType: `image/png` },
+                }).done()
+                console.log('uri', uri)
+                console.log(`Composed blogpost for ${event.name}.`)
+                c++
             }
-        
-            await BlogPost.create({
-                eventName: event.name,
-                eventAbbreviation: event.abbreviation,
-                eventDate: event.endDate,
-                eventId: event.id,
-                winnerName: event.winnerName,
-                winnerPfp: event.winner?.discordId,
-                winnerId: event.winnerId,
-                winningDeckTypeName: deck.deckTypeName,
-                winningDeckTypeIsPopular: popularDecks.includes(deck.deckTypeName),
-                winningDeckId: deck.id,
-                formatName: event.formatName,
-                formatIcon: event.format?.icon, 
-                formatId: event.formatId,
-                communityName: event.communityName,
-                communityId: event.communityId,
-                serverInviteLink: event.server?.inviteLink,
-                serverId: event.serverId
-            })
-        
-            const buffer = canvas.toBuffer('image/png')
-            const s3 = new S3({
-                region: config.s3.region,
-                credentials: {
-                    accessKeyId: config.s3.credentials.accessKeyId,
-                    secretAccessKey: config.s3.credentials.secretAccessKey
-                },
-            })
-    
-            const { Location: uri} = await new Upload({
-                client: s3,
-                params: { Bucket: 'formatlibrary', Key: `images/decks/previews/${deck.id}.png`, Body: buffer, ContentType: `image/png` },
-            }).done()
-            console.log('uri', uri)
-            console.log(`Composed blogpost for ${event.name}.`)
-            c++
+        } catch (err) {
+            console.log(err)
+            e++
         }
     }
 
