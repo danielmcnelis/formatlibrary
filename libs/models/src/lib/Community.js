@@ -13,6 +13,9 @@ export const Community = db.define('communities', {
   logo: {
     type: Sequelize.STRING
   },
+  serverName: {
+    type: Sequelize.STRING
+  },
   serverId: {
     type: Sequelize.STRING
   }

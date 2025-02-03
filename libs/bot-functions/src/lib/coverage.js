@@ -310,6 +310,7 @@ export const composeBlogPost = async (interaction, event) => {
                 formatIcon: event.format?.icon, 
                 formatId: event.formatId,
                 communityName: event.communityName,
+                communityId: event.communityId,
                 serverInviteLink: event.server?.inviteLink,
                 serverId: event.serverId,
             })
@@ -404,7 +405,8 @@ export const composeBlogPost = async (interaction, event) => {
                 formatName: event.formatName,
                 formatIcon: event.format?.icon, 
                 formatId: event.formatId,
-                communityName: event.communityName ,
+                communityName: event.communityName,
+                communityId: event.communityId,
                 serverInviteLink: event.server?.inviteLink,
                 serverId: event.serverId
             })
