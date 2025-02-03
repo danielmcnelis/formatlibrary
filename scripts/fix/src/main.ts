@@ -2496,7 +2496,7 @@ const shuffleArray = (arr) => {
                 main.push(card)
             }
     
-            main.sort((a, b) => {
+            main.sort((a:any, b:any) => {
                 if (a.sortPriority > b.sortPriority) {
                     return 1
                 } else if (b.sortPriority > a.sortPriority) {
