@@ -2419,7 +2419,7 @@ const shuffleArray = (arr) => {
     let d = 0
     let e = 0
 
-    const events = await Event.findAll({ where: { display: true, isTeamEvent: false }, include: Server })
+    const events = await Event.findAll({ where: { display: true, isTeamEvent: false }, include: [Server, { model: Player, as: 'winner' }] })
     for (let i = 0; i < events.length; i++) {
         try {
             const event = events[i]
