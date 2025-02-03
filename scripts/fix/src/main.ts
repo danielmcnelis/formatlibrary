@@ -6,6 +6,7 @@ import Canvas = require('canvas')
 import { capitalize, iso2ToCountries, getRoundName } from '@fl/utils'
 import * as fs from 'fs'
 import { parse } from 'csv-parse'
+import { Upload } from '@aws-sdk/lib-storage'
 import { S3, DeleteObjectCommand } from '@aws-sdk/client-s3'
 // import { statuses } from './ocg-banlists.json' 
 
