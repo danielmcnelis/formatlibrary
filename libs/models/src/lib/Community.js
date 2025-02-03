@@ -8,7 +8,7 @@ export const Community = db.define('communities', {
   },
   name: {
     type: Sequelize.STRING,
-    allowNull: false
+    unique: true
   },
   logo: {
     type: Sequelize.STRING

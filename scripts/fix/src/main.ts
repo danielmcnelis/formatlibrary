@@ -2419,15 +2419,21 @@ const shuffleArray = (arr) => {
     let d = 0
     let e = 0
     
-    const servers = await Server.findAll({ where: { communityName: {[Op.not]:null}}})
+    const servers = await Server.findAll({ 
+        where: { 
+            communityName: {[Op.not]: null }
+        }
+    })
 
     try {
         for (let i = 0; i < servers.length; i++) {
             const server = servers[i]
+            console.log('server.communityName', server.communityName)
             await Community.create({
                 where: {
+                    name: server.communityName,
+                    serverName: server.name,
                     serverId: server.id,
-                    name: server.communityName
                 }
             })
             d++
