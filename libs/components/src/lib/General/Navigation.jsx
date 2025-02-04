@@ -136,10 +136,10 @@ export const Navigation = (props) => {
                 <h2>
                     <a
                         className="inherit-color" 
-                        href="https://discord.com/channels/414551319031054346/414577532969418753/1333529424078835732"
+                        href="https://formatlibrary.com/subscribe"
                         rel="noreferrer"
                         target="_blank"
-                    >Subscribe here to join premium tournaments starting this week!</a></h2>
+                    >$100 Yata Tournament begins Friday - Subscribe to Join!</a></h2>
             </div>
         </>
     )
