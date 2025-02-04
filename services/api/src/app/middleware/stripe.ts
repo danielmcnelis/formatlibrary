@@ -125,7 +125,8 @@ export const getSubscriptions = async (req, res, next) => {
 
             await Subscription.create({
                 id: subscription.id,
-                playerName: player.name,
+                playerName: player?.name,
+                playerId: player?.id,
                 customerEmail: customer['email'],
                 customerName: customer['email'],
                 customerId: customer.id,
@@ -136,7 +137,7 @@ export const getSubscriptions = async (req, res, next) => {
                 endedAt: subscription.ended_at
             })
         }
-        
+
         res.json(subscriptions)
     } catch (err) {
         next(err)
