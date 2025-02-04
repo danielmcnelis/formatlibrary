@@ -387,6 +387,10 @@ Server.hasMany(Stats)
 Status.belongsTo(Card)
 Card.hasMany(Status)
 
+//STATS
+Subscription.belongsTo(Player)
+Player.hasMany(Subscription)
+
 //TOURNAMENT
 Tournament.belongsTo(Series)
 Series.hasMany(Tournament)
