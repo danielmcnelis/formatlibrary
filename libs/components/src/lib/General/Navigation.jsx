@@ -56,8 +56,6 @@ export const Navigation = (props) => {
                         </div>
                     ) : ''
                 }
-            </div>
-            <div id="nav-menu">
                 <div id={`theme-toggle-${theme}`} onClick={() => switchTheme()}>
                     <div id={`theme-toggle-inner-circle-${theme}`}></div>
                 </div>
