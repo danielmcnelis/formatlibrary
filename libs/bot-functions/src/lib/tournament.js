@@ -568,7 +568,7 @@ export const joinTournament = async (interaction, tournamentId) => {
     let format = await Format.findByServerOrChannelId(server, interaction.channelId)
     
     if (tournament.isPremiumTournament && (!player.isSubscriber || player.subscriberTier === 'Supporter')) {
-        return await interaction.editReply({ content: `Sorry, premium tournaments are only open to premium server subscribers.`})
+        return await interaction.editReply({ content: `Sorry, premium tournaments are only open to premium subscribers.`})
     } else if (tournament.requiredRoleId && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
         return await interaction.editReply({ content: `Sorry, you must have the <@&${tournament?.requiredRoleId}> role to join ${tournament.name}.`})
     }
