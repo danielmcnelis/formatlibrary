@@ -1010,7 +1010,7 @@ export const manageSubscriptions = async (client) => {
         try {
             const player = players[i]
             const member = membersMap.get(player.discordId)
-            const activeSubscription = await Subscription.count({
+            const activeSubscription = await Subscription.findOne({
                 where: {
                     playerId: player.id,
                     status: 'active'
