@@ -139,7 +139,7 @@ export const Navigation = (props) => {
                         href="https://discord.com/channels/414551319031054346/414577532969418753/1333529424078835732"
                         rel="noreferrer"
                         target="_blank"
-                    >The 2025 HAT Format Seasonal Ladder Begins Now! Click to Play.</a></h2>
+                    >Subscribe here to join premium tournaments starting this week!</a></h2>
             </div>
         </>
     )

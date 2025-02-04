@@ -493,9 +493,15 @@ export const getPreviousRatedDeck = async (user, yourRatedDecks, format) => {
     }).then(async (collected) => {
         const response = collected.first().content
         const index = !isNaN(parseInt(response)) ? parseInt(response) - 1 : null
-        const previousRatedDeck = response.includes('new') || index === options.length ? false : 
+        let previousRatedDeck = response.includes('new') || index === options.length ? false : 
             index >= 0 ? yourRatedDecks[index] :
             false
+
+        previousRatedDeck = await Deck.findOne({
+            where: {
+                id: previousRatedDeck.id
+            }
+        })
 
         return previousRatedDeck
     }).catch((err) => {
