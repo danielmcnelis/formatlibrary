@@ -10,7 +10,6 @@ import { Upload } from '@aws-sdk/lib-storage'
 import { S3 } from '@aws-sdk/client-s3'
 import { config } from '@fl/config'
 import * as tcgPlayer from '../../../../tokens/tcgplayer.json'
-import { format } from 'path'
 const Canvas = require('canvas')
 
 // GET HOURLY COUNTDOWN
@@ -994,38 +993,60 @@ export const manageSubscriptions = async (client) => {
 
     let a = 0
     let b = 0
-    const premiumRoleId = '1102002847056400464'
-    const supporterRoleId = '1102020060631011400'
+    const discordPremiumRoleId = '1102002847056400464'
+    const stripePremiumRoleId = '1335316985097093290'
+    const discordSupporterRoleId = '1102020060631011400'
+    const stripeSupporterRoleId = '1335317256921682053'
     const guild = client.guilds.cache.get('414551319031054346')
     const membersMap = await guild.members.fetch()
     // const members = [...membersMap.values()]
     const programmer = await client.users.fetch('194147938786738176')
     const players = await Player.findAll()
+    // UPDATE SUBSCRIPTIONS
+    const {data} = await axios.put(`api/stripe/subscriptions`)
+    console.log('stripe subscriptions:', data)
                     
     for (let i = 0; i < players.length; i++) {
         try {
             const player = players[i]
             const member = membersMap.get(player.discordId)
+            const activeSubscription = await Subscription.count({
+                where: {
+                    playerId: player.id,
+                    status: 'active'
+                }
+            })
 
-            if ((player.isSubscriber || player.subscriberTier !== null) && (!member || !member._roles.includes(supporterRoleId) && !member._roles.includes(premiumRoleId))) {
-                await programmer.send({ content: `${player.name} is no longer a Subscriber (${player.subscriberTier}).`})
-                console.log(`${player.name} is no longer a Subscriber (${player.subscriberTier}).`)
-                await player.update({ isSubscriber: false, subscriberTier: null })
+            if (activeSubscription && activeSubscription.tier === 'Premium' && (!player.isSubscriber || player.subscriberTier !== 'Premium')) {
+                await player.update({ isSubscriber: true, subscriberTier: 'Premium' })
+                await programmer.send({ content: `Welcome ${player.name} to the Stripe Premium Tier!`})
+                member?.roles.add(stripePremiumRoleId)
+                member?.roles.remove(stripeSupporterRoleId)
                 a++
-            } else if (!member) {
-                console.log('no member:', player.name)
-                continue
-            } else if (member._roles.includes(supporterRoleId) && (!player.isSubscriber || player.subscriberTier !== 'Supporter')) {
-                await programmer.send({ content: `Welcome ${player.name} to the Supporter Tier!`})
-                console.log(`Welcome ${player.name} to the Supporter Tier!`)
+            } else if (activeSubscription && activeSubscription.tier === 'Supporter' && (!player.isSubscriber || player.subscriberTier !== 'Supporter')) {
                 await player.update({ isSubscriber: true, subscriberTier: 'Supporter' })
-                b++
-            } else if (member._roles.includes(premiumRoleId) && (!player.isSubscriber || player.subscriberTier !== 'Premium')) {
+                await programmer.send({ content: `Welcome ${player.name} to the Stripe Supporter Tier!`})
+                member?.roles.add(stripeSupporterRoleId)
+                member?.roles.remove(stripePremiumRoleId)
+                a++
+            } else if (member?._roles.includes(discordPremiumRoleId) && (!player.isSubscriber || player.subscriberTier !== 'Premium')) {
                 await programmer.send({ content: `Welcome ${player.name} to the Premium Tier!`})
                 console.log(`Welcome ${player.name} to the Premium Tier!`)
                 await player.update({ isSubscriber: true, subscriberTier: 'Premium' })
+                a++
+            } else if (member?._roles.includes(discordSupporterRoleId) && (!player.isSubscriber || player.subscriberTier !== 'Supporter')) {
+                await programmer.send({ content: `Welcome ${player.name} to the Supporter Tier!`})
+                console.log(`Welcome ${player.name} to the Supporter Tier!`)
+                await player.update({ isSubscriber: true, subscriberTier: 'Supporter' })
+                a++
+            } else if (!activeSubscription && player.discordId !== programmer.id && player.isSubscriber && !member?._roles.includes(discordSupporterRoleId) && !member?._roles.includes(discordPremiumRoleId)) {
+                await programmer.send({ content: `${player.name} is no longer a Subscriber (${player.subscriberTier}).`})
+                console.log(`${player.name} is no longer a Subscriber (${player.subscriberTier}).`)
+                await player.update({ isSubscriber: false, subscriberTier: null })
+                member?.roles.remove(stripeSupporterRoleId)
+                member?.roles.remove(stripePremiumRoleId)
                 b++
-            }
+            } 
         } catch (err) {
             console.log(err)
         }
@@ -1041,7 +1062,7 @@ export const manageSubscriptions = async (client) => {
         runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
     })
 
-    console.log(`added ${b} new subscriptions and removed ${a} old subscriptions`)
+    console.log(`added ${a} new subscriptions and removed ${b} old subscriptions`)
     return console.log(`manageSubscriptions() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 

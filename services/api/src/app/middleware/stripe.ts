@@ -14,7 +14,6 @@ const Stripe = new stripe(config.stripe.clientSecret)
 // recreating the `Stripe` object on every render.
 // const stripePromise = loadStripe('pk_test_51LIfMzI2hSs9VrZuvedTsVTHy91Julkndoa3ngNSu57SEDslvLipAGD1FaZ2L6vQ4fp4RWwIejgKgcfKISQZFazW00DTWtDgVz');
 
-
 export const paymentIntent = async (req, res, next) => {
     try {
         const intent = await Stripe.paymentIntents.create({
@@ -62,9 +61,9 @@ export const receiveStripeWebhooks = async (req, res, next) => {
             await subscription.update({
                 tier: tier,
                 status: stripeSubscription.status,
-                currentPeriodStart: stripeSubscription.current_period_start,
-                currentPeriodEnd: stripeSubscription.current_period_end,
-                endedAt: stripeSubscription.ended_at
+                currentPeriodStart: stripeSubscription.current_period_start * 1000,
+                currentPeriodEnd: stripeSubscription.current_period_end * 1000,
+                endedAt: stripeSubscription.ended_at * 1000
             })
         } else {
             const player = invoice.customer_email ? await Player.findOne({
@@ -92,9 +91,9 @@ export const receiveStripeWebhooks = async (req, res, next) => {
                 customerId: stripeSubscription.customer,
                 tier: tier,
                 status: stripeSubscription.status,
-                currentPeriodStart: stripeSubscription.current_period_start,
-                currentPeriodEnd: stripeSubscription.current_period_end,
-                endedAt: stripeSubscription.ended_at
+                currentPeriodStart: stripeSubscription.current_period_start * 1000,
+                currentPeriodEnd: stripeSubscription.current_period_end * 1000,
+                endedAt: stripeSubscription.ended_at * 1000
             })
         }
     } catch (err) {
@@ -102,43 +101,65 @@ export const receiveStripeWebhooks = async (req, res, next) => {
     }
 }
 
-
-
 export const getSubscriptions = async (req, res, next) => {
     try {
-        const {data: subscriptions} = await Stripe.subscriptions.list()
+        const {data: stripeSubscriptions} = await Stripe.subscriptions.list()
 
-        for (let i = 0; i < subscriptions.length; i++) {
-            const subscription = subscriptions[i]
-            const customer = await Stripe.customers.retrieve(subscription.customer.toString())
-            console.log(customer)
-            console.log(customer['email'])
+        for (let i = 0; i < stripeSubscriptions.length; i++) {
+            const stripeSubscription = stripeSubscriptions[i]
+            const customer = await Stripe.customers.retrieve(stripeSubscription.customer.toString())
+            const tier = stripeSubscription.items.data[0].price.unit_amount === 899 ? 'Premium' : 'Supporter'
 
-            const player = customer['email'] ? await Player.findOne({
+            let subscription =  await Subscription.findOne({
                 where: {
-                    [Op.or]: {
-                        email: customer['email'],
-                        alternateEmail: customer['email'],
-                    }
-                }
-            }) : {}
-
-            await Subscription.create({
-                id: subscription.id,
-                playerName: player?.name,
-                playerId: player?.id,
-                customerEmail: customer['email'],
-                customerName: customer['email'],
-                customerId: customer.id,
-                tier: subscription.items.data[0].price.unit_amount === 899 ? 'Premium' : 'Supporter',
-                status: subscription.status,
-                currentPeriodStart: subscription.current_period_start,
-                currentPeriodEnd: subscription.current_period_end,
-                endedAt: subscription.ended_at
+                    id: stripeSubscription.id
+                },
+                include: Player
             })
+
+            let player = subscription?.player
+            if (!player) {
+                player = customer['email'] ? await Player.findOne({
+                    where: {
+                        [Op.or]: {
+                            email: customer['email'],
+                            alternateEmail: customer['email'],
+                        }
+                    }
+                }) : {}
+            }
+
+            if (subscription) {
+                await subscription.update({
+                    playerName: player?.name,
+                    playerId: player?.id,
+                    customerEmail: customer['email'],
+                    customerName: customer['name'],
+                    customerId: customer.id,
+                    tier: tier,
+                    status: stripeSubscription.status,
+                    currentPeriodStart: stripeSubscription.current_period_start * 1000,
+                    currentPeriodEnd: stripeSubscription.current_period_end * 1000,
+                    endedAt: stripeSubscription.ended_at * 1000
+                })
+            } else {
+                subscription = await Subscription.create({
+                    id: subscription.id,
+                    playerName: player?.name,
+                    playerId: player?.id,
+                    customerEmail: customer['email'],
+                    customerName: customer['name'],
+                    customerId: customer.id,
+                    tier: tier,
+                    status: subscription.status,
+                    currentPeriodStart: subscription.current_period_start * 1000,
+                    currentPeriodEnd: subscription.current_period_end * 1000,
+                    endedAt: subscription.ended_at * 1000
+                })
+            }
         }
 
-        res.json(subscriptions)
+        res.json(stripeSubscriptions)
     } catch (err) {
         next(err)
     }

@@ -33,8 +33,9 @@ export default {
                 // return downloadMissingCardImages()
                 // return recalculateAllStats()
                 // return runMonthlyTasks(client)
-                await assignTournamentRoles(client)
-                return assignSeasonalLadderRoles(client)
+                await manageSubscriptions(client)
+                // await assignTournamentRoles(client)
+                // return assignSeasonalLadderRoles(client)
             } else {
                 await interaction.editReply('🧪')
             }
