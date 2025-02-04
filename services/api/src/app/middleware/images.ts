@@ -3,16 +3,11 @@ import axios from 'axios'
 import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
 import { config } from '@fl/config'
+import {uploadCardImages} from '@fl/bot-functions'
 
 // IMAGES UPDATE CARD
 export const updateCardImage = async (req, res, next) => {
     try {
-        const {data: fullCardImage} = await axios({
-            method: 'GET',
-            url: `https://images.ygoprodeck.com/images/cards/${req.query.artworkId}.jpg`,
-            responseType: 'stream'
-        })
-
         const s3 = new S3({
             region: config.s3.region,
             credentials: {
@@ -20,39 +15,14 @@ export const updateCardImage = async (req, res, next) => {
                 secretAccessKey: config.s3.credentials.secretAccessKey
             }
         })
-    
-        const { Location: fullCardImageUri} = await new Upload({
-            client: s3,
 
-            params: { 
-                Bucket: 'formatlibrary', 
-                Key: `images/cards/${req.query.artworkId}.jpg`, 
-                Body: fullCardImage, 
-                ContentType: `image/jpg`
-            }
-        }).done()
+        const [fullSuccess, mediumSuccess, croppedSuccess] = uploadCardImages(s3, req.query.artworkId)
 
-        console.log('fullCardImageUri', fullCardImageUri)
-
-        const {data: croppedCardImage} = await axios({
-            method: 'GET',
-            url: `https://images.ygoprodeck.com/images/cards_cropped/${req.query.artworkId}.jpg`,
-            responseType: 'stream'
-        })
-
-        const { Location: croppedCardImageUri} = await new Upload({
-            client: s3,
-
-            params: { 
-                Bucket: 'formatlibrary', 
-                Key: `images/cards/${req.query.artworkId}.jpg`, 
-                Body: croppedCardImage, 
-                ContentType: `image/jpg`
-            }
-        }).done()
-
-        console.log('croppedCardImageUri', croppedCardImageUri)
-        res.json({success: true})
+        if (fullSuccess && mediumSuccess && croppedSuccess) {
+            res.json({success: true})
+        } else {
+            res.json({success: false})
+        }
     } catch (err) {
         next(err)
     }
