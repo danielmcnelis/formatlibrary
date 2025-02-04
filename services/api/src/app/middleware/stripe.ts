@@ -75,6 +75,10 @@ export const receiveStripeWebhooks = async (req, res, next) => {
                 }
             }) : null
 
+            if (player.email !== invoice.customer_email) {
+                await player.update({ alternateEmail: invoice.customer_email })
+            }
+
             if (stripeSubscription.status === 'active') {
                 await player.update({
                     subscriber: true,
@@ -127,6 +131,10 @@ export const getSubscriptions = async (req, res, next) => {
                         }
                     }
                 }) : {}
+            }
+
+            if (player.email !== customer['email']) {
+                await player.update({ alternateEmail: customer['email'] })
             }
 
             if (subscription) {

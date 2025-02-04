@@ -1017,14 +1017,21 @@ export const manageSubscriptions = async (client) => {
                 }
             })
 
+
             if (activeSubscription && activeSubscription.tier === 'Premium' && (!player.isSubscriber || player.subscriberTier !== 'Premium')) {
                 await player.update({ isSubscriber: true, subscriberTier: 'Premium' })
+                if (player.email !== activeSubscription.email) {
+                    await player.update({ alternateEmail: activeSubscription.email })
+                }
                 await programmer.send({ content: `Welcome ${player.name} to the Stripe Premium Tier!`})
                 member?.roles.add(stripePremiumRoleId)
                 member?.roles.remove(stripeSupporterRoleId)
                 a++
             } else if (activeSubscription && activeSubscription.tier === 'Supporter' && (!player.isSubscriber || player.subscriberTier !== 'Supporter')) {
                 await player.update({ isSubscriber: true, subscriberTier: 'Supporter' })
+                if (player.email !== activeSubscription.email) {
+                    await player.update({ alternateEmail: activeSubscription.email })
+                }
                 await programmer.send({ content: `Welcome ${player.name} to the Stripe Supporter Tier!`})
                 member?.roles.add(stripeSupporterRoleId)
                 member?.roles.remove(stripePremiumRoleId)
