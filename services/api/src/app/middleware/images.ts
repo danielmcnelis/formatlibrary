@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
 import { config } from '@fl/config'
+import * as sharp from 'sharp'
 
 // DOWNLOAD CROPPED IMAGE AND UPLOAD TO ARTWORK FOLDER
 export const uploadCroppedImage = async (s3, artworkId) => {
