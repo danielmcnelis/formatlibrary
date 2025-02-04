@@ -2,7 +2,7 @@
 import axios from 'axios'
 import * as fs from 'fs'
 import * as sharp from 'sharp'
-import { Artwork, BlogPost, Card, ChronRecord, Deck, DeckThumb, DeckType, Entry, Event, Format, Tournament, Match, Matchup, Membership, Player, Pool, Price, Print, Replay, Role, Server, Set, Stats } from '@fl/models'
+import { Artwork, BlogPost, Card, ChronRecord, Deck, DeckThumb, DeckType, Entry, Event, Format, Tournament, Match, Matchup, Membership, Player, Pool, Price, Print, Replay, Role, Server, Set, Stats, Subscription } from '@fl/models'
 import { checkTimeBetweenDates, createMembership, createPlayer, dateToVerbose, s3FileExists, capitalize, checkIfDiscordNameIsTaken, getNextDateAtMidnight, getNextSundayAtMidnight, getStartOfNextMonthAtMidnight, countDaysInBetweenDates } from './utility'
 import { Op } from 'sequelize'
 import { getFirstOfTwoRatedConfirmations, updateGeneralStats, updateSeasonalStats } from '@fl/bot-functions'
