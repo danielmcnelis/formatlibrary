@@ -12,8 +12,7 @@ export const getCubeById = async (req, res, next) => {
       
       const cube = await Cube.findOne({
           where: {
-              id: id,
-              display: true,
+              id: id
           },
           attributes: [
               'id',

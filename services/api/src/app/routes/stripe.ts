@@ -1,9 +1,11 @@
 import { Router } from 'express'
-import { receiveStripeWebhooks, paymentIntent } from '../middleware'
+import { getSubscriptions, paymentIntent, receiveStripeWebhooks } from '../middleware'
 
 const router = Router()
 
 router.post('/api/stripe/webhooks', receiveStripeWebhooks)
+
+router.get('/api/stripe/subscriptions', getSubscriptions)
 
 router.get('/api/stripe/payment', paymentIntent)
 

@@ -20,6 +20,7 @@ export const CubeMaker = () => {
         name: 'New Cube',
         cardPool: []
     })
+    console.log('cube', cube)
 
     const [cubes, setCubes] = useState([])
     const [card, setCard] = useState({})

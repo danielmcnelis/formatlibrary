@@ -103,3 +103,44 @@ export const receiveStripeWebhooks = async (req, res, next) => {
 }
 
 
+
+export const getSubscriptions = async (req, res, next) => {
+    try {
+        const {data: subscriptions} = await Stripe.subscriptions.list()
+
+        for (let i = 0; i < subscriptions.length; i++) {
+            const subscription = subscriptions[i]
+            const customer = await Stripe.customers.retrieve(subscription.customer.toString())
+            console.log(customer)
+            console.log(customer['email'])
+
+            const player = customer['email'] ? await Player.findOne({
+                where: {
+                    [Op.or]: {
+                        email: customer['email'],
+                        alternateEmail: customer['email'],
+                    }
+                }
+            }) : {}
+
+            await Subscription.create({
+                id: subscription.id,
+                playerName: player.name,
+                customerEmail: customer['email'],
+                customerName: customer['email'],
+                customerId: customer.id,
+                tier: subscription.items.data[0].price.unit_amount === 899 ? 'Premium' : 'Supporter',
+                status: subscription.status,
+                currentPeriodStart: subscription.current_period_start,
+                currentPeriodEnd: subscription.current_period_end,
+                endedAt: subscription.ended_at
+            })
+        }
+        
+        res.json(subscriptions)
+    } catch (err) {
+        next(err)
+    }
+}
+
+

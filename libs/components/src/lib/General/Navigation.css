@@ -145,6 +145,17 @@
     text-decoration: none;
 }
 
+.nav-header-small {
+    color: #f7f7f7;
+    padding: 2px 8px !important;
+    margin: 0px 0.35vw;
+    border-radius: 5px;
+    font-size: 0.8em !important;
+    text-decoration: none;
+    text-align: center !important;
+    width: 7.0em
+}
+
 #subscribe:hover, #login:hover, .nav-header:hover {
     cursor: pointer;
     background-color: rgb(209, 156, 70);

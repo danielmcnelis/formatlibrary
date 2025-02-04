@@ -63,8 +63,8 @@ export const Navigation = (props) => {
                 </div>
                 {
                     isSubscriber ? (
-                        <a href="/subscribe">
-                            <h1 id="subscribe" className="nav-header">SUBSCRIPTION</h1>
+                        <a href="https://billing.stripe.com/p/login/4gw14n5Cd4zp6KkbII">
+                            <h1 id="subscribe" className="nav-header-small">MANAGE SUBSCRIPTION</h1>
                         </a>
                     ) : (
                         <a href="/subscribe">
