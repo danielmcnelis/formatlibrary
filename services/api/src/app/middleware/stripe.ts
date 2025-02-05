@@ -6,10 +6,10 @@ import {config} from '@fl/config'
 import { Player, Subscription } from '@fl/models'
 import { Op } from 'sequelize'
 const Stripe = new stripe(config.stripe.clientSecret)
-import manageSubscriptions from '@fl/bot-functions'
+// import {manageSubscriptions} from '@fl/bot-functions'
 // import {Elements} from '@stripe/react-stripe-js'
 // import {loadStripe} from '@stripe/stripe-js'
-import { client } from 'libs/bot-functions/src/client'
+// import { client } from 'libs/bot-functions/src/client'
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -101,7 +101,7 @@ export const receiveStripeWebhooks = async (req, res, next) => {
                 })
             }
 
-            return manageSubscriptions(client)
+            // return manageSubscriptions(client)
         }
     } catch (err) {
         next(err)
