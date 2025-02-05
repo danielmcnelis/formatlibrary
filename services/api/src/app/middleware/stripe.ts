@@ -33,72 +33,77 @@ export const paymentIntent = async (req, res, next) => {
 
 export const receiveStripeWebhooks = async (req, res, next) => {
     try {
-        console.log('receiveStripeWebhooks req', req)
         console.log('req.body.data.object.', req.body.data.object)
-        const invoiceId = req.body.data.object.invoice?.toString()
-        console.log('invoiceId', invoiceId)
-        const invoice = await Stripe.invoices.retrieve(invoiceId)
-        console.log('invoice', invoice)
-        const subscriptionId = invoice.subscription?.toString()
-        console.log('subscriptionId', subscriptionId)
-        const stripeSubscription = await Stripe.subscriptions.retrieve(subscriptionId)
-        console.log('stripeSubscription', stripeSubscription)
-        let subscription = await Subscription.findOne({
-            where: {
-                id: stripeSubscription.id
-            }
-        })
+        if (req.body.data.object.object === 'subscription') {
+            const subscriptionId = req.body.data.object.id.toString()
+            console.log('subscriptionId', subscriptionId)
+            const stripeSubscription = req.body.data.object
+            const product = await Stripe.products.retrieve(stripeSubscription?.plan.product.toString())
+            console.log('product', product)
+            const customer = await Stripe.customers.retrieve(stripeSubscription?.customer)
+            console.log('customer', customer)
+            const tier = product?.name?.toString().replace('Format Library ', '')
+            console.log('tier', tier)
 
-        const product = await Stripe.products.retrieve(stripeSubscription?.items.data[0].plan.product.toString())
-        console.log('product', product)
-        console.log('invoice.customer_name', invoice.customer_name)
-        console.log('invoice.customer_email', invoice.customer_email)
-
-        const tier = product?.name?.toString().replace('Format Library ', '')
-        console.log('tier', tier)
-
-        if (subscription) {
-            await subscription.update({
-                tier: tier,
-                status: stripeSubscription.status,
-                currentPeriodStart: stripeSubscription.current_period_start * 1000,
-                currentPeriodEnd: stripeSubscription.current_period_end * 1000,
-                endedAt: stripeSubscription.ended_at * 1000
-            })
-        } else {
-            const player = invoice.customer_email ? await Player.findOne({
+            let subscription = await Subscription.findOne({
                 where: {
-                    [Op.or]: {
-                        email: invoice.customer_email,
-                        alternateEmail: invoice.customer_email
-                    }
+                    id: subscriptionId
                 }
-            }) : null
+            })
 
-            if (player.email !== invoice.customer_email) {
-                await player.update({ alternateEmail: invoice.customer_email })
-            }
+            if (subscription) {
+                const player = await Player.findOne({
+                    where: {
+                        [Op.or]: {
+                            email: customer['email'],
+                            alternateEmail: customer['email']
+                        }
+                    }
+                })
 
-            if (stripeSubscription.status === 'active') {
-                await player.update({
-                    subscriber: true,
-                    subscriberTier: tier,
+                await subscription.update({
+                    playerName: player?.name,
+                    playerId: player?.id,
+                    customerName: customer['name'],
+                    customerEmail: customer['email'],
+                    customerId: stripeSubscription.customer,
+                    tier: tier,
+                    status: stripeSubscription.status,
+                    currentPeriodStart: stripeSubscription.current_period_start * 1000,
+                    currentPeriodEnd: stripeSubscription.current_period_end * 1000,
+                    endedAt: stripeSubscription.ended_at * 1000
+                })
+            } else {
+                const player = await Player.findOne({
+                    where: {
+                        [Op.or]: {
+                            email: customer['email'],
+                            alternateEmail: customer['email']
+                        }
+                    }
+                })
+
+                if (stripeSubscription.status === 'active' && player) {
+                    await player.update({
+                        subscriber: true,
+                        subscriberTier: tier,
+                    })
+                }
+
+                subscription = await Subscription.create({
+                    id: stripeSubscription.id,
+                    playerName: player?.name,
+                    playerId: player?.id,
+                    customerName: customer['name'],
+                    customerEmail: customer['email'],
+                    customerId: stripeSubscription.customer,
+                    tier: tier,
+                    status: stripeSubscription.status,
+                    currentPeriodStart: stripeSubscription.current_period_start * 1000,
+                    currentPeriodEnd: stripeSubscription.current_period_end * 1000,
+                    endedAt: stripeSubscription.ended_at * 1000
                 })
             }
-
-            subscription = await Subscription.create({
-                id: stripeSubscription.id,
-                playerName: player?.name,
-                playerId: player?.id,
-                customerName: invoice.customer_name,
-                customerEmail: invoice.customer_email,
-                customerId: stripeSubscription.customer,
-                tier: tier,
-                status: stripeSubscription.status,
-                currentPeriodStart: stripeSubscription.current_period_start * 1000,
-                currentPeriodEnd: stripeSubscription.current_period_end * 1000,
-                endedAt: stripeSubscription.ended_at * 1000
-            })
         }
     } catch (err) {
         next(err)
