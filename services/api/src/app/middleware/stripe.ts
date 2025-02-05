@@ -6,9 +6,10 @@ import {config} from '@fl/config'
 import { Player, Subscription } from '@fl/models'
 import { Op } from 'sequelize'
 const Stripe = new stripe(config.stripe.clientSecret)
+import manageSubscriptions from '@fl/bot-functions'
 // import {Elements} from '@stripe/react-stripe-js'
 // import {loadStripe} from '@stripe/stripe-js'
-// import { client } from 'libs/bot-functions/src/client'
+import { client } from 'libs/bot-functions/src/client'
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -33,17 +34,12 @@ export const paymentIntent = async (req, res, next) => {
 
 export const receiveStripeWebhooks = async (req, res, next) => {
     try {
-        console.log('req.body.data.object.', req.body.data.object)
         if (req.body.data.object.object === 'subscription') {
             const subscriptionId = req.body.data.object.id.toString()
-            console.log('subscriptionId', subscriptionId)
             const stripeSubscription = req.body.data.object
             const product = await Stripe.products.retrieve(stripeSubscription?.plan.product.toString())
-            console.log('product', product)
             const customer = await Stripe.customers.retrieve(stripeSubscription?.customer)
-            console.log('customer', customer)
             const tier = product?.name?.toString().replace('Format Library ', '')
-            console.log('tier', tier)
 
             let subscription = await Subscription.findOne({
                 where: {
@@ -104,6 +100,8 @@ export const receiveStripeWebhooks = async (req, res, next) => {
                     endedAt: stripeSubscription.ended_at * 1000
                 })
             }
+
+            return manageSubscriptions(client)
         }
     } catch (err) {
         next(err)

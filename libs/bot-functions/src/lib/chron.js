@@ -997,6 +997,7 @@ export const manageSubscriptions = async (client) => {
     const stripePremiumRoleId = '1335316985097093290'
     const discordSupporterRoleId = '1102020060631011400'
     const stripeSupporterRoleId = '1335317256921682053'
+    const stripeSubscriberRoleId = '1336745321186988084'
     const guild = client.guilds.cache.get('414551319031054346')
     const membersMap = await guild.members.fetch()
     // const members = [...membersMap.values()]
@@ -1025,6 +1026,7 @@ export const manageSubscriptions = async (client) => {
                 }
                 await programmer.send({ content: `Welcome ${player.name} to the Stripe Premium Tier!`})
                 member?.roles.add(stripePremiumRoleId)
+                member?.roles.add(stripeSubscriberRoleId)
                 member?.roles.remove(stripeSupporterRoleId)
                 a++
             } else if (activeSubscription && activeSubscription.tier === 'Supporter' && (!player.isSubscriber || player.subscriberTier !== 'Supporter')) {
@@ -1034,6 +1036,7 @@ export const manageSubscriptions = async (client) => {
                 }
                 await programmer.send({ content: `Welcome ${player.name} to the Stripe Supporter Tier!`})
                 member?.roles.add(stripeSupporterRoleId)
+                member?.roles.add(stripeSubscriberRoleId)
                 member?.roles.remove(stripePremiumRoleId)
                 a++
             } else if (member?._roles.includes(discordPremiumRoleId) && (!player.isSubscriber || player.subscriberTier !== 'Premium')) {
@@ -1052,6 +1055,7 @@ export const manageSubscriptions = async (client) => {
                 await player.update({ isSubscriber: false, subscriberTier: null })
                 member?.roles.remove(stripeSupporterRoleId)
                 member?.roles.remove(stripePremiumRoleId)
+                member?.roles.remove(stripeSubscriberRoleId)
                 b++
             } 
         } catch (err) {
