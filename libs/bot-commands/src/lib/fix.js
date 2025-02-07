@@ -57,7 +57,7 @@ export default {
             await interaction.deferReply()
             if (isProgrammer(interaction.member)) {
                 const user = interaction.options.getUser('user')   
-                const card = await Card.findOne({ where: { id: interaction.options.getNumber('card') }})   
+                const card = await Card.findOne({ where: { id: interaction.options.getNumber('card') }}).catch((err) => console.log(err))
 
                 if (user) {
                     await updateSingleAvatar(user, card)
