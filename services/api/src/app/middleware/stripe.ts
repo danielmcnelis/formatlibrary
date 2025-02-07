@@ -131,14 +131,14 @@ export const getSubscriptions = async (req, res, next) => {
                 player = customer['email'] ? await Player.findOne({
                     where: {
                         [Op.or]: {
-                            email: customer['email'],
-                            alternateEmail: customer['email'],
+                            email: {[Op.iLike]: customer['email']},
+                            alternateEmail: {[Op.iLike]: customer['email']},
                         }
                     }
                 }) : {}
             }
 
-            if (player.email !== customer['email']) {
+            if (player && player.email !== customer['email']) {
                 await player.update({ alternateEmail: customer['email'] })
             }
 
