@@ -29,7 +29,7 @@ export default {
             })
 
             await interaction.respond(
-                cards.map(card => ({ name: card.name, value: card.id })),
+                cards.map(card => ({ name: card.name, value: card.name })),
             )
         } catch (err) {
             console.log(err)

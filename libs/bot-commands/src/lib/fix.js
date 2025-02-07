@@ -23,7 +23,7 @@ export default {
                 .setDescription('Tag a user.')
                 .setRequired(false)
         )
-        .addStringOption(option =>
+        .addNumberOption(option =>
             option
                 .setName('card')
                 .setDescription('Choose a card for an avatar.')
