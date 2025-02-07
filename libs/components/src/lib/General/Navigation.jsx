@@ -65,9 +65,15 @@ export const Navigation = (props) => {
                             <h1 id="subscribe" className="nav-header-small">MANAGE SUBSCRIPTION</h1>
                         </a>
                     ) : (
-                        <a href="/subscribe">
-                            <h1 id="subscribe" className="nav-header">SUBSCRIBE</h1>
-                        </a>
+                        playerId ? (
+                            <a href="/subscribe">
+                                <h1 id="subscribe" className="nav-header">SUBSCRIBE</h1>
+                            </a>
+                        ) : (
+                            <a href="/auth/login" onClick={() => alert('Please log-in before subscribing.')}>
+                                <h1 id="subscribe" className="nav-header">SUBSCRIBE</h1>
+                            </a>   
+                        )
                     )
                 }
                 {

@@ -5,7 +5,7 @@ const router = Router()
 
 router.post('/api/stripe/webhooks', receiveStripeWebhooks)
 
-router.put('/api/stripe/subscriptions', getSubscriptions)
+router.get('/api/stripe/subscriptions', getSubscriptions)
 
 router.get('/api/stripe/payment', paymentIntent)
 
