@@ -102,21 +102,29 @@ export const createDecks = async (event, participants, standings = [], topCutSiz
 }
 
 // UPDATE SINGLE AVATAR
-export const updateSingleAvatar = async (user) => {
+export const updateSingleAvatar = async (user, card) => {
     try {
-        const avatar = user.avatar
         const player = await Player.findOne({ where: { discordId: user.id }})
 
         if (player) {
-            await player.update({ discordPfp: avatar })
-            
-            const {data} = await axios.get(
-                `https://cdn.discordapp.com/avatars/${player.discordId}/${avatar}.webp`, {
-                    responseType: 'arraybuffer',
-                }
-            )
+            let buffer
+            if (card) {
+                const canvas = Canvas.createCanvas(100, 100)
+                const context = canvas.getContext('2d')
+                const image = await Canvas.loadImage(`https://cdn.formatlibrary.com/images/artworks/${card.artworkId}.jpg`) 
+                context.drawImage(image, 0, 0, 100, 100)
+                buffer = canvas.toBuffer('image/png')
+            } else {
+                const avatar = user.avatar
+                await player.update({ discordPfp: avatar })
+                const {data} = await axios.get(
+                    `https://cdn.discordapp.com/avatars/${player.discordId}/${avatar}.webp`, {
+                        responseType: 'arraybuffer',
+                    }
+                )
 
-            const buffer = await sharp(data).toFormat('png').toBuffer()
+                buffer = await sharp(data).toFormat('png').toBuffer()
+            }
 
             const s3 = new S3({
                 region: config.s3.region,

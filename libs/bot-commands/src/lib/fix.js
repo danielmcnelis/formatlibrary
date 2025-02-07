@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { isProgrammer } from '@fl/bot-functions'
-import { Alius, Deck, DeckType, Event, Format, Match, Matchup, Player, Replay, Server, Team, Tournament } from '@fl/models'
+import { Alius, Card, Deck, DeckType, Event, Format, Match, Matchup, Player, Replay, Server, Team, Tournament } from '@fl/models'
 import { getMatches, getParticipantFinalRank, getParticipants, composeBlogPost, calculateStandings, generateMatchupData, fixPlacements, updateSingleAvatar } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
@@ -23,15 +23,42 @@ export default {
                 .setDescription('Tag a user.')
                 .setRequired(false)
         )
+        .addUserOption(option =>
+            option
+                .setName('card')
+                .setDescription('Choose a card for an avatar.')
+				.setAutocomplete(true)
+                .setRequired(false)
+        )
         .setDMPermission(false),
+    async autocomplete(interaction) {
+        try {
+            const focusedValue = interaction.options.getFocused()
+
+            const cards = await Card.findAll({
+                where: {
+                    name: {[Op.startsWith]: `%${focusedValue}%`},
+                },
+                limit: 5,
+                order: [["name", "ASC"]]
+            })
+
+            await interaction.respond(
+                cards.map(card => ({ name: card.name, value: card.name })),
+            )
+        } catch (err) {
+            console.log(err)
+        }
+    },        
     async execute(interaction) {
         try {
             await interaction.deferReply()
             if (isProgrammer(interaction.member)) {
-                const user = interaction.options.getUser('user')      
+                const user = interaction.options.getUser('user')   
+                const card = await Card.findOne({ where: { name: interaction.options.getString('card') }})   
 
                 if (user) {
-                    await updateSingleAvatar(user)
+                    await updateSingleAvatar(user, card)
                     return await interaction.editReply(`Updated ${user?.username}'s avatar.`)
                 }
                 
@@ -61,7 +88,6 @@ export default {
                 const primaryTournamentMatches = await getMatches(server, event.primaryTournamentId)
                 const primaryTournamentParticipants = await getParticipants(server, event.primaryTournamentId)
                 const standings = await calculateStandings(event.primaryTournament, primaryTournamentMatches, primaryTournamentParticipants)
-                return
                 
                 for (let i = 0; i < standings.length; i++) {
                     try {

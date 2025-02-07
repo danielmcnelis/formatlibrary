@@ -16,7 +16,8 @@ export default {
                 .setRequired(true)
         )
 		.addStringOption(option =>
-			option.setName('tournament')
+			option
+                .setName('tournament')
 				.setDescription('Enter tournament name or abbreviation')
 				.setAutocomplete(true)
                 .setRequired(true)

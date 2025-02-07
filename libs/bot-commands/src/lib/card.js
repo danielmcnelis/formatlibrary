@@ -1,7 +1,8 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Format, Server } from '@fl/models'
+import { Card, Format, Server } from '@fl/models'
 import { getCard } from '@fl/bot-functions'
+import { Op } from 'sequelize'
 
 export default {
 	data: new SlashCommandBuilder()
@@ -11,9 +12,29 @@ export default {
             str
                 .setName('name')
                 .setDescription('Enter search query.')
+				.setAutocomplete(true)
                 .setRequired(true)
         )
-        .setDMPermission(false),
+        .setDMPermission(false), 
+    async autocomplete(interaction) {
+        try {
+            const focusedValue = interaction.options.getFocused()
+
+            const cards = await Card.findAll({
+                where: {
+                    name: {[Op.startsWith]: `%${focusedValue}%`},
+                },
+                limit: 5,
+                order: [["name", "ASC"]]
+            })
+
+            await interaction.respond(
+                cards.map(card => ({ name: card.name, value: card.id })),
+            )
+        } catch (err) {
+            console.log(err)
+        }
+    },        
 	async execute(interaction, fuzzyCards) {
         try {
             const query = interaction.options.getString('name')
