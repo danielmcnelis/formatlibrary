@@ -114,7 +114,9 @@ export const getSubscriptions = async (req, res, next) => {
 
         for (let i = 0; i < stripeSubscriptions.length; i++) {
             const stripeSubscription = stripeSubscriptions[i]
+            console.log('stripeSubscription', stripeSubscription)
             const customer = await Stripe.customers.retrieve(stripeSubscription.customer.toString())
+            console.log('customer', customer)
             const tier = stripeSubscription.items.data[0].price.unit_amount === 899 ? 'Premium' : 'Supporter'
 
             let subscription =  await Subscription.findOne({
@@ -146,7 +148,7 @@ export const getSubscriptions = async (req, res, next) => {
                     playerId: player?.id,
                     customerEmail: customer['email'],
                     customerName: customer['name'],
-                    customerId: customer.id,
+                    customerId: customer?.id,
                     tier: tier,
                     status: stripeSubscription.status,
                     currentPeriodStart: stripeSubscription.current_period_start * 1000,
@@ -160,7 +162,7 @@ export const getSubscriptions = async (req, res, next) => {
                     playerId: player?.id,
                     customerEmail: customer['email'],
                     customerName: customer['name'],
-                    customerId: customer.id,
+                    customerId: customer?.id,
                     tier: tier,
                     status: subscription.status,
                     currentPeriodStart: subscription.current_period_start * 1000,
