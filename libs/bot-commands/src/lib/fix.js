@@ -43,8 +43,10 @@ export default {
                 order: [["name", "ASC"]]
             })
 
+            console.log('cards[0]', cards[0])
+
             await interaction.respond(
-                cards.map(card => ({ name: card.name, value: card.name })),
+                cards.map(card => ({ name: card.name, value: card.id })),
             )
         } catch (err) {
             console.log(err)
@@ -55,7 +57,7 @@ export default {
             await interaction.deferReply()
             if (isProgrammer(interaction.member)) {
                 const user = interaction.options.getUser('user')   
-                const card = await Card.findOne({ where: { name: interaction.options.getString('card') }})   
+                const card = await Card.findOne({ where: { id: interaction.options.getNumber('card') }})   
 
                 if (user) {
                     await updateSingleAvatar(user, card)
