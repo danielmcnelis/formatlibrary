@@ -138,7 +138,7 @@ export const Navigation = (props) => {
                 }
             </div>
         </div>
-            <div className="announcement-banner">
+            {/* <div className="announcement-banner">
                 <h2>
                     <a
                         className="inherit-color" 
@@ -146,7 +146,7 @@ export const Navigation = (props) => {
                         rel="noreferrer"
                         target="_blank"
                     >$100 Yata Tournament begins Friday - Subscribe to Join!</a></h2>
-            </div>
+            </div> */}
         </>
     )
 }
