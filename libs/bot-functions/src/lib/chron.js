@@ -636,15 +636,15 @@ export const recalculateFormatStats = async (format) => {
 
     const servers = await Server.findAll({
         where: {
-            // [Op.or]: [
-                // {
+            [Op.or]: [
+                {
                     id: '414551319031054346'
-                // },
-                // {
-                //     hasInternalLadder: true,
-                //     formatId: format.id
-                // }
-            // ],
+                },
+                {
+                    hasInternalLadder: true,
+                    formatId: format.id
+                }
+            ],
         }
     })
 
@@ -658,7 +658,7 @@ export const recalculateFormatStats = async (format) => {
 
         const allMatches = await Match.findAll({ 
             where: { formatId: format.id, serverId: server.id }, 
-            attributes: ['id', 'formatId', 'winnerName', 'loserName', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'classicDelta', 'createdAt', 'isSeasonal'], 
+            attributes: ['id', 'formatId', 'serverId', 'winnerName', 'loserName', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'classicDelta', 'createdAt', 'isSeasonal'], 
             order: [["createdAt", "ASC"]]
         })
 
@@ -723,7 +723,7 @@ export const recalculateFormatStats = async (format) => {
                 const match = allMatches[i]
                 
                 if (nextMonth < match.createdAt) {
-                    await applyGeneralDecay(format.id, format.name,  currentMonth || currentDate, nextMonth)
+                    await applyGeneralDecay(format.id, format.name, server.id, currentMonth || currentDate, nextMonth)
                     currentMonth = nextMonth
                     nextMonth = getStartOfNextMonthAtMidnight(currentMonth)
 
@@ -734,11 +734,11 @@ export const recalculateFormatStats = async (format) => {
                 }
     
                 if (match.isSeasonal && format.useSeasonalElo && format.seasonResetDate < match.createdAt && nextSunday < match.createdAt) {
-                    await applySeasonalDecay(format.id, format.name, currentSunday || firstDayOfSeason, nextSunday)
+                    await applySeasonalDecay(format.id, format.name, server.id, currentSunday || firstDayOfSeason, nextSunday)
                     currentSunday = nextSunday
                     nextSunday = getNextSundayAtMidnight(currentSunday)
 
-                    allStats = await Stats.findAll({ 
+                    allStats = await Stats.findAll({
                         where: { formatId: format.id, serverId: server.id }, 
                         attributes: attributes
                     })
@@ -756,7 +756,7 @@ export const recalculateFormatStats = async (format) => {
                         formatName: format.name,
                         formatId: format.id,
                         serverId: server.id,
-                        isInternal: false
+                        isInternal: server.hasInternalLadder
                     })
     
                     console.log('created new winner stats', winnerId)
@@ -772,7 +772,7 @@ export const recalculateFormatStats = async (format) => {
                         formatName: format.name,
                         formatId: format.id,
                         serverId: server.id,
-                        isInternal: false
+                        isInternal: server.hasInternalLadder
                     })
     
                     console.log('created new loser stats:', loserId)
@@ -846,21 +846,21 @@ export const recalculateAllStats = async () => {
 
 
 // APPLY DECAY
-export const applyGeneralDecay = async (formatId, formatName, currentDate, nextDate) => {
+export const applyGeneralDecay = async (formatId, formatName, serverId, currentDate, nextDate) => {
     const allStats = await Stats.findAll({
         where: {
             formatId: formatId,
-            serverId: '414551319031054346',
+            serverId: serverId,
             elo: {[Op.gt]: 500}
         },
-        attributes: ['id', 'formatId', 'playerName', 'playerId', 'elo']
+        attributes: ['id', 'formatId', 'serverId', 'playerName', 'playerId', 'elo']
     })
 
     // GENERAL MATCHES
     const generalMatchesInPeriod = await Match.findAll({
         where: {
             formatId: formatId,
-            serverId: '414551319031054346',
+            serverId: serverId,
             createdAt: {
                 [Op.and]: [
                     {[Op.gte]: currentDate},
@@ -868,7 +868,7 @@ export const applyGeneralDecay = async (formatId, formatName, currentDate, nextD
                 ]
             }
         },
-        attributes: ['winnerId', 'loserId', 'formatId', 'createdAt']
+        attributes: ['winnerId', 'loserId', 'formatId', 'serverId', 'createdAt']
     })
 
     const days = Math.ceil(((nextDate.getTime() - currentDate.getTime())) / (1000 * 60 * 60 * 24))
@@ -914,7 +914,10 @@ export const applyGeneralDecay = async (formatId, formatName, currentDate, nextD
             stats.elo > 500
         ) {
             stats.elo = stats.elo * Math.pow(generalDecayRate, days - shields)
-            if (stats.elo < 500) stats.elo = 500
+            if (stats.elo < 500) {
+                stats.backupElo = stats.elo
+                stats.elo = 500
+            }
             await stats.save()
         }
     }
@@ -924,19 +927,21 @@ export const applyGeneralDecay = async (formatId, formatName, currentDate, nextD
 
 
 // APPLY SEASONAL DECAY
-export const applySeasonalDecay = async (formatId, formatName, currentDate, nextDate) => {
+export const applySeasonalDecay = async (formatId, formatName, serverId, currentDate, nextDate) => {
     console.log('dates', currentDate, nextDate)
     const allStats = await Stats.findAll({
         where: {
             formatId: formatId,
+            serverId: serverId,
             seasonalElo: {[Op.gt]: 500}
         },
-        attributes: ['id', 'formatId', 'playerName', 'playerId', 'seasonalElo']
+        attributes: ['id', 'formatId', 'serverId', 'playerName', 'playerId', 'seasonalElo']
     })
 
     const seasonalMatchesInPeriod = await Match.findAll({
         where: {
             formatId: formatId,
+            serverId: serverId,
             isSeasonal: true,
             createdAt: {
                 [Op.and]: [
@@ -945,7 +950,7 @@ export const applySeasonalDecay = async (formatId, formatName, currentDate, next
                 ]
             }
         },
-        attributes: ['winnerId', 'loserId', 'formatId', 'createdAt']
+        attributes: ['winnerId', 'loserId', 'serverId', 'formatId', 'isSeasonal', 'createdAt']
     })
 
     const days = Math.ceil((nextDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24))
@@ -983,7 +988,10 @@ export const applySeasonalDecay = async (formatId, formatName, currentDate, next
             stats.seasonalElo > 500
         ) {
             stats.seasonalElo = stats.seasonalElo * Math.pow(seasonalDecayRate, days - shields)
-            if (stats.seasonalElo < 500) stats.seasonalElo = 500
+            if (stats.seasonalElo < 500) {
+                stats.backupSeasonalElo = stats.seasonalElo
+                stats.seasonalElo = 500
+            }
             await stats.save()
         }
     }
