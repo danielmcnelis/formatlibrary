@@ -31,9 +31,9 @@ export default {
                 // await purgeBetaCards(client)
                 // return await downloadOriginalArtworks(client)
                 // return downloadMissingCardImages()
-                // return recalculateAllStats()
+                return recalculateAllStats()
                 // return runMonthlyTasks(client)
-                await manageSubscriptions(client)
+                // await manageSubscriptions(client)
                 // await assignTournamentRoles(client)
                 // return assignSeasonalLadderRoles(client)
             } else {
