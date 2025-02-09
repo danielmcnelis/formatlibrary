@@ -636,22 +636,22 @@ export const recalculateFormatStats = async (format) => {
 
     const servers = await Server.findAll({
         where: {
-            [Op.or]: [
-                {
+            // [Op.or]: [
+                // {
                     id: '414551319031054346'
-                },
-                {
-                    hasInternalLadder: true,
-                    formatId: format.id
-                }
-            ],
+                // },
+                // {
+                //     hasInternalLadder: true,
+                //     formatId: format.id
+                // }
+            // ],
         }
     })
 
     for (let z = 0; z < servers.length; z++) {
         const server = servers[z]
         console.log('server.name', server.name)
-        const allStats = await Stats.findAll({ 
+        let allStats = await Stats.findAll({ 
             where: { formatId: format.id, serverId: server.id }, 
             attributes: attributes
         })
@@ -726,12 +726,22 @@ export const recalculateFormatStats = async (format) => {
                     await applyGeneralDecay(format.id, format.name,  currentMonth || currentDate, nextMonth)
                     currentMonth = nextMonth
                     nextMonth = getStartOfNextMonthAtMidnight(currentMonth)
+
+                    allStats = await Stats.findAll({ 
+                        where: { formatId: format.id, serverId: server.id }, 
+                        attributes: attributes
+                    })
                 }
     
                 if (match.isSeasonal && format.useSeasonalElo && format.seasonResetDate < match.createdAt && nextSunday < match.createdAt) {
                     await applySeasonalDecay(format.id, format.name, currentSunday || firstDayOfSeason, nextSunday)
                     currentSunday = nextSunday
                     nextSunday = getNextSundayAtMidnight(currentSunday)
+
+                    allStats = await Stats.findAll({ 
+                        where: { formatId: format.id, serverId: server.id }, 
+                        attributes: attributes
+                    })
                 }
     
                 const winnerId = match.winnerId
@@ -840,6 +850,7 @@ export const applyGeneralDecay = async (formatId, formatName, currentDate, nextD
     const allStats = await Stats.findAll({
         where: {
             formatId: formatId,
+            serverId: '414551319031054346',
             elo: {[Op.gt]: 500}
         },
         attributes: ['id', 'formatId', 'playerName', 'playerId', 'elo']
@@ -849,6 +860,7 @@ export const applyGeneralDecay = async (formatId, formatName, currentDate, nextD
     const generalMatchesInPeriod = await Match.findAll({
         where: {
             formatId: formatId,
+            serverId: '414551319031054346',
             createdAt: {
                 [Op.and]: [
                     {[Op.gte]: currentDate},
