@@ -873,7 +873,7 @@ export const applyGeneralDecay = async (formatId, formatName, serverId, currentD
 
     const days = Math.ceil(((nextDate.getTime() - currentDate.getTime())) / (1000 * 60 * 60 * 24))
     let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriod.length) / (days * 20000))
-    if (generalDecayRate < 0.9998) generalDecayRate = 0.9998
+    if (generalDecayRate < 0.99995) generalDecayRate = 0.99995
 
     const generalActivePlayerIds = []
     for (let i = 0; i < generalMatchesInPeriod.length; i++) {
