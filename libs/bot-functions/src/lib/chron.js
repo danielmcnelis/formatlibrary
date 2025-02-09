@@ -672,9 +672,9 @@ export const recalculateFormatStats = async (format) => {
         let firstDayOfSeason = format.seasonResetDate
         let currentSunday
         let currentMonth
-        let nextDate = getNextDateAtMidnight(currentDate)
+        // let nextDate = getNextDateAtMidnight(currentDate)
         let nextSunday = firstDayOfSeason ? getNextSundayAtMidnight(firstDayOfSeason) : null
-        // let nextMonth = getStartOfNextMonthAtMidnight(currentDate)
+        let nextMonth = getStartOfNextMonthAtMidnight(currentDate)
     
         if (format.useSeasonalElo) {
             for (let i = 0; i < allStats.length; i++) {
@@ -722,10 +722,10 @@ export const recalculateFormatStats = async (format) => {
             try {
                 const match = allMatches[i]
                 
-                if (nextDate < match.createdAt) {
-                    await applyGeneralDecay(format.id, format.name, server.id, currentDate, nextDate)
-                    currentDate = nextDate
-                    nextDate = getNextDateAtMidnight(currentDate)
+                if (nextMonth < match.createdAt) {
+                    await applyGeneralDecay(format.id, format.name, server.id, currentMonth || currentDate, nextMonth)
+                    currentMonth = nextMonth
+                    nextMonth = getStartOfNextMonthAtMidnight(currentMonth)
 
                     allStats = await Stats.findAll({ 
                         where: { formatId: format.id, serverId: server.id }, 
@@ -871,9 +871,9 @@ export const applyGeneralDecay = async (formatId, formatName, serverId, currentD
         attributes: ['winnerId', 'loserId', 'formatId', 'serverId', 'createdAt']
     })
 
-    // const days = Math.ceil(((nextDate.getTime() - currentDate.getTime())) / (1000 * 60 * 60 * 24))
-    let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriod.length) / (1 * 20000))
-    if (generalDecayRate < 0.9995) generalDecayRate = 0.9995
+    const days = Math.ceil(((nextDate.getTime() - currentDate.getTime())) / (1000 * 60 * 60 * 24))
+    let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriod.length) / (days * 20000))
+    if (generalDecayRate < 0.99995) generalDecayRate = 0.99995
 
     const generalActivePlayerIds = []
     for (let i = 0; i < generalMatchesInPeriod.length; i++) {
@@ -906,14 +906,14 @@ export const applyGeneralDecay = async (formatId, formatName, serverId, currentD
 
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
-        // const n = generalGamesPlayed[stats.playerId] || 0
-        // const shields = n > days ? days : n
-        // console.log(`${stats.playerName}'s shields:`, shields, 'out of', days)
+        const n = generalGamesPlayed[stats.playerId] || 0
+        const shields = n > days ? days : n
+        console.log(`${stats.playerName}'s shields:`, shields, 'out of', days)
 
         if (
-            stats.elo > 500 && !generalGamesPlayed[stats.playerId]
+            stats.elo > 500
         ) {
-            stats.elo = stats.elo * generalDecayRate
+            stats.elo = stats.elo * Math.pow(generalDecayRate, days - shields)
             if (stats.elo < 500) {
                 stats.backupElo = stats.elo
                 stats.elo = 500
