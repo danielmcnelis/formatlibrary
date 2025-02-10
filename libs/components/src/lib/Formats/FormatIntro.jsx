@@ -168,7 +168,6 @@ export const FormatIntro = (props) => {
             <PopularDecks id="popular-decks" formatName={format.name}/>
             <RecentEvents id="recent-events" formatName={format.name}/>
             <MiniBoard limit={10} format={format}/>
-            <div className="divider"/>
             <BanList id="banlist" format={format}/>
         </div>
     </>

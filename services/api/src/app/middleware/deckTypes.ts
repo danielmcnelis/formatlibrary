@@ -313,6 +313,31 @@ export const getDeckTypeSummary = async (req, res, next) => {
         attributes: ['id', 'deckTypeName', 'category', 'ydk', 'formatName']
     })
 
+    const mostRecent = await Deck.findOne({
+        where: {
+            deckTypeId: deckType.id,
+            formatId: format.id,
+            origin: 'event',
+            eventId: { [Op.not]: null },
+            display: true
+        },
+        attributes: ['id', 'builderName', 'eventAbbreviation', 'deckTypeName', 'downloads', 'views', 'publishDate', 'placement'],
+        order: [['publishDate', 'DESC'], ['placement', 'ASC']]
+    })
+
+    const mostPopular = await Deck.findOne({
+        where: {
+            id: {[Op.not]: mostRecent?.id},
+            deckTypeId: deckType.id,
+            formatId: format.id,
+            origin: 'event',
+            eventId: { [Op.not]: null },
+            display: true
+        },
+        attributes: ['id', 'builderName', 'eventAbbreviation', 'deckTypeName', 'downloads', 'views', 'placement'],
+        order: [['downloads', 'DESC']]
+    })
+
     const showExtra = format.date >= '2008-08-05' || !format.date
     const total = await Deck.count({ where: { origin: 'event', formatId: format.id }})
 
@@ -331,7 +356,8 @@ export const getDeckTypeSummary = async (req, res, next) => {
       sideMonsters: [],
       sideSpells: [],
       sideTraps: [],
-      format: format
+      format: format,
+      examples: [mostPopular, mostRecent]
     }
 
     for (let i = 0; i < decks.length; i++) {

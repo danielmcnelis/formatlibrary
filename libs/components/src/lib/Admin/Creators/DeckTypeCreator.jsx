@@ -38,7 +38,7 @@ export const DeckTypeCreator = () => {
         if (!rightCard) return alert('Please assign a Card for the Right Thumbnail Image.')
         
         try {
-            const { data } = await axios.post('/api/deckTypes/create', {
+            const { data } = await axios.post('/api/decktypes/create', {
                 name: name,
                 category: category,
                 formatName: format.name,

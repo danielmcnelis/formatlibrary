@@ -74,8 +74,9 @@ export const MiniBoard = (props) => {
                   ) : <tr />
               }
             </tbody>
-          </table>
+          </table>                
         </div>
+        <h2 className="show-cursor deckThumbnail" onClick={() => goToLeaderBoard()}>Click here for the complete Leaderboard.</h2>
       </div>
     )
 }

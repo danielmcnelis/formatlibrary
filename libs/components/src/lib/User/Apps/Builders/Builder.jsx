@@ -413,7 +413,7 @@ export const Builder = () => {
     // HANDLE DECK TYPE SELECT
     const handldDeckTypeSelect = async (e) => {
         try {
-            const { data } = await axios.get(`/api/deckTypes/${e.target.value}`)
+            const { data } = await axios.get(`/api/decktypes/${e.target.value}`)
 
             setDeck({
                 ...deck,
@@ -463,7 +463,7 @@ useEffect(() => {
                 }
             })
 
-            const {data: deckTypeData} = await axios.get(`/api/deckTypes/`)
+            const {data: deckTypeData} = await axios.get(`/api/decktypes/`)
             const {data: formatsData} = await axios.get(`/api/formats`)
             const {data: formatData} = await axios.get(`/api/formats/advanced`)
 

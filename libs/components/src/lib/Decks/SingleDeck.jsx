@@ -123,7 +123,7 @@ export const SingleDeck = (props) => {
   useEffect(() => {
     const fetchDeckTypes = async () => {
       try {
-        const {data} = await axios.get(`/api/deckTypes/`)
+        const {data} = await axios.get(`/api/decktypes/`)
         setDeckTypes(data)
       } catch (err) {
         console.log(err)

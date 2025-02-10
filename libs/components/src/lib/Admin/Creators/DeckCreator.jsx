@@ -106,7 +106,7 @@ export const DeckCreator = () => {
     // USE EFFECT
     useEffect(() => {
         const fetchDeckTypes = async () => {
-            const {data} = await axios.get(`/api/deckTypes/`)
+            const {data} = await axios.get(`/api/decktypes/`)
             setDeckTypes(data)
         }
         

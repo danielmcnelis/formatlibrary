@@ -368,7 +368,7 @@
     margin: 10px;
   }
   
-  .eventThumbnail:hover, .badge:hover, .subheading#recent-events:hover, .subheading#popular-decks:hover {
+  .eventThumbnail:hover, .deckThumbnail:hover, .badge:hover, .subheading#recent-events:hover, .subheading#popular-decks:hover {
     cursor: pointer;
     color: #34AD5A;
   }

@@ -3,6 +3,7 @@ import { useState, useEffect, useLayoutEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { CardImage } from '../Cards/CardImage'
+import { DeckImage } from './DeckImage'
 import { Matchup } from './MatchupBar'
 import { NotFound } from '../General/NotFound'
 import { useLocation } from 'react-router-dom'
@@ -41,7 +42,7 @@ export const DeckType = (props) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                let summaryApiUrl = `/api/deckTypes/summary?id=${id}`
+                let summaryApiUrl = `/api/decktypes/summary?id=${id}`
                 if (format) summaryApiUrl += `&format=${format}`
 
                 const {data: summaryData} = await axios.get(summaryApiUrl)
@@ -119,7 +120,7 @@ export const DeckType = (props) => {
                 <div className="single-deck-title-flexbox">
                     <a
                         className="link desktop-only"
-                        href={`/api/deckTypes/download?id=${id}&format=${format}`} 
+                        href={`/api/decktypes/download?id=${id}&format=${format}`} 
                         download={`${summary.deckType} - ${capitalize(format)} Skeleton.ydk`}
                         // onClick={()=> addDownload()}
                     >                                    
@@ -129,7 +130,7 @@ export const DeckType = (props) => {
                         </div>
                     </a>
                     <div className="single-deck-title">{summary.deckType}</div>
-                    <Link to="/deck-builder" state={{ deck: {name: summary.deckType, formatName: summary.format?.name}, skeleton: `/api/deckTypes/download?id=${id}&format=${format}` }} className="desktop-only">                                    
+                    <Link to="/deck-builder" state={{ deck: {name: summary.deckType, formatName: summary.format?.name}, skeleton: `/api/decktypes/download?id=${id}&format=${format}` }} className="desktop-only">                                    
                         <div className="deck-button">
                             <b style={{padding: '0px 6px'}}>Open Deck</b>
                             <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`} alt="open-file"/>
@@ -342,6 +343,41 @@ export const DeckType = (props) => {
                         </div>
                     </div>
                 </div>
+                {
+                    summary.examples ? (
+                        <div id="top-decks">
+                            <div className="subcategory-title-flexbox">
+                            <img 
+                                style={{ width:'64px'}} 
+                                src={`https://cdn.formatlibrary.com/images/emojis/${summary.format.icon}.png`}
+                                alt={format.name}
+                            />
+                            <h2 className="subheading">{summary.examples[1] ? 'Example Decks:' : 'Example Deck:'}</h2>
+                            <img 
+                                style={{ height:'64px'}} 
+                                src={'https://cdn.formatlibrary.com/images/emojis/deckbox.png'}
+                                alt="deckbox"
+                            />
+                            </div>
+                            <div id="deckGalleryFlexBox">
+                            {
+                                summary.examples.map((deck, index) => {
+                                    return (<div className="vertical-flexbox"><h3>{index === 0 ? 'Most Popular:' : 'Recent Top:'}</h3><
+                                        DeckImage
+                                        key={deck.id} 
+                                        index={index} 
+                                        deck={deck}
+                                        width="360px"
+                                        margin="10px 5px"
+                                        padding="5px"
+                                        coverage={true}
+                                    /></div>)
+                                })
+                            }
+                            </div>
+                        </div>
+                    ) : ''
+                }
                 {
                     matchups ? (
                         <>

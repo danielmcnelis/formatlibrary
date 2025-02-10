@@ -37,6 +37,7 @@ export const PopularDecks = (props) => {
                     popularDecks.map((deckType) => <DeckThumbnail formatName={formatName} deckType={deckType} key={deckType.id}/>)
                 }
                 </div>
+                <h2 className="show-cursor deckThumbnail" onClick={() => goToDeckGallery()}>Click here for the complete Deck Gallery.</h2>
             </div>
         </div>
     )

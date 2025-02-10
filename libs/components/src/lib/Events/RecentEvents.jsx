@@ -39,6 +39,7 @@ export const RecentEvents = (props) => {
                     recentEvents.map((event, index) => <EventThumbnail key={event.id} event={event} winner={winners[index]} format={event.format}/>)
                 }
                 </div>
+                <h2 className="show-cursor eventThumbnail" onClick={() => goToEventGallery()}>Click here for the complete Event Gallery.</h2>
             </div>
         </div>
     )
