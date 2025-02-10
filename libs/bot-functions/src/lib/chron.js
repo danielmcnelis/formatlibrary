@@ -672,7 +672,7 @@ export const recalculateFormatStats = async (format) => {
         let firstDayOfSeason = format.seasonResetDate
         let currentSunday
         let currentMonth
-        let nextDate = getNextDateAtMidnight(currentDate)
+        // let nextDate = getNextDateAtMidnight(currentDate)
         let nextSunday = firstDayOfSeason ? getNextSundayAtMidnight(firstDayOfSeason) : null
         let nextMonth = getStartOfNextMonthAtMidnight(currentDate)
     
@@ -722,10 +722,10 @@ export const recalculateFormatStats = async (format) => {
             try {
                 const match = allMatches[i]
                 
-                if (nextDate < match.createdAt) {
-                    await applyGeneralDecay(format.id, format.name, server.id, currentDate, nextDate)
-                    currentDate = nextDate
-                    nextDate = getNextDateAtMidnight(currentDate)
+                if (nextMonth < match.createdAt) {
+                    await applyGeneralDecay(format.id, format.name, server.id, currentMonth || currentDate, nextMonth)
+                    currentMonth = nextMonth
+                    nextMonth = getStartOfNextMonthAtMidnight(currentMonth)
 
                     allStats = await Stats.findAll({ 
                         where: { formatId: format.id, serverId: server.id }, 
@@ -873,7 +873,7 @@ export const applyGeneralDecay = async (formatId, formatName, serverId, currentD
 
     const days = Math.ceil(((nextDate.getTime() - currentDate.getTime())) / (1000 * 60 * 60 * 24))
     let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriod.length) / (days * 20000))
-    if (generalDecayRate < 0.9995) generalDecayRate = 0.9995
+    if (generalDecayRate < 0.999815) generalDecayRate = 0.999815
 
     const generalActivePlayerIds = []
     for (let i = 0; i < generalMatchesInPeriod.length; i++) {
