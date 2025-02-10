@@ -907,13 +907,14 @@ export const applyGeneralDecay = async (formatId, formatName, serverId, currentD
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
         const n = generalGamesPlayed[stats.playerId] || 0
-        const shields = n > days ? days : n
-        console.log(`${stats.playerName}'s shields:`, shields, 'out of', days)
+        const standard = Math.floor(days / 7)
+        const shields = n > standard ? standard : n
+        console.log(`${stats.playerName}'s shields:`, shields, 'out of', standard)
 
         if (
             stats.elo > 500
         ) {
-            stats.elo = stats.elo * Math.pow(generalDecayRate, days - shields)
+            stats.elo = stats.elo * Math.pow(generalDecayRate, standard - shields)
             if (stats.elo < 500) {
                 stats.backupElo = stats.elo
                 stats.elo = 500
