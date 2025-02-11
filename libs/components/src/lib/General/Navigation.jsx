@@ -126,6 +126,21 @@ export const Navigation = (props) => {
                     <h3 className="hamburger-header">Apps</h3>
                 </div>
                 {
+                    isSubscriber ? (
+                        <a href="https://billing.stripe.com/p/login/4gw14n5Cd4zp6KkbII">
+                            <h3 className="hamburger-header">Subscription</h3>
+                        </a>
+                    ) : playerId ? (
+                        <a href="/subscribe">
+                            <h3 className="hamburger-header">Subscribe</h3>
+                        </a>
+                    ) : (
+                        <a href="/auth/login/" onClick={() => alert('Please log-in before subscribing.')}>
+                            <h3 className="hamburger-header">Subscribe</h3>
+                        </a>  
+                    )
+                }
+                {
                     playerId ? (
                         <a href="/auth/logout/">
                             <h3 className="hamburger-header">Logout</h3>

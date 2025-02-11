@@ -100,9 +100,9 @@ export const receiveStripeWebhooks = async (req, res, next) => {
                     endedAt: stripeSubscription.ended_at * 1000
                 })
             }
-
-            // return manageSubscriptions(client)
         }
+
+        res.status(200)
     } catch (err) {
         next(err)
     }

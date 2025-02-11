@@ -147,8 +147,8 @@ export const EventTable = (props) => {
             <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             <div className="body">
                 <div className="event-database-flexbox">
-                <h1>Event Database</h1>
-                <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/event.png'} alt="trophy"/>
+                    <h1>Event Database</h1>
+                    <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/event.png'} alt="trophy"/>
                 </div>
 
                 <div className="search-component">

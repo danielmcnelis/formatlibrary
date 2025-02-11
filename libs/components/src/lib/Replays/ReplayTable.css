@@ -121,7 +121,7 @@
     margin-right: auto;
     margin-left: auto;
     display: flex;
-    width: 640px;
+    width: 80vw;
     justify-content: space-between;
     flex-direction: row;
     align-items: center;
