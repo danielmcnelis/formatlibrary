@@ -230,12 +230,11 @@ export const getEventById = async (req, res, next) => {
             (a: any, b: any) => b[1] - a[1]
           )
         : []
-    const deckCategories =
-      allDecks.length >= event.size / 2
-        ? Object.entries(arrayToObject(allDecks.map((d) => capitalize(d.category, true)))).sort(
+
+    const topDeckConversions =
+    Object.entries(arrayToObject(topDecks.map((d) => capitalize(d.deckTypeName, true)))).sort(
             (a: any, b: any) => b[1] - a[1]
-          )
-        : []
+        )
     const mainDeckCards = []
     const sideDeckCards = []
     const topMainDeckCards = []
@@ -320,7 +319,7 @@ export const getEventById = async (req, res, next) => {
       topDecks: topDecks,
       metagame: {
         deckTypes,
-        deckCategories,
+        topDeckConversions,
         topMainDeckCards,
         topSideDeckCards
       }
@@ -408,12 +407,12 @@ export const getEventByIdAsSubscriber = async (req, res, next) => {
               (a: any, b: any) => b[1] - a[1]
             )
           : []
-      const deckCategories =
-        allDecks.length >= event.size / 2
-          ? Object.entries(arrayToObject(allDecks.map((d) => capitalize(d.category, true)))).sort(
+
+      const topDeckConversions =
+        Object.entries(arrayToObject(topDecks.map((d) => capitalize(d.deckTypeName, true)))).sort(
               (a: any, b: any) => b[1] - a[1]
             )
-          : []
+        
       const mainDeckCards = []
       const sideDeckCards = []
       const topMainDeckCards = []
@@ -498,7 +497,7 @@ export const getEventByIdAsSubscriber = async (req, res, next) => {
         topDecks: topDecks,
         metagame: {
           deckTypes,
-          deckCategories,
+          topDeckConversions,
           topMainDeckCards,
           topSideDeckCards
         }

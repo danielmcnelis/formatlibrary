@@ -24,7 +24,7 @@ export const SingleEvent = (props) => {
   const [topDecks, setTopDecks] = useState({})
   const [metagame, setMetagame] = useState({
     deckTypes: [],
-    deckCategories: [],
+    topDeckConversions: [],
     topMainDeckCards: [],
     topSideDeckCards: []
   })
@@ -118,12 +118,12 @@ export const SingleEvent = (props) => {
     ]
   } : {}
 
-  const deckCategoryData = metagame.deckCategories?.length ? {
-    labels: metagame.deckCategories.map((e) => e[0]),
+  const conversionRateData = metagame.topDeckConversions?.length ? {
+    labels: metagame.topDeckConversions.map((e) => e[0]),
     datasets: [
       {
-        data: metagame.deckCategories.map((e) => e[1]),
-        backgroundColor: colors.slice(0, metagame.deckCategories?.length),
+        data: metagame.topDeckConversions.map((e) => e[1]),
+        backgroundColor: colors.slice(0, metagame.topDeckConversions?.length),
         borderWidth: 1,
       },
     ]
@@ -425,22 +425,22 @@ export const SingleEvent = (props) => {
                         <h2>Deck Type Representation</h2>
                         <br/>
                         <Doughnut 
-                        className="doughnut"
-                        height="500px"
-                        width="500px"
-                        data={deckTypeData}
-                        options={doughnutOptions}
+                            className="doughnut"
+                            height="500px"
+                            width="500px"
+                            data={deckTypeData}
+                            options={doughnutOptions}
                         />
                     </div>
                     <div className="doughnut-container">
-                        <h2>Deck Category Representation</h2>
+                        <h2>Top Deck Representation</h2>
                         <br/>
                         <Doughnut 
-                        className="doughnut"
-                        height={parseInt(500 - (20 * Math.ceil(metagame.deckTypes?.length / 4)))}
-                        width="500px"
-                        data={deckCategoryData}
-                        options={doughnutOptions}
+                            className="doughnut"
+                            height={parseInt(500 - (20 * Math.ceil(metagame.deckTypes?.length / 4)))}
+                            width="500px"
+                            data={conversionRateData}
+                            options={doughnutOptions}
                         />
                     </div>
                     </div>

@@ -1,5 +1,5 @@
 
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import { capitalize } from '@fl/utils'
 import './EventThumbnail.css'
 
@@ -16,7 +16,7 @@ export const EventThumbnail = (props = {}) => {
               <h3>{capitalize(event.abbreviation, true)}</h3>
               <div className="eventThumbnail-flexbox">
                   <img 
-                    className="eventThumbnail-image" 
+                    className="eventThumbnail-format-icon" 
                     src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`}
                     alt={format.name}
                   />
@@ -31,7 +31,7 @@ export const EventThumbnail = (props = {}) => {
                     alt={winner.name}
                   />
                   <img 
-                    className="eventThumbnail-image" 
+                    className="eventThumbnail-logo" 
                     src={`https://cdn.formatlibrary.com/images/logos/${event.communityName?.replaceAll('+', '%2B')}.png`} 
                     alt={event.communityName}
                   />

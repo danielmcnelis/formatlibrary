@@ -154,3 +154,12 @@
       background-color:#00a3cc;
       border-radius: 4px; 
   }
+
+  .matchup-box-preview {
+    margin: 0.2em 10%;
+    background-image: url("https://cdn.formatlibrary.com/images/artworks/matchups-mock.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 30px;
+  }

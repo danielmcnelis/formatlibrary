@@ -31,7 +31,7 @@ export const PopularDecks = (props) => {
         <div>
             <div className="divider"/>
             <div id="popular-decks" className="popular-decks">
-                <h2 onClick={() => goToDeckGallery()} id="popular-decks" className="subheading">Popular Decks:</h2>
+                <h2 onClick={() => goToDeckGallery()} id="popular-decks" className="subheading">Deck Gallery:</h2>
                 <div className="popular-decks-flexbox">
                 {
                     popularDecks.map((deckType) => <DeckThumbnail formatName={formatName} deckType={deckType} key={deckType.id}/>)

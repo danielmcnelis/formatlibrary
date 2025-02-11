@@ -19,12 +19,21 @@
     color: var(--text-primary);
   }
   
-  .eventThumbnail-image {
+  .eventThumbnail-format-icon {
     width: 30%;
     -webkit-filter: drop-shadow(1px 0px 0 rgb(83, 74, 74))
                     drop-shadow(-1px 0px 0 rgb(83, 74, 74));
     filter: drop-shadow(1px 0px 0 rgb(83, 74, 74)) 
             drop-shadow(-1px 0px 0 rgb(83, 74, 74));
+  }
+  
+  .eventThumbnail-logo {
+    width: 30%;
+    -webkit-filter: drop-shadow(1px 0px 0 rgb(83, 74, 74))
+                    drop-shadow(-1px 0px 0 rgb(83, 74, 74));
+    filter: drop-shadow(1px 0px 0 rgb(83, 74, 74)) 
+            drop-shadow(-1px 0px 0 rgb(83, 74, 74));
+    border-radius: 100%;
   }
   
   .eventThumbnail-player-pfp {

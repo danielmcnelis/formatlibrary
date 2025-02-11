@@ -83,6 +83,17 @@ export const getRoundName = (tournament, roundInt, count) => {
     return roundName
 }
 
+// FILL WITH MULTIPLES
+export const fillWithMultiples = (arr, multiplier) => {
+    const result = []
+
+    for (let i = 0; i <= arr.length; i += multiplier) {
+      result.push(i)
+    }
+
+    return result
+}
+
 //ARRAY TO OBJECT
 export const arrayToObject = (arr = []) => {
   const obj = {}

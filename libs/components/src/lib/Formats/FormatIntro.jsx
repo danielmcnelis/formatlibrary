@@ -106,26 +106,16 @@ export const FormatIntro = (props) => {
                 }
                 {
                 deckCount ? (
-                    <>
-                        <li>
-                            <a href={`/deck-gallery/${urlize(format.name)}`}>Deck Gallery</a>
-                        </li>
-                        <li>
-                            <a href={`/formats/${urlize(format.name)}#popular-decks`}>Popular Decks</a>
-                        </li>
-                    </>
+                    <li>
+                        <a href={`/deck-gallery/${urlize(format.name)}`}>Deck Gallery</a>
+                    </li>
                 ) : ''
                 }
                 {
                 eventCount ? (
-                    <>
-                        <li>
-                            <a href={`/event-gallery/${urlize(format.name)}`}>Event Gallery</a>
-                        </li>
-                        <li>
-                            <a href={`/formats/${urlize(format.name)}#recent-events`}>Recent Events</a>
-                        </li>
-                    </>
+                    <li>
+                        <a href={`/event-gallery/${urlize(format.name)}`}>Event Gallery</a>
+                    </li>
                 ) : ''
                 }
                 {

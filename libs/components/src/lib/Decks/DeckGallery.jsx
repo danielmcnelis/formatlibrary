@@ -3,13 +3,16 @@ import { useState, useEffect, useLayoutEffect } from 'react'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { DeckThumbnail } from './DeckThumbnail'
+import { fillWithMultiples } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import './DeckGallery.css'
+
 
 export const DeckGallery = () => {
     const [deckTypes, setDeckTypes] = useState([])
     const [format, setFormat] = useState({})
     const { id } = useParams()
+    const indices = fillWithMultiples(deckTypes, 3)
     // const videoEmbed = format?.videoEmbed
 
     // USE LAYOUT EFFECT
@@ -51,11 +54,15 @@ export const DeckGallery = () => {
                         <h1 className="leaderboard-title">{format.name} Deck Gallery</h1>
                         <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
                     </div>
-                    <div className="popular-decks-flexbox">
                     {
-                        deckTypes.map((deckType) => <DeckThumbnail formatName={id} deckType={deckType} key={deckType.id}/>)
+                        indices.map((index) => (
+                            <div className="popular-decks-flexbox">
+                            {
+                                deckTypes.slice(index, index + 3).map((deckType) => <DeckThumbnail formatName={id} deckType={deckType} key={deckType.id}/>)
+                            }
+                            </div>
+                        ))
                     }
-                    </div>
                 </div>
             </div>
         </>

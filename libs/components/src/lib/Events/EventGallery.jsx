@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { EventThumbnail } from './EventThumbnail'
 import { Helmet } from 'react-helmet'
+import { fillWithMultiples } from '@fl/utils'
 import './EventGallery.css'
 
 export const EventGallery = () => {
@@ -11,6 +12,7 @@ export const EventGallery = () => {
     const [winners, setWinners] = useState([])
     const [format, setFormat] = useState({})
     const { id } = useParams()
+    const indices = fillWithMultiples(events, 3)
     // const videoPlaylistId = format?.videoPlaylistId
 
     // USE LAYOUT EFFECT
@@ -53,11 +55,15 @@ export const EventGallery = () => {
                         <h1 className="leaderboard-title">{format.name} Event Gallery</h1>
                         <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
                     </div>
-                    <div className="recent-events-flexbox">
                     {
-                        events.map((event, index) => <EventThumbnail key={event.id} event={event} winner={winners[index]} format={format}/>)
+                        indices.map((index) => (
+                            <div className="recent-events-flexbox">
+                            {
+                                events.slice(index, index + 3).map((event, index2) => <EventThumbnail key={event.id} event={event} winner={winners[index  + index2]} format={format}/>)
+                            }
+                            </div>
+                        ))
                     }
-                    </div>
                 </div>
             </div>
         </>
