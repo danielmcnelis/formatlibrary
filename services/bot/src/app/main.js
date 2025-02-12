@@ -550,10 +550,8 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
     
         const wasSubscriber = oldRoles.has('1102002844850208810')
         const isSubscriber = newRoles.has('1102002844850208810')
-        const wasTest = oldRoles.has('414576126107844609')
-        const isTest = newRoles.has('414576126107844609')
     
-        if ((wasSubscriber && !isSubscriber) || (wasTest && !isTest)) {
+        if (wasSubscriber && !isSubscriber) {
             const programmer = await client.users.fetch('194147938786738176')
                         
             const player = await Player.findOne({
@@ -565,7 +563,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
             const subscriberTier = player.subscriberTier
             await player.update({ isSubscriber: false, subscriberTier: null })
             return await programmer.send({ content: `${oldMember.user?.username} is no longer a Subscriber (${subscriberTier}).` })
-        } else if ((!wasSubscriber && isSubscriber) || (!wasTest && isTest)) {
+        } else if (!wasSubscriber && isSubscriber) {
             const programmer = await client.users.fetch('194147938786738176')
             
             const player = await Player.findOne({

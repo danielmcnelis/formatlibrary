@@ -2977,7 +2977,7 @@ export const startTournament = async (interaction, tournamentId) => {
                 entryCount >= 33 && entryCount <= 64 ? [6, 8] :
                 entryCount >= 65 && entryCount <= 96 ? [7, 8] :
                 entryCount >= 97 && entryCount <= 192 ? [7, 16] :
-                entryCount >= 193 && entryCount <= 256 ? [8, 16] :
+                entryCount >= 161 && entryCount <= 256 ? [8, 16] :
                 [9, 16]
 
             await tournament.update({ rounds, topCutSize })
