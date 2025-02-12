@@ -38,7 +38,6 @@ export default {
 	async execute(interaction, fuzzyCards) {
         try {
             const query = interaction.options.getString('name')
-            console.log('query', query)
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
             if (server?.name === 'Format Library' && interaction.member.roles.cache.some(role => role.id === '1085310457126060153')) return interaction.reply({ content: `Sorry, you cannot look up cards while playing trivia. 📚 🐛` })
             const format = await Format.findByServerOrChannelId(server, interaction.channelId)
