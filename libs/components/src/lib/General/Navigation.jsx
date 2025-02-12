@@ -153,15 +153,15 @@ export const Navigation = (props) => {
                 }
             </div>
         </div>
-            {/* <div className="announcement-banner">
+            <div className="announcement-banner">
                 <h2>
                     <a
                         className="inherit-color" 
-                        href="https://formatlibrary.com/subscribe"
+                        href="https://discord.com/events/414551319031054346/1327071117772329062"
                         rel="noreferrer"
                         target="_blank"
-                    >$100 Yata Tournament begins Friday - Subscribe to Join!</a></h2>
-            </div> */}
+                    >Free Edison WCQ @ 11AM EST Saturday - Click for More Info!</a></h2>
+            </div>
         </>
     )
 }
