@@ -15,7 +15,7 @@ import { emojis } from '@fl/bot-emojis'
 
 //ASK FOR DB NAME
 export const askForSimName = async (member, player, simulator, override = false, error = false, attempt = 1) => {
-    const filter = m => m.author.id === member.id || member.user.id
+    const filter = m => m.author.id === (member.id || member.user?.id)
     const pronoun = override ? `${player.name}'s` : 'your'
     const greeting = override ? '' : 'Hi! '
     const prompt = error ? `I think you're getting ahead of yourself. First, I need ${pronoun} ${simulator} name.`
@@ -53,7 +53,7 @@ export const askForSimName = async (member, player, simulator, override = false,
 
 //ASK FOR TIME ZONE
 export const askForTimeZone = async (member, player, override = false, error = false, attempt = 1) => {
-    const filter = m => m.author.id === member.id || member.user.id
+    const filter = m => m.author.id === (member.id || member.user?.id)
     const pronoun = override ? `${player.name}'s` : 'your'
     const greeting = override ? '' : 'Hi! '
     const prompt = error ? `I think you're getting ahead of yourself. First, I need ${pronoun} DuelingBook name.`
@@ -88,7 +88,7 @@ export const askForTimeZone = async (member, player, override = false, error = f
 
 //GET DECK LIST
 export const getDeckList = async (member, player, format, override = false, unranked = false) => {            
-    const filter = m => m.author.id === member.user.id
+    const filter = m => m.author.id === (member.id || member.user?.id)
     const pronoun = override ? `${player.name}'s` : 'your'
     const message = await member.send({ content: `To submit a ${pronoun} tournament deck, please either:\n- copy and paste a **__YDKe code__**\n- upload a **__YDK file__**`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
@@ -184,7 +184,7 @@ export const getSpeedDeckList = async (member, player, format, override = false)
     const skillCard = await getSkillCard(member, format, true)  
     if (!skillCard) return    
 
-    const filter = m => m.author.id === member.user.id
+    const filter = m => m.author.id === (member.id || member.user?.id)
     const pronoun = override ? `${player.name}'s` : 'your'
     const message = await member.send({ content: `Please either upload a **__YDK file__** or copy and paste a **__YDKe code__** for ${pronoun} tournament deck.`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false

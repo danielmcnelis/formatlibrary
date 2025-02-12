@@ -497,6 +497,8 @@ export const getPreviousRatedDeck = async (user, yourRatedDecks, format) => {
             index >= 0 ? yourRatedDecks[index] :
             false
 
+        if (!previousRatedDeck) return false
+
         previousRatedDeck = await Deck.findOne({
             where: {
                 id: previousRatedDeck?.id
