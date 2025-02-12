@@ -80,9 +80,8 @@ export default {
                     },
                     { 
                         name: `Misc. Info`,
-                        value: player.duelingBookName || player.opTcgSim || player.youtube || player.twitch || player.twitter || player.country || player.timeZone ? (
+                        value: player.duelingBookName || player.youtube || player.twitch || player.twitter || player.country || player.timeZone ? (
                             `${player.duelingBookName ? `Duelingbook Name: ${player.duelingBookName}` : ''}` +
-                            `${player.opTcgSim ? `\nOnePieceTCGSim: ${player.opTcgSim}` : ''}` +
                             `${player.youtube ? `\nYouTube: ${player.youtube}` : ''}` +
                             `${player.twitch ? `\nTwitch: ${player.twitch}` : ''}` +
                             `${player.twitter ? `\nTwitter: ${player.twitter}` : ''}` +
@@ -147,9 +146,8 @@ export default {
                     { name: `Best Finishes`, value: trophies.length ? trophies.join('\n') : 'N/A' },
                     { 
                         name: `Misc. Info`,
-                        value: player.duelingBookName || player.opTcgSim || player.youtube || player.twitch || player.twitter || player.country || player.timeZone ? (
+                        value: player.duelingBookName || player.youtube || player.twitch || player.twitter || player.country || player.timeZone ? (
                             `${player.duelingBookName ? `Duelingbook Name: ${player.duelingBookName}` : ''}` +
-                            `${player.opTcgSim ? `OnePieceTCGSim: ${player.opTcgSim}` : ''}` +
                             `${player.youtube ? `\nYouTube: ${player.youtube}` : ''}` +
                             `${player.twitch ? `\nTwitch: ${player.twitch}` : ''}` +
                             `${player.twitter ? `\nTwitter: ${player.twitter}` : ''}` +

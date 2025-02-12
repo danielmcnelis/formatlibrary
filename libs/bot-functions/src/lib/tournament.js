@@ -90,7 +90,7 @@ export const askForTimeZone = async (member, player, override = false, error = f
 export const getDeckList = async (member, player, format, override = false, unranked = false) => {            
     const filter = m => m.author.id === member.user.id
     const pronoun = override ? `${player.name}'s` : 'your'
-    const message = await member.send({ content: `Please either upload a **__YDK file__** or copy and paste a **__YDKe code__** for ${pronoun} tournament deck.`}).catch((err) => console.log(err))
+    const message = await member.send({ content: `To submit a ${pronoun} tournament deck, please either:\n- copy and paste a **__YDKe code__**\n- upload a **__YDK file__**`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     return await message.channel.awaitMessages({
         filter,
