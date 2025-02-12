@@ -1,13 +1,13 @@
 
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import { capitalize, urlize } from '@fl/utils'
 import './DeckThumbnail.css'
 
 export const DeckThumbnail = (props) => {
     const {deckType, formatName} = props
     if (!deckType) return <div/>
-    const deckTypeLink = formatName ? urlize(`/deckTypes/${deckType.name}?format=${formatName}`) : 
-        urlize(`/deckTypes/${deckType.name}`)
+    const deckTypeLink = formatName ? urlize(`/deckTypes/${deckType.cleanName}?format=${formatName}`) : 
+        urlize(`/deckTypes/${deckType.cleanName}`)
   
     return (
         <div 
@@ -15,7 +15,7 @@ export const DeckThumbnail = (props) => {
             onClick={() => {window.location.href=`${deckTypeLink}`}} 
         >
             <div className="deckThumbnail">
-                <h3>{capitalize(deckType.name, true)}</h3>
+                <h3>{capitalize(deckType.cleanName, true)}</h3>
                 <div className="deckThumbnail-flexbox">
                     <img 
                         className="deckThumbnail-image" 

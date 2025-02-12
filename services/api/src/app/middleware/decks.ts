@@ -370,7 +370,7 @@ export const getPopularDecks = async (req, res, next) => {
           where: {
             name: name
           },
-          attributes: ['name', 'id']
+          attributes: ['id', 'cleanName']
         })
 
         const deckThumb =
@@ -441,7 +441,7 @@ export const getDeckGallery = async (req, res, next) => {
           where: {
             name: name
           },
-          attributes: ['name', 'id']
+          attributes: ['id', 'cleanName']
         })
 
         const deckThumb =

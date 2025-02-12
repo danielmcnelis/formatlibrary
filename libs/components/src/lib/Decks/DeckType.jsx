@@ -364,18 +364,20 @@ export const DeckType = (props) => {
                             </div>
                             <div id="deckGalleryFlexBox">
                             {
-                                summary.examples.map((deck, index) => {
-                                    return (<div className="vertical-flexbox"><h3>{index === 0 ? 'Most Popular:' : 'Recent Top:'}</h3><
-                                        DeckImage
-                                        key={deck.id} 
-                                        index={index} 
-                                        deck={deck}
-                                        width="360px"
-                                        margin="10px 5px"
-                                        padding="5px"
-                                        coverage={true}
-                                    /></div>)
-                                })
+                                summary.examples.length ? (
+                                    summary.examples.map((deck, index) => {
+                                        return (<div className="vertical-flexbox"><h3>{index === 0 ? 'Most Popular:' : 'Recent Top:'}</h3><
+                                            DeckImage
+                                            key={deck.id} 
+                                            index={index} 
+                                            deck={deck}
+                                            width="360px"
+                                            margin="10px 5px"
+                                            padding="5px"
+                                            coverage={true}
+                                        /></div>)
+                                    })
+                                ) : ''
                             }
                             </div>
                         </div>
