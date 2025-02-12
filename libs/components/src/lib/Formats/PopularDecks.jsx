@@ -9,7 +9,7 @@ export const PopularDecks = (props) => {
     const {formatName} = props
     const [popularDecks, setPopularDecks] = useState([])
     const navigate = useNavigate()
-    const goToDeckGallery = () => navigate(`/deck-gallery/${formatName}`)
+    const goToDeckGallery = () => navigate(`/deck-gallery/${formatName.toLowerCase()}`)
   
     // USE EFFECT
     useEffect(() => {

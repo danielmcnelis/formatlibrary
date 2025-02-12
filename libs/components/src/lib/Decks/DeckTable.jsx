@@ -197,10 +197,16 @@ export const DeckTable = (props) => {
                 <div className="event-database-flexbox">
                     <img className="desktop-only" style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/deckbox.png'} alt="deck-box"/>
                     <h1>Deck Database</h1>
-                    <div className="horizontal-centered-flexbox" style={{alignItems: 'flex-end', padding: '10px 0px 10px'}}>
-                        <div style={{'padding': '0px 10px'}}><i>Subscribe to view all decks.</i></div>
-                        <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/artworks/fl-arrow.png'} alt="deck-box"/>
-                    </div>
+                    {
+                        isSubscriber ? (
+                            <img className="desktop-only" style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/deckbox.png'} alt="deck-box"/>
+                        ) : (
+                            <div className="horizontal-centered-flexbox" style={{alignItems: 'flex-end', padding: '10px 0px 10px'}}>
+                                <div style={{'padding': '0px 10px'}}><i>Subscribe to view all decks.</i></div>
+                                <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/artworks/fl-arrow.png'} alt="deck-box"/>
+                            </div>
+                        )
+                    }
                 </div>
         
                 <div className="search-component">

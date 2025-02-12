@@ -364,11 +364,11 @@ export const DeckType = (props) => {
                             </div>
                             <div id="deckGalleryFlexBox">
                             {
-                                summary.examples.length ? (
-                                    summary.examples.map((deck, index) => {
+                                summary.examples.map((deck, index) => {
+                                    if (deck) {
                                         return (<div className="vertical-flexbox"><h3>{index === 0 ? 'Most Popular:' : 'Recent Top:'}</h3><
                                             DeckImage
-                                            key={deck.id} 
+                                            key={deck.id}
                                             index={index} 
                                             deck={deck}
                                             width="360px"
@@ -376,8 +376,10 @@ export const DeckType = (props) => {
                                             padding="5px"
                                             coverage={true}
                                         /></div>)
-                                    })
-                                ) : ''
+                                    } else {
+                                        return ''
+                                    }
+                                })
                             }
                             </div>
                         </div>
