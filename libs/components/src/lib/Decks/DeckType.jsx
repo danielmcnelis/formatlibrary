@@ -28,7 +28,7 @@ const { Controller, Orb, Lock, Bow, Voltage, Volcano, Unicorn, Thinking } = emoj
 
 export const DeckType = (props) => {
     const [summary, setSummary] = useState({})
-    const [matchups, setMatchups] = useState(false)
+    const [matchups, setMatchups] = useState({})
     const [banlist, setBanList] = useState({})
     
     const { id } = useParams()
