@@ -386,7 +386,7 @@ export const DeckType = (props) => {
                     ) : ''
                 }
                 {
-                    Object.entries(matchups.length) ? (
+                    Object.entries(matchups).length ? (
                         <>
                             <br/>
                             <h2>Matchups</h2>
