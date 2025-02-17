@@ -1,7 +1,9 @@
 import { Router } from 'express'
-import { authenticate, getReplaysAsRegularUser, getReplaysAsAdmin, getReplaysAsSubscriber, countReplays } from '../middleware'
+import { authenticate, getReplayCommunities, getReplaysAsRegularUser, getReplaysAsAdmin, getReplaysAsSubscriber, countReplays } from '../middleware'
 
 const router = Router()
+
+router.get('/api/replays/communities', getReplayCommunities)
 
 router.get('/api/replays/count', countReplays)
 

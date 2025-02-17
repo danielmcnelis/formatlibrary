@@ -1,6 +1,31 @@
 
-import { Replay } from '@fl/models'
-// import { getCookie } from '@fl/utils'
+import { Event, Replay } from '@fl/models'
+
+export const getReplayCommunities = async (req, res, next) => {
+    try {        
+        const communities = [...await Replay.findAll({
+            where: {
+                '$event.display$': true
+            },
+            include: {model: Event, attributes: ['id', 'display', 'communityName']},
+            order: [[Event, 'communityName', 'ASC']],
+            attributes: ['eventId']
+        })].reduce((accum, val) => {
+            console.log('accum', accum)
+            if (!accum.includes(val.event.communityName)) {
+                accum.push(val.event.communityName)
+                return accum
+            } else {
+                return accum
+            }
+        }, [])
+
+        communities.unshift('All Communities')
+        res.json(communities.sort())
+    } catch (err) {
+        console.log(err)
+    }
+}
 
 export const countReplays = async (req, res, next) => {
     try {

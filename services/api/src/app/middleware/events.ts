@@ -5,6 +5,28 @@ import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
 import { config } from '@fl/config'
 
+export const getCommunities = async (req, res, next) => {
+    try {        
+        const communities = [...await Event.findAll({
+            where: { display: true },
+            attributes: ['communityName']
+        })].reduce((accum, val) => {
+            if (!accum.includes(val.communityName)) {
+                accum.push(val.communityName)
+                return accum
+            } else {
+                return accum
+            }
+        }, [])
+
+        communities.sort()
+        communities.unshift('All Communities')
+        res.json(communities.sort())
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 export const getEventGallery = async (req, res, next) => {
     try {
       const format = await Format.findOne({
