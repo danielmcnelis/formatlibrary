@@ -31,7 +31,7 @@ export default {
                 // await purgeBetaCards(client)
                 // return await downloadOriginalArtworks(client)
                 // return downloadMissingCardImages()
-                return recalculateAllStats()
+                return lookForAllPotentialPairs(client)
                 // return runMonthlyTasks(client)
                 // await manageSubscriptions(client)
                 // await assignTournamentRoles(client)
