@@ -245,7 +245,7 @@ export default {
                 for (let d = 0; d < poolsToUpdate.length; d++) {
                     const pool = poolsToUpdate[d]
                     await pool.update({ status: 'pending' })
-                    lookForPotentialPairs(client, interaction, pool, pool.player, pool.format)
+                    // lookForPotentialPairs(interaction, pool, pool.player, pool.format, server, interaction.guild, interaction.channel)
                 }
             }
 

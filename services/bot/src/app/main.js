@@ -28,7 +28,7 @@ import { createTopCut, editTieBreakers, getMidnightCountdown, getSecondOfTwoRate
     assignRoles, createMembership, createPlayer, fetchCardNames, hasPartnerAccess, 
     isModerator, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
     editPointsSystem, runNightlyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, 
-    getKnownAbbreviation, capitalize, getHourlyCountdown, runHourlyTasks
+    getKnownAbbreviation, capitalize, getFiveMinuteMarkCountdown, runFrequentTasks
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
@@ -131,8 +131,8 @@ client.on('ready', async() => {
     }
 
     try {
-        // HOURLY TASKS
-        setTimeout(() => runHourlyTasks(client), getHourlyCountdown())
+        // FREQUENT TASKS
+        setTimeout(() => runFrequentTasks(client), getFiveMinuteMarkCountdown())
     } catch (err) {
         console.log(err)
     }
@@ -196,10 +196,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const ids = customId.slice(3).split('-')
             const yourPoolId = ids[0]
             const opponentsPoolId = ids[1]
+            const guildId = ids[2]
             if (isConfirmed && !opponentIsConfirmed) {
-                return getSecondOfTwoRatedConfirmations(client, interaction, yourPoolId, opponentsPoolId)
+                return getSecondOfTwoRatedConfirmations(client, interaction, yourPoolId, opponentsPoolId, guildId)
             } else {
-                return handleRatedConfirmation(client, interaction, isConfirmed, yourPoolId, opponentsPoolId)
+                return handleRatedConfirmation(client, interaction, isConfirmed, yourPoolId, opponentsPoolId, guildId)
             }
         } else if (interaction.message?.content?.includes('Should this tournament be seeded')) {
             await interaction.message.edit({ components: [] }).catch((err) => console.log(err))

@@ -11,12 +11,11 @@ import { drawDeck } from './utility'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 
 // GET RATED CONFIRMATION
-export const getRatedConfirmation = async (client, player, opponent, format) => {
+export const getRatedConfirmation = async (player, opponent, format, guild) => {
     console.log('getRatedConfirmation()')
-    const guild = client.guilds.cache.get('414551319031054346')
     const member = await guild.members.fetch(player.discordId)
     if (!member) {
-        console.log(`player ${player.name} is no longer a member of format library, so they cannot play rated`)
+        console.log(`player ${player.name} is no longer a member of a supporting server, so they cannot play rated`)
         return
     }
 
@@ -40,13 +39,13 @@ export const getRatedConfirmation = async (client, player, opponent, format) => 
  
     const row = new ActionRowBuilder()
         .addComponents(new ButtonBuilder()
-            .setCustomId(`YY-${yourPool.id}-${opponentsPool.id}-414551319031054346`)
+            .setCustomId(`YY-${yourPool.id}-${opponentsPool.id}-${guild.id}`)
             .setLabel('Yes')
             .setStyle(ButtonStyle.Primary)
         )
 
         .addComponents(new ButtonBuilder()
-            .setCustomId(`NY-${yourPool.id}-${opponentsPool.id}-414551319031054346`)
+            .setCustomId(`NY-${yourPool.id}-${opponentsPool.id}-${guild.id}`)
             .setLabel('No')
             .setStyle(ButtonStyle.Primary)
         )
@@ -73,7 +72,7 @@ export const getRatedConfirmation = async (client, player, opponent, format) => 
 
 // GET FIRST PLAYER RATED CONFIRMATION
 export const getFirstOfTwoRatedConfirmations = async (client, player, opponent, format) => {
-    console.log('getRatedConfirmation()')
+    console.log('getFirstOfTwoRatedConfirmations()')
     const guild = client.guilds.cache.get('414551319031054346')
     const member = await guild.members.fetch(player.discordId)
     if (!member) {
@@ -134,11 +133,12 @@ export const getFirstOfTwoRatedConfirmations = async (client, player, opponent, 
 // GET FIRST PLAYER RATED CONFIRMATION  
 export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, player2PoolId) => {
     console.log('getSecondOfTwoRatedConfirmations()')
+    console.log('player1PoolId', player1PoolId)
     console.log('player2PoolId', player2PoolId)
     
     const player2Pool = await Pool.findOne({
         where: {
-            id: player2PoolId
+            id: Number(player2PoolId)
         },
         include: [Format, Player]
     })
@@ -188,9 +188,8 @@ export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, pl
     }, 5 * 60 * 1000)
 }
 
-
 // LOOK FOR POTENTIAL PAIRS
-export const lookForPotentialPairs = async (client, interaction, poolEntry, player, format) => {
+export const lookForPotentialPairs = async (interaction, pool, player, format, server, guild, channel) => {
     const potentialPairs = await Pool.findAll({ 
         where: { 
             playerId: {[Op.not]: player.id },
@@ -203,10 +202,8 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
 
     for (let i = 0; i < potentialPairs.length; i++) {
         const potentialPair = potentialPairs[i]
-        const now = new Date()
-        const isSeasonal = format.useSeasonalElo && format.seasonResetDate < now
         const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
-        const cutoff = isSeasonal ? new Date(now - (15 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
+        const cutoff = new Date(new Date() - (15 * 60 * 1000))
 
         const mostRecentMatch = await Match.findOne({
             where: {
@@ -219,19 +216,15 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
             order: [['createdAt', 'DESC']]
         })             
 
-        if (mostRecentMatch && cutoff < mostRecentMatch?.createdAt) {   
+        if (mostRecentMatch && (cutoff < mostRecentMatch?.createdAt)) {   
             console.log(`<!> ${player.name} and ${potentialPair.playerName} are RECENT opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Look for another opponent <!>`)
             continue
-        } else if (potentialPair.updatedAt < twoMinutesAgo) {
+        } else if ((potentialPair.updatedAt < twoMinutesAgo) || potentialPair.wasInactive) {
             console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. ${mostRecentMatch ? `Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}`: `They have never played`}. Getting confirmation from ${potentialPair.playerName} <!>`)
-            getRatedConfirmation(client, potentialPair.player, player, format)
+            getRatedConfirmation(potentialPair.player, player, format, guild)
             continue
         } else {
             console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. ${mostRecentMatch ? `Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}`: `They have never played`}. Creating New Pairing <!>`)
-            const server = await Server.findOne({ where: { id: '414551319031054346' }})
-            const channelId = format.channelId
-            const guild = client.guilds.cache.get('414551319031054346')
-            const channel = guild.channels.cache.get(channelId)
             const playerDiscordName =  player.discordName
             const playerGlobalName = player.globalName
             const opponent = potentialPair.player
@@ -242,7 +235,7 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
             opposingMember.user.send(
                 `New pairing for Rated ${format.name} Format ${format.emoji}!` +
                 `\nServer: ${server.name} ${server.logo}` +
-                `\nChannel: <#${channelId}>` +
+                `\nChannel: <#${channel.id}>` +
                 `\nDiscord Name: ${playerGlobalName ? `${playerGlobalName} (${playerDiscordName})` : playerDiscordName}` +
                 `\nDuelingbook Name: ${player.duelingBookName}`
             ).catch((err) => console.log(err))
@@ -250,7 +243,7 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
             interaction.user.send(
                 `New pairing for Rated ${format.name} Format ${format.emoji}!` + 
                 `\nServer: ${server.name} ${server.logo}` + 
-                `\nChannel: <#${channelId}>` +
+                `\nChannel: <#${channel.id}>` +
                 `\nDiscord Name: ${opponentGlobalName ? `${opponentGlobalName} (${opponentDiscordName})` : opponentDiscordName}` +
                 `\nDuelingbook Name: ${opponent.duelingBookName}`
             ).catch((err) => console.log(err))
@@ -260,15 +253,15 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
                 formatName: format.name,
                 serverId: server.id,
                 communityName: server.name,
-                playerAName: poolEntry.name,
-                playerAId: poolEntry.playerId,
-                deckFileA: poolEntry.deckFile,
+                playerAName: pool.name,
+                playerAId: pool.playerId,
+                deckFileA: pool.deckFile,
                 playerBName: potentialPair.name,
                 playerBId: potentialPair.playerId,
                 deckFileB: potentialPair.deckFile
             })
             
-            await poolEntry.destroy()
+            await pool.destroy()
             await potentialPair.destroy()
             
             const poolsToDeactivate = await Pool.findAll({
@@ -279,11 +272,10 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
 
             for (let d = 0; d < poolsToDeactivate.length; d++) {
                 const rPTD = poolsToDeactivate[d]
-                await rPTD.update({ status: 'inactive' })
+                await rPTD.update({ status: 'inactive', wasInactive: true })
             }
 
-            const now = new Date()
-            const isSeasonal = format.seasonResetDate < now
+            const isSeasonal = format.useSeasonalElo
             const eloType = isSeasonal ? 'seasonalElo' : 'elo'
             const gamesType = isSeasonal ? 'seasonalGames' : 'games'
 
@@ -304,14 +296,13 @@ export const lookForPotentialPairs = async (client, interaction, poolEntry, play
             const p2Index = allStats.findIndex((s) => s.playerId === opponent.id)
             const p2Rank = p2Index >= 0 ? `#${p2Index + 1} ` : ''
             const content = `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
-            console.log(`content`, content)
             return channel.send({ content: content })   
         }
     }
 }
 
 // HANDLE RATED CONFIRMATION
-export const handleRatedConfirmation = async (client, interaction, isConfirmed, yourPoolId, opponentsPoolId) => {
+export const handleRatedConfirmation = async (client, interaction, isConfirmed, yourPoolId, opponentsPoolId, guildId) => {
     try {
         const yourPool = await Pool.findOne({ where: { id: Number(yourPoolId) }, include: [Format, Player] })
         const format = yourPool.format
@@ -324,9 +315,9 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
                 return interaction.user.send(`Sorry, your potential opponent either found a match or left the pool while waiting for you to confirm. I'll put you back in the Rated ${format.name} Format ${format.emoji} Pool.`)
             }
     
-            const server = await Server.findOne({ where: { id: '414551319031054346' }})
+            const server = await Server.findOne({ where: { id: guildId }})
             const channelId = format.channelId
-            const guild = client.guilds.cache.get('414551319031054346')
+            const guild = client.guilds.cache.get(guildId)
             const channel = guild.channels.cache.get(channelId)
             const player = yourPool.player
             const playerDiscordName =  player.discordName
@@ -336,7 +327,7 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
             const opponentGlobalName = opponent.globalName
             const opposingMember = await guild.members.fetch(opponent.discordId)
 
-            console.log(`New Pairing!`)
+            console.log(`handleRatedConfirmation() New Pairing!`)
 
             opposingMember.user.send(
                 `New pairing for Rated ${format.name} Format ${format.emoji}!` +
@@ -378,11 +369,10 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
     
             for (let d = 0; d < poolsToDeactivate.length; d++) {
                 const rPTD = poolsToDeactivate[d]
-                await rPTD.update({ status: 'inactive' })
+                await rPTD.update({ status: 'inactive', wasInactive: true })
             }
     
-            const now = new Date()
-            const isSeasonal = format.seasonResetDate < now
+            const isSeasonal = format.useSeasonalElo
             const eloType = isSeasonal ? 'seasonalElo' : 'elo'
             const gamesType = isSeasonal ? 'seasonalGames' : 'games'
 

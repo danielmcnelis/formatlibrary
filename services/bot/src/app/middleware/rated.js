@@ -57,10 +57,8 @@ export const joinRatedPool = async (req, res, next) => {
             const opponent = potentialPair.player
             const ppid = potentialPair.playerId
             
-            const now = new Date()
-            const isSeasonal = format.useSeasonalElo && format.seasonResetDate < now
             const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
-            const cutoff = isSeasonal ? new Date(now - (15 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
+            const cutoff = new Date(new Date() - (15 * 60 * 1000))
 
             const mostRecentMatch = await Match.findOne({
                 where: {
@@ -106,7 +104,7 @@ export const joinRatedPool = async (req, res, next) => {
 
                 for (let d = 0; d < poolsToDeactivate.length; d++) {
                     const rPTD = poolsToDeactivate[d]
-                    await rPTD.update({ status: 'inactive' })
+                    await rPTD.update({ status: 'inactive', wasInactive: true })
                 }
     
                 await sendRatedPairingAnnouncement(client, player, opponent, format)  

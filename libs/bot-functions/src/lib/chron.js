@@ -13,9 +13,9 @@ import * as tcgPlayer from '../../../../tokens/tcgplayer.json'
 const Canvas = require('canvas')
 
 // GET HOURLY COUNTDOWN
-export const getHourlyCountdown = () => {
+export const getFiveMinuteMarkCountdown = () => {
 	const date = new Date()
-	const remainingMinutes = 60 - date.getMinutes()
+	const remainingMinutes = (60 - date.getMinutes()) % 5
     return remainingMinutes * 60 * 1000
 }
 
@@ -36,11 +36,11 @@ export const getRemainingDaysInMonth = () => {
 }
 
 // RUN HOURLY TASKS
-export const runHourlyTasks = async (client) => {
+export const runFrequentTasks = async (client) => {
     await cleanUpPools()
     await lookForAllPotentialPairs(client)
 
-    return setTimeout(() => runHourlyTasks(client), getHourlyCountdown())
+    return setTimeout(() => runFrequentTasks(client), getFiveMinuteMarkCountdown())
 }
 
 // RUN NIGHTLY TASKS
@@ -588,9 +588,7 @@ export const lookForAllPotentialPairs = async (client) => {
     
         for (let i = 0; i < potentialPairs.length; i++) {
             const potentialPair = potentialPairs[i]
-            const now = new Date()
-            const isSeasonal = format.useSeasonalElo && format.seasonResetDate < now
-            const cutoff = isSeasonal ? new Date(now - (30 * 60 * 1000)) : new Date(now - (10 * 60 * 1000))
+            const cutoff = new Date(new Date() - (15 * 60 * 1000))
     
             const mostRecentMatch = await Match.findOne({
                 where: {

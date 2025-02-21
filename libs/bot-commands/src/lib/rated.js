@@ -9,23 +9,25 @@ import { emojis } from '@fl/bot-emojis'
 
 const getRatedInformation = async (interaction, player, format) => {
     try {
-        const access = format.channelId ? 'full' : 'partner'
+        const access = format.hostedOnFl ? 'full' : 'partner'
 
-        const yourServers = [...await Membership.findAll({ 
+        const server = await Membership.findOne({ 
             where: { 
                 playerId: player.id,
                 isActive: true,
                 '$server.access$': access,
                 '$server.hasInternalLadder$': false,
-                '$server.formatName$': {[Op.or]: [format.name, null]}
+                [Op.or]: {
+                    '$server.access$': 'full',
+                    '$server.formatName$': format.name
+                }
             }, 
-            include: Server,
-            order: [[Server, 'createdAt', 'ASC']] 
-        })].map((m) => m.server) || []
+            include: Server
+        })
         
-        const yourGuildIds = yourServers.map((s) => s.id) || []
-
-        if (!yourGuildIds.length) return await interaction.user.send(`Sorry, you are not a member of a server that supports rated play for ${format.name} Format. ${format.emoji}`)
+        if (!server) return await interaction.user.send(`Sorry, you are not a member of a server that supports rated play for ${format.name} Format. ${format.emoji}`)
+        const guild = client.guilds.channels.cache.get(server.id)
+        const channel = guild.channels.cache.get(format.channelId)
         const simName = player.duelingBookName || await askForSimName(interaction.user, player, 'DuelingBook')
         if (!simName) return
 
@@ -78,12 +80,11 @@ const getRatedInformation = async (interaction, player, format) => {
             deckFile: ratedDeck.ydk || ratedDeck.opdk
         })
 
-        lookForPotentialPairs(client, interaction, pool, player, format)
+        await pool.update({ wasInactive: false })
+        lookForPotentialPairs(interaction, pool, player, format, server, guild, channel)
         
         if (!count) {
             try {
-                const guild = client.guilds.cache.get('414551319031054346')
-                const channel = guild.channels.cache.get(format.channelId)
                 channel.send(`Somebody joined the ${format.name} ${format.emoji} Rated Pool! ${emojis.megaphone}`)
             } catch (err) {
                 console.log(err)

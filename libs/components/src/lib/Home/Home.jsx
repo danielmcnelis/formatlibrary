@@ -5,6 +5,7 @@ import { BlogPost } from './BlogPost'
 import { Pagination } from '../General/Pagination'
 import { useLocation } from 'react-router-dom'
 import './Home.css'
+let n = 0
 
 // HOME
 export const Home = () => {
@@ -12,34 +13,25 @@ export const Home = () => {
     const [count, setCount] = useState(0)
     const [blogPosts, setBlogPosts] = useState([])
     const location = useLocation()
-  
-    // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, 0, []))
+    n++
+    console.log('Home render count', n)
 
     // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, document.getElementById('blog')?.offsetTop), [page])
-  
-    // USE EFFECT
-    useEffect(() => {
-        const fetchData = async () => {
-            const {data} = await axios.get(`/api/blogposts/count`)
-            setCount(data)
-        } 
-        
-        fetchData()
-    }, [])
+    useLayoutEffect(() => window.scrollTo(0, document.getElementById('blog')?.offsetTop || 0), [page])
 
     // USE EFFECT
     useEffect(() => {
-        if (location.state) setPage(location.state.page)
+        if (location.state?.page) setPage(location.state.page)
     }, [location.state])
 
     // USE EFFECT
     useEffect(() => {
         const fetchData = async () => {
-          const {data} = await axios.get(`/api/blogposts?page=${page}`)
-          setBlogPosts(data)
-        } 
+            const {data: count} = await axios.get(`/api/blogposts/count`)
+            const {data: blogposts} = await axios.get(`/api/blogposts?page=${page}`)
+            setCount(count)
+            setBlogPosts(blogposts)
+        }
   
         fetchData()
     }, [page])
