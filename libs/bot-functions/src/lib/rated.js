@@ -9,11 +9,12 @@ import { emojis } from '@fl/bot-emojis'
 import { getIssues } from './deck'
 import { drawDeck } from './utility'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
+import { client } from '../client'
 
 // GET RATED CONFIRMATION
 export const getRatedConfirmation = async (player, opponent, format, guild) => {
     console.log('getRatedConfirmation()')
-    if (!guild) 
+    if (!guild) guild = client.guilds.cache.get('414551319031054346')
     const member = await guild.members.fetch(player.discordId)
     if (!member) {
         console.log(`player ${player.name} is no longer a member of a supporting server, so they cannot play rated`)
