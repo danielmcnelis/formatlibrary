@@ -12,13 +12,6 @@ import { config } from '@fl/config'
 import * as tcgPlayer from '../../../../tokens/tcgplayer.json'
 const Canvas = require('canvas')
 
-// GET HOURLY COUNTDOWN
-export const getFiveMinuteMarkCountdown = () => {
-	const date = new Date()
-	const remainingMinutes = (60 - date.getMinutes()) % 5
-    return remainingMinutes * 60 * 1000
-}
-
 // GET MIDNIGHT COUNTDOWN
 export const getMidnightCountdown = () => {
 	const date = new Date()
@@ -35,12 +28,12 @@ export const getRemainingDaysInMonth = () => {
     return remainingDays
 }
 
-// RUN HOURLY TASKS
+// RUN FREQUENT TASKS
 export const runFrequentTasks = async (client) => {
     await cleanUpPools()
     await lookForAllPotentialPairs(client)
 
-    return setTimeout(() => runFrequentTasks(client), getFiveMinuteMarkCountdown())
+    return setTimeout(() => runFrequentTasks(client), 5 * 60 * 1000)
 }
 
 // RUN NIGHTLY TASKS

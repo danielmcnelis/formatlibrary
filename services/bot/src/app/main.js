@@ -28,7 +28,7 @@ import { createTopCut, editTieBreakers, getMidnightCountdown, getSecondOfTwoRate
     assignRoles, createMembership, createPlayer, fetchCardNames, hasPartnerAccess, 
     isModerator, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
     editPointsSystem, runNightlyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, 
-    getKnownAbbreviation, capitalize, getFiveMinuteMarkCountdown, runFrequentTasks
+    getKnownAbbreviation, capitalize, runFrequentTasks
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
@@ -132,7 +132,7 @@ client.on('ready', async() => {
 
     try {
         // FREQUENT TASKS
-        setTimeout(() => runFrequentTasks(client), getFiveMinuteMarkCountdown())
+        setTimeout(() => runFrequentTasks(client), 5 * 60 * 1000)
     } catch (err) {
         console.log(err)
     }
