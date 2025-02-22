@@ -16,6 +16,10 @@ export const Pool = db.define('pools', {
         type: Sequelize.STRING,      
         defaultValue: 'pending'
     },
+    wasInactive: {
+        type: Sequelize.BOOLEAN,      
+        defaultValue: false
+    },
     playerId: {
         type: Sequelize.STRING
     },

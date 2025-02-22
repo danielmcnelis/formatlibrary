@@ -198,7 +198,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const opponentsPoolId = ids[1]
             const guildId = ids[2]
             if (isConfirmed && !opponentIsConfirmed) {
-                return getSecondOfTwoRatedConfirmations(client, interaction, yourPoolId, opponentsPoolId, guildId)
+                return getSecondOfTwoRatedConfirmations(client, yourPoolId, opponentsPoolId, guildId)
             } else {
                 return handleRatedConfirmation(client, interaction, isConfirmed, yourPoolId, opponentsPoolId, guildId)
             }

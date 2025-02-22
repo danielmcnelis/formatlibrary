@@ -10,6 +10,7 @@ export const joinRatedPool = async (req, res, next) => {
         const player = await Player.findById(req.body.playerId)
         const format = await Format.findById(req.query.formatId)
         const deck = await Deck.findById(req.query.deckId)
+        const guild = client.guilds.cache.get('414551319031054346')
 
         const isResubmission = await Pool.count({
             where: {
@@ -56,7 +57,7 @@ export const joinRatedPool = async (req, res, next) => {
             const potentialPair = potentialPairs[i]
             const opponent = potentialPair.player
             const ppid = potentialPair.playerId
-            
+
             const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
             const cutoff = new Date(new Date() - (15 * 60 * 1000))
 
@@ -76,7 +77,7 @@ export const joinRatedPool = async (req, res, next) => {
                 continue
             } else if (potentialPair.updatedAt < twoMinutesAgo) {
                 console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Getting confirmation from ${potentialPair.playerName} <!>`)
-                await getRatedConfirmation(client, opponent, player, format)
+                await getRatedConfirmation(opponent, player, format, guild)
                 continue
             } else {
                 console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Creating New Pairing <!>`)

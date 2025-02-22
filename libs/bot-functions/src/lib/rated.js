@@ -13,6 +13,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 // GET RATED CONFIRMATION
 export const getRatedConfirmation = async (player, opponent, format, guild) => {
     console.log('getRatedConfirmation()')
+    if (!guild) 
     const member = await guild.members.fetch(player.discordId)
     if (!member) {
         console.log(`player ${player.name} is no longer a member of a supporting server, so they cannot play rated`)
@@ -132,7 +133,7 @@ export const getFirstOfTwoRatedConfirmations = async (client, player, opponent, 
 }
 
 // GET FIRST PLAYER RATED CONFIRMATION  
-export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, player2PoolId) => {
+export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, player2PoolId, guildId) => {
     console.log('getSecondOfTwoRatedConfirmations()')
     console.log('player1PoolId', player1PoolId)
     console.log('player2PoolId', player2PoolId)
@@ -144,14 +145,17 @@ export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, pl
         include: [Format, Player]
     })
 
+    console.log('!!player2Pool', !!player2Pool)
+
     const player = player2Pool?.player
     const format = player2Pool?.format
 
-    const guild = client.guilds.cache.get('414551319031054346')
+    const guild = client.guilds.cache.get(guildId)
+    console.log('guild?.name getSecondOfTwoRatedConfirmations()', guild?.name)
     
     const member = await guild.members.fetch(player?.discordId)
     if (!member) {
-        console.log(`player ${player?.name} is no longer a member of format library, so they cannot play rated`)
+        console.log(`player ${player?.name} is no longer a member of ${guild.name}, so they cannot play rated`)
         return
     }
 
@@ -175,7 +179,7 @@ export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, pl
     setTimeout(async () => {
         const unconfirmed = await Pool.count({
             where: {
-                id: player2PoolId,
+                id: Number(player2PoolId),
                 status: 'confirming'
             }
         })
