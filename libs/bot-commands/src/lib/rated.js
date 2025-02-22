@@ -11,7 +11,7 @@ const getRatedInformation = async (interaction, player, format) => {
     try {
         const access = format.hostedOnFl ? 'full' : 'partner'
 
-        const server = await Membership.findOne({ 
+        const membership = await Membership.findOne({ 
             where: { 
                 playerId: player.id,
                 isActive: true,
@@ -24,9 +24,10 @@ const getRatedInformation = async (interaction, player, format) => {
             }, 
             include: Server
         })
-        console.log('server.id', server.id)
-        if (!server) return await interaction.user.send(`Sorry, you are not a member of a server that supports rated play for ${format.name} Format. ${format.emoji}`)
-        const guild = client.guilds.cache.get(server.id)
+        const server = membership?.server
+        console.log('server.id', server?.id)
+        if (!membership || !server) return await interaction.user.send(`Sorry, you are not a member of a server that supports rated play for ${format.name} Format. ${format.emoji}`)
+        const guild = client.guilds.cache.get(server?.id)
     console.log('guild?.name', guild?.name)
     console.log('format.channelId',format.channelId)
         const channel = guild.channels.cache.get(format.channelId)
