@@ -132,7 +132,7 @@ client.on('ready', async() => {
 
     try {
         // FREQUENT TASKS
-        setTimeout(() => runFrequentTasks(client), 5 * 60 * 1000)
+        runFrequentTasks(client)
     } catch (err) {
         console.log(err)
     }
