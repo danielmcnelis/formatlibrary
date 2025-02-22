@@ -71,6 +71,10 @@ export const Format = db.define('formats', {
   },
   useSeasonalElo: {
     type: Sequelize.BOOLEAN
+  },
+  hostedOnFl: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: true
   }
 })
 
