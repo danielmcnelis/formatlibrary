@@ -76,7 +76,9 @@ export const getRatedConfirmation = async (player, opponent, format, guild) => {
 export const getFirstOfTwoRatedConfirmations = async (client, player, opponent, format) => {
     console.log('getFirstOfTwoRatedConfirmations()')
     const guild = client.guilds.cache.get('414551319031054346')
-    console.log('guild rated.js 79', guild)
+    console.log('guild?.name rated.js 79', guild?.name)
+    console.log('guild?.ownerId rated.js 79', guild?.ownerId)
+    console.log('player.discordId', player.discordId)
     const member = await guild.members.fetch(player.discordId)
     if (!member) {
         console.log(`player ${player.name} is no longer a member of format library, so they cannot play rated`)
@@ -114,7 +116,8 @@ export const getFirstOfTwoRatedConfirmations = async (client, player, opponent, 
             .setStyle(ButtonStyle.Primary)
         )
 
-    console.log('member rated.js 114', member)
+    console.log('member?.user rated.js 114', member?.user)
+    console.log('member?.username rated.js 114', member?.username)
     const message = await member.user.send({ content: `I've found a Rated ${format.name} Format ${format.emoji} opponent for you. Do you still wish to play?`, components: [row] })
 
     setTimeout(async () => {
