@@ -76,6 +76,7 @@ export const getRatedConfirmation = async (player, opponent, format, guild) => {
 export const getFirstOfTwoRatedConfirmations = async (client, player, opponent, format) => {
     console.log('getFirstOfTwoRatedConfirmations()')
     const guild = client.guilds.cache.get('414551319031054346')
+    console.log('guild rated.js 79', guild)
     const member = await guild.members.fetch(player.discordId)
     if (!member) {
         console.log(`player ${player.name} is no longer a member of format library, so they cannot play rated`)
