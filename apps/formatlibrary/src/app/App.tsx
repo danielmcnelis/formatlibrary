@@ -16,12 +16,13 @@ const App = () => {
         subscriber: false
     })
     
+    const oneDayAgo = new Date(Date.now() - (24 * 60 * 60 * 1000))
     const [checkedSubscription, setCheckedSubscription] = useState(false)  
-    const [showReminder, setShowReminder] = useState(true) 
+    const [showReminder, setShowReminder] = useState(false) 
 
     // USE EFFECT
     useEffect(() => {
-        if (adBlockDetected && !visited) {
+        if (adBlockDetected && (Number(visited) < oneDayAgo.getTime())) {
             setShowReminder(true)
             
             const track = async () => {
@@ -34,7 +35,7 @@ const App = () => {
     
             track()
         }
-    }, [adBlockDetected, visited])
+    }, [adBlockDetected, visited, oneDayAgo])
 
     // USE EFFECT
     useEffect(() => {
