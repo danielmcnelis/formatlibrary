@@ -1277,7 +1277,7 @@ export const updateDeckTypes = async () => {
 // UPDATE MARKET PRICES
 export const updateMarketPrices = async () => {
     const start = Date.now()
-    const oneWeekAgo = new Date(Date.now() - (7 * 24 * 60 * 60 * 1000))
+    const twoWeeksAgo = new Date(Date.now() - (2 * 7 * 24 * 60 * 60 * 1000))
     const chronRecord = await ChronRecord.create({
         function: 'updateMarketPrices',
         status: 'underway'
@@ -1289,7 +1289,8 @@ export const updateMarketPrices = async () => {
         where: {
             tcgPlayerProductId: {[Op.not]: null}
         },
-        attributes: ['id', 'tcgPlayerProductId']
+        attributes: ['id', 'name', 'tcgPlayerProductId'],
+        order: [['name', 'ASC']]
     })].map((p) => p.tcgPlayerProductId)
 
     for (let i = 0; i < ids.length; i += 100) {
@@ -1318,7 +1319,7 @@ export const updateMarketPrices = async () => {
                         printId: print.id,
                         source: 'TCGplayer',
                         edition: result.subTypeName,
-                        createdAt: {[Op.gt]: oneWeekAgo}
+                        createdAt: {[Op.gt]: twoWeeksAgo}
                     },
                     order: [['createdAt', 'DESC']]
                 })
