@@ -1277,7 +1277,7 @@ export const updateDeckTypes = async () => {
 // UPDATE MARKET PRICES
 export const updateMarketPrices = async () => {
     const start = Date.now()
-    const twoWeeksAgo = new Date(Date.now() - (2 * 7 * 24 * 60 * 60 * 1000))
+    const oneWeekAgo = new Date(Date.now() - (7 * 24 * 60 * 60 * 1000))
     const chronRecord = await ChronRecord.create({
         function: 'updateMarketPrices',
         status: 'underway'
@@ -1318,7 +1318,7 @@ export const updateMarketPrices = async () => {
                         printId: print.id,
                         source: 'TCGplayer',
                         edition: result.subTypeName,
-                        createdAt: {[Op.gt]: twoWeeksAgo}
+                        createdAt: {[Op.gt]: oneWeekAgo}
                     },
                     order: [['createdAt', 'DESC']]
                 })
