@@ -1289,17 +1289,21 @@ export const updateMarketPrices = async () => {
         }
     })
 
-    for (let i = 0; i < prints.length; i++) {
-        const print = prints[i]
+    for (let i = 0; i < prints.length; i += 50) {
+        const ids = prints.slice(i, i + 50).map((p) => p.tcgPlayerProductId).join(',')
+        console.log('ids', ids)
 
         try {
-            const endpoint = `https://api.tcgplayer.com/pricing/product/${print.tcgPlayerProductId}`
+            const endpoint = `https://api.tcgplayer.com/pricing/product/${ids}`
             const { data } = await axios.get(endpoint, {
                 headers: {
                     "Accept": "application/json",
                     "Authorization": `bearer ${tcgPlayer.access_token}`
                 }
             })
+
+            console.log('data', data)
+            return
         
             for (let i = 0; i < data?.results?.length; i++) {
                 const result = data.results[i]
