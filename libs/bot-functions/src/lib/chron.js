@@ -1277,7 +1277,6 @@ export const updateDeckTypes = async () => {
 // UPDATE MARKET PRICES
 export const updateMarketPrices = async () => {
     const start = Date.now()
-    const twoWeeksAgo = new Date(Date.now() - (2 * 7 * 24 * 60 * 60 * 1000))
     const chronRecord = await ChronRecord.create({
         function: 'updateMarketPrices',
         status: 'underway'
@@ -1314,35 +1313,16 @@ export const updateMarketPrices = async () => {
                     result.subTypeName === 'Limited' ? 'limitedPrice' :
                     null
         
-                const recentPrice = await Price.findOne({
-                    where: {
-                        printId: print.id,
-                        source: 'TCGplayer',
-                        edition: result.subTypeName,
-                        createdAt: {[Op.gt]: twoWeeksAgo}
-                    },
-                    order: [['createdAt', 'DESC']]
+                await print.update({ [priceType]: result.marketPrice })
+                await Price.create({
+                    usd: result.marketPrice,
+                    edition: result.subTypeName,
+                    source: 'TCGplayer',
+                    printId: print.id
                 })
-        
-                if (recentPrice && recentPrice.usd === result.marketPrice) {
-                    console.log(`no change in market price for: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${result.subTypeName} - $${result.marketPrice}`)
-                    c++
-                } else {
-                    try {
-                        await print.update({ [priceType]: result.marketPrice })
-                        await Price.create({
-                            usd: result.marketPrice,
-                            edition: result.subTypeName,
-                            source: 'TCGplayer',
-                            printId: print.id
-                        }) 
-    
-                        b++
-                        console.log(`saved market price for: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${result.subTypeName} - $${result.marketPrice}`)
-                    } catch (err) {
-                        console.log(err)
-                    }
-                }
+
+                b++
+                console.log(`saved market price for: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${result.subTypeName} - $${result.marketPrice}`)            
             }
         } catch (err) {
             console.log(err)
@@ -1356,6 +1336,29 @@ export const updateMarketPrices = async () => {
 
     console.log(`created ${b} new prices and checked ${c} other(s)`)
     return console.log(`updateMarketPrices() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+}
+
+
+// PURGE DUPLICATE PRICES
+export const purgeDuplicatePrices = async () => {
+    const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'purgeDuplicatePrices',
+        status: 'underway'
+    })
+    let b = 0 
+    let c = 0
+
+    const prints = await Print.findAll({ where: { tcgPlayerProductId: {[Op.not]: null }}})
+
+
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
+    console.log(`purged ${b} prices and checked ${c} other(s)`)
+    return console.log(`purgeDuplicatePrices() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // UPDATE PRINTS
