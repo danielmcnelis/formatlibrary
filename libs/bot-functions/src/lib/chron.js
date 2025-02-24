@@ -1277,24 +1277,24 @@ export const updateDeckTypes = async () => {
 // UPDATE MARKET PRICES
 export const updateMarketPrices = async () => {
     const start = Date.now()
+    const twoWeeksAgo = new Date(Date.now() - (2 * 7 * 24 * 60 * 60 * 1000))
     const chronRecord = await ChronRecord.create({
         function: 'updateMarketPrices',
         status: 'underway'
     })
     let b = 0 
     let c = 0
-    const prints = await Print.findAll({
+
+    const ids = [...await Print.findAll({
         where: {
             tcgPlayerProductId: {[Op.not]: null}
-        }
-    })
+        },
+        attributes: ['id', 'tcgPlayerProductId']
+    })].map((p) => p.tcgPlayerProductId)
 
-    for (let i = 0; i < prints.length; i += 100) {
-        const ids = prints.slice(i, i + 100).map((p) => p.tcgPlayerProductId).join(',')
-        console.log('ids', ids)
-
+    for (let i = 0; i < ids.length; i += 100) {
         try {
-            const endpoint = `https://api.tcgplayer.com/pricing/product/${ids}`
+            const endpoint = `https://api.tcgplayer.com/pricing/product/${ids.slice(i, i + 100).join(',')}`
             const { data } = await axios.get(endpoint, {
                 headers: {
                     "Accept": "application/json",
@@ -1317,7 +1317,8 @@ export const updateMarketPrices = async () => {
                     where: {
                         printId: print.id,
                         source: 'TCGplayer',
-                        edition: result.subTypeName
+                        edition: result.subTypeName,
+                        createdAt: {[Op.gt]: twoWeeksAgo}
                     },
                     order: [['createdAt', 'DESC']]
                 })
