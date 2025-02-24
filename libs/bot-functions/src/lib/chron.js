@@ -1353,6 +1353,7 @@ export const purgeDuplicatePrices = async () => {
 
     for (let i = 0; i < prints.length; i++) {
         const print = prints[i]
+        console.log(`print.cardName`, print.cardName, `number ${i} of ${prints.length}`)
         const firstPrices = await Price.findAll({
             where: {
                 printId: print.id,
@@ -1364,13 +1365,14 @@ export const purgeDuplicatePrices = async () => {
         for (let j = 1; j < firstPrices.length; j++) {
             const previousDay = firstPrices[j-1].createdAt
             const currentDay = firstPrices[j].createdAt
-            console.log(firstPrices[j].createdAt.getDate())
             if ( 
                 previousDay.getFullYear() === currentDay.getFullYear() &&
                 previousDay.getMonth() === currentDay.getMonth() &&
                 previousDay.getDate() === currentDay.getDate()
             ) {
                 console.log(`duplicate prices: ${previousDay} and ${currentDay} (hours diff: ${((currentDay - previousDay) / (1000 * 60 * 60)).toFixed(2)})`)
+                await firstPrices[j].destroy()
+                j++
                 b++
             } else {
                 c++
@@ -1394,6 +1396,8 @@ export const purgeDuplicatePrices = async () => {
                 previousDay.getDate() === currentDay.getDate()
             ) {
                 console.log(`duplicate prices: ${previousDay} and ${currentDay} (hours diff: ${((currentDay - previousDay) / (1000 * 60 * 60)).toFixed(2)})`)
+                await unlimitedPrices[j].destroy()
+                j++
                 b++
             } else {
                 c++
@@ -1417,6 +1421,8 @@ export const purgeDuplicatePrices = async () => {
                 previousDay.getDate() === currentDay.getDate()
             ) {
                 console.log(`duplicate prices: ${previousDay} and ${currentDay} (hours diff: ${((currentDay - previousDay) / (1000 * 60 * 60)).toFixed(2)})`)
+                await limitedPrices[j].destroy()
+                j++
                 b++
             } else {
                 c++
@@ -1440,14 +1446,14 @@ export const purgeDuplicatePrices = async () => {
                 previousDay.getDate() === currentDay.getDate()
             ) {
                 console.log(`duplicate prices: ${previousDay} and ${currentDay} (hours diff: ${((currentDay - previousDay) / (1000 * 60 * 60)).toFixed(2)})`)
+                await normalPrices[j].destroy()
+                j++
                 b++
             } else {
                 c++
             }
         }
     }
-
-    //limited normal unlimited 1st edition
 
     await chronRecord.update({
         status: 'complete',
