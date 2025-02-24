@@ -1349,7 +1349,12 @@ export const purgeDuplicatePrices = async () => {
     let b = 0 
     let c = 0
 
-    const prints = await Print.findAll({ where: { tcgPlayerProductId: {[Op.not]: null }, order: [['cardName', 'ASC']]}})
+    const prints = await Print.findAll({ 
+        where: { 
+            tcgPlayerProductId: {[Op.not]: null }
+        },
+        order: [['cardName', 'ASC']]
+    })
 
     for (let i = 0; i < prints.length; i++) {
         const print = prints[i]
