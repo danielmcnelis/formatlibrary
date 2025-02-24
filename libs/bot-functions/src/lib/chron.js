@@ -1351,6 +1351,103 @@ export const purgeDuplicatePrices = async () => {
 
     const prints = await Print.findAll({ where: { tcgPlayerProductId: {[Op.not]: null }}})
 
+    for (let i = 0; i < prints.length; i++) {
+        const print = prints[i]
+        const firstPrices = await Price.findAll({
+            where: {
+                printId: print.id,
+                edition: '1st Edition'
+            },
+            order: [['createdAt', 'ASC']]
+        })
+
+        for (let j = 1; j < firstPrices.length; j++) {
+            const previousDay = firstPrices[j-1].createdAt
+            const currentDay = firstPrices[j].createdAt
+            console.log(firstPrices[j].createdAt.getDate())
+            if ( 
+                previousDay.getFullYear() === currentDay.getFullYear() &&
+                previousDay.getMonth() === currentDay.getMonth() &&
+                previousDay.getDate() === currentDay.getDate()
+            ) {
+                console.log(`duplicate prices: ${previousDay} and ${currentDay} (hours diff: ${((currentDay - previousDay) / (1000 * 60 * 60)).toFixed(2)})`)
+                b++
+            } else {
+                c++
+            }
+        }
+
+        const unlimitedPrices = await Price.findAll({
+            where: {
+                printId: print.id,
+                edition: 'Unlimited'
+            },
+            order: [['createdAt', 'ASC']]
+        })
+
+        for (let j = 1; j < unlimitedPrices.length; j++) {
+            const previousDay = unlimitedPrices[j-1].createdAt
+            const currentDay = unlimitedPrices[j].createdAt
+            if ( 
+                previousDay.getFullYear() === currentDay.getFullYear() &&
+                previousDay.getMonth() === currentDay.getMonth() &&
+                previousDay.getDate() === currentDay.getDate()
+            ) {
+                console.log(`duplicate prices: ${previousDay} and ${currentDay} (hours diff: ${((currentDay - previousDay) / (1000 * 60 * 60)).toFixed(2)})`)
+                b++
+            } else {
+                c++
+            }
+        }
+
+        const limitedPrices = await Price.findAll({
+            where: {
+                printId: print.id,
+                edition: 'Limited'
+            },
+            order: [['createdAt', 'ASC']]
+        })
+
+        for (let j = 1; j < limitedPrices.length; j++) {
+            const previousDay = limitedPrices[j-1].createdAt
+            const currentDay = limitedPrices[j].createdAt
+            if ( 
+                previousDay.getFullYear() === currentDay.getFullYear() &&
+                previousDay.getMonth() === currentDay.getMonth() &&
+                previousDay.getDate() === currentDay.getDate()
+            ) {
+                console.log(`duplicate prices: ${previousDay} and ${currentDay} (hours diff: ${((currentDay - previousDay) / (1000 * 60 * 60)).toFixed(2)})`)
+                b++
+            } else {
+                c++
+            }
+        }
+
+        const normalPrices = await Price.findAll({
+            where: {
+                printId: print.id,
+                edition: 'Normal'
+            },
+            order: [['createdAt', 'ASC']]
+        })
+
+        for (let j = 1; j < normalPrices.length; j++) {
+            const previousDay = normalPrices[j-1].createdAt
+            const currentDay = normalPrices[j].createdAt
+            if ( 
+                previousDay.getFullYear() === currentDay.getFullYear() &&
+                previousDay.getMonth() === currentDay.getMonth() &&
+                previousDay.getDate() === currentDay.getDate()
+            ) {
+                console.log(`duplicate prices: ${previousDay} and ${currentDay} (hours diff: ${((currentDay - previousDay) / (1000 * 60 * 60)).toFixed(2)})`)
+                b++
+            } else {
+                c++
+            }
+        }
+    }
+
+    //limited normal unlimited 1st edition
 
     await chronRecord.update({
         status: 'complete',
