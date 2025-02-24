@@ -1289,8 +1289,8 @@ export const updateMarketPrices = async () => {
         }
     })
 
-    for (let i = 0; i < prints.length; i += 50) {
-        const ids = prints.slice(i, i + 50).map((p) => p.tcgPlayerProductId).join(',')
+    for (let i = 0; i < prints.length; i += 100) {
+        const ids = prints.slice(i, i + 100).map((p) => p.tcgPlayerProductId).join(',')
         console.log('ids', ids)
 
         try {
@@ -1301,13 +1301,12 @@ export const updateMarketPrices = async () => {
                     "Authorization": `bearer ${tcgPlayer.access_token}`
                 }
             })
-
-            console.log('data', data)
-            return
         
             for (let i = 0; i < data?.results?.length; i++) {
                 const result = data.results[i]
                 if (!result?.marketPrice) continue
+
+                const print = await Print.findOne({ where: { tcgPlayerProductId: result.productId }})
         
                 const priceType = result.subTypeName === 'Unlimited' ? 'unlimitedPrice' :
                     result.subTypeName === '1st Edition' ? 'firstEditionPrice' :
