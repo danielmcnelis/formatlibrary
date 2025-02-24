@@ -1289,8 +1289,8 @@ export const updateMarketPrices = async () => {
         where: {
             tcgPlayerProductId: {[Op.not]: null}
         },
-        attributes: ['id', 'name', 'tcgPlayerProductId'],
-        order: [['name', 'ASC']]
+        attributes: ['id', 'cardName', 'tcgPlayerProductId'],
+        order: [['cardName', 'ASC']]
     })].map((p) => p.tcgPlayerProductId)
 
     for (let i = 0; i < ids.length; i += 100) {
