@@ -1301,9 +1301,9 @@ export const updateMarketPrices = async () => {
                 }
             })
         
-            for (let i = 0; i < data.results.length; i++) {
+            for (let i = 0; i < data?.results?.length; i++) {
                 const result = data.results[i]
-                if (!result.marketPrice) continue
+                if (!result?.marketPrice) continue
         
                 const priceType = result.subTypeName === 'Unlimited' ? 'unlimitedPrice' :
                     result.subTypeName === '1st Edition' ? 'firstEditionPrice' :
@@ -1320,9 +1320,8 @@ export const updateMarketPrices = async () => {
                 })
         
                 if (recentPrice && recentPrice.usd === result.marketPrice) {
-                    console.log(`no change in market price for print: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${result.subTypeName} - $${result.marketPrice}`)
+                    console.log(`no change in market price for: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${result.subTypeName} - $${result.marketPrice}`)
                     c++
-                    continue
                 } else {
                     try {
                         await print.update({ [priceType]: result.marketPrice })
@@ -1334,7 +1333,7 @@ export const updateMarketPrices = async () => {
                         }) 
     
                         b++
-                        console.log(`saved market price for print: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${result.subTypeName} - $${result.marketPrice}`)
+                        console.log(`saved market price for: ${print.rarity} ${print.cardCode} - ${print.cardName} - ${result.subTypeName} - $${result.marketPrice}`)
                     } catch (err) {
                         console.log(err)
                     }

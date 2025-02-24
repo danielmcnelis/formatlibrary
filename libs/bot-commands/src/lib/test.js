@@ -20,7 +20,7 @@ export default {
             if (isProgrammer(interaction.member)) {
                 await interaction.editReply(emojis.yellow)
                 // return await manageSubscriptions(client)
-                // await updateMarketPrices()
+                await updateMarketPrices()
                 // return await conductCensus(client)
                 // await updateAvatars(client)
                 // await updateDeckThumbs()
@@ -31,7 +31,7 @@ export default {
                 // await purgeBetaCards(client)
                 // return await downloadOriginalArtworks(client)
                 // return downloadMissingCardImages()
-                return lookForAllPotentialPairs(client)
+                // return lookForAllPotentialPairs(client)
                 // return runMonthlyTasks(client)
                 // await manageSubscriptions(client)
                 // await assignTournamentRoles(client)
