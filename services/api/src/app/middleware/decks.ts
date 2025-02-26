@@ -370,7 +370,7 @@ export const getPopularDecks = async (req, res, next) => {
           where: {
             name: name
           },
-          attributes: ['id', 'cleanName']
+          attributes: ['id', 'name', 'cleanName']
         })
 
         const deckThumb =
@@ -441,7 +441,7 @@ export const getDeckGallery = async (req, res, next) => {
           where: {
             name: name
           },
-          attributes: ['id', 'cleanName']
+          attributes: ['id', 'name', 'cleanName']
         })
 
         const deckThumb =
@@ -518,7 +518,7 @@ export const getFavoriteDecks = async (req, res, next) => {
           where: {
             name: { [Op.iLike]: name }
           },
-          attributes: ['id', 'name']
+          attributes: ['id', 'name', 'cleanName']
         })
 
         if (types.includes(deckType.id)) continue

@@ -15,7 +15,7 @@ export const DeckThumbnail = (props) => {
             onClick={() => {window.location.href=`${deckTypeLink}`}} 
         >
             <div className="deckThumbnail">
-                <h3>{capitalize(deckType.cleanName, true)}</h3>
+                <h3>{capitalize(deckType.name, true)}</h3>
                 <div className="deckThumbnail-flexbox">
                     <img 
                         className="deckThumbnail-image" 
