@@ -23,7 +23,7 @@ export default {
                 // await updateAvatars(client)
                 // await updateMarketPrices()
                 // await purgeDuplicatePrices()
-                return await conductCensus(client) 
+                return await conductCensus(client)
                 // await updateDeckThumbs()
                 // await updateDeckType()
                 // await updateDecks()
