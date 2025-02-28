@@ -110,8 +110,10 @@ export const receiveStripeWebhooks = async (req, res, next) => {
 
 export const getSubscriptions = async (req, res, next) => {
     try {
+        console.log('Stripe', Stripe)
+        console.log('Stripe.subscriptions', Stripe.subscriptions)
+        console.log('Stripe.subscriptions.list', Stripe.subscriptions.list)
         const {data: stripeSubscriptions} = await Stripe.subscriptions.list()
-
         console.log('stripeSubscriptions', stripeSubscriptions)
 
         for (let i = 0; i < stripeSubscriptions.length; i++) {

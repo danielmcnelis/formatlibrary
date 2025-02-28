@@ -580,32 +580,36 @@ export const lookForAllPotentialPairs = async (client) => {
         }) || []
     
         for (let i = 0; i < potentialPairs.length; i++) {
-            const potentialPair = potentialPairs[i]
-            const cutoff = new Date(new Date() - (15 * 60 * 1000))
+            try {
+                const potentialPair = potentialPairs[i]
+                const cutoff = new Date(new Date() - (15 * 60 * 1000))
+        
+                const mostRecentMatch = await Match.findOne({
+                    where: {
+                        [Op.or]: [
+                            { winnerId: player.id, loserId: potentialPair.playerId },
+                            { loserId: player.id, winnerId: potentialPair.playerId },
+                        ],
+                        formatId: pool.formatId
+                    },
+                    order: [['createdAt', 'DESC']]
+                })
     
-            const mostRecentMatch = await Match.findOne({
-                where: {
-                    [Op.or]: [
-                        { winnerId: player.id, loserId: potentialPair.playerId },
-                        { loserId: player.id, winnerId: potentialPair.playerId },
-                    ],
-                    formatId: pool.formatId
-                },
-                order: [['createdAt', 'DESC']]
-            })
-
-            if (mostRecentMatch && cutoff < mostRecentMatch?.createdAt) {
-                console.log(`<!> ${pool.playerName} and ${potentialPair.playerName} are recent opponents. Match reported at ${recentMatch.createdAt}<!>`)
-                continue
-            } else if (playerIds.includes(player.id) || playerIds.includes(potentialPair.playerId)) {
-                console.log(`<!> ${pool.playerName} and/or ${potentialPair.playerName} have already been sent a confirmation notification <!>`)
-                continue
-            } else {
-                playerIds.push(player.id)
-                playerIds.push(potentialPair.playerId)
-                console.log(`getFirstOfTwoRatedConfirmations from ${player?.name} (${format.name})`)
-                getFirstOfTwoRatedConfirmations(client, player, potentialPair.player, format)
-                continue
+                if (mostRecentMatch && cutoff < mostRecentMatch?.createdAt) {
+                    console.log(`<!> ${pool.playerName} and ${potentialPair.playerName} are recent opponents. Match reported at ${recentMatch?.createdAt}<!>`)
+                    continue
+                } else if (playerIds.includes(player.id) || playerIds.includes(potentialPair.playerId)) {
+                    console.log(`<!> ${pool.playerName} and/or ${potentialPair.playerName} have already been sent a confirmation notification <!>`)
+                    continue
+                } else {
+                    playerIds.push(player.id)
+                    playerIds.push(potentialPair.playerId)
+                    console.log(`getFirstOfTwoRatedConfirmations from ${player?.name} (${format.name})`)
+                    getFirstOfTwoRatedConfirmations(client, player, potentialPair.player, format)
+                    continue
+                }
+            } catch (err) {
+                console.log(err)
             }
         }
     }
@@ -1077,11 +1081,6 @@ export const manageSubscriptions = async (client) => {
     } catch (err) {
         console.log(err)
     }
-
-    await chronRecord.update({
-        status: 'complete',
-        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
-    })
 
     await chronRecord.update({
         status: 'complete',
