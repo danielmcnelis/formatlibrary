@@ -32,6 +32,7 @@ export const getRemainingDaysInMonth = () => {
 export const runFrequentTasks = async (client) => {
     await cleanUpPools()
     await lookForAllPotentialPairs(client)
+    await manageSubscriptions(client)
 
     return setTimeout(() => runFrequentTasks(client), 5 * 60 * 1000)
 }
@@ -121,6 +122,10 @@ export const updateAvatars = async (client) => {
         let count = 0
         const server = servers[s]
         const guild = client.guilds.cache.get(server.id)
+        if (!guild) {
+            console.log('no guild', server.name)
+            continue
+        }
         const membersMap = await guild.members.fetch()
         const memberIds = [...membersMap.keys()]
         

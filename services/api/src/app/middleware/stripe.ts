@@ -109,19 +109,12 @@ export const receiveStripeWebhooks = async (req, res, next) => {
 }
 
 export const getSubscriptions = async (req, res, next) => {
-    console.log('HIT ROUTE')
     try {
-        // console.log('Stripe', Stripe)
-        // console.log('Stripe.subscriptions', Stripe.subscriptions)
-        // console.log('Stripe.subscriptions.list', Stripe.subscriptions.list)
         const {data: stripeSubscriptions} = await Stripe.subscriptions.list()
-        console.log('stripeSubscriptions?.length', stripeSubscriptions?.length)
-
+        
         for (let i = 0; i < stripeSubscriptions.length; i++) {
             const stripeSubscription = stripeSubscriptions[i]
-            console.log('stripeSubscription?.id', stripeSubscription?.id)
             const customer = await Stripe.customers.retrieve(stripeSubscription.customer.toString())
-            console.log('customer', customer)
             const tier = stripeSubscription.items.data[0].price.unit_amount === 899 ? 'Premium' : 'Supporter'
 
             let subscription = await Subscription.findOne({
@@ -130,8 +123,6 @@ export const getSubscriptions = async (req, res, next) => {
                 },
                 include: Player
             })
-
-            console.log('!!subscription', !!subscription)
 
             let player = subscription?.player
             if (!player) {
@@ -148,8 +139,6 @@ export const getSubscriptions = async (req, res, next) => {
             if (player && player.email !== customer['email']) {
                 await player.update({ alternateEmail: customer['email'] })
             }
-
-            console.log('customer?.id', customer?.id)
 
             if (subscription) {
                 await subscription.update({
