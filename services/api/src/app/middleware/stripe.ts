@@ -112,14 +112,15 @@ export const getSubscriptions = async (req, res, next) => {
     try {
         const {data: stripeSubscriptions} = await Stripe.subscriptions.list()
 
+        console.log('stripeSubscriptions', stripeSubscriptions)
+
         for (let i = 0; i < stripeSubscriptions.length; i++) {
             const stripeSubscription = stripeSubscriptions[i]
-            console.log('stripeSubscription', stripeSubscription)
             const customer = await Stripe.customers.retrieve(stripeSubscription.customer.toString())
             console.log('customer', customer)
             const tier = stripeSubscription.items.data[0].price.unit_amount === 899 ? 'Premium' : 'Supporter'
 
-            let subscription =  await Subscription.findOne({
+            let subscription = await Subscription.findOne({
                 where: {
                     id: stripeSubscription.id
                 },
