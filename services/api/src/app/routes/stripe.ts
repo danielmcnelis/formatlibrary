@@ -3,10 +3,10 @@ import { getSubscriptions, paymentIntent, receiveStripeWebhooks } from '../middl
 
 const router = Router()
 
-router.post('/api/stripe/webhooks', receiveStripeWebhooks)
-
 router.get('/api/stripe/subscriptions', getSubscriptions)
 
 router.get('/api/stripe/payment', paymentIntent)
+
+router.post('/api/stripe/webhooks', receiveStripeWebhooks)
 
 export default router

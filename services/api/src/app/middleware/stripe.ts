@@ -109,12 +109,13 @@ export const receiveStripeWebhooks = async (req, res, next) => {
 }
 
 export const getSubscriptions = async (req, res, next) => {
+    console.log('HIT ROUTE')
     try {
-        console.log('Stripe', Stripe)
-        console.log('Stripe.subscriptions', Stripe.subscriptions)
-        console.log('Stripe.subscriptions.list', Stripe.subscriptions.list)
+        // console.log('Stripe', Stripe)
+        // console.log('Stripe.subscriptions', Stripe.subscriptions)
+        // console.log('Stripe.subscriptions.list', Stripe.subscriptions.list)
         const {data: stripeSubscriptions} = await Stripe.subscriptions.list()
-        console.log('stripeSubscriptions', stripeSubscriptions)
+        // console.log('stripeSubscriptions', stripeSubscriptions)
 
         for (let i = 0; i < stripeSubscriptions.length; i++) {
             const stripeSubscription = stripeSubscriptions[i]
@@ -160,17 +161,17 @@ export const getSubscriptions = async (req, res, next) => {
                 })
             } else {
                 subscription = await Subscription.create({
-                    id: subscription.id,
+                    id: stripeSubscription.id,
                     playerName: player?.name,
                     playerId: player?.id,
                     customerEmail: customer['email'],
                     customerName: customer['name'],
                     customerId: customer?.id,
                     tier: tier,
-                    status: subscription.status,
-                    currentPeriodStart: subscription.current_period_start * 1000,
-                    currentPeriodEnd: subscription.current_period_end * 1000,
-                    endedAt: subscription.ended_at * 1000
+                    status: stripeSubscription.status,
+                    currentPeriodStart: stripeSubscription.current_period_start * 1000,
+                    currentPeriodEnd: stripeSubscription.current_period_end * 1000,
+                    endedAt: stripeSubscription.ended_at * 1000
                 })
             }
         }
