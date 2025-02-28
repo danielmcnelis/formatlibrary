@@ -115,10 +115,11 @@ export const getSubscriptions = async (req, res, next) => {
         // console.log('Stripe.subscriptions', Stripe.subscriptions)
         // console.log('Stripe.subscriptions.list', Stripe.subscriptions.list)
         const {data: stripeSubscriptions} = await Stripe.subscriptions.list()
-        // console.log('stripeSubscriptions', stripeSubscriptions)
+        console.log('stripeSubscriptions?.length', stripeSubscriptions?.length)
 
         for (let i = 0; i < stripeSubscriptions.length; i++) {
             const stripeSubscription = stripeSubscriptions[i]
+            console.log('stripeSubscription?.id', stripeSubscription?.id)
             const customer = await Stripe.customers.retrieve(stripeSubscription.customer.toString())
             console.log('customer', customer)
             const tier = stripeSubscription.items.data[0].price.unit_amount === 899 ? 'Premium' : 'Supporter'
@@ -129,6 +130,8 @@ export const getSubscriptions = async (req, res, next) => {
                 },
                 include: Player
             })
+
+            console.log('!!subscription', !!subscription)
 
             let player = subscription?.player
             if (!player) {
@@ -146,6 +149,8 @@ export const getSubscriptions = async (req, res, next) => {
                 await player.update({ alternateEmail: customer['email'] })
             }
 
+            console.log('customer?.id', customer?.id)
+
             if (subscription) {
                 await subscription.update({
                     playerName: player?.name,
@@ -161,7 +166,7 @@ export const getSubscriptions = async (req, res, next) => {
                 })
             } else {
                 subscription = await Subscription.create({
-                    id: stripeSubscription.id,
+                    id: stripeSubscription?.id,
                     playerName: player?.name,
                     playerId: player?.id,
                     customerEmail: customer['email'],
