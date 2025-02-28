@@ -1000,11 +1000,11 @@ export const manageSubscriptions = async (client) => {
         function: 'manageSubscriptions',
         status: 'underway'
     })
+    
+    let a = 0
+    let b = 0
 
     try {
-
-        let a = 0
-        let b = 0
         const discordPremiumRoleId = '1102002847056400464'
         const stripePremiumRoleId = '1335316985097093290'
         const discordSupporterRoleId = '1102020060631011400'
@@ -1090,6 +1090,7 @@ export const manageSubscriptions = async (client) => {
 
     console.log(`added ${a} new subscriptions and removed ${b} old subscriptions`)
     return console.log(`manageSubscriptions() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+
 }
 
 // ASSIGN SEASONAL LADDER ROLES
