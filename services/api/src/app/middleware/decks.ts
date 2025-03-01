@@ -573,6 +573,32 @@ export const getPublicDecks = async (req, res, next) => {
   }
 }
 
+export const getPlayerMostDownloadedDecks = async (req, res, next) => {
+    try {
+      const decks = await Deck.findAll({
+        where: {
+          builderId: req.params.id,
+          origin: 'event',
+          display: true
+        },
+        attributes: ['id', 'deckTypeName', 'builderName', 'eventAbbreviation', 'formatName', 'placement', 'downloads', 'publishDate'],
+        order: [
+          ['publishDate', 'DESC']
+        ],
+        // include: Format
+      })
+
+      const uniqueDecks = decks.filter((value, index, self) => {
+            return self.findIndex(v => v.formatName === value.formatName) === index
+       }).slice(0, 6)
+  
+       console.log('uniqueDecks.length', uniqueDecks.length)
+      return res.json(uniqueDecks)
+    } catch (err) {
+      next(err)
+    }
+}
+
 export const likeDeck = async (req, res, next) => {
   try {
     const deck = await Deck.findOne({

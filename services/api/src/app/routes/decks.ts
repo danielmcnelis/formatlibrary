@@ -9,6 +9,7 @@ import {
   openDeckInBuilder,
   getMyDecks,
   readDeckYdk,
+  getPlayerMostDownloadedDecks,
   getPopularDecks,
   getDeckGallery,
   getFavoriteDecks,
@@ -55,6 +56,8 @@ router.get('/api/decks/gallery/:format', getDeckGallery)
 router.get('/api/decks/favorite/:id', getFavoriteDecks)
 
 router.get('/api/decks/player/:id', getPublicDecks)
+
+router.get('/api/decks/most-downloaded/:id', getPlayerMostDownloadedDecks)
 
 router.get('/api/decks/like/:id', likeDeck)
 

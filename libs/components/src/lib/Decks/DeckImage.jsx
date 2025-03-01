@@ -4,6 +4,7 @@ import { ordinalize } from '@fl/utils'
 import './DeckImage.css'
 
 export const DeckImage = (props) => {
+    console.log('props', props)
     const {deck, width, margin, padding, coverage} = props
     if (!deck) return <div/>
     const fullName = deck.builderName || ''

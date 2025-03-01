@@ -9,11 +9,14 @@ import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import './PlayerProfile.css'
 import { countries } from '@fl/utils'
+import {DeckImage} from '../Decks/DeckImage'
 
 export const PlayerProfile = () => {
   const [player, setPlayer] = useState({})
   const [stats, setStats] = useState([])
   const [decks, setDecks] = useState([])
+  const [mostDownloadedDecks, setMostDownloadedDecks] = useState([])
+  console.log('mostDownloadedDecks', mostDownloadedDecks)
   const [deckTypes, setDeckTypes] = useState([])
   const { id } = useParams()
 
@@ -40,8 +43,17 @@ export const PlayerProfile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`/api/stats/${player.id}`)
-        setStats(data)
+        const { data: statsData } = await axios.get(`/api/stats/${player.id}`)
+        setStats(statsData)
+
+        const { data: deckData } = await axios.get(`/api/decks/player/${player.id}`)
+        setDecks(deckData)
+
+        const { data: deckTypeData } = await axios.get(`/api/decks/favorite/${player.id}`)
+        setDeckTypes(deckTypeData)
+
+        const { data: mostDownloadedData } = await axios.get(`/api/decks/most-downloaded/${player.id}`)
+        setMostDownloadedDecks(mostDownloadedData)
       } catch (err) {
         console.log(err)
       }
@@ -50,33 +62,6 @@ export const PlayerProfile = () => {
     fetchData()
   }, [player])
 
-  // USE EFFECT SET DECKS
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(`/api/decks/player/${player.id}`)
-        setDecks(data)
-      } catch (err) {
-        console.log(err)
-      }
-    }
-
-    fetchData()
-  }, [player])
-
-  // USE EFFECT SET DECKS
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(`/api/decks/favorite/${player.id}`)
-        setDeckTypes(data)
-      } catch (err) {
-        console.log(err)
-      }
-    }
-
-    fetchData()
-  }, [player])
 
   if (player === null) return <NotFound />
   if (!player.id) return <div style={{height: '100vh'}}/>
@@ -198,8 +183,48 @@ export const PlayerProfile = () => {
             ) : (
                 ''
             )}
-            </div>
+            {
+                mostDownloadedDecks.length ? (
+                    <div id="top-decks">
+                        {/* <div className="subcategory-title-flexbox"> */}
+                        {/* <img 
+                            style={{ width:'64px'}} 
+                            src={`https://cdn.formatlibrary.com/images/emojis/${summary.format.icon}.png`}
+                            alt={format.name}
+                        /> */}
+                        <h2 className="subheading">{'Recent Topping Decks:'}</h2>
+                        <img 
+                            style={{ height:'64px'}}
+                            src={'https://cdn.formatlibrary.com/images/emojis/deckbox.png'}
+                            alt="deckbox"
+                        />
+                        {/* </div> */}
+                        <div id="deckGalleryFlexBox">
+                        {
+                            mostDownloadedDecks?.map((deck, index) => {
+                                console.log('deck', deck)
+                                if (deck) {
+                                    return (
+                                        <DeckImage
+                                            key={deck?.id}
+                                            index={index} 
+                                            deck={deck}
+                                            width="360px"
+                                            margin="10px 5px"
+                                            padding="5px"
+                                            coverage={true}
+                                        />
+                                    )
+                                } else {
+                                    return ''
+                                }
+                            })
+                        }
+                        </div>
+                    </div>
+                ) : ''
+            }
+        </div>
     </>
-    
   )
 }
