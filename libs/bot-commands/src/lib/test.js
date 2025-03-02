@@ -20,7 +20,7 @@ export default {
             if (isProgrammer(interaction.member)) {
                 await interaction.editReply(emojis.yellow)
                 // await runNightlyTasks(client)
-                await manageSubscriptions(client)
+                // await manageSubscriptions(client)
                 await updateAvatars(client)
                 await updateMarketPrices()
                 // await purgeDuplicatePrices()

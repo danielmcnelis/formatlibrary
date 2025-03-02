@@ -49,8 +49,8 @@ export const runNightlyTasks = async (client) => {
         const tasks = [
             manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
             purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, updateSets, 
-            updateDecks, updateDeckTypes, downloadNewCards, downloadAltArtworks, downloadMissingCardImages, 
-            updateServers, conductCensus, updateAvatars, updateMarketPrices
+            updateMarketPrices, updateDecks, updateDeckTypes, downloadNewCards, downloadAltArtworks, 
+            downloadMissingCardImages, updateServers, conductCensus, updateAvatars, 
         ]
     
         for (let i = 0; i < tasks.length; i++) {
@@ -873,7 +873,7 @@ export const applyGeneralDecay = async (formatId, formatName, serverId, currentD
 
     const days = Math.ceil(((nextDate.getTime() - currentDate.getTime())) / (1000 * 60 * 60 * 24))
     let generalDecayRate = Math.pow(Math.E, (-1 * generalMatchesInPeriod.length) / (days * 20000))
-    if (generalDecayRate < 0.9995) generalDecayRate = 0.9995
+    if (generalDecayRate < 0.999) generalDecayRate = 0.999
 
     const generalActivePlayerIds = []
     for (let i = 0; i < generalMatchesInPeriod.length; i++) {
@@ -958,7 +958,7 @@ export const applySeasonalDecay = async (formatId, formatName, serverId, current
     console.log('days', days)
     console.log('seasonalMatchesInPeriod.length', seasonalMatchesInPeriod.length)
     let seasonalDecayRate = Math.pow(Math.E, (-1 * seasonalMatchesInPeriod.length) / (days * 600))
-    if (seasonalDecayRate < 0.993) seasonalDecayRate = 0.993
+    if (seasonalDecayRate < 0.99) seasonalDecayRate = 0.99
 
     const seasonalGamesPlayed = {}
     for (let i = 0; i < seasonalMatchesInPeriod.length; i++) {
@@ -979,16 +979,19 @@ export const applySeasonalDecay = async (formatId, formatName, serverId, current
 
     console.log('seasonalGamesPlayed', seasonalGamesPlayed)
 
+    const k = formatName === 'Edison' ? 1 : formatName === 'HAT' ? 0.5 : 1
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
         const n = seasonalGamesPlayed[stats.playerId] || 0
-        const shields = n > days ? days : n
-        console.log(`${stats.playerName}'s shields:`, shields, 'out of', days)
+        const standard = Math.floor(k * days / 7)
+        const shields = n > standard ? standard : n
+
+        console.log(`${stats.playerName}'s shields:`, shields, 'out of', standard)
 
         if (
             stats.seasonalElo > 500
         ) {
-            stats.seasonalElo = stats.seasonalElo * Math.pow(seasonalDecayRate, days - shields)
+            stats.seasonalElo = stats.seasonalElo * Math.pow(seasonalDecayRate, standard - shields)
             if (stats.seasonalElo < 500) {
                 stats.backupSeasonalElo = stats.seasonalElo
                 stats.seasonalElo = 500
@@ -1992,7 +1995,11 @@ export const downloadOriginalArtworks = async () => {
 
 // DOWNLOAD MISSING CARD IMAGES
 export const downloadMissingCardImages = async () => {
-    const start = new Date()
+    const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'manageSubscriptions',
+        status: 'underway'
+    })
     const cards = await Card.findAll({ include: Artwork })
     let a = 0
     let b = 0
@@ -2050,6 +2057,10 @@ export const downloadMissingCardImages = async () => {
         }
     }
 
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
     console.log(`Saved ${a} full sized card images, ${b} medium sized card images, ${c} cropped artwork images, encountered ${d} download/upload errors and ${e} loop errors`)
     return console.log(`downloadAltArtworks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
