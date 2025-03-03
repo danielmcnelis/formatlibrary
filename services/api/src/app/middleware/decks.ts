@@ -564,7 +564,8 @@ export const getPublicDecks = async (req, res, next) => {
       order: [
         ['placement', 'ASC'],
         ['publishDate', 'DESC']
-      ]
+      ],
+      limit: 100
     })
 
     return res.json(decks)
@@ -585,7 +586,7 @@ export const getPlayerMostDownloadedDecks = async (req, res, next) => {
         order: [
           ['publishDate', 'DESC']
         ],
-        // include: Format
+        include: {model: Format, attributes: ['id', 'icon']}
       })
 
       const uniqueDecks = decks.filter((value, index, self) => {

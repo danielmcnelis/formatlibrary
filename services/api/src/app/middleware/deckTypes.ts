@@ -310,7 +310,9 @@ export const getDeckTypeSummary = async (req, res, next) => {
             origin: 'event',
             eventId: { [Op.not]: null }
         },
-        attributes: ['id', 'deckTypeName', 'category', 'ydk', 'formatName']
+        attributes: ['id', 'deckTypeName', 'category', 'ydk', 'formatName'],
+        order: [['publishDate', 'DESC']],
+        limit: 100
     })
 
     const mostRecent = await Deck.findOne({

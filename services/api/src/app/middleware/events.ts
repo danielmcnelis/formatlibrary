@@ -1,5 +1,5 @@
 import { Card, Deck, Event, Format, Player, Replay, Server, Team, Tournament } from '@fl/models'
-import { arrayToObject, capitalize } from '@fl/utils'
+import { arrayToObject, capitalize, getRandomColor } from '@fl/utils'
 import { Op } from 'sequelize'
 import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
@@ -246,17 +246,28 @@ export const getEventById = async (req, res, next) => {
       attributes: ['id', 'deckTypeName', 'category', 'builderName', 'ydk', 'placement']
     })
 
-    const deckTypes =
-      allDecks.length >= event.size / 2
-        ? Object.entries(arrayToObject(allDecks.map((d) => capitalize(d.deckTypeName, true)))).sort(
-            (a: any, b: any) => b[1] - a[1]
-          )
-        : []
+    const colors = [
+        '#3d72e3', '#ff3c2e', '#ffd000', '#47ad53', '#43578f', '#b25cd6',
+        '#6d9399', '#f5881b', '#31ada5', '#ffcd19', '#cf8ac5', '#8a8dcf', 
+        '#d65180', '#307a3a', '#735645', '#fc8c1c', '#8dc276', '#c4495f', 
+        '#3e8cbd', '#b865cf', '#fcdc5b', '#43d1a2', '#452194', '#d96827', 
+        '#79b096', '#5c8fe0', '#9474b0', '#2b9dbd', '#eb692d', '#93c951'
+    ]
 
-    const topDeckConversions =
-    Object.entries(arrayToObject(topDecks.map((d) => capitalize(d.deckTypeName, true)))).sort(
+    const deckTypes = allDecks.length >= event.size / 2 ? 
+        Object.entries(arrayToObject(allDecks.map((d) => capitalize(d.deckTypeName, true)))).sort(
             (a: any, b: any) => b[1] - a[1]
-        )
+        ) : []
+
+    deckTypes.forEach((el, index) => el.push(colors[index] || getRandomColor()))
+
+    const topDeckConversions = allDecks.length >= event.size / 2 ?
+        Object.entries(arrayToObject(topDecks.map((d) => capitalize(d.deckTypeName, true)))).sort(
+            (a: any, b: any) => b[1] - a[1]
+        ) : []
+
+    topDeckConversions.forEach((el) => el.push(deckTypes.find((e) => e[0] === el[0])[2]))
+
     const mainDeckCards = []
     const sideDeckCards = []
     const topMainDeckCards = []
@@ -398,6 +409,21 @@ export const getEventByIdAsSubscriber = async (req, res, next) => {
           order: [['display', 'DESC'], ['roundAbs', 'DESC']]
       })
   
+      const trueTopDecks = await Deck.findAll({
+        where: {
+          display: true,
+          [Op.or]: {
+            eventAbbreviation: event.abbreviation,
+            eventId: event.id
+          }
+        },
+        attributes: ['id', 'deckTypeName', 'builderName', 'placement'],
+        order: [
+          ['placement', 'ASC'],
+          ['builderName', 'ASC']
+        ]
+      })
+
       const topDecks = await Deck.findAll({
         where: {
           display: {[Op.or]: [true, false]},
@@ -423,17 +449,28 @@ export const getEventByIdAsSubscriber = async (req, res, next) => {
         attributes: ['id', 'deckTypeName', 'category', 'builderName', 'ydk', 'placement']
       })
   
-      const deckTypes =
-        allDecks.length >= event.size / 2
-          ? Object.entries(arrayToObject(allDecks.map((d) => capitalize(d.deckTypeName, true)))).sort(
-              (a: any, b: any) => b[1] - a[1]
-            )
-          : []
+      const colors = [
+        '#3d72e3', '#ff3c2e', '#ffd000', '#47ad53', '#43578f', '#b25cd6',
+        '#6d9399', '#f5881b', '#31ada5', '#ffcd19', '#cf8ac5', '#8a8dcf', 
+        '#d65180', '#307a3a', '#735645', '#fc8c1c', '#8dc276', '#c4495f', 
+        '#3e8cbd', '#b865cf', '#fcdc5b', '#43d1a2', '#452194', '#d96827', 
+        '#79b096', '#5c8fe0', '#9474b0', '#2b9dbd', '#eb692d', '#93c951'
+    ]
 
-      const topDeckConversions =
+    const deckTypes = allDecks.length >= event.size / 2 ? 
+        Object.entries(arrayToObject(allDecks.map((d) => capitalize(d.deckTypeName, true)))).sort(
+            (a: any, b: any) => b[1] - a[1]
+        ) : []
+
+    deckTypes.forEach((el, index) => el.push(colors[index] || getRandomColor()))
+
+    const topDeckConversions = allDecks.length >= event.size / 2 ?
         Object.entries(arrayToObject(topDecks.map((d) => capitalize(d.deckTypeName, true)))).sort(
-              (a: any, b: any) => b[1] - a[1]
-            )
+            (a: any, b: any) => b[1] - a[1]
+        ) : []
+
+    topDeckConversions.forEach((el) => el.push(deckTypes.find((e) => e[0] === el[0])[2]))
+        
         
       const mainDeckCards = []
       const sideDeckCards = []

@@ -288,6 +288,13 @@
     padding-bottom: 10px;
   }
 
+  .profile-deck-flexbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
   .horizontal-centered-flexbox {
     display: flex;
     flex-direction: row;

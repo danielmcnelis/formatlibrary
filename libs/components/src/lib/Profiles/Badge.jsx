@@ -1,6 +1,5 @@
 
-import { capitalize, urlize } from '@fl/utils'
-import { Link } from 'react-router-dom'
+import { capitalize } from '@fl/utils'
 import './Badge.css'
 
 //GET MEDAL

@@ -28,6 +28,7 @@ export const SingleEvent = (props) => {
     topMainDeckCards: [],
     topSideDeckCards: []
   })
+  console.log('metagame', metagame)
 
   const { id } = useParams()
   const navigate = useNavigate()
@@ -105,6 +106,8 @@ export const SingleEvent = (props) => {
       '#3d72e3', '#ff3c2e', '#ffd000', '#47ad53', '#43578f', '#b25cd6',
       '#6d9399', '#f5881b', '#31ada5', '#ffcd19', '#cf8ac5', '#8a8dcf', 
       '#d65180', '#307a3a', '#735645', '#fc8c1c', '#8dc276', '#c4495f', 
+      '#3e8cbd', '#b865cf', '#fcdc5b', '#43d1a2', '#452194', '#d96827', 
+      '#79b096', '#5c8fe0', '#9474b0', '#2b9dbd', '#eb692d', '#93c951'
   ]
 
   const deckTypeData = metagame.deckTypes?.length ? {
@@ -112,7 +115,7 @@ export const SingleEvent = (props) => {
     datasets: [
       {
         data: metagame.deckTypes.map((e) => e[1]),
-        backgroundColor: colors.slice(0, metagame.deckTypes?.length),
+        backgroundColor: metagame.deckTypes.map((e) => e[2]),
         borderWidth: 1,
       },
     ]
@@ -123,7 +126,7 @@ export const SingleEvent = (props) => {
     datasets: [
       {
         data: metagame.topDeckConversions.map((e) => e[1]),
-        backgroundColor: colors.slice(0, metagame.topDeckConversions?.length),
+        backgroundColor: metagame.topDeckConversions.map((e) => e[2]),
         borderWidth: 1,
       },
     ]
@@ -422,7 +425,7 @@ export const SingleEvent = (props) => {
 
                     <div className="chart-flexbox">
                     <div className="doughnut-container">
-                        <h2>Deck Type Representation</h2>
+                        <h2>Deck Representation</h2>
                         <br/>
                         <Doughnut 
                             className="doughnut"

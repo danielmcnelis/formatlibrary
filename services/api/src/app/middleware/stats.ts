@@ -80,7 +80,7 @@ export const getStatsByPlayerId = async (req, res, next) => {
       },
       attributes: ['id', 'formatName', 'formatId', 'elo', 'wins', 'losses', 'playerId'],
       order: [['elo', 'DESC']],
-      limit: 10
+      limit: 16
     })
 
     res.json(stats)

@@ -16,7 +16,6 @@ export const PlayerProfile = () => {
   const [stats, setStats] = useState([])
   const [decks, setDecks] = useState([])
   const [mostDownloadedDecks, setMostDownloadedDecks] = useState([])
-  console.log('mostDownloadedDecks', mostDownloadedDecks)
   const [deckTypes, setDeckTypes] = useState([])
   const { id } = useParams()
 
@@ -184,31 +183,19 @@ export const PlayerProfile = () => {
                 ''
             )}
             {
-                mostDownloadedDecks.length ? (
-                    <div id="top-decks">
-                        {/* <div className="subcategory-title-flexbox"> */}
-                        {/* <img 
-                            style={{ width:'64px'}} 
-                            src={`https://cdn.formatlibrary.com/images/emojis/${summary.format.icon}.png`}
-                            alt={format.name}
-                        /> */}
-                        <h2 className="subheading">{'Recent Topping Decks:'}</h2>
-                        <img 
-                            style={{ height:'64px'}}
-                            src={'https://cdn.formatlibrary.com/images/emojis/deckbox.png'}
-                            alt="deckbox"
-                        />
-                        {/* </div> */}
+                mostDownloadedDecks.length ? (                        
+                        <div id="top-decks" className="popular-decks">
+                            <h2>Recent Top Decks:</h2>
                         <div id="deckGalleryFlexBox">
                         {
                             mostDownloadedDecks?.map((deck, index) => {
-                                console.log('deck', deck)
                                 if (deck) {
                                     return (
                                         <DeckImage
                                             key={deck?.id}
                                             index={index} 
                                             deck={deck}
+                                            formatIcon={deck.format.icon}
                                             width="360px"
                                             margin="10px 5px"
                                             padding="5px"

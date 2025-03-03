@@ -29,6 +29,16 @@ export const getCookie = (name) => {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+// GET RANDOM COLOR
+export const getRandomColor = () => {
+    const letters = '0123456789ABCDEF'
+    let color = '#'
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)]
+    }
+    return color
+}
+
 //APPEND SCRIPT
 export const appendScript = (src, document) => {
     const script = document.createElement('script')
