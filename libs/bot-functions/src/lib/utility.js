@@ -557,9 +557,7 @@ export const generateRandomString = (length, chars) => {
 export const getMedal = (stats, title = false) => {
     if (title) {
         return !stats ? `Gold ${emojis.gold}`
-        : stats <= 320 ? `Tilted ${emojis.mad}`
-        : (stats > 320 && stats <= 360) ?  `Chump ${emojis.sad}`
-        : (stats > 360 && stats <= 400) ?  `Rock ${emojis.rock}`
+        : stats <= 400 ? `Rock ${emojis.rock}`
         : (stats > 400 && stats <= 440) ?  `Bronze ${emojis.bronze}`
         : (stats > 440 && stats <= 480) ?  `Silver ${emojis.silver}`
         : (stats > 480 && stats <= 520) ?  `Gold ${emojis.gold}`
@@ -571,9 +569,7 @@ export const getMedal = (stats, title = false) => {
         : `Ascended ${emojis.treeborn}`
     } else {
         return !stats ? emojis.gold
-        : stats <= 320 ? emojis.mad
-        : (stats > 320 && stats <= 360) ? emojis.sad
-        : (stats > 360 && stats <= 400) ? emojis.rock
+        : stats <= 400 ? emojis.rock
         : (stats > 400 && stats <= 440) ? emojis.bronze
         : (stats > 440 && stats <= 480) ? emojis.silver
         : (stats > 480 && stats <= 520) ? emojis.gold

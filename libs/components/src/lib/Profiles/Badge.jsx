@@ -6,9 +6,7 @@ import './Badge.css'
 //GET MEDAL
 const getMedal = (elo) => {
   return !elo ? 'https://cdn.formatlibrary.com/images/emojis/gold.png'
-    : elo <= 320 ? 'https://cdn.formatlibrary.com/images/emojis/mad.png'
-    : elo > 320 && elo <= 360 ? 'https://cdn.formatlibrary.com/images/emojis/sad.png'
-    : elo > 360 && elo <= 400 ? 'https://cdn.formatlibrary.com/images/emojis/rock.png'
+    : elo <= 400 ? 'https://cdn.formatlibrary.com/images/emojis/rock.png'
     : elo > 400 && elo <= 440 ? 'https://cdn.formatlibrary.com/images/emojis/bronze.png'
     : elo > 440 && elo <= 480 ? 'https://cdn.formatlibrary.com/images/emojis/silver.png'
     : elo > 480 && elo <= 520 ? 'https://cdn.formatlibrary.com/images/emojis/gold.png'
