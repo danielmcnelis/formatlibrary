@@ -2,7 +2,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
-import { capitalize, dateToSimple, dateToVerbose } from '@fl/utils'
+import { capitalize, dateToSimple, dateToVerbose, s3FileExists } from '@fl/utils'
 import { ReplayThumbnail } from './ReplayThumbnail'
 import { DeckImage } from '../Decks/DeckImage'
 import { NotFound } from '../General/NotFound'
@@ -235,7 +235,8 @@ export const SingleEvent = (props) => {
                                             className="single-event-winner-cell-pfp"
                                             src={
                                                 event.winner?.discordPfp ? `https://cdn.discordapp.com/avatars/${event.winner?.discordId}/${event.winner?.discordPfp}.webp` :
-                                                `https://cdn.formatlibrary.com/images/pfps/${event.winner?.name}.png`
+                                                await s3FileExists(`images/pfps/${event.winner?.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner?.name}.png` :
+                                                `https://cdn.formatlibrary.com/images/pfps/${event.winner?.discordId}.png`
                                             }
                                             onError={(e) => {
                                                 e.target.onerror = null
