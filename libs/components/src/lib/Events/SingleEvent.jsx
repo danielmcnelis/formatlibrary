@@ -113,9 +113,10 @@ export const SingleEvent = (props) => {
   useEffect(() => {
     const fetchPfpData = async () => {
         try {
-            const {data: playerIdPfpExists} = await axios.get(`https://cdn.formatlibrary.com/images/pfps/${playerId}.png`)
+            const response = await axios.get(`https://cdn.formatlibrary.com/images/pfps/${playerId}.png`)
+            console.log('response', response)
             setExistingPfps({
-                playerId: !!playerIdPfpExists
+                // playerId: !!playerIdPfpExists
             })
         } catch (err) {
             console.log(err)
