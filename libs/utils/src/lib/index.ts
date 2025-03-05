@@ -11,6 +11,7 @@ import {
   getRoundName,
   fillWithMultiples,
   ordinalize,
+  s3FileExists,
   shouldDisplay,
   underscorize,
   urlize
@@ -43,6 +44,7 @@ export {
   iso2ToCountries,
   iso2ToFips,
   ordinalize,
+  s3FileExists,
   shouldDisplay,
   timezones,
   underscorize,

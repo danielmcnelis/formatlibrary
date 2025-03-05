@@ -11,6 +11,9 @@ import { Chart as ChartJS, ArcElement, CategoryScale, BarElement, Title, LinearS
 import { Bar, Doughnut } from 'react-chartjs-2'
 import { Helmet } from 'react-helmet'
 import { getCookie } from '@fl/utils'
+const playerId = getCookie('playerId')
+const discordPfp = getCookie('discordPfp')
+const discordId = getCookie('discordId')
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -28,6 +31,16 @@ export const SingleEvent = (props) => {
     topMainDeckCards: [],
     topSideDeckCards: []
   })
+
+  const [existingPfps, setExistingPfps] = useState({ 
+    playerId: false, 
+    discordPfp: false, 
+    discordId: false, 
+    playerName: false
+  })
+
+  console.log('existingPfps', existingPfps)
+
   console.log('metagame', metagame)
 
   const { id } = useParams()
@@ -95,6 +108,39 @@ export const SingleEvent = (props) => {
 
     fetchEventData()
   }, [id, isAdmin, isSubscriber])
+
+  // USE EFFECT SET PLAYER PFPS
+  useEffect(() => {
+    const fetchPfpData = async () => {
+        try {
+            const {data: playerIdPfpExists} = await axios.get(`https://cdn.formatlibrary.com/images/pfps/${playerId}.png`)
+            setExistingPfps({
+                playerId: !!playerIdPfpExists
+            })
+        } catch (err) {
+            console.log(err)
+        }
+
+        try {
+            const {data: discordPfpExists} = await axios.get(`https://cdn.discordapp.com/avatars/${discordId}/${discordPfp}.webp`)
+            setExistingPfps({
+                discordPfp: !!discordPfpExists
+            })
+        } catch (err) {
+            console.log(err)
+        }
+
+        try {
+            const {data: discordIdPfpExists} = await axios.get(`https://cdn.formatlibrary.com/images/pfps/${discordId}.png`)
+            setExistingPfps({
+                discordId: !!discordIdPfpExists
+            })
+        } catch (err) {
+            console.log(err)
+        }
+    }
+        fetchPfpData()
+    }, [event])
 
   if (event === null) return <NotFound/>
   if (!event.name) return <div></div>
@@ -234,9 +280,10 @@ export const SingleEvent = (props) => {
                                         <img 
                                             className="single-event-winner-cell-pfp"
                                             src={
-                                                event.winner?.discordPfp ? `https://cdn.discordapp.com/avatars/${event.winner?.discordId}/${event.winner?.discordPfp}.webp` :
-                                                await s3FileExists(`images/pfps/${event.winner?.name}.png`) ? `https://cdn.formatlibrary.com/images/pfps/${event.winner?.name}.png` :
-                                                `https://cdn.formatlibrary.com/images/pfps/${event.winner?.discordId}.png`
+                                                existingPfps.playerId ? `https://cdn.formatlibrary.com/images/pfps/${event.winner?.playerId}.png` :
+                                                existingPfps.discordPfp ? `https://cdn.discordapp.com/avatars/${event.winner?.discordId}/${event.winner?.discordPfp}.webp` :
+                                                existingPfps.discordId ? `https://cdn.formatlibrary.com/images/pfps/${event.winner?.discordId}.png` :
+                                                `https://cdn.formatlibrary.com/images/pfps/${event.winner?.name}.png`
                                             }
                                             onError={(e) => {
                                                 e.target.onerror = null

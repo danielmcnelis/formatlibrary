@@ -1,3 +1,7 @@
+
+import { HeadObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { config } from '@fl/config'
+
 //CAMELIZE
 export const camelize = (str) =>
   str.replace(/['"]/g, '').replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, (match, index) => {
@@ -47,6 +51,36 @@ export const appendScript = (src, document) => {
 
     document.head.appendChild(script)
 }
+
+//S3 FILE EXISTS
+export const s3FileExists = async (filePath) => {
+    console.log('filePath', filePath)
+    const command = new HeadObjectCommand({
+        Bucket: 'formatlibrary',
+        Key: filePath,
+    })
+
+    const s3 = new S3Client({
+        region: config.s3.region,
+        credentials: {
+            accessKeyId: config.s3.credentials.accessKeyId,
+            secretAccessKey: config.s3.credentials.secretAccessKey
+        },
+    })
+
+    console.log('!!command', !!command)
+    console.log('!!s3', !!s3)
+
+    try {
+        await s3.send(command)
+        console.log(`File exists: ${filePath}`)
+        return true
+    } catch (err) {
+        console.log(`File DOES NOT exist: ${filePath}`)
+        return false
+    }
+}
+
 
 // GET ROUND NAME
 export const getRoundName = (tournament, roundInt, count) => {

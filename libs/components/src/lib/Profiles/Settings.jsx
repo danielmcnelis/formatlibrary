@@ -3,6 +3,7 @@ import { useState, useEffect, useLayoutEffect } from 'react'
 import axios from 'axios'
 import { NotFound } from '../General/NotFound'
 import { getCookie, getCountry, countries, appendScript } from '@fl/utils'
+import {PfpUploader} from './PfpUploader'
 import {Button, Form, Modal} from 'react-bootstrap'
 import { Helmet } from 'react-helmet'
 import './Settings.css'
@@ -308,18 +309,7 @@ export const Settings = () => {
             <div className="settings-profile-flexbox">
                 <div className="settings-info">
                     <div className="settings-profile-title">{name}</div>
-                    <img
-                        className="settings-pfp"
-                        src={
-                            googlePfp ? `https://lh3.googleusercontent.com/a/${googlePfp}` :
-                            `https://cdn.formatlibrary.com/images/pfps/${discordId || name}.png`}
-                        onError={(e) => {
-                                e.target.onerror = null
-                                e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
-                            }
-                        }
-                        alt="your pfp"
-                    />
+                    <PfpUploader/>
                     <div className="profile-info"> 
                         <div className="profile-line"><b>Name:</b> {firstName && lastName ? `${firstName} ${lastName}` : ''}</div>
                         <div className="profile-line"><b>DuelingBook:</b> {duelingBookName || ''}</div>
