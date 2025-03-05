@@ -32,7 +32,7 @@ export default {
                 // await updateMatchups()
                 // await purgeBetaCards(client)
                 // await downloadMissingCardImages()
-                await s3FileExists('https://cdn.formatlibrary.com/images/pfps/UeyvnNBD6CD53gsqRQsxCY.png')
+                await s3FileExists('images/pfps/UeyvnNBD6CD53gsqRQsxCY.png')
                 // return await downloadOriginalArtworks(client)
                 // return downloadMissingCardImages()
                 // return lookForAllPotentialPairs(client)
