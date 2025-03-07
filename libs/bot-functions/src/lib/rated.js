@@ -576,13 +576,16 @@ export const deleteRatedDeck = async (user, yourRatedDecks, format) => {
         let previousRatedDeck = index >= 0 ? yourRatedDecks[index] : false
 
         if (previousRatedDeck) {
+            console.log('previousRatedDeck 579', previousRatedDeck)
             yourRatedDecks = yourRatedDecks.splice(index, 1)
+            console.log('yourRatedDecks', yourRatedDecks)
 
             previousRatedDeck = await Deck.findOne({
                 where: {
                     id: previousRatedDeck?.id
                 }
             })
+            console.log('previousRatedDeck 588', previousRatedDeck)
 
             await previousRatedDeck.delete()
             return yourRatedDecks
