@@ -499,17 +499,17 @@ export const getPreviousRatedDeck = async (user, player, yourRatedDecks, format)
     }).then(async (collected) => {
         const response = collected.first().content
         const index = !isNaN(parseInt(response)) ? parseInt(response) - 1 : null
-        if (index === options.length - 2) {
+        if (index === options.length - 3) {
             return await getNewRatedDeck(user, player, format)
-        } else if (index === options.length - 1) {
+        } else if (index === options.length - 2) {
             const deckToReplace = await getRatedDeckToReplace(user, yourRatedDecks, format)
             const newRatedDeck = await getNewRatedDeck(user, player, format, deckToReplace)
             return newRatedDeck
-        } else if (index === options.length) {
+        } else if (index === options.length - 1) {
             yourRatedDecks = await deleteRatedDeck(user, yourRatedDecks, format)
             return getPreviousRatedDeck(user, player, yourRatedDecks, format)
         } else {
-            let previousRatedDeck = index >= 0 ? yourRatedDecks[index] : false
+            let previousRatedDeck = index >= 0 && index < options.length - 3 ? yourRatedDecks[index] : false
 
             previousRatedDeck = await Deck.findOne({
                 where: {
