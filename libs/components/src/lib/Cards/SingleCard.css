@@ -20,7 +20,7 @@
     width: 300px;
 }
 
-.centered-vertical-flex {
+.vertical-centered-flexbox {
     display: flex;
     flex-direction: column;
     align-items: center;

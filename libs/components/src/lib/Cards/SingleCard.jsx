@@ -149,7 +149,7 @@ export const SingleCard = (props) => {
             }
             <div className="body">
                 <div className="single-card">
-                    <div className="centered-vertical-flex">
+                    <div className="vertical-centered-flexbox">
                         <img className="single-card-image" src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`} alt={card.name}/>
                         <div className="space-apart" style={{margin: '24px 0px'}}>
                         {

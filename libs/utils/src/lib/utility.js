@@ -54,7 +54,6 @@ export const appendScript = (src, document) => {
 
 //S3 FILE EXISTS
 export const s3FileExists = async (filePath) => {
-    console.log('filePath', filePath)
     const command = new HeadObjectCommand({
         Bucket: 'formatlibrary',
         Key: filePath,
@@ -67,9 +66,6 @@ export const s3FileExists = async (filePath) => {
             secretAccessKey: config.s3.credentials.secretAccessKey
         },
     })
-
-    console.log('!!command', !!command)
-    console.log('!!s3', !!s3)
 
     try {
         await s3.send(command)

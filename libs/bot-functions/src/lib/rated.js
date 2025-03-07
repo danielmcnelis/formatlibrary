@@ -478,10 +478,16 @@ export const getRatedFormat = async (interaction) => {
 }
 
 //GET PREVIOUS RATED DECK
-export const getPreviousRatedDeck = async (user, yourRatedDecks, format) => {   
+export const getPreviousRatedDeck = async (user, player, yourRatedDecks, format) => {   
     if (!yourRatedDecks || !yourRatedDecks.length) return false
     const options = yourRatedDecks.map((yRD, index) => `(${index + 1}) - ${yRD.name} - <https://formatlibrary.com/deck-builder/${yRD.id}>`)
-    options.push(`(${options.length + 1}) - Submit a New Deck`)
+    options.push(`(${options.length + 1}) - Submit and use a new deck`)
+    if (yourRatedDecks.length) { 
+        options.push(
+            `(${options.length + 1}) - Replace and use a new deck`,
+            `(${options.length + 2}) - Delete a deck`
+        )
+    }
 
     const filter = m => m.author.id === user.id
     const message = await user.send({ content: `Which of your ${format.name} Format ${format.emoji} Rated deck(s) would you like to use?\n${options.join('\n')}`}).catch((err) => console.log(err))
@@ -493,11 +499,50 @@ export const getPreviousRatedDeck = async (user, yourRatedDecks, format) => {
     }).then(async (collected) => {
         const response = collected.first().content
         const index = !isNaN(parseInt(response)) ? parseInt(response) - 1 : null
-        let previousRatedDeck = response.includes('new') || index === options.length ? false : 
-            index >= 0 ? yourRatedDecks[index] :
-            false
+        if (index === options.length - 2) {
+            return await getNewRatedDeck(user, player, format)
+        } else if (index === options.length - 1) {
+            const deckToReplace = await getRatedDeckToReplace(user, yourRatedDecks, format)
+            const newRatedDeck = await getNewRatedDeck(user, player, format, deckToReplace)
+            return newRatedDeck
+        } else if (index === options.length) {
+            yourRatedDecks = await deleteRatedDeck(user, yourRatedDecks, format)
+            return getPreviousRatedDeck(user, player, yourRatedDecks, format)
+        } else {
+            let previousRatedDeck = index >= 0 ? yourRatedDecks[index] : false
 
-        if (!previousRatedDeck) return false
+            previousRatedDeck = await Deck.findOne({
+                where: {
+                    id: previousRatedDeck?.id
+                }
+            })
+
+            return previousRatedDeck
+        }
+    }).catch((err) => {
+        console.log(err)
+        user.send({ content: `Sorry, time's up. Please try again.`}).catch((err) => console.log(err))
+        return undefined
+    })
+}
+
+
+//GET RATED DECK TO REPLACE
+export const getRatedDeckToReplace = async (user, yourRatedDecks, format) => {   
+    if (!yourRatedDecks || !yourRatedDecks.length) return false
+    const options = yourRatedDecks.map((yRD, index) => `(${index + 1}) - ${yRD.name} - <https://formatlibrary.com/deck-builder/${yRD.id}>`)
+
+    const filter = m => m.author.id === user.id
+    const message = await user.send({ content: `Which of your ${format.name} Format ${format.emoji} Rated deck(s) would you like to replace?\n${options.join('\n')}`}).catch((err) => console.log(err))
+    if (!message || !message.channel) return false
+    return await message.channel.awaitMessages({
+        filter,
+        max: 1,
+        time: 5 * 60 * 1000
+    }).then(async (collected) => {
+        const response = collected.first().content
+        const index = !isNaN(parseInt(response)) ? parseInt(response) - 1 : null
+        let previousRatedDeck = index >= 0 ? yourRatedDecks[index] : false
 
         previousRatedDeck = await Deck.findOne({
             where: {
@@ -509,12 +554,43 @@ export const getPreviousRatedDeck = async (user, yourRatedDecks, format) => {
     }).catch((err) => {
         console.log(err)
         user.send({ content: `Sorry, time's up. Please try again.`}).catch((err) => console.log(err))
-        return false
+        return undefined
+    })
+}
+
+//DELETE RATED DECK
+export const deleteRatedDeck = async (user, yourRatedDecks, format) => {   
+    if (!yourRatedDecks || !yourRatedDecks.length) return false
+    const options = yourRatedDecks.map((yRD, index) => `(${index + 1}) - ${yRD.name} - <https://formatlibrary.com/deck-builder/${yRD.id}>`)
+
+    const filter = m => m.author.id === user.id
+    const message = await user.send({ content: `Which of your ${format.name} Format ${format.emoji} Rated deck(s) would you like to delete?\n${options.join('\n')}`}).catch((err) => console.log(err))
+    if (!message || !message.channel) return false
+    return await message.channel.awaitMessages({
+        filter,
+        max: 1,
+        time: 5 * 60 * 1000
+    }).then(async (collected) => {
+        const response = collected.first().content
+        const index = !isNaN(parseInt(response)) ? parseInt(response) - 1 : null
+        let previousRatedDeck = index >= 0 ? yourRatedDecks[index] : false
+
+        if (previousRatedDeck) {
+            yourRatedDecks = yourRatedDecks.splice(index, 1)
+            await previousRatedDeck.delete()
+            return yourRatedDecks
+        } else {
+            return yourRatedDecks
+        }
+    }).catch((err) => {
+        console.log(err)
+        user.send({ content: `Sorry, time's up. Please try again.`}).catch((err) => console.log(err))
+        return undefined
     })
 }
 
 //GET NEW RATED DECK
-export const getNewRatedDeck = async (user, player, format) => {   
+export const getNewRatedDeck = async (user, player, format, deckToReplace) => {   
     const filter = m => m.author.id === user.id
     const message = await user.send({ content: `To submit a new deck, please either:\n- copy and paste a **__YDKe code__**\n- upload a **__YDK file__**`}).catch((err) => console.log(err))
     if (!message || !message.channel) return false
@@ -578,30 +654,41 @@ export const getNewRatedDeck = async (user, player, format) => {
                 return false
              } else {
                 user.send({ content: `Thanks, ${user.username}, your deck is perfectly legal. ${emojis.legend}`}).catch((err) => console.log(err))
-                const deckName = await askForDeckName(user, player) || 'Unnamed Deck'
-                const newRatedDeck = await Deck.create({
-                    builderName: player.name,
-                    formatName: format.name,
-                    formatId: format.id,
-                    name: deckName,
-                    url: url,
-                    ydk: ydk,
-                    origin: 'user',
-                    builderId: player.id
-                })
-
-                return newRatedDeck
+                if (deckToReplace) {
+                    await deckToReplace.update({
+                        url: url,
+                        ydk: ydk
+                    })
+    
+                    return deckToReplace
+                } else {
+                    const deckName = await askForDeckName(user, player) || 'Unnamed Deck'
+                    const newRatedDeck = await Deck.create({
+                        builderName: player.name,
+                        formatName: format.name,
+                        formatId: format.id,
+                        name: deckName,
+                        url: url,
+                        ydk: ydk,
+                        origin: 'user',
+                        builderId: player.id
+                    })
+    
+                    return newRatedDeck
+                }
             }
         } else {
             user.send({ content: "Sorry, I only accept **__YDK files__** or **__YDKe codes__**."}).catch((err) => console.log(err))    
-            return false  
+            return undefined  
         }
     }).catch((err) => {
         console.log(err)
         user.send({ content: `Sorry, time's up. Please try again.`}).catch((err) => console.log(err))
-        return false
+        return undefined
     })
 }
+
+
 
 //ASK FOR DECK NAME
 export const askForDeckName = async (member, player, override = false) => {

@@ -407,7 +407,7 @@ export const CardTable = () => {
       setQueryParams(() => {
         return {
           ...queryParams,
-          [id]: document.getElementById('search-bar').value,
+          [id]: id,
           [otherId]: null
         }
       })

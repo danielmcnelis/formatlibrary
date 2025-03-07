@@ -21,9 +21,10 @@ const getRatedInformation = async (interaction, player, format) => {
                     '$server.access$': 'full',
                     '$server.formatName$': format.name
                 }
-            }, 
+            },
             include: Server
         })
+
         const server = membership?.server
         if (!membership || !server) return await interaction.user.send(`Sorry, you are not a member of a server that supports rated play for ${format.name} Format. ${format.emoji}`)
         const guild = client.guilds.cache.get(server?.id)
@@ -42,10 +43,12 @@ const getRatedInformation = async (interaction, player, format) => {
         }) || []
 
         let ratedDeck
-        ratedDeck = await getPreviousRatedDeck(interaction.user, yourRatedDecks, format)
+        ratedDeck = await getPreviousRatedDeck(interaction.user, player, yourRatedDecks, format)
         
-        if (!ratedDeck) {
+        if (!yourRatedDecks.length) {
             ratedDeck = await getNewRatedDeck(interaction.user, player, format)
+        } else if (!ratedDeck || !ratedDeck.ydk) {
+            return
         }
         
         if (!ratedDeck || !ratedDeck.ydk) return
@@ -95,7 +98,7 @@ const getRatedInformation = async (interaction, player, format) => {
             return await interaction.user.send(`You've resubmitted your deck for the ${format.name} Rated Pool. ${format.emoji} You'll receive a DM when you're paired.`)
         }
     } catch (err) {
-        console.log(err)
+        return console.log(err)
     }
 }
 

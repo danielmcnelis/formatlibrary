@@ -266,7 +266,8 @@ export const getEventById = async (req, res, next) => {
             (a: any, b: any) => b[1] - a[1]
         ) : []
 
-    topDeckConversions.forEach((el) => el.push([...[deckTypes.find((e) => e[0] === el[0])]][2]))
+    // @ts-ignore
+    topDeckConversions.forEach((el) => el.push(deckTypes.find((e) => e[0] === el[0])[2]))
 
     const mainDeckCards = []
     const sideDeckCards = []
@@ -426,7 +427,7 @@ export const getEventByIdAsSubscriber = async (req, res, next) => {
 
       const topDecks = await Deck.findAll({
         where: {
-          display: {[Op.or]: [true, false]},
+          display: true,
           [Op.or]: {
             eventAbbreviation: event.abbreviation,
             eventId: event.id
@@ -469,7 +470,8 @@ export const getEventByIdAsSubscriber = async (req, res, next) => {
             (a: any, b: any) => b[1] - a[1]
         ) : []
 
-    topDeckConversions.forEach((el) => el.push([...[deckTypes.find((e) => e[0] === el[0])]][2]))
+    // @ts-ignore
+    topDeckConversions.forEach((el) => el.push(deckTypes.find((e) => e[0] === el[0])[2]))
         
         
       const mainDeckCards = []

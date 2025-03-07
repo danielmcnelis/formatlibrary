@@ -52,7 +52,7 @@ export const PfpUploader = (props) => {
     }
 
     return (
-        <div>
+        <div className='vertical-centered-flexbox'>
             <img
                 className="settings-pfp"
                 src={
@@ -69,16 +69,15 @@ export const PfpUploader = (props) => {
                 }
                 alt="your pfp"
             />
-            <label>Image:
-                <input
-                    id="image"
-                    type="file"
-                    accept=".png"
-                    onChange={(e) => {
-                        readImage(e.target.files[0])}
-                    }
-                />
-            </label>
+            <label>Upload New Profile Picture:</label>
+            <input
+                id="image"
+                type="file"
+                accept=".png"
+                onChange={(e) => {
+                    readImage(e.target.files[0])}
+                }
+            />
             <div
                 className="admin-button"
                 type="submit"

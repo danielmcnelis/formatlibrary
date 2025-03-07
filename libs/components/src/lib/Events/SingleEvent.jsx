@@ -2,7 +2,8 @@
 import { useState, useEffect, useLayoutEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
-import { capitalize, dateToSimple, dateToVerbose, s3FileExists } from '@fl/utils'
+import { capitalize, dateToSimple, dateToVerbose } from '@fl/utils'
+// import { s3FileExists } from '@fl/bot-functions'
 import { ReplayThumbnail } from './ReplayThumbnail'
 import { DeckImage } from '../Decks/DeckImage'
 import { NotFound } from '../General/NotFound'
@@ -39,7 +40,6 @@ export const SingleEvent = (props) => {
     playerName: false
   })
 
-  console.log('existingPfps', existingPfps)
 
   console.log('metagame', metagame)
 
@@ -110,38 +110,31 @@ export const SingleEvent = (props) => {
   }, [id, isAdmin, isSubscriber])
 
   // USE EFFECT SET PLAYER PFPS
-  useEffect(() => {
-    const fetchPfpData = async () => {
-        try {
-            const response = await axios.get(`https://cdn.formatlibrary.com/images/pfps/${playerId}.png`)
-            console.log('response', response)
-            setExistingPfps({
-                // playerId: !!playerIdPfpExists
-            })
-        } catch (err) {
-            console.log(err)
-        }
+//   useEffect(() => {
+//     const fetchPfpData = async () => {
+//         try {
+//             const {status: playerIdPfpStatus} = await axios.head(`https://d3aqltmlblhi1i.cloudfront.net/images/pfps/${playerId}.png`)
+//             setExistingPfps({...existingPfps, playerId: !!playerIdPfpStatus})
+//         } catch (err) {
+//             console.log(`axios.head(https://d3aqltmlblhi1i.cloudfront.net/images/pfps/${playerId}.png)\n`, err)
+//         }
 
-        try {
-            const {data: discordPfpExists} = await axios.get(`https://cdn.discordapp.com/avatars/${discordId}/${discordPfp}.webp`)
-            setExistingPfps({
-                discordPfp: !!discordPfpExists
-            })
-        } catch (err) {
-            console.log(err)
-        }
+//         try {
+//             const {status: discordPfpStatus} = await axios.head(`https://cdn.discordapp.com/avatars/${discordId}/${discordPfp}.webp`)
+//             setExistingPfps({...existingPfps, discordPfp: !!discordPfpStatus})
+//         } catch (err) {
+//             console.log(err)
+//         }
 
-        try {
-            const {data: discordIdPfpExists} = await axios.get(`https://cdn.formatlibrary.com/images/pfps/${discordId}.png`)
-            setExistingPfps({
-                discordId: !!discordIdPfpExists
-            })
-        } catch (err) {
-            console.log(err)
-        }
-    }
-        fetchPfpData()
-    }, [event])
+//         try {
+//             const {status: discordIdPfpStatus} = await axios.head(`https://d3aqltmlblhi1i.cloudfront.net/images/pfps/${discordId}.png`)
+//             setExistingPfps({...existingPfps, discordId: discordIdPfpStatus === 200})
+//         } catch (err) {
+//             console.log(`axios.head(https://d3aqltmlblhi1i.cloudfront.net/images/pfps/${discordId}.png)\n`, err)
+//         }
+//     }
+//         fetchPfpData()
+//     }, [])
 
   if (event === null) return <NotFound/>
   if (!event.name) return <div></div>
@@ -281,10 +274,11 @@ export const SingleEvent = (props) => {
                                         <img 
                                             className="single-event-winner-cell-pfp"
                                             src={
-                                                existingPfps.playerId ? `https://cdn.formatlibrary.com/images/pfps/${event.winner?.playerId}.png` :
-                                                existingPfps.discordPfp ? `https://cdn.discordapp.com/avatars/${event.winner?.discordId}/${event.winner?.discordPfp}.webp` :
-                                                existingPfps.discordId ? `https://cdn.formatlibrary.com/images/pfps/${event.winner?.discordId}.png` :
-                                                `https://cdn.formatlibrary.com/images/pfps/${event.winner?.name}.png`
+                                                `https://cdn.formatlibrary.com/images/pfps/${winner?.discordId || winner?.name}.png`
+                                                // `https://cdn.formatlibrary.com/images/pfps/${playerId}.png` 
+                                                // existingPfps.discordPfp ? `https://cdn.discordapp.com/avatars/${event.winner?.discordId}/${event.winner?.discordPfp}.webp` :
+                                                // existingPfps.discordId ? `https://cdn.formatlibrary.com/images/pfps/${event.winner?.discordId}.png` :
+                                                // `https://cdn.formatlibrary.com/images/pfps/${event.winner?.name}.png`
                                             }
                                             onError={(e) => {
                                                 e.target.onerror = null
