@@ -577,6 +577,13 @@ export const deleteRatedDeck = async (user, yourRatedDecks, format) => {
 
         if (previousRatedDeck) {
             yourRatedDecks = yourRatedDecks.splice(index, 1)
+
+            previousRatedDeck = await Deck.findOne({
+                where: {
+                    id: previousRatedDeck?.id
+                }
+            })
+
             await previousRatedDeck.delete()
             return yourRatedDecks
         } else {
@@ -655,6 +662,13 @@ export const getNewRatedDeck = async (user, player, format, deckToReplace) => {
              } else {
                 user.send({ content: `Thanks, ${user.username}, your deck is perfectly legal. ${emojis.legend}`}).catch((err) => console.log(err))
                 if (deckToReplace) {
+
+                    deckToReplace = await Deck.findOne({
+                        where: {
+                            id: deckToReplace?.id
+                        }
+                    })
+                    
                     await deckToReplace.update({
                         url: url,
                         ydk: ydk
