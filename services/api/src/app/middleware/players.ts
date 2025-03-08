@@ -3,6 +3,7 @@ import { Op } from 'sequelize'
 import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
 import { config } from '@fl/config'
+import axios from 'axios';
 import * as bcrypt from 'bcrypt'
 
 export const getPlayerRoles = async (req, res, next) => {
@@ -75,6 +76,46 @@ export const getPlayers = async (req, res, next) => {
   } catch (err) {
     next(err)
   }
+}
+
+// GET PLAYER AVATAR BY ID
+export const getPlayerAvatarById = async (req, res, next) => {
+    const playerId = req.params.id
+    const player = await Player.findOne({
+        where: {
+            id: playerId
+        },
+        attributes: ['id', 'name', 'discordId', 'googlePfp', 'discordPfp']
+    })
+
+    try {
+        await axios.head(`https://cdn.formatlibrary.com/images/pfps/${playerId}.png`)
+        return res.redirect(`https://cdn.formatlibrary.com/images/pfps/${playerId}.png`)    
+    } catch (err) {
+        console.log('PlayerId PFP Not Found.')
+    }
+
+    try {
+        await axios.head(`https://cdn.discordapp.com/avatars/${player.discordId}/${player.discordPfp}.webp`)
+        return res.redirect(`https://cdn.discordapp.com/avatars/${player.discordId}/${player.discordPfp}.webp`)
+    } catch (err) {
+        console.log('DiscordPfp PFP Not Found.')
+    }
+
+    try {
+        await axios.head(`https://cdn.formatlibrary.com/images/pfps/${player.discordId}.png`)
+        return res.redirect(`https://cdn.formatlibrary.com/images/pfps/${player.discordId}.png`)
+    } catch (err) {
+        console.log('DiscordId PFP Not Found.')
+    }
+
+    try {
+        await axios.head(`https://cdn.formatlibrary.com/images/pfps/${player.name}.png`)
+        return res.redirect(`https://cdn.formatlibrary.com/images/pfps/${player.name}.png`)
+    } catch (err) {
+        console.log('PlayerName PFP Not Found.')
+        return res.redirect(`https://cdn.discordapp.com/embed/avatars/3.png`)
+    }
 }
 
 export const updatePassword = async (req, res, next) => {

@@ -17,12 +17,7 @@ export const ReplayThumbnail = (props = {}) => {
                     <div className="replay-player">
                         <img 
                             className="thumbnail-player-pfp" 
-                            src={`https://cdn.formatlibrary.com/images/pfps/${winner.discordId || winner.name}.png`}
-                            onError={(e) => {
-                                    e.target.onerror = null
-                                    e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
-                                }
-                            }
+                            src={`/api/players/${winner.id}/avatar`}
                             alt={winner.name}
                         />                
                         <p className="playerName">{winner.name}</p>
@@ -37,12 +32,7 @@ export const ReplayThumbnail = (props = {}) => {
                     <div className="replay-player">
                         <img 
                             className="thumbnail-player-pfp" 
-                            src={`https://cdn.formatlibrary.com/images/pfps/${loser.discordId || loser.name}.png`}
-                            onError={(e) => {
-                                    e.target.onerror = null
-                                    e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
-                                }
-                            }
+                            src={`/api/players/${loser.id}/avatar`}
                             alt={loser.name}
                         />
                         <p className="playerName">{loser.name}</p>

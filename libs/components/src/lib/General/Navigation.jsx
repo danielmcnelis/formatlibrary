@@ -2,11 +2,7 @@
 import { Link } from 'react-router-dom'
 import { getCookie } from '@fl/utils'
 import './Navigation.css'
-
 const playerId = getCookie('playerId')
-const discordId = getCookie('discordId')
-const discordPfp = getCookie('discordPfp')
-const googlePfp = getCookie('googlePfp')
 
 // TOGGLE
 const toggle = () => {
@@ -81,15 +77,7 @@ export const Navigation = (props) => {
                         <a href="/settings/">
                             <img
                                 className="avatar"
-                                src={
-                                    googlePfp ? `https://lh3.googleusercontent.com/a/${googlePfp}` :
-                                    discordPfp && discordId ? `https://cdn.discordapp.com/avatars/${discordId}/${discordPfp}.webp` :
-                                    `https://cdn.formatlibrary.com/images/pfps/${discordId}.png`}
-                                onError={(e) => {
-                                        e.target.onerror = null
-                                        e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
-                                    }
-                                }
+                                src={`/api/players/${playerId}/avatar`}  
                                 alt="avatar"
                             />
                         </a>

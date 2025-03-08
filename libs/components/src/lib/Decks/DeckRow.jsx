@@ -41,13 +41,8 @@ export const DeckRow = (props) => {
                 <div className="player-cell">
                   <img 
                       className="player-cell-pfp"
-                      src={`https://cdn.formatlibrary.com/images/pfps/${deck.builder?.discordId || deck.builderName}.png`}                    
+                      src={`/api/players/${deck.builder?.id}/avatar`}                   
                       alt={`${deck.builderName}`}
-                      onError={(e) => {
-                              e.target.onerror = null
-                              e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
-                          }
-                      }
                   />
                   <div>{deck.builderName || '-'}</div>
                 </div>

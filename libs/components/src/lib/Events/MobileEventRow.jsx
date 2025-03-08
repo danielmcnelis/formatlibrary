@@ -36,17 +36,7 @@ export const MobileEventRow = (props) => {
                     <div className="player-cell">
                         <img 
                             className="player-cell-pfp"
-                            src={
-                                event.winner?.playerId ? `https://cdn.formatlibrary.com/images/pfps/${playerId}.png` :
-                                event.winner?.discordPfp ? `https://cdn.discordapp.com/avatars/${event.winner?.discordId}/${event.winner?.discordPfp}.webp` :
-                                event.winner?.discordId ? `https://cdn.formatlibrary.com/images/pfps/${event.winner?.discordId}.png` :
-                                `https://cdn.formatlibrary.com/images/pfps/${event.winner?.name}.png`
-                            }
-                            onError={(e) => {
-                                    e.target.onerror = null
-                                    e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
-                                }
-                            }
+                            src={`/api/players/${event?.winner?.id}/avatar`}
                             alt={event.winnerName}
                         />
                     </div>

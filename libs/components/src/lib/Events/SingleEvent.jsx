@@ -22,177 +22,178 @@ export const SingleEvent = (props) => {
     const isAdmin = props.roles?.admin
     const isSubscriber = props.roles?.subscriber
 
-  const [event, setEvent] = useState({})
-  const [winner, setWinner] = useState({})
-  const [replays, setReplays] = useState({})
-  const [topDecks, setTopDecks] = useState({})
-  const [metagame, setMetagame] = useState({
-    deckTypes: [],
-    topDeckConversions: [],
-    topMainDeckCards: [],
-    topSideDeckCards: []
-  })
+    const [event, setEvent] = useState({})
+    const [winner, setWinner] = useState({})
+    const [winnerPfp, setWinnerPfp] = useState(`https://cdn.discordapp.com/embed/avatars/1.png`)
+    const [replays, setReplays] = useState({})
+    const [topDecks, setTopDecks] = useState({})
+    const [metagame, setMetagame] = useState({
+        deckTypes: [],
+        topDeckConversions: [],
+        topMainDeckCards: [],
+        topSideDeckCards: []
+    })
 
-  const [existingPfps, setExistingPfps] = useState({ 
-    playerId: false, 
-    discordPfp: false, 
-    discordId: false, 
-    playerName: false
-  })
+    // const [existingPfps, setExistingPfps] = useState({ 
+    //     playerId: false, 
+    //     discordPfp: false, 
+    //     discordId: false, 
+    //     playerName: false
+    // })
 
 
-  console.log('metagame', metagame)
+    console.log('metagame', metagame)
 
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const [labelColor, gridColor] = JSON.parse(localStorage.getItem('theme')) === 'dark' ? ['#ccc', '#313131'] : ['#666', '#e1e1e1']
-//   const videoPlaylistId = event?.format?.videoPlaylistId
+    const { id } = useParams()
+    const navigate = useNavigate()
+    const [labelColor, gridColor] = JSON.parse(localStorage.getItem('theme')) === 'dark' ? ['#ccc', '#313131'] : ['#666', '#e1e1e1']
+    //   const videoPlaylistId = event?.format?.videoPlaylistId
 
-  let extension =  (winner?.name || '').replaceAll('%', '%25')
-    .replaceAll('/', '%2F')
-    .replaceAll(' ', '_')
-    .replaceAll('#', '%23')
-    .replaceAll('?', '%3F')
-    .replaceAll('&', '%26')
-    .replaceAll('★', '_')
+    let extension =  (winner?.name || '').replaceAll('%', '%25')
+        .replaceAll('/', '%2F')
+        .replaceAll(' ', '_')
+        .replaceAll('#', '%23')
+        .replaceAll('?', '%3F')
+        .replaceAll('&', '%26')
+        .replaceAll('★', '_')
 
-  const goToFormat = () => navigate(`/formats/${event.formatName || null}`)
-  const goToPlayer = () => navigate(`/players/${extension}`)
-  
-  const communityLink = event.server?.inviteLink ? event.server?.inviteLink :
-    event.communityName === 'Konami' ? 'https://www.yugioh-card.com/en/events/' :
-    event.communityName === 'Upper Deck Entertainment' ? 'https://upperdeck.com/entertainment/' :
-    'https://formatlibrary.com/cards/lost-world'
+    const goToFormat = () => navigate(`/formats/${event.formatName || null}`)
+    const goToPlayer = () => navigate(`/players/${extension}`)
+    
+    const communityLink = event.server?.inviteLink ? event.server?.inviteLink :
+        event.communityName === 'Konami' ? 'https://www.yugioh-card.com/en/events/' :
+        event.communityName === 'Upper Deck Entertainment' ? 'https://upperdeck.com/entertainment/' :
+        'https://formatlibrary.com/cards/lost-world'
 
-  const goToCommunity = () => window.open(communityLink, "_blank")
+    const goToCommunity = () => window.open(communityLink, "_blank")
 
-  // USE LAYOUT EFFECT
-  useLayoutEffect(() => window.scrollTo(0, 0), [])
+    // USE LAYOUT EFFECT
+    useLayoutEffect(() => window.scrollTo(0, 0), [])
 
-  // USE EFFECT SET CARD
-  useEffect(() => {
-    const fetchEventData = async () => {
-        // If user is subscriber or admin: Hit a different endpoint that requires authentication
-        if (isAdmin || isSubscriber) {
-            try {
-                const accessToken = getCookie('access')
-                const {data} = await axios.get(`/api/events/subscriber/${id}`, {
-                    headers: {
-                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                    }
-                })
+    // USE EFFECT SET CARD
+    useEffect(() => {
+        const fetchEventData = async () => {
+            // If user is subscriber or admin: Hit a different endpoint that requires authentication
+            if (isAdmin || isSubscriber) {
+                try {
+                    const accessToken = getCookie('access')
+                    const {data} = await axios.get(`/api/events/subscriber/${id}`, {
+                        headers: {
+                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                        }
+                    })
 
-                setEventData(data)
-            } catch (err) {
-                console.log(err)
-                setEvent(null)
+                    setEventData(data)
+                } catch (err) {
+                    console.log(err)
+                    setEvent(null)
+                }
+            } else {
+                try {
+                    const {data} = await axios.get(`/api/events/${id}`)
+                    setEventData(data)
+                } catch (err) {
+                    console.log(err)
+                    setEvent(null)
+                }
             }
-        } else {
-            try {
-                const {data} = await axios.get(`/api/events/${id}`)
-                setEventData(data)
-              } catch (err) {
-                console.log(err)
-                setEvent(null)
-              }
         }
-    }
 
-    const setEventData = (data) => {
-        setEvent(data.event)
-        setWinner(data.event.winner || data.event.team)
-        setReplays(data.replays)
-        setTopDecks(data.topDecks)
-        setMetagame(data.metagame)
-    }
+        const setEventData = (data) => {
+            setEvent(data.event)
+            setWinner(data.event.winner || data.event.team)
+            setReplays(data.replays)
+            setTopDecks(data.topDecks)
+            setMetagame(data.metagame)
+        }
 
-    fetchEventData()
-  }, [id, isAdmin, isSubscriber])
+        fetchEventData()
+    }, [id, isAdmin, isSubscriber])
 
-  // USE EFFECT SET PLAYER PFPS
-//   useEffect(() => {
-//     const fetchPfpData = async () => {
-//         try {
-//             const {status: playerIdPfpStatus} = await axios.head(`https://d3aqltmlblhi1i.cloudfront.net/images/pfps/${playerId}.png`)
-//             setExistingPfps({...existingPfps, playerId: !!playerIdPfpStatus})
-//         } catch (err) {
-//             console.log(`axios.head(https://d3aqltmlblhi1i.cloudfront.net/images/pfps/${playerId}.png)\n`, err)
-//         }
+    // USE EFFECT SET PLAYER PFPS
+    // useEffect(() => {
+    //     const fetchPfpData = async () => {
+    //         try {
+    //             const {status: playerIdPfpStatus} = await axios.head(`https://cdn.formatlibrary.com/images/pfps/${playerId}.png`)
+    //             setExistingPfps({...existingPfps, playerId: !!playerIdPfpStatus})
+    //         } catch (err) {
+    //             console.log(`axios.head(https://cdn.formatlibrary.com/images/pfps/${playerId}.png)\n`, err)
+    //         }
 
-//         try {
-//             const {status: discordPfpStatus} = await axios.head(`https://cdn.discordapp.com/avatars/${discordId}/${discordPfp}.webp`)
-//             setExistingPfps({...existingPfps, discordPfp: !!discordPfpStatus})
-//         } catch (err) {
-//             console.log(err)
-//         }
+    //         try {
+    //             const {status: discordPfpStatus} = await axios.head(`https://cdn.discordapp.com/avatars/${discordId}/${discordPfp}.webp`)
+    //             setExistingPfps({...existingPfps, discordPfp: !!discordPfpStatus})
+    //         } catch (err) {
+    //             console.log(err)
+    //         }
 
-//         try {
-//             const {status: discordIdPfpStatus} = await axios.head(`https://d3aqltmlblhi1i.cloudfront.net/images/pfps/${discordId}.png`)
-//             setExistingPfps({...existingPfps, discordId: discordIdPfpStatus === 200})
-//         } catch (err) {
-//             console.log(`axios.head(https://d3aqltmlblhi1i.cloudfront.net/images/pfps/${discordId}.png)\n`, err)
-//         }
-//     }
-//         fetchPfpData()
-//     }, [])
+    //         try {
+    //             const {status: discordIdPfpStatus} = await axios.head(`https://cdn.formatlibrary.com/images/pfps/${discordId}.png`)
+    //             setExistingPfps({...existingPfps, discordId: discordIdPfpStatus === 200})
+    //         } catch (err) {
+    //             console.log(`axios.head(https://cdn.formatlibrary.com/images/pfps/${discordId}.png)\n`, err)
+    //         }
+    //     }
+    //         fetchPfpData()
+    //     }, [])
 
-  if (event === null) return <NotFound/>
-  if (!event.name) return <div></div>
-  if (!event.format) return <div></div>
+    if (event === null) return <NotFound/>
+    if (!event.name) return <div></div>
+    if (!event.format) return <div></div>
 
-  const formatArtwork = `https://cdn.formatlibrary.com/images/artworks/${event.format.icon}.jpg` || ''
-  
-  const colors = [
-      '#3d72e3', '#ff3c2e', '#ffd000', '#47ad53', '#43578f', '#b25cd6',
-      '#6d9399', '#f5881b', '#31ada5', '#ffcd19', '#cf8ac5', '#8a8dcf', 
-      '#d65180', '#307a3a', '#735645', '#fc8c1c', '#8dc276', '#c4495f', 
-      '#3e8cbd', '#b865cf', '#fcdc5b', '#43d1a2', '#452194', '#d96827', 
-      '#79b096', '#5c8fe0', '#9474b0', '#2b9dbd', '#eb692d', '#93c951'
-  ]
-
-  const deckTypeData = metagame.deckTypes?.length ? {
-    labels: metagame.deckTypes.map((e) => e[0]),
-    datasets: [
-      {
-        data: metagame.deckTypes.map((e) => e[1]),
-        backgroundColor: metagame.deckTypes.map((e) => e[2]),
-        borderWidth: 1,
-      },
+    const formatArtwork = `https://cdn.formatlibrary.com/images/artworks/${event.format.icon}.jpg` || ''
+    
+    const colors = [
+        '#3d72e3', '#ff3c2e', '#ffd000', '#47ad53', '#43578f', '#b25cd6',
+        '#6d9399', '#f5881b', '#31ada5', '#ffcd19', '#cf8ac5', '#8a8dcf', 
+        '#d65180', '#307a3a', '#735645', '#fc8c1c', '#8dc276', '#c4495f', 
+        '#3e8cbd', '#b865cf', '#fcdc5b', '#43d1a2', '#452194', '#d96827', 
+        '#79b096', '#5c8fe0', '#9474b0', '#2b9dbd', '#eb692d', '#93c951'
     ]
-  } : {}
 
-  const conversionRateData = metagame.topDeckConversions?.length ? {
-    labels: metagame.topDeckConversions.map((e) => e[0]),
-    datasets: [
-      {
-        data: metagame.topDeckConversions.map((e) => e[1]),
-        backgroundColor: metagame.topDeckConversions.map((e) => e[2]),
-        borderWidth: 1,
-      },
-    ]
-  } : {}
+    const deckTypeData = metagame.deckTypes?.length ? {
+        labels: metagame.deckTypes.map((e) => e[0]),
+        datasets: [
+        {
+            data: metagame.deckTypes.map((e) => e[1]),
+            backgroundColor: metagame.deckTypes.map((e) => e[2]),
+            borderWidth: 1,
+        },
+        ]
+    } : {}
 
-  const topMainDeckCardsData = metagame.topMainDeckCards?.length ? {
-    labels: metagame.topMainDeckCards.map((e) => e[0].length <= 30 ? e[0] : e[0].slice(0, 30).split(' ').slice(0, -1).join(' ')),
-    datasets: [
-      {
-        label: 'Main Deck Count',
-        data: metagame.topMainDeckCards.map((e) => e[1]),
-        backgroundColor: '#1f4ed1'
-      }
-    ]
-  } : {}
- 
-  const topSideDeckCardsData = metagame.topSideDeckCards?.length ? {
-    labels: metagame.topSideDeckCards.map((e) => e[0].length <= 30 ? e[0] : e[0].slice(0, 30).split(' ').slice(0, -1).join(' ')),
-    datasets: [
-      {
-        label: 'Side Deck Count',
-        data: metagame.topSideDeckCards.map((e) => e[1]),
-        backgroundColor: '#c24225'
-      }
-    ]
-  } : {}
+    const conversionRateData = metagame.topDeckConversions?.length ? {
+        labels: metagame.topDeckConversions.map((e) => e[0]),
+        datasets: [
+        {
+            data: metagame.topDeckConversions.map((e) => e[1]),
+            backgroundColor: metagame.topDeckConversions.map((e) => e[2]),
+            borderWidth: 1,
+        },
+        ]
+    } : {}
+
+    const topMainDeckCardsData = metagame.topMainDeckCards?.length ? {
+        labels: metagame.topMainDeckCards.map((e) => e[0].length <= 30 ? e[0] : e[0].slice(0, 30).split(' ').slice(0, -1).join(' ')),
+        datasets: [
+        {
+            label: 'Main Deck Count',
+            data: metagame.topMainDeckCards.map((e) => e[1]),
+            backgroundColor: '#1f4ed1'
+        }
+        ]
+    } : {}
+    
+    const topSideDeckCardsData = metagame.topSideDeckCards?.length ? {
+        labels: metagame.topSideDeckCards.map((e) => e[0].length <= 30 ? e[0] : e[0].slice(0, 30).split(' ').slice(0, -1).join(' ')),
+        datasets: [
+        {
+            label: 'Side Deck Count',
+            data: metagame.topSideDeckCards.map((e) => e[1]),
+            backgroundColor: '#c24225'
+        }
+        ]
+    } : {}
 
     const doughnutOptions = {
         responsive: false,
@@ -273,17 +274,7 @@ export const SingleEvent = (props) => {
                                         <b>Winner: </b>{event.winnerName}
                                         <img 
                                             className="single-event-winner-cell-pfp"
-                                            src={
-                                                `https://cdn.formatlibrary.com/images/pfps/${winner?.discordId || winner?.name}.png`
-                                                // `https://cdn.formatlibrary.com/images/pfps/${playerId}.png` 
-                                                // existingPfps.discordPfp ? `https://cdn.discordapp.com/avatars/${event.winner?.discordId}/${event.winner?.discordPfp}.webp` :
-                                                // existingPfps.discordId ? `https://cdn.formatlibrary.com/images/pfps/${event.winner?.discordId}.png` :
-                                                // `https://cdn.formatlibrary.com/images/pfps/${event.winner?.name}.png`
-                                            }
-                                            onError={(e) => {
-                                                e.target.onerror = null
-                                                e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
-                                            }}
+                                            src={`/api/players/${winner?.id}/avatar`}
                                             alt={event.winner?.name}
                                         />
                                     </div>

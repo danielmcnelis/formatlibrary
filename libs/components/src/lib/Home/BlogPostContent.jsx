@@ -9,7 +9,7 @@ export const BlogPostContent = (props) => {
         eventDate,
         eventName,
         winnerName,
-        winnerPfp,
+        winnerId,
         winningDeckId,
         winningDeckTypeName,
         winningDeckTypeIsPopular,
@@ -35,7 +35,7 @@ export const BlogPostContent = (props) => {
                 <p class="blogpost-paragraph">{winnerName} won <a class="blogpost-event-link" href={`/events/${eventAbbreviation}`}>{eventName}</a> on {dateToVerbose(eventDate, true, true, false)} with a {winningDeckTypeIsPopular ? 'popular' : 'rogue'} deck, {winningDeckTypeName}!</p>
                 <div class="blogpost-images-flexbox">
                     <div class="blogpost-pfp-community-flexbox">
-                        <img class="blogpost-pfp" src={`https://cdn.formatlibrary.com/images/pfps/${winnerPfp}.png`} alt="winner pfp"/>
+                        <img class="blogpost-pfp" src={`/api/players/${winnerId}/avatar`} alt="winner pfp"/>
                         <img class="blogpost-community" src={`https://cdn.formatlibrary.com/images/logos/${communityName}.png`} alt="server logo"/></div>
                     <div class="blogpost-deck-box">
                         <a class="blogpost-deck-link" href={`/decks/${winningDeckId}`}>

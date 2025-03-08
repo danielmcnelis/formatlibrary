@@ -145,12 +145,7 @@ export const StatsRow = (props) => {
                     <div className="player-cell">
                         <img
                             className="player-cell-pfp"
-                            src={`https://cdn.formatlibrary.com/images/pfps/${stats.player.discordId || stats.player.name}.png`}
-                            onError={(e) => {
-                                    e.target.onerror = null
-                                    e.target.src="https://cdn.discordapp.com/embed/avatars/1.png"
-                                }
-                            }
+                            src={`/api/players/${stats.player?.id}/avatar`}  
                             alt={stats.player.name}
                         />
                         <div>{displayName}</div>
