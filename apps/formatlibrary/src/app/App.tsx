@@ -16,12 +16,12 @@ const App = () => {
         subscriber: false
     })
     
-    const oneDayAgo = new Date(Date.now() - (24 * 60 * 60 * 1000))
     const [checkedSubscription, setCheckedSubscription] = useState(false)  
     const [showReminder, setShowReminder] = useState(false) 
 
     // USE EFFECT
     useEffect(() => {
+        const oneDayAgo = new Date(Date.now() - (24 * 60 * 60 * 1000))
         if (adBlockDetected && (Number(visited) < oneDayAgo.getTime())) {
             setShowReminder(true)
             
@@ -35,7 +35,7 @@ const App = () => {
     
             track()
         }
-    }, [adBlockDetected, visited, oneDayAgo])
+    }, [adBlockDetected, visited])
 
     // USE EFFECT
     useEffect(() => {
@@ -72,7 +72,7 @@ const App = () => {
         <div className="app">
         {
             playerId && !checkedSubscription ? (<Router disableAds={disableAds}/>) :
-                adBlockDetected && showReminder ? (
+                !roles.subscriber && adBlockDetected && showReminder ? (
                     <div>
                         <div className="ad-block-detected">
                             <p>Format Library depends on modest ad revenue to operate and produce content. <span role="img" aria-label="artist">🧑‍🎨</span> We kindly ask you to whitelist us on your ad-blocker. <span role="img" aria-label="smiley">😊</span></p>
