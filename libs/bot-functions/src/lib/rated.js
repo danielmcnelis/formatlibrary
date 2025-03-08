@@ -484,8 +484,8 @@ export const getPreviousRatedDeck = async (user, player, yourRatedDecks, format)
     options.push(`(${options.length + 1}) - Submit and use a new deck`)
     if (yourRatedDecks.length) { 
         options.push(
-            `(${options.length + 1}) - Replace and use a new deck`,
-            `(${options.length + 2}) - Delete a deck`
+            `(${options.length + 1}) - Replace an old deck and use the updated deck`,
+            `(${options.length + 2}) - Delete an old deck`
         )
     }
 

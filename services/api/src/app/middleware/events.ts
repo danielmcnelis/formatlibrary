@@ -427,7 +427,7 @@ export const getEventByIdAsSubscriber = async (req, res, next) => {
 
       const topDecks = await Deck.findAll({
         where: {
-          display: true,
+          display: {[Op.or]: [true, false]},
           [Op.or]: {
             eventAbbreviation: event.abbreviation,
             eventId: event.id
@@ -466,7 +466,7 @@ export const getEventByIdAsSubscriber = async (req, res, next) => {
     deckTypes.forEach((el, index) => el.push(colors[index] || getRandomColor()))
 
     const topDeckConversions = allDecks.length >= event.size / 2 ?
-        Object.entries(arrayToObject(topDecks.map((d) => capitalize(d.deckTypeName, true)))).sort(
+        Object.entries(arrayToObject(trueTopDecks.map((d) => capitalize(d.deckTypeName, true)))).sort(
             (a: any, b: any) => b[1] - a[1]
         ) : []
 

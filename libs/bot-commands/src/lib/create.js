@@ -42,7 +42,7 @@ export default {
                 .setRequired(true)
             
             const duration = new TextInputBuilder()
-                .setCustomId('abbreviation')
+                .setCustomId('duration')
                 .setLabel('Live or Multi-Day? (L, M)')
                 .setStyle(TextInputStyle.Short)
                 .setPlaceholder('Live')
