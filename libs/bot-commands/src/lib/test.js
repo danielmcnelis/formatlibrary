@@ -20,7 +20,7 @@ export default {
             await interaction.deferReply()
             if (isProgrammer(interaction.member)) {
                 await interaction.editReply(emojis.yellow)
-                // await runNightlyTasks(client)
+                await runNightlyTasks(client)
                 // await recalculateAllStats()
                 // await updateAvatars(client)
                 // await updateMarketPrices()
@@ -32,7 +32,7 @@ export default {
                 // await updateMatchups()
                 // await purgeBetaCards(client)
                 // await downloadMissingCardImages()
-                await updateMinMedMaxRarities()
+                // await updateMinMedMaxRarities()
                 // await s3FileExists('images/pfps/UeyvnNBD6CD53gsqRQsxCY.png')
                 // return await downloadOriginalArtworks(client)
                 // return downloadMissingCardImages()
