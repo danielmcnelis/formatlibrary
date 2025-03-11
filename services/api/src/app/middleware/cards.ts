@@ -165,7 +165,7 @@ export const getCardById = async (req, res, next) => {
         })].map((p) => p.usd) : []
         
         // @ts-ignore
-        const highestCurrentPrice = Math.max(...[maxRarityPrint?.unlimitedPrice, maxRarityPrint?.firstEditionPrice, maxRarityPrint.limitedPrice].filter((el) => el !== null))
+        const highestCurrentPrice = Math.max(...[maxRarityPrint?.unlimitedPrice, maxRarityPrint?.firstEditionPrice, maxRarityPrint?.limitedPrice].filter((el) => el !== null))
         const maxRarityEditionToFind = maxRarityPrint?.firstEditionPrice === highestCurrentPrice ? '1st Edition' :
             maxRarityPrint?.limitedPrice === highestCurrentPrice ? 'Limited' :
             'Unlimited'
