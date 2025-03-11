@@ -20,9 +20,9 @@
     width: 300px;
 }
 
-/* .space-evenly {
-    align-content: space-around;
-} */
+.space-evenly {
+    align-content: space-evenly;
+}
 
 .line-chart-container {
     margin: 20px;
