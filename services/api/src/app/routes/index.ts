@@ -11,6 +11,7 @@ import formats from './formats'
 import images from './images'
 import matchups from './matchups'
 import players from './players'
+import prices from './prices'
 import rated from './rated'
 import replays from './replays'
 import rulings from './rulings'
@@ -22,4 +23,4 @@ import stripe from './stripe'
 import teams from './teams'
 import tournaments from './tournaments'
 
-export { banlists, blogposts, cards, cookies, cubes, decks, deckTypes, drafts, events, formats, images, matchups, players, rated, replays, rulings, sealed, sets, stats, statuses, stripe, teams, tournaments }
+export { banlists, blogposts, cards, cookies, cubes, decks, deckTypes, drafts, events, formats, images, matchups, players, prices, rated, replays, rulings, sealed, sets, stats, statuses, stripe, teams, tournaments }

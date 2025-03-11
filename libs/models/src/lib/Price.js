@@ -2,7 +2,10 @@ import { Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const Price = db.define('prices', {
-  usd: {
+  printId: {
+    type: Sequelize.INTEGER
+  },
+    usd: {
     type: Sequelize.FLOAT,
     defaultValue: 0.0
   },
@@ -13,8 +16,8 @@ export const Price = db.define('prices', {
     type: Sequelize.STRING,
     defaultValue: 'TCGplayer'
   },
-  printId: {
-    type: Sequelize.INTEGER
+  date: {
+    type: Sequelize.STRING
   },
   isManufactured: {
     type: Sequelize.BOOLEAN,

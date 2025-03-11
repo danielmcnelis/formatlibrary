@@ -2,6 +2,28 @@ import { Card, Format, Price, Print, Ruling, Set, Status } from '@fl/models'
 import { Op } from 'sequelize'
 import * as fs from 'fs'
 
+function convertTimestampToMonthYear(timestamp:any) {
+    const date = new Date(timestamp);
+    const month = date.toLocaleString('default', { month: 'short' });
+    const day = date.getDate();
+    const year = date.getFullYear();
+    return `${month} ${day}, ${year}`;
+}
+
+function smoothArray(data, windowSize) {
+    const smoothedData = [];
+    for (let i = 0; i < data.length; i++) {
+      let sum = 0;
+      let count = 0;
+      for (let j = Math.max(0, i - Math.floor(windowSize / 2)); j <= Math.min(data.length - 1, i + Math.floor(windowSize / 2)); j++) {
+        sum += data[j];
+        count++;
+      }
+      smoothedData.push(sum / count);
+    }
+    return smoothedData;
+  }
+
 export const getCardsByPartialName = async (req, res, next) => {
   try {
     const cards = await Card.findAll({
@@ -108,10 +130,6 @@ export const getCardById = async (req, res, next) => {
             order: [[Set, 'releaseDate', 'ASC']]
         })
 
-        const minRarityPrint = await Print.findOne({ where: { cardId: card.id, isMinRarity: true }, attributes: ['id', 'rarity', 'cardCode', 'unlimitedPrice', 'firstEditionPrice', 'limitedPrice']})
-        const medianRarityPrint = await Print.findOne({ where: { cardId: card.id, isMedianRarity: true }, attributes: ['id', 'rarity', 'cardCode', 'unlimitedPrice', 'firstEditionPrice', 'limitedPrice']})
-        const maxRarityPrint = await Print.findOne({ where: { cardId: card.id, isMaxRarity: true }, attributes: ['id', 'rarity', 'cardCode', 'unlimitedPrice', 'firstEditionPrice', 'limitedPrice']})
-
         const genericRulings = await Ruling.findAll({
             where: {
                 cardId: card.id,
@@ -130,63 +148,6 @@ export const getCardById = async (req, res, next) => {
             attributes: { exclude: ['createdAt', 'updatedAt'] },
             order: [[Format, 'date', 'ASC'], ['id', 'ASC']]
         })
-        
-        const oneYearAgo = new Date(Date.now() - (550 * 24 * 60 * 60 * 1000))
- 
-        // @ts-ignore
-        const lowestCurrentPrice = Math.min(...[minRarityPrint?.unlimitedPrice, minRarityPrint?.firstEditionPrice, minRarityPrint?.limitedPrice].filter((el) => el !== null))
-        const minRarityEditionToFind = minRarityPrint?.firstEditionPrice === lowestCurrentPrice ? '1st Edition' :
-            minRarityPrint?.limitedPrice === lowestCurrentPrice ? 'Limited' :
-            'Unlimited'
-
-        const minRarityPrices = minRarityPrint?.id ? [...await Price.findAll({
-            where: {
-                printId: minRarityPrint?.id,
-                createdAt: {[Op.gte]: oneYearAgo},
-                edition: minRarityEditionToFind
-            },
-            order: [['createdAt', 'ASC']]
-        })].map((p) => p.usd) : []
-
-        const currentMedianRarityPricesOfAllEditions = [medianRarityPrint?.unlimitedPrice, medianRarityPrint?.firstEditionPrice, medianRarityPrint?.limitedPrice].filter((el) => el !== null).sort()
-        const medianCurrentPrice = currentMedianRarityPricesOfAllEditions[Math.floor(currentMedianRarityPricesOfAllEditions.length / 2)]
-        const medianRarityEditionToFind = medianRarityPrint?.firstEditionPrice === medianCurrentPrice ? '1st Edition' :
-            medianRarityPrint?.limitedPrice === medianCurrentPrice ? 'Limited' :
-            'Unlimited'
-
-        const medianRarityPrices = medianRarityPrint?.id ? [...await Price.findAll({
-            where: {
-                printId: medianRarityPrint?.id,
-                createdAt: {[Op.gte]: oneYearAgo},
-                edition: medianRarityEditionToFind
-            },
-            include: Print,
-            order: [['createdAt', 'ASC']]
-        })].map((p) => p.usd) : []
-        
-        // @ts-ignore
-        const highestCurrentPrice = Math.max(...[maxRarityPrint?.unlimitedPrice, maxRarityPrint?.firstEditionPrice, maxRarityPrint?.limitedPrice].filter((el) => el !== null))
-        const maxRarityEditionToFind = maxRarityPrint?.firstEditionPrice === highestCurrentPrice ? '1st Edition' :
-            maxRarityPrint?.limitedPrice === highestCurrentPrice ? 'Limited' :
-            'Unlimited'
-
-        const maxRarityPrices =  maxRarityPrint?.id ? [...await Price.findAll({
-            where: {
-                printId: maxRarityPrint?.id,
-                createdAt: {[Op.gte]: oneYearAgo},
-                edition: maxRarityEditionToFind
-            },
-            include: Print,
-            order: [['createdAt', 'ASC']]
-        })].map((p) => p.usd) : []
-
-        const minRarityMonthlyChange = minRarityPrices[-1] - minRarityPrices[-30]
-        const medianRarityMonthlyChange = medianRarityPrices[-1] - medianRarityPrices[-30]
-        const maxRarityMonthlyChange = maxRarityPrices[-1] - maxRarityPrices[-30]
-
-        const minRarityYearlyChange = minRarityPrices[-1] - minRarityPrices[0]
-        const medianRarityYearlyChange = medianRarityPrices[-1] - medianRarityPrices[0]
-        const maxRarityYearlyChange = maxRarityPrices[-1] - maxRarityPrices[0]
 
         const specificRulings = {}
 
@@ -203,20 +164,6 @@ export const getCardById = async (req, res, next) => {
             rulings: {
                 generic: genericRulings || [],
                 specific: specificRulings || {}
-            },
-            prices: {
-                minRarityPrint,
-                medianRarityPrint,
-                maxRarityPrint,
-                minRarityMonthlyChange,
-                medianRarityMonthlyChange,
-                maxRarityMonthlyChange,
-                minRarityYearlyChange,
-                medianRarityYearlyChange,
-                maxRarityYearlyChange,
-                minRarityPrices,
-                medianRarityPrices,
-                maxRarityPrices
             }
         }
 

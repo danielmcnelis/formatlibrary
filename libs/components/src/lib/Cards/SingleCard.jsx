@@ -7,13 +7,14 @@ import { useMediaQuery } from 'react-responsive'
 import { NotFound } from '../General/NotFound'
 import { PrintRow } from './PrintRow'
 import { StatusBox } from './StatusBar'
-import { capitalize, dateToSimple, dateToVerbose, getEraVideoPlaylistId } from '@fl/utils'
+import { capitalize, dateToSimple, dateToVerbose, getEraVideoPlaylistId, camelize } from '@fl/utils'
 import { Line } from 'react-chartjs-2';
 import { Helmet } from 'react-helmet'
 import './SingleCard.css'
 import banlists from '../../data/banlists.json'
-import { Chart as ChartJS, LineElement, PointElement } from 'chart.js'
-ChartJS.register(LineElement, PointElement)
+import { Chart as ChartJS, LineElement, PointElement, TimeScale } from 'chart.js'
+import 'chartjs-adapter-moment'
+ChartJS.register(LineElement, PointElement, TimeScale)
 
 // SINGLE CARD COMPONENT
 export const SingleCard = (props) => {
@@ -25,24 +26,13 @@ export const SingleCard = (props) => {
         card: {},
         statuses: {},
         prints: [],
-        rulings: {},
-        prices: {
-            minRarityPrint: {},
-            medianRarityPrint: {},
-            maxRarityPrint: {},
-            minRarityYearlyChange: 0,
-            medianRarityYearlyChange: 0,
-            maxRarityYearlyChange: 0,
-            minRarityMonthlyChange: 0,
-            medianRarityMonthlyChange: 0,
-            maxRarityMonthlyChange: 0,
-            minRarityPrices: [],
-            medianRarityPrices: [],
-            maxRarityPrices: []
-        } 
+        rulings: {}
     })
 
-    console.log('prices', data?.prices)
+    const [prices, setPrices] = useState({})
+    console.log('prices', prices)
+    const raritySymbol = prices.rarity === '10000 Secret Rare' ? 'tenThousandSecretRare' : camelize(prices.rarity || '')
+
 
     const { card, statuses, prints, rulings } = data || {}
     const { id } = useParams()
@@ -97,11 +87,13 @@ export const SingleCard = (props) => {
     
     // USE EFFECT SET CARD
     useEffect(() => {
-        let data
         const fetchData = async () => {
             try {
-                ({data} = await axios.get(`/api/cards/${id}`))
-                setData(data)
+                const {data: cardData} = await axios.get(`/api/cards/${id}`)
+                setData(cardData)
+
+                const {data: priceData} = await axios.get(`/api/prices/${id}`)
+                setPrices(priceData)
             } catch (err) {
                 console.log(err)
                 setData(null)
@@ -153,50 +145,42 @@ export const SingleCard = (props) => {
     if (card.isNormal) classes.push('Normal')
     if (card.isEffect) classes.push('Effect')
 
-    const maxRarityLineData = {
-        labels: data.prices.maxRarityPrices.map((p, index) => `${index}`),
+    const lineData = {
+        labels: prices.labelsArr,
         datasets: [
             {
-                // label: 'USD',
-                data: data.prices.maxRarityPrices,
+                data: prices.pricesArr,
                 borderColor: 'rgb(99, 128, 255)',
                 backgroundColor: 'rgb(143, 160, 234)',
                 tension: 0.1,
                 pointRadius: 1,
-                pointHoverRadius: 10
-            }
-        ]        
-    }
-
-    const minRarityLineData = {
-        labels: data.prices.minRarityPrices.map((p, index) => `${index}`),
-        datasets: [
-            {
-                // label: 'USD',
-                data: data.prices.minRarityPrices,
-                borderColor: 'rgb(99, 128, 255)',
-                backgroundColor: 'rgb(143, 160, 234)',
-                tension: 0.1,
-                pointRadius: 1,
-                pointHoverRadius: 10
+                pointHoverRadius: 8
             }
         ]        
     }
 
     const lineOptions = {
         scales: {
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'month',
+                    minUnit: 'month',
+                    tooltipFormat:'MMMM D, YYYY'
+                }
+            },
             y: {
                 ticks: {
                     callback: (value) => '$' + value.toFixed(2)
                 }
-            }
+            },
+            
         },
         plugins: {
             legend: {
                 display: false
             }
         }
-        
     }
   
     return (
@@ -601,32 +585,23 @@ export const SingleCard = (props) => {
                 }
                 <div className="horizontal-centered-flexbox space-evenly">
                 {
-                    data.prices?.minRarityPrices?.length ? (
+                    prices.pricesArr?.length ? (
                         <div className="line-chart-container">
-                            <h2>Low Rarity Price History</h2>
+                            <h2 style={{marginBottom: '10px'}}>Price History</h2>
+                            <div className="horizontal-centered-flexbox" style={{alignItems: 'center'}}>
+                                <div>{prices.edition}</div>
+                                <div className="rarity-cell" style={{backgroundImage: `url(https://cdn.formatlibrary.com/images/rarities/${raritySymbol}.png)`, height: '28px', margin: '0px 3px'}}/>
+                                {
+                                    isMobile ? (<div>{prices.mobileTitle}</div>) : (<div>{prices.desktopTitle}</div>)
+                                }   
+                            </div>
                             <br/>
                             <Line 
                                 className="line-chart"
                                 type="line"
                                 normalized={true}
                                 animation={false}
-                                data={minRarityLineData}
-                                options={lineOptions}
-                            />
-                        </div>
-                    ) : null
-                }
-                {
-                    data.prices?.maxRarityPrices?.length ? (
-                        <div className="line-chart-container">
-                            <h2>Max Rarity Price History</h2>
-                            <br/>
-                            <Line 
-                                className="line-chart"
-                                type="line"
-                                normalized={true}
-                                animation={false}
-                                data={maxRarityLineData}
+                                data={lineData}
                                 options={lineOptions}
                             />
                         </div>

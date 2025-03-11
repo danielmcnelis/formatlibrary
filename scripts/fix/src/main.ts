@@ -2723,61 +2723,97 @@ const shuffleArray = (arr) => {
 
 
 // UPDATE MIN MED MAX RARITIES
+// ;(async () => {
+//     const cards = await Card.findAll({order: [['name', 'ASC']]})
+//     let b = 0
+//     let e = 0
+
+//     try {
+//         for (let i = 0; i < cards.length; i++) {
+//             const card = cards[i]
+//             const prints = await Print.findAll({ where: { cardId: card.id, marketPrice: {[Op.not]: null} }, order: [['marketPrice', 'ASC']] })
+//             console.log('prints.length', prints.length)
+//             for (let j = 0; j < prints.length; j++) {
+//                 const print = prints[j]
+//                 await print.update({
+//                     isMinRarity: false,
+//                     isMedianRarity: false,
+//                     isMaxRarity: false
+//                 })
+//             }
+    
+//             if (prints.length >= 2) {
+//                 const minRarityPrint = await Print.findOne({
+//                     where: {
+//                         cardId: card.id,
+//                         marketPrice: {[Op.not]: null}
+//                     },
+//                     order: [['marketPrice', 'ASC']]
+//                 })
+//                 console.log('!!minRarityPrint', !!minRarityPrint)
+//                 await minRarityPrint.update({ isMinRarity: true })
+//             }
+    
+//             if (prints.length >= 3) {
+//                 const medianRarityPrint = prints[Math.floor(prints.length / 2)]
+//                 console.log('!!medianRarityPrint', !!medianRarityPrint)
+//                 await medianRarityPrint.update({ isMedianRarity: true })
+//             }
+    
+//             if (prints.length >= 1) {
+//                 const maxRarityPrint = await Print.findOne({
+//                     where: {
+//                         cardId: card.id, 
+//                         marketPrice: {[Op.not]: null}
+//                     },
+//                     order: [['marketPrice', 'DESC']]
+//                 })
+//                 console.log('!!maxRarityPrint', !!maxRarityPrint)
+//                 await maxRarityPrint.update({ isMaxRarity: true })
+//             }
+//             b++
+//             console.log(`updated ${card.name}`)
+//         }
+//     } catch (err) {
+//         console.log(err)
+//         e++
+//     }
+
+//     return console.log(`updated ${b} max/median/min prints and encountered ${e} errors`)
+// })()
+
+
 ;(async () => {
-    const cards = await Card.findAll({order: [['name', 'ASC']]})
     let b = 0
     let e = 0
 
-    try {
-        for (let i = 0; i < cards.length; i++) {
-            const card = cards[i]
-            const prints = await Print.findAll({ where: { cardId: card.id, marketPrice: {[Op.not]: null} }, order: [['marketPrice', 'ASC']] })
-            console.log('prints.length', prints.length)
-            for (let j = 0; j < prints.length; j++) {
-                const print = prints[j]
-                await print.update({
-                    isMinRarity: false,
-                    isMedianRarity: false,
-                    isMaxRarity: false
-                })
-            }
-    
-            if (prints.length >= 2) {
-                const minRarityPrint = await Print.findOne({
-                    where: {
-                        cardId: card.id,
-                        marketPrice: {[Op.not]: null}
-                    },
-                    order: [['marketPrice', 'ASC']]
-                })
-                console.log('!!minRarityPrint', !!minRarityPrint)
-                await minRarityPrint.update({ isMinRarity: true })
-            }
-    
-            if (prints.length >= 3) {
-                const medianRarityPrint = prints[Math.floor(prints.length / 2)]
-                console.log('!!medianRarityPrint', !!medianRarityPrint)
-                await medianRarityPrint.update({ isMedianRarity: true })
-            }
-    
-            if (prints.length >= 1) {
-                const maxRarityPrint = await Print.findOne({
-                    where: {
-                        cardId: card.id, 
-                        marketPrice: {[Op.not]: null}
-                    },
-                    order: [['marketPrice', 'DESC']]
-                })
-                console.log('!!maxRarityPrint', !!maxRarityPrint)
-                await maxRarityPrint.update({ isMaxRarity: true })
-            }
-            b++
-            console.log(`updated ${card.name}`)
-        }
-    } catch (err) {
-        console.log(err)
-        e++
+    function formatDate(timestamp:Date) {
+        const date = new Date(timestamp);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
+
+    for (let j = 16466965; j < 27852869; j+=100000) {
+        const prices = await Price.findAll({
+            order: [['id', 'ASC']],
+            offset: j,
+            limit: 100000
+        })
+
+        try {
+            for (let i = 0; i < prices.length; i++) {
+                await prices[i].update({ date: formatDate(prices[i].createdAt) })
+                b++
+                console.log(`updated price ${i+j}`)
+            }
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
 
     return console.log(`updated ${b} max/median/min prints and encountered ${e} errors`)
 })()
