@@ -2583,201 +2583,201 @@ const shuffleArray = (arr) => {
 //     return console.log(`updated the ${d} decks, encountered ${e} errors`)
 // })()
 
-;(async () => {
-    let f = 0
-    let l = 0
-    let u = 0
-    let e = 0
-
-    const pricesToDelete = await Price.findAll({
-        where: {
-            isManufactured: true
-        }
-    })
-
-    for (let i = 0; i < pricesToDelete.length; i++) {
-        await pricesToDelete[i].destroy()
-    }
-    
-    const prints = await Print.findAll({ order: [['cardName', 'ASC']]})
-    const daysBetween = (d1, d2) => {
-        const timeElapsed = Math.abs(d2.getTime() - d1.getTime())
-        const difference = Math.ceil(timeElapsed / (1000 * 60 * 60 * 24))
-        return difference
-    }
-
-    try {
-        for (let i = 0; i < prints.length; i++) {
-            const print = prints[i]
-            const firstEditionPrices = await Price.findAll({
-                where: {
-                    printId: print.id,
-                    edition: '1st Edition',
-                    source: 'TCGplayer'
-                },
-                order: [['createdAt', 'ASC']]
-            })
-
-            for (let j = 0; j < firstEditionPrices.length - 1; j++) {
-                const currPrice = firstEditionPrices[j]
-                const nextPrice = firstEditionPrices[j+1]
-                const d = daysBetween(currPrice.createdAt, nextPrice.createdAt)
-                const y = nextPrice.usd - currPrice.usd
-                const m = y / d
-                let t = 1
-                while (t < d) {
-                    let newUsd = (nextPrice.usd + (t * m)).toFixed(2)
-                    if (newUsd <= 0) newUsd = 0.01
-                    const createdAt = new Date(currPrice.createdAt.getTime() + (t * 24 * 60 * 60 * 1000))
-                    await Price.create({
-                        printId: print.id,
-                        edition: currPrice.edition,
-                        source: currPrice.source,
-                        usd: newUsd,
-                        isManufactured: true,
-                        createdAt: createdAt 
-                    })
-
-                    f++
-                    t++
-                }
-            }
-
-            const limitedEditionPrices = await Price.findAll({
-                where: {
-                    printId: print.id,
-                    edition: 'Limited',
-                    source: 'TCGplayer'
-                },
-                order: [['createdAt', 'ASC']]
-            })
-
-            for (let j = 0; j < limitedEditionPrices.length - 1; j++) {
-                const currPrice = limitedEditionPrices[j]
-                const nextPrice = limitedEditionPrices[j+1]
-                const d = daysBetween(currPrice.createdAt, nextPrice.createdAt)
-                const y = nextPrice.usd - currPrice.usd
-                const m = y / d
-                let t = 1
-                while (t < d) {
-                    let newUsd = (nextPrice.usd + (t * m)).toFixed(2)
-                    if (newUsd <= 0) newUsd = 0.01
-                    const createdAt = new Date(currPrice.createdAt.getTime() + (t * 24 * 60 * 60 * 1000))
-                    await Price.create({
-                        printId: print.id,
-                        edition: currPrice.edition,
-                        source: currPrice.source,
-                        usd: newUsd,
-                        isManufactured: true,
-                        createdAt: createdAt 
-                    })
-
-                    l++
-                    t++
-                }
-            }
-
-            const unlimitedEditionPrices = await Price.findAll({
-                where: {
-                    printId: print.id,
-                    edition: 'Unlimited',
-                    source: 'TCGplayer'
-                },
-                order: [['createdAt', 'ASC']]
-            })
-
-            for (let j = 0; j < unlimitedEditionPrices.length - 1; j++) {
-                const currPrice = unlimitedEditionPrices[j]
-                const nextPrice = unlimitedEditionPrices[j+1]
-                const d = daysBetween(currPrice.createdAt, nextPrice.createdAt)
-                const y = nextPrice.usd - currPrice.usd
-                const m = y / d
-                let t = 1
-                while (t < d) {
-                    let newUsd = (nextPrice.usd + (t * m)).toFixed(2)
-                    if (newUsd <= 0) newUsd = 0.01
-                    const createdAt = new Date(currPrice.createdAt.getTime() + (t * 24 * 60 * 60 * 1000))
-                    await Price.create({
-                        printId: print.id,
-                        edition: currPrice.edition,
-                        source: currPrice.source,
-                        usd: newUsd,
-                        isManufactured: true,
-                        createdAt: createdAt 
-                    })
-
-                    l++
-                    t++
-                }
-            }
-
-            console.log(`updated print: ${print.rarity} ${print.cardCode} - ${print.cardName}`)
-        }
-    } catch (err) {
-        console.log(err)
-        e++
-    }
-
-    return console.log(`created ${f} manufactured 1st edition prices, ${l} manufactured limited edition prices, ${u} manufactured unlimited edition prices, encountered ${e} errors`)
-})()
-
-
-// UPDATE MIN MED MAX RARITIES
 // ;(async () => {
-//     const cards = await Card.findAll({order: [['name', 'ASC']]})
-//     let b = 0
+//     let f = 0
+//     let l = 0
+//     let u = 0
 //     let e = 0
 
+//     const pricesToDelete = await Price.findAll({
+//         where: {
+//             isManufactured: true
+//         }
+//     })
+
+//     for (let i = 0; i < pricesToDelete.length; i++) {
+//         await pricesToDelete[i].destroy()
+//     }
+    
+//     const prints = await Print.findAll({ order: [['cardName', 'ASC']]})
+//     const daysBetween = (d1, d2) => {
+//         const timeElapsed = Math.abs(d2.getTime() - d1.getTime())
+//         const difference = Math.ceil(timeElapsed / (1000 * 60 * 60 * 24))
+//         return difference
+//     }
+
 //     try {
-//         for (let i = 0; i < cards.length; i++) {
-//             const card = cards[i]
-//             const prints = await Print.findAll({ where: { cardId: card.id, marketPrice: {[Op.not]: null} }, order: [['marketPrice', 'ASC']] })
-//             console.log('prints.length', prints.length)
-//             for (let j = 0; j < prints.length; j++) {
-//                 const print = prints[j]
-//                 await print.update({
-//                     isMinRarity: false,
-//                     isMedianRarity: false,
-//                     isMaxRarity: false
-//                 })
+//         for (let i = 0; i < prints.length; i++) {
+//             const print = prints[i]
+//             const firstEditionPrices = await Price.findAll({
+//                 where: {
+//                     printId: print.id,
+//                     edition: '1st Edition',
+//                     source: 'TCGplayer'
+//                 },
+//                 order: [['createdAt', 'ASC']]
+//             })
+
+//             for (let j = 0; j < firstEditionPrices.length - 1; j++) {
+//                 const currPrice = firstEditionPrices[j]
+//                 const nextPrice = firstEditionPrices[j+1]
+//                 const d = daysBetween(currPrice.createdAt, nextPrice.createdAt)
+//                 const y = nextPrice.usd - currPrice.usd
+//                 const m = y / d
+//                 let t = 1
+//                 while (t < d) {
+//                     let newUsd = (nextPrice.usd + (t * m)).toFixed(2)
+//                     if (newUsd <= 0) newUsd = 0.01
+//                     const createdAt = new Date(currPrice.createdAt.getTime() + (t * 24 * 60 * 60 * 1000))
+//                     await Price.create({
+//                         printId: print.id,
+//                         edition: currPrice.edition,
+//                         source: currPrice.source,
+//                         usd: newUsd,
+//                         isManufactured: true,
+//                         createdAt: createdAt 
+//                     })
+
+//                     f++
+//                     t++
+//                 }
 //             }
-    
-//             if (prints.length >= 2) {
-//                 const minRarityPrint = await Print.findOne({
-//                     where: {
-//                         cardId: card.id,
-//                         marketPrice: {[Op.not]: null}
-//                     },
-//                     order: [['marketPrice', 'ASC']]
-//                 })
-//                 console.log('!!minRarityPrint', !!minRarityPrint)
-//                 await minRarityPrint.update({ isMinRarity: true })
+
+//             const limitedEditionPrices = await Price.findAll({
+//                 where: {
+//                     printId: print.id,
+//                     edition: 'Limited',
+//                     source: 'TCGplayer'
+//                 },
+//                 order: [['createdAt', 'ASC']]
+//             })
+
+//             for (let j = 0; j < limitedEditionPrices.length - 1; j++) {
+//                 const currPrice = limitedEditionPrices[j]
+//                 const nextPrice = limitedEditionPrices[j+1]
+//                 const d = daysBetween(currPrice.createdAt, nextPrice.createdAt)
+//                 const y = nextPrice.usd - currPrice.usd
+//                 const m = y / d
+//                 let t = 1
+//                 while (t < d) {
+//                     let newUsd = (nextPrice.usd + (t * m)).toFixed(2)
+//                     if (newUsd <= 0) newUsd = 0.01
+//                     const createdAt = new Date(currPrice.createdAt.getTime() + (t * 24 * 60 * 60 * 1000))
+//                     await Price.create({
+//                         printId: print.id,
+//                         edition: currPrice.edition,
+//                         source: currPrice.source,
+//                         usd: newUsd,
+//                         isManufactured: true,
+//                         createdAt: createdAt 
+//                     })
+
+//                     l++
+//                     t++
+//                 }
 //             }
-    
-//             if (prints.length >= 3) {
-//                 const medianRarityPrint = prints[Math.floor(prints.length / 2)]
-//                 console.log('!!medianRarityPrint', !!medianRarityPrint)
-//                 await medianRarityPrint.update({ isMedianRarity: true })
+
+//             const unlimitedEditionPrices = await Price.findAll({
+//                 where: {
+//                     printId: print.id,
+//                     edition: 'Unlimited',
+//                     source: 'TCGplayer'
+//                 },
+//                 order: [['createdAt', 'ASC']]
+//             })
+
+//             for (let j = 0; j < unlimitedEditionPrices.length - 1; j++) {
+//                 const currPrice = unlimitedEditionPrices[j]
+//                 const nextPrice = unlimitedEditionPrices[j+1]
+//                 const d = daysBetween(currPrice.createdAt, nextPrice.createdAt)
+//                 const y = nextPrice.usd - currPrice.usd
+//                 const m = y / d
+//                 let t = 1
+//                 while (t < d) {
+//                     let newUsd = (nextPrice.usd + (t * m)).toFixed(2)
+//                     if (newUsd <= 0) newUsd = 0.01
+//                     const createdAt = new Date(currPrice.createdAt.getTime() + (t * 24 * 60 * 60 * 1000))
+//                     await Price.create({
+//                         printId: print.id,
+//                         edition: currPrice.edition,
+//                         source: currPrice.source,
+//                         usd: newUsd,
+//                         isManufactured: true,
+//                         createdAt: createdAt 
+//                     })
+
+//                     l++
+//                     t++
+//                 }
 //             }
-    
-//             if (prints.length >= 1) {
-//                 const maxRarityPrint = await Print.findOne({
-//                     where: {
-//                         cardId: card.id, 
-//                         marketPrice: {[Op.not]: null}
-//                     },
-//                     order: [['marketPrice', 'DESC']]
-//                 })
-//                 console.log('!!maxRarityPrint', !!maxRarityPrint)
-//                 await maxRarityPrint.update({ isMaxRarity: true })
-//             }
-//             b++
-//             console.log(`updated ${card.name}`)
+
+//             console.log(`updated print: ${print.rarity} ${print.cardCode} - ${print.cardName}`)
 //         }
 //     } catch (err) {
 //         console.log(err)
 //         e++
 //     }
 
-//     return console.log(`updated ${b} max/median/min prints and encountered ${e} errors`)
+//     return console.log(`created ${f} manufactured 1st edition prices, ${l} manufactured limited edition prices, ${u} manufactured unlimited edition prices, encountered ${e} errors`)
 // })()
+
+
+// UPDATE MIN MED MAX RARITIES
+;(async () => {
+    const cards = await Card.findAll({order: [['name', 'ASC']]})
+    let b = 0
+    let e = 0
+
+    try {
+        for (let i = 0; i < cards.length; i++) {
+            const card = cards[i]
+            const prints = await Print.findAll({ where: { cardId: card.id, marketPrice: {[Op.not]: null} }, order: [['marketPrice', 'ASC']] })
+            console.log('prints.length', prints.length)
+            for (let j = 0; j < prints.length; j++) {
+                const print = prints[j]
+                await print.update({
+                    isMinRarity: false,
+                    isMedianRarity: false,
+                    isMaxRarity: false
+                })
+            }
+    
+            if (prints.length >= 2) {
+                const minRarityPrint = await Print.findOne({
+                    where: {
+                        cardId: card.id,
+                        marketPrice: {[Op.not]: null}
+                    },
+                    order: [['marketPrice', 'ASC']]
+                })
+                console.log('!!minRarityPrint', !!minRarityPrint)
+                await minRarityPrint.update({ isMinRarity: true })
+            }
+    
+            if (prints.length >= 3) {
+                const medianRarityPrint = prints[Math.floor(prints.length / 2)]
+                console.log('!!medianRarityPrint', !!medianRarityPrint)
+                await medianRarityPrint.update({ isMedianRarity: true })
+            }
+    
+            if (prints.length >= 1) {
+                const maxRarityPrint = await Print.findOne({
+                    where: {
+                        cardId: card.id, 
+                        marketPrice: {[Op.not]: null}
+                    },
+                    order: [['marketPrice', 'DESC']]
+                })
+                console.log('!!maxRarityPrint', !!maxRarityPrint)
+                await maxRarityPrint.update({ isMaxRarity: true })
+            }
+            b++
+            console.log(`updated ${card.name}`)
+        }
+    } catch (err) {
+        console.log(err)
+        e++
+    }
+
+    return console.log(`updated ${b} max/median/min prints and encountered ${e} errors`)
+})()
