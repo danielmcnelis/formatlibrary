@@ -29,7 +29,7 @@ export const Subscriptions = () => {
                                 Access all tournament decks, replays, matchup data
                             </li>
                             <li>
-                                Free entry to monthly $50 tournament (rotating formats)
+                                Free entry to monthly $50 rotating format tournaments (Discord)
                             </li>
                             <li>
                                 Add Discord "flair" from 25 custom Yu-Gi-Oh! emojis
@@ -51,10 +51,10 @@ export const Subscriptions = () => {
                                 Access all tournament decks, replays, matchup data
                             </li>
                             <li>
-                                Free entry to monthly Edison World Championship Qualifiers
+                                Free entry to monthly Edison World Championship Qualifiers (Discord)
                             </li>
                             <li>
-                                Free entry to monthly $50 tournament (rotating formats)
+                                Free entry to monthly $50 rotating format tournaments (Discord)
                             </li>
                             <li>
                                 Add Discord "flair" from 25 custom Yu-Gi-Oh! emojis

@@ -49,7 +49,7 @@ export const runNightlyTasks = async (client) => {
         const tasks = [
             manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
             purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, updateSets, 
-            updateMarketPrices, updateDecks, updateDeckTypes, downloadNewCards, downloadAltArtworks, 
+            updateMarketPrices, updateMinMedMaxRarities, updateDecks, updateDeckTypes, downloadNewCards, downloadAltArtworks, 
             downloadMissingCardImages, updateServers, conductCensus, updateAvatars, 
         ]
     
@@ -1349,6 +1349,75 @@ export const updateMarketPrices = async () => {
 
     console.log(`created ${b} new prices and checked ${c} other(s)`)
     return console.log(`updateMarketPrices() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+}
+
+// UPDATE MIN MED MAX RARITIES
+export const updateMinMedMaxRarities = async () => {
+    const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'updateMinMedMaxRarities',
+        status: 'underway'
+    })
+    let b = 0 
+    let e = 0
+
+    const cards = await Card.findAll({order: [['name', 'ASC']]})
+
+    try {
+        for (let i = 0; i < cards.length; i++) {
+            const card = cards[i]
+            const prints = await Print.findAll({ where: { cardId: card.id, marketPrice: {[Op.not]: null} }, order: [['marketPrice', 'ASC']] })
+            for (let j = 0; j < prints.length; j++) {
+                const print = prints[j]
+                await print.update({
+                    isMinRarity: false,
+                    isMedianRarity: false,
+                    isMaxRarity: false
+                })
+            }
+    
+            if (prints.length >= 2) {
+                const minRarityPrint = await Print.findOne({
+                    where: {
+                        cardId: card.id,
+                        marketPrice: {[Op.not]: null}
+                    },
+                    order: [['marketPrice', 'ASC']]
+                })
+                await minRarityPrint.update({ isMinRarity: true })
+            }
+    
+            if (prints.length >= 3) {
+                const medianRarityPrint = prints[Math.floor(prints.length / 2)]
+                await medianRarityPrint.update({ isMedianRarity: true })
+            }
+    
+            if (prints.length >= 1) {
+                const maxRarityPrint = await Print.findOne({
+                    where: {
+                        cardId: card.id, 
+                        marketPrice: {[Op.not]: null}
+                    },
+                    order: [['marketPrice', 'DESC']]
+                })
+                await maxRarityPrint.update({ isMaxRarity: true })
+            }
+            b++
+            console.log(`updated ${card.name}`)
+        }
+    } catch (err) {
+        console.log(err)
+        e++
+    }
+
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
+    console.log(`updated ${b} max/median/min prints and encountered ${c} errors`)
+    return console.log(`updateMarketPrices() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+
 }
 
 

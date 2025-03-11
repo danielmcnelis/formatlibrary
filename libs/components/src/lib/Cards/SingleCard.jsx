@@ -8,9 +8,12 @@ import { NotFound } from '../General/NotFound'
 import { PrintRow } from './PrintRow'
 import { StatusBox } from './StatusBar'
 import { capitalize, dateToSimple, dateToVerbose, getEraVideoPlaylistId } from '@fl/utils'
+import { Line } from 'react-chartjs-2';
 import { Helmet } from 'react-helmet'
 import './SingleCard.css'
 import banlists from '../../data/banlists.json'
+import { Chart as ChartJS, LineElement, PointElement } from 'chart.js'
+ChartJS.register(LineElement, PointElement)
 
 // SINGLE CARD COMPONENT
 export const SingleCard = (props) => {
@@ -22,8 +25,25 @@ export const SingleCard = (props) => {
         card: {},
         statuses: {},
         prints: [],
-        rulings: {}
+        rulings: {},
+        prices: {
+            minRarityPrint: {},
+            medianRarityPrint: {},
+            maxRarityPrint: {},
+            minRarityYearlyChange: 0,
+            medianRarityYearlyChange: 0,
+            maxRarityYearlyChange: 0,
+            minRarityMonthlyChange: 0,
+            medianRarityMonthlyChange: 0,
+            maxRarityMonthlyChange: 0,
+            minRarityPrices: [],
+            medianRarityPrices: [],
+            maxRarityPrices: []
+        } 
     })
+
+    console.log('prices', data?.prices)
+
     const { card, statuses, prints, rulings } = data || {}
     const { id } = useParams()
     // const videoPlaylistId = getEraVideoPlaylistId(card?.tcgDate)
@@ -132,6 +152,52 @@ export const SingleCard = (props) => {
     if (card.isUnion) classes.push('Union')
     if (card.isNormal) classes.push('Normal')
     if (card.isEffect) classes.push('Effect')
+
+    const maxRarityLineData = {
+        labels: data.prices.maxRarityPrices.map((p, index) => `${index}`),
+        datasets: [
+            {
+                // label: 'USD',
+                data: data.prices.maxRarityPrices,
+                borderColor: 'rgb(99, 128, 255)',
+                backgroundColor: 'rgb(143, 160, 234)',
+                tension: 0.1,
+                pointRadius: 1,
+                pointHoverRadius: 10
+            }
+        ]        
+    }
+
+    const minRarityLineData = {
+        labels: data.prices.minRarityPrices.map((p, index) => `${index}`),
+        datasets: [
+            {
+                // label: 'USD',
+                data: data.prices.minRarityPrices,
+                borderColor: 'rgb(99, 128, 255)',
+                backgroundColor: 'rgb(143, 160, 234)',
+                tension: 0.1,
+                pointRadius: 1,
+                pointHoverRadius: 10
+            }
+        ]        
+    }
+
+    const lineOptions = {
+        scales: {
+            y: {
+                ticks: {
+                    callback: (value) => '$' + value.toFixed(2)
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+        
+    }
   
     return (
         <>
@@ -533,6 +599,40 @@ export const SingleCard = (props) => {
                         </div>
                     ) : null
                 }
+                <div className="horizontal-centered-flexbox space-evenly">
+                {
+                    data.prices?.minRarityPrices?.length ? (
+                        <div className="line-chart-container">
+                            <h2>Low Rarity Price History</h2>
+                            <br/>
+                            <Line 
+                                className="line-chart"
+                                type="line"
+                                normalized={true}
+                                animation={false}
+                                data={minRarityLineData}
+                                options={lineOptions}
+                            />
+                        </div>
+                    ) : null
+                }
+                {
+                    data.prices?.maxRarityPrices?.length ? (
+                        <div className="line-chart-container">
+                            <h2>Max Rarity Price History</h2>
+                            <br/>
+                            <Line 
+                                className="line-chart"
+                                type="line"
+                                normalized={true}
+                                animation={false}
+                                data={maxRarityLineData}
+                                options={lineOptions}
+                            />
+                        </div>
+                    ) : null
+                }
+                </div>
                 {
                     prints?.length && !inEditMode ? (
                         <div className="prints-flexbox">

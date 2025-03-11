@@ -15,5 +15,9 @@ export const Price = db.define('prices', {
   },
   printId: {
     type: Sequelize.INTEGER
+  },
+  isManufactured: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
   }
 })

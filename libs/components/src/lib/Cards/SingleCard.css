@@ -20,6 +20,19 @@
     width: 300px;
 }
 
+/* .space-evenly {
+    align-content: space-around;
+} */
+
+.line-chart-container {
+    margin: 20px;
+  }
+
+  .line-chart, .bargraph {
+    width: 33vw;
+    height: 33vw;
+  }
+
 .vertical-centered-flexbox {
     display: flex;
     flex-direction: column;

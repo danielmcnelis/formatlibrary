@@ -1,6 +1,6 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
-import { purgeDuplicatePrices, assignSeasonalLadderRoles, downloadOriginalArtworks, purgeBetaCards, downloadMissingCardImages, recalculateStats, downloadNewCards, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckType, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runFrequentTasks } from '@fl/bot-functions'
+import { purgeDuplicatePrices, updateMinMedMaxRarities, assignSeasonalLadderRoles, downloadOriginalArtworks, purgeBetaCards, downloadMissingCardImages, recalculateStats, downloadNewCards, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckType, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runFrequentTasks } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { s3FileExists } from '@fl/bot-functions'
@@ -32,7 +32,8 @@ export default {
                 // await updateMatchups()
                 // await purgeBetaCards(client)
                 // await downloadMissingCardImages()
-                await s3FileExists('images/pfps/UeyvnNBD6CD53gsqRQsxCY.png')
+                await updateMinMedMaxRarities()
+                // await s3FileExists('images/pfps/UeyvnNBD6CD53gsqRQsxCY.png')
                 // return await downloadOriginalArtworks(client)
                 // return downloadMissingCardImages()
                 // return lookForAllPotentialPairs(client)

@@ -49,5 +49,17 @@ export const Print = db.define('prints', {
   },
   legalDate: {
     type: Sequelize.STRING
+  },
+  isMinRarity: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+  isMedianRarity: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+  isMaxRarity: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
   }
 })
