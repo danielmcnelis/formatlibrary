@@ -75,6 +75,18 @@ export const Format = db.define('formats', {
   hostedOnFl: {
     type: Sequelize.BOOLEAN,
     defaultValue: true
+  },
+  previousFormatId: {
+    type: Sequelize.INTEGER
+  },
+  previousFormatName: {
+    type: Sequelize.STRING
+  },
+  nextFormatId: {
+    type: Sequelize.INTEGER
+  },
+  nextFormatName: {
+    type: Sequelize.STRING
   }
 })
 

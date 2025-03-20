@@ -2589,16 +2589,6 @@ const shuffleArray = (arr) => {
 //     let u = 0
 //     let e = 0
 
-//     const pricesToDelete = await Price.findAll({
-//         where: {
-//             isManufactured: true
-//         }
-//     })
-
-//     for (let i = 0; i < pricesToDelete.length; i++) {
-//         await pricesToDelete[i].destroy()
-//     }
-    
 //     const prints = await Print.findAll({ order: [['cardName', 'ASC']]})
 //     const daysBetween = (d1, d2) => {
 //         const timeElapsed = Math.abs(d2.getTime() - d1.getTime())
@@ -2783,37 +2773,133 @@ const shuffleArray = (arr) => {
 // })()
 
 
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+
+//     function formatDate(timestamp:Date) {
+//         const date = new Date(timestamp);
+//         const year = date.getFullYear();
+//         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+//         const day = String(date.getDate()).padStart(2, '0');
+//         return `${year}-${month}-${day}`;
+//     }
+
+//     const prices = await Price.findAll({
+//         where: {
+//             date: null
+//         },
+//         order: [['id', 'ASC']]
+//     })
+
+//     for (let i = 0; i < prices.length; i++) {
+//         try {
+//             await prices[i].update({ date: formatDate(prices[i].createdAt) })
+//             b++
+//             console.log(`updated price ${i}`)
+//         } catch (err) {
+//             console.log(err)
+//         }
+//     }
+
+
+//     return console.log(`added ${b} dates to prices and encountered ${e} errors`)
+// })()
+
+
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+
+//     const printCount = await Print.count()
+
+//     for (let offset = 0; offset < printCount; offset+=10000) {
+//         const prints = await Print.findAll({
+//             where: {
+//                 cardName: {[Op.gte]: 'Widespread Ruin'}
+//             },
+//             offset: offset,
+//             limit: 10000,
+//             order: [['cardName', 'ASC']]
+//         })
+    
+//         for (let i = 0; i < prints.length; i++) {
+//             try {
+//                 let a = 0
+//                 const print = prints[i]
+//                 const manufacturedPrices = await Price.findAll({ where: { printId: print.id, isManufactured: true, date: {[Op.not]: null} }})
+//                 for (let j = 0; j < manufacturedPrices.length; j++) {
+//                     const price = manufacturedPrices[j]
+//                     const count = await Price.count({ where: { printId: print.id, id: {[Op.not]: price.id}, edition: price.edition, date: price.date } })
+//                     // console.log('count')
+//                     if (count) {
+//                         await price.destroy()
+//                         // console.log('destroy')
+//                         // console.log(`deleted manufactured price ${j} for ${print.cardName}`)
+//                         b++
+//                         a++
+//                     }
+//                 }
+//                 console.log(`destroyed ${a} prices ${print.cardCode} ${print.cardName}`)
+//             } catch (err) {
+//                 console.log(err)
+//                 e++
+//             }
+//         }
+//     }
+
+//     return console.log(`destroyed ${b} manufactured prints and encountered ${e} errors`)
+// })()
+
 ;(async () => {
     let b = 0
-    let e = 0
 
-    function formatDate(timestamp:Date) {
-        const date = new Date(timestamp);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    }
+    const tcgFormats = await Format.findAll({
+        where: {
+            category: 'TCG'
+        },
+        order: [['date', 'ASC']]
+    })
 
-    for (let j = 16466965; j < 27852869; j+=100000) {
-        const prices = await Price.findAll({
-            order: [['id', 'ASC']],
-            offset: j,
-            limit: 100000
+    for (let i = 0; i < tcgFormats.length - 1; i++) {
+        const currFormat = tcgFormats[i]
+        const nextFormat = tcgFormats[i+1]
+
+        await currFormat.update({
+            nextFormatName: nextFormat.name,
+            nextFormatId: nextFormat.id
         })
 
-        try {
-            for (let i = 0; i < prices.length; i++) {
-                await prices[i].update({ date: formatDate(prices[i].createdAt) })
-                b++
-                console.log(`updated price ${i+j}`)
-            }
-        } catch (err) {
-            console.log(err)
-            e++
-        }
+        await nextFormat.update({
+            previousFormatName: currFormat.name,
+            previousFormatId: currFormat.id
+        })
+
+        b++
+    }
+    
+    const ocgFormats = await Format.findAll({
+        where: {
+            category: 'OCG'
+        },
+        order: [['date', 'ASC']]
+    })
+
+    for (let i = 0; i < ocgFormats.length - 1; i++) {
+        const currFormat = ocgFormats[i]
+        const nextFormat = ocgFormats[i+1]
+
+        await currFormat.update({
+            nextFormatName: nextFormat.name,
+            nextFormatId: nextFormat.id
+        })
+
+        await nextFormat.update({
+            previousFormatName: currFormat.name,
+            previousFormatId: currFormat.id
+        })
+        b++
     }
 
-
-    return console.log(`updated ${b} max/median/min prints and encountered ${e} errors`)
+    return console.log(`updated ${b} formats`)
 })()

@@ -7,11 +7,13 @@ import { Subscriptions } from '@fl/components'
 // import { client } from 'libs/bot-functions/src/client'
 
 const App = () => {
+    console.log('navigator.userAgent', navigator.userAgent)
     const adBlockDetected = useDetectAdBlock()
     // console.log('adBlockDetected', adBlockDetected)
     const playerId = getCookie('playerId')
     const visited = getCookie('visited')
-    // console.log('visited', visited)
+    console.log('playerId', playerId)
+    console.log('visited', visited)
     const [roles, setRoles] = useState({
         admin: false, 
         contentManager: false, 

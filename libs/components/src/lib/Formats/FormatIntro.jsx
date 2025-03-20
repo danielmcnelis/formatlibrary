@@ -131,35 +131,35 @@ export const FormatIntro = (props) => {
                 <li>
                 <a href={`/formats/${urlize(format.name)}#banlist`}>Ban List</a>
                 </li>
-                </div>
-                {
-                    isContentManager ? (
-                        !inEditMode ? (                        
-                            <div className="vertical-centered-flexbox" style={{margin: '24px 0px'}}>
-                                <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} alt={format.icon}/>
-                                <div className="downloadButton" style={{width: '150px'}} onClick={()=> setInEditMode(true)}>Edit Mode</div>
-                            </div>
-                        ) : (
-                            <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} alt={format.icon}/>
-                        )
-                    ) : ''
-                }
             </div>
+            <div className="vertical-centered-flexbox" style={{margin: '24px 0px'}}>
             {
-                format.description ? (
-                    <div className="mobile-only">
-                    <p className="format-desc">{format.description}</p>
-                    </div>
-                ) : ''
+                format.previousFormatId ? <a className="format-neighbor-link align-left" href={`/formats/${urlize(format.previousFormatName)}`} >← {format.previousFormatName}</a> : ''
+            }
+            <img id="format-icon-large" src={`https://cdn.formatlibrary.com/images/artworks/${format.icon}.jpg`} alt={format.icon}/>
+            {
+                format.nextFormatId ? <a className="format-neighbor-link align-right" href ={`/formats/${urlize(format.nextFormatName)}`}>{format.nextFormatName} →</a> : ''
             }
             {
-                videoEmbed ? parse(videoEmbed) : null
+                // isContentManager && !inEditMode ? <div className="downloadButton" style={{width: '150px'}} onClick={()=> setInEditMode(true)}>Edit Mode</div> : ''
             }
-            <PopularDecks id="popular-decks" formatName={format.name}/>
-            <RecentEvents id="recent-events" formatName={format.name}/>
-            <MiniBoard limit={10} format={format}/>
-            <BanList id="banlist" format={format}/>
+            </div>
         </div>
+        {
+            format.description ? (
+                <div className="mobile-only">
+                <p className="format-desc">{format.description}</p>
+                </div>
+            ) : ''
+        }
+        {
+            videoEmbed ? parse(videoEmbed) : null
+        }
+        <PopularDecks id="popular-decks" formatName={format.name}/>
+        <RecentEvents id="recent-events" formatName={format.name}/>
+        <MiniBoard limit={10} format={format}/>
+        <BanList id="banlist" format={format}/>
+    </div>
     </>
 
     )

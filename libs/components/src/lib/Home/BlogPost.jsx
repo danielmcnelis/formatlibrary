@@ -63,7 +63,7 @@ export const BlogPost = (props) => {
                                         src="https://cdn.formatlibrary.com/images/logos/TCGPlayer.png" 
                                         alt="TCG Player" 
                                     />
-                                    <p className="ad-desc">Shop to support us!</p>
+                                    <p className="ad-desc">Shop to support FormatLibrary.com!</p>
                                 </a>
                             </div>
                         ) : <div/>

@@ -26,26 +26,29 @@ function smoothArray(data, windowSize) {
 
 // GET PRICES
 export const getPrices = async (req, res, next) => {
-    const id = req.params.id.replaceAll('%2F', '/')
-        .replaceAll('%3F', '?')
-        .replaceAll('%23', '#')
-        .replaceAll('%25', '%')
-        .replaceAll('%26', '&')
-        .replaceAll('-', ' ')
-        .replaceAll('   ', ' - ')
+    // const id = req.params.id.replaceAll('%2F', '/')
+    //     .replaceAll('%3F', '?')
+    //     .replaceAll('%23', '#')
+    //     .replaceAll('%25', '%')
+    //     .replaceAll('%26', '&')
+    //     .replaceAll('-', ' ')
+    //     .replaceAll('   ', ' - ')
 
     try {
-        const card = await Card.findOne({
-            where: {
-                [Op.or]: {
-                    name: {[Op.iLike]: id},
-                    cleanName: {[Op.iLike]: id}
-                }
-            },
-            attributes: { exclude: ['konamiCode', 'isTcgLegal', 'isOcgLegal', 'createdAt', 'updatedAt'] }
-        })
+        // const card = await Card.findOne({
+        //     where: {
+        //         [Op.or]: {
+        //             name: {[Op.iLike]: id},
+        //             cleanName: {[Op.iLike]: id}
+        //         }
+        //     },
+        //     attributes: { exclude: ['konamiCode', 'isTcgLegal', 'isOcgLegal', 'createdAt', 'updatedAt'] }
+        // })
 
-        const print = await Print.findOne({ where: { cardId: card.id, isMaxRarity: true }, attributes: ['id', 'rarity', 'cardCode', 'cardName', 'unlimitedPrice', 'firstEditionPrice', 'limitedPrice']})
+        // console.log('req.params.id', req.params.id)
+        // if (!req.params.id) return res.json({})
+            console.log('req.params.id', req.params.id)
+        const print = await Print.findOne({ where: { id: req.params.id }, attributes: ['id', 'rarity', 'cardCode', 'cardName', 'unlimitedPrice', 'firstEditionPrice', 'limitedPrice']})
         const daysAgo = new Date(Date.now() - (550 * 24 * 60 * 60 * 1000))
  
         // @ts-ignore

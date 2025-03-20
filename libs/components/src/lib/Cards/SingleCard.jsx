@@ -22,6 +22,7 @@ export const SingleCard = (props) => {
     const isAdmin = props.roles?.admin
     const isContentManager = props.roles?.contentManager
     const [inEditMode, setInEditMode] = useState(false)
+    const [print, setPrint] = useState({})
     const [data, setData] = useState({
         card: {},
         statuses: {},
@@ -30,9 +31,7 @@ export const SingleCard = (props) => {
     })
 
     const [prices, setPrices] = useState({})
-    console.log('prices', prices)
     const raritySymbol = prices.rarity === '10000 Secret Rare' ? 'tenThousandSecretRare' : camelize(prices.rarity || '')
-
 
     const { card, statuses, prints, rulings } = data || {}
     const { id } = useParams()
@@ -91,17 +90,35 @@ export const SingleCard = (props) => {
             try {
                 const {data: cardData} = await axios.get(`/api/cards/${id}`)
                 setData(cardData)
-
-                const {data: priceData} = await axios.get(`/api/prices/${id}`)
-                setPrices(priceData)
             } catch (err) {
                 console.log(err)
-                setData(null)
+                setData({})
             }
         }
   
         fetchData()
     }, [id])
+
+    // USE EFFECT SET CARD
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const {data: priceData} = await axios.get(`/api/prices/${print.id || data.prints[0]?.id}`)
+                setPrices(priceData)
+            } catch (err) {
+                console.log(err)
+                setData({})
+            }
+        }
+  
+        fetchData()
+    }, [data.prints, print])
+
+    // UPDATE PRINT
+    const updatePrint = (e) => {
+        const p = prints.find((p) => p.id === Number(e.target.value)) || {}
+        setPrint(p)
+    }
   
     if (data === null) return <NotFound/>
     if (!card?.id) return <div style={{height: '100vh'}}/>
@@ -573,7 +590,7 @@ export const SingleCard = (props) => {
                 {
                     !inEditMode ? (
                         <div className="status-flexbox">
-                            <div>TCG Status History:</div>
+                            <h2>TCG Status History</h2>
                             <div className="status-box">
                                 {banlists.map(([banlist, date]) => {
                                     const status = statuses[banlist] ? statuses[banlist] : card.tcgDate < date ? 'unlimited' : null
@@ -586,7 +603,7 @@ export const SingleCard = (props) => {
                 <div className="horizontal-centered-flexbox space-evenly">
                 {
                     prices.pricesArr?.length ? (
-                        <div className="line-chart-container">
+                        <div className="line-chart-container vertical-centered-flexbox">
                             <h2 style={{marginBottom: '10px'}}>Price History</h2>
                             <div className="horizontal-centered-flexbox" style={{alignItems: 'center'}}>
                                 <div>{prices.edition}</div>
@@ -604,18 +621,30 @@ export const SingleCard = (props) => {
                                 data={lineData}
                                 options={lineOptions}
                             />
+                            <select
+                                id="print"
+                                // value={`${print.rarity} - ${print.cardCode}  ${print.cardName}`}
+                                style={{maxWidth: '35vw', margin: '10px 0px'}}
+                                className="filter"
+                                onChange={(e) => updatePrint(e)}
+                            >
+                                {
+                                    prints?.map((p) => <option key={p.id} value={p.id}>{`${p.rarity} - ${p.cardCode} - ${p.cardName}`}</option>)
+                                }
+                            </select>
                         </div>
                     ) : null
                 }
                 </div>
                 {
                     prints?.length && !inEditMode ? (
-                        <div className="prints-flexbox">
-                            <div>Prints:</div>
+                        <div className="prints-flexbox vertical-centered-flexbox">
+                            <h2>Prints</h2>
+                            <div>Click to purchase on TCGplayer and support Format Library!</div>
                             <div className="print-box">
                             <table>
                                 <tbody>
-                                {prints.map((print, index) => <PrintRow key={print.id} index={index} print={print}/>)}
+                                {prints?.map((print, index) => <PrintRow key={print.id} index={index} print={print}/>)}
                                 </tbody>
                             </table>
                             </div>

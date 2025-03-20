@@ -15,7 +15,7 @@
     width: 176px;
     border: 10px ridge #bf9c60;
     border-radius: 5px;
-    margin: 10px 0px 10px 30px;
+    margin: 10px 0px;
   }
 
   .vertical-centered-flexbox {
@@ -33,7 +33,28 @@
     width: 100%;
   }
 
+  .align-left {
+    text-align: left;
+  }
+
+  .align-right {
+    text-align: right;
+  }
   
+.format-neighbor-link {
+    font-weight: 600;
+    width: 100%;
+    font-style: italic;
+    color: var(--text-link-no-hover);
+    display: inline;
+}
+
+.format-neighbor-link:hover {
+    font-style: italic;
+    color: var(--text-link-hover);
+    text-decoration: underline;
+}
+
   .format-desc {
     width: 90%;
     font-size: 12pt;
@@ -107,6 +128,6 @@
       width: 76px;
       border: 4px ridge #bf9c60;
       border-radius: 2px;
-      margin: 0px 0px 0px 10px;
+      margin: 0px;
     }
 }
