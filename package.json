@@ -39,6 +39,7 @@
     "express": "^4.18.1",
     "express-ejs-layouts": "^2.5.1",
     "fuzzyset": "^1.0.7",
+    "googleapis": "^148.0.0",
     "html-react-parser": "^3.0.4",
     "http-proxy-middleware": "^2.0.6",
     "jose": "^5.6.2",
