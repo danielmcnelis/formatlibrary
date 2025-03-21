@@ -9,6 +9,7 @@ import { parse } from 'csv-parse'
 import { Upload } from '@aws-sdk/lib-storage'
 import { S3, DeleteObjectCommand } from '@aws-sdk/client-s3'
 // import { statuses } from './ocg-banlists.json' 
+const imported_prices = require('./prices.json')
 
 //SHUFFLE ARRAY
 const shuffleArray = (arr) => {
@@ -2851,55 +2852,137 @@ const shuffleArray = (arr) => {
 //     return console.log(`destroyed ${b} manufactured prints and encountered ${e} errors`)
 // })()
 
+// ;(async () => {
+//     let b = 0
+
+//     const tcgFormats = await Format.findAll({
+//         where: {
+//             category: 'TCG'
+//         },
+//         order: [['date', 'ASC']]
+//     })
+
+//     for (let i = 0; i < tcgFormats.length - 1; i++) {
+//         const currFormat = tcgFormats[i]
+//         const nextFormat = tcgFormats[i+1]
+
+//         await currFormat.update({
+//             nextFormatName: nextFormat.name,
+//             nextFormatId: nextFormat.id
+//         })
+
+//         await nextFormat.update({
+//             previousFormatName: currFormat.name,
+//             previousFormatId: currFormat.id
+//         })
+
+//         b++
+//     }
+    
+//     const ocgFormats = await Format.findAll({
+//         where: {
+//             category: 'OCG'
+//         },
+//         order: [['date', 'ASC']]
+//     })
+
+//     for (let i = 0; i < ocgFormats.length - 1; i++) {
+//         const currFormat = ocgFormats[i]
+//         const nextFormat = ocgFormats[i+1]
+
+//         await currFormat.update({
+//             nextFormatName: nextFormat.name,
+//             nextFormatId: nextFormat.id
+//         })
+
+//         await nextFormat.update({
+//             previousFormatName: currFormat.name,
+//             previousFormatId: currFormat.id
+//         })
+//         b++
+//     }
+
+//     return console.log(`updated ${b} formats`)
+// })()
+
+// ;(async () => {
+//     let b = 0
+
+//     const tcgFormats = await Format.findAll({
+//         where: {
+//             category: 'TCG'
+//         },
+//         order: [['date', 'ASC']]
+//     })
+
+//     for (let i = 0; i < tcgFormats.length - 1; i++) {
+//         const currFormat = tcgFormats[i]
+//         const nextFormat = tcgFormats[i+1]
+
+//         await currFormat.update({
+//             nextFormatName: nextFormat.name,
+//             nextFormatId: nextFormat.id
+//         })
+
+//         await nextFormat.update({
+//             previousFormatName: currFormat.name,
+//             previousFormatId: currFormat.id
+//         })
+
+//         b++
+//     }
+    
+//     const ocgFormats = await Format.findAll({
+//         where: {
+//             category: 'OCG'
+//         },
+//         order: [['date', 'ASC']]
+//     })
+
+//     for (let i = 0; i < ocgFormats.length - 1; i++) {
+//         const currFormat = ocgFormats[i]
+//         const nextFormat = ocgFormats[i+1]
+
+//         await currFormat.update({
+//             nextFormatName: nextFormat.name,
+//             nextFormatId: nextFormat.id
+//         })
+
+//         await nextFormat.update({
+//             previousFormatName: currFormat.name,
+//             previousFormatId: currFormat.id
+//         })
+//         b++
+//     }
+
+//     return console.log(`updated ${b} formats`)
+// })()
+
+
 ;(async () => {
     let b = 0
+    let e = 0
 
-    const tcgFormats = await Format.findAll({
-        where: {
-            category: 'TCG'
-        },
-        order: [['date', 'ASC']]
-    })
-
-    for (let i = 0; i < tcgFormats.length - 1; i++) {
-        const currFormat = tcgFormats[i]
-        const nextFormat = tcgFormats[i+1]
-
-        await currFormat.update({
-            nextFormatName: nextFormat.name,
-            nextFormatId: nextFormat.id
-        })
-
-        await nextFormat.update({
-            previousFormatName: currFormat.name,
-            previousFormatId: currFormat.id
-        })
-
-        b++
-    }
-    
-    const ocgFormats = await Format.findAll({
-        where: {
-            category: 'OCG'
-        },
-        order: [['date', 'ASC']]
-    })
-
-    for (let i = 0; i < ocgFormats.length - 1; i++) {
-        const currFormat = ocgFormats[i]
-        const nextFormat = ocgFormats[i+1]
-
-        await currFormat.update({
-            nextFormatName: nextFormat.name,
-            nextFormatId: nextFormat.id
-        })
-
-        await nextFormat.update({
-            previousFormatName: currFormat.name,
-            previousFormatId: currFormat.id
-        })
-        b++
+    for (let i = 0; i < imported_prices.length; i++) {
+        try {
+            const price = imported_prices[i]
+            await Price.create({
+                usd: price.usd,
+                edition: price.edition,
+                source: price.source,
+                printId: price.printId,
+                createdAt: price.createdAt,
+                updatedAt: price.updatedAt,
+                isManufactured: false
+            })
+            console.log('created price for printId', price.printId)
+            b++
+            
+        } catch (err) {
+            console.log(err)
+            e++
+        }
     }
 
-    return console.log(`updated ${b} formats`)
+    return console.log(`created ${b} prices, encountered ${e} errors`)
 })()
