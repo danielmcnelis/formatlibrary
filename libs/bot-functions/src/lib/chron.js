@@ -56,7 +56,7 @@ export const runNightlyTasks = async (client) => {
 
         console.log('tasks.length', tasks.length)
     
-        for (let i = 9; i < tasks.length; i++) {
+        for (let i = 10; i < tasks.length; i++) {
             console.log(`RUNNING TASK ${i}`)
             await tasks[i](client)
     
@@ -1423,7 +1423,7 @@ export const updateMinMedMaxRarities = async () => {
         runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
     })
 
-    console.log(`updated ${b} max/median/min prints and encountered ${c} errors`)
+    console.log(`updated ${b} max/median/min prints and encountered ${e} errors`)
     return console.log(`updateMinMedMaxRarities() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
