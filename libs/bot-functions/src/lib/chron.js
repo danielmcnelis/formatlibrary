@@ -88,25 +88,29 @@ export const runMonthlyTasks = async () => {
 
 // REFRESH EXPIRED TOKENS
 export const refreshExpiredTokens = async () => {
-    const difference = new Date(tcgPlayer[".expires"]) - Date.now()
-    if (!tcgPlayer[".expires"] || difference < 24 * 60 * 60 * 1000) {
-        const params = new URLSearchParams()
-        params.append('grant_type', 'client_credentials')
-        params.append('client_id', config.tcgPlayer.publicKey)
-        params.append('client_secret', config.tcgPlayer.privateKey)
-
-        const { data } = await axios.post(`https://api.tcgplayer.com/token`, params, {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded' 
-            }
-        })
-
-        fs.writeFile('./tokens/tcgplayer.json', JSON.stringify(data), (err) => {
-            if (err) return console.error(err)
-            console.log('tcgPlayer token stored to', './tokens/tcgplayer.json')
-        })
-    } else {
-        console.log('tcgPlayer token is not expiring soon')
+    try {
+        const difference = new Date(tcgPlayer[".expires"]) - Date.now()
+        if (!tcgPlayer[".expires"] || difference < 24 * 60 * 60 * 1000) {
+            const params = new URLSearchParams()
+            params.append('grant_type', 'client_credentials')
+            params.append('client_id', config.tcgPlayer.publicKey)
+            params.append('client_secret', config.tcgPlayer.privateKey)
+    
+            const { data } = await axios.post(`https://api.tcgplayer.com/token`, params, {
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded' 
+                }
+            })
+    
+            fs.writeFile('./tokens/tcgplayer.json', JSON.stringify(data), (err) => {
+                if (err) return console.error(err)
+                console.log('tcgPlayer token stored to', './tokens/tcgplayer.json')
+            })
+        } else {
+            console.log('tcgPlayer token is not expiring soon')
+        }
+    } catch (err) {
+        console.log(err)
     }
 }
 

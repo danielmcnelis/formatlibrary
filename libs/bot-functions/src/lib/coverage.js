@@ -13,6 +13,7 @@ import { checkExpiryDate, uploadDeckFolder } from './drive'
 
 // CREATE DECKS
 export const createDecks = async (event, participants, standings = [], topCutSize, topCutTournamentId, challongeApiKey) => {
+    console.log("createDecks()")
     let b = 0
     let c = 0
     let e = 0
@@ -42,13 +43,15 @@ export const createDecks = async (event, participants, standings = [], topCutSiz
                         eventId: event.id
                     }
                 })
-    
+                console.log("count", count)
+
                 if (!count) {
                     const standing = standings?.find((s) => s.participantId === participant.id)
                     let placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
                         participant.final_rank ? parseInt(participant.final_rank) :
                         null
 
+                        console.log("placement", placement)
                     if (topCutSize && placement <= topCutSize) {
                         const topCutEntry = await Entry.findOne({
                             where: {
@@ -58,13 +61,15 @@ export const createDecks = async (event, participants, standings = [], topCutSiz
                         })
 
                         const {data} = await axios.get(`https://api.challonge.com/v1/tournaments/${topCutTournamentId}/participants/${topCutEntry.participantId}.json?api_key=${challongeApiKey}`) 
-                        
+                        console.log('!!data', !!data)
                         if (data?.participant?.final_rank) {
                             placement = data.participant.final_rank
                         }
                     }
     
                     const deckType = await getDeckType(entry.ydk, event.formatName)
+                    console.log('!!deckType', !!deckType)
+                    console.log('deckType?.name', deckType?.name)
     
                     await Deck.create({
                         deckTypeName: deckType.name,
