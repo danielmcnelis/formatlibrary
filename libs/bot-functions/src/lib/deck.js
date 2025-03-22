@@ -406,7 +406,7 @@ export const getDeckType = async (deckfile, formatName) => {
         order: [['createdAt', 'DESC']]
     })
 
-    while (labeledDecks.length < 5000) {
+    while (nearbyFormats.length !== 0 && labeledDecks.length < 5000) {
         for (let i = 0; i < nearbyFormats.length; i++) {
             const nearbyFormat = nearbyFormats[i]
             const additionalDecks = await Deck.findAll({
