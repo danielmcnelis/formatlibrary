@@ -54,6 +54,7 @@ export const runNightlyTasks = async (client) => {
         ]
     
         for (let i = 0; i < tasks.length; i++) {
+            console.log(`RUNNIG TASK ${i}`)
             await tasks[i](client)
     
             if (i === tasks.length - 1) {
