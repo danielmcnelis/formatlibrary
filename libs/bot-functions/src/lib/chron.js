@@ -2,7 +2,7 @@
 import axios from 'axios'
 import * as fs from 'fs'
 import * as sharp from 'sharp'
-import { Artwork, BlogPost, Card, ChronRecord, Deck, DeckThumb, DeckType, Entry, Event, Format, Tournament, Match, Matchup, Membership, Player, Pool, Price, Print, Replay, Role, Server, Set, Stats, Subscription } from '@fl/models'
+import { Artwork, BlogPost, Card, ChronRecord, Community, Deck, DeckThumb, DeckType, Entry, Event, Format, Tournament, Match, Matchup, Membership, Player, Pool, Price, Print, Replay, Role, Server, Set, Stats, Subscription } from '@fl/models'
 import { checkTimeBetweenDates, createMembership, createPlayer, dateToVerbose, s3FileExists, capitalize, checkIfDiscordNameIsTaken, getNextDateAtMidnight, getNextSundayAtMidnight, getStartOfNextMonthAtMidnight, countDaysInBetweenDates } from './utility'
 import { Op } from 'sequelize'
 import { getFirstOfTwoRatedConfirmations, updateGeneralStats, updateSeasonalStats } from '@fl/bot-functions'
@@ -56,7 +56,7 @@ export const runNightlyTasks = async (client) => {
 
         console.log('tasks.length', tasks.length)
     
-        for (let i = 10; i < tasks.length; i++) {
+        for (let i = 15; i < tasks.length; i++) {
             console.log(`RUNNING TASK ${i}`)
             await tasks[i](client)
     
