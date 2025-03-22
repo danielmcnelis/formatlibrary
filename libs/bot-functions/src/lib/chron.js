@@ -2721,19 +2721,19 @@ export const updateServers = async (client) => {
                 await server.save()
             }
 
+            const count = await Community.count({ where: { serverId: server.id } })
+            if (server.access === 'partner' && !count) {
+                await Community.create({
+                    name: server.communityName || server.name,
+                    serverName: server.name,
+                    serverId: server.id
+                })
+            }
+
             if (server.access !== 'free' && !server.logoName) {
                 if (await s3FileExists(`images/logos/${server.name.replaceAll('+', '%2B')}.png`)) {
                     await server.update({ logoName: server.name })
-                }
-
-                const count = await Community.count({ where: { serverId: server.id } })
-                if (!count) {
-                    await Community.create({
-                        name: server.communityName || server.name,
-                        serverName: server.name,
-                        serverId: server.id
-                    })
-                }
+                } 
             }
         } catch (err) {
             console.log(err)
