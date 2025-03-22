@@ -49,12 +49,15 @@ export const runNightlyTasks = async (client) => {
         const tasks = [
             manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
             purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, updateSets, 
-            updateMarketPrices, updateMinMedMaxRarities, updateDecks, updateDeckTypes, downloadNewCards, downloadAltArtworks, 
-            downloadMissingCardImages, updateServers, conductCensus, updateAvatars, 
+            updateMarketPrices, updateMinMedMaxRarities, updateDecks, updateDeckTypes, 
+            downloadNewCards, downloadAltArtworks, downloadMissingCardImages, updateServers, 
+            conductCensus, updateAvatars
         ]
+
+        console.log('tasks.length', tasks.length)
     
-        for (let i = 0; i < tasks.length; i++) {
-            console.log(`RUNNIG TASK ${i}`)
+        for (let i = 9; i < tasks.length; i++) {
+            console.log(`RUNNING TASK ${i}`)
             await tasks[i](client)
     
             if (i === tasks.length - 1) {
@@ -1421,8 +1424,7 @@ export const updateMinMedMaxRarities = async () => {
     })
 
     console.log(`updated ${b} max/median/min prints and encountered ${c} errors`)
-    return console.log(`updateMarketPrices() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-
+    return console.log(`updateMinMedMaxRarities() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 
@@ -2723,6 +2725,15 @@ export const updateServers = async (client) => {
                 if (await s3FileExists(`images/logos/${server.name.replaceAll('+', '%2B')}.png`)) {
                     await server.update({ logoName: server.name })
                 }
+
+                const count = await Community.count({ where: { serverId: server.id } })
+                if (!count) {
+                    await Community.create({
+                        name: server.communityName || server.name,
+                        serverName: server.name,
+                        serverId: server.id
+                    })
+                }
             }
         } catch (err) {
             console.log(err)
@@ -2740,6 +2751,7 @@ export const updateServers = async (client) => {
 
 // UPDATE DECKS
 export const updateDecks = async () => {
+    console.log('updateDecks()')
     const start = Date.now()
     const chronRecord = await ChronRecord.create({
         function: 'updateDecks',

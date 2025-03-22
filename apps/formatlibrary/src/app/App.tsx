@@ -30,7 +30,7 @@ const App = () => {
 
     // USE EFFECT
     useEffect(() => {
-        if (adBlockDetected && ((Number(visited) < oneDayAgo.getTime()) || !visited)) {
+        if ((adBlockDetected && (Number(visited) > oneDayAgo.getTime())) || !visited) {
             setShowReminder(true)
             
             const track = async () => {
