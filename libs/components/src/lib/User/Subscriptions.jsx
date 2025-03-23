@@ -11,8 +11,8 @@ export const Subscriptions = () => {
                 <script async src="https://js.stripe.com/v3/buy-button.js"/>
             </Helmet>
             <div className="body">
-                <h2>FormatLibrary.com Subscription Tiers</h2>
-                <h4 style={{margin: '0px auto'}}><i>Important: Sign-up using the email connected to your Discord account!</i></h4>
+                <h2>Format Library Subscription Tiers</h2>
+                <h4 style={{margin: '0px auto'}}><i>Important: Purchase a subscription using the email connected to your account!</i></h4>
                 <div className="horizontal-products-flex" style={{margin: '20px 20%'}}>
                     <div>
                         <stripe-buy-button

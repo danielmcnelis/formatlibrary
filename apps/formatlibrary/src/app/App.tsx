@@ -79,20 +79,22 @@ const App = () => {
         <div className="app">
         {
             playerId && !checkedSubscription ? (<Router disableAds={disableAds}/>) :
-                !roles.subscriber && adBlockDetected && showReminder ? (
+                !roles.subscriber && adBlockDetected /* && showReminder */ ? (
                     <div>
                         <div className="ad-block-detected">
-                            <p>Format Library depends on modest ad revenue to operate and produce content. <span role="img" aria-label="artist">🧑‍🎨</span> We kindly ask you to whitelist us on your ad-blocker. <span role="img" aria-label="smiley">😊</span></p>
-                            <p>You can also subscribe for ad-free content and other perks below.</p>
+                            <br/>
+                            <p>Format Library depends on modest ad revenue to operate. Please pause your ad-blocker to view our content. <span role="img" aria-label="smiley">😊</span></p>
+                            <br/>
+                            <p>You can also subscribe and log-in below for ad-free content and other perks!</p>
                         </div>
                         <Subscriptions/>
                         <div className="horizontal-centered-flexbox">
                             <a className="show-cursor reminder-button" href="/auth/login/">
                                 <h1 className="login">LOGIN</h1>
                             </a>
-                            <div className="show-cursor reminder-button" onClick={() => window.location.reload()}>
-                                <h1 className="login">CONTINUE</h1>
-                            </div>
+                            {/* <div className="show-cursor reminder-button" onClick={() => window.location.reload()}>
+                                <h1 className="login">SUBSCRIBE</h1>
+                            </div> */}
                         </div>
                     </div>
                 ) : (<Router disableAds={disableAds} roles={roles}/>)

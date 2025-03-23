@@ -2726,7 +2726,8 @@ export const updateServers = async (client) => {
                 await Community.create({
                     name: server.communityName || server.name,
                     serverName: server.name,
-                    serverId: server.id
+                    serverId: server.id,
+                    logo: server.logoName
                 })
             }
 
