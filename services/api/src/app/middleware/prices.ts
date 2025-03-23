@@ -49,7 +49,7 @@ export const getPrices = async (req, res, next) => {
         // if (!req.params.id) return res.json({})
             console.log('req.params.id', req.params.id)
         const print = await Print.findOne({ where: { id: req.params.id }, attributes: ['id', 'rarity', 'cardCode', 'cardName', 'unlimitedPrice', 'firstEditionPrice', 'limitedPrice']})
-        const daysAgo = new Date(Date.now() - (550 * 24 * 60 * 60 * 1000))
+        const daysAgo = new Date(Date.now() - (365 * 24 * 60 * 60 * 1000))
  
         // @ts-ignore
         const highestCurrentPrice = Math.max(...[print?.unlimitedPrice, print?.firstEditionPrice, print?.limitedPrice].filter((el) => el !== null))
@@ -62,12 +62,13 @@ export const getPrices = async (req, res, next) => {
         const mobileTitle = `${print.cardCode}`
         const desktopTitle = `${print.cardCode} - ${print.cardName}`
 
-        const prices =  print?.id ? [...await Price.findAll({
+        const prices = print?.id ? [...await Price.findAll({
             where: {
                 printId: print?.id,
                 createdAt: {[Op.gte]: daysAgo},
                 edition: editionToFind
             },
+            attributes: ['usd', 'createdAt'],
             include: Print,
             order: [['createdAt', 'ASC']]
         })].map((p) => [p.usd, p.createdAt]) : []
