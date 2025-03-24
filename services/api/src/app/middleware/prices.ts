@@ -69,7 +69,7 @@ export const getPrices = async (req, res, next) => {
                 edition: editionToFind
             },
             attributes: ['usd', 'createdAt'],
-            include: Print,
+            // include: Print,
             order: [['createdAt', 'ASC']]
         })].map((p) => [p.usd, p.createdAt]) : []
 

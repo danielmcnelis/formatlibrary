@@ -12,7 +12,7 @@ import './EventTable.css'
 export const EventTable = (props) => {
     const isMounted = useRef(false)
     const [communityName, setCommunityName] = useState(null)
-    const [communities, setCommunties] = useState(['All Communities'])
+    const [communities, setCommunities] = useState(['All Communities'])
     const [events, setEvents] = useState([])
     const [eventsPerPage, setEventsPerPage] = useState(10)
     const [format, setFormat] = useState(null)
@@ -114,8 +114,7 @@ export const EventTable = (props) => {
             setFormats(formatData)  
 
             const {data: communityData} = await axios.get(`/api/events/communities`)
-            setCommunties(communityData)  
-            console.log('communities', communities)
+            setCommunities(communityData)  
               
             isMounted.current = true
         }

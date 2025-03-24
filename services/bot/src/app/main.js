@@ -27,7 +27,7 @@ import { createTopCut, editTieBreakers, getMidnightCountdown, getSecondOfTwoRate
     startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, 
     assignRoles, createMembership, createPlayer, fetchCardNames, hasPartnerAccess, 
     isModerator, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
-    editPointsSystem, runNightlyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, 
+    editPointsSystem, runNightlyTasks, runWeeklyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, 
     getKnownAbbreviation, capitalize, runFrequentTasks
 } from '@fl/bot-functions'
 

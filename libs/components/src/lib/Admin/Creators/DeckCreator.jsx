@@ -5,12 +5,12 @@ import { shouldDisplay } from '@fl/utils'
 
 export const DeckCreator = () => {
     const [communityName, setCommunityName] = useState(null)
+    const [communities, setCommunities] = useState([])
     const [deckType, setDeckType] = useState(null)
     const [deckTypes, setDeckTypes] = useState([])
     const [display, setDisplay] = useState(true)
     const [event, setEvent] = useState(null)
     const [events, setEvents] = useState([])
-    console.log('events', events)
     const [placement, setPlacement] = useState(1)
     const [player, setPlayer] = useState(null)
     const [players, setPlayers] = useState([])
@@ -68,7 +68,12 @@ export const DeckCreator = () => {
             console.log(err)
         }
     }
-
+  
+    const readYDKe = async (ydke) => {
+        const {data: ydk} = await axios.put(`https://formatlibrary.com/api/decks/convert-ydke-to-ydk`, { ydke: ydke })
+        setYDK(ydk)
+    }
+        
     const readYDK = (file) => {
         const reader = new FileReader()
         reader.readAsBinaryString(file)
@@ -105,12 +110,15 @@ export const DeckCreator = () => {
 
     // USE EFFECT
     useEffect(() => {
-        const fetchDeckTypes = async () => {
-            const {data} = await axios.get(`/api/decktypes/`)
-            setDeckTypes(data)
+        const fetchData = async () => {
+            const {data: communityData} = await axios.get(`/api/events/communities`)
+            setCommunities(communityData)  
+
+            const {data: deckTypeData} = await axios.get(`/api/decktypes/`)
+            setDeckTypes(deckTypeData)
         }
         
-        fetchDeckTypes()
+        fetchData()
     }, [])
 
     // USE EFFECT
@@ -156,38 +164,16 @@ export const DeckCreator = () => {
             <label>
                 Community:
                 <select
-                    id="community-name"
-                    onChange={(e) => setCommunityName(e.target.value || null)}
+                    id="community"
+                    defaultValue="All Communities"
+                    className="filter"
+                    onChange={(e) => {setCommunityName(e.target.value || null)}}
                 >
-                    <option value=""></option>
-                    <option value="Format Library">Format Library</option>
-                    <option value="Androidland">Androidland</option>
-                    <option value="Aureum's Army">Aureum's Army</option>
-                    <option value="beastmode">Beastmode</option>
-                    <option value="Big Boy Gaming">Big Boy Gaming</option>
-                    <option value="Card Brawlers">Card Brawlers</option>
-                    <option value="DuelistGroundz">DuelistGroundz</option>
-                    <option value="EdisonFormat.com">EdisonFormat.com</option>
-                    <option value="Fire-Water Format">Fire-Water Format</option>
-                    <option value="GoatFormat.com">GoatFormat.com</option>
-                    <option value="Goat Community Italia">Goat Community Italia</option>
-                    <option value="Goat Format Europe">Goat Format Europe</option>
-                    <option value="Goat Format War League">Goat Format War League</option>
-                    <option value="HATformat.com">HATFormat.com</option>
-                    <option value="Ishizu Tear Format">Ishizu Tear Format</option>
-                    <option value="Konami">Konami</option>
-                    <option value="Reaper Format">Reaper Format</option>
-                    <option value="Shuffle Deck Gaming">Shuffle Deck Gaming</option>
-                    <option value="Tengu Plant Town">Tengu Plant Town</option>
-                    <option value="The Dice Jar">The Dice Jar</option>
-                    <option value="The H.A.T. Alliance">The H.A.T. Alliance</option>
-                    <option value="Upper Deck Entertainment">Upper Deck Entertainment</option>
-                    <option value="Vegas Format">Vegas Format</option>
-                    <option value="Wind-Up Factory">Wind-Up Factory</option>
-                    <option value="YGOFrom0">YGOFrom0</option>
-                    <option value="Yugi-Kaibaland">Yugi-Kaibaland</option>
-                    <option value="Yu-Gi-Oh! Legacy">Yu-Gi-Oh! Legacy</option>
+                {
+                    communities.map((c) => <option key={c} value={c}>{c}</option>)
+                }
                 </select>
+                
             </label>
 
             <label>Event:
@@ -233,6 +219,14 @@ export const DeckCreator = () => {
                     type="file"
                     accept=".ydk"
                     onChange={(e) => readYDK(e.target.files[0])}
+                />
+            </label>
+
+            <label>YDKe:
+                <input
+                    id="ydke"
+                    type="text"
+                    onChange={(e) => readYDKe(e.target.value)}
                 />
             </label>
 

@@ -20,6 +20,14 @@ export const getMidnightCountdown = () => {
     return ( remainingHours * 60 + remainingMinutes ) * 60 * 1000
 }
 
+// IS SUNDAY
+export const isSunday = () => {
+	const date = new Date()
+    if(date.getDay() === 0) {
+        return true
+    }
+}
+
 // GET REMAINING DAYS IN MONTH
 export const getRemainingDaysInMonth = () => {
 	const date = new Date()
@@ -49,12 +57,9 @@ export const runNightlyTasks = async (client) => {
         const tasks = [
             manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
             purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, updateSets, 
-            updateMarketPrices, updateMinMedMaxRarities, updateDecks, updateDeckTypes, 
-            downloadNewCards, downloadAltArtworks, downloadMissingCardImages, updateServers, 
-            conductCensus, updateAvatars
+            updateMarketPrices, updateDecks, updateDeckTypes, downloadNewCards, 
+            downloadAltArtworks, downloadMissingCardImages, updateServers
         ]
-
-        console.log('tasks.length', tasks.length)
     
         for (let i = 0; i < tasks.length; i++) {
             console.log(`RUNNING TASK ${i}`)
@@ -70,6 +75,10 @@ export const runNightlyTasks = async (client) => {
                 for (let j = 0; j < records.length; j++) {
                     await records[j].update({ status: 'archived' })
                 }
+
+                if (isSunday()) {
+                    await runWeeklyTasks(client)
+                }
     
                 const remainingDaysInMonth = getRemainingDaysInMonth()
                 if (remainingDaysInMonth === 1) {
@@ -82,6 +91,13 @@ export const runNightlyTasks = async (client) => {
     }
     
     return setTimeout(() => runNightlyTasks(client), getMidnightCountdown())
+}
+
+// RUN MONTHLY TASKS
+export const runWeeklyTasks = async (client) => {
+    await updateMinMedMaxRarities()
+    await conductCensus(client)
+    await updateAvatars(client)
 }
 
 // RUN MONTHLY TASKS
@@ -124,21 +140,22 @@ export const updateAvatars = async (client) => {
         function: 'updateAvatars',
         status: 'underway'
     })
+    
     const servers = await Server.findAll({ order: [['size', 'DESC']]})
     const discordIds = []
-    for (let s = 0; s < servers.length; s++) {
-        let count = 0
-        const server = servers[s]
-        const guild = client.guilds.cache.get(server.id)
-        if (!guild) {
-            console.log('no guild', server.name)
-            continue
-        }
-        const membersMap = await guild.members.fetch()
-        const memberIds = [...membersMap.keys()]
-        
-        for (let i = 0; i < memberIds.length; i++) {
-            try {
+    try {
+        for (let s = 0; s < servers.length; s++) {
+            let count = 0
+            const server = servers[s]
+            const guild = client.guilds.cache.get(server.id)
+            if (!guild) {
+                console.log('no guild', server.name)
+                continue
+            }
+            const membersMap = await guild.members.fetch()
+            const memberIds = [...membersMap.keys()]
+            
+            for (let i = 0; i < memberIds.length; i++) {
                 const memberId = memberIds[i]
                 const member = membersMap.get(memberId)
                 const user = member.user
@@ -179,13 +196,13 @@ export const updateAvatars = async (client) => {
                 } else {
                     continue
                 }
-            } catch (err) {
-                console.log(err)
-            }   
+            } 
         }
+    } catch (err) {
+        console.log(err)
+    }  
 
-        console.log(`updated ${count} avatars for ${server.name}`)
-    }
+    console.log(`updated ${count} avatars for ${server.name}`)
 
     await chronRecord.update({
         status: 'complete',
