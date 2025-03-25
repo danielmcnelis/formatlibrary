@@ -147,7 +147,7 @@ export default {
                 if (commonTournamentIds.length) {
                     for (let i = 0; i < commonTournamentIds.length; i++) {
                         const id = commonTournamentIds[i]
-                        tournament = await Tournament.findOne({ where: { id: id, serverId: interaction.guildId, state: 'underway' }})
+                        tournament = await Tournament.findOne({ where: { id: id, serverId: interaction.guildId }})
                         console.log('!!tournament', !!tournament)
                         if (!tournament) continue
                         losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id } })
