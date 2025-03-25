@@ -1,11 +1,11 @@
-import { Card, Deck, Event, Format, Player, Replay, Server, Team, Tournament } from '@fl/models'
+import { Card, Community, Deck, Event, Format, Player, Replay, Server, Team, Tournament } from '@fl/models'
 import { arrayToObject, capitalize, getRandomColor } from '@fl/utils'
 import { Op } from 'sequelize'
 import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
 import { config } from '@fl/config'
 
-export const getCommunities = async (req, res, next) => {
+export const getEventCommunities = async (req, res, next) => {
     try {        
         const communities = [...await Event.findAll({
             where: { display: true },
@@ -21,7 +21,19 @@ export const getCommunities = async (req, res, next) => {
 
         communities.sort()
         communities.unshift('All Communities')
-        res.json(communities.sort())
+        res.json(communities)
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+export const getAllCommunities = async (req, res, next) => {
+    console.log('HIT')
+    try {        
+        const communities = [...await Community.findAll()].map((c) => c.name)
+        communities.sort()
+        communities.unshift('All Communities')
+        res.json(communities)
     } catch (err) {
         console.log(err)
     }

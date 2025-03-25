@@ -113,7 +113,7 @@ export const EventTable = (props) => {
             const {data: formatData} = await axios.get(`/api/formats/`)
             setFormats(formatData)  
 
-            const {data: communityData} = await axios.get(`/api/events/communities`)
+            const {data: communityData} = await axios.get(`/api/events/event-communities`)
             setCommunities(communityData)  
               
             isMounted.current = true

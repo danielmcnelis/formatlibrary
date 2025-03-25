@@ -159,7 +159,7 @@ export const ReplayTable = (props) => {
                     })
                     setReplays(replayData)
 
-                    const {data: communityData} = await axios.get(`/api/events/communities`)
+                    const {data: communityData} = await axios.get(`/api/events/cevent-ommunities`)
                     setCommunities(communityData)  
                     
                     const {data: formatData} = await axios.get(`/api/formats`)
@@ -180,7 +180,7 @@ export const ReplayTable = (props) => {
                     const { data: replayData } = await axios.get(url)                
                     setReplays(replayData)
 
-                    const {data: communityData} = await axios.get(`/api/events/communities`)
+                    const {data: communityData} = await axios.get(`/api/events/event-communities`)
                     setCommunities(communityData)  
 
                     const {data: formatData} = await axios.get(`/api/formats`)

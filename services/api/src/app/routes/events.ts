@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { authenticate, getEvents, getCommunities, countEvents, getRecentEvents, getEventById, createEvents, getEventCommunity, getEventGallery, getEventByIdAsSubscriber } from '../middleware'
+import { authenticate, getEvents, getAllCommunities, getEventCommunities, countEvents, getRecentEvents, getEventById, createEvents, getEventCommunity, getEventGallery, getEventByIdAsSubscriber } from '../middleware'
 
 const router = Router()
 
@@ -7,7 +7,9 @@ router.get('/api/events/recent/:format', getRecentEvents)
 
 router.get('/api/events/gallery/:format', getEventGallery)
 
-router.get('/api/events/communities', getCommunities)
+router.get('/api/events/communities', getAllCommunities)
+
+router.get('/api/events/event-communities', getEventCommunities)
 
 router.get('/api/events/community/:community', getEventCommunity)
 
