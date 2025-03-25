@@ -132,7 +132,7 @@ export default {
                 })
             }
             
-            const activeTournament = await Tournament.count({ where: { state: 'underway', serverId: interaction.guildId, formatName: {[Op.or]: [format.name, 'Multiple']} }}) 
+            const activeTournament = await Tournament.count({ where: { state: {[Op.includes]: 'underway'}, serverId: interaction.guildId, formatName: {[Op.or]: [format.name, 'Multiple']} }}) 
             let isTournament, winningEntry, losingEntry, tournament, match, challongeMatch
 
             if (activeTournament) {
