@@ -123,8 +123,11 @@ export default {
 
             if (activeTournament) {
                 const loserTournamentIds = [...await Entry.findByPlayerIdAndFormatId(losingPlayer.id, format.id)].map((e) => e.tournamentId)
+                console.log('loserTournamentIds', loserTournamentIds)
                 const winnerTournamentIds = [...await Entry.findByPlayerIdAndFormatId(winningPlayer.id, format.id)].map((e) => e.tournamentId)
+                console.log('winnerTournamentIds', winnerTournamentIds)
                 const commonTournamentIds = loserTournamentIds.filter((id) => winnerTournamentIds.includes(id))
+                console.log('commonTournamentIds', commonTournamentIds)
                 const tournaments = []
 
                 if (commonTournamentIds.length) {
@@ -132,10 +135,14 @@ export default {
                         const id = commonTournamentIds[i]
                         tournament = await Tournament.findOne({ where: { id: id, serverId: interaction.guildId }})
                         if (!tournament) continue
+                        console.log('!!tournament', !!tournament)
                         losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id } })
+                        console.log('!!losingEntry', !!losingEntry)
                         winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id } })
+                        console.log('!!winningEntry', !!winningEntry)
                         if (!losingEntry || !winningEntry) continue
                         const data = await getMatches(server, tournament.id, 'open', losingEntry.participantId)
+                        console.log('!!data[0]', !!data[0])
                         if (!data[0]) continue
                         if (checkPairing(data[0].match, losingEntry.participantId, winningEntry.participantId)) {
                             tournaments.push(tournament)
