@@ -138,7 +138,7 @@ export default {
                         console.log('!!tournament', !!tournament)
                         losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id } })
                         console.log('!!losingEntry', !!losingEntry)
-                        const losingEntryParticipantIdToPassToGetMatches = tournament.state !== 'underway' ? losingEntry.participantId : null
+                        const losingEntryParticipantIdToPassToGetMatches = tournament.state === 'underway' ? losingEntry.participantId : null
                         winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id } })
                         console.log('!!winningEntry', !!winningEntry)
                         if (!losingEntry || !winningEntry) continue
