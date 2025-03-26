@@ -137,28 +137,20 @@ export default {
 
             if (activeTournament) {
                 const loserTournamentIds = [...await Entry.findByPlayerIdAndFormatId(losingPlayer.id, format.id)].map((e) => e.tournamentId)
-                console.log('loserTournamentIds', loserTournamentIds)
                 const winnerTournamentIds = [...await Entry.findByPlayerIdAndFormatId(winningPlayer.id, format.id)].map((e) => e.tournamentId)
-                console.log('winnerTournamentIds', winnerTournamentIds)
                 const commonTournamentIds = loserTournamentIds.filter((id) => winnerTournamentIds.includes(id))
-                console.log('commonTournamentIds', commonTournamentIds)
                 const tournaments = []
                 
                 if (commonTournamentIds.length) {
                     for (let i = 0; i < commonTournamentIds.length; i++) {
                         const id = commonTournamentIds[i]
                         tournament = await Tournament.findOne({ where: { id: id, serverId: interaction.guildId }})
-                        console.log('!!tournament', !!tournament)
                         if (!tournament) continue
                         losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id } })
-                        console.log('!!losingEntry', !!losingEntry)
                         const losingEntryParticipantIdToPassToGetMatches = tournament.state === 'underway' ? losingEntry.participantId : null
                         winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id } })
-                        console.log('!!winningEntry', !!winningEntry)
                         if (!losingEntry || !winningEntry) continue
                         const data = await getMatches(server, tournament.id, 'open', losingEntryParticipantIdToPassToGetMatches)
-                        console.log('!!data[0]', !!data[0])
-                        console.log('data', data)
                         if (!data[0]) continue
                         if (checkPairing(data[0].match, losingEntry.participantId, winningEntry.participantId)) {
                             tournaments.push(tournament)
