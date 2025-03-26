@@ -21,7 +21,7 @@ export const getReplayCommunities = async (req, res, next) => {
         }, [])
 
         communities.unshift('All Communities')
-        res.json(communities.sort())
+        return res.json(communities.sort())
     } catch (err) {
         console.log(err)
     }
@@ -43,7 +43,7 @@ export const countReplays = async (req, res, next) => {
         }, display) : display
 
         const count = await Replay.countResults(filter)
-        res.json(count)
+        return res.json(count)
     } catch (err) {
         next(err)
     }
@@ -76,7 +76,7 @@ export const getReplaysAsAdmin = async (req, res, next) => {
     try {
         const display = {}
         const replays = await findReplays(req, display)
-        res.json(replays)
+        return res.json(replays)
     } catch (err) {
         next(err)
     }
@@ -86,7 +86,7 @@ export const getReplaysAsSubscriber = async (req, res, next) => {
     try {
         const display = { publishDate: {operator: 'not', value: null } }
         const replays = await findReplays(req, display)
-        res.json(replays)
+        return res.json(replays)
     } catch (err) {
         next(err)
     }
@@ -96,7 +96,7 @@ export const getReplaysAsRegularUser = async (req, res, next) => {
     try {
         const display = { display: {operator: 'eq', value: true}, publishDate: {operator: 'not', value: null } }
         const replays = await findReplays(req, display)
-        res.json(replays)
+        return res.json(replays)
     } catch (err) {
         next(err)
     }

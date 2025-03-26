@@ -12,7 +12,7 @@ export const getStatuses = async (req, res, next) => {
       }
     })
 
-    res.json(status)
+    return res.json(status)
   } catch (err) {
     next(err)
   }

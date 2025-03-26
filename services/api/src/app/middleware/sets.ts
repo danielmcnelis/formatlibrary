@@ -35,7 +35,7 @@ export const getSet = async (req, res, next) => {
         attributes: ['id', 'name', 'setCode', 'releaseDate', 'legalDate']
       })
   
-      res.json(set)
+      return res.json(set)
     } catch (err) {
       next(err)
     }
@@ -52,7 +52,7 @@ export const getDraftable = async (req, res, next) => {
         order: [['releaseDate', 'ASC']]
       })
   
-      res.json(sets)
+      return res.json(sets)
     } catch (err) {
       next(err)
     }
@@ -69,7 +69,7 @@ export const getCoreSets = async (req, res, next) => {
         order: [['releaseDate', 'ASC']]
       })
   
-      res.json(sets)
+      return res.json(sets)
     } catch (err) {
       next(err)
     }
@@ -86,7 +86,7 @@ export const getBoosters = async (req, res, next) => {
       order: [['releaseDate', 'ASC']]
     })
 
-    res.json(sets)
+    return res.json(sets)
   } catch (err) {
     next(err)
   }
@@ -242,7 +242,7 @@ export const generatePacks = async (req, res, next) => {
             packs.push(pack)
         }
 
-        res.json(packs)
+        return res.json(packs)
     } catch (err) {
         next(err)
     }
@@ -389,7 +389,7 @@ export const generateBox = async (req, res, next) => {
             for (let i = 0; i < 2; i++) box.push([...getRandomSubset(commons, 8), getRandomElement(ultras)].sort((a, b) => b.setCode - a.setCode))
         }
 
-        res.json(box)
+        return res.json(box)
     } catch (err) {
         next(err)
     }

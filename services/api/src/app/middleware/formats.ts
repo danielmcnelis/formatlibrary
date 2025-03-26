@@ -40,7 +40,7 @@ export const getFormatByName = async (req, res, next) => {
       statsCount
     }
 
-    res.json(data)
+    return res.json(data)
   } catch (err) {
     next(err)
   }
@@ -64,7 +64,7 @@ export const getFormats = async (req, res, next) => {
       ]
     })
 
-    res.json(formats)
+    return res.json(formats)
   } catch (err) {
     next(err)
   }
@@ -79,7 +79,7 @@ export const updateFormatInfo = async (req, res, next) => {
         })
 
         await format.update({ ...req.body })
-        res.json(format)
+        return res.json(format)
     } catch (err) {
     next(err)
     }

@@ -50,7 +50,7 @@ export const getRatedDecks = async (req, res, next) => {
             order: [['updatedAt', 'DESC']]
         })
     
-        res.json(decks)
+        return res.json(decks)
     } catch (err) {
         next(err)
     }

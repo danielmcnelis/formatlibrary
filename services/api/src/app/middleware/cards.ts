@@ -34,7 +34,7 @@ export const getCardsByPartialName = async (req, res, next) => {
       order: [['name', 'ASC']]
     })
 
-    res.json(cards)
+    return res.json(cards)
   } catch (err) {
     next(err)
   }
@@ -52,7 +52,7 @@ export const countCards = async (req, res, next) => {
         }, {}) : {}
 
         const count = await Card.countResults(filter, booster)
-        res.json(count)
+        return res.json(count)
     } catch (err) {
         next(err)
     }
@@ -83,7 +83,7 @@ export const getCards = async (req, res, next) => {
 
         sort.push(['name', 'asc'])
         const cards = await Card.find(filter, booster, limit, page, sort)
-        res.json(cards)
+        return res.json(cards)
     } catch (err) {
         next(err)
     }
@@ -167,7 +167,7 @@ export const getCardById = async (req, res, next) => {
             }
         }
 
-        res.json(info)
+        return res.json(info)
     } catch (err) {
         next(err)
     }
@@ -182,7 +182,7 @@ export const updateCard = async (req, res, next) => {
         })
 
         await card.update({ ...req.body })
-        res.json(card)
+        return res.json(card)
     } catch (err) {
     next(err)
     }
@@ -251,7 +251,7 @@ export const createCard = async (req, res, next) => {
             sortPriority: req.body.sortPriority
         })
 
-        res.json(card)
+        return res.json(card)
     } catch (err) {
     next(err)
     }

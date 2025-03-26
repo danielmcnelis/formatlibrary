@@ -10,7 +10,7 @@ export const getDeckTypes = async (req, res, next) => {
       order: [['name', 'ASC']]
     })
 
-    res.json(deckTypes)
+    return res.json(deckTypes)
   } catch (err) {
     next(err)
   }
@@ -26,7 +26,7 @@ export const getDeckTypeByName = async (req, res, next) => {
             order: [['name', 'ASC']]
         })
     
-        res.json(deckType)
+        return res.json(deckType)
     } catch (err) {
         next(err)
     }
@@ -542,7 +542,7 @@ export const getDeckTypeSummary = async (req, res, next) => {
       .filter((v: any) => v.card.category === 'Trap')
       .sort((a: any, b: any) => b.decks - a.decks)
 
-    res.json(data)
+    return res.json(data)
   } catch (err) {
     console.log(err)
   }
@@ -638,7 +638,7 @@ export const createDeckType = async (req, res, next) => {
       }
     }
 
-    res.json(deckType)
+    return res.json(deckType)
   } catch (err) {
     next(err)
   }

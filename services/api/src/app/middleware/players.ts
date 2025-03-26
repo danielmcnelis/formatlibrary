@@ -16,7 +16,7 @@ export const getPlayerRoles = async (req, res, next) => {
           attributes: ['id', 'isAdmin', 'isContentManager', 'isSubscriber']
         })
 
-        res.json(player)
+        return res.json(player)
       } catch (err) {
         next(err)
       }
@@ -32,7 +32,7 @@ export const getPlayersByPartialName = async (req, res, next) => {
       order: [['name', 'ASC']]
     })
 
-    res.json(players)
+    return res.json(players)
   } catch (err) {
     next(err)
   }
@@ -59,7 +59,7 @@ export const getPlayerById = async (req, res, next) => {
         }
     })
 
-    res.json({...player.dataValues, hasPassword: !!hasPassword})
+    return res.json({...player.dataValues, hasPassword: !!hasPassword})
   } catch (err) {
     next(err)
   }
@@ -72,7 +72,7 @@ export const getPlayers = async (req, res, next) => {
       order: [['name', 'ASC']]
     })
 
-    res.json(players)
+    return res.json(players)
   } catch (err) {
     next(err)
   }
@@ -170,7 +170,7 @@ export const updatePlayer = async (req, res, next) => {
                 twitter: req.body.twitter,
             })
     
-            res.json(player)
+            return res.json(player)
         }
     } catch (err) {
         console.log(err)
@@ -204,7 +204,7 @@ export const adminPlayerUpdate = async (req, res, next) => {
                 twitter: req.body.twitter,
             })
     
-            res.json(player)
+            return res.json(player)
         }
     } catch (err) {
         console.log(err)
@@ -265,7 +265,7 @@ export const createPlayer = async (req, res, next) => {
             discordName: req.body.discordName
         })
 
-        res.json(player)
+        return res.json(player)
     } catch (err) {
       next(err)
     }

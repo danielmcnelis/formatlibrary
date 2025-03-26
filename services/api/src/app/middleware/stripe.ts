@@ -25,7 +25,7 @@ export const paymentIntent = async (req, res, next) => {
             },
         })
     
-        res.json({client_secret: intent.client_secret})
+        return res.json({client_secret: intent.client_secret})
 
     } catch (err) {
         next(err)
@@ -170,7 +170,7 @@ export const getSubscriptions = async (req, res, next) => {
             }
         }
 
-        res.json(stripeSubscriptions)
+        return res.json(stripeSubscriptions)
     } catch (err) {
         next(err)
     }

@@ -158,6 +158,7 @@ export default {
                         if (!losingEntry || !winningEntry) continue
                         const data = await getMatches(server, tournament.id, 'open', losingEntryParticipantIdToPassToGetMatches)
                         console.log('!!data[0]', !!data[0])
+                        console.log('data', data)
                         if (!data[0]) continue
                         if (checkPairing(data[0].match, losingEntry.participantId, winningEntry.participantId)) {
                             tournaments.push(tournament)

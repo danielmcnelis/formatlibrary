@@ -22,7 +22,7 @@ export const createTeam = async (req, res, next) => {
             placement
         })
 
-        res.json(team)
+        return res.json(team)
     } else {
         throw Error('Team already exists.')
     }

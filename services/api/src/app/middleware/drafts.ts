@@ -11,7 +11,7 @@ export const getDraft = async (req, res, next) => {
             include: [Cube, Set]
         })
 
-        res.json(draft)
+        return res.json(draft)
     } catch (err) {
       next(err)
     }
@@ -47,7 +47,7 @@ export const getPack = async (req, res, next) => {
             order: [[Card, 'sortPriority', 'ASC'], [Card, 'name', 'ASC']]
         })
 
-        res.json(contents)
+        return res.json(contents)
     } catch (err) {
       next(err)
     }
@@ -64,7 +64,7 @@ export const getInventory = async (req, res, next) => {
             include: Card
         })
 
-        res.json(inventory)
+        return res.json(inventory)
     } catch (err) {
       next(err)
     }
@@ -99,7 +99,7 @@ export const getParticipants = async (req, res, next) => {
             order: [['createdAt', 'ASC']]
         })
 
-        res.json(participants)
+        return res.json(participants)
     } catch (err) {
       next(err)
     }
@@ -144,7 +144,7 @@ export const getParticipants = async (req, res, next) => {
         shareLink: shareLink
       })
 
-      res.json(`https://formatlibrary.com/drafts/${draft.shareLink}`)
+      return res.json(`https://formatlibrary.com/drafts/${draft.shareLink}`)
     } catch (err) {
       next(err)
     }

@@ -15,7 +15,7 @@ export const getAllBanlists = async (req, res, next) => {
       .filter(onlyUnique)
       .sort()
 
-    res.json(banlists)
+    return res.json(banlists)
   } catch (err) {
     next(err)
   }
@@ -137,7 +137,7 @@ export const getBanlistByDate = async (req, res, next) => {
       limited3: limited3
     }
 
-    res.json(banlist)
+    return res.json(banlist)
   } catch (err) {
     next(err)
   }
@@ -159,7 +159,7 @@ export const getBanlistAsCardsByDate = async (req, res, next) => {
     ].map((s) => [s.cardId, s.restriction])
 
     const banlist = Object.fromEntries(statuses)
-    res.json(banlist)
+    return res.json(banlist)
   } catch (err) {
     next(err)
   }
@@ -230,7 +230,7 @@ export const createNewBanlist = async (req, res, next) => {
       }
     }
 
-    res.json(b)
+    return res.json(b)
   } catch (err) {
     next(err)
   }

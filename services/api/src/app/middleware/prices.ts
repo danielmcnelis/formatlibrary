@@ -90,12 +90,12 @@ export const getPrices = async (req, res, next) => {
             pricesArr: smoothArray(prices.map((p) => p[0]), 30)
         }
 
-        res.json(data)
+        return res.json(data)
     } catch (err) {
         next(err)
     }
 }
 
 // export const getPricesAsSubscriber = async (req, res, next) => {
-//     res.json({})
+//     return res.json({})
 // }

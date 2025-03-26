@@ -76,7 +76,7 @@ export const readDeckYdk = async (req, res, next) => {
             side
         }
 
-        res.json(data)
+        return res.json(data)
     } catch (err) {
         console.log(err)
     }
@@ -129,7 +129,7 @@ export const updateDeckLabels = async (req, res, next) => {
         })
 
         await deck.update({ ...deck, ...req.body })
-        res.json(deck)
+        return res.json(deck)
     } catch (err) {
         next(err)
     }
@@ -211,7 +211,7 @@ export const shareDeck = async (req, res, next) => {
             linkExpiresAt: req.body.linkExpiresAt
         })
 
-        res.json({ shareLink })
+        return res.json({ shareLink })
     } catch (err) {
         console.log(err)
     }
@@ -303,7 +303,7 @@ export const openDeckInBuilder = async (req, res, next) => {
             side
         }
 
-        res.json(data)
+        return res.json(data)
     } catch (err) {
         next(err)
     }
@@ -401,7 +401,7 @@ export const getPopularDecks = async (req, res, next) => {
       }
     }
 
-    res.json(data)
+    return res.json(data)
   } catch (err) {
     next(err)
   }
@@ -472,7 +472,7 @@ export const getDeckGallery = async (req, res, next) => {
       }
     }
 
-    res.json({
+    return res.json({
       deckTypes: data,
       format: format
     })
@@ -546,7 +546,7 @@ export const getFavoriteDecks = async (req, res, next) => {
       }
     }
 
-    res.json(data.slice(0, 6))
+    return res.json(data.slice(0, 6))
   } catch (err) {
     next(err)
   }
@@ -649,7 +649,7 @@ export const convertTextToYDK = async (req, res, next) => {
         let ydk = 'created by...\n#main\n'
         let fileName = null
         const errors = []
-        if (!arr.length) res.json({ydk, fileName, errors})
+        if (!arr.length) return res.json({ydk, fileName, errors})
 
         const fuzzyCards = FuzzySet([], false)
         const cards = await Card.findAll()
@@ -757,7 +757,7 @@ export const convertTextToYDK = async (req, res, next) => {
             ydk = repaired.join('\n')
         }
     
-        res.json({ydk, fileName, errors})
+        return res.json({ydk, fileName, errors})
     } catch (err) {
         next(err)
     }
@@ -779,7 +779,7 @@ export const countDecks = async (req, res, next) => {
         }, display) : display
 
         const count = await Deck.countResults(filter)
-        res.json(count)
+        return res.json(count)
     } catch (err) {
         next(err)
     }
@@ -793,7 +793,7 @@ export const getDecksAsRegularUser = async (req, res, next) => {
         const page = parseInt(req.query.page || 1)
         const display = { display: {operator: 'eq', value: true} }
         const decks = await findDecks(req, display, limit, page)
-        res.json(decks)
+        return res.json(decks)
     } catch (err) {
         next(err)
     }
@@ -807,7 +807,7 @@ export const getDecksAsSubscriber = async (req, res, next) => {
         const page = parseInt(req.query.page || 1)
         const display = { publishDate: {operator: 'not', value: null }}
         const decks = await findDecks(req, display, limit, page)
-        res.json(decks)
+        return res.json(decks)
     } catch (err) {
         next(err)
     }
@@ -821,7 +821,7 @@ export const getDecksAsAdmin = async (req, res, next) => {
         const page = parseInt(req.query.page || 1)
         const display = { display: {operator: 'or', value: [true, false]} }
         const decks = await findDecks(req, display, limit, page)
-        res.json(decks)
+        return res.json(decks)
     } catch (err) {
         next(err)
     }
@@ -875,7 +875,7 @@ export const getDeckAsAdmin = async (req, res, next) => {
         const deck = await getDeckData(filter)
 
         if (deck) {
-            res.json(deck)
+            return res.json(deck)
         } else {
             return res.sendStatus(404)
         }
@@ -900,7 +900,7 @@ export const getDeckBySubscriber = async (req, res, next) => {
         const deck = await getDeckData(filter)
 
         if (deck) {
-            res.json(deck)
+            return res.json(deck)
         } else {
             return res.sendStatus(404)
         }
@@ -925,7 +925,7 @@ export const getDeckAsRegularUser = async (req, res, next) => {
         const deck = await getDeckData(filter)
 
         if (deck) {
-            res.json(deck)
+            return res.json(deck)
         } else {
             return res.sendStatus(404)
         }
@@ -1149,7 +1149,7 @@ export const createDeck = async (req, res, next) => {
       display: req.body.display
     })
 
-    res.json(deck)
+    return res.json(deck)
   } catch (err) {
     console.log('err', err)
     next(err)

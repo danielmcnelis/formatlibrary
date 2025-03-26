@@ -28,7 +28,7 @@ export const launchSealed = async (req, res, next) => {
           shareLink: shareLink
         })
   
-        res.json(`https://formatlibrary.com/sealed/${draft.shareLink}`)
+        return res.json(`https://formatlibrary.com/sealed/${draft.shareLink}`)
       } catch (err) {
         next(err)
       }
@@ -70,7 +70,7 @@ export const getSealedPacks = async (req, res, next) => {
             }
         }
 
-        res.json(packs)
+        return res.json(packs)
     } catch (err) {
       next(err)
     }

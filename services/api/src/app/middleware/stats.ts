@@ -18,7 +18,7 @@ export const getClassicLeaderboard = async (req, res, next) => {
         order: [['elo', 'DESC']]
       })
   
-      res.json(stats)
+      return res.json(stats)
     } catch (err) {
       next(err)
     }
@@ -41,7 +41,7 @@ export const getGeneralLeaderboard = async (req, res, next) => {
         order: [['elo', 'DESC']]
       })
   
-      res.json(stats)
+      return res.json(stats)
     } catch (err) {
       next(err)
     }
@@ -64,7 +64,7 @@ export const getSeasonalLeaderboard = async (req, res, next) => {
       order: [['elo', 'DESC']]
     })
 
-    res.json(stats)
+    return res.json(stats)
   } catch (err) {
     next(err)
   }
@@ -83,7 +83,7 @@ export const getStatsByPlayerId = async (req, res, next) => {
       limit: 16
     })
 
-    res.json(stats)
+    return res.json(stats)
   } catch (err) {
     next(err)
   }

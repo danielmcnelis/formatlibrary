@@ -18,7 +18,7 @@ export const getTournamentByChallongeName = async (req, res, next) => {
         config.challonge[req.headers.communityName]
       }`
     )
-    res.json(data.tournament)
+    return res.json(data.tournament)
   } catch (err) {
     next(err)
   }
@@ -86,7 +86,7 @@ export const createMockBracket = async (req, res, next) => {
             }
         }
 
-        res.json(tournament)
+        return res.json(tournament)
     } catch (err) {
       next(err)
     }

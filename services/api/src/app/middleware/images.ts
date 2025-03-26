@@ -91,9 +91,9 @@ export const updateCardImage = async (req, res, next) => {
         const [fullSuccess, mediumSuccess, croppedSuccess] = await uploadCardImages(s3, req.query.artworkId)
 
         if (fullSuccess && mediumSuccess && croppedSuccess) {
-            res.json({success: true})
+            return res.json({success: true})
         } else {
-            res.json({success: false})
+            return res.json({success: false})
         }
     } catch (err) {
         next(err)
@@ -127,7 +127,7 @@ export const createImage = async (req, res, next) => {
     }).done()
 
     console.log('uri', uri)
-    res.json({ success: true })
+    return res.json({ success: true })
   } catch (err) {
     next(err)
   }

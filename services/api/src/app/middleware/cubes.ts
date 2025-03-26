@@ -86,7 +86,7 @@ export const getCubeById = async (req, res, next) => {
         cardPool
       }
   
-      res.json(data)
+      return res.json(data)
     } catch (err) {
       next(err)
     }
@@ -116,7 +116,7 @@ export const readCubeYdk = async (req, res, next) => {
             cardPool
         }
 
-        res.json(data)
+        return res.json(data)
     } catch (err) {
         console.log(err)
         next(err)
@@ -183,7 +183,7 @@ export const createCube = async (req, res, next) => {
         display: req.body.display
       })
   
-      res.json(cube)
+      return res.json(cube)
     } catch (err) {
       next(err)
     }
@@ -197,7 +197,7 @@ export const getAllCubes = async (req, res, next) => {
           }
       })
   
-      res.json(cubes)
+      return res.json(cubes)
     } catch (err) {
       next(err)
     }
@@ -299,7 +299,7 @@ export const drawCube = async (req, res, next) => {
           params: { Bucket: 'formatlibrary', Key: `images/cubes/slideshows/${cube.id}.png`, Body: buffer, ContentType: `image/png` },
       }).done()
       console.log('uri', uri)
-      res.json(uri)
+      return res.json(uri)
   } catch (err) {
       next(err)
   }

@@ -41,9 +41,9 @@ export const getMatchupH2H = async (req, res, next) => {
     
         const total = wins + losses
         const data = { wins, losses, total }
-        res.json(data)
+        return res.json(data)
     } else {
-        res.json(false)
+        return res.json(false)
     }
   } catch (err) {
     next(err)
@@ -109,9 +109,9 @@ export const getMatchupMatrix = async (req, res, next) => {
                 }
             })
         
-            res.json(matrix)
+            return res.json(matrix)
         } else {
-            res.json({})
+            return res.json({})
         }
     } catch (err) {
       next(err)

@@ -4,7 +4,7 @@ import { BlogPost, Team } from '@fl/models'
 export const countBlogPosts = async (req, res, next) => {
     try {
       const count = await BlogPost.count()
-      res.json(count)
+      return res.json(count)
     } catch (err) {
       next(err)
     }
@@ -26,7 +26,7 @@ export const getBlogPosts = async (req, res, next) => {
       order: [['eventDate', 'DESC']]
     })
 
-    res.json(blogposts)
+    return res.json(blogposts)
   } catch (err) {
     next(err)
   }

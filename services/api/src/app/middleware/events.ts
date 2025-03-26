@@ -21,7 +21,7 @@ export const getEventCommunities = async (req, res, next) => {
 
         communities.sort()
         communities.unshift('All Communities')
-        res.json(communities)
+        return res.json(communities)
     } catch (err) {
         console.log(err)
     }
@@ -33,7 +33,7 @@ export const getAllCommunities = async (req, res, next) => {
         const communities = [...await Community.findAll()].map((c) => c.name)
         communities.sort()
         communities.unshift('All Communities')
-        res.json(communities)
+        return res.json(communities)
     } catch (err) {
         console.log(err)
     }
@@ -72,7 +72,7 @@ export const getEventGallery = async (req, res, next) => {
         winners
       }
   
-      res.json(data)
+      return res.json(data)
     } catch (err) {
       next(err)
     }
@@ -89,7 +89,7 @@ export const countEvents = async (req, res, next) => {
         }, { display: {operator: 'eq', value: 'true'} }) : { display: {operator: 'eq', value: 'true'} }
 
         const count = await Event.countResults(filter)
-        res.json(count)
+        return res.json(count)
     } catch (err) {
         next(err)
     }
@@ -115,7 +115,7 @@ export const getEvents = async (req, res, next) => {
         }, []) : [['startedAt', 'desc']]
 
         const events = await Event.find(filter, limit, page, sort)
-        res.json(events)
+        return res.json(events)
     } catch (err) {
         next(err)
     }
@@ -151,7 +151,7 @@ export const getEventCommunity = async (req, res, next) => {
 
     console.log('events', events)
 
-    res.json(events)
+    return res.json(events)
   } catch (err) {
     next(err)
   }
@@ -182,7 +182,7 @@ export const getRecentEvents = async (req, res, next) => {
       winners
     }
 
-    res.json(data)
+    return res.json(data)
   } catch (err) {
     next(err)
   }
@@ -371,7 +371,7 @@ export const getEventById = async (req, res, next) => {
       }
     }
     
-    res.json(data)
+    return res.json(data)
   } catch (err) {
     next(err)
   }
@@ -576,7 +576,7 @@ export const getEventByIdAsSubscriber = async (req, res, next) => {
         }
       }
       
-      res.json(data)
+      return res.json(data)
     } catch (err) {
       next(err)
     }
@@ -645,7 +645,7 @@ export const createEvents = async (req, res, next) => {
       endDate: req.body.endDate
     })
 
-    res.json(event)
+    return res.json(event)
   } catch (err) {
     next(err)
   }
