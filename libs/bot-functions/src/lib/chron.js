@@ -586,6 +586,7 @@ export const cleanUpPools = async () => {
 
 // LOOK FOR ALL POTENTIAL PAIRS
 export const lookForAllPotentialPairs = async (client) => {
+    console.log('lookForAllPotentialPairs()')
     const pools = await Pool.findAll({
         where: {
             status: 'pending'

@@ -103,13 +103,13 @@ export const getFirstOfTwoRatedConfirmations = async (client, player, opponent, 
  
     const row = new ActionRowBuilder()
         .addComponents(new ButtonBuilder()
-            .setCustomId(`YN-${yourPool.id}-${opponentsPool.id}`)
+            .setCustomId(`YN-${yourPool.id}-${opponentsPool.id}-${guild.id}`)
             .setLabel('Yes')
             .setStyle(ButtonStyle.Primary)
         )
 
         .addComponents(new ButtonBuilder()
-            .setCustomId(`NN-${yourPool.id}-${opponentsPool.id}`)
+            .setCustomId(`NN-${yourPool.id}-${opponentsPool.id}-${guild.id}`)
             .setLabel('No')
             .setStyle(ButtonStyle.Primary)
         )
@@ -140,6 +140,7 @@ export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, pl
     console.log('getSecondOfTwoRatedConfirmations()')
     console.log('player1PoolId', player1PoolId)
     console.log('player2PoolId', player2PoolId)
+    console.log('guildId rated.js 143', guildId)
     
     const player2Pool = await Pool.findOne({
         where: {

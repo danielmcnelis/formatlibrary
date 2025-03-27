@@ -197,6 +197,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const yourPoolId = ids[0]
             const opponentsPoolId = ids[1]
             const guildId = ids[2]
+            console.log('guildId main.js 200', guildId)
             if (isConfirmed && !opponentIsConfirmed) {
                 return getSecondOfTwoRatedConfirmations(client, yourPoolId, opponentsPoolId, guildId)
             } else {
