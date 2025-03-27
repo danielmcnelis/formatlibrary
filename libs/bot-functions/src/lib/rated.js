@@ -320,8 +320,8 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
         if (isConfirmed) {
             if (!opponentsPool) {
                 await yourPool.update({ status: 'pending' })
-                console.log(`Sorry, ${yourPool.playerName}, your potential opponent either found a match or left the pool while waiting for you to confirm. I'll put you back in the Rated ${format.name} Format ${format.emoji} Pool.`)
-                return interaction.user.send(`Sorry, your potential opponent either found a match or left the pool while waiting for you to confirm. I'll put you back in the Rated ${format.name} Format ${format.emoji} Pool.`)
+                console.log(`Sorry, ${yourPool.playerName}, your potential opponent either found a match or left the pool. I'll put you back in the Rated ${format.name} Format ${format.emoji} Pool.`)
+                return interaction.user.send(`Sorry, your potential opponent either found a match or left the pool. I'll put you back in the Rated ${format.name} Format ${format.emoji} Pool.`)
             }
     
             const server = await Server.findOne({ where: { id: guildId }})

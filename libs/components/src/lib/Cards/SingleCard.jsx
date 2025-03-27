@@ -104,19 +104,19 @@ export const SingleCard = (props) => {
     }, [id])
 
     // USE EFFECT SET CARD
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const {data: priceData} = await axios.get(`/api/prices/${print.id || data.prints[0]?.id}`)
-    //             setPrices(priceData)
-    //         } catch (err) {
-    //             console.log(err)
-    //             setData({})
-    //         }
-    //     }
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const {data: priceData} = await axios.get(`/api/prices/${print.id || data.prints[0]?.id}`)
+                setPrices(priceData)
+            } catch (err) {
+                console.log(err)
+                setData({})
+            }
+        }
   
-    //     fetchData()
-    // }, [data.prints, print])
+        fetchData()
+    }, [data.prints, print])
 
     // UPDATE PRINT
     const updatePrint = (e) => {

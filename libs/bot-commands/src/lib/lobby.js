@@ -11,18 +11,19 @@ export default {
 	async execute(interaction) {
         try {
             await interaction.deferReply()
-            const oneDayAgo = new Date(Date.now() - (24 * 60 * 60 * 1000))
+            // const oneDayAgo = new Date(Date.now() - (24 * 60 * 60 * 1000))
 
             const pools = [...await Pool.findAll({ 
-                where: { 
-                    createdAt: {[Op.gte]: oneDayAgo}
-                }, 
+                // where: { 
+                //     createdAt: {[Op.gte]: oneDayAgo}
+                // }, 
                 include: Format,
                 order: [['createdAt', 'DESC']] 
             })].map((pool) => {
                 const difference = new Date() - pool.createdAt
                 const timeAgo = difference < 1000 * 60 * 60 ? `${Math.round(difference / (1000 * 60))}m ago ${emojis.megaphone}` :
-                    `${Math.round(difference / (1000 * 60 * 60))}h ago`
+                    difference < 1000 * 60 * 60 * 24 ? `${Math.round(difference / (1000 * 60 * 60))}h ago` :
+                    `${Math.round(difference / (1000 * 60 * 60 * 24))}d ago`
                 
                 return `${pool.formatName} ${pool.format.emoji} - ${timeAgo}` 
             })
