@@ -9,7 +9,7 @@ import * as fs from 'fs'
 import { Upload } from '@aws-sdk/lib-storage'
 import { S3, DeleteObjectCommand } from '@aws-sdk/client-s3'
 // import { statuses } from './ocg-banlists.json' 
-const imported_prices = require('./prices.json')
+// const imported_prices = require('./prices.json')
 
 //SHUFFLE ARRAY
 const shuffleArray = (arr) => {

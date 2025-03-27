@@ -1,7 +1,7 @@
 import { Card, Price, Print } from '@fl/models'
 import { Op } from 'sequelize'
 
-function convertTimestampToMonthDayYear(timestamp) {
+const convertTimestampToMonthDayYear = (timestamp) => {
     const date = new Date(timestamp);
     const month = date.toLocaleString('default', { month: 'short' });
     const day = date.getDate();
@@ -9,7 +9,7 @@ function convertTimestampToMonthDayYear(timestamp) {
     return `${month} ${day}, ${year}`;
 }
 
-function smoothArray(data, windowSize) {
+const smoothArray = (data, windowSize) => {
     const smoothedData = [];
     for (let i = 0; i < data.length; i++) {
       let sum = 0;
@@ -95,7 +95,3 @@ export const getPrices = async (req, res, next) => {
         next(err)
     }
 }
-
-// export const getPricesAsSubscriber = async (req, res, next) => {
-//     return res.json({})
-// }
