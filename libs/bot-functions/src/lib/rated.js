@@ -24,16 +24,14 @@ export const getRatedConfirmation = async (player, opponent, format, guild) => {
     const yourPool = await Pool.findOne({
         where: {
             playerId: player.id,
-            formatId: format.id,
-            status: 'pending'
+            formatId: format.id
         }
     })
 
     const opponentsPool = await Pool.findOne({
         where: {
             playerId: opponent.id,
-            formatId: format.id,
-            status: 'pending'
+            formatId: format.id
         }
     })
 
