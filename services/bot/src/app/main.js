@@ -191,9 +191,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
         } else if (interaction.message?.content?.includes(`I've found a Rated`)) {
             await interaction.update({ components: [] }).catch((err) => console.log(err))
             const customId = interaction.customId
+            console.log('customId', customId)
             const isConfirmed = customId.charAt(0) === 'Y'
             const opponentIsConfirmed = customId.charAt(1) === 'Y'
             const ids = customId.slice(3).split('-')
+            console.log('ids', ids)
             const yourPoolId = ids[0]
             const opponentsPoolId = ids[1]
             const guildId = ids[2]

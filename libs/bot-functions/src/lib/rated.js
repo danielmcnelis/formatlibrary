@@ -167,13 +167,13 @@ export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, pl
  
     const row = new ActionRowBuilder()
         .addComponents(new ButtonBuilder()
-            .setCustomId(`YY-${player1PoolId}-${player2PoolId}`)
+            .setCustomId(`YY-${player1PoolId}-${player2PoolId}-${guild.id}`)
             .setLabel('Yes')
             .setStyle(ButtonStyle.Primary)
         )
 
         .addComponents(new ButtonBuilder()
-            .setCustomId(`NY-${player1PoolId}-${player2PoolId}`)
+            .setCustomId(`NY-${player1PoolId}-${player2PoolId}-${guild.id}`)
             .setLabel('No')
             .setStyle(ButtonStyle.Primary)
         )
