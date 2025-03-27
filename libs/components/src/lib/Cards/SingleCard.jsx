@@ -30,7 +30,11 @@ export const SingleCard = (props) => {
         rulings: {}
     })
 
-    const [prices, setPrices] = useState({})
+    const [prices, setPrices] = useState({
+        labelsArr: [],
+        pricesArr: []
+    })
+    
     const raritySymbol = prices.rarity === '10000 Secret Rare' ? 'tenThousandSecretRare' : camelize(prices.rarity || '')
 
     const { card, statuses, prints, rulings } = data || {}
@@ -100,19 +104,19 @@ export const SingleCard = (props) => {
     }, [id])
 
     // USE EFFECT SET CARD
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const {data: priceData} = await axios.get(`/api/prices/${print.id || data.prints[0]?.id}`)
-                setPrices(priceData)
-            } catch (err) {
-                console.log(err)
-                setData({})
-            }
-        }
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const {data: priceData} = await axios.get(`/api/prices/${print.id || data.prints[0]?.id}`)
+    //             setPrices(priceData)
+    //         } catch (err) {
+    //             console.log(err)
+    //             setData({})
+    //         }
+    //     }
   
-        fetchData()
-    }, [data.prints, print])
+    //     fetchData()
+    // }, [data.prints, print])
 
     // UPDATE PRINT
     const updatePrint = (e) => {

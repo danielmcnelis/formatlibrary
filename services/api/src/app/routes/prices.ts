@@ -6,6 +6,6 @@ const router = Router()
 
 // router.get('/api/prices/subscriber/:id', [authenticate, getPricesAsSubscriber])
 
-// router.get('/api/prices/:id', getPrices)
+router.get('/api/prices/:id', getPrices)
 
 export default router
