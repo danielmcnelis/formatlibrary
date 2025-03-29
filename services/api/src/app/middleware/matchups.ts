@@ -81,6 +81,7 @@ export const getMatchupMatrix = async (req, res, next) => {
                 }
             })
             
+            
             const tournamentWins = await Matchup.findAll({
                 where: {
                     winningDeckTypeId: deckType.id,
