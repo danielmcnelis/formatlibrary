@@ -315,6 +315,15 @@ export const getDeckTypeSummary = async (req, res, next) => {
         limit: 100
     })
 
+    const count = await Deck.count({
+        where: {
+            deckTypeId: deckType.id,
+            formatId: format.id,
+            origin: 'event',
+            eventId: { [Op.not]: null }
+        }
+    })
+
     const mostRecent = await Deck.findOne({
         where: {
             deckTypeId: deckType.id,
@@ -344,7 +353,7 @@ export const getDeckTypeSummary = async (req, res, next) => {
     const total = await Deck.count({ where: { origin: 'event', formatId: format.id }})
 
     const data = {
-      percent: Math.round((decks.length / total) * 100) || '<1',
+      percent: Math.round((count / total) * 100) || '<1',
       deckType: deckType.name,
       deckCategory: deckType.category,
       analyzed: 0,
