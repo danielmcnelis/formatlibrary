@@ -1,7 +1,9 @@
 import { Router } from 'express'
-import { getDeckTypes, createDeckType, downloadDeckType, getDeckTypeByName, getDeckTypeSummary } from '../middleware'
+import { authenticate, getDeckTypes, createDeckType, getWinRateData, downloadDeckType, getDeckTypeByName, getDeckTypeSummary, getWinRateData } from '../middleware'
 
 const router = Router()
+
+router.get('/api/decktypes/winrates', [authenticate, getWinRateData])
 
 router.get('/api/decktypes/summary', getDeckTypeSummary)
 

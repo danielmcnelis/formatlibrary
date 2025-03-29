@@ -27,8 +27,12 @@ const emojis = {
 const { Controller, Orb, Lock, Bow, Voltage, Volcano, Unicorn, Thinking } = emojis
 
 export const DeckType = (props) => {
+    const accessToken = getCookie('access')
     const [summary, setSummary] = useState({})
+    const [winRateData, setWinRateData] = useState({})
+    console.log('winRateData', winRateData)
     const [matchups, setMatchups] = useState({})
+    console.log('matchups', matchups)
     const [banlist, setBanList] = useState({})
     
     const { id } = useParams()
@@ -49,12 +53,30 @@ export const DeckType = (props) => {
                 const {data: summaryData} = await axios.get(summaryApiUrl)
                 setSummary(summaryData)
 
+                let winRateSummaryUrl = `/api/decktypes/winrates?id=${id}`
+                if (format) winRateSummaryUrl += `&format=${format}`
+                if (props.roles?.admin) winRateSummaryUrl += '&isAdmin=true'
+                if (props.roles?.subscriber) winRateSummaryUrl += '&isSubscriber=true'
+
+                const {data: winRateData} = await axios.get(winRateSummaryUrl, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
+
+                setWinRateData(winRateData)
+
                 let matchupApiUrl = `/api/matchups/${id}`
                 if (format) matchupApiUrl += `?format=${format}`
                 if (props.roles?.admin) matchupApiUrl += '&isAdmin=true'
                 if (props.roles?.subscriber) matchupApiUrl += '&isSubscriber=true'
 
-                const {data: matchupData} = await axios.get(matchupApiUrl)
+                const {data: matchupData} = await axios.get(matchupApiUrl, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
+
                 setMatchups(matchupData)
 
                 if (summaryData?.format) {
@@ -162,23 +184,23 @@ export const DeckType = (props) => {
                     </tr>
                     
                         {
-                            Object.entries(matchups).length ? (
+                            winRateData.overallWinRate || winRateData.tournamentWinRate || winRateData.conversionRate ? (
                                 <tr className="single-decktype-info-2">
                                     <td>
                                         <div className="single-decktype-cell">
-                                        <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Overall Win Rate:</b> {matchups.overallWinRate ? `${matchups.overallWinRate}%` : 'N/A'}</div>
+                                        <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Overall Win Rate:</b> {winRateData.overallWinRate ? `${winRateData.overallWinRate}%` : 'N/A'}</div>
                                         <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
                                         </div>
                                     </td>
                                     <td>
                                         <div className="single-decktype-cell">
-                                        <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Tournament Win Rate:</b> {matchups.tournamentWinRate ? `${matchups.tournamentWinRate}%` : 'N/A'}</div>
+                                        <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Tournament Win Rate:</b> {winRateData.tournamentWinRate ? `${winRateData.tournamentWinRate}%` : 'N/A'}</div>
                                         <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
                                         </div>
                                     </td>
                                     <td>
                                         <div className="single-decktype-cell">
-                                        <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Conversion Rate:</b> {matchups.conversionRate ? `${matchups.conversionRate}%` : 'N/A'}</div>
+                                        <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Conversion Rate:</b> {winRateData.conversionRate ? `${winRateData.conversionRate}%` : 'N/A'}</div>
                                         <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
                                         </div>
                                     </td>
@@ -412,7 +434,7 @@ export const DeckType = (props) => {
                     ) : ''
                 }
                 {
-                    Object.entries(matchups)[0]?.total ? (
+                    Object.entries(matchups).length ? (
                         <>
                             <br/>
                             <h2>Matchups</h2>

@@ -1,4 +1,4 @@
-import { Card, Deck, DeckThumb, DeckType, Format } from '@fl/models'
+import { Card, Deck, DeckThumb, DeckType, Format, Matchup } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import * as fs from 'fs'
@@ -546,6 +546,83 @@ export const getDeckTypeSummary = async (req, res, next) => {
   } catch (err) {
     console.log(err)
   }
+}
+
+export const getWinRateData = async (req, res, next) => {
+    try {
+        if (req.query.isSubscriber === 'true' || req.query.isAdmin === 'true') {
+            const deckType = await DeckType.findOne({
+                where: {
+                    cleanName: {[Op.iLike]: req.query.id?.replaceAll('-', '_')}
+                }
+            })
+
+            const format = await Format.findOne({
+                where: {
+                    cleanName: {[Op.iLike]: req.query.format?.replaceAll('-', '_')}
+                }
+            })
+
+            if (!format) return res.json({})
+
+            const wins = await Matchup.count({
+                where: {
+                    winningDeckTypeId: deckType.id,
+                    formatId: format.id
+                }
+            })
+
+            const losses = await Matchup.count({
+                where: {
+                    losingDeckTypeId: deckType.id,
+                    formatId: format.id
+                }
+            })
+            
+
+            const tournamentWins = await Matchup.count({
+                where: {
+                    winningDeckTypeId: deckType.id,
+                    source: 'tournament',
+                    formatId: format.id
+                }
+            })
+
+            const tournamentLosses = await Matchup.count({
+                where: {
+                    losingDeckTypeId: deckType.id,
+                    source: 'tournament',
+                    formatId: format.id
+                }
+            })
+
+            const deckRepresentation = await Deck.count({
+                where: {
+                    deckTypeId: deckType.id,
+                    origin: 'event',
+                    formatId: format?.id
+                }
+            })
+
+            const topDeckRepresentation = await Deck.count({
+                where: {
+                    display: true,
+                    deckTypeId: deckType.id,
+                    origin: 'event',
+                    formatId: format?.id
+                }
+            })
+
+            const conversionRate = Math.round((topDeckRepresentation / deckRepresentation) * 100)
+            const overallWinRate = Math.round(wins / (wins + losses) * 100)
+            const tournamentWinRate = Math.round(tournamentWins / (tournamentWins + tournamentLosses) * 100)
+            res.json({conversionRate, overallWinRate, tournamentWinRate})
+        } else {
+            return res.json({})
+        }
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 export const createDeckType = async (req, res, next) => {

@@ -51,6 +51,7 @@ export const getMatchupH2H = async (req, res, next) => {
 }
 
 export const getMatchupMatrix = async (req, res, next) => {
+    console.log('ROUTE HITITTTT')
     try {
         if (req.query.isSubscriber === 'true' || req.query.isAdmin === 'true') {
             const deckType = await DeckType.findOne({
@@ -81,23 +82,6 @@ export const getMatchupMatrix = async (req, res, next) => {
                 }
             })
             
-            
-            const tournamentWins = await Matchup.findAll({
-                where: {
-                    winningDeckTypeId: deckType.id,
-                    source: 'tournament',
-                    formatId: format.id
-                }
-            })
-        
-            const tournamentLosses = await Matchup.findAll({
-                where: {
-                    losingDeckTypeId: deckType.id,
-                    source: 'tournament',
-                    formatId: format.id
-                }
-            })
-
             const matrix = {}
 
             wins.forEach((matchup) => {
@@ -126,28 +110,7 @@ export const getMatchupMatrix = async (req, res, next) => {
                 }
             })
 
-            const deckRepresentation = await Deck.count({
-                where: {
-                    deckTypeId: deckType.id,
-                    origin: 'event',
-                    formatId: format?.id
-                }
-            })
-
-            const topDeckRepresentation = await Deck.count({
-                where: {
-                    display: true,
-                    deckTypeId: deckType.id,
-                    origin: 'event',
-                    formatId: format?.id
-                }
-            })
-
-            const conversionRate = Math.round((topDeckRepresentation / deckRepresentation) * 100)
-            const overallWinRate = Math.round(wins / (wins + losses) * 100)
-            const tournamentWinRate = Math.round(tournamentWins / (tournamentWins + tournamentLosses) * 100)
-            
-            return res.json({...matrix, conversionRate, overallWinRate, tournamentWinRate})
+            return res.json({...matrix})
         } else {
             return res.json({})
         }
