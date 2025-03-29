@@ -579,20 +579,13 @@ export const getWinRateData = async (req, res, next) => {
                 }
             })
             
-
-            const tournamentWins = await Matchup.count({
+            const firstPlaceRepresentation = await Deck.count({
                 where: {
-                    winningDeckTypeId: deckType.id,
-                    source: 'tournament',
-                    formatId: format.id
-                }
-            })
-
-            const tournamentLosses = await Matchup.count({
-                where: {
-                    losingDeckTypeId: deckType.id,
-                    source: 'tournament',
-                    formatId: format.id
+                    display: true,
+                    placement: 1,
+                    deckTypeId: deckType.id,
+                    origin: 'event',
+                    formatId: format?.id
                 }
             })
 
@@ -613,9 +606,9 @@ export const getWinRateData = async (req, res, next) => {
                 }
             })
 
-            const conversionRate = Math.round((topDeckRepresentation / deckRepresentation) * 100)
+            const conversionRate = Math.round(topDeckRepresentation / deckRepresentation * 100)
             const overallWinRate = Math.round(wins / (wins + losses) * 100)
-            const tournamentWinRate = Math.round(tournamentWins / (tournamentWins + tournamentLosses) * 100)
+            const tournamentWinRate = Math.round(firstPlaceRepresentation / deckRepresentation * 100)
             res.json({conversionRate, overallWinRate, tournamentWinRate})
         } else {
             return res.json({})

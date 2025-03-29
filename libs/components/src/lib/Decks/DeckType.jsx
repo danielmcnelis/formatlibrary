@@ -189,19 +189,19 @@ export const DeckType = (props) => {
                                     <td>
                                         <div className="single-decktype-cell">
                                         <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Overall Win Rate:</b> {winRateData.overallWinRate ? `${winRateData.overallWinRate}%` : 'N/A'}</div>
-                                        <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className="single-decktype-cell">
-                                        <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Tournament Win Rate:</b> {winRateData.tournamentWinRate ? `${winRateData.tournamentWinRate}%` : 'N/A'}</div>
-                                        <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
+                                        <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/abacus.png`} alt="abacus"/>
                                         </div>
                                     </td>
                                     <td>
                                         <div className="single-decktype-cell">
                                         <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Conversion Rate:</b> {winRateData.conversionRate ? `${winRateData.conversionRate}%` : 'N/A'}</div>
-                                        <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
+                                        <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/microscope.png`} alt="microscope"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className="single-decktype-cell">
+                                        <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Tournament Win Rate:</b> {winRateData.tournamentWinRate ? `${winRateData.tournamentWinRate}%` : 'N/A'}</div>
+                                        <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/1st.png`} alt="1st.png"/>
                                         </div>
                                     </td>
                                 </tr>
