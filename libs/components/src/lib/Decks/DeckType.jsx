@@ -28,9 +28,7 @@ const { Controller, Orb, Lock, Bow, Voltage, Volcano, Unicorn, Thinking } = emoj
 
 export const DeckType = (props) => {
     const [summary, setSummary] = useState({})
-    console.log('summary', summary)
     const [matchups, setMatchups] = useState({})
-    console.log('matchups', matchups)
     const [banlist, setBanList] = useState({})
     
     const { id } = useParams()
@@ -120,7 +118,7 @@ export const DeckType = (props) => {
                 <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             }
             <div className="body">
-                <div className="single-deck-title-flexbox">
+                <div className="single-decktype-title-flexbox">
                     <a
                         className="link desktop-only"
                         href={`/api/decktypes/download?id=${id}&format=${format}`} 
@@ -132,7 +130,7 @@ export const DeckType = (props) => {
                             <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`} alt="download"/>
                         </div>
                     </a>
-                    <div className="single-deck-title">{summary.deckType}</div>
+                    <div className="single-decktype-title">{summary.deckType}</div>
                     <Link to="/deck-builder" state={{ deck: {name: summary.deckType, formatName: summary.format?.name}, skeleton: `/api/decktypes/download?id=${id}&format=${format}` }} className="desktop-only">                                    
                         <div className="deck-button">
                             <b style={{padding: '0px 6px'}}>Open Deck</b>
@@ -140,44 +138,60 @@ export const DeckType = (props) => {
                         </div>
                     </Link>
                 </div>
-                <table className="single-deck-table">
+                <table className="single-decktype-table">
                 <tbody>
-                    <tr className="single-deck-info-1">
-                    <td>
-                        <div onClick={() => {window.location.href=`/formats/${summary.formatName ? summary.format?.name : ''}`}} className="single-deck-cell">
-                        <div className="single-deck-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {summary.format?.name}</div>
-                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/${summary.format?.icon}.png`} alt="format-icon"/>
-                        </div>       
-                    </td>
-                    <td>
-                        <div className="single-deck-cell">
-                        <div className="single-deck-category" style={{paddingRight:'7px'}}><b>Category:</b> {summary.deckCategory}</div>
-                        <img className="single-deck-category-emoji" style={{width:'28px'}} src={categoryImage} alt={summary.deckCategory}/>
-                        </div>
-                    </td>
-                    <td>
-                        <div className="single-deck-cell">
-                        <div className="single-deck-category" style={{paddingRight:'7px'}}><b>Frequency:</b> {summary.percent}%</div>
-                        <img className="single-deck-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
-                        </div>
-                    </td>
-                    {
-                        Object.entries(matchups).length ? (
-                            <td>
-                                <div className="single-deck-cell">
-                                <div className="single-deck-category" style={{paddingRight:'7px'}}><b>Conversion:</b> {matchups.conversionRate ? `${matchups.conversionRate}%` : 'N/A'}</div>
-                                <img className="single-deck-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
-                                </div>
-                            </td>
-                        ) : ''
-                    }
+                    <tr className="single-decktype-info-1">
+                        <td>
+                            <div onClick={() => {window.location.href=`/formats/${summary.formatName ? summary.format?.name : ''}`}} className="single-decktype-cell">
+                            <div className="single-decktype-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {summary.format?.name}</div>
+                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/${summary.format?.icon}.png`} alt="format-icon"/>
+                            </div>       
+                        </td>
+                        <td>
+                            <div className="single-decktype-cell">
+                            <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Category:</b> {summary.deckCategory}</div>
+                            <img className="single-decktype-category-emoji" style={{width:'28px'}} src={categoryImage} alt={summary.deckCategory}/>
+                            </div>
+                        </td>
+                        <td>
+                            <div className="single-decktype-cell">
+                            <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Frequency:</b> {summary.percent}%</div>
+                            <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
+                            </div>
+                        </td>
                     </tr>
+                    
+                        {
+                            Object.entries(matchups).length ? (
+                                <tr className="single-decktype-info-2">
+                                    <td>
+                                        <div className="single-decktype-cell">
+                                        <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Overall Win Rate:</b> {matchups.overallWinRate ? `${matchups.overallWinRate}%` : 'N/A'}</div>
+                                        <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className="single-decktype-cell">
+                                        <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Tournament Win Rate:</b> {matchups.tournamentWinRate ? `${matchups.tournamentWinRate}%` : 'N/A'}</div>
+                                        <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className="single-decktype-cell">
+                                        <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Conversion Rate:</b> {matchups.conversionRate ? `${matchups.conversionRate}%` : 'N/A'}</div>
+                                        <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : ''
+                        }
+                    
                 </tbody>
                 </table>
         
                 {/* <div className="popular-cards"> */}
                     <h2>Popular Main Deck Cards</h2>
-                    <div id="main" className="deck-bubble">
+                    <div id="main" className="decktype-bubble">
                         <div id="main" className="deck-flexbox">
                         {
                         summary.mainMonsters.map((data, index) => {
@@ -254,7 +268,7 @@ export const DeckType = (props) => {
                             <>
                             <br/>
                             <h2>Popular Extra Deck Cards</h2>
-                            <div id="extra" className="deck-bubble">
+                            <div id="extra" className="decktype-bubble">
                                 <div id="extra" className="deck-flexbox">
                                 {
                                     summary.extraMonsters.map((data, index) => {
@@ -286,7 +300,7 @@ export const DeckType = (props) => {
                 
                         <br/>
                         <h2>Popular Side Deck Cards</h2>
-                        <div id="side" className="deck-bubble">
+                        <div id="side" className="decktype-bubble">
                             <div id="side" className="deck-flexbox">
                             {
                             summary.sideMonsters.map((data, index) => {
@@ -398,7 +412,7 @@ export const DeckType = (props) => {
                     ) : ''
                 }
                 {
-                    Object.entries(matchups).length ? (
+                    Object.entries(matchups)[0]?.total ? (
                         <>
                             <br/>
                             <h2>Matchups</h2>

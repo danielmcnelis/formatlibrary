@@ -39,26 +39,8 @@ export const getMatchupH2H = async (req, res, next) => {
             }
         })
 
-        const deckRepresentation = await Deck.count({
-            where: {
-                deckTypeId: deckType1.id,
-                origin: 'event',
-                formatId: format?.id
-            }
-        })
-
-        const topDeckRepresentation = await Deck.count({
-            where: {
-                display: true,
-                deckTypeId: deckType1.id,
-                origin: 'event',
-                formatId: format?.id
-            }
-        })
-
         const total = wins + losses
-        const conversionRate = Math.round((topDeckRepresentation / deckRepresentation) * 100)
-        const data = { wins, losses, total, conversionRate }
+        const data = { wins, losses, total }
         return res.json(data)
     } else {
         return res.json(false)
@@ -98,6 +80,22 @@ export const getMatchupMatrix = async (req, res, next) => {
                     formatId: format.id
                 }
             })
+            
+            const tournamentWins = await Matchup.findAll({
+                where: {
+                    winningDeckTypeId: deckType.id,
+                    source: 'tournament',
+                    formatId: format.id
+                }
+            })
+        
+            const tournamentLosses = await Matchup.findAll({
+                where: {
+                    losingDeckTypeId: deckType.id,
+                    source: 'tournament',
+                    formatId: format.id
+                }
+            })
 
             const matrix = {}
 
@@ -126,8 +124,29 @@ export const getMatchupMatrix = async (req, res, next) => {
                     matrix[matchup.winningDeckTypeName].total++
                 }
             })
-        
-            return res.json(matrix)
+
+            const deckRepresentation = await Deck.count({
+                where: {
+                    deckTypeId: deckType.id,
+                    origin: 'event',
+                    formatId: format?.id
+                }
+            })
+
+            const topDeckRepresentation = await Deck.count({
+                where: {
+                    display: true,
+                    deckTypeId: deckType.id,
+                    origin: 'event',
+                    formatId: format?.id
+                }
+            })
+
+            const conversionRate = Math.round((topDeckRepresentation / deckRepresentation) * 100)
+            const overallWinRate = Math.round(wins / (wins + losses) * 100)
+            const tournamentWinRate = Math.round(tournamentWins / (tournamentWins + tournamentLosses) * 100)
+            
+            return res.json({...matrix, conversionRate, overallWinRate, tournamentWinRate})
         } else {
             return res.json({})
         }

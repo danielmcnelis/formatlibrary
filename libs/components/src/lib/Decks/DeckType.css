@@ -1,13 +1,13 @@
 
   
-  .deck-bubble {
+  .decktype-bubble {
     width: 760px;
     margin-left: auto;
     margin-right: auto;
     border-radius: 5px;
   }
   
-  .deck-bubble#main {
+  .decktype-bubble#main {
     border: solid #990099;
     border-width: 5px 0px;
     padding: 10px 0px;
@@ -15,7 +15,7 @@
     margin-bottom: 5px;
   }
   
-  .deck-bubble#side {
+  .decktype-bubble#side {
     border: solid #00a3cc;
     border-width: 5px 0px;
     padding: 5px 0px;
@@ -23,7 +23,7 @@
     margin-bottom: 2px;
   }
   
-  .deck-bubble#extra {
+  .decktype-bubble#extra {
     border: solid #ffbf00;
     border-width: 5px 0px;
     padding: 5px 0px;
@@ -32,7 +32,7 @@
 
   .deck-flexbox {
     padding: 0px 10px;
-    max-width: 800px;
+    max-width: 760px;
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
@@ -117,7 +117,7 @@
     padding: 6px 0px;
   }
 
-  .single-deck-title {
+  .single-decktype-title {
     padding: 0px 20px;
     text-align: center;
     font-weight: bold;
@@ -128,10 +128,10 @@
     align-items: center;
   }
   
-  .single-deck-title-flexbox {
+  .single-decktype-title-flexbox {
     display: flex;
     justify-content: center;
-    width: 760px;
+    width: 850px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -163,3 +163,43 @@
     width: 100%;
     height: 30px;
   }
+
+  
+  .single-decktype-builder-cell-pfp {
+    border: 1px solid black;
+    border-radius: 28px;
+    width: 28px;
+    margin: 0px 7px;
+  }
+
+    .single-decktype-table {
+        display: table;
+        width: 850px;
+        margin: 5px 0px 10px;
+        vertical-align: middle;
+        margin-left: auto;
+        margin-right: auto;
+        border-top: 2px solid var(--text-tertiary);
+        border-bottom: 2px solid var(--text-tertiary);
+        border-radius: 6px;
+    }
+
+    .single-decktype-info-1 {
+        border-bottom: 1px solid var(--text-tertiary);
+        background-color: var(--background);
+    }
+
+    .single-decktype-info-2 {
+        background-color: var(--even-row);
+    }
+
+    .single-decktype-cell {
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+        align-content: left;
+        align-items: center;
+        font-size: 18px;
+        padding: 2px 2px;
+        height: 28px;
+    }
