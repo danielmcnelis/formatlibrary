@@ -225,7 +225,8 @@ export const conductCensus = async (client) => {
     const servers = await Server.findAll({
         where: {
             access: {[Op.not]: 'free'}
-        }
+        },
+        order: [['size', 'DESC']]
     })
 
     const checkedDiscordIds = []

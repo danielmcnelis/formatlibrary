@@ -6,7 +6,7 @@ const Canvas = require('canvas')
 import { ActionRowBuilder, EmbedBuilder, AttachmentBuilder, StringSelectMenuBuilder } from 'discord.js'
 import { Op } from 'sequelize'
 import axios from 'axios'
-import { Match, Pairing, Replay, Deck, Alius, Card, Membership, Player, Print, Role, Server, Set, Status, Tournament } from '@fl/models'
+import { Event, Match, Pairing, Replay, Deck, Alius, Card, Membership, Player, Print, Role, Server, Set, Status, Tournament } from '@fl/models'
 import { emojis, rarities } from '@fl/bot-emojis'
 import { config } from '@fl/config'
 import { HeadObjectCommand, S3Client } from '@aws-sdk/client-s3'
