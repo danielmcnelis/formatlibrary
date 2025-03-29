@@ -159,6 +159,16 @@ export const DeckType = (props) => {
                         <img className="single-deck-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
                         </div>
                     </td>
+                    {
+                        Object.entries(matchups).length ? (
+                            <td>
+                                <div className="single-deck-cell">
+                                <div className="single-deck-category" style={{paddingRight:'7px'}}><b>Conversion:</b> {matchups.conversionRate ? `${matchups.conversionRate}%` : 'N/A'}</div>
+                                <img className="single-deck-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
+                                </div>
+                            </td>
+                        ) : ''
+                    }
                     </tr>
                 </tbody>
                 </table>

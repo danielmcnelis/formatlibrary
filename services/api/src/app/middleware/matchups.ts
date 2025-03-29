@@ -1,5 +1,5 @@
 
-import { DeckType, Format, Matchup } from '@fl/models'
+import { Deck, DeckType, Format, Matchup } from '@fl/models'
 import { Op } from 'sequelize'
 
 export const getMatchupH2H = async (req, res, next) => {
@@ -38,9 +38,27 @@ export const getMatchupH2H = async (req, res, next) => {
                 formatId: format?.id
             }
         })
-    
+
+        const deckRepresentation = await Deck.count({
+            where: {
+                deckTypeId: deckType1.id,
+                origin: 'event',
+                formatId: format?.id
+            }
+        })
+
+        const topDeckRepresentation = await Deck.count({
+            where: {
+                display: true,
+                deckTypeId: deckType1.id,
+                origin: 'event',
+                formatId: format?.id
+            }
+        })
+
         const total = wins + losses
-        const data = { wins, losses, total }
+        const conversionRate = Math.round((topDeckRepresentation / deckRepresentation) * 100)
+        const data = { wins, losses, total, conversionRate }
         return res.json(data)
     } else {
         return res.json(false)
