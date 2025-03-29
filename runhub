@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-pm2 start ~/code/formatlibrary/dist/services/hub/main.js --max-memory-restart 100M --name hub 
+pm2 start ~/code/formatlibrary/dist/services/hub/main.js --max-memory-restart 0.1G --name hub 
