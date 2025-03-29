@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { authenticate, getDeckTypes, createDeckType, getWinRateData, downloadDeckType, getDeckTypeByName, getDeckTypeSummary, getWinRateData } from '../middleware'
+import { authenticate, getDeckTypes, createDeckType, getWinRateData, downloadDeckType, getDeckTypeByName, getDeckTypeSummary } from '../middleware'
 
 const router = Router()
 
