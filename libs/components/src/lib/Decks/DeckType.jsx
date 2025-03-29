@@ -53,31 +53,34 @@ export const DeckType = (props) => {
                 const {data: summaryData} = await axios.get(summaryApiUrl)
                 setSummary(summaryData)
 
-                let winRateSummaryUrl = `/api/decktypes/winrates?id=${id}`
-                if (format) winRateSummaryUrl += `&format=${format}`
-                if (props.roles?.admin) winRateSummaryUrl += '&isAdmin=true'
-                if (props.roles?.subscriber) winRateSummaryUrl += '&isSubscriber=true'
+                if (accessToken) {
+                    let winRateSummaryUrl = `/api/decktypes/winrates?id=${id}`
+                    if (format) winRateSummaryUrl += `&format=${format}`
+                    if (props.roles?.admin) winRateSummaryUrl += '&isAdmin=true'
+                    if (props.roles?.subscriber) winRateSummaryUrl += '&isSubscriber=true'
+    
+                    const {data: winRateData} = await axios.get(winRateSummaryUrl, {
+                        headers: {
+                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                        }
+                    })
+    
+                    setWinRateData(winRateData)
+    
+                    let matchupApiUrl = `/api/matchups/${id}`
+                    if (format) matchupApiUrl += `?format=${format}`
+                    if (props.roles?.admin) matchupApiUrl += '&isAdmin=true'
+                    if (props.roles?.subscriber) matchupApiUrl += '&isSubscriber=true'
+    
+                    const {data: matchupData} = await axios.get(matchupApiUrl, {
+                        headers: {
+                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                        }
+                    })
+    
+                    setMatchups(matchupData)
+                }
 
-                const {data: winRateData} = await axios.get(winRateSummaryUrl, {
-                    headers: {
-                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                    }
-                })
-
-                setWinRateData(winRateData)
-
-                let matchupApiUrl = `/api/matchups/${id}`
-                if (format) matchupApiUrl += `?format=${format}`
-                if (props.roles?.admin) matchupApiUrl += '&isAdmin=true'
-                if (props.roles?.subscriber) matchupApiUrl += '&isSubscriber=true'
-
-                const {data: matchupData} = await axios.get(matchupApiUrl, {
-                    headers: {
-                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                    }
-                })
-
-                setMatchups(matchupData)
 
                 if (summaryData?.format) {
                     const {data: banlistData} = await axios.get(`/api/banlists/cards/${summaryData?.format?.banlist}?category=${summaryData?.format?.category || 'TCG'}`)
