@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-pm2 start ~/code/formatlibrary/dist/services/auth/main.js --max-memory-restart 0.1G --name auth 
+pm2 start ~/code/formatlibrary/dist/services/auth/main.js --name auth 
