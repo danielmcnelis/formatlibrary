@@ -6,7 +6,7 @@ const Canvas = require('canvas')
 import { ActionRowBuilder, EmbedBuilder, AttachmentBuilder, StringSelectMenuBuilder } from 'discord.js'
 import { Op } from 'sequelize'
 import axios from 'axios'
-import { Card, Membership, Player, Print, Role, Server, Set, Status, Tournament } from '@fl/models'
+import { Match, Pairing, Replay, Deck, Alius, Card, Membership, Player, Print, Role, Server, Set, Status, Tournament } from '@fl/models'
 import { emojis, rarities } from '@fl/bot-emojis'
 import { config } from '@fl/config'
 import { HeadObjectCommand, S3Client } from '@aws-sdk/client-s3'
@@ -429,19 +429,189 @@ export const convertArrayToObject = (arr = []) => {
 }
 
 //CREATE PLAYER
-export const createPlayer = async (member) => {
+export const createPlayer = async (member, x = 0) => {
+    if (x >= 2) return
     if (member && !member.user.bot) {
         try {
             const id = await Player.generateId()
-            await Player.create({
+            const newPlayer = await Player.create({
                 id: id,
                 name: `${member.user?.username}`,
                 discordId: `${member.user?.id}`,
                 discordName: `${member.user?.username}`
             })
+
+            return newPlayer
         } catch (err) {
             console.log(err)
+            const existingPlayer = await Player.findOne({
+                where: {
+                    discordName: `${member.user?.username}`
+                }
+            })
+
+            if (existingPlayer) {
+                try {
+                    await existingPlayer.update({ 
+                        name: `Deleted User ${existingPlayer.discordName} ${existingPlayer.discordId}`, 
+                        discordName: `Deleted User ${existingPlayer.discordName} ${existingPlayer.discordId}` 
+                    })
+                    const newPlayer = await createPlayer(member, x++)
+                    if (newPlayer) {
+                        await combinePlayers(existingPlayer, newPlayer)
+                    }
+                } catch (err) {
+                    console.log(err)
+                    return
+                }
+            }
         }
+    }
+}
+
+// COMBINE PLAYERS
+export const combinePlayers = async (oldPlayer, newPlayer) => {
+    try {
+        const aliuses = await Alius.findAll({
+            where: {
+                playerId: oldPlayer.id
+            }
+        })
+    
+        for (let i = 0; i < aliuses.length; i++) {
+            const alius = aliuses[i]
+            await alius.update({ playerId: newPlayer.id })
+        }
+    
+        const decks = await Deck.findAll({
+            where: {
+                builderId: oldPlayer.id
+            }
+        })
+    
+        for (let i = 0; i < decks.length; i++) {
+            const deck = decks[i]
+            await deck.update({ builderId: newPlayer.id })
+        }
+    
+        const events = await Event.findAll({
+            where: {
+                winnerId: oldPlayer.id
+            }
+        })
+    
+        for (let i = 0; i < events.length; i++) {
+            const event = events[i]
+            await event.update({ winnerId: newPlayer.id })
+        }
+    
+        const membership = await Membership.findOne({
+            where: {
+                playerId: oldPlayer.id
+            }
+        })
+    
+        if (membership) await membership.destroy()
+    
+        const replays = await Replay.findAll({
+            where: {
+                [Op.or]: [
+                    { winnerId: oldPlayer.id },
+                    { loserId: oldPlayer.id }
+                ]
+            }
+        })
+    
+        for (let i = 0; i < replays.length; i++) {
+            const replay = replays[i]
+            
+            if (replay.winnerId === oldPlayer.id) {     
+                await replay.update({
+                    winnerId: newPlayer.id,
+                    winnerName: newPlayer.name
+                })
+            } else if (replay.loserId === oldPlayer.id) {
+                await replay.update({
+                    loserId: newPlayer.id,
+                    loserName: newPlayer.name
+                })
+            }
+        }
+    
+        const pairings = await Pairing.findAll({
+            where: {
+                [Op.or]: [
+                    { playerAId: oldPlayer.id },
+                    { playerBId: oldPlayer.id }
+                ]
+            }
+        })
+    
+        for (let i = 0; i < pairings.length; i++) {
+            const pairing = pairings[i]
+            
+            if (pairing.playerAId === oldPlayer.id) {     
+                await pairing.update({
+                    playerAId: newPlayer.id,
+                    playerAName: newPlayer.name
+                })
+            } else if (pairing.playerBId === oldPlayer.id) {
+                await pairing.update({
+                    playerBId: newPlayer.id,
+                    playerBName: newPlayer.name
+                })
+            }
+        }
+    
+        for (let i = 0; i < decks.length; i++) {
+            const deck = decks[i]
+            await deck.update({ builderId: newPlayer.id })
+        }
+    
+        const matches = await Match.findAll({
+            where: {
+                [Op.or]: [
+                    { winnerId: oldPlayer.id },
+                    { loserId: oldPlayer.id }
+                ]
+            }
+        })
+    
+        let violations = 0
+        let count = 0
+        let formats = []
+    
+        for (let i = 0; i < matches.length; i++) {
+            const match = matches[i]
+            const format = match.formatName
+            if (!formats.includes(format)) formats.push(format)
+            
+            if (
+                (match.winnerId === oldPlayer.id && match.loserId === newPlayer.id) || 
+                (match.loserId === oldPlayer.id && match.winnerId === newPlayer.id)
+            ) {
+                violations++
+                await match.destroy()
+            } else if (match.winnerId === oldPlayer.id) {     
+                await match.update({
+                    winnerId: newPlayer.id,
+                    winnerName: newPlayer.name
+                })
+                count++
+            } else if (match.loserId === oldPlayer.id) {
+                await match.update({
+                    loserId: newPlayer.id,
+                    loserName: newPlayer.name
+                })
+                count++
+            }
+        }
+    
+        console.log(`combined ${oldPlayer.discordName} and ${newPlayer.discordName}`)
+        return [formats, count, violations]
+    } catch (err) {
+        console.log(err)
+        return false
     }
 }
 
