@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-pm2 start dist/services/bot/main.js --max-memory-restart 1G --name bot 
+pm2 start dist/services/bot/main.js --max-memory-restart 700M --name bot 
