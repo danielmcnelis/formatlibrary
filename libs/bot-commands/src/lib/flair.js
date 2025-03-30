@@ -46,7 +46,7 @@ export default {
             const currentRoles = [...(await interaction.member.roles.cache.filter((r) => r.name.includes('(Sub)'))).values()]
             const privilegedUserIds = ['194147938786738176', '626843317010694176']
 
-            if (!interaction.member._roles?.includes('1102002844850208810') && !privilegedUserIds.includes(interaction.member.id)) {
+            if (!interaction.member._roles?.includes('1102002844850208810') && !interaction.member._roles?.includes('1336745321186988084') && !privilegedUserIds.includes(interaction.member.id)) {
                 return await interaction.reply({ content: `Sorry, Subscriber Flair is only available with a Format Library ${emojis.FL} subscription.`})
             }
 
