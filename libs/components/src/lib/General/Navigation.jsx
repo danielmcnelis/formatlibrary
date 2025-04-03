@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom'
 import { getCookie } from '@fl/utils'
 import './Navigation.css'
+import axios from 'axios'
 const playerId = getCookie('playerId')
 
 // TOGGLE
@@ -139,7 +140,7 @@ export const Navigation = (props) => {
                 }
                 {
                     playerId ? (
-                        <div onClick={()=>logOut()} >
+                        <div onClick={() => logOut()} >
                             <h3 className="hamburger-header">Logout</h3>
                         </div>
                     ) : (
