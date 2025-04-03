@@ -15,6 +15,7 @@ const Stripe = new stripe(config.stripe.clientSecret)
 // recreating the `Stripe` object on every render.
 // const stripePromise = loadStripe('pk_test_51LIfMzI2hSs9VrZuvedTsVTHy91Julkndoa3ngNSu57SEDslvLipAGD1FaZ2L6vQ4fp4RWwIejgKgcfKISQZFazW00DTWtDgVz');
 
+// PAYMENT INTENT
 export const paymentIntent = async (req, res, next) => {
     try {
         const intent = await Stripe.paymentIntents.create({
@@ -32,6 +33,7 @@ export const paymentIntent = async (req, res, next) => {
     }
 }
 
+//RECEIVE STRIPE WEBHOOKS
 export const receiveStripeWebhooks = async (req, res, next) => {
     try {
         if (req.body.data.object.object === 'subscription') {
@@ -108,6 +110,7 @@ export const receiveStripeWebhooks = async (req, res, next) => {
     }
 }
 
+//GET SUBSCRIPTIONS
 export const getSubscriptions = async (req, res, next) => {
     try {
         const {data: stripeSubscriptions} = await Stripe.subscriptions.list()

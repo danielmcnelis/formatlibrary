@@ -50,7 +50,7 @@ export default {
         try {
             const tournamentId = interaction.options.getString('tournament')
             const tournament = await Tournament.findOne({ where: { id: tournamentId }})
-            if (!tournament) return await interaction.reply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
+            if (!tournament) return await interaction.reply({ content: `Error: Please select a tournament from the drop down menu`})	
             if (tournament.type !== 'swiss') return await interaction.reply({ content: `Tie-breakers can only be edited for Swiss tournaments.`})	
 
             const placeholder1 = tournament.tieBreaker1 === 'median buchholz' ? 'Median-Buchholz (MB)' :

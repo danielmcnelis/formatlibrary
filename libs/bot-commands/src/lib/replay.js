@@ -96,7 +96,7 @@ export default {
             const winner = interaction.options.getUser('winner')
             const loser = interaction.options.getUser('loser')
             const tournament = await Tournament.findOne({ where: { id: tournamentId }})
-            if (!tournament) return await interaction.editReply({ content: `Error: Could not find tournamentId ${tournamentId}.`})	
+            if (!tournament) return await interaction.editReply({ content: `Error: Please select a tournament from the drop down menu.`})	
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
             const format = await Format.findByServerOrChannelId(server, interaction.channelId)
 

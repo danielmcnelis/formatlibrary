@@ -1045,17 +1045,19 @@ export const manageSubscriptions = async (client) => {
 
     try {
         const discordPremiumRoleId = '1102002847056400464'
-        const stripePremiumRoleId = '1335316985097093290'
         const discordSupporterRoleId = '1102020060631011400'
+
+        const stripePremiumRoleId = '1335316985097093290'
         const stripeSupporterRoleId = '1335317256921682053'
         const stripeSubscriberRoleId = '1336745321186988084'
+
         const guild = client.guilds.cache.get('414551319031054346')
         const membersMap = await guild.members.fetch()
         // const members = [...membersMap.values()]
         const programmer = await client.users.fetch('194147938786738176')
         const players = await Player.findAll()
         // UPDATE SUBSCRIPTIONS
-        const {data} = await axios.get(`https://formatlibrary.com/api/stripe/subscriptions`)
+        const {data} = await axios.get(`https://formatlibrary.com/xdcriptions`)
                         
         for (let i = 0; i < players.length; i++) {
             try {
@@ -1075,6 +1077,7 @@ export const manageSubscriptions = async (client) => {
                         await player.update({ alternateEmail: activeSubscription.email })
                     }
                     await programmer.send({ content: `Welcome ${player.name} to the Stripe Premium Tier!`})
+                    console.log('!!member found line 1080', !!member)
                     member?.roles.add(stripePremiumRoleId)
                     member?.roles.add(stripeSubscriberRoleId)
                     member?.roles.remove(stripeSupporterRoleId)
@@ -1084,7 +1087,9 @@ export const manageSubscriptions = async (client) => {
                     if (player.email !== activeSubscription.email) {
                         await player.update({ alternateEmail: activeSubscription.email })
                     }
+
                     await programmer.send({ content: `Welcome ${player.name} to the Stripe Supporter Tier!`})
+                    console.log('!!member found line 1092', !!member)
                     member?.roles.add(stripeSupporterRoleId)
                     member?.roles.add(stripeSubscriberRoleId)
                     member?.roles.remove(stripePremiumRoleId)

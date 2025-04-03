@@ -17,6 +17,15 @@ export const Navigation = (props) => {
     const isContentManager = props.roles?.contentManager
     const isSubscriber = props.roles?.subscriber
 
+    const logOut = async () => {
+        try {
+            const { request } = await axios.post(`/auth/logout`)
+            window.location.href = request.responseURL
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     return (
         <>
         <div className="nav-bar">
@@ -130,9 +139,9 @@ export const Navigation = (props) => {
                 }
                 {
                     playerId ? (
-                        <a href="/auth/logout/">
+                        <div onClick={()=>logOut()} >
                             <h3 className="hamburger-header">Logout</h3>
-                        </a>
+                        </div>
                     ) : (
                         <a href="/auth/login/">
                             <h3 className="hamburger-header">Login</h3>
