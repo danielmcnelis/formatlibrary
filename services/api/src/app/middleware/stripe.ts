@@ -113,8 +113,48 @@ export const receiveStripeWebhooks = async (req, res, next) => {
 //GET SUBSCRIPTIONS
 export const getSubscriptions = async (req, res, next) => {
     try {
-        const {data: stripeSubscriptions} = await Stripe.subscriptions.list()
-        console.log('stripeSubscriptions', stripeSubscriptions)
+        const subscriptions = await Subscription.findAll({
+            include: Player,
+            order: [['createdAt', 'DESC']]
+        })
+
+        for (let i = 0; i < subscriptions.length; i++) {
+            const subscription = subscriptions[i]
+            const stripeSubscription = await Stripe.subscriptions.retrieve(
+                subscription.id
+            )
+
+            // const stripeSubscription = stripeSubscriptions[i]
+            const customer = await Stripe.customers.retrieve(stripeSubscription.customer.toString())
+
+            let player = subscription?.player
+            if (!player) {
+                player = customer['email'] ? await Player.findOne({
+                    where: {
+                        [Op.or]: {
+                            email: {[Op.iLike]: customer['email']},
+                            alternateEmail: {[Op.iLike]: customer['email']},
+                        }
+                    }
+                }) : {}
+            }
+
+            if (player && player.email !== customer['email']) {
+                await player.update({ alternateEmail: customer['email'] })
+            }
+
+            console.log('player?.name stripeSubscription.status', player?.name, stripeSubscription.status)
+
+            if (stripeSubscription.status !== 'active') {
+                await subscription.destroy()
+                console.log('deleting stripeSubscription from FL DB:', stripeSubscription)
+            } 
+        }
+            
+        const {data: stripeSubscriptions} = await Stripe.subscriptions.list({
+            limit: 100,
+            status: 'active'
+          });
         
         for (let i = 0; i < stripeSubscriptions.length; i++) {
             const stripeSubscription = stripeSubscriptions[i]
@@ -144,7 +184,7 @@ export const getSubscriptions = async (req, res, next) => {
                 await player.update({ alternateEmail: customer['email'] })
             }
 
-            console.log('player?.name stripeSubscription.status', player?.name, stripeSubscription.status)
+            console.log('player?.name, stripeSubscription.status', player?.name, stripeSubscription.status)
 
             if (subscription) {
                 await subscription.update({
