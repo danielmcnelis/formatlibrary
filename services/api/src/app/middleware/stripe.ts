@@ -114,6 +114,7 @@ export const receiveStripeWebhooks = async (req, res, next) => {
 export const getSubscriptions = async (req, res, next) => {
     try {
         const {data: stripeSubscriptions} = await Stripe.subscriptions.list()
+        console.log('stripeSubscriptions', stripeSubscriptions)
         
         for (let i = 0; i < stripeSubscriptions.length; i++) {
             const stripeSubscription = stripeSubscriptions[i]
@@ -142,6 +143,8 @@ export const getSubscriptions = async (req, res, next) => {
             if (player && player.email !== customer['email']) {
                 await player.update({ alternateEmail: customer['email'] })
             }
+
+            console.log('player?.name stripeSubscription.status', player?.name, stripeSubscription.status)
 
             if (subscription) {
                 await subscription.update({
