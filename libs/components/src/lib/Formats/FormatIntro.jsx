@@ -19,6 +19,7 @@ export const FormatIntro = (props) => {
     const [eventCount, setEventCount] = useState(0)
     const [statsCount, setStatsCount] = useState(0)
     const [inEditMode, setInEditMode] = useState(false)
+    const [description, setDescription] = useState('')
     const { id } = useParams()
     // const videoId = format?.videoId
     const videoEmbed = format?.videoEmbed
@@ -41,16 +42,31 @@ export const FormatIntro = (props) => {
         }
     }
     
-            
+    // UPDATE FORMAT DESCRIPTION
+    const updateFormatDescription = async () => {
+        try {
+            await axios.post(`/api/formats/update?id=${format.id}`, { description })
+            setFormat({...format, description})
+            setInEditMode(false)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    
+
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0))
   
+    // USE EFFECT
+    useEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop), [inEditMode])
+
     // USE EFFECT SET CARD
     useEffect(() => {
       const fetchData = async () => {
         try {
           const {data} = await axios.get(`/api/formats/${id}`)
           setFormat(data.format)
+          setDescription(data.format.description || '')
           setDeckCount(data.deckCount)
           setEventCount(data.eventCount)
           setStatsCount(data.statsCount)
@@ -98,11 +114,27 @@ export const FormatIntro = (props) => {
                     ) : <h2>{format.eventName}</h2>
                 }
                 {
-                format.description ? (
-                    <div className="desktop-only">
-                    <p className="format-desc">{format.description}</p>
+                !inEditMode ? (
+                    format.description ? (
+                        <div className="desktop-only">
+                            <p className="format-desc">{format.description}</p>
+                        </div>
+                    ) : <br/>
+                ) : (
+                    <div className="format-desc pwk-border-bottom">
+                        <textarea
+                            id="name"
+                            className="large-input"
+                            // onInput="this.size = this.value.length"
+                            style={{height: '70vh'}}
+                            defaultValue={format.description || ''}
+                            type="text"
+                            onChange={(e) => {
+                                setDescription(e.target.value)
+                            }}
+                        />
                     </div>
-                ) : <br/>
+                    )   
                 }
                 {
                 deckCount ? (
@@ -141,7 +173,10 @@ export const FormatIntro = (props) => {
                 format.nextFormatId ? <a className="format-neighbor-link align-right" href ={`/formats/${urlize(format.nextFormatName)}`}>{format.nextFormatName} →</a> : ''
             }
             {
-                // isContentManager && !inEditMode ? <div className="downloadButton" style={{width: '150px'}} onClick={()=> setInEditMode(true)}>Edit Mode</div> : ''
+                isContentManager && !inEditMode ? 
+                    <div className="downloadButton" style={{width: '150px'}} onClick={()=> setInEditMode(true)}>Edit Mode</div> : (
+                    <div className="downloadButton" style={{width: '150px'}} onClick={()=> updateFormatDescription()}>Save Changes</div>
+                )
             }
             </div>
         </div>

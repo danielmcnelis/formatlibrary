@@ -22,6 +22,9 @@ export const Format = db.define('formats', {
   eventName: {
     type: Sequelize.STRING
   },
+  latestSetCode: {
+    type: Sequelize.STRING
+  },
   icon: {
     type: Sequelize.STRING
   },

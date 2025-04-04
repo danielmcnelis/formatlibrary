@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getFormatByName, getFormats, updateFormatInfo } from '../middleware'
+import { getFormatByName, getFormats, updateFormatDescription, updateFormatInfo } from '../middleware'
 
 const router = Router()
 

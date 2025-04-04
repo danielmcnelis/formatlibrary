@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import RedirectWWW from './RedirectWWW'
 import {
  AdminPortal,
  Builder,
@@ -48,6 +49,7 @@ export const Router = (props) => {
  const {disableAds, roles} = props
  return (
 			<BrowserRouter>
+                <RedirectWWW />
 				<Routes>
 					<Route path="/" element=<Page roles={roles} disableAds={disableAds} element=<Home /> /> />
                     <Route path='/ads.txt' element=<AdsTxtRedirect /> />
