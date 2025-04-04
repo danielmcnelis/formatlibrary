@@ -116,8 +116,14 @@ export const generatePacks = async (req, res, next) => {
         const coreV2 = ['SOD', 'RDS', 'FET', 'TLM', 'CRV', 'EEN', 'SOI', 'EOJ', 'POTD', 'CDIP']
         const coreV3 = ['STON', 'FOTB']
         const coreV4 = ['TAEV', 'GLAS', 'PTDN', 'LODT', 'TDGS', 'CSOC', 'CRMS', 'RGBT', 'ANPR', 'SOVR', 'ABPF']
-        const coreV5 = ['TSHD', 'DREV', 'STBL', 'STOR', 'EXVC', 'GENF', 'PHSW', 'ORCS', 'GAOV', 'REDU', 'ABYR', 'CBLZ', 'LTGY', 'JOTL', 'SHSP', 'LVAL', 'PRIO', 'DUEA', 'NECH', 'SECE', 'CROS', 'CORE', 'DOCS']
-        const coreV6 = ['BOSH', 'SHVI', 'TDIL', 'INOV', 'RATE', 'MACR', 'COTD', 'CIBR', 'EXFO', 'FLOD', 'CYHO', 'SOFU', 'SAST', 'DANE', 'RIRA', 'CHIM', 'IGAS', 'ETCO', 'ROTD', 'PHRA', 'BLVO', 'LIOV', 'DAMA', 'BODE', 'BACH', 'DIFO', 'POTE', 'DABL', 'PHHY', 'CYAC', 'DUNE', 'AGOV', 'PHNI']
+        const coreV5 = ['TSHD', 'DREV', 'STBL', 'STOR', 'EXVC', 'GENF', 'PHSW', 'ORCS', 'GAOV', 'REDU', 'ABYR', 
+                'CBLZ', 'LTGY', 'JOTL', 'SHSP', 'LVAL', 'PRIO', 'DUEA', 'NECH', 'SECE', 'CROS', 'CORE', 'DOCS'
+            ]
+        const coreV6 = ['BOSH', 'SHVI', 'TDIL', 'INOV', 'RATE', 'MACR', 'COTD', 'CIBR', 'EXFO', 'FLOD', 'CYHO', 
+                'SOFU', 'SAST', 'DANE', 'RIRA', 'CHIM', 'IGAS', 'ETCO', 'ROTD', 'PHRA', 'BLVO', 'LIOV', 'DAMA', 
+                'BODE', 'BACH', 'DIFO', 'POTE', 'DABL', 'PHHY', 'CYAC', 'DUNE', 'AGOV', 'PHNI', 'LEDE', 'INFO',
+                'ROTA', 'SUDA'
+            ]
         const reprintV1 = ['DB1', 'DB2', 'DR1', 'DR2', 'DR3']
         const duelistV1 = ['DP01', 'DP02', 'DP03', 'DP04', 'DP05', 'DP06', 'DP07']
         const duelistV2 = ['DP08', 'DP09', 'DP10', 'DP11', 'DPYG']
@@ -170,7 +176,7 @@ export const generatePacks = async (req, res, next) => {
                 for (let i = 0; i < 2; i++) odds.push(ultras)
                 for (let i = 0; i < 9; i++) odds.push(supers)
     
-                pack = [...getRandomSubset(commons, 7), getRandomElement(rares), getRandomElement(getRandomElement(odds))].sort((a, b) => b.setCode - a.setCode)
+                pack = [...getRandomSubset(commons, 8), getRandomElement(getRandomElement(odds))].sort((a, b) => b.setCode - a.setCode)
             } else if (reprintV1.includes(set.setCode)) {
                 const monsterCommons = commons.filter((p) => p.card?.category === 'Monster')
                 const spellCommons = commons.filter((p) => p.card?.category === 'Spell')
@@ -265,8 +271,14 @@ export const generateBox = async (req, res, next) => {
         const coreV2 = ['SOD', 'RDS', 'FET', 'TLM', 'CRV', 'EEN', 'SOI', 'EOJ', 'POTD', 'CDIP']
         const coreV3 = ['STON', 'FOTB']
         const coreV4 = ['TAEV', 'GLAS', 'PTDN', 'LODT', 'TGDS', 'CSOC', 'CRMS', 'RGBT', 'ANPR', 'SOVR', 'ABPF']
-        const coreV5 = ['TSHD', 'DREV', 'STBL', 'STOR', 'EXVR', 'GENF', 'PHSW', 'ORCS', 'GAOV', 'REDU', 'ABYR', 'CBLZ', 'LTGY', 'JOTL', 'SHSP', 'LVAL', 'PRIO', 'DUEA', 'NECH', 'SECE', 'CROS', 'CORE', 'DOCS']
-        const coreV6 = ['BOSH', 'SHVI', 'TDIL', 'INOV', 'RATE', 'MACR', 'COTD', 'CIBR', 'EXFO', 'FLOD', 'CYHO', 'SOFU', 'SAST', 'DANE', 'RIRA', 'CHIM', 'IGAS', 'ETCO', 'ROTD', 'PHRA', 'BLVO', 'LIOV', 'DAMA', 'BODE', 'BACH', 'DIFO', 'POTE', 'DABL', 'PHHY', 'CYAC', 'DUNE', 'AGOV', 'PHNI']
+        const coreV5 = ['TSHD', 'DREV', 'STBL', 'STOR', 'EXVC', 'GENF', 'PHSW', 'ORCS', 'GAOV', 'REDU', 'ABYR', 
+                'CBLZ', 'LTGY', 'JOTL', 'SHSP', 'LVAL', 'PRIO', 'DUEA', 'NECH', 'SECE', 'CROS', 'CORE', 'DOCS'
+            ]
+        const coreV6 = ['BOSH', 'SHVI', 'TDIL', 'INOV', 'RATE', 'MACR', 'COTD', 'CIBR', 'EXFO', 'FLOD', 'CYHO', 
+                'SOFU', 'SAST', 'DANE', 'RIRA', 'CHIM', 'IGAS', 'ETCO', 'ROTD', 'PHRA', 'BLVO', 'LIOV', 'DAMA', 
+                'BODE', 'BACH', 'DIFO', 'POTE', 'DABL', 'PHHY', 'CYAC', 'DUNE', 'AGOV', 'PHNI', 'LEDE', 'INFO',
+                'ROTA', 'SUDA'
+            ]
         const reprintV1 = ['DB1', 'DB2', 'DR1', 'DR2', 'DR3']
         const duelistV1 = ['DP01', 'DP02', 'DP03', 'DP04', 'DP05', 'DP06', 'DP07']
         const duelistV2 = ['DP08', 'DP09', 'DP10', 'DP11', 'DPYG']
@@ -307,7 +319,7 @@ export const generateBox = async (req, res, next) => {
             for (let i = 0; i < 1; i++) odds.push(secrets)
             for (let i = 0; i < 2; i++) odds.push(ultras)
             for (let i = 0; i < 9; i++) odds.push(supers)
-            for (let i = 0; i < 24; i++) box.push([...getRandomSubset(commons, 7), getRandomElement(rares), getRandomElement(getRandomElement(odds))].sort((a, b) => b.setCode - a.setCode))
+            for (let i = 0; i < 24; i++) box.push([...getRandomSubset(commons, 8), getRandomElement(getRandomElement(odds))].sort((a, b) => b.setCode - a.setCode))
         } else if (reprintV1.includes(set.setCode)) {
             const monsterCommons = commons.filter((p) => p.card?.category === 'Monster')
             const spellCommons = commons.filter((p) => p.card?.category === 'Spell')

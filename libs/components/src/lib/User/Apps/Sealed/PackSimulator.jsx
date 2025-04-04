@@ -12,6 +12,11 @@ export const PackSimulator = () => {
     const [count, setCount] = useState(1)
     const [packs, setPacks] = useState([])
     const [card, setCard] = useState({})
+    console.log('boosters', boosters)
+    console.log('booster', booster)
+    console.log('packs', packs)
+    console.log('count', count)
+    console.log('card', card)
 
     const packNumberOptions = []
     for (let i = 1; i <= 24; i++) packNumberOptions.push(i) 
