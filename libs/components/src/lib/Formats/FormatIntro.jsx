@@ -13,6 +13,7 @@ import parse from 'html-react-parser';
 import './FormatIntro.css'
 
 export const FormatIntro = (props) => {
+    const isAdmin = props.roles?.admin
     const isContentManager = props.roles?.contentManager
     const [format, setFormat] = useState({})
     const [deckCount, setDeckCount] = useState(0)
@@ -173,9 +174,10 @@ export const FormatIntro = (props) => {
                 format.nextFormatId ? <a className="format-neighbor-link align-right" href ={`/formats/${urlize(format.nextFormatName)}`}>{format.nextFormatName} →</a> : ''
             }
             {
-                isContentManager && !inEditMode ? 
-                    <div className="downloadButton" style={{width: '150px'}} onClick={()=> setInEditMode(true)}>Edit Mode</div> : (
-                    <div className="downloadButton" style={{width: '150px'}} onClick={()=> updateFormatDescription()}>Save Changes</div>
+                !isAdmin ? '' : !inEditMode ? (
+                    <div className="downloadButton" style={{width: '150px', margin: '20px 0px 0px'}} onClick={()=> setInEditMode(true)}>Edit Mode</div> 
+                ) : (
+                    <div className="downloadButton" style={{width: '150px', margin: '20px 0px 0px'}} onClick={()=> updateFormatDescription()}>Save Changes</div>
                 )
             }
             </div>
