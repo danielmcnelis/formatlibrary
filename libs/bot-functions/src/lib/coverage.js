@@ -32,6 +32,7 @@ export const createDecks = async (event, participants, standings = [], topCutSiz
 
             if (!entries.length) {
                 console.log(`missing entry for participant ${participant.id}`)
+                b++
             }
 
             for (let j = 0; j < entries.length; j++) {
@@ -43,7 +44,6 @@ export const createDecks = async (event, participants, standings = [], topCutSiz
                         eventId: event.id
                     }
                 })
-                console.log("count", count)
 
                 if (!count) {
                     const standing = standings?.find((s) => s.participantId === participant.id)
