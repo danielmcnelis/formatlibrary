@@ -197,8 +197,8 @@ export const PlayerProfile = () => {
                                             deck={deck}
                                             formatIcon={deck.format.icon}
                                             width="360px"
-                                            margin="10px 5px"
-                                            padding="5px"
+                                            margin="10px 2px"
+                                            padding="2px"
                                             coverage={true}
                                         />
                                     )

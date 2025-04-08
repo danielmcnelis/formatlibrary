@@ -202,7 +202,7 @@ export const DeckTable = (props) => {
                             <img className="desktop-only" style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/deckbox.png'} alt="deck-box"/>
                         ) : (
                             <div className="horizontal-centered-flexbox" style={{alignItems: 'flex-end', padding: '10px 0px 10px'}}>
-                                <div style={{'padding': '0px 10px'}}><i>Subscribe to view all decks.</i></div>
+                                <div style={{'padding': '0px 10px'}} className="desktop-only"><i>Subscribe to view all decks.</i></div>
                                 <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/artworks/fl-arrow.png'} alt="deck-box"/>
                             </div>
                         )

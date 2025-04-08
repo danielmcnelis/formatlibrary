@@ -1,7 +1,7 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Server, Team, Tournament } from '@fl/models'
-import { initiateEndTournament, selectTournament, sendPairings, sendTeamPairings, postParticipant } from '@fl/bot-functions'
+import { startChallongeBracket, initiateEndTournament, selectTournament, sendPairings, sendTeamPairings, postParticipant } from '@fl/bot-functions'
 import { isModerator, hasPartnerAccess, shuffleArray } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
@@ -130,6 +130,8 @@ export default {
                     } else {
                         return sendPairings(interaction.guild, server, tournament, false)
                     }
+                } else if (tournament.isTopCutTournament) {
+                    return startChallongeBracket(interaction, tournament.id)
                 } else {
                     const row = new ActionRowBuilder()
                         .addComponents(new ButtonBuilder()

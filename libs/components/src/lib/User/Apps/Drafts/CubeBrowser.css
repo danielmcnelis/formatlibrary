@@ -112,16 +112,6 @@
     align-items: center;
   }
   
-  .paginationWrapper {
-    width: 90%;
-    min-width: 764px;
-    max-width: 100%;
-    padding: 4px 4px 2px 4px;
-    align-items: center;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
   .resultsWrapper0 {
     width: 90%;
     min-width: 764px;
@@ -190,17 +180,6 @@
   }
   
   
-  .pagination {
-    display: flex;
-    min-width: 410px;
-    max-width: 100%;
-    margin: 0px 8px;
-    padding: 4px;
-    align-items: center;
-    justify-content: center;
-  }
-
-  
 @media only screen and (max-width: 1000px) {
     #card-table {
         margin: none;
@@ -211,7 +190,16 @@
         display: none;
     }
 
-    .card-search-flexbox, .resultsWrapper0 {
+    .card-search-flexbox {
+        width: 98vw !important;
+        min-width: 0px;   
+        max-width: 98vw;
+        display: flex;
+        align-content: space-evenly;
+        flex-direction: row !important;
+    }
+
+    .resultsWrapper0 {
         width: 98vw !important;
         min-width: 0px;   
         display: flex;

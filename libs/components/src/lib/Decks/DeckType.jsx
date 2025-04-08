@@ -7,7 +7,7 @@ import { DeckImage } from './DeckImage'
 import { Matchup } from './MatchupBar'
 import { NotFound } from '../General/NotFound'
 import { useLocation } from 'react-router-dom'
-import { capitalize, getCookie } from '@fl/utils'
+import { capitalize, getCookie, urlize } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import './DeckType.css'
 const playerId = getCookie('playerId')
@@ -167,12 +167,12 @@ export const DeckType = (props) => {
                 <tbody>
                     <tr className="single-decktype-info-1">
                         <td>
-                            <div onClick={() => {window.location.href=`/formats/${summary.formatName ? summary.format?.name : ''}`}} className="single-decktype-cell">
+                            <div onClick={() => {window.location.href=`/formats/${summary.format?.name ? urlize(summary.format.name) : ''}`}} className="single-decktype-cell">
                             <div className="single-decktype-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {summary.format?.name}</div>
                             <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/${summary.format?.icon}.png`} alt="format-icon"/>
                             </div>       
                         </td>
-                        <td>
+                        <td className='desktop-only'>
                             <div className="single-decktype-cell">
                             <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Category:</b> {summary.deckCategory}</div>
                             <img className="single-decktype-category-emoji" style={{width:'28px'}} src={categoryImage} alt={summary.deckCategory}/>
@@ -201,7 +201,7 @@ export const DeckType = (props) => {
                                         <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/microscope.png`} alt="microscope"/>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td className='desktop-only'>
                                         <div className="single-decktype-cell">
                                         <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Tournament Win Rate:</b> {winRateData.tournamentWinRate ? `${winRateData.tournamentWinRate}%` : 'N/A'}</div>
                                         <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/1st.png`} alt="1st.png"/>
@@ -422,9 +422,9 @@ export const DeckType = (props) => {
                                             key={deck.id}
                                             index={index} 
                                             deck={deck}
-                                            width="360px"
-                                            margin="10px 5px"
-                                            padding="5px"
+                                            width="100%"
+                                            margin="10px 1px"
+                                            padding="1px"
                                             coverage={true}
                                         /></div>)
                                     } else {
@@ -438,7 +438,7 @@ export const DeckType = (props) => {
                 }
                 {
                     Object.entries(matchups).length ? (
-                        <>
+                        <div className={"desktop-only"}>
                             <br/>
                             <h2>Matchups</h2>
                             <div className="matchup-box">
@@ -446,9 +446,9 @@ export const DeckType = (props) => {
                                 Object.entries(matchups).filter((m) => m[1].total >= 6).sort((a, b) => (b[1].wins / b[1].total) - (a[1].wins / a[1].total)).map((m) => <Matchup deckType={m[0]} wins={m[1].wins} losses={m[1].losses} total={m[1].total} format={format || summary.formatName}/>)
                             }
                             </div>
-                        </>
+                        </div>
                     ) : (
-                        <div>
+                        <div className={"desktop-only"}>
                             <br/>
                             <h2>Matchups</h2>
                             <div className="horizontal-centered-flexbox">

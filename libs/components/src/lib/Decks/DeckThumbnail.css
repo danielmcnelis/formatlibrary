@@ -31,5 +31,6 @@
 @media only screen and (max-width: 1000px) {
     .deckThumbnail-flexbox {
         width: 100vw;
+        padding: 0px;
     }
 }

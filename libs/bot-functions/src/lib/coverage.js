@@ -12,7 +12,7 @@ import { config } from '@fl/config'
 import { checkExpiryDate, uploadDeckFolder } from './drive'
 
 // CREATE DECKS
-export const createDecks = async (event, participants, standings = [], topCutSize, topCutTournamentId, challongeApiKey) => {
+export const createDecks = async (interaction, event, participants, standings = [], topCutSize, topCutTournamentId, challongeApiKey) => {
     console.log("createDecks()")
     let b = 0
     let c = 0
@@ -31,7 +31,8 @@ export const createDecks = async (event, participants, standings = [], topCutSiz
             })
 
             if (!entries.length) {
-                console.log(`missing entry for participant ${participant.id}`)
+                console.log(`missing entry for participant: ${participant.name} (${participant.id})`)
+                interaction.channel.send(`missing entry for participant: ${participant.name} (${participant.id})`).catch((err) => console.log(err))
                 b++
             }
 

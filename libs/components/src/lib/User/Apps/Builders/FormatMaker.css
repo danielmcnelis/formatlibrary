@@ -126,16 +126,6 @@
     background-color: var(--extra-deck-background);
   }
 
-  .deck-flexbox {
-    padding: 0px 10px;
-    max-width: 800px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: left;
-    flex-direction: row;
-    overflow: visible;
-  }
   
   .refinedButton {
     display: inline-block;

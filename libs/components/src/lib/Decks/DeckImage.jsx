@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom'
-import { ordinalize } from '@fl/utils'
+import { abbreviateString, ordinalize } from '@fl/utils'
 import './DeckImage.css'
 
 
@@ -8,13 +8,10 @@ import './DeckImage.css'
 export const DeckImage = (props) => {
     const {deck, width, margin, padding, coverage, formatIcon} = props
     if (!deck) return <div/>
-    const fullName = deck.builderName || ''
-    const displayName = fullName.length <= 17 ? fullName : fullName.slice(0, 17).split(' ')[0] || ''
     const placement = ordinalize(deck.placement)
-    const title = coverage ? `${deck.deckTypeName} - ${displayName} - ${placement}` :
-      `${deck.deckTypeName ? deck.deckTypeName + ' - ' : ''}${displayName}${deck.eventAbbreviation ? ' - ' + deck.eventAbbreviation : ''}`
-  
-    
+    const deckTypeNamePlusDeckBuilderName = abbreviateString(`${deck.deckTypeName} - ${deck.builderName}`, 36)
+    const title = coverage ? `${deckTypeNamePlusDeckBuilderName} - ${placement}` :
+      `${deckTypeNamePlusDeckBuilderName}${deck.eventAbbreviation ? ' - ' + deck.eventAbbreviation : ''}`
 
     return (
       <div className="DeckImage-box">
@@ -38,10 +35,10 @@ export const DeckImage = (props) => {
                                 alt={formatIcon}
                             />
                         </div>
-                    ) : <h4 style={{width}}>{title}</h4>
+                    ) : <h4 style={{width: '100%'}}>{title}</h4>
                 }
                 <div id="main" style={{maxWidth: '98vw', width, margin, padding}} className="deck-flexbox">
-                    <img src={`https://cdn.formatlibrary.com/images/decks/thumbnails/${deck.id}.png`} alt="deck"></img>
+                    <img style={{maxWidth: '98vw'}} src={`https://cdn.formatlibrary.com/images/decks/thumbnails/${deck.id}.png`} alt="deck"></img>
                 </div>
               </div>
           </Link>

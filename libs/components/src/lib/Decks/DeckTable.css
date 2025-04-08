@@ -48,16 +48,6 @@
     align-items: center;
   }
   
-  .paginationWrapper {
-    width: 90%;
-    min-width: 764px;
-    max-width: 100%;
-    padding: 4px 4px 2px 4px;
-    align-items: center;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
   .resultsWrapper0 {
     width: 90%;
     min-width: 764px;
@@ -118,15 +108,6 @@
   }
   
   
-  .pagination {
-    display: flex;
-    min-width: 410px;
-    max-width: 100%;
-    margin: 0px 8px;
-    padding: 4px;
-    align-items: center;
-    justify-content: center;
-  }
 
   .event-database-flexbox {
     padding: 0px 20px;

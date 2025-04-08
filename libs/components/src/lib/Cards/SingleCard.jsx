@@ -274,7 +274,7 @@ export const SingleCard = (props) => {
                                             <img src={starType} className="card-symbol-standard" alt={starType}/>
                                             {
                                                 isMobile ? (
-                                                    <div>{card.level || card.rating}</div>
+                                                    <div style={{padding: '12px 8px'}}>{card.level || card.rating}</div>
                                                 ) : (
                                                     <div>{starWord} {card.level || card.rating}</div>
                                                 )
@@ -284,7 +284,7 @@ export const SingleCard = (props) => {
                                             <img src="https://cdn.formatlibrary.com/images/emojis/swords.png" className="card-symbol-standard" alt="sword"/>
                                             {
                                                 isMobile ? (
-                                                    <div>{card.atk}</div>
+                                                    <div style={{padding: '12px 8px'}}>{card.atk}</div>
                                                 ) : (
                                                     <div>ATK: {card.atk}</div>
                                                 )
@@ -294,7 +294,7 @@ export const SingleCard = (props) => {
                                             <img src="https://cdn.formatlibrary.com/images/emojis/shield.png" className="card-symbol-standard" alt="shield"/>
                                             {
                                                 isMobile ? (
-                                                    <div>{card.def}</div>
+                                                    <div style={{padding: '12px 8px'}}>{card.def}</div>
                                                 ) : (
                                                     <div>DEF: {card.def}</div>
                                                 )
@@ -657,7 +657,7 @@ export const SingleCard = (props) => {
                 }
                 {
                     rulings?.generic?.length && !inEditMode ? (
-                        <div className="prints-flexbox">
+                        <div className="rulings-flexbox">
                             <div>Generic Rulings:</div>
                             <div>
                                 {rulings.generic.map((ruling) => <li className="ruling" key={ruling.id}>{ruling.content}</li>)}
@@ -665,7 +665,7 @@ export const SingleCard = (props) => {
                             <br/>
                         </div>
                     ) : rulings?.generic?.length && inEditMode && isAdmin ? (
-                        <div className="prints-flexbox">
+                        <div className="rulings-flexbox">
                             <div>Generic Rulings:</div>
                             <div>
                                 {rulings.generic.map((ruling) => (
@@ -691,7 +691,7 @@ export const SingleCard = (props) => {
                     rulings?.specific && Object.keys(rulings?.specific).length && !inEditMode ? (
                         Object.entries(rulings.specific).map((entry) => {
                             return (
-                                <div className="prints-flexbox">
+                                <div className="rulings-flexbox">
                                     <div>{entry[0] + ' Rulings:'}</div>
                                     {
                                         entry[1].map((ruling) => (
@@ -707,7 +707,7 @@ export const SingleCard = (props) => {
                     ) : rulings?.specific && Object.keys(rulings?.specific).length && inEditMode && isAdmin ? (
                         Object.entries(rulings.specific).map((entry) => {
                             return (
-                                <div className="prints-flexbox">
+                                <div className="rulings-flexbox">
                                     <div>{entry[0] + ' Rulings:'}</div>
                                     {
                                         entry[1].map((ruling) => (

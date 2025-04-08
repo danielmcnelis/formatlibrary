@@ -429,8 +429,8 @@ export const SingleEvent = (props) => {
                                 index={index} 
                                 deck={deck}
                                 width="360px"
-                                margin="10px 5px"
-                                padding="5px"
+                                margin="10px 1px"
+                                padding="1px"
                                 coverage={true}
                                 />
                     })

@@ -9,9 +9,10 @@
 .clickedGroupMiniButton {
   display: inline-block;
   padding: 0px;
-  margin: 0.1em;
-  min-width: 28px;
-  min-height: 28px;
+  margin: 0.2em 0.2em;
+  min-width: 40px;
+  min-height: 40px;
+  /* width:  */
   border-radius: 8px;
   box-sizing: border-box;
   text-decoration: none;
@@ -21,7 +22,7 @@
   transition: all 0.15s;
   background-repeat: no-repeat;
   background-position: 2px;
-  background-size: 24px;
+  background-size: 36px !important;
   vertical-align: middle;
 }
 

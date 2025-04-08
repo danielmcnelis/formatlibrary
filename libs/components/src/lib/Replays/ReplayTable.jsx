@@ -229,15 +229,11 @@ export const ReplayTable = (props) => {
                             !isSubscriber ? (
 
                                 <div className="horizontal-centered-flexbox" style={{alignItems: 'flex-end', padding: '10px 0px 10px'}}>
-                                    <div style={{'padding': '0px 10px'}}><i>Subscribe to view all replays.</i></div>
+                                    <div style={{'padding': '0px 10px'}} className="desktop-only"><i>Subscribe to view all replays.</i></div>
                                     <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/artworks/fl-arrow.png'} alt="deck-box"/>
                                 </div>
                             ) : ''
                         }
-                        <div className="horizontal-centered-flexbox" style={{alignItems: 'flex-end', padding: '10px 0px 10px'}}>
-                            <div style={{'padding': '0px 10px'}}><i>Subscribe to view all replays.</i></div>
-                            <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/artworks/fl-arrow.png'} alt="deck-box"/>
-                        </div>
                     </div>
 
                     <div className="search-component">
@@ -335,7 +331,7 @@ export const ReplayTable = (props) => {
                         <table id="replays">
                             <thead>
                             <tr>
-                                <th>Format</th>
+                                <th></th>
                                 <th>Event</th>
                                 <th>Round</th>
                                 <th>Players</th>
@@ -379,7 +375,7 @@ export const ReplayTable = (props) => {
                                 <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/film.png'} alt="film"/>
                             ) : (
                                 <div className="horizontal-centered-flexbox" style={{alignItems: 'flex-end', padding: '10px 0px 10px'}}>
-                                    <div style={{'padding': '0px 10px'}}><i>Subscribe to view all replays.</i></div>
+                                    <div style={{'padding': '0px 10px'}} className="desktop-only"><i>Subscribe to view all replays.</i></div>
                                     <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/artworks/fl-arrow.png'} alt="deck-box"/>
                                 </div>
                             )

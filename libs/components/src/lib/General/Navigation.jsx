@@ -120,9 +120,6 @@ export const Navigation = (props) => {
                 <div onClick={() => {window.location.href="/formats/"}}>
                     <h3 className="hamburger-header">Formats</h3>
                 </div>
-                <div onClick={() => {window.location.href="/apps/"}}>
-                    <h3 className="hamburger-header">Apps</h3>
-                </div>
                 {
                     isSubscriber ? (
                         <a href="https://billing.stripe.com/p/login/4gw14n5Cd4zp6KkbII">

@@ -39,9 +39,9 @@ export const Home = () => {
     if (!blogPosts?.length) return <div style={{height: '100vh'}}/>
   
     return (
-        <div className="blog" id="blog">
+        <div id="blog">
         {/* Default Gaming Playlist */}
-        <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
+            <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"/>
             {
                 blogPosts.map((bp, index) => {
                 return (

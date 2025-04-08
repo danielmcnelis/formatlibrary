@@ -157,8 +157,7 @@
 
   .chart-flexbox {
     padding: 40px 20px;
-    margin-right: auto;
-    margin-left: auto;
+    margin: 0px auto;
     display: flex;
     width: 90%;
     justify-content: space-evenly;
@@ -183,4 +182,10 @@
         font-size: 40px;
     }
     
+    .chart-flexbox {
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0px;
+        margin: 0px auto;
+      }
   }

@@ -227,3 +227,12 @@ export const urlize = (str) => str.replace(/[\s]/g, '-').toLowerCase()
 
 //UNDERSCORIZE
 export const underscorize = (str) => str.replace(/[\s]/g, '_').toLowerCase()
+
+//ABBREVIATE STRING
+export const abbreviateString = (str, length = 12) => {
+    if (str.length <= length) {
+        return str
+    } else {
+        return `${str.substring(0, length)}.`
+    }
+ }

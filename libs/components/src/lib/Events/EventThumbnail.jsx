@@ -1,6 +1,6 @@
 
 // import { Link } from 'react-router-dom'
-import { capitalize } from '@fl/utils'
+import { abbreviateString, capitalize } from '@fl/utils'
 import './EventThumbnail.css'
 
 export const EventThumbnail = (props = {}) => {
@@ -23,7 +23,7 @@ export const EventThumbnail = (props = {}) => {
                   <img 
                     className="eventThumbnail-player-pfp" 
                     src={`/api/players/${event?.winner?.id}/avatar`}
-                    alt={winner.name}
+                    alt={abbreviateString(winner.name)}
                   />
                   <img 
                     className="eventThumbnail-logo" 

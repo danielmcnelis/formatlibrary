@@ -92,7 +92,11 @@
         flex-direction: column;
     }
 
-    .player-info, .player-awards {
+    .player-info {
+        padding: 5px 0px;
+    }
+
+    .player-awards {
         padding: 5px;
     }
 

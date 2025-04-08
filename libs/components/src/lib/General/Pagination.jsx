@@ -8,7 +8,7 @@ export const Pagination = (props) => {
     if (!itemCount || itemCount <= itemsPerPage || !setPage) return <div/>
 
     return (
-      <div>
+      <div className={"pagination-div"}>
         {
           page > 2 ? (
             <div
@@ -33,7 +33,7 @@ export const Pagination = (props) => {
         {
           totalPages > 3 && (page - 3) > 0 ? (
             <div
-              className="page-button"
+              className="page-button desktop-only"
               type="submit"
               onClick={() => setPage(page - 3)}
             >
@@ -94,7 +94,7 @@ export const Pagination = (props) => {
         {
           (page + 3) <= totalPages ? (
             <div
-              className="page-button"
+              className="page-button desktop-only"
               type="submit"
               onClick={() => setPage(page + 3)}
             >

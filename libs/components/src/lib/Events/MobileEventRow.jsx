@@ -22,10 +22,9 @@ export const MobileEventRow = (props) => {
                     className="search-results-link" 
                     onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
                 >
-              <div className="community-cell-flexbox">
-                  <img src={`https://cdn.formatlibrary.com/images/logos/${event.communityName?.replaceAll('+', '%2B')}.png`}/>
-                  <div>{event.name}</div>
-              </div>
+                <div className="community-cell-flexbox">
+                    <img src={`https://cdn.formatlibrary.com/images/logos/${event.communityName?.replaceAll('+', '%2B')}.png`}/>
+                </div>
               </div>
           </td>
           <td className="no-padding">
@@ -33,14 +32,19 @@ export const MobileEventRow = (props) => {
                     className="search-results-link" 
                     onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
                 >
-                    <div className="player-cell">
-                        <img 
-                            className="player-cell-pfp"
-                            src={`/api/players/${event?.winner?.id}/avatar`}
-                            alt={event.winnerName}
-                        />
-                    </div>
+                <div className="event-name-cell-flexbox">
+                    <div>{event.name}</div>
                 </div>
+                </div>
+          </td>
+          <td className="no-padding">
+            <div className="player-cell">
+                <img 
+                    className="player-cell-pfp"
+                    src={`/api/players/${event?.winner?.id}/avatar`}
+                    alt={event.winnerName}
+                />
+            </div>
           </td>
         </tr>
     )

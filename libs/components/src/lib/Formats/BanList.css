@@ -91,5 +91,11 @@
   @media only screen and (max-width: 1000px) {
       .banlist-flexbox {
           justify-content: center;
+          max-width: 100vw;
+          padding: 0px;
       }
+
+        .banlist-category {
+            width: 80vw !important;
+        }
   }

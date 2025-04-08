@@ -146,7 +146,7 @@
     justify-content: space-evenly;
 }
 
-.prints-flexbox {
+.prints-flexbox, .rulings-flexbox {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -271,5 +271,16 @@
         padding: 6px 0px;
     }
 
+    .rulings-flexbox {
+        display: none;
+    }
 
+
+    .line-chart-container {
+        display: none !important;
+      }
+ 
+    .card-symbol-standard {
+        padding: 12px 8px;
+    }
 }

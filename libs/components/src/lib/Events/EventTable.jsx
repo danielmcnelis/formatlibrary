@@ -248,7 +248,8 @@ export const EventTable = (props) => {
                         <table id="events">
                             <thead>
                             <tr>
-                                <th>Format</th>
+                                <th></th>
+                                <th>Host</th>
                                 <th>Event</th>
                                 <th>Winner</th>
                             </tr>

@@ -1,4 +1,5 @@
 import {
+  abbreviateString,
   appendScript,
   camelize,
   capitalize,
@@ -27,6 +28,7 @@ import {
 } from './country'
 
 export {
+  abbreviateString,
   appendScript,
   camelize,
   capitalize,

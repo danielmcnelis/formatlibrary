@@ -1,5 +1,6 @@
 
 import './ReplayThumbnail.css'
+import { abbreviateString } from '@fl/utils'
 
 export const ReplayThumbnail = (props = {}) => {
     const {url, roundName, winner, loser} = props
@@ -20,7 +21,7 @@ export const ReplayThumbnail = (props = {}) => {
                             src={`/api/players/${winner.id}/avatar`}
                             alt={winner.name}
                         />                
-                        <p className="playerName">{winner.name}</p>
+                        <p className="playerName">{abbreviateString(winner.name)}</p>
                     </div>
 
                     <img 
@@ -35,7 +36,7 @@ export const ReplayThumbnail = (props = {}) => {
                             src={`/api/players/${loser.id}/avatar`}
                             alt={loser.name}
                         />
-                        <p className="playerName">{loser.name}</p>
+                        <p className="playerName">{abbreviateString(loser.name)}</p>
                     </div>
                     
                 </div>

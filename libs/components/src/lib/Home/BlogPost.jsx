@@ -36,7 +36,7 @@ export const BlogPost = (props) => {
                                         src="https://cdn.formatlibrary.com/images/logos/Discord.png" 
                                         alt="Discord" 
                                     />
-                                    <p className="ad-desc">Join our Discord server!</p>
+                                    <p className="ad-description">Join our Discord server!</p>
                                 </div>
                                 </a>
                                 <a 
@@ -50,7 +50,7 @@ export const BlogPost = (props) => {
                                     src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" 
                                     alt="Buy Me A Coffee" 
                                 />
-                                <p className="ad-desc">Small donations support our work!</p>
+                                <p className="ad-description">Small donations support our work!</p>
                                 </a>
                                 <a 
                                     href="https://tcgplayer.pxf.io/XYZQm5" 
@@ -63,7 +63,7 @@ export const BlogPost = (props) => {
                                         src="https://cdn.formatlibrary.com/images/logos/TCGPlayer.png" 
                                         alt="TCG Player" 
                                     />
-                                    <p className="ad-desc">Shop to support FormatLibrary.com!</p>
+                                    <p className="ad-description">Shop to support FormatLibrary.com!</p>
                                 </a>
                             </div>
                         ) : <div/>
