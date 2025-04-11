@@ -214,6 +214,7 @@
   .body {
     min-height: 70vh;
     padding: 20px 0px;
+    overflow-x: hidden;
   }
   
   .mobile-only, .hide {

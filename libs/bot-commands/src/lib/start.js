@@ -1,12 +1,11 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
-import { Entry, Format, Server, Team, Tournament } from '@fl/models'
+import { Entry, Format, Player, Server, Team, Tournament } from '@fl/models'
 import { startChallongeBracket, initiateEndTournament, selectTournament, sendPairings, sendTeamPairings, postParticipant } from '@fl/bot-functions'
 import { isModerator, hasPartnerAccess, shuffleArray } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { emojis } from '@fl/bot-emojis'
-import { Player } from '../../../models/src'
 
 export default {
 	data: new SlashCommandBuilder()

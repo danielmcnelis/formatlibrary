@@ -1081,6 +1081,7 @@ export const manageSubscriptions = async (client) => {
                         member?.roles.remove(stripeSupporterRoleId)
                         a++
                     } else {
+                        await programmer.send({ content: `Adding the Stripe Premium Tier roles for ${player.name}!`})
                         member?.roles.add(stripePremiumRoleId)
                         member?.roles.add(stripeSubscriberRoleId)
                         member?.roles.remove(stripeSupporterRoleId)
@@ -1098,6 +1099,7 @@ export const manageSubscriptions = async (client) => {
                         member?.roles.remove(stripePremiumRoleId)
                         a++
                     } else {
+                        await programmer.send({ content: `Adding the Stripe Supporters Tier roles for ${player.name}!`})
                         member?.roles.add(stripeSupporterRoleId)
                         member?.roles.add(stripeSubscriberRoleId)
                         member?.roles.remove(stripePremiumRoleId)
