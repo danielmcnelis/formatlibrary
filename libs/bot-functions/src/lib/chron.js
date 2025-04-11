@@ -1080,7 +1080,13 @@ export const manageSubscriptions = async (client) => {
                         member?.roles.add(stripeSubscriberRoleId)
                         member?.roles.remove(stripeSupporterRoleId)
                         a++
-                    } else {
+                    } else if (
+                        member && (
+                            !member?.roles.cache.has(stripePremiumRoleId) || 
+                            !member?.roles.cache.has(stripeSubscriberRoleId) || 
+                            member?.roles.cache.has(stripeSupporterRoleId)
+                        )
+                    ) { 
                         await programmer.send({ content: `Adding the Stripe Premium Tier roles for ${player.name}!`})
                         member?.roles.add(stripePremiumRoleId)
                         member?.roles.add(stripeSubscriberRoleId)
@@ -1089,8 +1095,8 @@ export const manageSubscriptions = async (client) => {
                 } else if (subscription && subscription.status === 'active' && subscription.tier === 'Supporter') { 
                     if (!player.isSubscriber || player.subscriberTier !== 'Supporter') {
                         await player.update({ isSubscriber: true, subscriberTier: 'Supporter' })
-                        if (player.email !== activeSubscription.email) {
-                            await player.update({ alternateEmail: activeSubscription.email })
+                        if (player.email !== subscription.email) {
+                            await player.update({ alternateEmail: subscription.email })
                         }
 
                         await programmer.send({ content: `Welcome ${player.name} to the Stripe Supporter Tier!`})
@@ -1098,7 +1104,13 @@ export const manageSubscriptions = async (client) => {
                         member?.roles.add(stripeSubscriberRoleId)
                         member?.roles.remove(stripePremiumRoleId)
                         a++
-                    } else {
+                    } else if (
+                        member && (
+                            !member?.roles.cache.has(stripeSupporterRoleId) || 
+                            !member?.roles.cache.has(stripeSubscriberRoleId) || 
+                            member?.roles.cache.has(stripePremiumRoleId)
+                        )
+                    ) {
                         await programmer.send({ content: `Adding the Stripe Supporters Tier roles for ${player.name}!`})
                         member?.roles.add(stripeSupporterRoleId)
                         member?.roles.add(stripeSubscriberRoleId)
