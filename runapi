@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-pm2 start ~/code/formatlibrary/dist/services/api/main.js --max-memory-restart 900M --name api 
+pm2 start ~/code/formatlibrary/dist/services/api/main.js --max-memory-restart 1200M --name api 
