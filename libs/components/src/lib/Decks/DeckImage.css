@@ -24,4 +24,14 @@
 
   .DeckImage-box {
     max-width: 100vw;
+    padding: 2px 16px;
   }
+
+
+  /* MEDIUM AND LARGE CELL PHONES */
+  @media only screen and (max-width: 600px) {
+    
+        .DeckImage-box {
+            padding: 0px;
+        }
+    }
