@@ -143,8 +143,6 @@ export const getSubscriptions = async (req, res, next) => {
                 await player.update({ alternateEmail: customer['email'] })
             }
 
-            console.log('player?.name stripeSubscription.status', player?.name, stripeSubscription.status)
-
             if (stripeSubscription.status !== 'active') {
                 await subscription.destroy()
                 console.log('deleting stripeSubscription from FL DB:', stripeSubscription)
@@ -183,8 +181,6 @@ export const getSubscriptions = async (req, res, next) => {
             if (player && player.email !== customer['email']) {
                 await player.update({ alternateEmail: customer['email'] })
             }
-
-            console.log('player?.name, stripeSubscription.status', player?.name, stripeSubscription.status)
 
             if (subscription) {
                 await subscription.update({

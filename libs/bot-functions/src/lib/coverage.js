@@ -479,21 +479,17 @@ export const composeThumbnails = async (interaction, event) => {
         for (let i = 0; i < mainKonamiCodes.length; i++) {
             let konamiCode = mainKonamiCodes[i]
             while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-            let card = await Card.findOne({ where: { konamiCode }})
+            const card = await Card.findOne({ 
+                where: { 
+                    [Op.or]: {
+                        konamiCode: konamiCode,
+                        ypdId: mainKonamiCodes[i]
+                    }
+                }
+            })
 
             if (!card) {
-                const artwork = await Artwork.findOne({
-                    where: {
-                        artworkId: mainKonamiCodes[i]
-                    },
-                    include: Card
-                })
-        
-                if (artwork) {
-                    card = artwork.card
-                } else {
-                    continue
-                }
+                continue
             }
             
             main.push(card)

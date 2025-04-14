@@ -92,29 +92,33 @@ export const getPlayerAvatarById = async (req, res, next) => {
         await axios.head(`https://cdn.formatlibrary.com/images/pfps/${playerId}.png`)
         return res.redirect(`https://cdn.formatlibrary.com/images/pfps/${playerId}.png`)    
     } catch (err) {
-        console.log('PlayerId PFP Not Found.')
+        console.log('')
+        // console.log('PlayerId PFP Not Found.')
     }
 
     try {
         await axios.head(`https://cdn.discordapp.com/avatars/${player.discordId}/${player.discordPfp}.webp`)
         return res.redirect(`https://cdn.discordapp.com/avatars/${player.discordId}/${player.discordPfp}.webp`)
     } catch (err) {
-        console.log('DiscordPfp PFP Not Found.')
+        console.log('')
+        // console.log('DiscordPfp PFP Not Found.')
     }
 
     try {
         await axios.head(`https://cdn.formatlibrary.com/images/pfps/${player.discordId}.png`)
         return res.redirect(`https://cdn.formatlibrary.com/images/pfps/${player.discordId}.png`)
     } catch (err) {
-        console.log('DiscordId PFP Not Found.')
+        console.log('')
+        // console.log('DiscordId PFP Not Found.')
     }
 
     try {
         await axios.head(`https://cdn.formatlibrary.com/images/pfps/${player.name}.png`)
         return res.redirect(`https://cdn.formatlibrary.com/images/pfps/${player.name}.png`)
     } catch (err) {
-        console.log('PlayerName PFP Not Found.')
-        return res.redirect(`https://cdn.discordapp.com/embed/avatars/3.png`)
+        console.log('')
+        // console.log('PlayerName PFP Not Found.')
+        return res.redirect(`https://cdn.discordapp.com/embed/avatars/1.png`)
     }
 }
 

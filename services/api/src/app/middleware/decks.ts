@@ -884,7 +884,7 @@ export const getDeckAsAdmin = async (req, res, next) => {
     }
 }
 
-export const getDeckBySubscriber = async (req, res, next) => {
+export const getDeckAsSubscriber = async (req, res, next) => {
     try {
         const id = parseInt(req.params.id)
         const shareLink = req.params.id
@@ -935,6 +935,7 @@ export const getDeckAsRegularUser = async (req, res, next) => {
 }
 
 export const getDeckData = async (filter) => {
+    console.log('!!!!!!      GET DECK DATA      !!!!!!')
     const deck = await Deck.findOne({
         where: filter,
         attributes: [
@@ -991,29 +992,18 @@ export const getDeckData = async (filter) => {
     for (let i = 0; i < mainKonamiCodes.length; i++) {
       let konamiCode = mainKonamiCodes[i]
       while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-      let card = await Card.findOne({
+      const card = await Card.findOne({
         where: {
-          konamiCode: konamiCode
+            [Op.or]: {
+                konamiCode: konamiCode,
+                ypdId: mainKonamiCodes[i]
+            }
         },
         attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']
       })
 
       if (!card) {
-        console.log(`missing ${konamiCode}`)
-        console.log(`looking for artwork ${mainKonamiCodes[i]}`)
-        const artwork = await Artwork.findOne({
-            where: {
-                artworkId: mainKonamiCodes[i]
-            },
-            include: {model: Card, attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']}
-        })
-
-        console.log('!!artwork', !!artwork)
-        if (artwork) {
-            card = artwork.card
-        } else {
-            continue
-        }
+        continue
       }
 
       main.push(card)
@@ -1040,7 +1030,10 @@ export const getDeckData = async (filter) => {
       while (konamiCode.length < 8) konamiCode = '0' + konamiCode
       const card = await Card.findOne({
         where: {
-          konamiCode: konamiCode
+            [Op.or]: {
+                konamiCode: konamiCode,
+                ypdId: mainKonamiCodes[i]
+            }
         },
         attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']
       })
@@ -1056,7 +1049,10 @@ export const getDeckData = async (filter) => {
       while (konamiCode.length < 8) konamiCode = '0' + konamiCode
       const card = await Card.findOne({
         where: {
-          konamiCode: konamiCode
+            [Op.or]: {
+                konamiCode: konamiCode,
+                ypdId: mainKonamiCodes[i]
+            }
         },
         attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']
       })

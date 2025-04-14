@@ -17,8 +17,8 @@ import {
   likeDeck,
   downloadDeck,
   getDeckAsAdmin,
-  getDeckBySubscriber,
   getDeckAsRegularUser,
+  getDeckAsSubscriber,
   getDecksAsAdmin,
   getDecksAsSubscriber,
   getDecksAsRegularUser,
@@ -71,7 +71,7 @@ router.get('/api/decks/count', countDecks)
 
 router.get('/api/decks/admin/:id', [authenticate, getDeckAsAdmin])
 
-router.get('/api/decks/subscriber/:id', [authenticate, getDeckBySubscriber])
+router.get('/api/decks/subscriber/:id', [authenticate, getDeckAsSubscriber])
 
 router.get('/api/decks/admin', [authenticate, getDecksAsAdmin])
 
