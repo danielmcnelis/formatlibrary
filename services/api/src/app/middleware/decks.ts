@@ -1032,7 +1032,7 @@ export const getDeckData = async (filter) => {
         where: {
             [Op.or]: {
                 konamiCode: konamiCode,
-                ypdId: mainKonamiCodes[i]
+                ypdId: extraKonamiCodes[i]
             }
         },
         attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']
@@ -1051,7 +1051,7 @@ export const getDeckData = async (filter) => {
         where: {
             [Op.or]: {
                 konamiCode: konamiCode,
-                ypdId: mainKonamiCodes[i]
+                ypdId: sideKonamiCodes[i]
             }
         },
         attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']
