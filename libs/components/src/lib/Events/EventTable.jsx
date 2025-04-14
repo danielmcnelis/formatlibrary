@@ -107,8 +107,8 @@ export const EventTable = (props) => {
     // USE EFFECT
     useEffect(() => {
         const fetchData = async () => {
-            const {data: eventData} = await axios.get(`/api/events?page=1&limit=10&sortBy=startedAt:desc`)
-            setEvents(eventData)
+            // const {data: eventData} = await axios.get(`/api/events?page=1&limit=10&sortBy=startedAt:desc`)
+            // setEvents(eventData)
         
             const {data: formatData} = await axios.get(`/api/formats/`)
             setFormats(formatData)  
@@ -119,7 +119,7 @@ export const EventTable = (props) => {
             isMounted.current = true
         }
   
-        count()
+        // count()
         fetchData()
     }, [])
   

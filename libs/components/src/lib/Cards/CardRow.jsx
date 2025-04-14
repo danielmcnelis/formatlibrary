@@ -45,13 +45,8 @@ export const CardRow = (props) => {
     const filePath = `https://cdn.formatlibrary.com/images/medium_cards/${card.artworkId}.jpg`
     
     return (
-        <tr className={`${evenOrOdd}-search-results-row`}>
+        <tr className={`${evenOrOdd}-search-results-row`} onClick={() => {window.open(`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`, '_blank')}}>
           <td className="no-padding-2" style={{verticalAlign: 'top'}}>
-              <Link className="search-results-link" to={`/cards/${
-                  card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
-                  target="_blank" 
-                  rel="noopener noreferrer"
-              >
                   <div className='card-image-cell'>
                       <img
                         className="card-image"
@@ -69,14 +64,9 @@ export const CardRow = (props) => {
                       ) : ''
                       }
                   </div>
-              </Link>
           </td>
           <td className="no-padding-2" style={{verticalAlign: 'top'}}>
-              <Link className="search-results-link" to={`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
-                  target="_blank" 
-                  rel="noopener noreferrer"
-              >
-                  <table className="inner-cardRow-table">
+                 <table className="inner-cardRow-table">
                       <tbody>
                           <tr>
                           <th
@@ -197,7 +187,6 @@ export const CardRow = (props) => {
                           }
                       </tbody>
                   </table>
-              </Link>
           </td>
         </tr>
     )

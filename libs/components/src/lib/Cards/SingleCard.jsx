@@ -105,6 +105,7 @@ export const SingleCard = (props) => {
 
     // USE EFFECT SET CARD
     useEffect(() => {
+        if (!print.id && !data.prints[0]?.id) return
         const fetchData = async () => {
             try {
                 const {data: priceData} = await axios.get(`/api/prices/${print.id || data.prints[0]?.id}`)

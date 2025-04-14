@@ -16,7 +16,7 @@ export const DeckTable = (props) => {
     const accessToken = getCookie('access')
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
-    const [decks, setDecks] = useState([{},{},{},{},{},{},{},{},{},{}])
+    const [decks, setDecks] = useState([])
     const [decksPerPage, setDecksPerPage] = useState(10)
     const [view, setView] = useState('table')
     const [sortBy, setSortBy] = useState('publishDate:desc')
@@ -100,7 +100,7 @@ export const DeckTable = (props) => {
             }
         } else {
             try {
-                let url = `/api/decks?page=${page}&limit=${decksPerPage}&admin=${isAdmin}&subscriber=${isSubscriber}&sort=${sortBy}`
+                let url = `/api/decks?page=${page}&limit=${decksPerPage}&sort=${sortBy}`
                 if (filter.length) url += ('&filter=' + filter.slice(1))
     
                 const {data: deckData} = await axios.get(url)
@@ -154,8 +154,8 @@ export const DeckTable = (props) => {
     useEffect(() => {
         const fetchInitialData = async () => {
             try {
-                const {data: deckData} = await axios.get(`/api/decks?page=1&limit=12&sortBy=publishDate:desc&filter=origin:eq:event`)
-                setDecks(deckData)
+                // const {data: deckData} = await axios.get(`/api/decks?page=1&limit=12&sortBy=publishDate:desc&filter=origin:eq:event`)
+                // setDecks(deckData)
 
                 const {data: formatData} = await axios.get(`/api/formats/`)
                 setFormats(formatData)  
@@ -166,7 +166,6 @@ export const DeckTable = (props) => {
             }
         }
     
-        count()
         fetchInitialData()
     }, [])
   
@@ -286,7 +285,7 @@ export const DeckTable = (props) => {
         
                     <select
                     id="decksPerPageSelector"
-                    defaultValue="12"
+                    defaultValue="10"
                     style={{width: '160px', maxWidth: '45vw'}}
                     onChange={(e) => {setDecksPerPage(e.target.value); setPage(1)}}
                     >

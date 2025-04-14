@@ -4,10 +4,9 @@ import './ReplayRow.css'
 export const ReplayRow = (props) => {
     const {replay} = props
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
-    const openNewTab = () => window.open(replay.url, "_blank")
 
     return (    
-        <tr onClick={() => openNewTab()} className={`${evenOrOdd}-search-results-row`}>
+        <tr onClick={() => window.open(replay.url, "_blank")} className={`${evenOrOdd}-search-results-row`}>
           <td className="no-padding">
               <div className="format-cell-flexbox">
                 <img src={`https://cdn.formatlibrary.com/images/emojis/${replay.format?.icon}.png`} alt={replay.format?.icon}/>

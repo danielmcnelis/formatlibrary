@@ -130,7 +130,9 @@ export const SingleDeck = (props) => {
       }
     }
 
-    fetchDeckTypes()
+    if (inEditMode) {
+        fetchDeckTypes()
+    }
   }, [inEditMode])
 
   

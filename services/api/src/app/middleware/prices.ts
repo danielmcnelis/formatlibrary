@@ -47,7 +47,6 @@ export const getPrices = async (req, res, next) => {
 
         // console.log('req.params.id', req.params.id)
         // if (!req.params.id) return res.json({})
-            console.log('req.params.id', req.params.id)
         const print = await Print.findOne({ where: { id: req.params.id }, attributes: ['id', 'rarity', 'cardCode', 'cardName', 'unlimitedPrice', 'firstEditionPrice', 'limitedPrice']})
         const daysAgo = new Date(Date.now() - (365 * 24 * 60 * 60 * 1000))
  

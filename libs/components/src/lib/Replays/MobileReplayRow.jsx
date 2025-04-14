@@ -10,7 +10,7 @@ export const MobileReplayRow = (props) => {
         <tr onClick={() => openNewTab()} className={`${evenOrOdd}-search-results-row`}>
           <td className="no-padding">
               <div className="format-cell-flexbox" style={{padding: '0px'}}>
-                <img src={`https://cdn.formatlibrary.com/images/emojis/${replay.format?.icon}.png`}/>
+                <img src={`https://cdn.formatlibrary.com/images/emojis/${replay.format?.icon}.png`} alt="format icon"/>
               </div>
           </td>
 

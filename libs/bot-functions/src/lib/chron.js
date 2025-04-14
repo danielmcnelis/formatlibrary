@@ -1810,17 +1810,17 @@ export const getLinkArrows = (directionsArr = []) => {
 
 // GET SORT PRIORITY
 export const getSortPriority = (type = '') => {
-    const sortPriority = type.includes('Trap') ? 11 :
-        type.includes('Spell') ? 10 :
-        type.includes('Link') ? 9 :
-        type.includes('Xyz') ? 8 :
-        type.includes('Synchro') ? 7 :
-        type.includes('Fusion') ? 6 :
-        type.includes('Ritual') ? 5 :
-        type.includes('Pendulum') && type.includes('Effect') ? 4 :
-        type.includes('Effect') ? 3 :
-        type.includes('Pendulum') && !type.includes('Effect') ? 2 :
-        type.includes('Normal') ? 1 :
+    const sortPriority = type.includes('trap') ? 11 :
+        type.includes('spell') ? 10 :
+        type.includes('link') ? 9 :
+        type.includes('xyz') ? 8 :
+        type.includes('synchro') ? 7 :
+        type.includes('fusion') ? 6 :
+        type.includes('ritual') ? 5 :
+        type.includes('pendulum') && type.includes('effect') ? 4 :
+        type.includes('effect') ? 3 :
+        type.includes('pendulum') && !type.includes('effect') ? 2 :
+        type.includes('normal') ? 1 :
         null
 
     return sortPriority
@@ -1828,18 +1828,18 @@ export const getSortPriority = (type = '') => {
 
 // GET COLOR
 export const getColor = (type = '') => {
-    const color = type.includes('Trap') ? 'violet' :
-        type.includes('Spell') ? 'green' :
-        type.includes('Link') ? 'dark-blue' :
-        type.includes('Pendulum') && !type.includes('Normal') ? 'orange-green' :
-        type.includes('Pendulum') && type.includes('Normal') ? 'yellow-green' :
-        type.includes('Xyz') ? 'black' :
-        type.includes('Synchro') ? 'white' :
-        type.includes('Ritual') ? 'light-blue' :
-        type.includes('Fusion') ? 'purple' :
-        type.includes('Effect') ? 'orange' :
-        type.includes('Normal') ? 'yellow' :
-        type.includes('Token') ? 'gray' :
+    const color = type.includes('trap') ? 'violet' :
+        type.includes('spell') ? 'green' :
+        type.includes('link') ? 'dark-blue' :
+        type.includes('pendulum') && !type.includes('normal') ? 'orange-green' :
+        type.includes('pendulum') && type.includes('normal') ? 'yellow-green' :
+        type.includes('xyz') ? 'black' :
+        type.includes('synchro') ? 'white' :
+        type.includes('ritual') ? 'light-blue' :
+        type.includes('fusion') ? 'purple' :
+        type.includes('effect') ? 'orange' :
+        type.includes('normal') ? 'yellow' :
+        type.includes('token') ? 'gray' :
         null
 
     return color
@@ -2260,12 +2260,12 @@ export const downloadNewCards = async () => {
     
             let konamiCode = id
             while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-            const type = datum.type
-            const category = type.includes('Monster') ? 'Monster' :
-                type.includes('Spell') ? 'Spell' :
-                type.includes('Skill') ? 'Skill' :
-                type.includes('Trap') ? 'Trap' :
-                type.includes('Token') ? 'Token' :
+            const type = datum.type.toLowerCase()
+            const category = type.includes('monster') ? 'Monster' :
+                type.includes('spell') ? 'Spell' :
+                type.includes('skill') ? 'Skill' :
+                type.includes('trap') ? 'Trap' :
+                type.includes('token') ? 'Token' :
                 null
 
             if (!category) console.log(`No category for ${datum.type}`)
@@ -2303,42 +2303,42 @@ export const downloadNewCards = async () => {
                     isSpeedLegal: isSpeedLegal,
                     category: category,
                     icon: category !== 'Monster' ? datum.race : null,
-                    isNormal: category === 'Monster' && type.includes('Normal'),
+                    isNormal: category === 'Monster' && type.includes('normal'),
                     isEffect: category === 'Monster' &&
-                        !type.includes('Normal') && 
+                        !type.includes('normal') && 
                         (
-                            type.includes('Effect') || 
-                            type.includes('Flip') || 
-                            type.includes('Gemini') || 
-                            type.includes('Spirit') || 
-                            type.includes('Toon') || 
-                            type.includes('Union') || 
-                            type.includes('Tuner')
+                            type.includes('effect') || 
+                            type.includes('flip') || 
+                            type.includes('gemini') || 
+                            type.includes('spirit') || 
+                            type.includes('toon') || 
+                            type.includes('union') || 
+                            type.includes('tuner')
                         ),
-                    isFusion: category === 'Monster' && type.includes('Fusion'),
-                    isRitual: category === 'Monster' && type.includes('Ritual'),
-                    isSynchro: category === 'Monster' && type.includes('Synchro'),
-                    isXyz: category === 'Monster' && type.includes('Xyz'),
-                    isPendulum: category === 'Monster' && type.includes('Pendulum'),
-                    isLink: category === 'Monster' && type.includes('Link'),
-                    isFlip: category === 'Monster' && type.includes('Flip'),
-                    isGemini: category === 'Monster' && type.includes('Gemini'),
-                    isSpirit: category === 'Monster' && type.includes('Spirit'),
-                    isToon: category === 'Monster' && type.includes('Toon'),
-                    isTuner: category === 'Monster' && type.includes('Tuner'),
-                    isUnion: category === 'Monster' && type.includes('Union'),
+                    isFusion: category === 'Monster' && type.includes('fusion'),
+                    isRitual: category === 'Monster' && type.includes('ritual'),
+                    isSynchro: category === 'Monster' && type.includes('synchro'),
+                    isXyz: category === 'Monster' && type.includes('xyz'),
+                    isPendulum: category === 'Monster' && type.includes('pendulum'),
+                    isLink: category === 'Monster' && type.includes('link'),
+                    isFlip: category === 'Monster' && type.includes('flip'),
+                    isGemini: category === 'Monster' && type.includes('gemini'),
+                    isSpirit: category === 'Monster' && type.includes('spirit'),
+                    isToon: category === 'Monster' && type.includes('toon'),
+                    isTuner: category === 'Monster' && type.includes('tuner'),
+                    isUnion: category === 'Monster' && type.includes('union'),
                     attribute: datum.attribute,
-                    type: (category === 'Monster' || category === 'Token') ? datum.race : null,
-                    level: (category === 'Monster' || category === 'Token') && !type.includes('Link') ? datum.level : null,
-                    rating: category === 'Monster' && type.includes('Link') ? datum.linkval : null,
-                    arrows: category === 'Monster' && type.includes('Link') ? getLinkArrows(datum.linkmarkers) : null,
-                    scale: category === 'Monster' && type.includes('Pendulum') ? datum.scale : null,
+                    type: (category === 'Monster' || category === 'token') ? datum.race : null,
+                    level: (category === 'Monster' || category === 'token') && !type.includes('link') ? datum.level : null,
+                    rating: category === 'Monster' && type.includes('link') ? datum.linkval : null,
+                    arrows: category === 'Monster' && type.includes('link') ? getLinkArrows(datum.linkmarkers) : null,
+                    scale: category === 'Monster' && type.includes('pendulum') ? datum.scale : null,
                     atk: (category === 'Monster' || category === 'Token') ? datum.atk : null,
-                    def: (category === 'Monster' || category === 'Token') && !type.includes('Link') ? datum.def : null,
+                    def: (category === 'Monster' || category === 'Token') && !type.includes('link') ? datum.def : null,
                     description: datum.desc,
                     tcgDate: tcgDate,
                     ocgDate: ocgDate,
-                    isExtraDeck: type.includes('Fusion') || type.includes('Synchro') || type.includes('Xyz') || type.includes('Link'),
+                    isExtraDeck: type.includes('fusion') || type.includes('synchro') || type.includes('xyz') || type.includes('link'),
                     color: getColor(datum.type),
                     sortPriority: getSortPriority(datum.type)
                 })

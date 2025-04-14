@@ -149,43 +149,52 @@ export const ReplayTable = (props) => {
     useEffect(() => {
         const fetchInitialData = async () => {
             try {
+                const {data: communityData} = await axios.get(`/api/events/event-communities`)
+                setCommunities(communityData)  
+
+                const {data: formatData} = await axios.get(`/api/formats`)
+                setFormats(formatData)
+
                 // If user is subscriber or admin: Hit a different endpoint that requires authentication
-                if (isAdmin) {
-                    const url = `/api/replays/admin?page=1&limit=10&sortBy=publishDate:desc,display:desc,roundAbs:desc`
-                    const { data: replayData } = await axios.get(url, {
-                        headers: {
-                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                        }
-                    })
-                    setReplays(replayData)
+                // if (isAdmin) {
+                    // const url = `/api/replays/admin?page=1&limit=10&sortBy=publishDate:desc,display:desc,roundAbs:desc`
+                    // const { data: replayData } = await axios.get(url, {
+                    //     headers: {
+                    //         ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    //     }
+                    // })
+                    // setReplays(replayData)
 
-                    const {data: communityData} = await axios.get(`/api/events/cevent-ommunities`)
-                    setCommunities(communityData)  
+                //     const {data: communityData} = await axios.get(`/api/events/cevent-ommunities`)
+                //     setCommunities(communityData)  
                     
-                    const {data: formatData} = await axios.get(`/api/formats`)
-                    setFormats(formatData)
-                }  if (isSubscriber) {
-                    const url = `/api/replays/subscriber?page=1&limit=10&sortBy=publishDate:desc,display:desc,roundAbs:desc`
-                    const { data:replayData } = await axios.get(url, {
-                        headers: {
-                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
-                        }
-                    })
+                //     const {data: formatData} = await axios.get(`/api/formats`)
+                //     setFormats(formatData)
+                // }  if (isSubscriber) {
+                    // const url = `/api/replays/subscriber?page=1&limit=10&sortBy=publishDate:desc,display:desc,roundAbs:desc`
+                    // const { data:replayData } = await axios.get(url, {
+                    //     headers: {
+                    //         ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    //     }
+                    // })
                     
-                    setReplays(replayData)
-                    const {data: formatData} = await axios.get(`/api/formats`)
-                    setFormats(formatData)
-                } else {
-                    const url = `/api/replays?page=1&limit=10&sortBy=publishDate:desc,display:desc,roundAbs:desc`
-                    const { data: replayData } = await axios.get(url)                
-                    setReplays(replayData)
+                    // setReplays(replayData)
+                //     const {data: communityData} = await axios.get(`/api/events/event-communities`)
+                //     setCommunities(communityData) 
 
-                    const {data: communityData} = await axios.get(`/api/events/event-communities`)
-                    setCommunities(communityData)  
+                //     const {data: formatData} = await axios.get(`/api/formats`)
+                //     setFormats(formatData)
+                // } else {
+                    // const url = `/api/replays?page=1&limit=10&sortBy=publishDate:desc,display:desc,roundAbs:desc`
+                    // const { data: replayData } = await axios.get(url)                
+                    // setReplays(replayData)
 
-                    const {data: formatData} = await axios.get(`/api/formats`)
-                    setFormats(formatData)
-                }
+                //     const {data: communityData} = await axios.get(`/api/events/event-communities`)
+                //     setCommunities(communityData)  
+
+                //     const {data: formatData} = await axios.get(`/api/formats`)
+                //     setFormats(formatData)
+                // }
             } catch (err) {
                 console.log(err)
             } 

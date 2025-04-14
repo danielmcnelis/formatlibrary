@@ -6,35 +6,20 @@ export const MobileEventRow = (props) => {
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
     
     return (
-        <tr className={`${evenOrOdd}-search-results-row`}>
+        <tr className={`${evenOrOdd}-search-results-row`} onClick={() => {window.open(`/events/${event.abbreviation}`, '_blank')}}>
           <td className="no-padding">
-            <div 
-                className="search-results-link" 
-                onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
-            >
-              <div className="format-cell-flexbox">
-                <img src={`https://cdn.formatlibrary.com/images/emojis/${event.format?.icon}.png`}/>
-              </div>
+            <div className="format-cell-flexbox">
+                <img src={`https://cdn.formatlibrary.com/images/emojis/${event.format?.icon}.png`} alt="format icon"/>
             </div>
           </td>
           <td className="no-padding">
-                <div 
-                    className="search-results-link" 
-                    onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
-                >
                 <div className="community-cell-flexbox">
-                    <img src={`https://cdn.formatlibrary.com/images/logos/${event.communityName?.replaceAll('+', '%2B')}.png`}/>
+                    <img src={`https://cdn.formatlibrary.com/images/logos/${event.communityName?.replaceAll('+', '%2B')}.png`} alt="community logo"/>
                 </div>
-              </div>
           </td>
           <td className="no-padding">
-                <div 
-                    className="search-results-link" 
-                    onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
-                >
                 <div className="event-name-cell-flexbox">
                     <div>{event.name}</div>
-                </div>
                 </div>
           </td>
           <td className="no-padding">

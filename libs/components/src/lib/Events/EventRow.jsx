@@ -5,73 +5,48 @@ export const EventRow = (props) => {
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
     
     return (
-        <tr className={`${evenOrOdd}-search-results-row`}>
+        <tr className={`${evenOrOdd}-search-results-row`} onClick={() => {window.open(`/events/${event.abbreviation}`, '_blank')}}>
           <td className="no-padding">
             <div 
                 className="search-results-link" 
-                onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
+                
             >
               <div className="format-cell-flexbox">
-                <img src={`https://cdn.formatlibrary.com/images/emojis/${event.format?.icon}.png`}/>
+                <img src={`https://cdn.formatlibrary.com/images/emojis/${event.format?.icon}.png`} alt="format icon"/>
                 <div>{event.formatName}</div>
               </div>
             </div>
           </td>
           <td className="no-padding">
-            <div 
-                className="search-results-link" 
-                onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
-            >
-              <div className="event-name-cell">
-                {event.name}
-              </div>
-            </div>
+                <div className="event-name-cell">
+                    {event.name}
+                </div>
           </td>
           <td className="no-padding">
-            <div 
-                className="search-results-link"                 
-                onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
-            >
-              <div className="player-cell">
-                <img 
-                    className="player-cell-pfp"
-                    src={`/api/players/${event?.winner?.id}/avatar`}
-                    alt={event.winnerName}
-                />
-                <div>{event.winnerName || 'N/A'}</div>
-              </div>
-            </div>
+                <div className="player-cell">
+                    <img 
+                        className="player-cell-pfp"
+                        src={`/api/players/${event?.winner?.id}/avatar`}
+                        alt={event.winnerName}
+                    />
+                    <div>{event.winnerName || 'N/A'}</div>
+                </div>
           </td>
           <td className="no-padding">
-            <div 
-                className="search-results-link" 
-                onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
-            >
               <div className="community-cell-flexbox">
-                <img src={`https://cdn.formatlibrary.com/images/logos/${event.communityName?.replaceAll('+', '%2B')}.png`}/>
+                <img src={`https://cdn.formatlibrary.com/images/logos/${event.communityName?.replaceAll('+', '%2B')}.png`} alt="community logo"/>
                 <div>{event.communityName}</div>
               </div>
-            </div>
           </td>
           <td className="no-padding">
-            <div 
-                className="search-results-link" 
-                onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
-            >
               <div className="size-cell">
                 {event.size} 👤
               </div>
-            </div>
           </td>
           <td className="no-padding">
-            <div 
-                className="search-results-link" 
-                onClick={() => {window.location.href=`/events/${event.abbreviation}`}}
-            >
                 <div className="date-cell">
                     {event.startedAt ? event.startedAt.substring(0, 10) : ''}
                 </div>
-            </div>
           </td>
         </tr>
     )
