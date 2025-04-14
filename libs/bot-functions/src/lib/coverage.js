@@ -5,7 +5,7 @@ import * as sharp from 'sharp'
 import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
 import { Op } from 'sequelize'
-import { Alius, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Match, Matchup, Player, Replay, Team, Tournament, Server, Stats }  from '@fl/models'
+import { Alius, Artwork, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Match, Matchup, Player, Replay, Team, Tournament, Server, Stats }  from '@fl/models'
 import { capitalize, dateToVerbose, s3FileExists } from './utility'
 import { getDeckType } from './deck'
 import { config } from '@fl/config'
@@ -479,8 +479,23 @@ export const composeThumbnails = async (interaction, event) => {
         for (let i = 0; i < mainKonamiCodes.length; i++) {
             let konamiCode = mainKonamiCodes[i]
             while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-            const card = await Card.findOne({ where: { konamiCode }})
-            if (!card) continue
+            let card = await Card.findOne({ where: { konamiCode }})
+
+            if (!card) {
+                const artwork = await Artwork.findOne({
+                    where: {
+                        artworkId: mainKonamiCodes[i]
+                    },
+                    include: Card
+                })
+        
+                if (artwork) {
+                    card = artwork.card
+                } else {
+                    continue
+                }
+            }
+            
             main.push(card)
         }
 

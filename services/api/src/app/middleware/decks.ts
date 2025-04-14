@@ -991,14 +991,28 @@ export const getDeckData = async (filter) => {
     for (let i = 0; i < mainKonamiCodes.length; i++) {
       let konamiCode = mainKonamiCodes[i]
       while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-      const card = await Card.findOne({
+      let card = await Card.findOne({
         where: {
           konamiCode: konamiCode
         },
         attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']
       })
 
-      if (!card) continue
+      if (!card) {
+        const artwork = await Artwork.findOne({
+            where: {
+                artworkId: mainKonamiCodes[i]
+            },
+            include: {model: Card, attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']}
+        })
+
+        if (artwork) {
+            card = artwork.card
+        } else {
+            continue
+        }
+      }
+
       main.push(card)
     }
 
