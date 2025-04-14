@@ -935,7 +935,6 @@ export const getDeckAsRegularUser = async (req, res, next) => {
 }
 
 export const getDeckData = async (filter) => {
-    console.log('!!!!!!      GET DECK DATA      !!!!!!')
     const deck = await Deck.findOne({
         where: filter,
         attributes: [
