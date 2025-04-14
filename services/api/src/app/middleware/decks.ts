@@ -999,6 +999,8 @@ export const getDeckData = async (filter) => {
       })
 
       if (!card) {
+        console.log(`missing ${konamiCode}`)
+        console.log(`looking for artwork ${mainKonamiCodes[i]}`)
         const artwork = await Artwork.findOne({
             where: {
                 artworkId: mainKonamiCodes[i]
@@ -1006,6 +1008,7 @@ export const getDeckData = async (filter) => {
             include: {model: Card, attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']}
         })
 
+        console.log('!!artwork', !!artwork)
         if (artwork) {
             card = artwork.card
         } else {
