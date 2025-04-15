@@ -1810,16 +1810,21 @@ export const getLinkArrows = (directionsArr = []) => {
 
 // GET SORT PRIORITY
 export const getSortPriority = (type = '') => {
-    const sortPriority = type.includes('trap') ? 11 :
-        type.includes('spell') ? 10 :
-        type.includes('link') ? 9 :
-        type.includes('xyz') ? 8 :
-        type.includes('synchro') ? 7 :
-        type.includes('fusion') ? 6 :
+    const sortPriority = type.includes('trap') ? 16 :
+        type.includes('spell') ? 15 :
+        type.includes('link') && type.includes('pendulum') ? 14 :
+        type.includes('link') ? 13 :
+        type.includes('xyz') && type.includes('pendulum') ? 12 :
+        type.includes('xyz') ? 11 :
+        type.includes('synchro') && type.includes('pendulum') ? 10 :
+        type.includes('synchro') ? 9 :
+        type.includes('fusion') && type.includes('pendulum') ? 8 :
+        type.includes('fusion') ? 7 :
+        type.includes('ritual') && type.includes('pendulum') ? 6 :
         type.includes('ritual') ? 5 :
-        type.includes('pendulum') && type.includes('effect') ? 4 :
+        type.includes('pendulum') && type.includes('effect') && !type.includes('ritual') && !type.includes('fusion') && !type.includes('synchro') && !type.includes('xyz') && !type.includes('link') ? 4 :
         type.includes('effect') ? 3 :
-        type.includes('pendulum') && !type.includes('effect') ? 2 :
+        type.includes('pendulum') && !type.includes('effect') && !type.includes('ritual') && !type.includes('fusion') && !type.includes('synchro') && !type.includes('xyz') && !type.includes('link') ? 2 :
         type.includes('normal') ? 1 :
         null
 
@@ -1831,12 +1836,12 @@ export const getColor = (type = '') => {
     const color = type.includes('trap') ? 'violet' :
         type.includes('spell') ? 'green' :
         type.includes('link') ? 'dark-blue' :
-        type.includes('pendulum') && !type.includes('normal') ? 'orange-green' :
-        type.includes('pendulum') && type.includes('normal') ? 'yellow-green' :
         type.includes('xyz') ? 'black' :
         type.includes('synchro') ? 'white' :
         type.includes('ritual') ? 'light-blue' :
         type.includes('fusion') ? 'purple' :
+        type.includes('pendulum') && !type.includes('normal') ? 'orange-green' :
+        type.includes('pendulum') && type.includes('normal') ? 'yellow-green' :
         type.includes('effect') ? 'orange' :
         type.includes('normal') ? 'yellow' :
         type.includes('token') ? 'gray' :
