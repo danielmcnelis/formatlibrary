@@ -13,8 +13,7 @@ export const getBracketImage = async (req, res, next) => {
         console.log(`${bracketId} Bracket Found.`)
         return res.json(true)    
     } catch (err) {
-        console.log(`${bracketId} Bracket Not Found.`)
-        return res.json(false)    
+        return console.log(`${bracketId} Bracket Not Found.`)
     }
 }
 
