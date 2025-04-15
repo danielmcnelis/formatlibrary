@@ -1,6 +1,6 @@
 /* eslint-disable max-statements */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import { useMediaQuery } from 'react-responsive'
@@ -16,8 +16,27 @@ import { Chart as ChartJS, LineElement, PointElement, TimeScale } from 'chart.js
 import 'chartjs-adapter-moment'
 ChartJS.register(LineElement, PointElement, TimeScale)
 
+// USE TAB VISIBILITY
+const useTabVisibility = () => {
+    const [isTabVisible, setIsTabVisible] = useState(true)
+  
+    const handleVisibilityChange = useCallback(() => {
+      setIsTabVisible(document.visibilityState === 'visible')
+    }, [])
+  
+    useEffect(() => {
+      document.addEventListener('visibilitychange', handleVisibilityChange)
+      return () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange)
+      }
+    }, [handleVisibilityChange])
+  
+    return isTabVisible
+}
+
 // SINGLE CARD COMPONENT
 export const SingleCard = (props) => {
+    const tabIsVisible = useTabVisibility()
     const isMobile = useMediaQuery({ query: '(max-width: 480px)' })
     const isAdmin = props.roles?.admin
     const isContentManager = props.roles?.contentManager
@@ -105,7 +124,7 @@ export const SingleCard = (props) => {
 
     // USE EFFECT SET CARD
     useEffect(() => {
-        if (!print.id && !data.prints[0]?.id) return
+        if (!tabIsVisible || !print.id && !data.prints[0]?.id) return
         const fetchData = async () => {
             try {
                 const {data: priceData} = await axios.get(`/api/prices/${print.id || data.prints[0]?.id}`)
