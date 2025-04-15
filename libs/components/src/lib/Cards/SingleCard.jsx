@@ -18,7 +18,7 @@ ChartJS.register(LineElement, PointElement, TimeScale)
 
 // USE TAB VISIBILITY
 const useTabVisibility = () => {
-    const [isTabVisible, setIsTabVisible] = useState(true)
+    const [isTabVisible, setIsTabVisible] = useState(false)
   
     const handleVisibilityChange = useCallback(() => {
       setIsTabVisible(document.visibilityState === 'visible')
@@ -136,7 +136,7 @@ export const SingleCard = (props) => {
         }
   
         fetchData()
-    }, [data.prints, print])
+    }, [data.prints, print, tabIsVisible])
 
     // UPDATE PRINT
     const updatePrint = (e) => {
