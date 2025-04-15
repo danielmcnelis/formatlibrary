@@ -33,6 +33,7 @@ export const SingleEvent = (props) => {
         topSideDeckCards: []
     })
     const [bracketExists, setBracketExists] = useState(false)
+    console.log('bracketExists', bracketExists)
 
     // const [existingPfps, setExistingPfps] = useState({ 
     //     playerId: false, 
@@ -111,10 +112,12 @@ export const SingleEvent = (props) => {
     useEffect(() => {
         const checkForBracket = async () => {
             try {
+                console.log('checkForBracket()')
+                console.log(`https://cdn.formatlibrary.com/images/brackets/${event.abbreviation}.png`)
                 await axios.head(`https://cdn.formatlibrary.com/images/brackets/${event.abbreviation}.png`)
                 setBracketExists(true)
             } catch (err) {
-                console.log(err)
+                console.log('BRACKET ERROR', err)
                 setBracketExists(false)
             }
         }
