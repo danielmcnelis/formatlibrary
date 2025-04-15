@@ -962,7 +962,7 @@ export const removeParticipant = async (server, interaction, member, entry, tour
         return await interaction.editReply({ content: `Error: Cannot ${drop ? 'drop' : 'remove participants'} while generating pairings for the next round. Please try again in a moment.`})
     } else {
         openMatch = findOpenMatch(matches, entry.participantId)
-        opponentEntry = await findNextOpponent(tournament.id, matches, openMatch, entry.participantId)
+        opponentEntry = await findNextOpponent(tournament.id, matches, openMatch.id, entry.participantId)
     }
  
     const processing = await Tournament.count({ where: { id: tournament.id, state: 'processing' }})
@@ -1006,9 +1006,9 @@ export const removeParticipant = async (server, interaction, member, entry, tour
                 }
             })
 
-            const roundName = getRoundName(tournament, openMatch.round, participants_count)
+            const roundName = getRoundName(tournament, openMatch?.round, participants_count)
             opposingMember.user.send(
-                `Pairing update: Your opponent for ${roundName} of ${tournament.name} ${tournament.logo} (${entry.name}) dropped. ${emojis.woe} Enjoy the free win! ${emojis.koolaid}`
+                `Pairing update: Your opponent for ${roundName} of ${tournament.name} ${tournament.logo || tournament.emoji} (${entry.name}) dropped. ${emojis.woe} Enjoy the free win! ${emojis.koolaid}`
             )
         }
         
@@ -1196,7 +1196,7 @@ export const findOpenMatch = (matchesArr = [], participantId) => {
     for (let i = 0; i < matchesArr.length; i++) {
         const match = matchesArr[i].match
         if (match.state === 'open' && (match?.player1_id === participantId || match?.player2_id === participantId)) {
-            return match.id
+            return match
         } else {
             continue
         }

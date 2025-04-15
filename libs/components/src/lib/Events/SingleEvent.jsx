@@ -24,7 +24,6 @@ export const SingleEvent = (props) => {
 
     const [event, setEvent] = useState({})
     const [winner, setWinner] = useState({})
-    const [winnerPfp, setWinnerPfp] = useState(`https://cdn.discordapp.com/embed/avatars/1.png`)
     const [replays, setReplays] = useState({})
     const [topDecks, setTopDecks] = useState({})
     const [metagame, setMetagame] = useState({
@@ -33,6 +32,7 @@ export const SingleEvent = (props) => {
         topMainDeckCards: [],
         topSideDeckCards: []
     })
+    const [bracketExists, setBracketExists] = useState(false)
 
     // const [existingPfps, setExistingPfps] = useState({ 
     //     playerId: false, 
@@ -40,9 +40,6 @@ export const SingleEvent = (props) => {
     //     discordId: false, 
     //     playerName: false
     // })
-
-
-    console.log('metagame', metagame)
 
     const { id } = useParams()
     const navigate = useNavigate()
@@ -70,7 +67,7 @@ export const SingleEvent = (props) => {
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0), [])
 
-    // USE EFFECT SET CARD
+    // USE EFFECT SET EVENT DATA
     useEffect(() => {
         const fetchEventData = async () => {
             // If user is subscriber or admin: Hit a different endpoint that requires authentication
@@ -110,46 +107,26 @@ export const SingleEvent = (props) => {
         fetchEventData()
     }, [id, isAdmin, isSubscriber])
 
-    // USE EFFECT SET PLAYER PFPS
-    // useEffect(() => {
-    //     const fetchPfpData = async () => {
-    //         try {
-    //             const {status: playerIdPfpStatus} = await axios.head(`https://cdn.formatlibrary.com/images/pfps/${playerId}.png`)
-    //             setExistingPfps({...existingPfps, playerId: !!playerIdPfpStatus})
-    //         } catch (err) {
-    //             console.log(`axios.head(https://cdn.formatlibrary.com/images/pfps/${playerId}.png)\n`, err)
-    //         }
+    // USE EFFECT SET EVENT DATA
+    useEffect(() => {
+        const checkForBracket = async () => {
+            try {
+                await axios.head(`https://cdn.formatlibrary.com/images/brackets/${event.abbreviation}.png`)
+                setBracketExists(true)
+            } catch (err) {
+                console.log(err)
+                setBracketExists(false)
+            }
+        }
 
-    //         try {
-    //             const {status: discordPfpStatus} = await axios.head(`https://cdn.discordapp.com/avatars/${discordId}/${discordPfp}.webp`)
-    //             setExistingPfps({...existingPfps, discordPfp: !!discordPfpStatus})
-    //         } catch (err) {
-    //             console.log(err)
-    //         }
-
-    //         try {
-    //             const {status: discordIdPfpStatus} = await axios.head(`https://cdn.formatlibrary.com/images/pfps/${discordId}.png`)
-    //             setExistingPfps({...existingPfps, discordId: discordIdPfpStatus === 200})
-    //         } catch (err) {
-    //             console.log(`axios.head(https://cdn.formatlibrary.com/images/pfps/${discordId}.png)\n`, err)
-    //         }
-    //     }
-    //         fetchPfpData()
-    //     }, [])
+        checkForBracket()
+    }, [event])
 
     if (event === null) return <NotFound/>
     if (!event.name) return <div></div>
     if (!event.format) return <div></div>
 
     const formatArtwork = `https://cdn.formatlibrary.com/images/artworks/${event.format.icon}.jpg` || ''
-    
-    const colors = [
-        '#3d72e3', '#ff3c2e', '#ffd000', '#47ad53', '#43578f', '#b25cd6',
-        '#6d9399', '#f5881b', '#31ada5', '#ffcd19', '#cf8ac5', '#8a8dcf', 
-        '#d65180', '#307a3a', '#735645', '#fc8c1c', '#8dc276', '#c4495f', 
-        '#3e8cbd', '#b865cf', '#fcdc5b', '#43d1a2', '#452194', '#d96827', 
-        '#79b096', '#5c8fe0', '#9474b0', '#2b9dbd', '#eb692d', '#93c951'
-    ]
 
     const deckTypeData = metagame.deckTypes?.length ? {
         labels: metagame.deckTypes.map((e) => e[0]),
@@ -339,9 +316,13 @@ export const SingleEvent = (props) => {
                     </tbody>
                 </table>
                 <br/>
-                <li>
-                    <a href={`/events/${event?.name}#bracket`}>Bracket</a>
-                </li>
+                {
+                    bracketExists ? (
+                    <li>
+                        <a href="#bracket">Bracket</a>
+                    </li>
+                    ) : ''
+                }
                 {
                     topDecks?.length ? (
                     <li>
@@ -369,41 +350,48 @@ export const SingleEvent = (props) => {
 
             <div className="divider"/>
 
-            <div id="bracket">
-                <div className="subcategory-title-flexbox">
-                <img 
-                    style={{ width:'64px'}} 
-                    src={`https://cdn.formatlibrary.com/images/emojis/${event.format?.icon}.png`}
-                    alt={event.format.name}
-                />
-                <h2 className="subheading"><b>{event.abbreviation}</b> Bracket:</h2>
-                <img
-                    style={{ width:'64px'}} 
-                    src={'https://cdn.formatlibrary.com/images/logos/Challonge.png'}
-                    alt="challonge"
-                />
-                </div>
-                <img 
-                    style={{width:'800px'}}
-                    className="bracket" 
-                    src={`https://cdn.formatlibrary.com/images/brackets/${event.abbreviation}.png`}
-                    onError={(e) => {
-                        e.target.onerror = null
-                        e.target.style.width = "300px"
-                        e.target.src="https://cdn.formatlibrary.com/images/artworks/dig.jpg"
-                    }}
-                    alt="bracket"
-                />
-                <a 
-                    className="bracket-link"
-                    href={event.referenceUrl} 
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                Click Here for Full Bracket
-                </a>
-            </div>
-            <div className="divider"/>
+            {
+                bracketExists ? (
+                    <>
+                        <div id="bracket">
+                            <div className="subcategory-title-flexbox">
+                                <img 
+                                    style={{ width:'64px'}} 
+                                    src={`https://cdn.formatlibrary.com/images/emojis/${event.format?.icon}.png`}
+                                    alt={event.format.name}
+                                />
+                                <h2 className="subheading"><b>{event.abbreviation}</b> Bracket:</h2>
+                                <img
+                                    style={{ width:'64px'}} 
+                                    src={'https://cdn.formatlibrary.com/images/logos/Challonge.png'}
+                                    alt="challonge"
+                                />
+                            </div>
+                            <img 
+                                style={{width:'800px'}}
+                                className="bracket" 
+                                src={`https://cdn.formatlibrary.com/images/brackets/${event.abbreviation}.png`}
+                                onError={(e) => {
+                                    e.target.onerror = null
+                                    e.target.style.width = "300px"
+                                    e.target.src="https://cdn.formatlibrary.com/images/artworks/dig.jpg"
+                                }}
+                                alt="bracket"
+                            />
+                            <a 
+                                className="bracket-link"
+                                href={event.referenceUrl} 
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                            Click Here for Full Bracket
+                            </a>
+                        </div>
+                        <div className="divider"/>
+                    </>
+                ) : ''
+            }
+
             {
                 topDecks?.length ? (
                 <div id="top-decks">

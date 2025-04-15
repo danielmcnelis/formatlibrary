@@ -18,7 +18,7 @@ ChartJS.register(LineElement, PointElement, TimeScale)
 
 // USE TAB VISIBILITY
 const useTabVisibility = () => {
-    const [isTabVisible, setIsTabVisible] = useState(false)
+    const [isTabVisible, setIsTabVisible] = useState(document.visibilityState === 'visible')
   
     const handleVisibilityChange = useCallback(() => {
       setIsTabVisible(document.visibilityState === 'visible')
