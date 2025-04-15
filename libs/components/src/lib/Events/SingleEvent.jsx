@@ -112,12 +112,9 @@ export const SingleEvent = (props) => {
     useEffect(() => {
         const checkForBracket = async () => {
             try {
-                console.log('checkForBracket()')
-                console.log(`https://cdn.formatlibrary.com/images/brackets/${event.abbreviation}.png`)
-                await axios.head(`https://cdn.formatlibrary.com/images/brackets/${event.abbreviation}.png`)
+                await axios.get(`api/images/brackets/${event.abbreviation}`)
                 setBracketExists(true)
             } catch (err) {
-                console.log('BRACKET ERROR', err)
                 setBracketExists(false)
             }
         }

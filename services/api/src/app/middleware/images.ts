@@ -5,6 +5,19 @@ import { S3 } from '@aws-sdk/client-s3';
 import { config } from '@fl/config'
 import * as sharp from 'sharp'
 
+// GET BRACKET IMAGE
+export const getBracketImage = async (req, res, next) => {
+    const bracketId = req.params.id
+    try {
+        await axios.head(`https://cdn.formatlibrary.com/images/brackets/${bracketId}.png`)
+        console.log(`${bracketId} Bracket Found.`)
+        return res.json(true)    
+    } catch (err) {
+        console.log(`${bracketId} Bracket Not Found.`)
+        return res.json(false)    
+    }
+}
+
 // DOWNLOAD CROPPED IMAGE AND UPLOAD TO ARTWORK FOLDER
 export const uploadCroppedImage = async (s3, artworkId) => {
     try {
