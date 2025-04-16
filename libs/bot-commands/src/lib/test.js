@@ -25,7 +25,7 @@ export default {
                 // await updateAvatars(client)
                 // await updateMarketPrices()
                 // await purgeDuplicatePrices()
-                return await conductCensus(client)
+                // return await conductCensus(client)
                 // await updateDeckType()
                 // await updateDecks()
                 // await downloadNewCards(client)
@@ -40,7 +40,7 @@ export default {
                 // return runMonthlyTasks(client)
                 // await manageSubscriptions(client)
                 // await assignTournamentRoles(client)
-                // return assignSeasonalLadderRoles(client)
+                return assignSeasonalLadderRoles(client)
             } else {
                 await interaction.editReply('🧪')
             }
