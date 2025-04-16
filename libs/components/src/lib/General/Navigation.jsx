@@ -148,15 +148,15 @@ export const Navigation = (props) => {
                 }
             </div>
         </div>
-            {/* <div className="announcement-banner">
+            <div className="announcement-banner">
                 <h2>
                     <a
                         className="inherit-color" 
-                        href="https://discord.com/events/414551319031054346/1327071117772329062"
+                        href="https://discord.com/events/414551319031054346/1327086221922406482"
                         rel="noreferrer"
                         target="_blank"
-                    >Free Edison WCQ @ 11AM EST Saturday - Click for More Info!</a></h2>
-            </div> */}
+                    >The Goat Format Seasonal Ladder is Underway - Click for More Info!</a></h2>
+            </div>
         </>
     )
 }

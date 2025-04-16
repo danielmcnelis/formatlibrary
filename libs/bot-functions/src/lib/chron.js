@@ -1116,7 +1116,7 @@ export const manageSubscriptions = async (client) => {
                         member?.roles.add(stripeSubscriberRoleId)
                         member?.roles.remove(stripePremiumRoleId)
                     }
-                } else if (subscription?.status !== 'active' && player.discordId !== programmer.id && player.discordId !== '626843317010694176' && player.isSubscriber && !member?._roles.includes(discordSupporterRoleId) && !member?._roles.includes(discordPremiumRoleId)) {
+                } else if (subscription?.status !== 'active' && player.discordId !== programmer.id && player.discordId !== '626843317010694176' && player.discordId !== '479046758815760404' && player.isSubscriber && !member?._roles.includes(discordSupporterRoleId) && !member?._roles.includes(discordPremiumRoleId)) {
                     await programmer.send({ content: `${player.name} is no longer a Subscriber (${player.subscriberTier}).`})
                     console.log(`${player.name} is no longer a Subscriber (${player.subscriberTier}).`)
                     await player.update({ isSubscriber: false, subscriberTier: null })
