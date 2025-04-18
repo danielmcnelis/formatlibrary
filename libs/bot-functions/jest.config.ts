@@ -8,6 +8,7 @@ export default {
     }
   },
   testEnvironment: 'node',
+  testPathIgnorePatterns: ["src/lib/test.js"],
   transform: {
     '^.+\\.[tj]sx?$': 'ts-jest'
   },

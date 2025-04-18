@@ -69,14 +69,14 @@ export const getIssues = async (deckArr, format) => {
     const day = now.getDate().toString().padStart(2, '0')
     const formatDate = format.name === 'Advanced' || format.name === 'Traditional' ? `${year}-${month}-${day}` : format.date
 
-    const cardIds = format.category === 'Custom' ? [...await Card.findAll()].map(c => c.konamiCode) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: formatDate } }})].map(c => c.konamiCode)
-    const forbiddenIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'forbidden' }, include: Card })].map(s => s.card.konamiCode)
-    const limitedIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited' }, include: Card })].map(s => s.card.konamiCode)
-    const semiIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'semi-limited' }, include: Card })].map(s => s.card.konamiCode)
+    const cardIds = format.category === 'Custom' ? [...await Card.findAll()].flatMap(c => [c.konamiCode, c.ypdId]) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: formatDate } }})].flatMap(c => [c.konamiCode, c.ypdId])
+    const forbiddenIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'forbidden' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId])
+    const limitedIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId])
+    const semiIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'semi-limited' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId])
     
-    const limited1Ids = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-1' }, include: Card })].map(s => s.card.konamiCode)
-    const limited2Ids = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-2' }, include: Card })].map(s => s.card.konamiCode)
-    const limited3Ids = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-3' }, include: Card })].map(s => s.card.konamiCode)
+    const limited1Ids = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-1' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId])
+    const limited2Ids = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-2' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId])
+    const limited3Ids = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-3' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId])
     
     const illegalCards = []
     const forbiddenCards = []
@@ -99,31 +99,31 @@ export const getIssues = async (deckArr, format) => {
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode 
         if (konamiCode === '00000000' && format.name === 'Advanced') continue
         if (!cardIds.includes(konamiCode)) {
-            const card = await Card.findOne({ where: { konamiCode: konamiCode } })
+            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
             if (card) {
                 illegalCards.push(card.name)
             } else {
                 unrecognizedCards.push(konamiCode)
             }
         } else if (forbiddenIds.includes(konamiCode)) {
-            const card = await Card.findOne({ where: { konamiCode: konamiCode } })
+            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
             if (card) forbiddenCards.push(card.name)
         } else if ((format.isHighlander || limitedIds.includes(konamiCode)) && deck[key] > 1) {
-            const card = await Card.findOne({ where: { konamiCode: konamiCode } })
+            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
             if (card) limitedCards.push(card.name)
         } else if (semiIds.includes(konamiCode) && deck[key] > 2) {
-            const card = await Card.findOne({ where: { konamiCode: konamiCode } })
+            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
             if (card) semiLimitedCards.push(card.name)
         } else if (limited1Ids.includes(konamiCode)) {
-            const card = await Card.findOne({ where: { konamiCode: konamiCode } })
+            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
             if (card) limited1Cards.push(card.name)
             limited1Count += deck[key]
         } else if (limited2Ids.includes(konamiCode)) {
-            const card = await Card.findOne({ where: { konamiCode: konamiCode } })
+            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
             if (card) limited2Cards.push(card.name)
             limited2Count += deck[key]
         } else if (limited3Ids.includes(konamiCode)) {
-            const card = await Card.findOne({ where: { konamiCode: konamiCode } })
+            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
             if (card) limited3Cards.push(card.name)
             limited3Count += deck[key]
         }
@@ -254,10 +254,9 @@ export const checkSpeedDeckList = async (member, format, skillCard) => {
             const main = ydk.split('#main')[1].split('#extra')[0].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
             const extra = ydk.split('#extra')[1].split('!side')[0].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
             const side = ydk.split('!side')[1].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)    
-            const minimum = format.category === 'Speed' ? 20 : 40
 
-            if (main?.length < minimum) {
-                member.send(`I'm sorry, your deck must contain at least ${minimum} cards.`).catch((err) => console.log(err))    
+            if (main?.length < 20) {
+                member.send(`I'm sorry, your deck must contain at least 20 cards.`).catch((err) => console.log(err))    
                 return false
             }
 
