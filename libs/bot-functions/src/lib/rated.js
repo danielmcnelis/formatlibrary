@@ -114,6 +114,7 @@ export const getFirstOfTwoRatedConfirmations = async (client, player, opponent, 
             .setStyle(ButtonStyle.Primary)
         )
 
+    console.log('member rated.js 114', member)
     console.log('member?.user rated.js 114', member?.user)
     console.log('member?.username rated.js 114', member?.username)
     const message = await member.user.send({ content: `I've found a Rated ${format.name} Format ${format.emoji} opponent for you. Do you still wish to play?`, components: [row] })

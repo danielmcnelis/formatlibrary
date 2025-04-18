@@ -220,7 +220,7 @@ export const checkDeckList = async (member, format) => {
                 return false
             } else if (unrecognizedCards.length) {
                 let response = `I'm sorry, ${member.user.username}, the following card IDs were not found in our database:\n${unrecognizedCards.join('\n')}`
-                response += `\n\nThese cards are either alternate artwork, new to the TCG, OCG only, or incorrect in our database. Please contact the Tournament Organizer or the Admin if you can't resolve this.`
+                response += `\n\nThese cards are either alternate artwork, new to the TCG/OCG, or use YDK codes that are not in our database. Please try the following options to troubleshoot:\n- Import this YDK into DuelingBook, then export it and submit the newly exported YDK.\n- Please contact the Tournament Organizer or the Admin if you can't resolve this.`
                 
                 member.send({ content: response.toString() }).catch((err) => console.log(err))
                 return false
