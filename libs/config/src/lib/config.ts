@@ -1,3 +1,4 @@
+
 export const config = { 
     siteUrl: process.env.SITE_URL,
     siteProxy: process.env.SITE_PROXY,
@@ -91,7 +92,7 @@ export const config = {
         apiEnvar: process.env.CLOUDINARY_API_ENVAR
     },
     stripe: {
-        clientSecret: process.env.CLIENT_SECRET
+        clientSecret: process.env.STRIPE_CLIENT_SECRET
     }
   }
   

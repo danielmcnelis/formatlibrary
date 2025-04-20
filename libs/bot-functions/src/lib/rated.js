@@ -116,7 +116,7 @@ export const getFirstOfTwoRatedConfirmations = async (client, player, opponent, 
 
     console.log('member rated.js 114', member)
     console.log('member?.user rated.js 114', member?.user)
-    console.log('member?.username rated.js 114', member?.username)
+    console.log('member?.user?.username rated.js 114', member?.user?.username)
     const message = await member.user.send({ content: `I've found a Rated ${format.name} Format ${format.emoji} opponent for you. Do you still wish to play?`, components: [row] })
 
     setTimeout(async () => {

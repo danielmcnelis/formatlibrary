@@ -277,6 +277,7 @@ export const SingleDeck = (props) => {
             <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
         }
         <div className="body">
+            <div className="place-ads-below"/>
             <div className="single-deck">
                 <div className="single-deck-title-flexbox">
                     <div>

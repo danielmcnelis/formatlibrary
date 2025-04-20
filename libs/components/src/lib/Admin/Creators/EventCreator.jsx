@@ -7,6 +7,7 @@ export const EventCreator = () => {
   const [bracket, setBracket] = useState(null)
   const [challongeName, setChallongeName] = useState(null)
   const [communityName, setCommunityName] = useState(null)
+  const [communities, setCommunities] = useState(['All Communities'])
   const [endDate, setEndDate] = useState(null)
   const [formats, setFormats] = useState([])
   const [format, setFormat] = useState(null)
@@ -149,12 +150,16 @@ export const EventCreator = () => {
 
   // USE EFFECT
   useEffect(() => {
-    const fetchFormats = async () => {
-      const { data } = await axios.get(`/api/formats`)
-      setFormats(data)
+    const fetchData = async () => {
+      const { data: formatData } = await axios.get(`/api/formats`)
+      setFormats(formatData)
+
+      const {data: communityData} = await axios.get(`/api/events/event-communities`)
+      setCommunities(communityData)  
+        
     }
 
-    fetchFormats()
+    fetchData()
   }, [])
 
   return (
@@ -162,34 +167,9 @@ export const EventCreator = () => {
       <label>
         Community:
         <select id="community" onChange={(e) => setCommunityName(e.target.value || null)}>
-          <option value=""></option>
-                    <option value="Format Library">Format Library</option>
-                    <option value="Androidland">Androidland</option>
-                    <option value="Aureum's Army">Aureum's Army</option>
-                    <option value="beastmode">Beastmode</option>
-                    <option value="Big Boy Gaming">Big Boy Gaming</option>
-                    <option value="Card Brawlers">Card Brawlers</option>
-                    <option value="DuelistGroundz">DuelistGroundz</option>
-                    <option value="EdisonFormat.com">EdisonFormat.com</option>
-                    <option value="Fire-Water Format">Fire-Water Format</option>
-                    <option value="GoatFormat.com">GoatFormat.com</option>
-                    <option value="Goat Community Italia">Goat Community Italia</option>
-                    <option value="Goat Format Europe">Goat Format Europe</option>
-                    <option value="Goat Format War League">Goat Format War League</option>
-                    <option value="HATformat.com">HATFormat.com</option>
-                    <option value="Ishizu Tear Format">Ishizu Tear Format</option>
-                    <option value="Konami">Konami</option>
-                    <option value="Reaper Format">Reaper Format</option>
-                    <option value="Shuffle Deck Gaming">Shuffle Deck Gaming</option>
-                    <option value="Tengu Plant Town">Tengu Plant Town</option>
-                    <option value="The Dice Jar">The Dice Jar</option>
-                    <option value="The H.A.T. Alliance">The H.A.T. Alliance</option>
-                    <option value="Upper Deck Entertainment">Upper Deck Entertainment</option>
-                    <option value="Vegas Format">Vegas Format</option>
-                    <option value="Wind-Up Factory">Wind-Up Factory</option>
-                    <option value="YGOFrom0">YGOFrom0</option>
-                    <option value="Yugi-Kaibaland">Yugi-Kaibaland</option>
-                    <option value="Yu-Gi-Oh! Legacy">Yu-Gi-Oh! Legacy</option>
+        {
+            communities.map((c) => <option key={c} value={c}>{c}</option>)
+        }
         </select>
       </label>
       <label>

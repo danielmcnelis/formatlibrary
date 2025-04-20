@@ -239,6 +239,7 @@ export const SingleCard = (props) => {
                 <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             }
             <div className="body">
+                <div className="place-ads-below"/>
                 <div className="single-card">
                     <div className="vertical-centered-flexbox">
                         <img className="single-card-image" src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`} alt={card.name}/>

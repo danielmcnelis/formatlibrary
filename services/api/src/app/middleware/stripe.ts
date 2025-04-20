@@ -5,6 +5,8 @@ import stripe from 'stripe'
 import {config} from '@fl/config'
 import { Player, Subscription } from '@fl/models'
 import { Op } from 'sequelize'
+console.log('config', config)
+console.log('config.stripe.clientSecret', config.stripe.clientSecret)
 const Stripe = new stripe(config.stripe.clientSecret)
 // import {manageSubscriptions} from '@fl/bot-functions'
 // import {Elements} from '@stripe/react-stripe-js'
@@ -16,22 +18,22 @@ const Stripe = new stripe(config.stripe.clientSecret)
 // const stripePromise = loadStripe('pk_test_51LIfMzI2hSs9VrZuvedTsVTHy91Julkndoa3ngNSu57SEDslvLipAGD1FaZ2L6vQ4fp4RWwIejgKgcfKISQZFazW00DTWtDgVz');
 
 // PAYMENT INTENT
-export const paymentIntent = async (req, res, next) => {
-    try {
-        const intent = await Stripe.paymentIntents.create({
-            amount: 1099,
-            currency: 'usd',
-            automatic_payment_methods: {
-                enabled: true,
-            },
-        })
+// export const paymentIntent = async (req, res, next) => {
+//     try {
+//         const intent = await Stripe.paymentIntents.create({
+//             amount: 1099,
+//             currency: 'usd',
+//             automatic_payment_methods: {
+//                 enabled: true,
+//             },
+//         })
     
-        return res.json({client_secret: intent.client_secret})
+//         return res.json({client_secret: intent.client_secret})
 
-    } catch (err) {
-        next(err)
-    }
-}
+//     } catch (err) {
+//         next(err)
+//     }
+// }
 
 //RECEIVE STRIPE WEBHOOKS
 export const receiveStripeWebhooks = async (req, res, next) => {
