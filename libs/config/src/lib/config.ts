@@ -92,7 +92,8 @@ export const config = {
         apiEnvar: process.env.CLOUDINARY_API_ENVAR
     },
     stripe: {
-        clientSecret: process.env.STRIPE_CLIENT_SECRET
+        clientSecret: process.env.STRIPE_CLIENT_SECRET,
+        testing: process.env.STRIPE_TESTING
     }
   }
   
