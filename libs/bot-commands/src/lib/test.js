@@ -20,7 +20,7 @@ export default {
             await interaction.deferReply()
             if (isProgrammer(interaction.member)) {
                 await interaction.editReply(emojis.yellow)
-                // await runNightlyTasks(client)
+                await runNightlyTasks(client)
                 // await recalculateAllStats()
                 // await updateAvatars(client)
                 // await updateMarketPrices()
@@ -40,7 +40,7 @@ export default {
                 // return runMonthlyTasks(client)
                 // await manageSubscriptions(client)
                 // await assignTournamentRoles(client)
-                return assignSeasonalLadderRoles(client)
+                // return assignSeasonalLadderRoles(client)
             } else {
                 await interaction.editReply('🧪')
             }
