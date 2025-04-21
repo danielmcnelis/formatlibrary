@@ -1336,14 +1336,18 @@ export const getCurrentRound = async (server, tournamentId) => {
 }
 
 //GET PARTICIPANTS
-export const getParticipants = async (server, tournamentId) => {
+export const getParticipants = async (server, tournamentId, activeOnly) => {
     try {
         const { data } = await axios({
             method: 'get',
             url: `https://api.challonge.com/v1/tournaments/${tournamentId}/participants.json?api_key=${server.challongeApiKey}`
         })
-        
-        return data
+
+        if (activeOnly) {
+            return data.filter((d) => d.participant.active)
+        } else {
+            return data
+        }        
     } catch (err) {
         console.log(err)
         return []
@@ -1468,9 +1472,11 @@ export const processMatchResult = async (server, interaction, winner, winningPla
     }
  
     losingEntry.losses++
+    losingEntry.isActive = true
     await losingEntry.save()
     
     winningEntry.wins++
+    winningEntry.isActive = true
     await winningEntry.save()
     
     if (tournament.type === 'single elimination' || tournament.type === 'double elimination') {
@@ -3193,7 +3199,7 @@ export const createTopCut = async(interaction, tournamentId) => {
 
     try {
         const matches = await getMatches(server, primaryTournament.id)
-        const participants = await getParticipants(server, primaryTournament.id)
+        const participants = await getParticipants(server, primaryTournament.id, true)
         const standings = await calculateStandings(primaryTournament, matches, participants)
         const {errors, size} = await autoRegisterTopCut(server, primaryTournament, topCutTournament, standings)
         if (errors.length > 1) {
@@ -3777,7 +3783,7 @@ export const postStandings = async (interaction, tournamentId) => {
     })
 
     const matches = await getMatches(server, tournamentId)
-    const participants = await getParticipants(server, tournamentId)
+    const participants = await getParticipants(server, tournamentId, true)
     const standings = await calculateStandings(tournament, matches, participants)
     const abbreviateTieBreakers = (tb) => {
         if (tb === 'median buchholz') {

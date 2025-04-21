@@ -24,7 +24,7 @@ export default {
 
             await interaction.editReply(`Calculating standings, please wait.`)
             const matches = await getMatches(server, tournament.id)
-            const participants = await getParticipants(server, tournament.id)
+            const participants = await getParticipants(server, tournament.id, true)
             
             const standings = await calculateStandings(tournament, matches, participants)
             const abbreviateTieBreakers = (tb) => {
