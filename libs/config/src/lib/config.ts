@@ -82,8 +82,9 @@ export const config = {
     },
     tcgPlayer: {
        accessToken: process.env.TCGPLAYER_ACCESS_TOKEN,
-       publicKey : process.env.TCGPLAYER_PUBLIC_KEY,
-       privateKey : process.env.TCGPLAYER_PRIVATE_KEY
+       publicKey: process.env.TCGPLAYER_PUBLIC_KEY,
+       privateKey: process.env.TCGPLAYER_PRIVATE_KEY,
+       bullshit: process.env.TCGPLAYER_BULLSHIT
     },
     cloudinary: {
         cloudName: process.env.CLOUDINARY_CLOUD_NAME,

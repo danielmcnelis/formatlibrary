@@ -7,6 +7,7 @@ import { Player, Subscription } from '@fl/models'
 import { Op } from 'sequelize'
 // console.log('config', config)
 console.log('config.stripe', config.stripe)
+console.log('config.stripe.clientSecret', config.stripe.clientSecret)
 // const Stripe = new stripe(config.stripe.clientSecret)
 // import {manageSubscriptions} from '@fl/bot-functions'
 // import {Elements} from '@stripe/react-stripe-js'
