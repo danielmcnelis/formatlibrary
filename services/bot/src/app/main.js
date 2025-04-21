@@ -531,6 +531,7 @@ client.on('guildMemberAdd', async (member) => {
 // GOODBYE
 client.on('guildMemberRemove', async (member) => {
     try {
+        console.log(`guildMemberRemove`, member.user?.username, 'from', member.guild?.name)
         const guild = member.guild
         const server = await Server.findOne({ where: { id: guild.id }})
         if (!server || !hasPartnerAccess(server)) return
@@ -546,6 +547,8 @@ client.on('guildMemberRemove', async (member) => {
             },
             include: [Player, Tournament]
         })
+
+        console.log('entries.length', entries.length)
 
         for (let i = 0; i < entries.length; i++) {
             try {
