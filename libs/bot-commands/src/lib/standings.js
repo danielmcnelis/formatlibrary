@@ -67,12 +67,12 @@ export default {
                         obj[camelizeTieBreaker(tb)]
                 }
 
-                const result = `${s.rank}.  ${s.name}  -  ${s.score.toFixed(1)}  (${s.wins}-${s.losses}-${s.ties})${s.byes ? ` +BYE` : ''}  [${getAndStylizeTBVal(s, tb1)} / ${getAndStylizeTBVal(s, tb2)}${tb3 ? '/ ' + getAndStylizeTBVal(s, tb3) : ''}]`
+                const details = `${s.name}  -  ${s.score.toFixed(1)}  (${s.wins}-${s.losses}-${s.ties})${s.byes ? ` +BYE` : ''}  [${getAndStylizeTBVal(s, tb1)} / ${getAndStylizeTBVal(s, tb2)}${tb3 ? '/ ' + getAndStylizeTBVal(s, tb3) : ''}]`
 
-                if (!s.isActive) {
-                    results.push(`~~${result}~~`)
+                if (s.isActive) {
+                    results.push(`${s.rank}.` + details)
                 } else {
-                    results.push(result)
+                    results.push(`${s.rank}.` + `~~${details}~~`)
                 }             
             }
 
