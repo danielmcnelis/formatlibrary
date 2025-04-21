@@ -980,7 +980,7 @@ export const removeParticipant = async (server, interaction, member, entry, tour
         
         // DE-ACTIVATE ENTRY DATA IF UNDERWAY, OTHERWISE DELETE ENTRY DATA
         if (initialState === 'underway') {
-            await entry.update({ isActive: false, roundDropped: entry.wins + entry.losses })
+            await entry.update({ isActive: false, roundDropped: await getCurrentRound(server, entry.tournament.id) })
         } else {
             await entry.destroy()
         }
@@ -1055,7 +1055,7 @@ export const removeTeam = async (server, interaction, team, entries, tournament,
                 if (tournament.state === 'underway') {
                     await entry.update({
                         isActive: false,
-                        roundDropped: entry.wins + entry.losses
+                        roundDropped: await getCurrentRound(server, entry.tournament.id)
                     })
 
                     if (!team.roundDropped || entry.roundDropped > team.roundDropped) {
@@ -1317,6 +1317,21 @@ export const getMatches = async (server, tournamentId, state = 'all', participan
     } catch (err) {
         console.log(err)
         return []
+    }
+}
+
+//GET CURRENT ROUND 
+export const getCurrentRound = async (server, tournamentId) => {
+    try {
+        const { data } = await axios({
+            method: 'get',
+            url: `https://api.challonge.com/v1/tournaments/${tournamentId}/matches.json?api_key=${server.challongeApiKey}&state=open`
+        })
+
+        return data[0]?.match?.round
+    } catch (err) {
+        console.log(err)
+        return false
     }
 }
 

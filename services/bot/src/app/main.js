@@ -3,6 +3,7 @@
 // RETROBOT - A RANKINGS & TOURNAMENT MANAGEMENT DISCORD BOT
 
 // MODULE IMPORTS
+import axios from 'axios'
 import { Collection, Events } from 'discord.js'
 const FuzzySet = require('fuzzyset')
 import { Op } from 'sequelize'
@@ -17,10 +18,10 @@ import * as https from 'https'
 import { config } from '@fl/config'
 
 // DATABASE IMPORTS 
-import { Format, Match, Membership, Player, Server, Tournament } from '@fl/models'
+import { Entry, Format, Match, Membership, Player, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
-import { createTopCut, editTieBreakers, getMidnightCountdown, getSecondOfTwoRatedConfirmations,
+import { createTopCut, editTieBreakers, getCurrentRound, getMidnightCountdown, getSecondOfTwoRatedConfirmations,
     postStandings, checkTimer, closeTournament, createTournament, 
     dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
@@ -536,6 +537,34 @@ client.on('guildMemberRemove', async (member) => {
         
         const membership = await Membership.findOne({ where: { '$player.discordId$': member.user.id, serverId: guild.id }, include: Player })
         membership.isActive = false
+
+        const entries = await Entry.findAll({
+            where: {
+                '$player.discordId$': member.user.id,
+                '$tournament.serverId$': guild.id,
+                isActive: true
+            },
+            include: [Player, Tournament]
+        })
+
+        for (let i = 0; i < entries.length; i++) {
+            try {
+                const entry = entries[i]
+                await axios({
+                    method: 'delete',
+                    url: `https://api.challonge.com/v1/tournaments/${entry.tournament.id}/participants/${entry.participantId}.json?api_key=${server.challongeApiKey}`
+                })
+                
+                // DE-ACTIVATE ENTRY DATA IF UNDERWAY, OTHERWISE DELETE ENTRY DATA
+                if (entry.tournament.state === 'underway') {
+                    await entry.update({ isActive: false, roundDropped: await getCurrentRound(server, entry.tournament.id) })
+                } else {
+                    await entry.destroy()
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        }
 
         const channel = guild.channels.cache.get(server.welcomeChannelId)
         if (channel) channel.send({ content: `Oh dear. ${member.user.username} has left the server. ${emojis.sad}`})

@@ -154,7 +154,7 @@ export const EventCreator = () => {
       const { data: formatData } = await axios.get(`/api/formats`)
       setFormats(formatData)
 
-      const {data: communityData} = await axios.get(`/api/events/event-communities`)
+      const {data: communityData} = await axios.get(`/api/events/communities`)
       setCommunities(communityData)  
         
     }
