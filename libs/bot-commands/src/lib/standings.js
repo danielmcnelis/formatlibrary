@@ -70,7 +70,7 @@ export default {
                 const result = `${s.rank}.  ${s.name}  -  ${s.score.toFixed(1)}  (${s.wins}-${s.losses}-${s.ties})${s.byes ? ` +BYE` : ''}  [${getAndStylizeTBVal(s, tb1)} / ${getAndStylizeTBVal(s, tb2)}${tb3 ? '/ ' + getAndStylizeTBVal(s, tb3) : ''}]`
 
                 if (!s.isActive) {
-                    results.push('~~' + result + '~~')
+                    results.push(`~~${result}~~`)
                 } else {
                     results.push(result)
                 }             
