@@ -5,7 +5,7 @@ import stripe from 'stripe'
 import {config} from '@fl/config'
 import { Player, Subscription } from '@fl/models'
 import { Op } from 'sequelize'
-// console.log('config', config)
+console.log('config', config)
 console.log('config.stripe', config.stripe)
 console.log('config.stripe.clientSecret', config.stripe.clientSecret)
 // const Stripe = new stripe(config.stripe.clientSecret)
