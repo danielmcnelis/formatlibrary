@@ -66,8 +66,14 @@ export default {
                         tb === 'opponents win percentage' || tb === 'opponents opponents win percentage' ? obj[camelizeTieBreaker(tb)].toFixed(3) :
                         obj[camelizeTieBreaker(tb)]
                 }
-                
-                results.push(`${s.rank}.  ${s.name}  -  ${s.score.toFixed(1)}  (${s.wins}-${s.losses}-${s.ties})${s.byes ? ` +BYE` : ''}  [${getAndStylizeTBVal(s, tb1)} / ${getAndStylizeTBVal(s, tb2)}${tb3 ? '/ ' + getAndStylizeTBVal(s, tb3) : ''}]`)
+
+                const result = `${s.rank}.  ${s.name}  -  ${s.score.toFixed(1)}  (${s.wins}-${s.losses}-${s.ties})${s.byes ? ` +BYE` : ''}  [${getAndStylizeTBVal(s, tb1)} / ${getAndStylizeTBVal(s, tb2)}${tb3 ? '/ ' + getAndStylizeTBVal(s, tb3) : ''}]`
+
+                if (!s.isActive) {
+                    results.push('~~' + result + '~~')
+                } else {
+                    results.push(result)
+                }             
             }
 
             const channel = interaction.guild?.channels?.cache?.get(server.botSpamChannelId) || interaction.channel
