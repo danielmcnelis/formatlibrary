@@ -83,8 +83,7 @@ export const config = {
     tcgPlayer: {
        accessToken: process.env.TCGPLAYER_ACCESS_TOKEN,
        publicKey: process.env.TCGPLAYER_PUBLIC_KEY,
-       privateKey: process.env.TCGPLAYER_PRIVATE_KEY,
-       bullshit: process.env.TCGPLAYER_BULLSHIT
+       privateKey: process.env.TCGPLAYER_PRIVATE_KEY
     },
     cloudinary: {
         cloudName: process.env.CLOUDINARY_CLOUD_NAME,
@@ -93,8 +92,7 @@ export const config = {
         apiEnvar: process.env.CLOUDINARY_API_ENVAR
     },
     stripe: {
-        clientSecret: process.env.STRIPE_CLIENT_SECRET,
-        testing: process.env.STRIPE_TESTING
+        clientSecret: process.env.STRIPE_CLIENT_SECRET
     }
   }
   
