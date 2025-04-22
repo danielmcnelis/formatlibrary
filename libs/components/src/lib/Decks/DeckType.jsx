@@ -30,9 +30,7 @@ export const DeckType = (props) => {
     const accessToken = getCookie('access')
     const [summary, setSummary] = useState({})
     const [winRateData, setWinRateData] = useState({})
-    console.log('winRateData', winRateData)
     const [matchups, setMatchups] = useState({})
-    console.log('matchups', matchups)
     const [banlist, setBanList] = useState({})
     
     const { id } = useParams()
@@ -164,57 +162,57 @@ export const DeckType = (props) => {
                     </Link>
                 </div>
                 <table className="single-decktype-table">
-                <tbody>
-                    <tr className="single-decktype-info-1">
-                        <td>
-                            <div onClick={() => {window.location.href=`/formats/${summary.format?.name ? urlize(summary.format.name) : ''}`}} className="single-decktype-cell">
-                            <div className="single-decktype-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {summary.format?.name}</div>
-                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/${summary.format?.icon}.png`} alt="format-icon"/>
-                            </div>       
-                        </td>
-                        <td className='desktop-only'>
-                            <div className="single-decktype-cell">
-                            <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Category:</b> {summary.deckCategory}</div>
-                            <img className="single-decktype-category-emoji" style={{width:'28px'}} src={categoryImage} alt={summary.deckCategory}/>
-                            </div>
-                        </td>
-                        <td>
-                            <div className="single-decktype-cell">
-                            <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Frequency:</b> {summary.percent}%</div>
-                            <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
-                            </div>
-                        </td>
-                    </tr>
-                    
-                        {
-                            winRateData.overallWinRate || winRateData.tournamentWinRate || winRateData.conversionRate ? (
-                                <tr className="single-decktype-info-2">
-                                    <td>
-                                        <div className="single-decktype-cell">
-                                        <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Overall Win Rate:</b> {winRateData.overallWinRate ? `${winRateData.overallWinRate}%` : 'N/A'}</div>
-                                        <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/abacus.png`} alt="abacus"/>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className="single-decktype-cell">
-                                        <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Conversion Rate:</b> {winRateData.conversionRate ? `${winRateData.conversionRate}%` : 'N/A'}</div>
-                                        <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/microscope.png`} alt="microscope"/>
-                                        </div>
-                                    </td>
-                                    <td className='desktop-only'>
-                                        <div className="single-decktype-cell">
-                                        <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Tournament Win Rate:</b> {winRateData.tournamentWinRate ? `${winRateData.tournamentWinRate}%` : 'N/A'}</div>
-                                        <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/1st.png`} alt="1st.png"/>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ) : ''
-                        }
-                    
-                </tbody>
+                    <tbody>
+                        <tr className="single-decktype-info-1">
+                            <td>
+                                <div onClick={() => {window.location.href=`/formats/${summary.format?.name ? urlize(summary.format.name) : ''}`}} className="single-decktype-cell">
+                                <div className="single-decktype-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {summary.format?.name}</div>
+                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/${summary.format?.icon}.png`} alt="format-icon"/>
+                                </div>       
+                            </td>
+                            <td className='desktop-only'>
+                                <div className="single-decktype-cell">
+                                <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Category:</b> {summary.deckCategory}</div>
+                                <img className="single-decktype-category-emoji" style={{width:'28px'}} src={categoryImage} alt={summary.deckCategory}/>
+                                </div>
+                            </td>
+                            <td>
+                                <div className="single-decktype-cell">
+                                <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Frequency:</b> {summary.percent}%</div>
+                                <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                            {
+                                winRateData.overallWinRate || winRateData.tournamentWinRate || winRateData.conversionRate ? (
+                                    <tr className="single-decktype-info-2">
+                                        <td>
+                                            <div className="single-decktype-cell">
+                                            <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Overall Win Rate:</b> {winRateData.overallWinRate ? `${winRateData.overallWinRate}%` : 'N/A'}</div>
+                                            <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/abacus.png`} alt="abacus"/>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="single-decktype-cell">
+                                            <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Conversion Rate:</b> {winRateData.conversionRate ? `${winRateData.conversionRate}%` : 'N/A'}</div>
+                                            <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/microscope.png`} alt="microscope"/>
+                                            </div>
+                                        </td>
+                                        <td className='desktop-only'>
+                                            <div className="single-decktype-cell">
+                                            <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Tournament Win Rate:</b> {winRateData.tournamentWinRate ? `${winRateData.tournamentWinRate}%` : 'N/A'}</div>
+                                            <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/1st.png`} alt="1st.png"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ) : ''
+                            }
+                        
+                    </tbody>
                 </table>
         
-                {/* <div className="popular-cards"> */}
+                <div className="popular-cards">
                     <h2>Popular Main Deck Cards</h2>
                     <div id="main" className="decktype-bubble">
                         <div id="main" className="deck-flexbox">
@@ -396,46 +394,49 @@ export const DeckType = (props) => {
                             </div>
                         </div>
                     </div>
-                {/* </div> */}
-                {
+                </div>
+                
+                <div className="decktype-example-decks">
+                {   
                     summary.examples ? (
                         <div id="top-decks">
                             <div className="subcategory-title-flexbox">
-                            <img 
-                                style={{ width:'64px'}} 
-                                src={`https://cdn.formatlibrary.com/images/emojis/${summary.format.icon}.png`}
-                                alt={format.name}
-                            />
-                            <h2 className="subheading">{summary.examples[1] ? 'Example Decks:' : 'Example Deck:'}</h2>
-                            <img 
-                                style={{ height:'64px'}} 
-                                src={'https://cdn.formatlibrary.com/images/emojis/deckbox.png'}
-                                alt="deckbox"
-                            />
-                            </div>
-                            <div id="deckGalleryFlexBox">
-                            {
-                                summary.examples.map((deck, index) => {
-                                    if (deck) {
-                                        return (<div className="vertical-flexbox"><h3>{index === 0 ? 'Most Popular:' : 'Recent Top:'}</h3><
-                                            DeckImage
-                                            key={deck.id}
-                                            index={index} 
-                                            deck={deck}
-                                            width="100%"
-                                            margin="10px 1px"
-                                            padding="1px"
-                                            coverage={true}
-                                        /></div>)
-                                    } else {
-                                        return ''
-                                    }
-                                })
-                            }
+                                <img 
+                                    style={{ width:'64px'}} 
+                                    src={`https://cdn.formatlibrary.com/images/emojis/${summary.format.icon}.png`}
+                                    alt={format.name}
+                                />
+                                <h2 className="subheading">{summary.examples[1] ? 'Example Decks:' : 'Example Deck:'}</h2>
+                                <img 
+                                    style={{ height:'64px'}} 
+                                    src={'https://cdn.formatlibrary.com/images/emojis/deckbox.png'}
+                                    alt="deckbox"
+                                />
+                                </div>
+                                <div id="deckGalleryFlexBox">
+                                {
+                                    summary.examples.map((deck, index) => {
+                                        if (deck) {
+                                            return (<div className="vertical-flexbox"><h3>{index === 0 ? 'Most Popular:' : 'Recent Top:'}</h3><
+                                                DeckImage
+                                                key={deck.id}
+                                                index={index} 
+                                                deck={deck}
+                                                width="100%"
+                                                margin="10px 1px"
+                                                padding="1px"
+                                                coverage={true}
+                                            /></div>)
+                                        } else {
+                                            return ''
+                                        }
+                                    })
+                                }
                             </div>
                         </div>
                     ) : ''
                 }
+                </div>
                 {
                     Object.entries(matchups).length ? (
                         <div className={"desktop-only"}>

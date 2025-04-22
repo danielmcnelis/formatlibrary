@@ -277,232 +277,228 @@ export const SingleDeck = (props) => {
             <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
         }
         <div className="body">
-            <div className="place-ads-below"/>
-            <div className="single-deck">
-                <div className="single-deck-title-flexbox">
-                    <div>
-                        {
-                            isContentManager ? (
-                                <div style={{width: '80px'}}></div>
-                            ) : null
-                        }
+            <div className="single-deck-title-flexbox">
+                <div>
+                    {
+                        isContentManager ? (
+                            <div style={{width: '80px'}}></div>
+                        ) : null
+                    }
+                </div>
+                <div
+                    className="link desktop-only show-cursor"
+                    onClick={() => handleDeckDownload()}
+                >                                     
+                    <div className="deck-button show-cursor">
+                        <b style={{padding: '0px 6px'}}>Download</b>
+                        <img 
+                            style={{width:'28px'}} 
+                            src={`https://cdn.formatlibrary.com/images/emojis/download.png`}
+                            alt="download"
+                        />
                     </div>
-                    <div
-                        className="link desktop-only show-cursor"
-                        onClick={() => handleDeckDownload()}
-                    >                                     
-                        <div className="deck-button show-cursor">
-                            <b style={{padding: '0px 6px'}}>Download</b>
+                </div>
+                {
+
+                !inEditMode ? (
+                        <div 
+                            onClick={() => {window.location.href=`/deckTypes/${deck.deckTypeName.toLowerCase().replace(/\s/g, '-')}?format=${deck.formatName.toLowerCase().replace(/\s/g, '_')}`}}
+                        >
+                            <div className="single-deck-title">{deck.deckTypeName || deck.name}</div>
+                        </div>
+                    ) : (
+                        <div>
+                            <form autoComplete='on'>
+                            <input
+                                id="decktype-input"
+                                className="large-input"
+                                defaultValue={deck.deckTypeName || deck.name}
+                                type="text"
+                                onChange={(e) => {
+                                    setInput(e.target.value)
+                                }}
+                            />
+                            </form>
+                            <div className="suggestions-flex">
+                                {
+                                    suggestions.map((s) => {
+                                        return (
+                                            <div 
+                                                className="suggestion" 
+                                                key={s} 
+                                                onClick={() => handleSuggestionClick(s)}
+                                            >{s}</div>
+                                        )
+                                })
+                                }
+                            </div>
+                        </div>
+                    )
+                }
+                <Link to="/deck-builder" state={{ deck: deck }} className="desktop-only">                                    
+                    <div className="deck-button">
+                        <b style={{padding: '0px 6px'}}>Open Deck</b>
+                        <img 
+                            style={{width:'28px'}} 
+                            src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`}
+                            alt="open"
+                        />
+                    </div>
+                </Link>
+                <div>
+                    {
+                        isContentManager ? (
+                            !inEditMode ? (
+                                <div className="downloadButton" style={{width: '80px'}} onClick={()=> setInEditMode(true)}>Edit</div>
+                            ) : (
+                                <div className="downloadButton" style={{width: '80px'}} onClick={()=> updateDeckInfo()}>Save</div>
+                            )
+                        ) : null
+                    }
+                </div>
+            </div>
+            <table className="single-deck-table">
+                <tbody>
+                <tr className="single-deck-info-1">
+                    <td id="single-deck-builder-td">
+                    <div className="single-deck-cell">
+                        <div onClick={() => goToPlayer()} className="single-deck-builder-link">
+                            <b>Builder: </b>
+                            <p>{displayName}</p>
                             <img 
-                                style={{width:'28px'}} 
-                                src={`https://cdn.formatlibrary.com/images/emojis/download.png`}
-                                alt="download"
+                                className="single-deck-builder-cell-pfp"
+                                src={`/api/players/${deck.builder?.id}/avatar`}  
+                                alt={deck.builderName}
                             />
                         </div>
-                    </div>
+                    </div>       
+                    </td>
+                    <td>
+                    
+                    <div onClick={() => goToFormat()} className="single-deck-cell">
+                        <div className="single-deck-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {deck.formatName}</div>
+                        <img 
+                            style={{width:'28px'}} 
+                            src={`https://cdn.formatlibrary.com/images/emojis/${deck.format.icon}.png`}
+                            alt={deck.format.icon}
+                        />
+                    </div>       
+                    </td>
                     {
-
-                    !inEditMode ? (
-                            <div 
-                                onClick={() => {window.location.href=`/deckTypes/${deck.deckTypeName.toLowerCase().replace(/\s/g, '-')}?format=${deck.formatName.toLowerCase().replace(/\s/g, '_')}`}}
-                            >
-                                <div className="single-deck-title">{deck.deckTypeName || deck.name}</div>
-                            </div>
-                        ) : (
-                            <div>
-                                <form autoComplete='on'>
-                                <input
-                                    id="decktype-input"
-                                    className="large-input"
-                                    defaultValue={deck.deckTypeName || deck.name}
-                                    type="text"
-                                    onChange={(e) => {
-                                        setInput(e.target.value)
-                                    }}
+                        deck.category ? (
+                            <td>
+                            <div className="single-deck-cell">
+                                <div className="single-deck-category" style={{paddingRight:'7px'}}><b>Category:</b> {deck.category}</div>
+                                <img 
+                                    className="single-deck-category-emoji" 
+                                    style={{width:'28px'}} 
+                                    src={categoryImage}
+                                    alt={deck.category}
                                 />
-                                </form>
-                                <div className="suggestions-flex">
-                                    {
-                                        suggestions.map((s) => {
-                                            return (
-                                                <div 
-                                                    className="suggestion" 
-                                                    key={s} 
-                                                    onClick={() => handleSuggestionClick(s)}
-                                                >{s}</div>
-                                            )
-                                    })
-                                    }
-                                </div>
                             </div>
+                            </td>
+                        ) : (
+                            <td>
+                                <div className="single-deck-cell">
+                                <div className="desktop-only"><b>Last Updated:</b> {dateToVerbose(deck.updatedAt, false, false)}</div>
+                                <div id="single-deck-uploaded-mobile" className="mobile-only"><b>Last Updated:</b> {dateToSimple(deck.updatedAt)}</div>
+                                </div>
+                            </td>
                         )
                     }
-                    <Link to="/deck-builder" state={{ deck: deck }} className="desktop-only">                                    
-                        <div className="deck-button">
-                            <b style={{padding: '0px 6px'}}>Open Deck</b>
+                </tr>
+                {
+                    deck.eventAbbreviation && deck.placement ? (
+                        <tr className="single-deck-info-2">
+                        <td>
+                        <div onClick={() => goToEvent()} className="single-deck-cell">
+                            <div className="single-deck-event-link" style={{paddingRight:'7px'}}><b>Event:</b> {deck.eventAbbreviation}</div> 
                             <img 
                                 style={{width:'28px'}} 
-                                src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`}
-                                alt="open"
+                                src={`https://cdn.formatlibrary.com/images/logos/${deck.communityName?.replaceAll('+', '%2B')}.png`}
+                                alt={deck.communityName}
                             />
-                        </div>
-                    </Link>
-                    <div>
-                        {
-                            isContentManager ? (
-                                !inEditMode ? (
-                                    <div className="downloadButton" style={{width: '80px'}} onClick={()=> setInEditMode(true)}>Edit</div>
-                                ) : (
-                                    <div className="downloadButton" style={{width: '80px'}} onClick={()=> updateDeckInfo()}>Save</div>
-                                )
-                            ) : null
-                        }
-                    </div>
-                </div>
-                <table className="single-deck-table">
-                    <tbody>
-                    <tr className="single-deck-info-1">
-                        <td id="single-deck-builder-td">
-                        <div className="single-deck-cell">
-                            <div onClick={() => goToPlayer()} className="single-deck-builder-link">
-                                <b>Builder: </b>
-                                <p>{displayName}</p>
-                                <img 
-                                    className="single-deck-builder-cell-pfp"
-                                    src={`/api/players/${deck.builder?.id}/avatar`}  
-                                    alt={deck.builderName}
-                                />
-                            </div>
-                        </div>       
+                        </div>   
                         </td>
                         <td>
-                        
-                        <div onClick={() => goToFormat()} className="single-deck-cell">
-                            <div className="single-deck-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {deck.formatName}</div>
+                        <div className="single-deck-cell">
+                            <div style={{paddingRight:'7px'}}><b>Place:</b> {ordinalize(deck.placement)}</div> 
                             <img 
                                 style={{width:'28px'}} 
-                                src={`https://cdn.formatlibrary.com/images/emojis/${deck.format.icon}.png`}
-                                alt={deck.format.icon}
+                                src={placementImage}
+                                alt={deck.placement}
                             />
-                        </div>       
+                        </div>   
                         </td>
-                        {
-                            deck.category ? (
-                                <td>
-                                <div className="single-deck-cell">
-                                    <div className="single-deck-category" style={{paddingRight:'7px'}}><b>Category:</b> {deck.category}</div>
-                                    <img 
-                                        className="single-deck-category-emoji" 
-                                        style={{width:'28px'}} 
-                                        src={categoryImage}
-                                        alt={deck.category}
-                                    />
-                                </div>
-                                </td>
-                            ) : (
-                                <td>
-                                    <div className="single-deck-cell">
-                                    <div className="desktop-only"><b>Last Updated:</b> {dateToVerbose(deck.updatedAt, false, false)}</div>
-                                    <div id="single-deck-uploaded-mobile" className="mobile-only"><b>Last Updated:</b> {dateToSimple(deck.updatedAt)}</div>
-                                    </div>
-                                </td>
-                            )
-                        }
+                        <td>
+                        <div className="single-deck-cell">
+                            <div className="desktop-only"><b>Uploaded:</b> {dateToVerbose(deck.publishDate, false, false)}</div>
+                            <div id="single-deck-uploaded-mobile" className="mobile-only"><b>Uploaded:</b> {dateToSimple(deck.publishDate)}</div>
+                        </div>
+                        </td>
                     </tr>
+                    ) : ''
+                }
+                </tbody>
+            </table>
+            <div className="deck-component">
+                <div id="main" className="deck-bubble">
+                    <div id="main" className="deck-flexbox">
                     {
-                        deck.eventAbbreviation && deck.placement ? (
-                            <tr className="single-deck-info-2">
-                            <td>
-                            <div onClick={() => goToEvent()} className="single-deck-cell">
-                                <div className="single-deck-event-link" style={{paddingRight:'7px'}}><b>Event:</b> {deck.eventAbbreviation}</div> 
-                                <img 
-                                    style={{width:'28px'}} 
-                                    src={`https://cdn.formatlibrary.com/images/logos/${deck.communityName?.replaceAll('+', '%2B')}.png`}
-                                    alt={deck.communityName}
-                                />
-                            </div>   
-                            </td>
-                            <td>
-                            <div className="single-deck-cell">
-                                <div style={{paddingRight:'7px'}}><b>Place:</b> {ordinalize(deck.placement)}</div> 
-                                <img 
-                                    style={{width:'28px'}} 
-                                    src={placementImage}
-                                    alt={deck.placement}
-                                />
-                            </div>   
-                            </td>
-                            <td>
-                            <div className="single-deck-cell">
-                                <div className="desktop-only"><b>Uploaded:</b> {dateToVerbose(deck.publishDate, false, false)}</div>
-                                <div id="single-deck-uploaded-mobile" className="mobile-only"><b>Uploaded:</b> {dateToSimple(deck.publishDate)}</div>
-                            </div>
-                            </td>
-                        </tr>
-                        ) : ''
+                        deck.main.map((card, index) => <CardImage className="card-image" width='72px' padding='1px' margin='0px' key={`${deck.id}-${index}-${card.id}`} card={card} status={banlist[card.id]}/>)
                     }
-                    </tbody>
-                </table>
-
-                <div className="deck-component">
-                    <div id="main" className="deck-bubble">
-                        <div id="main" className="deck-flexbox">
+                    </div>
+                </div>
+                {
+                    deck.side.length ? (
+                    <div id="side" className="deck-bubble">
+                        <div id="side" className="deck-flexbox">
                         {
-                            deck.main.map((card, index) => <CardImage className="card-image" width='72px' padding='1px' margin='0px' key={`${deck.id}-${index}-${card.id}`} card={card} status={banlist[card.id]}/>)
+                            deck.side.map((card, index) => <CardImage className="card-image" width='48px' padding='0.5px' margin='0px' key={`${deck.id}-${index}-${card.id}`} card={card} status={banlist[card.id]}/>)
                         }
                         </div>
                     </div>
-                    {
-                        deck.side.length ? (
-                        <div id="side" className="deck-bubble">
-                            <div id="side" className="deck-flexbox">
-                            {
-                                deck.side.map((card, index) => <CardImage className="card-image" width='48px' padding='0.5px' margin='0px' key={`${deck.id}-${index}-${card.id}`} card={card} status={banlist[card.id]}/>)
-                            }
-                            </div>
+                    ) : ''
+                }
+                {
+                    deck.extra.length ? (
+                    <div id="extra" className="deck-bubble">
+                        <div id="extra" className="deck-flexbox">
+                        {
+                            deck.extra.map((card, index) => <CardImage className="card-image"f width='48px' padding='0.5px' margin='0px' key={`${deck.id}-${index}-${card.id}`} card={card} status={banlist[card.id]}/>)
+                        }
                         </div>
-                        ) : ''
-                    }
-                    {
-                        deck.extra.length ? (
-                        <div id="extra" className="deck-bubble">
-                            <div id="extra" className="deck-flexbox">
-                            {
-                                deck.extra.map((card, index) => <CardImage className="card-image"f width='48px' padding='0.5px' margin='0px' key={`${deck.id}-${index}-${card.id}`} card={card} status={banlist[card.id]}/>)
-                            }
-                            </div>
-                        </div>
-                        ) : ''
-                    }
-                    <table className='deck-stats-table'>
-                        <tbody>
-                            <tr>
-                                <td>
-                                <div className="deck-stats-cell">
-                                    <div style={{paddingRight:'7px'}}><b className="deck-stats-label">Likes: </b>{deck.rating}</div>
-                                    <img className="likeImg" alt="heart" onClick={() => addLike()} style={{width:'28px'}} src={Heart}/>
-                                </div>   
-                                </td>
-                                <td>
-                                <div className="deck-stats-cell show-cursor">
-                                    <div style={{paddingRight:'7px'}}><b className="deck-stats-label show-cursor">Downloads: </b>{deck.downloads}</div> 
-                                    <div
-                                        onClick={()=> handleDeckDownload()}
-                                    >
-                                        <img style={{width:'28px'}} alt="download" src={Disk}/>
-                                    </div>
-                                </div>   
-                                </td>
-                                <td>
-                                <div className="deck-stats-cell">
-                                    <div style={{paddingRight:'7px'}}><b className="deck-stats-label">Views: </b>{deck.views}</div> 
-                                    <img style={{width:'28px'}} src={Eye} alt="eye"/>
-                                </div>   
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                    </div>
+                    ) : ''
+                }
+                <table className='deck-stats-table'>
+                    <tbody>
+                        <tr>
+                            <td>
+                            <div className="deck-stats-cell">
+                                <div style={{paddingRight:'7px'}}><b className="deck-stats-label">Likes: </b>{deck.rating}</div>
+                                <img className="likeImg" alt="heart" onClick={() => addLike()} style={{width:'28px'}} src={Heart}/>
+                            </div>   
+                            </td>
+                            <td>
+                            <div className="deck-stats-cell show-cursor">
+                                <div style={{paddingRight:'7px'}}><b className="deck-stats-label show-cursor">Downloads: </b>{deck.downloads}</div> 
+                                <div
+                                    onClick={()=> handleDeckDownload()}
+                                >
+                                    <img style={{width:'28px'}} alt="download" src={Disk}/>
+                                </div>
+                            </div>   
+                            </td>
+                            <td>
+                            <div className="deck-stats-cell">
+                                <div style={{paddingRight:'7px'}}><b className="deck-stats-label">Views: </b>{deck.views}</div> 
+                                <img style={{width:'28px'}} src={Eye} alt="eye"/>
+                            </div>   
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </>
