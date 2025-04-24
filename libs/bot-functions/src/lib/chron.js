@@ -765,11 +765,11 @@ export const recalculateFormatStats = async (format) => {
                 console.log('!!', !!format.useSeasonalElo)
                 console.log('format.seasonResetDate < match.createdAt', format.seasonResetDate < match.createdAt)
                 console.log('nextSunday < match.createdAt', nextSunday < match.createdAt)
-                if (match.isSeasonal && format.useSeasonalElo && format.seasonResetDate < match.createdAt && nextSunday < match.createdAt) {
+                if (match.isSeasonal && format.useSeasonalElo && (format.seasonResetDate < match.createdAt) && (nextSunday < match.createdAt)) {
                     '!!!!!!!!!!!!!!!!!!!!!!!! APPLYING SEASONAL DECAY !!!!!!!!!!!!!!!!!!!!!!!!'
                     await applySeasonalDecay(format.id, format.name, server.id, currentSunday || firstDayOfSeason, nextSunday)
                     currentSunday = nextSunday
-                    nextSunday = getNextSundayAtMidnight(currentSunday)
+                    nextSunday = getNextSundayAtMidnight(nextSunday)
 
                     allStats = await Stats.findAll({
                         where: { formatId: format.id, serverId: server.id }, 
