@@ -20,8 +20,8 @@ export default {
             await interaction.deferReply()
             if (isProgrammer(interaction.member)) {
                 await interaction.editReply(emojis.yellow)
-                await runNightlyTasks(client)
-                // await recalculateAllStats()
+                // await runNightlyTasks(client)
+                await recalculateAllStats()
                 // await updateAvatars(client)
                 // await updateMarketPrices()
                 // await purgeDuplicatePrices()
