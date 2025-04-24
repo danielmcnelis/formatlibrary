@@ -986,8 +986,8 @@ export const applySeasonalDecay = async (formatId, formatName, serverId, current
     console.log('days', days)
     console.log('seasonalMatchesInPeriod.length', seasonalMatchesInPeriod.length)
     let seasonalDecayRate = Math.pow(Math.E, (-1 * seasonalMatchesInPeriod.length) / (days * 600))
-    seasonalDecayRate = 1.0
-    // if (seasonalDecayRate < 0.99) seasonalDecayRate = 0.99
+    // seasonalDecayRate = 1.0
+    if (seasonalDecayRate < 0.99) seasonalDecayRate = 0.99
 
     const seasonalGamesPlayed = {}
     for (let i = 0; i < seasonalMatchesInPeriod.length; i++) {
