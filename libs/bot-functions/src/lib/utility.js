@@ -23,7 +23,7 @@ export const getNextDateAtMidnight = (date) => {
 export const getNextSundayAtMidnight = (currentDate) => {
     const remainingDays = 7 - currentDate.getDay()
     const nextSunday = new Date(currentDate)
-    nextSunday.setDate(currentDate.getDate() + remainingDays)
+    nextSunday.setDate(currentDate.getDate() + remainingDays + 7)
     nextSunday.setHours(0, 0, 0, 0)
     return nextSunday
 }
