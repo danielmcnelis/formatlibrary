@@ -998,16 +998,26 @@ export const applySeasonalDecay = async (formatId, formatName, serverId, current
     const seasonalGamesPlayed = {}
     for (let i = 0; i < seasonalMatchesInPeriod.length; i++) {
         const match = seasonalMatchesInPeriod[i]
+        const isIkarosWin = match.winnerId === 'PbUxFLN4NU19kJMLWXKFFA' || match.loserId === 'PbUxFLN4NU19kJMLWXKFFA'
+        console.log('isIkarosWin', isIkarosWin)
+        const isIkarosLoss = match.winnerId === 'PbUxFLN4NU19kJMLWXKFFA' || match.loserId === 'PbUxFLN4NU19kJMLWXKFFA'
+        console.log('isIkarosLoss', isIkarosLoss)
 
         if (seasonalGamesPlayed[match.winnerId]) {
+            if (isIkarosWin) console.log('HEY 1')
             seasonalGamesPlayed[match.winnerId] = seasonalGamesPlayed[match.winnerId] + 1
         } else {
+            if (isIkarosWin) console.log('HEY 2')
             seasonalGamesPlayed[match.winnerId] = 1
         }
 
+        console.log()
+
         if (seasonalGamesPlayed[match.loserId]) {
+            if (isIkarosLoss) console.log('HEY 3')
             seasonalGamesPlayed[match.loserId] = seasonalGamesPlayed[match.loserId] + 1
         } else {
+            if (isIkarosLoss) console.log('HEY 4')
             seasonalGamesPlayed[match.loserId] = 1
         }
     }
