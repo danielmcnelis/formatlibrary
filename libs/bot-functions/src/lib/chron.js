@@ -701,6 +701,7 @@ export const recalculateFormatStats = async (format) => {
         let currentMonth
         // let nextDate = getNextDateAtMidnight(currentDate)
         let nextSunday = firstDayOfSeason ? getNextSundayAtMidnight(firstDayOfSeason) : null
+        console.log('nextSunday', nextSunday)
         let nextMonth = getStartOfNextMonthAtMidnight(currentDate)
     
         if (format.useSeasonalElo) {
@@ -759,8 +760,13 @@ export const recalculateFormatStats = async (format) => {
                         attributes: attributes
                     })
                 }
-    
+                
+                console.log('!!match.isSeasonal', !!match.isSeasonal)
+                console.log('!!', !!format.useSeasonalElo)
+                console.log('format.seasonResetDate < match.createdAt', format.seasonResetDate < match.createdAt)
+                console.log('nextSunday < match.createdAt', nextSunday < match.createdAt)
                 if (match.isSeasonal && format.useSeasonalElo && format.seasonResetDate < match.createdAt && nextSunday < match.createdAt) {
+                    '!!!!!!!!!!!!!!!!!!!!!!!! APPLYING SEASONAL DECAY !!!!!!!!!!!!!!!!!!!!!!!!'
                     await applySeasonalDecay(format.id, format.name, server.id, currentSunday || firstDayOfSeason, nextSunday)
                     currentSunday = nextSunday
                     nextSunday = getNextSundayAtMidnight(currentSunday)
