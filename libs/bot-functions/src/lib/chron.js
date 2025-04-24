@@ -761,12 +761,14 @@ export const recalculateFormatStats = async (format) => {
                     })
                 }
                 
-                console.log('!!match.isSeasonal', !!match.isSeasonal)
-                console.log('!!', !!format.useSeasonalElo)
-                console.log('format.seasonResetDate < match.createdAt', format.seasonResetDate < match.createdAt)
-                console.log('nextSunday < match.createdAt', nextSunday < match.createdAt)
+                // console.log('!!match.isSeasonal', !!match.isSeasonal)
+                // console.log('!!', !!format.useSeasonalElo)
+                // console.log('format.seasonResetDate < match.createdAt', format.seasonResetDate < match.createdAt)
+                // console.log('nextSunday < match.createdAt', nextSunday < match.createdAt)
+                // console.log('ALL TRUE', match.isSeasonal && format.useSeasonalElo && (format.seasonResetDate < match.createdAt) && (nextSunday < match.createdAt))
+
                 if (match.isSeasonal && format.useSeasonalElo && (format.seasonResetDate < match.createdAt) && (nextSunday < match.createdAt)) {
-                    '!!!!!!!!!!!!!!!!!!!!!!!! APPLYING SEASONAL DECAY !!!!!!!!!!!!!!!!!!!!!!!!'
+                    console.log('!!!!!!!!!!!!!!!!!!!!!!!! APPLYING SEASONAL DECAY !!!!!!!!!!!!!!!!!!!!!!!!')
                     await applySeasonalDecay(format.id, format.name, server.id, currentSunday || firstDayOfSeason, nextSunday)
                     currentSunday = nextSunday
                     nextSunday = getNextSundayAtMidnight(nextSunday)
@@ -1016,7 +1018,7 @@ export const applySeasonalDecay = async (formatId, formatName, serverId, current
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
         const n = seasonalGamesPlayed[stats.playerId] || 0
-        const standard = Math.floor(k * days / 7)
+        const standard = Math.floor(k * days)
         const shields = n > standard ? standard : n
 
         console.log(`${stats.playerName}'s shields:`, shields, 'out of', standard)
