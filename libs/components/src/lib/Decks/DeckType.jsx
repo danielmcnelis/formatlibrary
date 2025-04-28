@@ -66,9 +66,15 @@ export const DeckType = (props) => {
                     setWinRateData(winRateData)
     
                     let matchupApiUrl = `/api/matchups/${id}`
-                    if (props.roles?.admin) matchupApiUrl += '&isAdmin=true'
-                    if (props.roles?.subscriber) matchupApiUrl += '&isSubscriber=true'
-                    if (format) matchupApiUrl += `?format=${format}`
+                    if (format) {
+                        if (props.roles?.subscriber || props.roles?.admin) {
+                            matchupApiUrl += `?format=${format}&isSubscriber=true`
+                        }
+                    } else if (!format) {
+                        if (props.roles?.subscriber || props.roles?.admin) {
+                            matchupApiUrl += '?isSubscriber=true'
+                        }
+                    }
     
                     const {data: matchupData} = await axios.get(matchupApiUrl, {
                         headers: {
