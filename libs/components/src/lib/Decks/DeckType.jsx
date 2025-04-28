@@ -66,9 +66,9 @@ export const DeckType = (props) => {
                     setWinRateData(winRateData)
     
                     let matchupApiUrl = `/api/matchups/${id}`
-                    if (format) matchupApiUrl += `?format=${format}`
                     if (props.roles?.admin) matchupApiUrl += '&isAdmin=true'
                     if (props.roles?.subscriber) matchupApiUrl += '&isSubscriber=true'
+                    if (format) matchupApiUrl += `?format=${format}`
     
                     const {data: matchupData} = await axios.get(matchupApiUrl, {
                         headers: {
@@ -449,7 +449,7 @@ export const DeckType = (props) => {
                             </div>
                         </div>
                     ) : (
-                        <div className={"desktop-only"}>
+                        <div className="desktop-only matchups">
                             <br/>
                             <h2>Matchups</h2>
                             <div className="horizontal-centered-flexbox">
