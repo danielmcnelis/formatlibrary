@@ -617,16 +617,16 @@ export const getWinRateData = async (req, res, next) => {
                 }
             })
 
-            const totalTournamentDeckCount = await Deck.count({
+            const tournamentCount = await Event.count({
                 where: {
-                    origin: 'event',
+                    display: true,
                     formatId: format?.id
                 }
             })
 
             const conversionRate = Math.round(topDeckRepresentation / deckRepresentation * 100)
             const overallWinRate = Math.round(wins / (wins + losses) * 100)
-            const tournamentWinRate = Math.round(firstPlaceRepresentation / totalTournamentDeckCount * 100)
+            const tournamentWinRate = Math.round(firstPlaceRepresentation / tournamentCount * 100)
             res.json({conversionRate, overallWinRate, tournamentWinRate})
         } else {
             return res.json({})
