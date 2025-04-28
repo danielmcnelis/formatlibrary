@@ -815,7 +815,7 @@ export const sendRatedPairingNotifications = async (client, player, opponent, fo
 }
 
 // GET ELO K-FACTOR
-export const getKFactor = (games, bestElo, currentElo) => {
+export const getKFactor = (games, bestElo) => {
     if (games < 20 && bestElo < 560) {
         return 24
     } else if (bestElo < 560) {
@@ -870,8 +870,8 @@ export const updateGeneralStats = async (winnerStats, loserStats) => {
 
 // UPDATE SEASONAL STATS
 export const updateSeasonalStats = async (winnerStats, loserStats) => {
-    const winnerKFactor = getKFactor(winnerStats.seasonalGames, winnerStats.seasonalElo)
-    const loserKFactor = getKFactor(loserStats.seasonalGames, loserStats.seasonalElo)
+    const winnerKFactor = getKFactor(winnerStats.seasonalGames, winnerStats.bestSeasonalElo)
+    const loserKFactor = getKFactor(loserStats.seasonalGames, loserStats.bestSeasonalElo)
     const winnerDelta = getEloDelta(winnerKFactor, winnerStats.seasonalElo, loserStats.seasonalElo)
     const loserDelta = getEloDelta(loserKFactor, winnerStats.seasonalElo, loserStats.seasonalElo)
     
