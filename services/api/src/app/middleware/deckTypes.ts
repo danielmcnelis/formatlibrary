@@ -1,4 +1,4 @@
-import { Card, Deck, DeckThumb, DeckType, Format, Matchup } from '@fl/models'
+import { Card, Deck, DeckThumb, DeckType, Event, Format, Matchup } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import * as fs from 'fs'
