@@ -25,7 +25,7 @@ import { createTopCut, editTieBreakers, getCurrentRound, getMidnightCountdown, g
     postStandings, checkTimer, closeTournament, createTournament, 
     dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
-    startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, 
+    startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, voidPairing,
     assignRoles, createMembership, createPlayer, fetchCardNames, hasPartnerAccess, 
     isModerator, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
     editPointsSystem, runNightlyTasks, runWeeklyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, 
@@ -483,6 +483,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
             if (!authorIsMod) return interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
             const matchId = interaction.values[0]
             await undoMatch(interaction, server, matchId, authorIsMod)
+            return interaction.message?.edit({components: []}).catch((err) => console.log(err))
+        }else if (command.data.name === 'void') {
+            const authorIsMod = isModerator(server, interaction.member)
+            if (!authorIsMod) {
+                interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)
+                return interaction.message?.edit({components: []}).catch((err) => console.log(err))
+            }
+            const pairingId = interaction.values[0]
+            await voidPairing(interaction, pairingId)
             return interaction.message?.edit({components: []}).catch((err) => console.log(err))
         } else {
             return

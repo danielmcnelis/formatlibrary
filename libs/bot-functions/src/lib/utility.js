@@ -938,6 +938,36 @@ export const selectMatch = async (interaction, matches, replayExtension = '') =>
     await interaction.editReply({ content: `Please select a match:`, components: [row] })
 }
 
+// SELECT PAIRING
+export const selectPairing = async (interaction, pairings) => {
+    if (pairings.length === 0) return false
+    if (pairings.length === 1) return pairings[0]
+
+    const options = pairings.map((pairing, index) => {
+        const difference = Date.now() - pairing.createdAt
+        const timeAgo = difference < 1000 * 60 * 60 ?  `${Math.round(difference / (1000 * 60))}m ago` :
+            difference >= 1000 * 60 * 60 && difference < 1000 * 60 * 60 * 24 ? `${Math.round(difference / (1000 * 60 * 60))}h ago` :
+            difference >= 1000 * 60 * 60 * 24 && difference < 1000 * 60 * 60 * 24 * 30 ? `${Math.round(difference / (1000 * 60 * 60 * 24))}d ago` :
+            difference >= 1000 * 60 * 60 * 24 * 30 && difference < 1000 * 60 * 60 * 24 * 365 ? `${Math.round(difference / (1000 * 60 * 60 * 24 * 30))}mo ago` :
+            `${Math.round(difference / (1000 * 60 * 60 * 24 * 365))}y ago`
+                        
+        return {
+            label: `(${index + 1}) ${pairing.playerAName} > ${pairing.playerBName} (${timeAgo})`,
+            value: `${pairings[index].id}`,
+        }
+    })
+
+    const row = new ActionRowBuilder()
+        .addComponents(
+            new StringSelectMenuBuilder()
+                .setCustomId(`${interaction.member.id}`)
+                .setPlaceholder('Nothing selected')
+                .addOptions(...options),
+        )
+
+    await interaction.editReply({ content: `Please select a pairing:`, components: [row] })
+}
+
 // SET TIMERS
 export const setTimers = async (client) => {
     const now = new Date()

@@ -1,5 +1,5 @@
 
-import { Format, Match, Player, Stats } from '@fl/models'
+import { Format, Match, Pairing, Player, Stats } from '@fl/models'
 import axios from 'axios'
 
 // UNDO MATCH
@@ -74,6 +74,20 @@ export const undoMatch = async (interaction, server, matchId, authorIsMod) => {
     
         await match.destroy()
         return interaction.channel.send({ content: `The last ${server.hasInternalLadder ? 'Internal ' : ''}${match.formatName} Format ${match.format?.emoji || ''} ${match.isTournament ? 'Tournament ' : ''}match in which ${winningPlayer.name} defeated ${losingPlayer.name} has been erased.`})	
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+// VOID PAIRING
+export const voidPairing = async (interaction, pairingId) => {
+    try {
+        const pairing = await Pairing.findOne({ where: { id: pairingId }, include: Format })
+        const formatName = pairing.formatName
+        const playerAName = pairing.playerAName
+        const playerBName = pairing.playerBName
+        await pairing.destroy()
+        return interaction.channel.send({ content: `The last ${formatName} Format ${pairing.format?.emoji || ''} pairing in which ${playerAName} was paired with ${playerBName} has been voided.`})	
     } catch (err) {
         console.log(err)
     }

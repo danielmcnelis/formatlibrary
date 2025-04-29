@@ -46,6 +46,9 @@ export const Format = db.define('formats', {
   channelId: {
     type: Sequelize.STRING
   },
+  categoryChannelId: {
+    type: Sequelize.STRING
+  },
   emoji: {
     type: Sequelize.STRING
   },
