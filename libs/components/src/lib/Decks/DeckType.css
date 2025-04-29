@@ -1,6 +1,6 @@
 
     .matchups {
-        padding: 0px 0px 20px;
+        padding: 0px 0px 50px;
     }
   
   .decktype-bubble {
@@ -107,7 +107,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 6px 0px;
+    padding: 6px 0px 20px;
   }
 
   .single-decktype-title {

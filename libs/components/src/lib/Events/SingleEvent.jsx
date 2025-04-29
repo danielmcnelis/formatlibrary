@@ -33,7 +33,6 @@ export const SingleEvent = (props) => {
         topSideDeckCards: []
     })
     const [bracketExists, setBracketExists] = useState(false)
-    console.log('bracketExists', bracketExists)
 
     // const [existingPfps, setExistingPfps] = useState({ 
     //     playerId: false, 
@@ -384,12 +383,26 @@ export const SingleEvent = (props) => {
                                 target="_blank"
                                 rel="noreferrer"
                             >
-                            Click Here for Full Bracket
+                            Click Here for Reference
                             </a>
                         </div>
                         <div className="divider"/>
                     </>
-                ) : ''
+                ) : (
+                    <>
+                        <div id="bracket">
+                            <a 
+                                className="bracket-link"
+                                href={event.referenceUrl} 
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                            Click Here for Reference
+                            </a>
+                        </div>
+                        <div className="divider"/>
+                    </>
+                )
             }
 
             {

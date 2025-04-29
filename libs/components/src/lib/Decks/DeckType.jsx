@@ -207,7 +207,7 @@ export const DeckType = (props) => {
                                         </td>
                                         <td className='desktop-only'>
                                             <div className="single-decktype-cell">
-                                            <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Tournament Win Rate:</b> {winRateData.tournamentWinRate ? `${winRateData.tournamentWinRate}%` : 'N/A'}</div>
+                                            <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Tournament Wins:</b> {winRateData.tournamentWinRate ? `${winRateData.tournamentWinRate}%` : 'N/A'}</div>
                                             <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/1st.png`} alt="1st.png"/>
                                             </div>
                                         </td>
@@ -445,7 +445,7 @@ export const DeckType = (props) => {
                 </div>
                 {
                     Object.entries(matchups).length ? (
-                        <div className={"desktop-only"}>
+                        <div className="desktop-only">
                             <br/>
                             <h2>Matchups</h2>
                             <div className="matchup-box">
@@ -455,7 +455,7 @@ export const DeckType = (props) => {
                             </div>
                         </div>
                     ) : (
-                        <div className="desktop-only matchups">
+                        <div className="desktop-only">
                             <br/>
                             <h2>Matchups</h2>
                             <div className="horizontal-centered-flexbox">
