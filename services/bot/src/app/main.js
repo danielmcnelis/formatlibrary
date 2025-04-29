@@ -252,6 +252,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             // )
              
             const name = interaction.fields.getTextInputValue('name')
+            console.log('name', name)
 
             const tournament_type = interaction.customId?.includes('SW') ? 'swiss' :
                 interaction.customId?.includes('SE') ? 'single elimination' :

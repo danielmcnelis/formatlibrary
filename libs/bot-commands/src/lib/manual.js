@@ -64,8 +64,8 @@ export default {
                     let activeOcgPairing = await Pairing.findOne({
                         where: {
                             [Op.or]: [
-                                {playerAId: winningPlayer.id, playerBid: losingPlayer.id},
-                                {playerAId: losingPlayer.id, playerBid: winningPlayer.id}
+                                {playerAId: winningPlayer.id, playerBId: losingPlayer.id},
+                                {playerAId: losingPlayer.id, playerBId: winningPlayer.id}
                             ],                            
                             status: 'active',
                             '$format.category$': 'OCG'
