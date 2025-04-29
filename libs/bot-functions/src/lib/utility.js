@@ -952,7 +952,7 @@ export const selectPairing = async (interaction, pairings) => {
             `${Math.round(difference / (1000 * 60 * 60 * 24 * 365))}y ago`
                         
         return {
-            label: `(${index + 1}) ${pairing.playerAName} > ${pairing.playerBName} (${timeAgo})`,
+            label: `(${index + 1}) ${pairing.playerAName} vs ${pairing.playerBName} (${timeAgo})`,
             value: `${pairings[index].id}`,
         }
     })

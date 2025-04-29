@@ -484,7 +484,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const matchId = interaction.values[0]
             await undoMatch(interaction, server, matchId, authorIsMod)
             return interaction.message?.edit({components: []}).catch((err) => console.log(err))
-        }else if (command.data.name === 'void') {
+        }else if (command.data.name === 'cancel') {
             const authorIsMod = isModerator(server, interaction.member)
             if (!authorIsMod) {
                 interaction.channel.send(`<@${interaction.member.id}>, You do not have permission to do that.`)

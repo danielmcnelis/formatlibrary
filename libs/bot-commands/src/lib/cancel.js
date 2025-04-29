@@ -2,7 +2,7 @@
 import { SlashCommandBuilder } from 'discord.js'    
 import { isModerator, hasPartnerAccess, selectPairing, undoMatch } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
-import { Pairing, Server } from '@fl/models'
+import { Pairing, Player, Server } from '@fl/models'
 
 export default {
     data: new SlashCommandBuilder()
@@ -15,7 +15,7 @@ export default {
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
             if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
             const serverId = server.hasInternalLadder ? server.id : '414551319031054346'
-            const pairings = await Pairing.findAll({ where: { serverId: serverId }, order: [['createdAt', 'DESC']]})
+            const pairings = await Pairing.findAll({ where: { serverId: serverId, status: 'active' }, include: Player, order: [['createdAt', 'DESC']]})
             const authorIsMod = isModerator(server, interaction.member)
             const match = authorIsMod ? await selectPairing(interaction, pairings.slice(0, 25)) : pairings[0]
 

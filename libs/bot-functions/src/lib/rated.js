@@ -263,10 +263,10 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
                 formatName: format.name,
                 serverId: server.id,
                 communityName: server.name,
-                playerAName: pool.name,
+                playerAName: pool.playerName,
                 playerAId: pool.playerId,
                 deckFileA: pool.deckFile,
-                playerBName: potentialPair.name,
+                playerBName: potentialPair.playerName,
                 playerBId: potentialPair.playerId,
                 deckFileB: potentialPair.deckFile
             })
