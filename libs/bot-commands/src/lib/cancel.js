@@ -6,8 +6,8 @@ import { Pairing, Server } from '@fl/models'
 
 export default {
     data: new SlashCommandBuilder()
-        .setName('void')
-        .setDescription(`Void a rated pairing.`)
+        .setName('cancel')
+        .setDescription(`Cancel a rated pairing.`)
         .setDMPermission(false),                
     async execute(interaction) {
         try {

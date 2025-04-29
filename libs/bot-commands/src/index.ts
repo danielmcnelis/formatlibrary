@@ -1,5 +1,3 @@
-
-
 import activity from './lib/activity'
 import bracket from './lib/bracket'
 import card from './lib/card'
@@ -58,7 +56,7 @@ import test from './lib/test'
 import trivia from './lib/trivia'
 import undo from './lib/undo'
 import username from './lib/username'
-import void from './lib/void.js'
+import cancel from './lib/cancel.js'
 
 export default {
     formatLibraryCommands: {
@@ -74,6 +72,7 @@ export default {
     globalCommands: {
         activity,
         bracket,
+        cancel,
         card,
         close,
         coin,
@@ -121,7 +120,6 @@ export default {
         tiebreakers,
         timer,
         undo,
-        username,
-        void
+        username
     }
 }
