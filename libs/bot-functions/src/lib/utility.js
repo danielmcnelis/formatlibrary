@@ -906,7 +906,7 @@ export const getKnownAbbreviation = (name = '') => {
 }
 
 // GET SUGGESTED ABBREVIATION
-export const getSuggestedAbbreviation = (str) => str.match(/\b([A-Z])/g).join('')
+export const getSuggestedAbbreviation = (str) => str.match(/\b([A-Z])/g)?.join('')
 
 // SELECT MATCH
 export const selectMatch = async (interaction, matches, replayExtension = '') => {

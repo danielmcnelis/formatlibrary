@@ -51,7 +51,7 @@ export default {
                         where: {
                             [Op.or]: [
                                 {playerAId: winningPlayer.id, playerBId: losingPlayer.id},
-                                {playerAId: losingPlayer.id, playerBId: winningPlayer.id}
+                                {playerAId: losingPlayer.id, playerBd: winningPlayer.id}
                             ],                            
                             status: 'active',
                             '$format.category$': 'OCG'
