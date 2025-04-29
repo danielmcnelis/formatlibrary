@@ -58,7 +58,8 @@ import test from './lib/test'
 import trivia from './lib/trivia'
 import undo from './lib/undo'
 import username from './lib/username'
-  
+import void from './lib/void.js'
+
 export default {
     formatLibraryCommands: {
         combine,
@@ -120,6 +121,7 @@ export default {
         tiebreakers,
         timer,
         undo,
-        username
+        username,
+        void
     }
 }

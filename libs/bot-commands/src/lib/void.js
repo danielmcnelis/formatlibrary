@@ -2,12 +2,12 @@
 import { SlashCommandBuilder } from 'discord.js'    
 import { isModerator, hasPartnerAccess, selectPairing, undoMatch } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
-import { Format, Match, Pairing, Server } from '@fl/models'
+import { Pairing, Server } from '@fl/models'
 
 export default {
     data: new SlashCommandBuilder()
         .setName('void')
-        .setDescription(`Void a rated pairing. ⏪`)
+        .setDescription(`Void a rated pairing.`)
         .setDMPermission(false),                
     async execute(interaction) {
         try {
