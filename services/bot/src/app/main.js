@@ -249,7 +249,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             //         interaction.fields.getTextInputValue('name')
             //     ?.replace(/[/|\\()[\]{}<>~^%&?@#,;"'`_*+=]/g, '')
             //     ?.replace(/\s+/g, ' ')
-            // )fffff
+            // )
              
             const name = interaction.fields.getTextInputValue('name')
             console.log('name', name)
