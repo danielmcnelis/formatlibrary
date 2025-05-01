@@ -36,7 +36,11 @@ export default {
                     if (i === 0) {
                         await interaction.editReply(pools.slice(i, i + 20).join('\n'))
                     } else {
-                        await interaction.channel.send(pools.slice(i, i + 20).join('\n'))
+                        if (interaction.channel) {
+                            await interaction.channel.send(pools.slice(i, i + 20).join('\n'))
+                        } else {
+                            await interaction.user.send(pools.slice(i, i + 20).join('\n'))
+                        }
                     }
                 }
 
