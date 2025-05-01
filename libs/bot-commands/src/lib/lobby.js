@@ -32,14 +32,14 @@ export default {
             } else {
                 pools.unshift(`${emojis.FL} __**Active Rated Lobbies**__ ${emojis.FL}`)
 
-                for (let i = 0; i < pools.length; i += 20) {
+                for (let i = 0; i < pools.length; i += 27) {
                     if (i === 0) {
-                        await interaction.editReply(pools.slice(i, i + 20).join('\n'))
+                        await interaction.editReply(pools.slice(i, i + 27).join('\n'))
                     } else {
                         if (interaction.channel) {
-                            await interaction.channel.send(pools.slice(i, i + 20).join('\n'))
+                            await interaction.channel.send(pools.slice(i, i + 27).join('\n'))
                         } else {
-                            await interaction.user.send(pools.slice(i, i + 20).join('\n'))
+                            await interaction.user.send(pools.slice(i, i + 27).join('\n'))
                         }
                     }
                 }
