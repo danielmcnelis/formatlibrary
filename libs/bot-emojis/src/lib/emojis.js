@@ -119,7 +119,7 @@ export const emojis = {
     Thunder: "<:Thunder:935749316188975134>",
     toad: "<:toad:933987032395575306>",
     Trap: "<:Trap:935749314163114064>",
-    treeborn: "<:treeborn:1055754557977800764>",
+    treeborn: "<:treeborn:1367235491774075101>",
     unlimited: "<:unlimited:971166322773885008>",
     UredU: "<:UredU:968608034366586980>",
     'Vegas (April 2014) Format': "<:Duelist:970372450535763978>",

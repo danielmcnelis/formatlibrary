@@ -1561,7 +1561,13 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                 } else if (winnerNextOpponent) {
                     try {
                         const name = winnerNextOpponent.player.name
-                        const content = `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord Name: ${name}\nDuelingbook Name: ${winnerNextOpponent.player.duelingBookName}`
+                        const content = 
+                            `New Match for ${tournament.name}! ${tournament.logo}` +
+                            `\nServer: ${server.name} ${server.logo}` +
+                            `\nChannel: <#${tournament.channelId}>` +
+                            `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                            `\nDiscord Name: ${name}` +
+                            `\nDuelingbook Name: ${winnerNextOpponent.player.duelingBookName}`
                         winner.send({ content: content })
                     } catch (err) {
                         console.log(err)
@@ -1570,8 +1576,13 @@ export const processMatchResult = async (server, interaction, winner, winningPla
                     try {
                         const member = await interaction.guild?.members.fetch(winnerNextOpponent.player.discordId)
                         const name = winningPlayer.name
-                        const content = `New Match for ${tournament.name}! ${tournament.logo}\nServer: ${server.name} ${server.logo}\nFormat: ${tournament.formatName} ${tournament.emoji}\nDiscord Name: ${name}\nDuelingbook Name: ${winningPlayer.duelingBookName}`
-                            
+                        const content = 
+                            `New Match for ${tournament.name}! ${tournament.logo}` +
+                            `\nServer: ${server.name} ${server.logo}` +
+                            `\nChannel: <#${tournament.channelId}>` +
+                            `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+                            `\nDiscord Name: ${name}` +
+                            `\nDuelingbook Name: ${winningPlayer.duelingBookName}`
                         member.user.send({ content: content })
                     } catch (err) {
                         console.log(err)

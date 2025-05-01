@@ -2,7 +2,6 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { Format, Pool } from '@fl/models'
 import { emojis } from '@fl/bot-emojis'
-import { Op } from 'sequelize'
 
 export default {
 	data: new SlashCommandBuilder()
@@ -31,7 +30,17 @@ export default {
             if (!pools.length) {
                 return await interaction.editReply({ content: `Nobody is actively using the Rated Lobby.` })
             } else {
-                return await interaction.editReply({ content: `${emojis.FL} __**Active Rated Lobbies**__ ${emojis.FL}\n${pools.join('\n')}`})
+                pools.unshift(`${emojis.FL} __**Active Rated Lobbies**__ ${emojis.FL}`)
+
+                for (let i = 0; i < pools.length; i += 20) {
+                    if (i === 0) {
+                        await interaction.editReply(pools.slice(i, i + 20).join('\n'))
+                    } else {
+                        await interaction.channel.send(pools.slice(i, i + 20).join('\n'))
+                    }
+                }
+
+                return
             }
         } catch (err) {
             console.log(err)
