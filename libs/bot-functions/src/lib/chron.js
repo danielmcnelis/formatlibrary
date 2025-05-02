@@ -1061,7 +1061,7 @@ export const manageSubscriptions = async (client) => {
         for (let i = 0; i < players.length; i++) {
             try {
                 const player = players[i]
-                let member = membersMap.get(player.discordId)
+                let member = await membersMap.get(player.discordId)
                 const subscription = await Subscription.findOne({
                     where: {
                         playerId: player.id,
@@ -1075,7 +1075,7 @@ export const manageSubscriptions = async (client) => {
                             await player.update({ alternateEmail: subscription.email })
                         }
                         console.log('member 1077', member)
-                        if (!member) member = await guild.members.fetch(player.discordId)
+                        // if (!member) member = await guild.members.fetch(player.discordId)
                         await programmer.send({ content: `Welcome ${player.name} to the Stripe Premium Tier!`})
                         member?.roles.add(stripePremiumRoleId)
                         member?.roles.add(stripeSubscriberRoleId)
