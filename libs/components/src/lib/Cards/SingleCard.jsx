@@ -57,7 +57,11 @@ export const SingleCard = (props) => {
     const raritySymbol = prices.rarity === '10000 Secret Rare' ? 'tenThousandSecretRare' : camelize(prices.rarity || '')
 
     const { card, statuses, prints, rulings } = data || {}
-    const { id } = props.match.params
+    const [id, setId] = useState(null)
+    const { id: useParamsId } = useParams()
+    if (useParamsId && id !== useParamsId) {
+        setId(useParamsId)
+    }
     // const videoPlaylistId = getEraVideoPlaylistId(card?.tcgDate)
 
     // USE EFFECT
@@ -111,6 +115,7 @@ export const SingleCard = (props) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                if (!id) return
                 const {data: cardData} = await axios.get(`/api/cards/${id}`)
                 setData(cardData)
             } catch (err) {

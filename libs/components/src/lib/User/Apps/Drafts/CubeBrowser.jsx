@@ -28,7 +28,11 @@ export const CubeBrowser = (props) => {
     })
 
     const [advanced, setAdvanced] = useState(false)
-    const { id } = props.match.params
+    const [id, setId] = useState(null)
+    const { id: useParamsId } = useParams()
+    if (useParamsId && id !== useParamsId) {
+        setId(useParamsId)
+    }
 
     const [sliders, setSliders] = useState({
       level: [1, 12],

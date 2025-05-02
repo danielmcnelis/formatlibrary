@@ -6,7 +6,11 @@ import { useParams } from 'react-router-dom'
 import { capitalize } from '@fl/utils'
 
 export const SingleBanList = (props) => {
-    const { id } = props.match.params
+    const [id, setId] = useState(null)
+    const { id: useParamsId } = useParams()
+    if (useParamsId && id !== useParamsId) {
+        setId(useParamsId)
+    }
   
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0))

@@ -41,7 +41,11 @@ export const SingleEvent = (props) => {
     //     playerName: false
     // })
 
-    const { id } = props.match.params
+    const [id, setId] = useState(null)
+    const { id: useParamsId } = useParams()
+    if (useParamsId && id !== useParamsId) {
+        setId(useParamsId)
+    }
     const navigate = useNavigate()
     const [labelColor, gridColor] = JSON.parse(localStorage.getItem('theme')) === 'dark' ? ['#ccc', '#313131'] : ['#666', '#e1e1e1']
     //   const videoPlaylistId = event?.format?.videoPlaylistId

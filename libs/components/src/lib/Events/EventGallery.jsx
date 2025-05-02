@@ -11,7 +11,11 @@ export const EventGallery = (props) => {
     const [events, setEvents] = useState([])
     const [winners, setWinners] = useState([])
     const [format, setFormat] = useState({})
-    const { id } = props.match.params
+    const [id, setId] = useState(null)
+    const { id: useParamsId } = useParams()
+    if (useParamsId && id !== useParamsId) {
+        setId(useParamsId)
+    }
     const indices = fillWithMultiples(events, 3)
     // const videoPlaylistId = format?.videoPlaylistId
 

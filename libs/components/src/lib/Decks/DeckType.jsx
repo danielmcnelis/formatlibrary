@@ -32,8 +32,11 @@ export const DeckType = (props) => {
     const [winRateData, setWinRateData] = useState({})
     const [matchups, setMatchups] = useState({})
     const [banlist, setBanList] = useState({})
-    
-    const { id } = props.match.params
+    const [id, setId] = useState(null)
+    const { id: useParamsId } = useParams()
+    if (useParamsId && id !== useParamsId) {
+        setId(useParamsId)
+    }
     const location = useLocation()
     const format = location?.search?.slice(8) || summary?.format?.name
     // const videoPlaylistId = summary?.format?.videoPlaylistId
@@ -45,6 +48,7 @@ export const DeckType = (props) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                if (!id) return
                 let summaryApiUrl = `/api/decktypes/summary?id=${id}`
                 if (format) summaryApiUrl += `&format=${format}`
 

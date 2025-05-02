@@ -11,7 +11,11 @@ import './DeckGallery.css'
 export const DeckGallery = (props) => {
     const [deckTypes, setDeckTypes] = useState([])
     const [format, setFormat] = useState({})
-    const { id } = props.match.params
+    const [id, setId] = useState(null)
+    const { id: useParamsId } = useParams()
+    if (useParamsId && id !== useParamsId) {
+        setId(useParamsId)
+    }
     const indices = fillWithMultiples(deckTypes, 3)
     // const videoEmbed = format?.videoEmbed
 
@@ -22,6 +26,7 @@ export const DeckGallery = (props) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                if (!id) return
                 const {data} = await axios.get(`/api/decks/gallery/${id}`)
                 setDeckTypes(data.deckTypes)
                 setFormat(data.format)

@@ -9,7 +9,11 @@ import './MiniBoard.css'
 export const MiniBoard = (props) => {
     const { format } = props
     const [miniboard, setMiniBoard] = useState([])
-    const { id } = props.match.params
+    const [id, setId] = useState(null)
+    const { id: useParamsId } = useParams()
+    if (useParamsId && id !== useParamsId) {
+        setId(useParamsId)
+    }
     const navigate = useNavigate()
     const statsType = format.useSeasonalElo ? 'seasonal' : 'general'
     // const videoPlaylistId = format?.videoPlaylistId
