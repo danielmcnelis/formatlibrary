@@ -78,7 +78,7 @@ export const FormatIntro = (props) => {
       }
   
       fetchData()
-    }, [id])
+    }, [])
 
     if (!format) return <NotFound/>
     if (!format.id) return <div style={{height: '100vh'}}/>

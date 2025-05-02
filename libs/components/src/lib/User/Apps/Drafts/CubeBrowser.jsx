@@ -402,7 +402,7 @@ export const CubeBrowser = () => {
         }
 
         fetchData()    
-    }, [id])
+    }, [])
 
     // USE EFFECT SET CARDS
     useEffect(() => {

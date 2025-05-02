@@ -105,7 +105,7 @@ export const SingleEvent = (props) => {
         }
 
         fetchEventData()
-    }, [id, isAdmin, isSubscriber])
+    }, [isAdmin, isSubscriber])
 
     // USE EFFECT SET EVENT DATA
     useEffect(() => {

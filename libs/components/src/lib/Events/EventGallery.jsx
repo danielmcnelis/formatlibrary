@@ -32,7 +32,7 @@ export const EventGallery = () => {
         }
 
         fetchData()
-    }, [id])
+    }, [])
 
     if (!events?.length || !format?.id) return <div style={{height: '100vh'}}/>
 

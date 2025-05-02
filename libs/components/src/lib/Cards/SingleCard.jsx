@@ -120,7 +120,7 @@ export const SingleCard = (props) => {
         }
   
         fetchData()
-    }, [id])
+    }, [])
 
     // USE EFFECT SET CARD
     useEffect(() => {

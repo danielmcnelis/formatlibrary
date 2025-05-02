@@ -97,7 +97,7 @@ export const DeckType = (props) => {
         }
 
         fetchData()
-    }, [id, format, props.roles])
+    }, [format, props.roles])
 
     if (!summary) return <NotFound/>
     if (!summary?.deckType) return <div style={{height: '100vh'}}/>

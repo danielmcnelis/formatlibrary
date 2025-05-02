@@ -36,7 +36,7 @@ export const PlayerProfile = () => {
     }
 
     fetchData()
-  }, [id])
+  }, [])
 
   // USE EFFECT SET STATS
   useEffect(() => {

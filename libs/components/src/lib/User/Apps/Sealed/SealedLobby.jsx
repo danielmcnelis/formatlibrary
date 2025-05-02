@@ -179,7 +179,7 @@ export const SealedLobby = () => {
         }
         
         fetchData()
-    }, [id])
+    }, [])
 
     return (
         <div className="sealed-portal">

@@ -528,7 +528,7 @@ useEffect(() => {
     }
 
     fetchData()
-  }, [decks, id])
+  }, [decks])
 
   // USE EFFECT SET BANLIST
   useEffect(() => {

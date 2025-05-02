@@ -34,7 +34,7 @@ export const LeaderBoard = () => {
         }
     
         fetchData()
-      }, [id])
+      }, [])
       
     // USE EFFECT FETCH DATA
     useEffect(() => {
@@ -56,7 +56,7 @@ export const LeaderBoard = () => {
       }
   
       fetchData()
-    }, [id, statsType])
+    }, [statsType])
   
     if (!format.id || !leaderboard.length) return <div/>
   
