@@ -11,7 +11,7 @@ export const BanList = (props) => {
     const [banlist, setBanlist] = useState({})
     const [searchParams, ] = useSearchParams()
     const {format} = props
-    const { id } = this.props.match.params()
+    const { id } = props.match.params
     const category = searchParams.get('category') || format?.category || 'TCG'
     const BL = format?.banlist || id
     

@@ -33,7 +33,7 @@ export const DeckType = (props) => {
     const [matchups, setMatchups] = useState({})
     const [banlist, setBanList] = useState({})
     
-    const { id } = this.props.match.params()
+    const { id } = props.match.params
     const location = useLocation()
     const format = location?.search?.slice(8) || summary?.format?.name
     // const videoPlaylistId = summary?.format?.videoPlaylistId

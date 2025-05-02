@@ -21,7 +21,7 @@ export const FormatIntro = (props) => {
     const [statsCount, setStatsCount] = useState(0)
     const [inEditMode, setInEditMode] = useState(false)
     const [description, setDescription] = useState('')
-    const { id } = this.props.match.params()
+    const { id } = props.match.params
     // const videoId = format?.videoId
     const videoEmbed = format?.videoEmbed
     

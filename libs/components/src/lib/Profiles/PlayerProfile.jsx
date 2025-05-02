@@ -17,7 +17,7 @@ export const PlayerProfile = (props) => {
   const [decks, setDecks] = useState([])
   const [mostDownloadedDecks, setMostDownloadedDecks] = useState([])
   const [deckTypes, setDeckTypes] = useState([])
-  const { id } = this.props.match.params()
+  const { id } = props.match.params
 
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0))

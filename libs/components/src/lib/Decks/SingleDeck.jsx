@@ -45,7 +45,7 @@ export const SingleDeck = (props) => {
     const [deckTypes, setDeckTypes] = useState([])
 
     const navigate = useNavigate()
-    const { id } = this.props.match.params()
+    const { id } = props.match.params
     // const videoPlaylistId = deck?.format?.videoPlaylistId
     
   // USE LAYOUT EFFECT

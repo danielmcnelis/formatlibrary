@@ -40,7 +40,7 @@ export const Builder = (props) => {
     const [showSaveModal, setShowSaveModal] = useState(false)
     const [showShareModal, setShowShareModal] = useState(false)
     const [showUploadModal, setShowUploadModal] = useState(false)
-    const { id } = this.props.match.params()
+    const { id } = props.match.params
     
     const myFormats = [...new Set(decks.map((d) => d.formatName))]
     const myDeckTypes = [...new Set(decks.map((d) => d.deckTypeName))]

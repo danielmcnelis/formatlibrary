@@ -75,7 +75,7 @@ export const DraftLobby = (props) => {
     const [toggleHorn] = useAudio('/assets/sounds/horn.mp3')
     const [socket] = useState(useSocket())
     // const [{id}] = useState(useParams())
-    const { id } = this.props.match.params()
+    const { id } = props.match.params
     const timerColor = JSON.parse(localStorage.getItem('theme')) === 'dark' ? '#00bca6' : '#334569'
     const logoName = draft?.type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${draft?.cube?.logo || 'cube.png'}` :
         `https://cdn.formatlibrary.com/images/artworks/${draft?.set?.setCode || 'back'}.jpg`
