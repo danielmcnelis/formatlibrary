@@ -107,16 +107,15 @@ export const SingleDeck = (props) => {
             try {
                 const {data: deckData} = await axios.get(`/api/decks/${id}`)
                 setDeck(deckData)
-                } catch (err) {
+            } catch (err) {
                 console.log(err)
                 setDeck(null)
-                }
-
+            }
         }
     }
 
     fetchDeckData()
-  }, [id, isAdmin, isSubscriber])
+  }, [isAdmin, isSubscriber])
 
 
   // USE EFFECT SET DeckTypes
