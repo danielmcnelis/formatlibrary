@@ -1051,7 +1051,7 @@ export const manageSubscriptions = async (client) => {
         const stripeSubscriberRoleId = '1336745321186988084'
 
         const guild = await client.guilds.fetch('414551319031054346')
-        // const membersMap = await guild.members.fetch()
+        const membersMap = await guild.members.fetch()
         // const members = [...membersMap.values()]
         const programmer = await client.users.fetch('194147938786738176')
         const players = await Player.findAll()
@@ -1061,7 +1061,7 @@ export const manageSubscriptions = async (client) => {
         for (let i = 0; i < players.length; i++) {
             try {
                 const player = players[i]
-                const member = await guild.members.fetch(player.discordId)
+                let member = await membersMap.get(player.discordId)
                 const subscription = await Subscription.findOne({
                     where: {
                         playerId: player.id,
@@ -1074,8 +1074,17 @@ export const manageSubscriptions = async (client) => {
                         if (player.email !== subscription.email) {
                             await player.update({ alternateEmail: subscription.email })
                         }
-                        console.log('member 1077', member)
-                        // if (!member) member = await guild.members.fetch(player.discordId)
+
+                        if (!member) { 
+                            console.log('player.discordId', player.discordId)
+                            const {data} = await axios.get(`https://discord.com/api/v9/guilds/414551319031054346/members/${player.discordId}`, {
+                                headers: {
+                                    Authorization: `Bot ${config.services.bot.token}`
+                                }
+                            })
+                            
+                            member = data
+                        }
                         await programmer.send({ content: `Welcome ${player.name} to the Stripe Premium Tier!`})
                         member?.roles.add(stripePremiumRoleId)
                         member?.roles.add(stripeSubscriberRoleId)
