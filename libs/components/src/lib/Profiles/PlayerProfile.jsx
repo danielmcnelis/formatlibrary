@@ -11,13 +11,13 @@ import './PlayerProfile.css'
 import { countries } from '@fl/utils'
 import {DeckImage} from '../Decks/DeckImage'
 
-export const PlayerProfile = () => {
+export const PlayerProfile = (props) => {
   const [player, setPlayer] = useState({})
   const [stats, setStats] = useState([])
   const [decks, setDecks] = useState([])
   const [mostDownloadedDecks, setMostDownloadedDecks] = useState([])
   const [deckTypes, setDeckTypes] = useState([])
-  const { id } = useParams()
+  const { id } = this.props.match.params()
 
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0))

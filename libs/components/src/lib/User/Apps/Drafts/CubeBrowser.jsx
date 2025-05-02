@@ -13,7 +13,7 @@ import { useMediaQuery } from 'react-responsive'
 import { Helmet } from 'react-helmet'
 import './CubeBrowser.css' 
 
-export const CubeBrowser = () => {
+export const CubeBrowser = (props) => {
     const isMounted = useRef(false)
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1000px)' })
     const [page, setPage] = useState(1)
@@ -28,7 +28,7 @@ export const CubeBrowser = () => {
     })
 
     const [advanced, setAdvanced] = useState(false)
-    const { id } = useParams()
+    const { id } = this.props.match.params()
 
     const [sliders, setSliders] = useState({
       level: [1, 12],

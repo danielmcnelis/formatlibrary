@@ -7,11 +7,11 @@ import { Helmet } from 'react-helmet'
 import { fillWithMultiples } from '@fl/utils'
 import './EventGallery.css'
 
-export const EventGallery = () => {
+export const EventGallery = (props) => {
     const [events, setEvents] = useState([])
     const [winners, setWinners] = useState([])
     const [format, setFormat] = useState({})
-    const { id } = useParams()
+    const { id } = this.props.match.params()
     const indices = fillWithMultiples(events, 3)
     // const videoPlaylistId = format?.videoPlaylistId
 

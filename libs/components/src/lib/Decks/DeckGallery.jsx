@@ -8,10 +8,10 @@ import { Helmet } from 'react-helmet'
 import './DeckGallery.css'
 
 
-export const DeckGallery = () => {
+export const DeckGallery = (props) => {
     const [deckTypes, setDeckTypes] = useState([])
     const [format, setFormat] = useState({})
-    const { id } = useParams()
+    const { id } = this.props.match.params()
     const indices = fillWithMultiples(deckTypes, 3)
     // const videoEmbed = format?.videoEmbed
 

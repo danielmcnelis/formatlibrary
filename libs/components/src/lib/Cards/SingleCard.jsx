@@ -57,7 +57,7 @@ export const SingleCard = (props) => {
     const raritySymbol = prices.rarity === '10000 Secret Rare' ? 'tenThousandSecretRare' : camelize(prices.rarity || '')
 
     const { card, statuses, prints, rulings } = data || {}
-    const { id } = useParams()
+    const { id } = this.props.match.params()
     // const videoPlaylistId = getEraVideoPlaylistId(card?.tcgDate)
 
     // USE EFFECT
