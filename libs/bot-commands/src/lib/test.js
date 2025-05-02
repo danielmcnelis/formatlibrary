@@ -20,8 +20,11 @@ export default {
             await interaction.deferReply()
             if (isProgrammer(interaction.member)) {
                 await interaction.editReply(emojis.yellow)
+                const guild = await client.guilds.fetch('414551319031054346')
+                const member = await guild.members.fetch('730180640531546275')
+                console.log('member', member)
                 // await runNightlyTasks(client)
-                await recalculateAllStats()
+                // await recalculateAllStats()
                 // await updateAvatars(client)
                 // await updateMarketPrices()
                 // await purgeDuplicatePrices()
