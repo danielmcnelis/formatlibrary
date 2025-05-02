@@ -1051,7 +1051,6 @@ export const manageSubscriptions = async (client) => {
         const stripeSubscriberRoleId = '1336745321186988084'
 
         const guild = client.guilds.cache.get('414551319031054346')
-        const membersMap = await guild.members.fetch()
         // const members = [...membersMap.values()]
         const programmer = await client.users.fetch('194147938786738176')
         const players = await Player.findAll()
@@ -1061,7 +1060,7 @@ export const manageSubscriptions = async (client) => {
         for (let i = 0; i < players.length; i++) {
             try {
                 const player = players[i]
-                const member = membersMap.get(player.discordId)
+                const member = guild.members.fetch(player.discordId)
                 const subscription = await Subscription.findOne({
                     where: {
                         playerId: player.id,
