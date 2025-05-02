@@ -1075,21 +1075,21 @@ export const manageSubscriptions = async (client) => {
                         }
                         console.log('member 1077', member)
                         await programmer.send({ content: `Welcome ${player.name} to the Stripe Premium Tier!`})
-                        member?.roles.add(stripePremiumRoleId)
-                        member?.roles.add(stripeSubscriberRoleId)
-                        member?.roles.remove(stripeSupporterRoleId)
+                        member?.roles?.add(stripePremiumRoleId)
+                        member?.roles?.add(stripeSubscriberRoleId)
+                        member?.roles?.remove(stripeSupporterRoleId)
                         a++
                     } else if (
                         member && (
-                            !member?.roles.cache.has(stripePremiumRoleId) || 
-                            !member?.roles.cache.has(stripeSubscriberRoleId) || 
-                            member?.roles.cache.has(stripeSupporterRoleId)
+                            !member?.roles?.cache.has(stripePremiumRoleId) || 
+                            !member?.roles?.cache.has(stripeSubscriberRoleId) || 
+                            member?.roles?.cache.has(stripeSupporterRoleId)
                         )
                     ) { 
                         await programmer.send({ content: `Adding the Stripe Premium Tier roles for ${player.name}!`})
-                        member?.roles.add(stripePremiumRoleId)
-                        member?.roles.add(stripeSubscriberRoleId)
-                        member?.roles.remove(stripeSupporterRoleId)
+                        member?.roles?.add(stripePremiumRoleId)
+                        member?.roles?.add(stripeSubscriberRoleId)
+                        member?.roles?.remove(stripeSupporterRoleId)
                     }
                 } else if (subscription && subscription.status === 'active' && subscription.tier === 'Supporter') { 
                     if (!player.isSubscriber || player.subscriberTier !== 'Supporter') {
@@ -1099,36 +1099,36 @@ export const manageSubscriptions = async (client) => {
                         }
 
                         await programmer.send({ content: `Welcome ${player.name} to the Stripe Supporter Tier!`})
-                        member?.roles.add(stripeSupporterRoleId)
-                        member?.roles.add(stripeSubscriberRoleId)
-                        member?.roles.remove(stripePremiumRoleId)
+                        member?.roles?.add(stripeSupporterRoleId)
+                        member?.roles?.add(stripeSubscriberRoleId)
+                        member?.roles?.remove(stripePremiumRoleId)
                         a++
                     } else if (
                         member && (
-                            !member?.roles.cache.has(stripeSupporterRoleId) || 
-                            !member?.roles.cache.has(stripeSubscriberRoleId) || 
-                            member?.roles.cache.has(stripePremiumRoleId)
+                            !member?.roles?.cache.has(stripeSupporterRoleId) || 
+                            !member?.roles?.cache.has(stripeSubscriberRoleId) || 
+                            member?.roles?.cache.has(stripePremiumRoleId)
                         )
                     ) {
                         await programmer.send({ content: `Adding the Stripe Supporters Tier roles for ${player.name}!`})
-                        member?.roles.add(stripeSupporterRoleId)
-                        member?.roles.add(stripeSubscriberRoleId)
-                        member?.roles.remove(stripePremiumRoleId)
+                        member?.roles?.add(stripeSupporterRoleId)
+                        member?.roles?.add(stripeSubscriberRoleId)
+                        member?.roles?.remove(stripePremiumRoleId)
                     }
                 } else if (subscription?.status !== 'active' && player.discordId !== programmer.id && player.discordId !== '626843317010694176' && player.discordId !== '479046758815760404' && player.isSubscriber && !member?._roles.includes(discordSupporterRoleId) && !member?._roles.includes(discordPremiumRoleId)) {
                     await programmer.send({ content: `${player.name} is no longer a Subscriber (${player.subscriberTier}).`})
                     console.log(`${player.name} is no longer a Subscriber (${player.subscriberTier}).`)
                     await player.update({ isSubscriber: false, subscriberTier: null })
-                    member?.roles.remove(stripeSupporterRoleId)
-                    member?.roles.remove(stripePremiumRoleId)
-                    member?.roles.remove(stripeSubscriberRoleId)
+                    member?.roles?.remove(stripeSupporterRoleId)
+                    member?.roles?.remove(stripePremiumRoleId)
+                    member?.roles?.remove(stripeSubscriberRoleId)
                     b++
-                } else if (member?._roles.includes(discordPremiumRoleId) && (!player.isSubscriber || player.subscriberTier !== 'Premium')) {
+                } else if (member?._roles?.includes(discordPremiumRoleId) && (!player.isSubscriber || player.subscriberTier !== 'Premium')) {
                     await programmer.send({ content: `Welcome ${player.name} to the Discord Premium Tier!`})
                     console.log(`Welcome ${player.name} to the Discord Premium Tier!`)
                     await player.update({ isSubscriber: true, subscriberTier: 'Premium' })
                     a++
-                } else if (member?._roles.includes(discordSupporterRoleId) && (!player.isSubscriber || player.subscriberTier !== 'Supporter')) {
+                } else if (member?._roles?.includes(discordSupporterRoleId) && (!player.isSubscriber || player.subscriberTier !== 'Supporter')) {
                     await programmer.send({ content: `Welcome ${player.name} to the Discord Supporter Tier!`})
                     console.log(`Welcome ${player.name} to the Discord Supporter Tier!`)
                     await player.update({ isSubscriber: true, subscriberTier: 'Supporter' })
