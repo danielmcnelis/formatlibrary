@@ -1,23 +1,26 @@
 import src from '@fl/bot-commands'
-import { Card, Print, Set } from '@fl/models'
+import { Card, Print, Set as CardSet } from '@fl/models'
 import { Op } from 'sequelize'
 
 //GET RANDOM SUBSET
-const getRandomSubset = (arr, n) => {
-    const shuffledArr = arr.slice(0)
-    let i = arr.length
-    let temp
-    let index
-
-    while (i--) {
-        index = Math.floor((i + 1) * Math.random())
-        temp = shuffledArr[index]
-        shuffledArr[index] = shuffledArr[i]
-        shuffledArr[i] = temp
+function getRandomSubset(array, size) {
+    // console.log('array', array)
+    const shuffled = [...array]; // Create a copy to avoid modifying the original
+    let currentIndex = shuffled.length;
+  
+    // While there remain elements to shuffle
+    while (currentIndex !== 0) {
+      // Pick a remaining element
+      const randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [shuffled[currentIndex], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[currentIndex]];
     }
-
-    return shuffledArr.slice(0, n)
-}
+  
+    // Return the desired subset
+    return shuffled.slice(0, size).sort((c) => c.name).sort((c) => c.sortPriority);
+  }
 
 //GET RANDOM ELEMENT
 const getRandomElement = (arr) => {
@@ -28,7 +31,7 @@ const getRandomElement = (arr) => {
 // GET SET
 export const getSet = async (req, res, next) => {
     try {
-      const set = await Set.findOne({
+      const set = await CardSet.findOne({
         where: {
           id: req.params.id
         },
@@ -44,7 +47,7 @@ export const getSet = async (req, res, next) => {
 // GET DRAFTABLE
 export const getDraftable = async (req, res, next) => {
     try {
-      const sets = await Set.findAll({
+      const sets = await CardSet.findAll({
         where: {
           isDraftable: true
         },
@@ -61,7 +64,7 @@ export const getDraftable = async (req, res, next) => {
 // GET CORE
 export const getCoreSets = async (req, res, next) => {
     try {
-      const sets = await Set.findAll({
+      const sets = await CardSet.findAll({
         where: {
           isCore: true
         },
@@ -78,7 +81,7 @@ export const getCoreSets = async (req, res, next) => {
 // GET BOOSTERS
 export const getBoosters = async (req, res, next) => {
   try {
-    const sets = await Set.findAll({
+    const sets = await CardSet.findAll({
       where: {
         isBooster: true
       },
@@ -95,16 +98,31 @@ export const getBoosters = async (req, res, next) => {
 // GENERATE PACKS
 export const generatePacks = async (req, res, next) => {
     try {
-        const set = await Set.findOne({ where: { setCode: req.params.set_code, isBooster: true }})
-        const prints = await Print.findAll({ 
-            where: { 
-                setId: set.id, 
-                region: {[Op.or]: ['NA', null]}
-            }, 
+        const set = await CardSet.findOne({ where: { setCode: req.params.set_code, isBooster: true }})
+        // const prints = await Print.findAll({ 
+        //     where: { 
+        //         setId: set.id, 
+        //         // region: {[Op.or]: ['NA', null]}
+        //     },
+        //     order: [['id', 'ASC']],
+        //     include: Card
+        // })
+        const removeDuplicates = (arr) => {
+            return [...new Set(arr)];
+          }
+
+        const prints = await Print.findAll({
+            where: {
+                setId: set.id
+            },
+            order: [['id', 'ASC']],
             include: Card
         })
-        
+
+        // prints = removeDuplicates(prints)
+        console.log('prints', removeDuplicates(prints.map((c) => c.id)))
         const commons = prints.filter((p) => p.rarity === 'Common' || p.rarity === 'Short Print')
+        // console.log('commons', commons.map((c) => c.cardName))
         const rares = prints.filter((p) => p.rarity === 'Rare')
         const supers = prints.filter((p) => p.rarity === 'Super Rare')
         const ultras = prints.filter((p) => p.rarity === 'Ultra Rare')
@@ -257,7 +275,7 @@ export const generatePacks = async (req, res, next) => {
 // GENERATE BOX
 export const generateBox = async (req, res, next) => {
     try {
-        const set = await Set.findOne({ where: { setCode: req.params.set_code }})
+        const set = await CardSet.findOne({ where: { setCode: req.params.set_code }})
         const prints = await Print.findAll({ where: { setId: set.id, region: {[Op.not]: 'EU' }}, include: Card })
         const commons = prints.filter((p) => p.rarity === 'Common' || p.rarity === 'Short Print')
         const rares = prints.filter((p) => p.rarity === 'Rare')
