@@ -1074,6 +1074,7 @@ export const manageSubscriptions = async (client) => {
                         if (player.email !== subscription.email) {
                             await player.update({ alternateEmail: subscription.email })
                         }
+                        console.log('member 1077', member)
                         await programmer.send({ content: `Welcome ${player.name} to the Stripe Premium Tier!`})
                         member?.roles.add(stripePremiumRoleId)
                         member?.roles.add(stripeSubscriberRoleId)
