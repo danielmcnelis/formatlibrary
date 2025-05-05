@@ -1,4 +1,4 @@
-import { Artwork, Card, Deck, DeckThumb, DeckType, Format, Player } from '@fl/models'
+import { Artwork, Card, Deck, DeckThumb, DeckType, Event, Format, Player } from '@fl/models'
 import { Op } from 'sequelize'
 const FuzzySet = require('fuzzyset')
 
@@ -349,9 +349,11 @@ export const getPopularDecks = async (req, res, next) => {
       where: {
         formatId: format.id,
         origin: 'event',
-        deckTypeName: { [Op.not]: 'Other' }
+        deckTypeName: { [Op.not]: 'Other' },
+        '$event.isRepresentative$': true
       },
-      attributes: ['id', 'deckTypeName']
+      attributes: ['id', 'eventId', 'deckTypeName'],
+      include: { model: Event, attributes: ['id', 'isRepresentative']}
     })
 
     if (!decks.length) return false
@@ -420,9 +422,11 @@ export const getDeckGallery = async (req, res, next) => {
       where: {
         formatId: format.id,
         deckTypeName: { [Op.not]: 'Other' },
-        origin: 'event'
+        origin: 'event',
+        '$event.isRepresentative$': true
       },
-      attributes: ['id', 'deckTypeName', 'deckTypeId']
+      attributes: ['id', 'eventId', 'deckTypeName', 'deckTypeId'],
+      include: { model: Event, attributes: ['id', 'isRepresentative']}
     })
 
     if (!decks.length) return false
@@ -948,6 +952,7 @@ export const getDeckData = async (filter) => {
             'display',
             'formatName',
             'formatId',
+            'eventId',
             'communityName',
             'eventAbbreviation',
             'eventId',
@@ -959,7 +964,8 @@ export const getDeckData = async (filter) => {
         ],
         include: [
             { model: Format, attributes: ['id', 'name', 'icon', 'banlist', 'videoName', 'videoId', 'videoPlaylistId'] },
-            { model: Player, as: 'builder', attributes: ['id', 'name', 'discordId', 'discordPfp'] }
+            { model: Player, as: 'builder', attributes: ['id', 'name', 'discordId', 'discordPfp'] },
+            { model: Event, attributes: ['id', 'isRepresentative'] }
         ]
     })
 

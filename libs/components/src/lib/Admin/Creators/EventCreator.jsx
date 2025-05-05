@@ -21,6 +21,7 @@ export const EventCreator = () => {
   const [startedAt, setstartedAt] = useState(null)
   const [tournamentId, setTournamentId] = useState(null)
   const [tournamentType, setTournamentType] = useState(true)
+  const [isRepresentative, setIsRepresentative] = useState(true)
   const [url, setUrl] = useState(null)
 
   const slice = startedAt ? startedAt.slice(0, 10) : null
@@ -43,6 +44,7 @@ export const EventCreator = () => {
     setstartedAt(null)
     setTournamentId(null)
     setTournamentType(true)
+    setIsRepresentative(true)
     setUrl(null)
 
     document.getElementById('abbreviation').value = null
@@ -55,6 +57,7 @@ export const EventCreator = () => {
     document.getElementById('size').value = ''
     document.getElementById('format').value = null
     document.getElementById('series').value = true
+    document.getElementById('representative').value = true
     document.getElementById('start-date').value = 'mm/dd/yyyy'
     document.getElementById('type').value = null
     document.getElementById('winner').value = ''
@@ -86,6 +89,7 @@ export const EventCreator = () => {
         format: format,
         size: size,
         series: isSeries,
+        isRepresentative: isRepresentative,
         isTeamEvent: isTeamEvent,
         type: tournamentType,
         winner: player.name || player.name,
@@ -217,6 +221,13 @@ export const EventCreator = () => {
       <label>
         Series:
         <select id="series" defaultValue="true" onChange={(e) => setIsSeries(e.target.value)}>
+          <option value="true">True</option>
+          <option value="false">False</option>
+        </select>
+      </label>
+      <label>
+        Representative (card pool matches FL):
+        <select id="representative" defaultValue="true" onChange={(e) => setIsRepresentative(e.target.value)}>
           <option value="true">True</option>
           <option value="false">False</option>
         </select>

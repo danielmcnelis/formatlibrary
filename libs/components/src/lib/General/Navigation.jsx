@@ -1,5 +1,6 @@
 
-import { Link } from 'react-router-dom'
+import { Link,  } from 'react-router-dom'
+import { useMediaQuery } from 'react-responsive'
 import { getCookie } from '@fl/utils'
 import './Navigation.css'
 import axios from 'axios'
@@ -17,6 +18,7 @@ export const Navigation = (props) => {
     const { switchTheme, theme } = props
     const isContentManager = props.roles?.contentManager
     const isSubscriber = props.roles?.subscriber
+    const isMobile = useMediaQuery({ query: '(max-width: 480px)' })
 
     const logOut = async () => {
         try {
@@ -98,6 +100,13 @@ export const Navigation = (props) => {
                     )
                 }
             </div>
+            {
+                isMobile ? (
+                    <div id={`theme-toggle-${theme}`} onClick={() => switchTheme()}>
+                        <div id={`theme-toggle-inner-circle-${theme}`}></div>
+                    </div>
+                ) : ''
+            }
             <div id="hamburger-menu" className="closed" onClick={() => toggle()}>
                 <div id="hamburger-button" className="closed-menu" style={{fontSize: '44px'}}>
                     ≡

@@ -23,6 +23,7 @@ export const SingleEvent = (props) => {
     const isSubscriber = props.roles?.subscriber
 
     const [event, setEvent] = useState({})
+    console.log('event', event)
     const [winner, setWinner] = useState({})
     const [replays, setReplays] = useState({})
     const [topDecks, setTopDecks] = useState({})
@@ -239,6 +240,15 @@ export const SingleEvent = (props) => {
             <div className="event-title-flexbox">
                 <div className="event-info-container">
                 <div className="single-event-title">{event.name}</div>
+                {
+                    !event.isRepresentative ? (
+                        <p style={{fontStyle: 'italic'}}>
+                            This event uses a card pool that is significantly different from the format as defined by FormatLibrary.com
+                        </p>
+                    ) : (
+                        ''
+                    )
+                }
                     <table className="single-event-table">
                     <tbody>
                     <tr className="single-event-info-1">

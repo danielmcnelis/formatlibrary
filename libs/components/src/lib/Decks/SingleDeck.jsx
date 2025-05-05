@@ -360,6 +360,15 @@ export const SingleDeck = (props) => {
                     }
                 </div>
             </div>
+            {
+                !deck?.event?.isRepresentative ? (
+                    <p style={{fontStyle: 'italic', textAlign: 'center'}}>
+                        This deck was built from a card pool that is significantly different from the format as defined by FormatLibrary.com
+                    </p>
+                ) : (
+                    ''
+                )
+            }
             <table className="single-deck-table">
                 <tbody>
                 <tr className="single-deck-info-1">

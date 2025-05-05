@@ -72,6 +72,10 @@ export const Event = db.define('events', {
   },
   endDate: {
     type: Sequelize.DATE
+  },
+  isRepresentative: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: true
   }
 })
 

@@ -210,7 +210,8 @@ export const getEventById = async (req, res, next) => {
         'communityName',
         'serverId',
         'startedAt',
-        'endDate'
+        'endDate',
+        'isRepresentative'
       ],
       include: [
         { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp', 'pfp']},
@@ -400,7 +401,8 @@ export const getEventByIdAsSubscriber = async (req, res, next) => {
           'communityName',
           'serverId',
           'startedAt',
-          'endDate'
+          'endDate',
+          'isRepresentative'
         ],
         include: [
           { model: Player, as: 'winner', attributes: ['id', 'name', 'discordId', 'discordPfp', 'pfp']},
@@ -636,6 +638,7 @@ export const createEvents = async (req, res, next) => {
       size: req.body.size,
       type: req.body.type,
       series: req.body.series,
+      isRepresentative: req.body.isRepresentative,
       isTeamEvent: req.body.isTeamEvent,
       winnerName: req.body.winner,
       winnerId: req.body.playerId,

@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react'
+import { useMediaQuery } from 'react-responsive'
 import axios from 'axios'
 import { FormatButton } from './FormatButton'
 import { Helmet } from 'react-helmet'
@@ -8,8 +9,8 @@ import './FormatMenu.css'
 export const FormatMenu = (props) => {
     const [formats, setFormats] = useState(null)
     const [category, setCategory] = useState('TCG')
+    const isMobile = useMediaQuery({ query: '(max-width: 480px)' })
 
-    const isContentManager = props.roles?.contentManager
     const popularFormats = formats?.filter((format) => format.category === category && format.isPopular)
     const spotlightFormats = formats?.filter((format) => format.category === category && format.isSpotlight)
     const dmFormats = formats?.filter((format) => format.category === category && !format.isPopular && !format.isSpotlight && format.era === 'DM')
@@ -58,22 +59,16 @@ export const FormatMenu = (props) => {
             {/* Default Gaming Playlist */}
             <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             <div className="body">
-                {
-                    // isContentManager ? (
-                        <>
-                            <div className="desktop-only" style={{"position":"absolute", "top":"20vh", "right":"0vw", "padding":"10px 20px"}}>
-                                <h2>{category}</h2>
-                                <div 
-                                    id={`category-toggle-${category}`} 
-                                    onClick={() => switchCategory()}
-                                >
-                                    <div id={`category-toggle-inner-circle-${category}`}></div>
-                                </div>
-                            </div>
-                            <br/>
-                        </>
-                    // ) : ""
-                }
+                <div className="desktop-only" style={{"position":"absolute", "top":"20vh", "right":"0vw", "padding":"10px 20px"}}>
+                    <h2>{category}</h2>
+                    <div 
+                        id={`category-toggle-${category}`} 
+                        onClick={() => switchCategory()}
+                    >
+                        <div id={`category-toggle-inner-circle-${category}`}></div>
+                    </div>
+                </div>
+                <br/>
                 <div id="popular-and-spotlight">
                     {
                         popularFormats.length ? (
@@ -84,10 +79,26 @@ export const FormatMenu = (props) => {
                                     popularFormats.map((format) => <FormatButton key={format.id} format={format}  />)
                                 }
                                 </div>
+                                {
+                                    isMobile ? (
+                                        <div className="format-menu" style={{margin: '20px 0px'}}>
+                                            <h2 style={{margin: '0px 20px'}}>{category}</h2>
+                                            <div 
+                                                id={`category-toggle-${category}`} 
+                                                onClick={() => switchCategory()}
+                                            >
+                                                <div id={`category-toggle-inner-circle-${category}`}></div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        ''
+                                    )
+                                }
                                 <div className="divider"/>
                             </>
                         ) : ''
                     }
+                    
                     {
                         spotlightFormats.length ? (
                             <>

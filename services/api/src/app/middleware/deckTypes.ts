@@ -49,11 +49,15 @@ export const downloadDeckType = async (req, res, next) => {
 
       const decks =
         (await Deck.findAll({
-          where: {
-            deckTypeId: deckType.id,
-            formatId: format.id
-          },
-          attributes: ['id', 'ydk']
+            where: {
+                deckTypeId: deckType.id,
+                formatId: format.id,
+                origin: 'event',
+                eventId: { [Op.not]: null },
+                '$event.isRepresentative$': true
+            },
+            attributes: ['id', 'ydk', 'eventId'],
+            include: { model: Event, attributes: ['id', 'isRepresentative']}
         })) || []
 
       const data = {
@@ -308,9 +312,11 @@ export const getDeckTypeSummary = async (req, res, next) => {
             deckTypeId: deckType.id,
             formatId: format.id,
             origin: 'event',
-            eventId: { [Op.not]: null }
+            eventId: { [Op.not]: null },
+            '$event.isRepresentative$': true
         },
-        attributes: ['id', 'deckTypeName', 'category', 'ydk', 'formatName'],
+        attributes: ['id', 'eventId', 'deckTypeName', 'category', 'ydk', 'formatName'],
+        include: { model: Event, attributes: ['id', 'isRepresentative']},
         order: [['publishDate', 'DESC']],
         limit: 100
     })
@@ -330,9 +336,11 @@ export const getDeckTypeSummary = async (req, res, next) => {
             formatId: format.id,
             origin: 'event',
             eventId: { [Op.not]: null },
-            display: true
+            display: true,
+            '$event.isRepresentative$': true
         },
-        attributes: ['id', 'builderName', 'eventAbbreviation', 'deckTypeName', 'downloads', 'views', 'publishDate', 'placement'],
+        attributes: ['id', 'builderName', 'eventAbbreviation', 'eventId', 'deckTypeName', 'downloads', 'views', 'publishDate', 'placement'],
+        include: { model: Event, attributes: ['id', 'isRepresentative']},
         order: [['publishDate', 'DESC'], ['placement', 'ASC']]
     })
 
@@ -343,9 +351,11 @@ export const getDeckTypeSummary = async (req, res, next) => {
             formatId: format.id,
             origin: 'event',
             eventId: { [Op.not]: null },
-            display: true
+            display: true,
+            '$event.isRepresentative$': true
         },
-        attributes: ['id', 'builderName', 'eventAbbreviation', 'deckTypeName', 'downloads', 'views', 'placement'],
+        attributes: ['id', 'builderName', 'eventAbbreviation', 'eventId', 'deckTypeName', 'downloads', 'views', 'placement'],
+        include: { model: Event, attributes: ['id', 'isRepresentative']},
         order: [['downloads', 'DESC']]
     })
 
