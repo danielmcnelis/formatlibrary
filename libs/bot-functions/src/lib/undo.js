@@ -79,15 +79,15 @@ export const undoMatch = async (interaction, server, matchId, authorIsMod) => {
     }
 }
 
-// VOID PAIRING
-export const voidPairing = async (interaction, pairingId) => {
+// CANCEL PAIRING
+export const cancelPairing = async (interaction, pairingId) => {
     try {
         const pairing = await Pairing.findOne({ where: { id: pairingId }, include: Format })
         const formatName = pairing.formatName
         const playerAName = pairing.playerAName
         const playerBName = pairing.playerBName
         await pairing.destroy()
-        return interaction.channel.send({ content: `The last ${formatName} Format ${pairing.format?.emoji || ''} pairing in which ${playerAName} was paired with ${playerBName} has been voided.`})	
+        return interaction.editReply({ content: `The last ${formatName} Format ${pairing.format?.emoji || ''} pairing in which ${playerAName} was paired with ${playerBName} has been canceled.`})	
     } catch (err) {
         console.log(err)
     }

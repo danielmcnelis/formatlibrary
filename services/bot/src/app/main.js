@@ -25,7 +25,7 @@ import { createTopCut, editTieBreakers, getCurrentRound, getMidnightCountdown, g
     postStandings, checkTimer, closeTournament, createTournament, 
     dropFromTournament, getFilm, initiateEndTournament, joinTournament, openTournament, updateTournament,
     processNoShow, removeFromTournament, seed, sendDeck, setTimerForTournament, signupForTournament, 
-    startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, voidPairing,
+    startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, cancelPairing,
     assignRoles, createMembership, createPlayer, fetchCardNames, hasPartnerAccess, 
     isModerator, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
     editPointsSystem, runNightlyTasks, runWeeklyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, 
@@ -493,7 +493,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 return interaction.message?.edit({components: []}).catch((err) => console.log(err))
             }
             const pairingId = interaction.values[0]
-            await voidPairing(interaction, pairingId)
+            await cancelPairing(interaction, pairingId)
             return interaction.message?.edit({components: []}).catch((err) => console.log(err))
         } else {
             return

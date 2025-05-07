@@ -1,6 +1,7 @@
 
 import axios from 'axios'
 import { useState, useEffect, useLayoutEffect } from 'react'
+import { Helmet } from 'react-helmet'
 import { BlogPost } from './BlogPost'
 import { Pagination } from '../General/Pagination'
 import { useLocation } from 'react-router-dom'
@@ -39,7 +40,15 @@ export const Home = () => {
     if (!blogPosts?.length) return <div style={{height: '100vh'}}/>
   
     return (
-        <div id="blog">
+        <>
+            <Helmet>
+                <title>{`Yu-Gi-Oh! Format Library`}</title>
+                <meta 
+                    name="description" 
+                    content={`Format Library is a public resource for learning about the Yu-Gi-Oh! Trading Card Game and its history.`}
+                />
+            </Helmet>
+            <div id="blog">
         {/* Default Gaming Playlist */}
             <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"/>
             {
@@ -62,5 +71,6 @@ export const Home = () => {
                 />
             </div>
         </div>
+        </>
     )
 }
