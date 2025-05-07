@@ -21,7 +21,6 @@ ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tool
 export const SingleEvent = (props) => {
     const isAdmin = props.roles?.admin
     const isSubscriber = props.roles?.subscriber
-    console.log('Single Event render count', n)
 
     const [event, setEvent] = useState({})
     console.log('event', event)
