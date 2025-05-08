@@ -22,6 +22,7 @@
           "apps/formatlibrary/src/privacy.html",
           "apps/formatlibrary/src/terms.html",
           "apps/formatlibrary/src/raptive.js",
+          "apps/formatlibrary/src/robots.txt",
           "apps/formatlibrary/src/disable-all-ads.js",
           "apps/formatlibrary/src/disable-content-ads.js",
           "apps/formatlibrary/src/disable-playlist-players.js"

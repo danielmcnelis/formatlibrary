@@ -10,7 +10,7 @@ export const emojis = {
     bronze: "<:bronze:580616719068954624>",
     casablanca: "<:casablanca:899538560317788182>",
     cavebob: "<:cavebob:639568078308507650>",
-    celtic: "<:celtic:647204025636487188>",
+    celtic: "<:celtic:1326570549065027604>",
     chadward: "<:chadward:934002441869996032>",
     character: "<:character:1113867518327656540>",
     check: "<:check:934002600964157470>",
