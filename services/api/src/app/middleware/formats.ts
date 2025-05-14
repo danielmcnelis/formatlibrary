@@ -2,10 +2,11 @@ import { Format, Deck, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 
 export const getFormatByName = async (req, res, next) => {
+    console.log('req.params.name.replace', req.params.name.replaceAll(' ', '_').replaceAll('-', '_'))
   try {
     const format = await Format.findOne({
       where: {
-        name: { [Op.iLike]: req.params.name.replace(' ', '_').replace('-', '_') }
+        name: { [Op.iLike]: req.params.name.replaceAll(' ', '_').replaceAll('-', '_') }
       },
       attributes: [
         'id', 'name', 'icon', 'date', 'banlist', 'category', 'eventName', 'description', 
@@ -14,15 +15,17 @@ export const getFormatByName = async (req, res, next) => {
       ]
     })
 
+    console.log('!!format', !!format)
+
     const deckCount = await Deck.count({
       where: {
-        formatName: { [Op.iLike]: format.name.replace(' ', '_').replace('-', '_') }
+        formatName: { [Op.iLike]: format.name.replaceAll(' ', '_').replaceAll('-', '_') }
       }
     })
 
     const eventCount = await Tournament.count({
       where: {
-        formatName: { [Op.iLike]: format.name.replace(' ', '_').replace('-', '_') }
+        formatName: { [Op.iLike]: format.name.replaceAll(' ', '_').replaceAll('-', '_') }
       }
     })
 
