@@ -47,18 +47,19 @@ export default {
                 // await manageSubscriptions(client)
                 // await assignTournamentRoles(client)
                 // return assignSeasonalLadderRoles(client)
+                
+                const row = new ActionRowBuilder()
+                    .addComponents(new ButtonBuilder()
+                        .setCustomId(`Yes`)
+                        .setLabel('Yes')
+                        .setStyle(ButtonStyle.Primary)
+                    )
 
-                .addComponents(new ButtonBuilder()
-                    .setCustomId(`Yes`)
-                    .setLabel('Yes')
-                    .setStyle(ButtonStyle.Primary)
-                )
-
-                .addComponents(new ButtonBuilder()
-                    .setCustomId(`No`)
-                    .setLabel('No')
-                    .setStyle(ButtonStyle.Primary)
-                )
+                    .addComponents(new ButtonBuilder()
+                        .setCustomId(`No`)
+                        .setLabel('No')
+                        .setStyle(ButtonStyle.Primary)
+                    )
 
                 await interaction.reply({ content: `Do you wish to change it?`, components: [row] })
 
