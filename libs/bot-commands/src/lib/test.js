@@ -72,6 +72,7 @@ export default {
                         await confirmation.update({ content: 'Pressed Yes!', components: [] })
                     } else {
                         await confirmation.update({ content: 'Pressed No!', components: [] })
+                        await confirmation.channel.send({ content: `Do you wish to change it?`, components: [row] })
                     }
                 } catch (e) {
                     await interaction.editReply({ content: 'No button pressed within 10 seconds, cancelling.', components: [] });
