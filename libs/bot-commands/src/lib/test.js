@@ -68,7 +68,11 @@ export default {
                 try {
                     const confirmation = await interaction.channel.awaitMessageComponent({ filter, time: 10000 })
                     console.log('confirmation', confirmation)
-                    await confirmation.update({ content: 'Button pressed!', components: [] })
+                    if (confirmation.customId.includes('Yes')) {
+                        await confirmation.update({ content: 'Pressed Yes!', components: [] })
+                    } else {
+                        await confirmation.update({ content: 'Pressed No!', components: [] })
+                    }
                 } catch (e) {
                     await interaction.editReply({ content: 'No button pressed within 10 seconds, cancelling.', components: [] });
                 }
