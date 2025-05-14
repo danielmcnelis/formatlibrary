@@ -18,14 +18,14 @@ export default {
 
             const tournament = format ? await Tournament.findOne({
                 where: {
-                    status: 'pending',
+                    state: 'pending',
                     isTeamTournament: true,
                     formatId: format.id,
                     serverId: server.id
                 }
             }) : await Tournament.findOne({
                 where: {
-                    status: 'pending',
+                    state: 'pending',
                     isTeamTournament: true,
                     serverId: server.id
                 }
