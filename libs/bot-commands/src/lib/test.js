@@ -18,7 +18,7 @@ export default {
         .setDMPermission(false),
     async execute(interaction) {
         try {
-            await interaction.deferReply()
+            // await interaction.deferReply()
             if (!isProgrammer(interaction.member)) return await interaction.editReply('🧪')
                 // await interaction.editReply(emojis.yellow)
                 // const guild = await client.guilds.fetch('414551319031054346')
@@ -51,17 +51,19 @@ export default {
                 const row = new ActionRowBuilder()
                     .addComponents(new ButtonBuilder()
                         .setCustomId(`Yes`)
-                        .setLabel('Yes')
+                        .setLabel('Test-Yes')
                         .setStyle(ButtonStyle.Primary)
                     )
 
                     .addComponents(new ButtonBuilder()
                         .setCustomId(`No`)
-                        .setLabel('No')
+                        .setLabel('Test-No')
                         .setStyle(ButtonStyle.Primary)
                     )
 
-                await interaction.editReply({ content: `Do you wish to change it?`, components: [row] })
+                await interaction.reply({ content: `Do you wish to change it?`, components: [row] })
+
+                const filter = i => i.customId.startsWith('Test-') && i.user.id === interaction.user.id;
 
                 try {
                     const confirmation = await interaction.channel.awaitMessageComponent({ filter, time: 10000 })
