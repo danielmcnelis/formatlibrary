@@ -50,14 +50,14 @@ export default {
                 
                 const row = new ActionRowBuilder()
                     .addComponents(new ButtonBuilder()
-                        .setCustomId(`Yes`)
-                        .setLabel('Test-Yes')
+                        .setCustomId(`Test-Yes`)
+                        .setLabel('Yes')
                         .setStyle(ButtonStyle.Primary)
                     )
 
                     .addComponents(new ButtonBuilder()
-                        .setCustomId(`No`)
-                        .setLabel('Test-No')
+                        .setCustomId(`Test-No`)
+                        .setLabel('No')
                         .setStyle(ButtonStyle.Primary)
                     )
 
