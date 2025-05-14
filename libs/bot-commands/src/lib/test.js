@@ -61,7 +61,7 @@ export default {
                         .setStyle(ButtonStyle.Primary)
                     )
 
-                await interaction.reply({ content: `Do you wish to change it?`, components: [row] })
+                await interaction.editReply({ content: `Do you wish to change it?`, components: [row] })
 
                 try {
                     const confirmation = await interaction.channel.awaitMessageComponent({ filter, time: 10000 })
