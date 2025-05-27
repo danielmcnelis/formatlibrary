@@ -8,7 +8,7 @@ import {
 } from '@fl/bot-functions'
 
 import { emojis } from '@fl/bot-emojis'
-import { Entry, Format, Match, Matchup, Pairing, Player, Pool, Replay, Server, Stats, Tournament } from '@fl/models'
+import { Entry, Format, Match, Matchup, Pairing, Player, Pool, Replay, Server, Stats, Tournament, Wallet } from '@fl/models'
 import { Op } from 'sequelize'
 import { client } from '../client'
 
@@ -31,6 +31,7 @@ export default {
     async execute(interaction) {
         try {
             const now = new Date()
+            let chipsWinner, chipsLoser
             await interaction.deferReply()
             const winner = interaction.options.getUser('winner')
             const winningMember = await interaction.guild?.members.fetch(winner.id).catch((err) => console.log(err))
@@ -193,6 +194,8 @@ export default {
             }
              
             if (isRated) { 
+                const origStatsWinner = winnerStats.elo
+                const origStatsLoser = loserStats.elo
                 const [winnerDelta, loserDelta, classicDelta] = await updateGeneralStats(winnerStats, loserStats)
                 match = await Match.create({
                     winnerName: winningPlayer.name,
@@ -214,6 +217,17 @@ export default {
                     serverId: serverId,
                     pairingId: pairing?.id
                 })
+
+                if (format.name === 'Forged in Chaos') {
+                    const winnersWallet = await Wallet.findOne({ where: { playerId: winningPlayer.id }})
+                    const losersWallet = await Wallet.findOne({ where: { playerId: losingPlayer.id }})
+                    chipsWinner = (Math.round((classicDelta)) + 5) < 9 ? 10 : (Math.round((classicDelta)) + 5) > 29 ? 29 : (Math.round((classicDelta)) + 5)
+                    chipsLoser = (origStatsLoser - origStatsWinner) < 72 ? 5 : (origStatsLoser - origStatsWinner) >=150 ? 3 : 4
+                    const newChipsWinner = winnersWallet.starchips + chipsWinner
+                    const newChipsLoser = losersWallet.starchips + chipsLoser
+                    await winnersWallet.update({ starchips: newChipsWinner })
+                    await losersWallet.update({ starchips: newChipsLoser })
+                }
             }
             
             if (isSeasonal) {
@@ -273,7 +287,7 @@ export default {
             }
             
             const season = getSeason(now.getMonth())
-            const content = `A manual ${isSeasonal ? `Seasonal ${season} ` : server.hasInternalLadder ? 'Internal ' : ''}${format.name} Format ${format.emoji} ${isRated && isTournament ? 'Tournament 🏆 ' : !isRated && isTournament ? 'Unrated Tournament 🏆 ' :''}loss by <@${losingPlayer.discordId}> to <@${winningPlayer.discordId}> has been recorded.`
+            const content = `A manual ${isSeasonal ? `Seasonal ${season} ` : server.hasInternalLadder ? 'Internal ' : ''}${format.name} Format ${format.emoji} ${isRated && isTournament ? 'Tournament 🏆 ' : !isRated && isTournament ? 'Unrated Tournament 🏆 ' :''}loss by <@${losingPlayer.discordId}>${chipsLoser ? ` (+${chipsLoser}<:starchips:1374362231109718117>)` : ''} to <@${winningPlayer.discordId}>${chipsWinner ? ` (+${chipsWinner}<:starchips:1374362231109718117>)` : ''} has been recorded.`
             return await interaction.editReply({ content })
         } catch (err) {
             console.log(err)

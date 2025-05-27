@@ -10,6 +10,7 @@ import { getIssues } from './deck'
 import { drawDeck } from './utility'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 import { client } from '../client'
+import { getForgedIssues } from './forged'
 
 // GET RATED CONFIRMATION
 export const getRatedConfirmation = async (player, opponent, format, guild) => {
@@ -623,10 +624,18 @@ export const getNewRatedDeck = async (user, player, format, deckToReplace) => {
             }
 
             const deckArr = [...main, ...extra, ...side,]
-            const issues = await getIssues(deckArr, format)
-            if (!issues) return false
 
-            const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards } = issues
+            let issues
+
+            if (format.name === 'Forged in Chaos') {
+                issues = await getForgedIssues(deckArr, format)
+                if (!issues) return false
+            } else {
+                issues = await getIssues(deckArr, format)
+                if (!issues) return false
+            }
+
+            const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards, zeroCardsOwned, oneCardOwned, twoCardsOwned } = issues
             if (!illegalCards || !forbiddenCards || !limitedCards || !semiLimitedCards || !unrecognizedCards) return false
             
             if (illegalCards.length || forbiddenCards.length || limitedCards.length || semiLimitedCards.length) {
@@ -635,6 +644,9 @@ export const getNewRatedDeck = async (user, player, format, deckToReplace) => {
                 if (forbiddenCards.length) response = [...response, `\nThe following cards are forbidden:`, ...forbiddenCards]
                 if (limitedCards.length) response = [...response, `\nThe following cards are limited:`, ...limitedCards]
                 if (semiLimitedCards.length) response = [...response, `\nThe following cards are semi-limited:`, ...semiLimitedCards]
+                if (zeroCardsOwned.length) response = [...response, `\nYou own 0 copies of the following cards:`, ...zeroCardsOwned]
+                if (oneCardOwned.length) response = [...response, `\nYou only own 1 copy of the following cards:`, ...oneCardOwned]
+                if (twoCardsOwned.length) response = [...response, `\nYou only own 2 copies of the following cards:`, ...twoCardsOwned]
             
                 for (let i = 0; i < response.length; i += 50) {
                     if (response[i+50] && response[i+50].startsWith("\n")) {
@@ -654,14 +666,7 @@ export const getNewRatedDeck = async (user, player, format, deckToReplace) => {
                 return false
              } else {
                 user.send({ content: `Thanks, ${user.username}, your deck is perfectly legal. ${emojis.legend}`}).catch((err) => console.log(err))
-                if (deckToReplace) {
-
-                    // deckToReplace = await Deck.findOne({
-                    //     where: {
-                    //         id: deckToReplace?.id
-                    //     }
-                    // })
-                    
+                if (deckToReplace) {                    
                     await deckToReplace.update({
                         url: url,
                         ydk: ydk

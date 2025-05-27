@@ -50,7 +50,7 @@ export default {
         try {
             const tournamentId = interaction.options.getString('tournament')
             const tournament = await Tournament.findOne({ where: { id: tournamentId }})
-            if (!tournament) return await interaction.reply({ content: `Error: Please select a tournament from the drop down menu.`})	
+            if (!tournament) return await interaction.reply({ content: `Error: Please select a tournament from the auto-complete list.`})	
 
             const modal = new ModalBuilder()
                 .setCustomId(`settings-${tournamentId}`)

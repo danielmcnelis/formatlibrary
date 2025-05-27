@@ -2,6 +2,7 @@
 export * from './lib/chron'
 export * from './lib/coverage'
 export * from './lib/deck'
+export * from './lib/forged'
 export * from './lib/rated'
 export * from './lib/sheets'
 export * from './lib/test'

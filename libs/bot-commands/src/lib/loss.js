@@ -7,7 +7,7 @@ import {
 } from '@fl/bot-functions'
 
 import { emojis } from '@fl/bot-emojis'
-import { Entry, Format, Match, Matchup, Pairing, Player, Pool, Replay, Server, Stats, Tournament } from '@fl/models'
+import { Entry, Format, Match, Matchup, Pairing, Player, Pool, Replay, Server, Stats, Tournament, Wallet } from '@fl/models'
 import { Op } from 'sequelize'
 import { client } from '../client'
 
@@ -27,6 +27,7 @@ export default {
         try {
             await interaction.deferReply()
             const now = new Date()
+            let chipsWinner, chipsLoser
             const winningUser = interaction.options.getUser('opponent')
             const winningMember = await interaction.guild?.members.fetch(winningUser.id).catch((err) => console.log(err))
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
@@ -38,7 +39,7 @@ export default {
             const winningPlayer = await Player.findOne({ where: { discordId: winningUser.id } })
             const losingPlayer = await Player.findOne({ where: { discordId: interaction.user.id } })
             
-            if (winningUser.bot) return await interaction.editReply({ content: `Sorry, Bots do not play ${format.name} Format... *yet*.`})
+            if (winningUser.bot) return await interaction.editReply({ content: `Sorry, Bots do not play Yu-Gi-Oh!... *yet*.`})
             if (losingPlayer.isHidden) return await interaction.reply(`You are not allowed to play in the Format Library rated system.`)
             if (winningPlayer.isHidden) return await interaction.reply(`That user is not allowed to play in the Format Library rated system.`)
                 
@@ -185,6 +186,8 @@ export default {
              
 
             if (isRated) { 
+                const origStatsWinner = winnerStats.elo
+                const origStatsLoser = loserStats.elo
                 const [winnerDelta, loserDelta, classicDelta] = await updateGeneralStats(winnerStats, loserStats)
                 match = await Match.create({
                     winnerName: winningPlayer.name,
@@ -206,6 +209,17 @@ export default {
                     serverId: serverId,
                     pairingId: pairing?.id
                 })
+
+                if (format.name === 'Forged in Chaos') {
+                    const winnersWallet = await Wallet.findOne({ where: { playerId: winningPlayer.id }})
+                    const losersWallet = await Wallet.findOne({ where: { playerId: losingPlayer.id }})
+                    chipsWinner = (Math.round((classicDelta)) + 5) < 9 ? 10 : (Math.round((classicDelta)) + 5) > 29 ? 29 : (Math.round((classicDelta)) + 5)
+                    chipsLoser = (origStatsLoser - origStatsWinner) < 72 ? 5 : (origStatsLoser - origStatsWinner) >=150 ? 3 : 4
+                    const newChipsWinner = winnersWallet.starchips + chipsWinner
+                    const newChipsLoser = losersWallet.starchips + chipsLoser
+                    await winnersWallet.update({ starchips: newChipsWinner })
+                    await losersWallet.update({ starchips: newChipsLoser })
+                }
             }
             
             if (isSeasonal) {
@@ -213,6 +227,7 @@ export default {
             } else if (!isRated && !isTournament) {
                 return await interaction.editReply({ content: `Sorry, outside of tournaments and war leagues, rated matches may only be played via the official rated pool.`})
             }
+
 
             if (!isTournament && pairing) {
                 const winnerIsPlayerA = pairing.playerAId === winningPlayer.id
@@ -265,7 +280,7 @@ export default {
             }
 
             const season = getSeason(now.getMonth())
-            const content = `${losingPlayer.name}, your ${isSeasonal ? `Seasonal ${season} ` : server.hasInternalLadder ? 'Internal ' : ''}${format.name} Format ${format.emoji} ${isRated && isTournament ? 'Tournament 🏆 ' : !isRated && isTournament ? 'Unrated Tournament 🏆 ' :''}loss to <@${winningPlayer.discordId}> has been recorded.`
+            const content = `${losingPlayer.name}${chipsLoser ? ` (+${chipsLoser}<:starchips:1374362231109718117>)` : ''}, your ${isSeasonal ? `Seasonal ${season} ` : server.hasInternalLadder ? 'Internal ' : ''}${format.name} Format ${format.emoji} ${isRated && isTournament ? 'Tournament 🏆 ' : !isRated && isTournament ? 'Unrated Tournament 🏆 ' :''}loss to <@${winningPlayer.discordId}>${chipsWinner ? ` (+${chipsWinner}<:starchips:1374362231109718117>)` : ''} has been recorded.`
             return await interaction.editReply({ content })
         } catch (err) {
             console.log(err)

@@ -8,6 +8,7 @@ import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, String
 import { Deck, Entry, Event, Format, Match, Player, Replay, Stats, Server, Team, Tournament } from '@fl/models'
 import { getIssues, getSkillCard } from './deck.js'
 import { createDecks } from './coverage.js'
+import { getForgedDeck } from './forged.js'
 import { capitalize, drawDeck, generateRandomString, getRoundName, isModerator, shuffleArray } from './utility.js'
 import { emojis } from '@fl/bot-emojis'
 
@@ -607,7 +608,10 @@ export const joinTournament = async (interaction, tournamentId) => {
     const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
-    const data = await getDeckList(interaction.member, player, tournament.format || format, false, !tournament.isRated)
+    const data = tournament.format.name === 'Forged in Chaos' ? await getForgedDeck(interaction.member, player, format) :
+        tournament.format.category === tournament.format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
+        await getDeckList(interaction.member, player, tournament.format, true, !tournament.isRated)
+
     if (!data) return
 
     if (!entry && tournament.isTeamTournament && team) {
@@ -783,7 +787,9 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
     const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
-    const data = await getDeckList(interaction.member, player, tournament.format, true, !tournament.isRated)
+    const data = tournament.format.name === 'Forged in Chaos' ? await getForgedDeck(interaction.member, player, format) :
+        tournament.format.category === tournament.format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
+        await getDeckList(interaction.member, player, tournament.format, true, !tournament.isRated)
 
     if (!data) return
 

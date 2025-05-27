@@ -97,6 +97,13 @@ export const Player = db.define('players', {
   },
   twitter: {
       type: Sequelize.STRING
+  },
+  isForgedSubscriber: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+  forgedSubscriberTier: {
+    type: Sequelize.STRING
   }
 })
 

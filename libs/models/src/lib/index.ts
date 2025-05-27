@@ -19,6 +19,9 @@ import { DraftEntry } from './DraftEntry'
 import { Entry } from './Entry'
 import { Errata } from './Errata'
 import { Event } from './Event'
+import { ForgedInventory } from './ForgedInventory'
+import { ForgedPrint } from './ForgedPrint'
+import { ForgedSet } from './ForgedSet'
 import { Format } from './Format'
 import { Inventory } from './Inventory'
 import { LikedArticle } from './LikedArticle'
@@ -50,6 +53,7 @@ import { TriviaEntry } from './TriviaEntry'
 import { TriviaKnowledge } from './TriviaKnowledge'
 import { TriviaQuestion } from './TriviaQuestion'
 import { Video } from './Video'
+import { Wallet } from './Wallet'
 
 //ALIUS
 Alius.belongsTo(Player)
@@ -199,6 +203,19 @@ Server.hasMany(Event)
 
 Event.belongsTo(Format)
 Format.hasMany(Event)
+
+//FORGED
+Player.hasOne(Wallet)
+Wallet.belongsTo(Player)
+
+Player.hasMany(ForgedInventory)
+ForgedInventory.belongsTo(Player)
+
+ForgedPrint.hasMany(ForgedInventory)
+ForgedInventory.belongsTo(ForgedPrint)
+
+ForgedSet.hasMany(ForgedPrint)
+ForgedPrint.belongsTo(ForgedSet)
 
 //FORMAT
 Format.hasMany(Deck)
@@ -458,6 +475,9 @@ export {
   Entry,
   Errata,
   Event,
+  ForgedInventory,
+  ForgedPrint,
+  ForgedSet,
   Format,
   Inventory,
   LikedArticle,
@@ -488,5 +508,6 @@ export {
   TriviaEntry,
   TriviaKnowledge,
   TriviaQuestion,
-  Video
+  Video,
+  Wallet
 }
