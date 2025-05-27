@@ -628,7 +628,7 @@ export const lookForAllPotentialPairs = async (client) => {
                 })
     
                 if (mostRecentMatch && cutoff < mostRecentMatch?.createdAt) {
-                    console.log(`<!> ${pool.playerName} and ${potentialPair.playerName} are recent opponents. Match reported at ${recentMatch?.createdAt}<!>`)
+                    console.log(`<!> ${pool.playerName} and ${potentialPair.playerName} are recent opponents. Match reported at ${mostRecentMatch?.createdAt}<!>`)
                     continue
                 } else if (playerIds.includes(player.id) || playerIds.includes(potentialPair.playerId)) {
                     console.log(`<!> ${pool.playerName} and/or ${potentialPair.playerName} have already been sent a confirmation notification <!>`)
