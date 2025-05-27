@@ -31,7 +31,7 @@ export default {
                 // await updateAvatars(client)
                 // await updateMarketPrices()
                 // await purgeDuplicatePrices()
-                // return await conductCensus(client)
+                return await conductCensus(client)
                 // await updateDeckType()
                 // await updateDecks()
                 // await downloadNewCards(client)
@@ -48,35 +48,35 @@ export default {
                 // await assignTournamentRoles(client)
                 // return assignSeasonalLadderRoles(client)
                 
-                const row = new ActionRowBuilder()
-                    .addComponents(new ButtonBuilder()
-                        .setCustomId(`Test-Yes`)
-                        .setLabel('Yes')
-                        .setStyle(ButtonStyle.Primary)
-                    )
+                // const row = new ActionRowBuilder()
+                //     .addComponents(new ButtonBuilder()
+                //         .setCustomId(`Test-Yes`)
+                //         .setLabel('Yes')
+                //         .setStyle(ButtonStyle.Primary)
+                //     )
 
-                    .addComponents(new ButtonBuilder()
-                        .setCustomId(`Test-No`)
-                        .setLabel('No')
-                        .setStyle(ButtonStyle.Primary)
-                    )
+                //     .addComponents(new ButtonBuilder()
+                //         .setCustomId(`Test-No`)
+                //         .setLabel('No')
+                //         .setStyle(ButtonStyle.Primary)
+                //     )
 
-                await interaction.reply({ content: `Do you wish to change it?`, components: [row] })
+                // await interaction.reply({ content: `Do you wish to change it?`, components: [row] })
 
-                const filter = i => i.customId.startsWith('Test-') && i.user.id === interaction.user.id;
+                // const filter = i => i.customId.startsWith('Test-') && i.user.id === interaction.user.id;
 
-                try {
-                    const confirmation = await interaction.channel.awaitMessageComponent({ filter, time: 10000 })
-                    console.log('confirmation', confirmation)
-                    if (confirmation.customId.includes('Yes')) {
-                        await confirmation.update({ content: 'Pressed Yes!', components: [] })
-                    } else {
-                        await confirmation.update({ content: 'Pressed No!', components: [] })
-                        await confirmation.channel.send({ content: `Do you wish to change it?`, components: [row] })
-                    }
-                } catch (e) {
-                    await interaction.editReply({ content: 'No button pressed within 10 seconds, cancelling.', components: [] });
-                }
+                // try {
+                //     const confirmation = await interaction.channel.awaitMessageComponent({ filter, time: 10000 })
+                //     console.log('confirmation', confirmation)
+                //     if (confirmation.customId.includes('Yes')) {
+                //         await confirmation.update({ content: 'Pressed Yes!', components: [] })
+                //     } else {
+                //         await confirmation.update({ content: 'Pressed No!', components: [] })
+                //         await confirmation.channel.send({ content: `Do you wish to change it?`, components: [row] })
+                //     }
+                // } catch (e) {
+                //     await interaction.editReply({ content: 'No button pressed within 10 seconds, cancelling.', components: [] });
+                // }
         } catch (err) {
             console.log(err)
         }
