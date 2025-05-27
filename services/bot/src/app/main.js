@@ -554,12 +554,10 @@ client.on('guildMemberRemove', async (member) => {
             where: {
                 '$player.discordId$': member.user.id,
                 '$tournament.serverId$': guild.id,
-                isActive: true
+                state: {[Op.or]: ['pending', 'underway']}
             },
             include: [Player, Tournament]
         })
-
-        console.log('entries.length', entries.length)
 
         for (let i = 0; i < entries.length; i++) {
             try {
