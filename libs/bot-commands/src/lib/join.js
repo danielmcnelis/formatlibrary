@@ -75,7 +75,7 @@ export default {
 
             if (!simName) return
 
-            const data = format.name === 'Forged in Chaos' ? await getForgedDeck(interaction.member, player, format) :
+            const data = format.name === 'Forged in Chaos' ? await getForgedDeckList(interaction.member, player, format) :
                 format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
                 await getDeckList(interaction.member, player, format, false, !tournament.isRated)
 
