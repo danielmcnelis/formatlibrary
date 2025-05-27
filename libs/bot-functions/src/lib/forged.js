@@ -1,7 +1,7 @@
 import axios from "axios"
 import { Card, ForgedInventory, Status } from "@fl/models"
 import { Op } from "sequelize"
-import emojis from '@fl/emojis'
+import emojis from '@fl/bot-emojis'
 import { convertArrayToObject } from "./utility"
 import card from "../../../bot-commands/src/lib/card"
 
