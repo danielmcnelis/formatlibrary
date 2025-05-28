@@ -211,6 +211,9 @@ Wallet.belongsTo(Player)
 Player.hasMany(ForgedInventory)
 ForgedInventory.belongsTo(Player)
 
+Card.hasMany(ForgedPrint)
+ForgedPrint.belongsTo(Card)
+
 ForgedPrint.hasMany(ForgedInventory)
 ForgedInventory.belongsTo(ForgedPrint)
 
