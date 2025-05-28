@@ -29,7 +29,7 @@ export const getForgedIssues = async (player, deckArr, format) => {
         const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
 
         if (totalQuantities[card.name]) {
-            totalQuantities[card.name] = totalQuantities[card.name]++
+            totalQuantities[card.name] = totalQuantities[card.name] + 1
         } else {
             totalQuantities[card.name] = 1
         }
@@ -55,6 +55,8 @@ export const getForgedIssues = async (player, deckArr, format) => {
     const zeroCopiesOwned = []
     const oneCopyOwned = []
     const twoCopiesOwned = []
+
+    console.log('totalQuantities', totalQuantities)
 
     for (let i = 0; i < quantityKeys.length; i++) {
         const quantityKey = quantityKeys[i]
@@ -152,8 +154,8 @@ export const getForgedDeckList = async (member, player, format, override = false
             console.log('getForgedIssues issues', issues)
             if (!issues) return false
 
-            const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards, zeroCardsOwned, oneCardOwned, twoCardsOwned } = issues
-            if (!illegalCards || !forbiddenCards || !limitedCards || !semiLimitedCards || !unrecognizedCards || !zeroCardsOwned || !oneCardOwned || !twoCardsOwned) return false
+            const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards, zeroCopiesOwned, oneCopyOwned, twoCopiesOwned } = issues
+            if (!illegalCards || !forbiddenCards || !limitedCards || !semiLimitedCards || !unrecognizedCards || !zeroCopiesOwned || !oneCopyOwned || !twoCopiesOwned) return false
             
             if (format.category !== 'TCG' && format.category !== 'OCG' && format.category !== 'Speed') {
                 member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck has been saved. ${emojis.legend}\n\nPlease note: Decks for ${format.category} Formats cannot be verified at this time. Be sure your deck is legal for this tournament!`}).catch((err) => console.log(err))
@@ -164,9 +166,9 @@ export const getForgedDeckList = async (member, player, format, override = false
                 if (forbiddenCards.length) response = [...response, `\nThe following cards are forbidden:`, ...forbiddenCards]
                 if (limitedCards.length) response = [...response, `\nThe following cards are limited:`, ...limitedCards]
                 if (semiLimitedCards.length) response = [...response, `\nThe following cards are semi-limited:`, ...semiLimitedCards]
-                if (zeroCardsOwned.length) response = [...response, `\n${pronoun2} own 0 copies of the following cards:`, ...zeroCardsOwned]
-                if (oneCardOwned.length) response = [...response, `\n${pronoun2} only own 1 copy of the following cards:`, ...oneCardOwned]
-                if (twoCardsOwned.length) response = [...response, `\n${pronoun2} only own 2 copies of the following cards:`, ...twoCardsOwned]
+                if (zeroCardsOwned.length) response = [...response, `\n${pronoun2} own 0 copies of the following cards:`, ...zeroCopiesOwned]
+                if (oneCardOwned.length) response = [...response, `\n${pronoun2} only own 1 copy of the following cards:`, ...oneCopyOwned]
+                if (twoCardsOwned.length) response = [...response, `\n${pronoun2} only own 2 copies of the following cards:`, ...twoCopiesOwned]
             
                 for (let i = 0; i < response.length; i += 50) {
                     if (response[i+50] && response[i+50].startsWith("\n")) {
