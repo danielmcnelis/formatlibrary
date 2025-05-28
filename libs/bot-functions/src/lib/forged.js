@@ -149,6 +149,7 @@ export const getForgedDeckList = async (member, player, format, override = false
 
             const deckArr = [...main, ...extra, ...side,]
             const issues = await getForgedIssues(player, deckArr, format)
+            console.log('getForgedIssues issues', issues)
             if (!issues) return false
 
             const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards, zeroCardsOwned, oneCardOwned, twoCardsOwned } = issues
