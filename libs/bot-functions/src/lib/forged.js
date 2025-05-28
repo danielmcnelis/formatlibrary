@@ -18,6 +18,8 @@ export const getForgedIssues = async (player, deckArr, format) => {
     const semiLimitedCards = []
     const unrecognizedCards = []
 
+    console.log('deck', deck)
+
     const totalQuantities = {}
 
     const keys = Object.keys(deck)
