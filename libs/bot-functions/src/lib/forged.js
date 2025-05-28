@@ -68,7 +68,7 @@ export const getForgedIssues = async (player, deckArr, format) => {
         })
 
         for (let j = 0; j < invs.length; j++) {
-            const inv = invs[i]
+            const inv = invs[j]
             quantityOwned+=inv.quantity
         }
 
