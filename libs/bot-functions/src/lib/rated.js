@@ -628,7 +628,7 @@ export const getNewRatedDeck = async (user, player, format, deckToReplace) => {
             let issues
 
             if (format.name === 'Forged in Chaos') {
-                issues = await getForgedIssues(deckArr, format)
+                issues = await getForgedIssues(player, deckArr, format)
                 if (!issues) return false
             } else {
                 issues = await getIssues(deckArr, format)
