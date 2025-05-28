@@ -306,7 +306,10 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
             const p1Rank = p1Index >= 0 ? `#${p1Index + 1} ` : ''
             const p2Index = allStats.findIndex((s) => s.playerId === opponent.id)
             const p2Rank = p2Index >= 0 ? `#${p2Index + 1} ` : ''
-            const content = `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
+
+            const content = format.name === 'Forged in Chaos' ? `New Rated ${format.name} ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.` :
+                `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
+            
             return channel.send({ content: content })   
         }
     }
@@ -404,7 +407,9 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
             const p2Index = allStats.findIndex((s) => s.playerId === opponent.id)
             const p2Rank = p2Index >= 0 ? `#${p2Index + 1} ` : ''
     
-            const content = `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
+            
+            const content = format.name === 'Forged in Chaos' ? `New Rated ${format.name} ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.` :
+                `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
             return channel.send({ content: content })
         } else {
             await yourPool.destroy()
@@ -811,7 +816,8 @@ export const sendRatedPairingNotifications = async (client, player, opponent, fo
         const p1Rank = p1Index >= 0 ? `#${p1Index + 1} ` : ''
         const p2Index = allStats.findIndex((s) => s.playerId === opponent.id)
         const p2Rank = p2Index >= 0 ? `#${p2Index + 1} ` : ''
-        const content = `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
+        const content = format.name === 'Forged in Chaos' ? `New Rated ${format.name} ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.` :
+            `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
         return channel.send({ content: content })   
     } catch (err) {
         console.log(err)
