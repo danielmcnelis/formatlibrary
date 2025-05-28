@@ -166,9 +166,9 @@ export const getForgedDeckList = async (member, player, format, override = false
                 if (forbiddenCards.length) response = [...response, `\nThe following cards are forbidden:`, ...forbiddenCards]
                 if (limitedCards.length) response = [...response, `\nThe following cards are limited:`, ...limitedCards]
                 if (semiLimitedCards.length) response = [...response, `\nThe following cards are semi-limited:`, ...semiLimitedCards]
-                if (zeroCardsOwned.length) response = [...response, `\n${pronoun2} own 0 copies of the following cards:`, ...zeroCopiesOwned]
-                if (oneCardOwned.length) response = [...response, `\n${pronoun2} only own 1 copy of the following cards:`, ...oneCopyOwned]
-                if (twoCardsOwned.length) response = [...response, `\n${pronoun2} only own 2 copies of the following cards:`, ...twoCopiesOwned]
+                if (zeroCopiesOwned.length) response = [...response, `\n${pronoun2} own 0 copies of the following cards:`, ...zeroCopiesOwned]
+                if (oneCopyOwned.length) response = [...response, `\n${pronoun2} only own 1 copy of the following cards:`, ...oneCopyOwned]
+                if (twoCopiesOwned.length) response = [...response, `\n${pronoun2} only own 2 copies of the following cards:`, ...twoCopiesOwned]
             
                 for (let i = 0; i < response.length; i += 50) {
                     if (response[i+50] && response[i+50].startsWith("\n")) {
