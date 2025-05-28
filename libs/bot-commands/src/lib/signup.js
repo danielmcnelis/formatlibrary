@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Server, Team, Tournament } from '@fl/models'
-import { isModerator, hasPartnerAccess, askForSimName, getDeckList, getForgedDeck, getSpeedDeckList, postParticipant, selectTournament } from '@fl/bot-functions'
+import { isModerator, hasPartnerAccess, askForSimName, getDeckList, getForgedDeckList, getSpeedDeckList, postParticipant, selectTournament } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
 
