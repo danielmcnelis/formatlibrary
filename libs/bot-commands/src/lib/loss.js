@@ -213,8 +213,28 @@ export default {
                 if (format.name === 'Forged in Chaos') {
                     const winnersWallet = await Wallet.findOne({ where: { playerId: winningPlayer.id }})
                     const losersWallet = await Wallet.findOne({ where: { playerId: losingPlayer.id }})
-                    chipsWinner = (Math.round((classicDelta))) < 5 ? 5 : (Math.round((classicDelta))) > 30 ? 30 : (Math.round((classicDelta)))
+                    chipsWinner = (Math.round((classicDelta))) < 5 ? 5 : (Math.round((classicDelta))) > 20 ? 20 : (Math.round((classicDelta)))
                     chipsLoser = (origStatsLoser - origStatsWinner) < 72 ? 5 : (origStatsLoser - origStatsWinner) >=150 ? 3 : 4
+                    
+                    console.log('chipsWinner', chipsWinner)
+                    console.log('chipsLoser', chipsLoser)
+
+                    const chipBonusWinner = winningPlayer.forgedSubscriberTier === 'Supporter' ? 1.33 :
+                        winningPlayer.forgedSubscriberTier === 'Patron' ? 1.67 :
+                        winningPlayer.forgedSubscriberTier === 'Benefactor' ? 2 :
+                        1
+
+                    const chipBonusLoser = losingPlayer.forgedSubscriberTier === 'Supporter' ? 1.33 :
+                    losingPlayer.forgedSubscriberTier === 'Patron' ? 1.67 :
+                        losingPlayer.forgedSubscriberTier === 'Benefactor' ? 2 :
+                        1
+                        
+                    chipsWinner = Math.round(chipsWinner * chipBonusWinner)
+                    chipsLoser = Math.round(chipsLoser * chipBonusLoser)
+
+                    console.log('chipsWinner', chipsWinner)
+                    console.log('chipsLoser', chipsLoser)
+                    
                     const newChipsWinner = winnersWallet.starchips + chipsWinner
                     const newChipsLoser = losersWallet.starchips + chipsLoser
                     await winnersWallet.update({ starchips: newChipsWinner })
