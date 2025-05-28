@@ -635,7 +635,7 @@ export const getNewRatedDeck = async (user, player, format, deckToReplace) => {
                 if (!issues) return false
             }
 
-            const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards, zeroCardsOwned, oneCardOwned, twoCardsOwned } = issues
+            const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards, zeroCopiesOwned, oneCopyOwned, twoCopiesOwned } = issues
             if (!illegalCards || !forbiddenCards || !limitedCards || !semiLimitedCards || !unrecognizedCards) return false
             
             if (illegalCards.length || forbiddenCards.length || limitedCards.length || semiLimitedCards.length) {
@@ -644,9 +644,9 @@ export const getNewRatedDeck = async (user, player, format, deckToReplace) => {
                 if (forbiddenCards.length) response = [...response, `\nThe following cards are forbidden:`, ...forbiddenCards]
                 if (limitedCards.length) response = [...response, `\nThe following cards are limited:`, ...limitedCards]
                 if (semiLimitedCards.length) response = [...response, `\nThe following cards are semi-limited:`, ...semiLimitedCards]
-                if (zeroCardsOwned.length) response = [...response, `\nYou own 0 copies of the following cards:`, ...zeroCardsOwned]
-                if (oneCardOwned.length) response = [...response, `\nYou only own 1 copy of the following cards:`, ...oneCardOwned]
-                if (twoCardsOwned.length) response = [...response, `\nYou only own 2 copies of the following cards:`, ...twoCardsOwned]
+                if (zeroCopiesOwned.length) response = [...response, `\nYou own 0 copies of the following cards:`, ...zeroCopiesOwned]
+                if (oneCopyOwned.length) response = [...response, `\nYou only own 1 copy of the following cards:`, ...oneCopyOwned]
+                if (twoCopiesOwned.length) response = [...response, `\nYou only own 2 copies of the following cards:`, ...twoCopiesOwned]
             
                 for (let i = 0; i < response.length; i += 50) {
                     if (response[i+50] && response[i+50].startsWith("\n")) {
