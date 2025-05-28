@@ -601,7 +601,10 @@ export const lookForAllPotentialPairs = async (client) => {
         const pool = pools[i]
         const player = pool.player
         const format = pool.format
+        console.log('player?.id', player?.id)
+        console.log('format?.id', format?.id)
         const yourStats = await Stats.findOne({ where: { formatId: format.id, playerId: player.id }})
+        console.log('yourStats', yourStats)
         const yourElo = format.useSeasonalElo ? yourStats.seasonalElo : yourStats.elo
 
         const potentialPairs = await Pool.findAll({ 
