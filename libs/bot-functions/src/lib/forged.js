@@ -28,11 +28,7 @@ export const getForgedIssues = async (player, deckArr, format) => {
         if (konamiCode === '00000000' && format.name === 'Advanced') continue
         const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
 
-        if (totalQuantities[card.name]) {
-            totalQuantities[card.name] = totalQuantities[card.name] + 1
-        } else {
-            totalQuantities[card.name] = 1
-        }
+        totalQuantities[card.name] = deck[key]
 
         if (!cardIds.includes(konamiCode)) {
             if (card) {
@@ -47,16 +43,15 @@ export const getForgedIssues = async (player, deckArr, format) => {
         } else if (semiIds.includes(konamiCode) && deck[key] > 2) {
             if (card) semiLimitedCards.push(card.name)
         }
-
-
     }
+
+    console.log('totalQuantities', totalQuantities)
 
     const quantityKeys = Object.keys(totalQuantities)
     const zeroCopiesOwned = []
     const oneCopyOwned = []
     const twoCopiesOwned = []
 
-    console.log('totalQuantities', totalQuantities)
 
     for (let i = 0; i < quantityKeys.length; i++) {
         const quantityKey = quantityKeys[i]
