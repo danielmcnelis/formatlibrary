@@ -1,9 +1,8 @@
 import axios from "axios"
-import { Card, ForgedInventory, Status } from "@fl/models"
+import { Card, ForgedInventory, ForgedPrint, Status } from "@fl/models"
 import { Op } from "sequelize"
 import emojis from '@fl/bot-emojis'
 import { convertArrayToObject } from "./utility"
-import card from "../../../bot-commands/src/lib/card"
 
 // GET FORGED ISSUES
 export const getForgedIssues = async (player, deckArr, format) => {
@@ -48,6 +47,8 @@ export const getForgedIssues = async (player, deckArr, format) => {
         } else if (semiIds.includes(konamiCode) && deck[key] > 2) {
             if (card) semiLimitedCards.push(card.name)
         }
+
+
     }
 
     const quantityKeys = Object.keys(totalQuantities)
@@ -62,7 +63,7 @@ export const getForgedIssues = async (player, deckArr, format) => {
         const invs = await ForgedInventory.findAll({
             where: {
                 playerId: player.id,
-                cardName: card.name
+                cardName: quantityKey
             }
         })
 
