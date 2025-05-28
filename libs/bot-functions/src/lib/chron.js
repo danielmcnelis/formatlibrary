@@ -605,7 +605,7 @@ export const lookForAllPotentialPairs = async (client) => {
         console.log('format?.id', format?.id)
         const yourStats = await Stats.findOne({ where: { formatId: format.id, playerId: player.id }})
         console.log('yourStats', yourStats)
-        const yourElo = format.useSeasonalElo ? yourStats.seasonalElo : yourStats.elo
+        const yourElo = format.useSeasonalElo ? yourStats?.seasonalElo : yourStats?.elo
 
         const potentialPairs = await Pool.findAll({ 
             where: { 
@@ -622,7 +622,7 @@ export const lookForAllPotentialPairs = async (client) => {
                 const potentialPair = potentialPairs[i]
 
                 const potentialPairStats = await Stats.findOne({ where: { formatId: format.id, playerId: potentialPair.playerId }})
-                const potentialPairElo = format.useSeasonalElo ? potentialPairStats.seasonalElo : potentialPairStats.elo
+                const potentialPairElo = format.useSeasonalElo ? potentialPairStats?.seasonalElo : potentialPairStats?.elo
                 if (format.name === 'Forged in Chaos' && Math.abs(yourElo - potentialPairElo) > 100) {
                     continue
                 }
