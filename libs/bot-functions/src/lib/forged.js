@@ -18,8 +18,6 @@ export const getForgedIssues = async (player, deckArr, format) => {
     const semiLimitedCards = []
     const unrecognizedCards = []
 
-    console.log('deck', deck)
-
     const totalQuantities = {}
 
     const keys = Object.keys(deck)
@@ -47,8 +45,6 @@ export const getForgedIssues = async (player, deckArr, format) => {
         }
     }
 
-    console.log('totalQuantities', totalQuantities)
-
     const quantityKeys = Object.keys(totalQuantities)
     const zeroCopiesOwned = []
     const oneCopyOwned = []
@@ -72,7 +68,7 @@ export const getForgedIssues = async (player, deckArr, format) => {
         }
 
         if (quantityOwned < totalQuantities[quantityKey]) {
-            if (quantityOwned === 0) {
+            if (quantityOwned === 0 && !illegalCards.includes(quantityKey)) {
                 zeroCopiesOwned.push(quantityKey)
             } else if (quantityOwned === 1) {
                 oneCopyOwned.push(quantityKey)
