@@ -1,7 +1,7 @@
 import axios from "axios"
 import { Card, ForgedInventory, ForgedPrint, Status } from "@fl/models"
 import { Op } from "sequelize"
-import emojis from '@fl/bot-emojis'
+import { emojis } from '@fl/bot-emojis'
 import { convertArrayToObject } from "./utility"
 
 // GET FORGED ISSUES
