@@ -7,7 +7,7 @@ import { convertArrayToObject } from "./utility"
 // GET FORGED ISSUES
 export const getForgedIssues = async (player, deckArr, format) => {
     const deck = convertArrayToObject(deckArr)   
-    const cardIds = [...await ForgedPrint.findAll()].flatMap(fp => [fp.card.konamiCode, fp.card.ypdId])
+    const cardIds = [...await ForgedPrint.findAll({ include: Card })].flatMap(fp => [fp.card.konamiCode, fp.card.ypdId])
     const forbiddenIds = [...await Status.findAll({ where: { banlist: format.banlist, category: 'Forged', restriction: 'forbidden' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId])
     const limitedIds = [...await Status.findAll({ where: { banlist: format.banlist, category: 'Forged', restriction: 'limited' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId])
     const semiIds = [...await Status.findAll({ where: { banlist: format.banlist, category: 'Forged', restriction: 'semi-limited' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId])
