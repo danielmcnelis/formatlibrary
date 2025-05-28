@@ -201,6 +201,8 @@ export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, pl
 
 // LOOK FOR POTENTIAL PAIRS
 export const lookForPotentialPairs = async (interaction, pool, player, format, server, guild, channel) => {
+    const yourStats = await Stats.findOne({ where: { formatId: format.id, playerId: player.id }})
+    const yourElo = format.useSeasonalElo ? yourStats.seasonalElo : yourStats.elo
     const potentialPairs = await Pool.findAll({ 
         where: { 
             playerId: {[Op.not]: player.id },
@@ -213,6 +215,13 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
 
     for (let i = 0; i < potentialPairs.length; i++) {
         const potentialPair = potentialPairs[i]
+        
+        const potentialPairStats = await Stats.findOne({ where: { formatId: format.id, playerId: potentialPair.playerId }})
+        const potentialPairElo = format.useSeasonalElo ? potentialPairStats.seasonalElo : potentialPairStats.elo
+        if (format.name === 'Forged in Chaos' && Math.abs(yourElo - potentialPairElo) > 100) {
+            continue
+        }
+
         const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
         const cutoff = new Date(new Date() - (15 * 60 * 1000))
 

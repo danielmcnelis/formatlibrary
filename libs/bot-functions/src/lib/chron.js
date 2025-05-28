@@ -601,6 +601,9 @@ export const lookForAllPotentialPairs = async (client) => {
         const pool = pools[i]
         const player = pool.player
         const format = pool.format
+        const yourStats = await Stats.findOne({ where: { formatId: format.id, playerId: player.id }})
+        const yourElo = format.useSeasonalElo ? yourStats.seasonalElo : yourStats.elo
+
         const potentialPairs = await Pool.findAll({ 
             where: { 
                 formatId: pool.formatId,
@@ -614,6 +617,13 @@ export const lookForAllPotentialPairs = async (client) => {
         for (let i = 0; i < potentialPairs.length; i++) {
             try {
                 const potentialPair = potentialPairs[i]
+
+                const potentialPairStats = await Stats.findOne({ where: { formatId: format.id, playerId: potentialPair.playerId }})
+                const potentialPairElo = format.useSeasonalElo ? potentialPairStats.seasonalElo : potentialPairStats.elo
+                if (format.name === 'Forged in Chaos' && Math.abs(yourElo - potentialPairElo) > 100) {
+                    continue
+                }
+                
                 const cutoff = new Date(new Date() - (15 * 60 * 1000))
         
                 const mostRecentMatch = await Match.findOne({
@@ -649,6 +659,7 @@ export const lookForAllPotentialPairs = async (client) => {
 
 // RECALCULATE FORMAT STATS
 export const recalculateFormatStats = async (format) => {
+    const baseElo = format.name === 'Forged in Chaos' ? 400.00 : 500.00
     const count = await Match.count({ where: { formatId: format.id }})
     console.log(`Recalculating data from ${count} ${format.name} ${format.emoji} matches. Please wait...`)
 
@@ -707,19 +718,19 @@ export const recalculateFormatStats = async (format) => {
             for (let i = 0; i < allStats.length; i++) {
                 const stats = allStats[i]
                 await stats.update({
-                    elo: 500.00,
-                    bestElo: 500.00,
+                    elo: baseElo,
+                    bestElo: baseElo,
                     backupElo: null,
                     wins: 0,
                     losses: 0,
                     games: 0,
-                    seasonalElo: 500.00,
-                    bestSeasonalElo: 500.00,
+                    seasonalElo: baseElo,
+                    bestSeasonalElo: baseElo,
                     backupSeasonalElo: null,
                     seasonalWins: 0,
                     seasonalLosses: 0,
                     seasonalGames: 0,
-                    classicElo: 500.00,
+                    classicElo: baseElo,
                     backupClassicElo: null,
                     currentStreak: 0,
                     bestStreak: 0,

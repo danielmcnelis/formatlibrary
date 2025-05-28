@@ -221,7 +221,7 @@ export default {
                 if (format.name === 'Forged in Chaos') {
                     const winnersWallet = await Wallet.findOne({ where: { playerId: winningPlayer.id }})
                     const losersWallet = await Wallet.findOne({ where: { playerId: losingPlayer.id }})
-                    chipsWinner = (Math.round((classicDelta)) + 5) < 9 ? 10 : (Math.round((classicDelta)) + 5) > 29 ? 29 : (Math.round((classicDelta)) + 5)
+                    chipsWinner = (Math.round((classicDelta))) < 5 ? 5 : (Math.round((classicDelta))) > 30 ? 30 : (Math.round((classicDelta)))
                     chipsLoser = (origStatsLoser - origStatsWinner) < 72 ? 5 : (origStatsLoser - origStatsWinner) >=150 ? 3 : 4
                     const newChipsWinner = winnersWallet.starchips + chipsWinner
                     const newChipsLoser = losersWallet.starchips + chipsLoser
