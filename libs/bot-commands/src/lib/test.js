@@ -1,14 +1,14 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
 
-import { purgeDuplicatePrices, updateMinMedMaxRarities, assignSeasonalLadderRoles, downloadOriginalArtworks, purgeBetaCards, downloadMissingCardImages, recalculateStats, downloadNewCards, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckType, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runFrequentTasks } from '@fl/bot-functions'
+import { recalculateFormatStats, purgeDuplicatePrices, updateMinMedMaxRarities, assignSeasonalLadderRoles, downloadOriginalArtworks, purgeBetaCards, downloadMissingCardImages, recalculateStats, downloadNewCards, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckType, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runFrequentTasks } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { s3FileExists } from '@fl/bot-functions'
-import { Match, Tournament, Server, TriviaQuestion } from '@fl/models'
+import { Match, Tournament, Server, TriviaQuestion, Format } from '@fl/models'
 import axios from 'axios'
 import { assignTournamentRoles, recalculateAllStats } from '../../../bot-functions/src'
-import { Stats } from '../../../models/src'
+import { Format, Stats } from '../../../models/src'
 // import { config } from '@fl/config'
 
 export default {
@@ -27,11 +27,12 @@ export default {
                 // const member = await guild.members.fetch('730180640531546275')
                 // console.log('member', member)
                 // await runNightlyTasks(client)
-                // await recalculateAllStats()
+                const format = await Format.findOne({ where: { name: 'Forged in Chaos' }})
+                await recalculateFormatStats(format)
                 // await updateAvatars(client)
                 // await updateMarketPrices()
                 // await purgeDuplicatePrices()
-                return await conductCensus(client)
+                // return await conductCensus(client)
                 // await updateDeckType()
                 // await updateDecks()
                 // await downloadNewCards(client)

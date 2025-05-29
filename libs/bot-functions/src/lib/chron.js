@@ -741,13 +741,13 @@ export const recalculateFormatStats = async (format) => {
             for (let i = 0; i < allStats.length; i++) {
                 const stats = allStats[i]
                 await stats.update({
-                    elo: 500.00,
-                    bestElo: 500.00,
+                    elo: baseElo,
+                    bestElo: baseElo,
                     backupElo: null,
                     wins: 0,
                     losses: 0,
                     games: 0,
-                    classicElo: 500.00,
+                    classicElo: baseElo,
                     backupClassicElo: null,
                     currentStreak: 0,
                     bestStreak: 0,

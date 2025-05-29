@@ -14,6 +14,9 @@ export const Stats = db.define('stats', {
     formatName: {
         type: Sequelize.STRING
     },
+    compositeKey: {
+        type: Sequelize.STRING
+    },
     elo: {
         type: Sequelize.FLOAT,
         defaultValue: 500.0

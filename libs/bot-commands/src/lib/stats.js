@@ -16,7 +16,7 @@ export default {
                 .setRequired(false)
         )
         .setDMPermission(false),
-    async execute(interaction) {
+    async execute(interaction) {    
         try {
             const now = new Date()
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
