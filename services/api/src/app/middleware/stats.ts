@@ -28,7 +28,7 @@ export const getGeneralLeaderboard = async (req, res, next) => {
     try {
       const stats = await Stats.findAll({
         where: {
-          formatName: { [Op.iLike]: req.params.format.replace(' ', '_').replace('-', '_') },
+          formatName: { [Op.iLike]: req.params.format.replaceAll(' ', '_').replaceAll('-', '_') },
           games: { [Op.gte]: 3 },
           serverId: '414551319031054346',
           '$player.isHidden$': false
