@@ -660,6 +660,7 @@ export const lookForAllPotentialPairs = async (client) => {
 // RECALCULATE FORMAT STATS
 export const recalculateFormatStats = async (format) => {
     const baseElo = format.name === 'Forged in Chaos' ? 400.00 : 500.00
+    console.log('baseElo', baseElo)
     const count = await Match.count({ where: { formatId: format.id }})
     console.log(`Recalculating data from ${count} ${format.name} ${format.emoji} matches. Please wait...`)
 
