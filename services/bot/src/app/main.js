@@ -554,7 +554,7 @@ client.on('guildMemberRemove', async (member) => {
             where: {
                 '$player.discordId$': member.user.id,
                 '$tournament.serverId$': guild.id,
-                state: {[Op.or]: ['pending', 'underway']}
+                '$tournament.state$': {[Op.or]: ['pending', 'underway']}
             },
             include: [Player, Tournament]
         })

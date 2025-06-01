@@ -439,7 +439,8 @@ export const getDropFormats = async (interaction, pools) => {
         time: 30000
     }).then(async (collected) => {
         const response = collected.first().content.toLowerCase()
-        const index = !isNaN(parseInt(response)) ? parseInt(response) - 1 : null
+        const digits = response.match(/\d/g).join('')
+        const index = !isNaN(digits) ? digits - 1 : null
         const poolsToLeave = response.includes('all') || index === 0 ? pools : 
             index !== null ? [pools[index - 1]] :
             false
@@ -511,8 +512,9 @@ export const getPreviousRatedDeck = async (user, player, yourRatedDecks, format)
         max: 1,
         time: 5 * 60 * 1000
     }).then(async (collected) => {
-        const response = collected.first().content
-        const index = !isNaN(parseInt(response)) ? parseInt(response) - 1 : null
+        const response = collected.first().content.toLowerCase()
+        const digits = response.match(/\d/g).join('')
+        const index = !isNaN(digits) ? digits - 1 : null
         if (index === options.length - 3) {
             return await getNewRatedDeck(user, player, format)
         } else if (index === options.length - 2) {
@@ -554,8 +556,9 @@ export const getRatedDeckToReplace = async (user, yourRatedDecks, format) => {
         max: 1,
         time: 5 * 60 * 1000
     }).then(async (collected) => {
-        const response = collected.first().content
-        const index = !isNaN(parseInt(response)) ? parseInt(response) - 1 : null
+        const response = collected.first().content.toLowerCase()
+        const digits = response.match(/\d/g).join('')
+        const index = !isNaN(digits) ? digits - 1 : null
         let previousRatedDeck = index >= 0 ? yourRatedDecks[index] : false
 
         previousRatedDeck = await Deck.findOne({
@@ -585,8 +588,9 @@ export const deleteRatedDeck = async (user, yourRatedDecks, format) => {
         max: 1,
         time: 5 * 60 * 1000
     }).then(async (collected) => {
-        const response = collected.first().content
-        const index = !isNaN(parseInt(response)) ? parseInt(response) - 1 : null
+        const response = collected.first().content.toLowerCase()
+        const digits = response.match(/\d/g).join('')
+        const index = !isNaN(digits) ? digits - 1 : null
         let previousRatedDeck = index >= 0 ? yourRatedDecks[index] : false
 
         if (previousRatedDeck) {
