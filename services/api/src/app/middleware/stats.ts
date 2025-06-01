@@ -41,6 +41,7 @@ export const getGeneralLeaderboard = async (req, res, next) => {
         order: [['elo', 'DESC']]
       })
   
+      console.log('stats', stats)
       return res.json(stats)
     } catch (err) {
       next(err)

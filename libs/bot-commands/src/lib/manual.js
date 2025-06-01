@@ -225,14 +225,14 @@ export default {
                     chipsWinner = (Math.round((classicDelta))) < 5 ? 5 : (Math.round((classicDelta))) > 20 ? 20 : (Math.round((classicDelta)))
                     chipsLoser = (origStatsLoser - origStatsWinner) < 72 ? 5 : (origStatsLoser - origStatsWinner) >=150 ? 3 : 4
                     
-                    const chipBonusWinner = winningPlayer.forgedSubscriberTier === 'Supporter' ? 1.5 :
-                        winningPlayer.forgedSubscriberTier === 'Patron' ? 2 :
-                        winningPlayer.forgedSubscriberTier === 'Benefactor' ? 3 :
+                    const chipBonusWinner = winningPlayer.forgedSubscriberTier === 'Supporter' ? 1.3 :
+                        winningPlayer.forgedSubscriberTier === 'Patron' ? 1.6 :
+                        winningPlayer.forgedSubscriberTier === 'Benefactor' ? 2 :
                         1
 
-                    const chipBonusLoser = losingPlayer.forgedSubscriberTier === 'Supporter' ? 1.5 :
-                    losingPlayer.forgedSubscriberTier === 'Patron' ? 2 :
-                        losingPlayer.forgedSubscriberTier === 'Benefactor' ? 3 :
+                    const chipBonusLoser = losingPlayer.forgedSubscriberTier === 'Supporter' ? 1.3 :
+                    losingPlayer.forgedSubscriberTier === 'Patron' ? 1.6 :
+                        losingPlayer.forgedSubscriberTier === 'Benefactor' ? 2 :
                         1
                         
                     chipsWinner = Math.round(chipsWinner * chipBonusWinner)
