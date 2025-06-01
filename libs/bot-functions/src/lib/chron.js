@@ -792,6 +792,9 @@ export const recalculateFormatStats = async (format) => {
                     const stats = await Stats.create({
                         playerName: match.winnerName,
                         playerId: winnerId,
+                        elo: baseElo,
+                        bestElo: baseElo,
+                        classicElo: baseElo,
                         formatName: format.name,
                         formatId: format.id,
                         serverId: server.id,
@@ -808,6 +811,9 @@ export const recalculateFormatStats = async (format) => {
                     const stats = await Stats.create({
                         playerName: match.loserName,
                         playerId: loserId,
+                        elo: baseElo,
+                        bestElo: baseElo,
+                        classicElo: baseElo,
                         formatName: format.name,
                         formatId: format.id,
                         serverId: server.id,
