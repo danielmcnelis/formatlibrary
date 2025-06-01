@@ -115,9 +115,6 @@ export const getFirstOfTwoRatedConfirmations = async (client, player, opponent, 
             .setStyle(ButtonStyle.Primary)
         )
 
-    console.log('member rated.js 114', member)
-    console.log('member?.user rated.js 114', member?.user)
-    console.log('member?.user?.username rated.js 114', member?.user?.username)
     const message = await member.user.send({ content: `I've found a Rated ${format.name} Format ${format.emoji} opponent for you. Do you still wish to play?`, components: [row] })
 
     setTimeout(async () => {
@@ -247,6 +244,7 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
             console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. ${mostRecentMatch ? `Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}`: `They have never played`}. Creating New Pairing <!>`)
             const playerDiscordName =  player.discordName
             const playerGlobalName = player.globalName
+            const member = await guild.members.fetch(player.discordId)
             const opponent = potentialPair.player
             const opponentDiscordName =  opponent.discordName
             const opponentGlobalName = opponent.globalName
@@ -260,7 +258,7 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
                 `\nDuelingbook Name: ${player.duelingBookName}`
             ).catch((err) => console.log(err))
 
-            interaction.user.send(
+            member.user.send(
                 `New pairing for Rated ${format.name} Format ${format.emoji}!` + 
                 `\nServer: ${server.name} ${server.logo}` + 
                 `\nChannel: <#${channel.id}>` +
@@ -343,6 +341,7 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
             const guild = client.guilds.cache.get(guildId)
             const channel = guild.channels.cache.get(channelId)
             const player = yourPool.player
+            const member = await guild.members.fetch(player.discordId)
             const playerDiscordName =  player.discordName
             const playerGlobalName = player.globalName
             const opponent = opponentsPool.player
@@ -360,7 +359,7 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
                 `\n${`Duelingbook Name: ${player.duelingBookName}`}`
             ).catch((err) => console.log(err))
             
-            interaction.user.send(
+            member.user.send(
                 `New pairing for Rated ${format.name} Format ${format.emoji}!` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${channelId}>` +

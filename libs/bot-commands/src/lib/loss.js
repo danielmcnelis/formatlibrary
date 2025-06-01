@@ -89,11 +89,17 @@ export default {
             })
 
             if (!winnerStats) {
+                const baseElo = format.name === 'Forged in Chaos' ? 400 : 500
                 winnerStats = await Stats.create({
                     playerName: winningPlayer.name, 
                     playerId: winningPlayer.id, 
                     formatName: format.name, 
                     formatId: format.id, 
+                    elo: baseElo,
+                    bestElo: baseElo,
+                    seasonalElo: baseElo,
+                    bestSeasonalElo: baseElo,
+                    classicElo: baseElo,
                     serverId: serverId, 
                     isInternal: server.hasInternalLadder
                 })
@@ -109,11 +115,17 @@ export default {
             })
 
             if (!loserStats) {
+                const baseElo = format.name === 'Forged in Chaos' ? 400 : 500
                 loserStats = await Stats.create({
                     playerName: losingPlayer.name, 
                     playerId: losingPlayer.id, 
                     formatName: format.name, 
                     formatId: format.id, 
+                    elo: baseElo,
+                    bestElo: baseElo,
+                    seasonalElo: baseElo,
+                    bestSeasonalElo: baseElo,
+                    classicElo: baseElo,
                     serverId: serverId, 
                     isInternal: server.hasInternalLadder
                 })
