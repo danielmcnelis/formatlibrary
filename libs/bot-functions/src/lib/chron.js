@@ -620,7 +620,7 @@ export const lookForAllPotentialPairs = async (client) => {
 
                 const potentialPairStats = await Stats.findOne({ where: { formatId: format.id, playerId: potentialPair.playerId }})
                 const potentialPairElo = format.useSeasonalElo ? potentialPairStats?.seasonalElo : potentialPairStats?.elo
-                if (format.name === 'Forged in Chaos' && Math.abs(yourElo - potentialPairElo) > 120) {
+                if (format.name === 'Forged in Chaos' && Math.abs(yourElo - potentialPairElo) > 100) {
                     continue
                 }
                 
