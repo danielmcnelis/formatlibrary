@@ -116,7 +116,10 @@ export default {
         const focusedValue = interaction.options.getFocused()
         const formats = await Format.findAll({
             where: {
-                name: {[Op.iLike]: focusedValue + '%'},
+                [Op.or]: {
+                    name: {[Op.iLike]: focusedValue + '%'},
+                    abbreviation: {[Op.iLike]: focusedValue + '%'}
+                },
                 category: {[Op.notIn]: ['discontinued', 'multiple']},
                 isHighlander: false
             },
