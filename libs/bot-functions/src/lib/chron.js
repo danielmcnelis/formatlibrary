@@ -42,7 +42,7 @@ export const runFrequentTasks = async (client) => {
     await lookForAllPotentialPairs(client)
     await manageSubscriptions(client)
 
-    return setTimeout(() => runFrequentTasks(client), 5 * 60 * 1000)
+    return setTimeout(() => runFrequentTasks(client), 2 * 60 * 1000)
 }
 
 // RUN NIGHTLY TASKS
@@ -620,7 +620,7 @@ export const lookForAllPotentialPairs = async (client) => {
 
                 const potentialPairStats = await Stats.findOne({ where: { formatId: format.id, playerId: potentialPair.playerId }})
                 const potentialPairElo = format.useSeasonalElo ? potentialPairStats?.seasonalElo : potentialPairStats?.elo
-                if (format.name === 'Forged in Chaos' && Math.abs(yourElo - potentialPairElo) > 100) {
+                if (format.name === 'Forged in Chaos' && Math.abs(yourElo - potentialPairElo) > 120) {
                     continue
                 }
                 
