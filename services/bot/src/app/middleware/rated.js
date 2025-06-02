@@ -83,32 +83,32 @@ export const joinRatedPool = async (req, res, next) => {
                 console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Creating New Pairing <!>`)
                 await sendRatedPairingNotifications(client, player, opponent, format)
 
-                // const count1 = Pairing.count({
-                //     where: {
-                //         status: 'active',
-                //         [Op.or]: {
-                //             playerAId: player.id,
-                //             playerBId: player.id,
-                //         },
-                //         createdAt: {[Op.gte]: twoMinutesAgo}
-                //     }
-                // })
+                const count1 = await Pairing.count({
+                    where: {
+                        status: 'active',
+                        [Op.or]: {
+                            playerAId: player.id,
+                            playerBId: player.id,
+                        },
+                        createdAt: {[Op.gte]: twoMinutesAgo}
+                    }
+                })
     
-                // const count2 = Pairing.count({
-                //     where: {
-                //         status: 'active',
-                //         [Op.or]: {
-                //             playerAId: opponent.id,
-                //             playerBId: opponent.id,
-                //         },
-                //         createdAt: {[Op.gte]: twoMinutesAgo}
-                //     }
-                // })
+                const count2 = await Pairing.count({
+                    where: {
+                        status: 'active',
+                        [Op.or]: {
+                            playerAId: opponent.id,
+                            playerBId: opponent.id,
+                        },
+                        createdAt: {[Op.gte]: twoMinutesAgo}
+                    }
+                })
     
-                // if (count1 || count2) {
-                //     console.log(`RATED API <!> DO NOT PAIR <!>`)
-                //     return
-                // }
+                if (count1 || count2) {
+                    console.log(`RATED API <!> DO NOT PAIR <!>`)
+                    return
+                }
 
                 const pairing = await Pairing.create({
                     formatId: format.id,

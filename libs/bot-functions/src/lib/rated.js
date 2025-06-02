@@ -251,34 +251,34 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
             const opponentGlobalName = opponent.globalName
             const opposingMember = await guild.members.fetch(opponent.discordId)
 
-            // const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000)) 
+            const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000)) 
 
-            // const count1 = Pairing.count({
-            //     where: {
-            //         status: 'active',
-            //         [Op.or]: {
-            //             playerAId: player.id,
-            //             playerBId: player.id,
-            //         },
-            //         createdAt: {[Op.gte]: twoMinutesAgo}
-            //     }
-            // })
+            const count1 = await Pairing.count({
+                where: {
+                    status: 'active',
+                    [Op.or]: {
+                        playerAId: player.id,
+                        playerBId: player.id,
+                    },
+                    createdAt: {[Op.gte]: twoMinutesAgo}
+                }
+            })
 
-            // const count2 = Pairing.count({
-            //     where: {
-            //         status: 'active',
-            //         [Op.or]: {
-            //             playerAId: opponent.id,
-            //             playerBId: opponent.id,
-            //         },
-            //         createdAt: {[Op.gte]: twoMinutesAgo}
-            //     }
-            // })
+            const count2 = await Pairing.count({
+                where: {
+                    status: 'active',
+                    [Op.or]: {
+                        playerAId: opponent.id,
+                        playerBId: opponent.id,
+                    },
+                    createdAt: {[Op.gte]: twoMinutesAgo}
+                }
+            })
 
-            // if (count1 || count2) {
-            //     console.log(`lookForPotentialPairs() <!> DO NOT PAIR <!>`)
-            //     return
-            // }
+            if (count1 || count2) {
+                console.log(`lookForPotentialPairs() <!> DO NOT PAIR <!>`)
+                return
+            }
 
             opposingMember.user.send(
                 `New pairing for Rated ${format.name} Format ${format.emoji}!` +
@@ -380,34 +380,34 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
             const opposingMember = await guild.members.fetch(opponent.discordId)
 
 
-            // const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000)) 
+            const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000)) 
 
-            // const count1 = Pairing.count({
-            //     where: {
-            //         status: 'active',
-            //         [Op.or]: {
-            //             playerAId: yourPool.playerId,
-            //             playerBId: yourPool.playerId,
-            //         },
-            //         createdAt: {[Op.gte]: twoMinutesAgo}
-            //     }
-            // })
+            const count1 = await Pairing.count({
+                where: {
+                    status: 'active',
+                    [Op.or]: {
+                        playerAId: yourPool.playerId,
+                        playerBId: yourPool.playerId,
+                    },
+                    createdAt: {[Op.gte]: twoMinutesAgo}
+                }
+            })
 
-            // const count2 = Pairing.count({
-            //     where: {
-            //         status: 'active',
-            //         [Op.or]: {
-            //             playerAId: opponentsPool.playerId,
-            //             playerBId: opponentsPool.playerId,
-            //         },
-            //         createdAt: {[Op.gte]: twoMinutesAgo}
-            //     }
-            // })
+            const count2 = await Pairing.count({
+                where: {
+                    status: 'active',
+                    [Op.or]: {
+                        playerAId: opponentsPool.playerId,
+                        playerBId: opponentsPool.playerId,
+                    },
+                    createdAt: {[Op.gte]: twoMinutesAgo}
+                }
+            })
 
-            // if (count1 || count2) {
-            //     console.log(`handleRatedConfirmation() <!> DO NOT PAIR <!>`)
-            //     return
-            // }
+            if (count1 || count2) {
+                console.log(`handleRatedConfirmation() <!> DO NOT PAIR <!>`)
+                return
+            }
 
             console.log(`handleRatedConfirmation() New Pairing!`)
 
