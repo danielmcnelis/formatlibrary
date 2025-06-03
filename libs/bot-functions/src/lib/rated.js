@@ -200,7 +200,7 @@ export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, pl
 export const lookForPotentialPairs = async (interaction, pool, player, format, server, guild, channel) => {
     const yourStats = await Stats.findOne({ where: { formatId: format.id, playerId: player.id }})
     const yourElo = format.useSeasonalElo ? yourStats.seasonalElo : yourStats.elo
-    const potentialPairs = await Pool.findOne({ 
+    const potentialPair = await Pool.findOne({ 
         where: { 
             playerId: {[Op.not]: player.id },
             status: 'pending',
@@ -210,8 +210,8 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
         order: [['createdAt', 'ASC']]
     }) || []
 
-    for (let i = 0; i < potentialPairs.length; i++) {
-        const potentialPair = potentialPairs[i]
+    // for (let i = 0; i < potentialPairs.length; i++) {
+        // const potentialPair = potentialPairs[i]
         
         const potentialPairStats = await Stats.findOne({ where: { formatId: format.id, playerId: potentialPair.playerId }})
         const potentialPairElo = format?.useSeasonalElo ? potentialPairStats?.seasonalElo : potentialPairStats?.elo
@@ -349,7 +349,7 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
                 `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
             
             return channel.send({ content: content })   
-        }
+        // }
     }
 }
 
