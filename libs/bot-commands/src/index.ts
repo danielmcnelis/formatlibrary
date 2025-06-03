@@ -1,5 +1,6 @@
 import activity from './lib/activity'
 import bracket from './lib/bracket'
+import cancel from './lib/cancel.js'
 import card from './lib/card'
 import close from './lib/close'
 import coin from './lib/coin'
@@ -56,7 +57,6 @@ import test from './lib/test'
 import trivia from './lib/trivia'
 import undo from './lib/undo'
 import username from './lib/username'
-import cancel from './lib/cancel.js'
 
 export default {
     formatLibraryCommands: {
