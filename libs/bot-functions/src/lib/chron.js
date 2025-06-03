@@ -37,12 +37,18 @@ export const getRemainingDaysInMonth = () => {
 }
 
 // RUN FREQUENT TASKS
+export const runSomewhatFrequentTasks = async (client) => {
+    await manageSubscriptions(client)
+
+    return setTimeout(() => runFrequentTasks(client), 10 * 60 * 1000)
+}
+
+// RUN FREQUENT TASKS
 export const runFrequentTasks = async (client) => {
     await cleanUpPools()
     await lookForAllPotentialPairs(client)
-    await manageSubscriptions(client)
 
-    return setTimeout(() => runFrequentTasks(client), 2 * 60 * 1000)
+    return setTimeout(() => runFrequentTasks(client), 5 * 60 * 1000)
 }
 
 // RUN NIGHTLY TASKS

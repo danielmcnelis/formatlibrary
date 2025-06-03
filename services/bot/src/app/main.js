@@ -29,13 +29,14 @@ import { createTopCut, editTieBreakers, getCurrentRound, getMidnightCountdown, g
     assignRoles, createMembership, createPlayer, fetchCardNames, hasPartnerAccess, 
     isModerator, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
     editPointsSystem, runNightlyTasks, runWeeklyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, 
-    getKnownAbbreviation, capitalize, runFrequentTasks
+    getKnownAbbreviation, capitalize, runFrequentTasks, runSomewhatFrequentTasks
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
 import { emojis } from '@fl/bot-emojis'
 import commands from '@fl/bot-commands'
 import { rated } from './routes'
+import { runSomewhatFrequentTasks } from '../../../../libs/bot-functions/src'
 client.commands = new Collection()
 Object.values(commands.formatLibraryCommands).forEach((command) => client.commands.set(command.data.name, command))
 Object.values(commands.globalCommands).forEach((command) => client.commands.set(command.data.name, command))
@@ -133,7 +134,14 @@ client.on('ready', async() => {
 
     try {
         // FREQUENT TASKS
-        runFrequentTasks(client)
+        setTimeout(() => runFrequentTasks(client), 1 * 60 * 1000)
+    } catch (err) {
+        console.log(err)
+    }
+
+    try {
+        // SOMEWHATFREQUENT TASKS
+        setTimeout(() => runSomewhatFrequentTasks(client), 2 * 60 * 1000)
     } catch (err) {
         console.log(err)
     }
