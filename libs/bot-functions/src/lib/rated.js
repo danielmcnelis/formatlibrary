@@ -217,8 +217,7 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
         const potentialPairElo = format?.useSeasonalElo ? potentialPairStats?.seasonalElo : potentialPairStats?.elo
         if (format.name === 'Forged in Chaos' && ((yourElo <= 430 && potentialPairElo > 500) || (yourElo > 500 && potentialPairElo <= 430))) {
         // if (format.name === 'Forged in Chaos' && (Math.abs(yourElo - potentialPairElo) > 60)) {
-            console.log(`<!> ${player.name} and ${potentialPair.playerName} are TOO FAR APART IN ELO. Look for another opponent.`)
-            continue
+            return console.log(`<!> ${player.name} and ${potentialPair.playerName} are TOO FAR APART IN ELO. Look for another opponent.`)
         }
 
         const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
@@ -236,12 +235,10 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
         })             
 
         if (mostRecentMatch && (cutoff < mostRecentMatch?.createdAt)) {   
-            console.log(`<!> ${player.name} and ${potentialPair.playerName} are RECENT opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Look for another opponent <!>`)
-            continue
+            return console.log(`<!> ${player.name} and ${potentialPair.playerName} are RECENT opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Look for another opponent <!>`)
         } else if ((potentialPair.updatedAt < twoMinutesAgo) || potentialPair.wasInactive) {
             console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. ${mostRecentMatch ? `Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}`: `They have never played`}. Getting confirmation from ${potentialPair.playerName} <!>`)
-            getRatedConfirmation(potentialPair.player, player, format, guild)
-            continue
+            return getRatedConfirmation(potentialPair.player, player, format, guild)
         } else {
             console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. ${mostRecentMatch ? `Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}`: `They have never played`}. Creating New Pairing <!>`)
             const playerDiscordName =  player.discordName
