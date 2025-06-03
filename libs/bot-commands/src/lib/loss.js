@@ -230,12 +230,12 @@ export default {
 
                     const chipBonusWinner = winningPlayer.forgedSubscriberTier === 'Supporter' ? 1.3 :
                         winningPlayer.forgedSubscriberTier === 'Patron' ? 1.6 :
-                        winningPlayer.forgedSubscriberTier === 'Benefactor' ? 2 :
+                        winningPlayer.forgedSubscriberTier === 'Benefactor' || winningPlayer.id === 'Cc2FhYrRPctZ4y72Y79gKp' ? 2 :
                         1
 
                     const chipBonusLoser = losingPlayer.forgedSubscriberTier === 'Supporter' ? 1.3 :
-                    losingPlayer.forgedSubscriberTier === 'Patron' ? 1.6 :
-                        losingPlayer.forgedSubscriberTier === 'Benefactor' ? 2 :
+                        losingPlayer.forgedSubscriberTier === 'Patron' ? 1.6 :
+                        losingPlayer.forgedSubscriberTier === 'Benefactor' || winningPlayer.id === 'Cc2FhYrRPctZ4y72Y79gKp' ? 2 :
                         1
                         
                     chipsWinner = Math.round(chipsWinner * chipBonusWinner)
