@@ -10,6 +10,7 @@ import { Upload } from '@aws-sdk/lib-storage'
 import { S3 } from '@aws-sdk/client-s3'
 import { config } from '@fl/config'
 import * as tcgPlayer from '../../../../tokens/tcgplayer.json'
+import {client} from '@fl/config'
 const Canvas = require('canvas')
 
 // GET MIDNIGHT COUNTDOWN

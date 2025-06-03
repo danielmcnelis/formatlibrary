@@ -66,8 +66,9 @@ export const getRatedConfirmation = async (player, opponent, format, guild) => {
             await yourPool.destroy()
             console.log(`removed ${yourPool.playerName} from the ${yourPool.formatName} rated pool`)
             await message.channel.send({ content: `Sorry, time's up! I've removed you from the ${format.name} Format ${format.emoji} rated pool.`})
+            return false
         }
-    }, 5 * 60 * 1000)
+    }, 2 * 60 * 1000)
 }
 
 
@@ -200,7 +201,7 @@ export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, pl
 export const lookForPotentialPairs = async (interaction, pool, player, format, server, guild, channel) => {
     const yourStats = await Stats.findOne({ where: { formatId: format.id, playerId: player.id }})
     const yourElo = format.useSeasonalElo ? yourStats.seasonalElo : yourStats.elo
-    const potentialPair = await Pool.findOne({ 
+    const potentialPairs = await Pool.findAll({ 
         where: { 
             playerId: {[Op.not]: player.id },
             status: 'pending',
@@ -210,14 +211,15 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
         order: [['createdAt', 'ASC']]
     }) || []
 
-    // for (let i = 0; i < potentialPairs.length; i++) {
-        // const potentialPair = potentialPairs[i]
+    for (let i = 0; i < potentialPairs.length; i++) {
+        const potentialPair = potentialPairs[i]
         
         const potentialPairStats = await Stats.findOne({ where: { formatId: format.id, playerId: potentialPair.playerId }})
         const potentialPairElo = format?.useSeasonalElo ? potentialPairStats?.seasonalElo : potentialPairStats?.elo
         if (format.name === 'Forged in Chaos' && ((yourElo <= 430 && potentialPairElo > 500) || (yourElo > 500 && potentialPairElo <= 430))) {
         // if (format.name === 'Forged in Chaos' && (Math.abs(yourElo - potentialPairElo) > 60)) {
-            return console.log(`<!> ${player.name} and ${potentialPair.playerName} are TOO FAR APART IN ELO. Look for another opponent.`)
+            console.log(`<!> ${player.name} and ${potentialPair.playerName} are TOO FAR APART IN ELO. Look for another opponent.`)
+            continue
         }
 
         const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
@@ -235,10 +237,16 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
         })             
 
         if (mostRecentMatch && (cutoff < mostRecentMatch?.createdAt)) {   
-            return console.log(`<!> ${player.name} and ${potentialPair.playerName} are RECENT opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Look for another opponent <!>`)
+            console.log(`<!> ${player.name} and ${potentialPair.playerName} are RECENT opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Look for another opponent <!>`)
+            continue
         } else if ((potentialPair.updatedAt < twoMinutesAgo) || potentialPair.wasInactive) {
             console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. ${mostRecentMatch ? `Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}`: `They have never played`}. Getting confirmation from ${potentialPair.playerName} <!>`)
-            return getRatedConfirmation(potentialPair.player, player, format, guild)
+            const foundOpponent = await getRatedConfirmation(potentialPair.player, player, format, guild)
+            if (foundOpponent) {
+                return true
+            } else {
+                continue
+            }
         } else {
             console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. ${mostRecentMatch ? `Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}`: `They have never played`}. Creating New Pairing <!>`)
             const playerDiscordName =  player.discordName
@@ -346,7 +354,7 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
                 `New Rated ${format.name} Format ${format.emoji} Match: ${p2Rank}<@${opponent.discordId}> (DB: ${opponent.duelingBookName}) vs. ${p1Rank}<@${player.discordId}> (DB: ${player.duelingBookName}). Good luck to both duelists.`
             
             return channel.send({ content: content })   
-        // }
+        }
     }
 }
 
