@@ -39,6 +39,7 @@ export const getRemainingDaysInMonth = () => {
 
 // RUN FREQUENT TASKS
 export const runSomewhatFrequentTasks = async (client) => {
+    console.log('runSomewhatFrequentTasks()')
     await manageSubscriptions(client)
 
     return setTimeout(() => runFrequentTasks(client), 10 * 60 * 1000)
@@ -627,10 +628,23 @@ export const lookForAllPotentialPairs = async (client) => {
 
                 const potentialPairStats = await Stats.findOne({ where: { formatId: format.id, playerId: potentialPair.playerId }})
                 const potentialPairElo = format.useSeasonalElo ? potentialPairStats?.seasonalElo : potentialPairStats?.elo
-                // if (format.name === 'Forged in Chaos' && ((yourElo <= 430 && potentialPairElo > 500) || (yourElo > 500 && potentialPairElo <= 430))) {
-                if (format.name === 'Forged in Chaos' && Math.abs(yourElo - potentialPairElo) > 80) {
-                    continue
+                let acceptablePairing
+                if (format.name === 'Forged in Chaos' && (
+                    yourElo <= 400 && potentialPairElo <= 400 ||
+                    yourElo > 440 && potentialPairElo > 440 ||
+                    Math.abs(yourElo - potentialPairElo) >= 80
+                )) {
+                    acceptablePairing = true
+                } else {
+                    acceptablePairing = false
                 }
+
+                if (!acceptablePairing) continue
+
+                // if (format.name === 'Forged in Chaos' && ((yourElo <= 430 && potentialPairElo > 500) || (yourElo > 500 && potentialPairElo <= 430))) {
+                // if (format.name === 'Forged in Chaos' && Math.abs(yourElo - potentialPairElo) > 100) {
+                    // continue
+                // }
                 
                 const cutoff = new Date(new Date() - (15 * 60 * 1000))
         
