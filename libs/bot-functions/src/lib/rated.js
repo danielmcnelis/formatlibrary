@@ -796,6 +796,55 @@ export const getNewRatedDeck = async (user, player, format, deckToReplace) => {
     })
 }
 
+// CHECK PREVIOUS FORGED RATED DECK
+export const checkPreviousForgedRatedDeck = async (user, player, ydk, format) => {
+    const main = ydk.split('#main')[1].split('#extra')[0].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
+    const extra = ydk.split('#extra')[1].split('!side')[0].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)
+    const side = ydk.split('!side')[1].split(/[\s]+/).map((e) => e.replace(/\D/g,'')).filter((e) => e.length)    
+    const minimum = format.category === 'Speed' ? 20 : 40
+
+    if (main?.length < minimum) {
+        user.send(`I'm sorry, your deck must contain at least ${minimum} cards.`).catch((err) => console.log(err))    
+        return false 
+    }
+
+    const deckArr = [...main, ...extra, ...side,]
+
+    const issues = await getForgedIssues(player, deckArr, format)
+
+    const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards, zeroCopiesOwned, oneCopyOwned, twoCopiesOwned } = issues
+    if (!illegalCards || !forbiddenCards || !limitedCards || !semiLimitedCards || !unrecognizedCards) return false
+    
+    if (illegalCards.length || forbiddenCards.length || limitedCards.length || semiLimitedCards.length || zeroCopiesOwned?.length || oneCopyOwned?.length || twoCopiesOwned?.length) {
+        let response = [`I'm sorry, ${user.username}, your deck is not legal. ${emojis.mad}`]
+        if (illegalCards.length) response = [...response, `\nThe following cards are not included in this format:`, ...illegalCards]
+        if (forbiddenCards.length) response = [...response, `\nThe following cards are forbidden:`, ...forbiddenCards]
+        if (limitedCards.length) response = [...response, `\nThe following cards are limited:`, ...limitedCards]
+        if (semiLimitedCards.length) response = [...response, `\nThe following cards are semi-limited:`, ...semiLimitedCards]
+        if (zeroCopiesOwned?.length) response = [...response, `\nYou own 0 copies of the following cards:`, ...zeroCopiesOwned]
+        if (oneCopyOwned?.length) response = [...response, `\nYou only own 1 copy of the following cards:`, ...oneCopyOwned]
+        if (twoCopiesOwned?.length) response = [...response, `\nYou only own 2 copies of the following cards:`, ...twoCopiesOwned]
+    
+        for (let i = 0; i < response.length; i += 50) {
+            if (response[i+50] && response[i+50].startsWith("\n")) {
+                user.send({ content: response.slice(i, i+51).join('\n').toString()}).catch((err) => console.log(err))
+                i++
+            } else {
+                user.send({ content: response.slice(i, i+50).join('\n').toString()}).catch((err) => console.log(err))
+            }
+        }
+    
+        return false
+    } else if (unrecognizedCards.length) {
+        let response = `I'm sorry, ${user.username}, the following card IDs were not found in our database:\n${unrecognizedCards.join('\n')}`
+        response += `\n\nThese cards are either alternate artwork, new to the TCG, OCG only, or incorrect in our database. Please contact the Tournament Organizer or the Admin if you can't resolve this.`
+        
+        user.send({ content: response.toString() }).catch((err) => console.log(err))
+        return false
+     } else {
+        return true
+    }
+}
 
 
 //ASK FOR DECK NAME

@@ -2,7 +2,7 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { Deck, Format, Match, Membership, Pairing, Player, Pool, Server, Stats } from '@fl/models'
 import { Op } from 'sequelize'
-import { askForSimName, drawDeck, lookForPotentialPairs, getRatedFormat, getNewRatedDeck, getPreviousRatedDeck } from '@fl/bot-functions'
+import { askForSimName, drawDeck, lookForPotentialPairs, getRatedFormat, getNewRatedDeck, getPreviousRatedDeck, checkPreviousForgedRatedDeck } from '@fl/bot-functions'
 // import axios from 'axios'
 import { client } from '../client'
 import { emojis } from '@fl/bot-emojis'
@@ -44,6 +44,9 @@ const getRatedInformation = async (interaction, player, format) => {
 
         let ratedDeck
         ratedDeck = await getPreviousRatedDeck(interaction.user, player, yourRatedDecks, format)
+        if (ratedDeck && format.name === 'Forged in Chaos') {
+            await checkPreviousForgedRatedDeck(interaction.user, player, ratedDeck.ydk, format)
+        }
         
         if (!yourRatedDecks.length) {
             ratedDeck = await getNewRatedDeck(interaction.user, player, format)
