@@ -217,19 +217,16 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
         const potentialPairStats = await Stats.findOne({ where: { formatId: format.id, playerId: potentialPair.playerId }})
         const potentialPairElo = format?.useSeasonalElo ? potentialPairStats?.seasonalElo : potentialPairStats?.elo
         // if (format.name === 'Forged in Chaos' && ((yourElo <= 430 && potentialPairElo > 500) || (yourElo > 500 && potentialPairElo <= 430))) {
-        let acceptablePairing
         if (format.name === 'Forged in Chaos' && (
             yourElo <= 420 && potentialPairElo <= 420 ||
             yourElo > 420 && potentialPairElo > 420 ||
             Math.abs(yourElo - potentialPairElo) <= 80
         )) {
-            acceptablePairing = true
+            console.log(`Acceptable pairing`)
         } else {
-            acceptablePairing = false
             console.log(`<!> ${player.name} and ${potentialPair.playerName} are TOO FAR APART IN ELO. Look for another opponent.`)
+            continue
         }
-
-        if (!acceptablePairing) continue
         
         // if (format.name === 'Forged in Chaos' && (Math.abs(yourElo - potentialPairElo) > 80)) {
         //     continue
