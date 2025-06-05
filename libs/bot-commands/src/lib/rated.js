@@ -45,7 +45,8 @@ const getRatedInformation = async (interaction, player, format) => {
         let ratedDeck
         ratedDeck = await getPreviousRatedDeck(interaction.user, player, yourRatedDecks, format)
         if (ratedDeck && format.name === 'Forged in Chaos') {
-            await checkPreviousForgedRatedDeck(interaction.user, player, ratedDeck.ydk, format)
+            const previousDeckIsLegal = await checkPreviousForgedRatedDeck(interaction.user, player, ratedDeck.ydk, format)
+            if (!previousDeckIsLegal) return
         }
         
         if (!yourRatedDecks.length) {
