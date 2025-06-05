@@ -634,7 +634,7 @@ export const lookForAllPotentialPairs = async (client) => {
                     Math.abs(yourElo - potentialPairElo) <= 80
                 )) {
                     console.log(`Acceptable pairing`)
-                } else {
+                } else if (format.name === 'Forged in Chaos') {
                     console.log(`<!> ${player.name} and ${potentialPair.playerName} are TOO FAR APART IN ELO. Look for another opponent.`)
                     continue
                 }
