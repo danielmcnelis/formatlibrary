@@ -136,7 +136,7 @@ export default {
             if (interaction.guildId) return await interaction.editReply(`Try using **/rated** by DM'ing it to me.`)
             const player = await Player.findOne({ where: { discordId: interaction.user.id } })
             if (!player) return await interaction.editReply(`You are not in the database. Please join the Format Library Discord server to register.`)
-            if (player.isHidden) return await interaction.editReply(`You are not allowed is not allowed to play in the Format Library rated system.`)
+            if (player.isHidden || player.isBannedFromRated) return await interaction.editReply(`You are not allowed to play in the Format Library rated system.`)
             const formatName = interaction.options.getString('format')
 
             const format = await Format.findOne({

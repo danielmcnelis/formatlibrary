@@ -89,6 +89,10 @@ export const Player = db.define('players', {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
+  isBannedFromRated: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
   youtube: {
       type: Sequelize.STRING
   },
