@@ -630,8 +630,8 @@ export const lookForAllPotentialPairs = async (client) => {
                 const potentialPairElo = format.useSeasonalElo ? potentialPairStats?.seasonalElo : potentialPairStats?.elo
                 let acceptablePairing
                 if (format.name === 'Forged in Chaos' && (
-                    yourElo <= 400 && potentialPairElo <= 400 ||
-                    yourElo > 440 && potentialPairElo > 440 ||
+                    yourElo <= 420 && potentialPairElo <= 420 ||
+                    yourElo > 420 && potentialPairElo > 420 ||
                     Math.abs(yourElo - potentialPairElo) <= 80
                 )) {
                     acceptablePairing = true

@@ -219,8 +219,8 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
         // if (format.name === 'Forged in Chaos' && ((yourElo <= 430 && potentialPairElo > 500) || (yourElo > 500 && potentialPairElo <= 430))) {
         let acceptablePairing
         if (format.name === 'Forged in Chaos' && (
-            yourElo <= 400 && potentialPairElo <= 400 ||
-            yourElo > 440 && potentialPairElo > 440 ||
+            yourElo <= 420 && potentialPairElo <= 420 ||
+            yourElo > 420 && potentialPairElo > 420 ||
             Math.abs(yourElo - potentialPairElo) <= 80
         )) {
             acceptablePairing = true
