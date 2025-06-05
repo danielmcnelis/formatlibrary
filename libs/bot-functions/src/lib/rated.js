@@ -178,7 +178,7 @@ export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, pl
             .setStyle(ButtonStyle.Primary)
         )
 
-    const message = await member.user.send({ content: `I've found a Rated ${format?.name} Format ${format?.emoji} opponent for you. Do you still wish to play?`, components: [row] })
+    const message = await member.send({ content: `I've found a Rated ${format?.name} Format ${format?.emoji} opponent for you. Do you still wish to play?`, components: [row] })
 
     setTimeout(async () => {
         const unconfirmed = await Pool.count({
