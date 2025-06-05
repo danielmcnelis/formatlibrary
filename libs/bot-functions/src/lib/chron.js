@@ -42,7 +42,7 @@ export const runSomewhatFrequentTasks = async (client) => {
     console.log('runSomewhatFrequentTasks()')
     await manageSubscriptions(client)
 
-    return setTimeout(() => runFrequentTasks(client), 10 * 60 * 1000)
+    return setTimeout(() => runSomewhatFrequentTasks(client), 10 * 60 * 1000)
 }
 
 // RUN FREQUENT TASKS

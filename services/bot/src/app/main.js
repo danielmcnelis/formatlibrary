@@ -28,7 +28,7 @@ import { createTopCut, editTieBreakers, getCurrentRound, getMidnightCountdown, g
     startChallongeBracket, startTournament, endSwissTournamentWithoutPlayoff, saveReplay, undoMatch, cancelPairing,
     assignRoles, createMembership, createPlayer, fetchCardNames, hasPartnerAccess, 
     isModerator, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
-    editPointsSystem, runNightlyTasks, runWeeklyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, 
+    editPointsSystem, runNightlyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, 
     getKnownAbbreviation, capitalize, runFrequentTasks, runSomewhatFrequentTasks
 } from '@fl/bot-functions'
 
@@ -36,7 +36,6 @@ import { createTopCut, editTieBreakers, getCurrentRound, getMidnightCountdown, g
 import { emojis } from '@fl/bot-emojis'
 import commands from '@fl/bot-commands'
 import { rated } from './routes'
-import { runSomewhatFrequentTasks } from '../../../../libs/bot-functions/src'
 client.commands = new Collection()
 Object.values(commands.formatLibraryCommands).forEach((command) => client.commands.set(command.data.name, command))
 Object.values(commands.globalCommands).forEach((command) => client.commands.set(command.data.name, command))
