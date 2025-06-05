@@ -30,6 +30,7 @@ export default {
             let chipsWinner, chipsLoser
             const winningUser = interaction.options.getUser('opponent')
             const winningMember = await interaction.guild?.members.fetch(winningUser.id).catch((err) => console.log(err))
+            const losingMember = interaction.member
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
             if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
             if (winningUser.id === interaction.user.id) return await interaction.editReply({ content: `You cannot lose a match to yourself.`})
@@ -228,14 +229,21 @@ export default {
                     chipsWinner = (Math.round((classicDelta))) < 5 ? 5 : (Math.round((classicDelta))) > 20 ? 20 : (Math.round((classicDelta )))
                     chipsLoser = (origStatsLoser - origStatsWinner) < 72 ? 5 : (origStatsLoser - origStatsWinner) >=150 ? 3 : 4
 
-                    const chipBonusWinner = winningPlayer.forgedSubscriberTier === 'Supporter' ? 1.3 :
-                        winningPlayer.forgedSubscriberTier === 'Patron' ? 1.6 :
-                        winningPlayer.forgedSubscriberTier === 'Benefactor' || winningPlayer.id === 'Cc2FhYrRPctZ4y72Y79gKp' ? 2 :
+                    const winnerIsSupporter = winningMember.roles.cache.has('1375131869036810302') || winningPlayer.forgedSubscriberTier === 'Supporter'
+                    const winnerIsPatron = winningMember.roles.cache.has('1375132712070811689') || winningPlayer.forgedSubscriberTier === 'Patron'
+                    const winnerIsBenefactor = winningMember.roles.cache.has('1375133829521608784') || winningPlayer.forgedSubscriberTier === 'Benefactor' || winningPlayer.id === 'Cc2FhYrRPctZ4y72Y79gKp'
+                    const loserIsSupporter = losingMember.roles.cache.has('1375131869036810302') || losingPlayer.forgedSubscriberTier === 'Supporter'
+                    const loserIsPatron = losingMember.roles.cache.has('1375132712070811689') || losingPlayer.forgedSubscriberTier === 'Patron'
+                    const loserIsBenefactor = losingMember.roles.cache.has('1375133829521608784') || losingPlayer.forgedSubscriberTier === 'Benefactor' || losingPlayer.id === 'Cc2FhYrRPctZ4y72Y79gKp'
+                    
+                    const chipBonusWinner =  winnerIsBenefactor ? 2 :
+                        winnerIsPatron ? 1.6 :
+                        winnerIsSupporter ? 1.3 :
                         1
-
-                    const chipBonusLoser = losingPlayer.forgedSubscriberTier === 'Supporter' ? 1.3 :
-                        losingPlayer.forgedSubscriberTier === 'Patron' ? 1.6 :
-                        losingPlayer.forgedSubscriberTier === 'Benefactor' || losingPlayer.id === 'Cc2FhYrRPctZ4y72Y79gKp' ? 2 :
+                    
+                    const chipBonusLoser =  loserIsBenefactor ? 2 :
+                        loserIsPatron ? 1.6 :
+                        loserIsSupporter ? 1.3 :
                         1
                         
                     chipsWinner = Math.round(chipsWinner * chipBonusWinner)
