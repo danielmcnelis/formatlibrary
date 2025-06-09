@@ -37,7 +37,7 @@ export const getRemainingDaysInMonth = () => {
     return remainingDays
 }
 
-// RUN FREQUENT TASKS
+// RUN SOMEWHAT FREQUENT TASKS
 export const runSomewhatFrequentTasks = async (client) => {
     console.log('runSomewhatFrequentTasks()')
     await manageSubscriptions(client)

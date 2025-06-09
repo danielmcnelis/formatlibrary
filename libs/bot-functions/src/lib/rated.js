@@ -83,10 +83,7 @@ export const getRatedConfirmation = async (player, opponent, format, guild) => {
         return false
       }
 
-      myFunction()
-
-
-    
+      await myFunction()
 }
 
 
