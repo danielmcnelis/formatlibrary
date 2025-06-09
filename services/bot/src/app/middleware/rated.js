@@ -77,8 +77,12 @@ export const joinRatedPool = async (req, res, next) => {
                 continue
             } else if (potentialPair.updatedAt < twoMinutesAgo) {
                 console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Getting confirmation from ${potentialPair.playerName} <!>`)
-                await getRatedConfirmation(opponent, player, format, guild)
-                continue
+                const confirmed = await getRatedConfirmation(opponent, player, format, guild)
+                if (!confirmed) {
+                    continue
+                } else {
+                    return true
+                }
             } else {
                 console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Creating New Pairing <!>`)
                 await sendRatedPairingNotifications(client, player, opponent, format)

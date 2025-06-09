@@ -11,6 +11,7 @@ import { drawDeck } from './utility'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 import { client } from '../client'
 import { getForgedIssues } from './forged'
+import { time } from 'console'
 
 // GET RATED CONFIRMATION
 export const getRatedConfirmation = async (player, opponent, format, guild) => {
@@ -52,23 +53,40 @@ export const getRatedConfirmation = async (player, opponent, format, guild) => {
         )
 
     const message = await member.user?.send({ content: `I've found a Rated ${format.name} Format ${format.emoji} opponent for you. Do you still wish to play?`, components: [row] })
+    function delay(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time, async () => {
+                const unconfirmed = await Pool.count({
+                    where: {
+                        id: yourPool.id,
+                        status: 'confirming'
+                    }
+                })
+        
+                if (unconfirmed) {
+                    await message.edit({ components: [] }).catch((err) => console.log(err))
+                    await yourPool.destroy()
+                    console.log(`removed ${yourPool.playerName} from the ${yourPool.formatName} rated pool`)
+                    await message.channel.send({ content: `Sorry, time's up! I've removed you from the ${format.name} Format ${format.emoji} rated pool.`})
+                    return false
+                } else {
+                    return true
+                }
+            }, time);
+        });
+      }
 
-    setTimeout(async () => {
-        const unconfirmed = await Pool.count({
-            where: {
-                id: yourPool.id,
-                status: 'confirming'
-            }
-        })
+      async function myFunction() {
+        console.log("Before delay")
+        await delay(2 * 60 * 1000)
+        console.log("After delay")
+        return false
+      }
 
-        if (unconfirmed) {
-            await message.edit({ components: [] }).catch((err) => console.log(err))
-            await yourPool.destroy()
-            console.log(`removed ${yourPool.playerName} from the ${yourPool.formatName} rated pool`)
-            await message.channel.send({ content: `Sorry, time's up! I've removed you from the ${format.name} Format ${format.emoji} rated pool.`})
-            return false
-        }
-    }, 2 * 60 * 1000)
+      myFunction()
+
+
+    
 }
 
 
