@@ -256,6 +256,8 @@ export default {
                         
                     chipsWinner = Math.round(chipsWinner * chipBonusWinner)
                     chipsLoser = Math.round(chipsLoser * chipBonusLoser)
+                    
+                    if (chipsWinner <= chipsLoser) chipsWinner = chipsLoser + 1
 
                     const newChipsWinner = winnersWallet.starchips + chipsWinner
                     const newChipsLoser = losersWallet.starchips + chipsLoser

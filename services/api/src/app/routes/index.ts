@@ -7,6 +7,7 @@ import decks from './decks'
 import deckTypes from './deckTypes'
 import drafts from './drafts'
 import events from './events'
+import forged from './forged'
 import formats from './formats'
 import images from './images'
 import matchups from './matchups'
@@ -23,4 +24,4 @@ import stripe from './stripe'
 import teams from './teams'
 import tournaments from './tournaments'
 
-export { banlists, blogposts, cards, cookies, cubes, decks, deckTypes, drafts, events, formats, images, matchups, players, prices, rated, replays, rulings, sealed, sets, stats, statuses, stripe, teams, tournaments }
+export { banlists, blogposts, cards, cookies, cubes, decks, deckTypes, drafts, events, forged, formats, images, matchups, players, prices, rated, replays, rulings, sealed, sets, stats, statuses, stripe, teams, tournaments }

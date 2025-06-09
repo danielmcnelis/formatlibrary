@@ -14,13 +14,13 @@ import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import './ForgedTable.css' 
 
-const now = new Date()
+// const now = new Date()
 
 export const ForgedTable = () => {
     const isMounted = useRef(false)
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1000px)' })
     const formatName = 'Forged in Chaos'
-    const {id} = useParams()
+    const {id: playerId} = useParams()
     const [page, setPage] = useState(1)
     const [cards, setCards] = useState([])
     const [cardsPerPage, setCardsPerPage] = useState(10)
@@ -31,7 +31,7 @@ export const ForgedTable = () => {
     const [banlist, setBanlist] = useState({})
     const [booster, setBooster] = useState(null)
     const [advanced, setAdvanced] = useState(false)
-    const [cutoff, setCutoff] = useState(`${now.getFullYear()}-12-31`)
+    // const [cutoff, setCutoff] = useState(`${now.getFullYear()}-12-31`)
     
     const [sliders, setSliders] = useState({
       level: [1, 12],
@@ -126,7 +126,7 @@ export const ForgedTable = () => {
     
     // COUNT
     const count = useCallback(async () => {
-      let url = `/api/forged-cards/count`   
+      let url = `/api/forged/count?${playerId}`   
       let filter = ''
       if (queryParams.name) filter += `,name:inc:${queryParams.name}`
       if (queryParams.category) filter += `,category:eq:${queryParams.category}`
@@ -148,11 +148,11 @@ export const ForgedTable = () => {
       groups.forEach((g) => filter += `,${g}:eq:true`)
       if (groupParams.isEffect) filter += `,extra:eq:false`
 
-      if (cutoff !== `${now.getFullYear()}-12-31`) {
-        queryParams.region?.toLowerCase() === 'speed' ? filter += `,speedDate:lte:${cutoff}`: 
-        queryParams.region?.toLowerCase()?.includes('ocg') ? filter += `,ocgDate:lte:${cutoff}` : 
-        filter += `,tcgDate:lte:${cutoff}`
-      }
+    //   if (cutoff !== `${now.getFullYear()}-12-31`) {
+    //     queryParams.region?.toLowerCase() === 'speed' ? filter += `,speedDate:lte:${cutoff}`: 
+    //     queryParams.region?.toLowerCase()?.includes('ocg') ? filter += `,ocgDate:lte:${cutoff}` : 
+    //     filter += `,tcgDate:lte:${cutoff}`
+    //   }
   
       const minLevel = sliders.level[0]
       const maxLevel = sliders.level[1]
@@ -177,21 +177,16 @@ export const ForgedTable = () => {
   
       const { data } = await axios.get(url, { headers: { name: queryParams.name, description: queryParams.description }})
       setTotal(data)
-    }, [queryParams, iconParams, attributeParams, typeParams, groupParams, sliders.atk, sliders.level, sliders.def, booster, cutoff])
+    }, [queryParams, iconParams, attributeParams, typeParams, groupParams, sliders.atk, sliders.level, sliders.def, booster, /*cutoff*/])
   
     // SEARCH
     const search = useCallback(async () => {
-      let url = `/api/forged-cards?limit=${cardsPerPage}&page=${page}&sort=${sortBy}`
+      let url = `/api/forged?${playerId}&limit=${cardsPerPage}&page=${page}&sort=${sortBy}`
       let filter = ''
       let headers = {}
       if (queryParams.name) headers.name = queryParams.name
       if (queryParams.category) filter += `,category:eq:${queryParams.category}`
       if (queryParams.description) headers.description = queryParams.description
-      if (queryParams.region?.toLowerCase() === 'tcg') filter += `,tcg:eq:true`
-      if (queryParams.region?.toLowerCase() === 'ocg') filter += `,ocg:eq:true`
-      if (queryParams.region === 'tcg-exclusive') filter += `,tcg:eq:true,ocg:eq:false`
-      if (queryParams.region === 'ocg-exclusive') filter += `,tcg:eq:false,ocg:eq:true`
-      if (queryParams.region?.toLowerCase() === 'speed') filter += `,speed:eq:true`
   
       const icons = Object.entries(iconParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
       const attributes = Object.entries(attributeParams).filter((e) => !!e[1]).map((e) => e[0].toUpperCase())
@@ -203,12 +198,6 @@ export const ForgedTable = () => {
       if (types.length) filter += `,type:or:arr(${types.join(';')})`
       groups.forEach((g) => filter += `,${g}:eq:true`)
       if (groupParams.isEffect) filter += `,extra:eq:false`
-      
-      if (cutoff !== `${now.getFullYear()}-12-31`) {
-        queryParams.region?.toLowerCase() === 'speed' ? filter += `,speeDdate:lte:${cutoff}`: 
-        queryParams.region?.toLowerCase()?.includes('ocg') ? filter += `,ocgDate:lte:${cutoff}` : 
-        filter += `,tcgDate:lte:${cutoff}`
-      }
   
       const minLevel = sliders.level[0]
       const maxLevel = sliders.level[1]
@@ -227,7 +216,7 @@ export const ForgedTable = () => {
   
       const { data } = await axios.get(url, { headers })
       setCards(data)
-    }, [cardsPerPage, page, sortBy, queryParams, iconParams, attributeParams, typeParams, groupParams, sliders.atk, sliders.level, sliders.def, booster, cutoff])
+    }, [cardsPerPage, page, sortBy, queryParams, iconParams, attributeParams, typeParams, groupParams, sliders.atk, sliders.level, sliders.def, booster, /*cutoff*/])
   
     // RESET
     const reset = async () => {
@@ -248,7 +237,7 @@ export const ForgedTable = () => {
       
       if (!formatName) {
         document.getElementById('format').value = ""
-        setCutoff(`${now.getFullYear()}-12-31`)
+        // setCutoff(`${now.getFullYear()}-12-31`)
         const {data: formatData} = await axios.get(`/api/formats/forged-in-chaos`)
         setFormat(formatData?.format)
         const {data: banlistData} = await axios.get(`/api/banlists/forged-in-chaos`)
@@ -378,7 +367,7 @@ export const ForgedTable = () => {
     useEffect(() => {
         count()
         search()
-    }, [page, cardsPerPage, sortBy, cutoff, format, booster, queryParams, groupParams, iconParams, attributeParams, typeParams, count, search])
+    }, [page, cardsPerPage, sortBy, /*cutoff*/, format, booster, queryParams, groupParams, iconParams, attributeParams, typeParams, count, search])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -515,7 +504,7 @@ export const ForgedTable = () => {
                             </div>
 
                             <div className="card-search-flexbox">
-                                <select
+                                {/* <select
                                     id="region"
                                     value={queryParams.region || "tcg"}
                                     className="filter"
@@ -528,7 +517,7 @@ export const ForgedTable = () => {
                                     <option value="tcg-exclusive">TCG Excl.</option>
                                     <option value="ocg-exclusive">OCG Excl.</option>
                                     <option value="speed">Speed Duel</option>
-                                </select>
+                                </select> */}
 
                                 <select
                                     id="category"
@@ -541,11 +530,9 @@ export const ForgedTable = () => {
                                     <option value="Monster">Monster</option>
                                     <option value="Spell">Spell</option>
                                     <option value="Trap">Trap</option>
-                                    <option value="Skill">Skill</option>
-                                    <option value="Token">Token</option>
                                 </select>
 
-                                <select
+                                {/* <select
                                     id="format"
                                     value={formatName.toLowerCase() || format?.name?.toLowerCase()}
                                     style={{maxWidth: '35vw'}}
@@ -557,9 +544,9 @@ export const ForgedTable = () => {
                                     {
                                         formats.filter((f) => !!f.date).map((f) => <option key={f.name} value={f.name.toLowerCase()}>{capitalize(f.name, true)}</option>)
                                     }
-                                </select>
+                                </select> */}
         
-                                <select
+                                {/* <select
                                     id="booster"
                                     defaultValue=""
                                     className="filter"
@@ -570,7 +557,7 @@ export const ForgedTable = () => {
                                     {
                                         boosters.map((b) => <option key={b.id} value={b.setCode}>{b.setCode}</option>)
                                     }
-                                </select>
+                                </select> */}
                             </div>
                         </>
                     ) : (
@@ -599,7 +586,7 @@ export const ForgedTable = () => {
                             </div>
 
                             <div className="card-search-flexbox">
-                                <select
+                                {/* <select
                                     id="region"
                                     value={queryParams.region?.toLowerCase() || "tcg"}
                                     className="filter"
@@ -612,7 +599,7 @@ export const ForgedTable = () => {
                                     <option value="tcg-exclusive">TCG Exclusive</option>
                                     <option value="ocg-exclusive">OCG Exclusive</option>
                                     <option value="speed">Speed Duel</option>
-                                </select>
+                                </select> */}
 
                                 <select
                                 id="category"
@@ -624,11 +611,9 @@ export const ForgedTable = () => {
                                     <option value="Monster">Monster</option>
                                     <option value="Spell">Spell</option>
                                     <option value="Trap">Trap</option>
-                                    <option value="Skill">Skill</option>
-                                    <option value="Token">Token</option>
                                 </select>
 
-                                <select
+                                {/* <select
                                     id="format"
                                     value={formatName.toLowerCase() || format?.name?.toLowerCase()}
                                     className="filter"
@@ -639,9 +624,9 @@ export const ForgedTable = () => {
                                     {
                                         formats.filter((f) => !!f.date).map((f) => <option key={f.name} value={f.name.toLowerCase()}>{capitalize(f.name, true)}</option>)
                                     }
-                                </select>
+                                </select> */}
         
-                                <select
+                                {/* <select
                                     id="booster"
                                     defaultValue=""
                                     className="filter"
@@ -651,7 +636,7 @@ export const ForgedTable = () => {
                                     {
                                         boosters.map((b) => <option key={b.id} value={b.setCode}>{b.name}</option>)
                                     }
-                                </select>
+                                </select> */}
         
                                 <div
                                     className="search-button desktop-only"
@@ -794,7 +779,7 @@ export const ForgedTable = () => {
                     </div>
         
                     <div className="buttonWrapper">
-                        <select
+                        {/* <select
                             className="desktop-only"
                             id="viewSwitch"
                             defaultValue="spoilers"
@@ -803,7 +788,7 @@ export const ForgedTable = () => {
                         >
                             <option value="spoilers">Spoilers</option>
                             <option value="gallery">Gallery</option>
-                        </select>
+                        </select> */}
             
                         <select
                             id="cardsPerPageSelector"
@@ -823,18 +808,10 @@ export const ForgedTable = () => {
                             style={{width: '160px', maxWidth: '45vw'}}
                             onChange={(e) => { setSortBy(e.target.value); setPage(1)}}
                         >
+                            <option value="forgedPrintId:asc">Release: Old ⮕ New</option>
+                            <option value="forgedPrintId:desc">Release: New ⮕ Old</option>
                             <option value="name:asc">Name: A ⮕ Z</option>
                             <option value="name:desc">Name: Z ⮕ A</option>
-                            <option value={
-                                queryParams.region?.includes('ocg') ? "ocgDate:asc" : 
-                                queryParams.region?.includes('speed') ? "speedDate:asc" : 
-                                "tcgDate:asc"
-                            }>Date: Old ⮕ New</option>
-                            <option value={
-                                queryParams.region?.includes('ocg') ? "ocgDate:desc" : 
-                                queryParams.region?.includes('speed') ? "speedDate:desc" : 
-                                "tcgDate:desc"
-                            }>Date: New ⮕ Old</option>
                             <option value="atk:desc nulls last">ATK: Desc. ⬇</option>
                             <option value="atk:asc nulls last">ATK: Asc. ⬆</option>
                             <option value="def:desc nulls last">DEF: Desc. ⬇</option>
