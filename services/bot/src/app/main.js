@@ -127,6 +127,14 @@ client.on('ready', async() => {
             if (!data) continue
             await tournament.update({ state: data.tournament?.state })
         }
+
+        // RESTORE POOL STATES
+
+        const pools = await Tournament.findAll({ where: { status: 'confirming' }})
+        for (let i = 0; i < pools.length; i++) {
+            const pool = pools[i]
+            await pool.update({ status: 'pending' })
+        }
     } catch (err) {
         console.log(err)
     }
