@@ -264,7 +264,7 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
         if (mostRecentMatch && (cutoff < mostRecentMatch?.createdAt)) {   
             console.log(`<!> ${player.name} and ${potentialPair.playerName} are RECENT opponents. Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}. Look for another opponent <!>`)
             continue
-        } else if ((potentialPair.updatedAt < twoMinutesAgo) || potentialPair.wasInactive) {
+        } else if ((potentialPair.createdAt < twoMinutesAgo) || potentialPair.wasInactive) {
             console.log(`<!> ${player.name} and ${potentialPair.playerName} are NOT recent opponents. ${mostRecentMatch ? `Match reported at ${mostRecentMatch?.createdAt}, cutoff is ${cutoff}`: `They have never played`}. Getting confirmation from ${potentialPair.playerName} <!>`)
             const foundOpponent = await getRatedConfirmation(potentialPair.player, player, format, guild)
             if (foundOpponent) {
