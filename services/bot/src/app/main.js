@@ -18,7 +18,7 @@ import * as https from 'https'
 import { config } from '@fl/config'
 
 // DATABASE IMPORTS 
-import { Entry, Format, Match, Membership, Player, Server, Tournament } from '@fl/models'
+import { Entry, Format, Match, Membership, Player, Pool, Server, Tournament } from '@fl/models'
 
 // FUNCTION IMPORTS
 import { createTopCut, editTieBreakers, getCurrentRound, getMidnightCountdown, getSecondOfTwoRatedConfirmations,
@@ -130,7 +130,7 @@ client.on('ready', async() => {
 
         // RESTORE POOL STATES
 
-        const pools = await Tournament.findAll({ where: { status: 'confirming' }})
+        const pools = await Pool.findAll({ where: { status: 'confirming' }})
         for (let i = 0; i < pools.length; i++) {
             const pool = pools[i]
             await pool.update({ status: 'pending' })
