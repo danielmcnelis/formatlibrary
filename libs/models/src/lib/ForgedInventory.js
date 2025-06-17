@@ -1,7 +1,8 @@
 
 import {db} from './db'
 import { Op, Sequelize } from 'sequelize'
-import { ForgedPrint } from './ForgedPrint'
+import { Card } from './Card'
+// import { ForgedPrint } from './ForgedPrint'
 
 export const ForgedInventory = db.define('forgedInventories', {
     playerName: {
@@ -36,16 +37,6 @@ ForgedInventory.countResults = async (filter = {}, booster) => {
         let operator = by.operator
         if (['isNormal', 'isEffect', 'isFusion', 'isRitual', 'isSynchro', 'isXyz', 'isPendulum', 'isLink', 'isFlip', 'isGemini', 'isSpirit', 'isToon', 'isTuner', 'isUnion'].includes(key)) { value = value.toLowerCase() === 'true' }
         if (['level', 'rating', 'scale', 'sortPriority'].includes(key) && operator !== 'btw') { value = parseInt(value) }
-        
-        if (['tcg'].includes(key)) { 
-            key = 'isTcgLegal'
-        } else if (['ocg'].includes(key)) { 
-            key = 'isOcgLegal'
-        } else if (['speed'].includes(key)) { 
-            key = 'isSpeedLegal'
-        } else if (['extra'].includes(key)) { 
-            key = 'isExtraDeck'
-        }
 
         if (operator === 'eq') {
             operator = Op.eq
@@ -77,10 +68,9 @@ ForgedInventory.countResults = async (filter = {}, booster) => {
         return reduced
     }, {})
 
-    let include = []
+    let include = [{ model: Card } ]
     if (booster) {
         filter['$prints.cardCode$'] = {[Op.iLike]: booster + '%' }        
-        include = [{ model: Print } ]
     }
 
     const count = await ForgedInventory.count({ 
@@ -95,18 +85,8 @@ ForgedInventory.find = async (filter = {}, booster, limit = 10, page = 1, sort =
         let value = by.value
         if (typeof value === 'string') value.replaceAll('%20', ' ')
         let operator = by.operator
-        if (['tcg', 'ocg', 'speed', 'extra', 'isNormal', 'isEffect', 'isFusion', 'isRitual', 'isSynchro', 'isXyz', 'isPendulum', 'isLink', 'isFlip', 'isGemini', 'isSpirit', 'isToon', 'isTuner', 'isUnion'].includes(key)) { value = value.toLowerCase() === 'true' }
+        if (['isNormal', 'isEffect', 'isFusion', 'isRitual', 'isSynchro', 'isXyz', 'isPendulum', 'isLink', 'isFlip', 'isGemini', 'isSpirit', 'isToon', 'isTuner', 'isUnion'].includes(key)) { value = value.toLowerCase() === 'true' }
         if (['level', 'rating', 'scale', 'sortPriority'].includes(key) && operator !== 'btw') { value = parseInt(value) }
-        
-        if (['tcg'].includes(key)) { 
-            key = 'isTcgLegal'
-        } else if (['ocg'].includes(key)) { 
-            key = 'isOcgLegal'
-        } else if (['speed'].includes(key)) { 
-            key = 'isSpeedLegal'
-        } else if (['extra'].includes(key)) { 
-            key = 'isExtraDeck'
-        }
 
         if (operator === 'eq') {
             operator = Op.eq
@@ -145,8 +125,9 @@ ForgedInventory.find = async (filter = {}, booster, limit = 10, page = 1, sort =
         offset: (page - 1) * limit,
         limit: limit,
         subQuery: false,
-        attributes: { exclude: ['isTcgLegal', 'isOcgLegal', 'isSpeedLegal', 'createdAt', 'updatedAt'] },
-        include: [{ model: ForgedPrint, separate: !booster, attributes: ['id'] }],
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        include: [{model: Card}],
+        // include: [{ model: ForgedPrint, separate: !booster, attributes: ['id'] }],
         order: sort
     })
 

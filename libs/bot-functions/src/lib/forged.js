@@ -55,6 +55,8 @@ export const getForgedIssues = async (player, deckArr, format) => {
         const quantityKey = quantityKeys[i]
         let quantityOwned = 0
 
+        console.log('quantityKey', quantityKey)
+
         const invs = await ForgedInventory.findAll({
             where: {
                 playerId: player.id,
@@ -64,6 +66,7 @@ export const getForgedIssues = async (player, deckArr, format) => {
 
         for (let j = 0; j < invs.length; j++) {
             const inv = invs[j]
+            console.log('inv.cardCode, quantity', inv.Cardcode, inv.quantity)
             quantityOwned+=inv.quantity
         }
 

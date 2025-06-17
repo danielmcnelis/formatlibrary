@@ -1,4 +1,4 @@
-import { Artwork, Alius, Card, Community, Cube, Deck, DeckType, DeckThumb, Entry, Event, Format, Match, Membership, Pairing, Player, Pool, Price, Print, Replay, Ruling, Server, Set, Stats, Status, Team, Tournament, BlogPost, Matchup } from '@fl/models'
+import { Artwork, Alius, Card, Community, Cube, Deck, DeckType, DeckThumb, Entry, Event, ForgedInventory, Format, Match, Membership, Pairing, Player, Pool, Price, Print, Replay, Ruling, Server, Set, Stats, Status, Team, Tournament, BlogPost, Matchup } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
 import { config } from '@fl/config'
@@ -2988,19 +2988,232 @@ const shuffleArray = (arr) => {
 // })()
 
 
+// ;(async () => {
+//     let b = 0
+//     let e = 0
+//     const elevenCards = await Card.findAll({
+//         where: {
+//             sortPriority: 11
+//         }
+//     })
+
+//     for (let i = 0; i < elevenCards.length; i++) {
+//         try {
+//             await elevenCards[i].update({sortPriority: 16})
+//             console.log('updated sortPriority for', elevenCards[i].name)
+//             b++
+            
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     const tenCards = await Card.findAll({
+//         where: {
+//             sortPriority: 10
+//         }
+//     })
+
+//     for (let i = 0; i < tenCards.length; i++) {
+//         try {
+//             await tenCards[i].update({sortPriority: 15})
+//             console.log('updated sortPriority for', tenCards[i].name)
+//             b++
+            
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     const nineCards = await Card.findAll({
+//         where: {
+//             sortPriority: 9
+//         }
+//     })
+
+//     for (let i = 0; i < nineCards.length; i++) {
+//         try {
+//             await nineCards[i].update({sortPriority: 13})
+//             console.log('updated sortPriority for', nineCards[i].name)
+//             b++
+            
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     const eightCards = await Card.findAll({
+//         where: {
+//             sortPriority: 9
+//         }
+//     })
+
+//     for (let i = 0; i < eightCards.length; i++) {
+//         try {
+//             await eightCards[i].update({sortPriority: 11})
+//             console.log('updated sortPriority for', eightCards[i].name)
+//             b++
+            
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     const sevenCards = await Card.findAll({
+//         where: {
+//             sortPriority: 9
+//         }
+//     })
+
+//     for (let i = 0; i < sevenCards.length; i++) {
+//         try {
+//             await sevenCards[i].update({sortPriority: 9})
+//             console.log('updated sortPriority for', sevenCards[i].name)
+//             b++
+            
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     const sixCards = await Card.findAll({
+//         where: {
+//             sortPriority: 9
+//         }
+//     })
+
+//     for (let i = 0; i < sixCards.length; i++) {
+//         try {
+//             await sixCards[i].update({sortPriority: 7})
+//             console.log('updated sortPriority for', sixCards[i].name)
+//             b++
+            
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     const linkPends = await Card.findAll({
+//         where: {
+//             isLink: true,
+//             isPendulum: true
+//         }
+//     })
+
+//     for (let i = 0; i < linkPends.length; i++) {
+//         try {
+//             await linkPends[i].update({sortPriority: 14})
+//             console.log('updated sortPriority for', linkPends[i].name)
+//             b++
+            
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     const xyzPends = await Card.findAll({
+//         where: {
+//             isXyz: true,
+//             isPendulum: true
+//         }
+//     })
+
+//     for (let i = 0; i < xyzPends.length; i++) {
+//         try {
+//             await xyzPends[i].update({sortPriority: 12})
+//             console.log('updated sortPriority for', xyzPends[i].name)
+//             b++
+            
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     const synchroPends = await Card.findAll({
+//         where: {
+//             isSynchro: true,
+//             isPendulum: true
+//         }
+//     })
+
+//     for (let i = 0; i < synchroPends.length; i++) {
+//         try {
+//             await synchroPends[i].update({sortPriority: 10})
+//             console.log('updated sortPriority for', synchroPends[i].name)
+//             b++
+            
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+
+//     const fusionPends = await Card.findAll({
+//         where: {
+//             isFusion: true,
+//             isPendulum: true
+//         }
+//     })
+
+//     for (let i = 0; i < fusionPends.length; i++) {
+//         try {
+//             await fusionPends[i].update({sortPriority: 8})
+//             console.log('updated sortPriority for', fusionPends[i].name)
+//             b++
+            
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     const ritualPends = await Card.findAll({
+//         where: {
+//             isRitual: true,
+//             isPendulum: true
+//         }
+//     })
+
+//     for (let i = 0; i < ritualPends.length; i++) {
+//         try {
+//             await ritualPends[i].update({sortPriority: 6})
+//             console.log('updated sortPriority for', ritualPends[i].name)
+//             b++
+            
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     return console.log(`updated ${b} sortPriorities, encountered ${e} errors`)
+// })()
+
+
 ;(async () => {
+    const forgedInventories = await ForgedInventory.findAll()
     let b = 0
     let e = 0
-    const elevenCards = await Card.findAll({
-        where: {
-            sortPriority: 11
-        }
-    })
 
-    for (let i = 0; i < elevenCards.length; i++) {
+    for (let i = 0; i < forgedInventories.length; i++) {
         try {
-            await elevenCards[i].update({sortPriority: 16})
-            console.log('updated sortPriority for', elevenCards[i].name)
+            const inv = forgedInventories[i]
+            const card = await Card.findOne({
+                where: {
+                    name: inv.cardName
+                }
+            })
+
+            await inv.update({ cardId: card.id })
             b++
             
         } catch (err) {
@@ -3009,191 +3222,5 @@ const shuffleArray = (arr) => {
         }
     }
 
-    const tenCards = await Card.findAll({
-        where: {
-            sortPriority: 10
-        }
-    })
-
-    for (let i = 0; i < tenCards.length; i++) {
-        try {
-            await tenCards[i].update({sortPriority: 15})
-            console.log('updated sortPriority for', tenCards[i].name)
-            b++
-            
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
-
-    const nineCards = await Card.findAll({
-        where: {
-            sortPriority: 9
-        }
-    })
-
-    for (let i = 0; i < nineCards.length; i++) {
-        try {
-            await nineCards[i].update({sortPriority: 13})
-            console.log('updated sortPriority for', nineCards[i].name)
-            b++
-            
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
-
-    const eightCards = await Card.findAll({
-        where: {
-            sortPriority: 9
-        }
-    })
-
-    for (let i = 0; i < eightCards.length; i++) {
-        try {
-            await eightCards[i].update({sortPriority: 11})
-            console.log('updated sortPriority for', eightCards[i].name)
-            b++
-            
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
-
-    const sevenCards = await Card.findAll({
-        where: {
-            sortPriority: 9
-        }
-    })
-
-    for (let i = 0; i < sevenCards.length; i++) {
-        try {
-            await sevenCards[i].update({sortPriority: 9})
-            console.log('updated sortPriority for', sevenCards[i].name)
-            b++
-            
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
-
-    const sixCards = await Card.findAll({
-        where: {
-            sortPriority: 9
-        }
-    })
-
-    for (let i = 0; i < sixCards.length; i++) {
-        try {
-            await sixCards[i].update({sortPriority: 7})
-            console.log('updated sortPriority for', sixCards[i].name)
-            b++
-            
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
-
-    const linkPends = await Card.findAll({
-        where: {
-            isLink: true,
-            isPendulum: true
-        }
-    })
-
-    for (let i = 0; i < linkPends.length; i++) {
-        try {
-            await linkPends[i].update({sortPriority: 14})
-            console.log('updated sortPriority for', linkPends[i].name)
-            b++
-            
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
-
-    const xyzPends = await Card.findAll({
-        where: {
-            isXyz: true,
-            isPendulum: true
-        }
-    })
-
-    for (let i = 0; i < xyzPends.length; i++) {
-        try {
-            await xyzPends[i].update({sortPriority: 12})
-            console.log('updated sortPriority for', xyzPends[i].name)
-            b++
-            
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
-
-    const synchroPends = await Card.findAll({
-        where: {
-            isSynchro: true,
-            isPendulum: true
-        }
-    })
-
-    for (let i = 0; i < synchroPends.length; i++) {
-        try {
-            await synchroPends[i].update({sortPriority: 10})
-            console.log('updated sortPriority for', synchroPends[i].name)
-            b++
-            
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
-
-
-    const fusionPends = await Card.findAll({
-        where: {
-            isFusion: true,
-            isPendulum: true
-        }
-    })
-
-    for (let i = 0; i < fusionPends.length; i++) {
-        try {
-            await fusionPends[i].update({sortPriority: 8})
-            console.log('updated sortPriority for', fusionPends[i].name)
-            b++
-            
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
-
-    const ritualPends = await Card.findAll({
-        where: {
-            isRitual: true,
-            isPendulum: true
-        }
-    })
-
-    for (let i = 0; i < ritualPends.length; i++) {
-        try {
-            await ritualPends[i].update({sortPriority: 6})
-            console.log('updated sortPriority for', ritualPends[i].name)
-            b++
-            
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
-
-    return console.log(`updated ${b} sortPriorities, encountered ${e} errors`)
+    return console.log(`updated ${b} cardIds, encountered ${e} errors`)
 })()

@@ -50,7 +50,18 @@ const symbols = {
 
 /* eslint-disable complexity */
 export const MobileCardRow = (props) => {
-    const { card, status } = props
+    let { status } = props
+    const { card, isForged } = props
+    if (isForged && status >= 3) {
+        status = 'tres'
+    } else if (isForged && status === 2) {
+        status = 'semi-limited'
+    } else if (isForged && status === 1) {
+        status = 'limited'
+    } else {
+        status = 'zero'
+    }
+    
     const { category, attribute, level, rating, atk, def } = card
     const line = card.type
     

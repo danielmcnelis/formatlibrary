@@ -43,7 +43,7 @@ export const getForgedCards = async (req, res, next) => {
             return reduced
         }, []) : []
 
-        sort.push(['name', 'asc'])
+        sort.push(['cardName', 'asc'])
         const cards = await ForgedInventory.find(filter, booster, limit, page, sort)
         return res.json(cards)
     } catch (err) {

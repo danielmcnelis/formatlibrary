@@ -22,10 +22,11 @@ export const ForgedTable = () => {
     const formatName = 'Forged in Chaos'
     const {id: playerId} = useParams()
     const [page, setPage] = useState(1)
-    const [cards, setCards] = useState([])
+    const [forgedInventories, setForgedInventories] = useState([])
+    console.log('forgedInventories', forgedInventories)
     const [cardsPerPage, setCardsPerPage] = useState(10)
     const [view, setView] = useState('spoilers')
-    const [sortBy, setSortBy] = useState('name:asc')
+    const [sortBy, setSortBy] = useState('forgedPrintId:asc')
     const [total, setTotal] = useState('')
     const [format, setFormat] = useState({})
     const [banlist, setBanlist] = useState({})
@@ -42,8 +43,7 @@ export const ForgedTable = () => {
     const [queryParams, setQueryParams] = useState({
       name: null,
       description: null,
-      category: null,
-      region: 'tcg'
+      category: null
     })
   
     const [iconParams, setIconParams] = useState({
@@ -126,27 +126,23 @@ export const ForgedTable = () => {
     
     // COUNT
     const count = useCallback(async () => {
-      let url = `/api/forged/count?${playerId}`   
-      let filter = ''
-      if (queryParams.name) filter += `,name:inc:${queryParams.name}`
-      if (queryParams.category) filter += `,category:eq:${queryParams.category}`
-      if (queryParams.description) filter += `,description:inc:${queryParams.description}`
-      if (queryParams.region?.toLowerCase() === 'tcg') filter += `,tcg:eq:true`
-      if (queryParams.region?.toLowerCase() === 'ocg') filter += `,ocg:eq:true`
-      if (queryParams.region?.toLowerCase() === 'tcg-exclusive') filter += `,tcg:eq:true,ocg:eq:false`
-      if (queryParams.region?.toLowerCase() === 'ocg-exclusive') filter += `,tcg:eq:false,ocg:eq:true`
-      if (queryParams.region?.toLowerCase() === 'speed') filter += `,speed:eq:true`
+      let url = `/api/forged/count?`   
+      let filter = `,playerId:eq:${playerId}`
+    // let filter = ''
+      if (queryParams.name) filter += `,$card.name$:inc:${queryParams.name}`
+      if (queryParams.category) filter += `,$card.category$:eq:${queryParams.category}`
+      if (queryParams.description) filter += `,$card.description$:inc:${queryParams.description}`
   
       const icons = Object.entries(iconParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
       const attributes = Object.entries(attributeParams).filter((e) => !!e[1]).map((e) => e[0].toUpperCase())
       const types = Object.entries(typeParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
       const groups = Object.entries(groupParams).filter((e) => !!e[1]).map((e) => e[0])
   
-      if (icons.length) filter += `,icon:or:arr(${icons.join(';')})`
-      if (attributes.length) filter += `,attribute:or:arr(${attributes.join(';')})`
-      if (types.length) filter += `,type:or:arr(${types.join(';')})`
-      groups.forEach((g) => filter += `,${g}:eq:true`)
-      if (groupParams.isEffect) filter += `,extra:eq:false`
+      if (icons.length) filter += `,$card.icon$:or:arr(${icons.join(';')})`
+      if (attributes.length) filter += `,$card.attribute$:or:arr(${attributes.join(';')})`
+      if (types.length) filter += `,$card.type$:or:arr(${types.join(';')})`
+      groups.forEach((g) => filter += `,$card.${g}$:eq:true`)
+      if (groupParams.isEffect) filter += `,$card.extra$:eq:false`
 
     //   if (cutoff !== `${now.getFullYear()}-12-31`) {
     //     queryParams.region?.toLowerCase() === 'speed' ? filter += `,speedDate:lte:${cutoff}`: 
@@ -156,17 +152,17 @@ export const ForgedTable = () => {
   
       const minLevel = sliders.level[0]
       const maxLevel = sliders.level[1]
-      if (minLevel !== 1 || maxLevel !== 12) filter += `,level:btw:arr(${minLevel};${maxLevel})`
+      if (minLevel !== 1 || maxLevel !== 12) filter += `,$card.level$:btw:arr(${minLevel};${maxLevel})`
   
       const minATK = sliders.atk[0]
       const maxATK = sliders.atk[1]
-      if (minATK !== 0 || maxATK !== 5000) filter += `,atk:btw:arr(${minATK};${maxATK})`
+      if (minATK !== 0 || maxATK !== 5000) filter += `,$card.atk$:btw:arr(${minATK};${maxATK})`
   
       const minDEF = sliders.def[0]
       const maxDEF = sliders.def[1]
-      if (minDEF !== 0 || maxDEF !== 5000) filter += `,def:btw:arr(${minDEF};${maxDEF})`
+      if (minDEF !== 0 || maxDEF !== 5000) filter += `,$card.def$:btw:arr(${minDEF};${maxDEF})`
   
-      if (filter.length) url += ('?filter=' + filter.slice(1))
+      if (filter.length) url += ('&filter=' + filter.slice(1))
       if (booster) {
           if (filter.length) {
               url += `&booster=${booster}`
@@ -181,11 +177,12 @@ export const ForgedTable = () => {
   
     // SEARCH
     const search = useCallback(async () => {
-      let url = `/api/forged?${playerId}&limit=${cardsPerPage}&page=${page}&sort=${sortBy}`
-      let filter = ''
+      let url = `/api/forged?limit=${cardsPerPage}&page=${page}&sort=${sortBy}`
+      let filter = `,playerId:eq:${playerId}`
+    // let filter = ''
       let headers = {}
-      if (queryParams.name) headers.name = queryParams.name
-      if (queryParams.category) filter += `,category:eq:${queryParams.category}`
+      if (queryParams.cardName) headers.cardName = queryParams.cardName
+      if (queryParams.category) filter += `,$card.category$:eq:${queryParams.category}`
       if (queryParams.description) headers.description = queryParams.description
   
       const icons = Object.entries(iconParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
@@ -193,29 +190,29 @@ export const ForgedTable = () => {
       const types = Object.entries(typeParams).filter((e) => !!e[1]).map((e) => capitalize(e[0], true))
       const groups = Object.entries(groupParams).filter((e) => !!e[1]).map((e) => e[0])
   
-      if (icons.length) filter += `,icon:or:arr(${icons.join(';')})`
-      if (attributes.length) filter += `,attribute:or:arr(${attributes.join(';')})`
-      if (types.length) filter += `,type:or:arr(${types.join(';')})`
-      groups.forEach((g) => filter += `,${g}:eq:true`)
-      if (groupParams.isEffect) filter += `,extra:eq:false`
+      if (icons.length) filter += `,$card.icon$:or:arr(${icons.join(';')})`
+      if (attributes.length) filter += `,$card.attribute$:or:arr(${attributes.join(';')})`
+      if (types.length) filter += `,$card.type$:or:arr(${types.join(';')})`
+      groups.forEach((g) => filter += `,$card.${g}$:eq:true`)
+      if (groupParams.isEffect) filter += `,$card.extra$:eq:false`
   
       const minLevel = sliders.level[0]
       const maxLevel = sliders.level[1]
-      if (minLevel !== 1 || maxLevel !== 12) filter += `,level:btw:arr(${minLevel};${maxLevel})`
+      if (minLevel !== 1 || maxLevel !== 12) filter += `,$card.level$:btw:arr(${minLevel};${maxLevel})`
   
       const minATK = sliders.atk[0]
       const maxATK = sliders.atk[1]
-      if (minATK !== 0 || maxATK !== 5000) filter += `,atk:btw:arr(${minATK};${maxATK})`
+      if (minATK !== 0 || maxATK !== 5000) filter += `,$card.atk$:btw:arr(${minATK};${maxATK})`
   
       const minDEF = sliders.def[0]
       const maxDEF = sliders.def[1]
-      if (minDEF !== 0 || maxDEF !== 5000) filter += `,def:btw:arr(${minDEF};${maxDEF})`
+      if (minDEF !== 0 || maxDEF !== 5000) filter += `,$card.def$:btw:arr(${minDEF};${maxDEF})`
   
       if (filter.length) url += ('&filter=' + filter.slice(1))
       if (booster) url += `&booster=${booster}`
   
       const { data } = await axios.get(url, { headers })
-      setCards(data)
+      setForgedInventories(data)
     }, [cardsPerPage, page, sortBy, queryParams, iconParams, attributeParams, typeParams, groupParams, sliders.atk, sliders.level, sliders.def, booster, /*cutoff*/])
   
     // RESET
@@ -223,7 +220,7 @@ export const ForgedTable = () => {
       const formatSelector = document.getElementById('format')
       if (formatSelector) formatSelector.value = ''
       document.getElementById('category').value = ''
-      document.getElementById('search-by').value = 'name'
+      document.getElementById('search-by').value = 'forgedPrintId'
       document.getElementById('booster').value = ''
       document.getElementById('search-bar').value = null
   
@@ -245,13 +242,12 @@ export const ForgedTable = () => {
       }
   
       setBooster(null)
-      setSortBy('name:asc')
+      setSortBy('cardCode:asc')
       
       setQueryParams({
         name: null,
         description: null,
-        category: null,
-        region: 'tcg'
+        category: null
       })
     
       setIconParams({
@@ -353,7 +349,7 @@ export const ForgedTable = () => {
     const runQuery = () => {
       setPage(1)
       const id = document.getElementById('search-by').value
-      const otherId = id === 'description' ? 'name' : 'description'
+      const otherId = id === 'description' ? 'cardName' : 'description'
       setQueryParams(() => {
         return {
           ...queryParams,
@@ -371,7 +367,7 @@ export const ForgedTable = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const {data: banlistData} = await axios.get(`/api/banlists/cards/${format?.banlist || 'december 2024'}?category=${format?.category || 'tcg'}`)
+            const {data: banlistData} = await axios.get(`/api/banlists/cards/may-2025?category=forged}`)
             setBanlist(banlistData)
         }
 
@@ -380,7 +376,7 @@ export const ForgedTable = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const {data: formatData} = await axios.get(`/api/formats/${(formatName || 'advanced').toLowerCase().replace(' ', '-')}`)
+            const {data: formatData} = await axios.get(`/api/formats/forged-in-chaos`)
             setFormat(formatData?.format)
         }
 
@@ -458,8 +454,8 @@ export const ForgedTable = () => {
     return (
         <>
             <Helmet>
-                <title>{`Yu-Gi-Oh! Card Database - Format Library`}</title>
-                <meta name="og:title" content={`Yu-Gi-Oh! Card Database - Format Library`}/>
+                <title>{`Yu-Gi-Oh! Forged Inventory - Format Library`}</title>
+                <meta name="og:title" content={`Yu-Gi-Oh! Forged Inventory - Format Library`}/>
                 <meta name="description" content={`Find any Yu-Gi-Oh! card from the TCG, OCG, or Speed Duels. View release dates, rulings, prints, prices, banlist history, etc.`}/>
                 <meta name="og:description" content={`Find any Yu-Gi-Oh! card from the TCG, OCG, or Speed Duels. View release dates, rulings, prints, prices, banlist history, etc.`}/>
             </Helmet>
@@ -467,12 +463,12 @@ export const ForgedTable = () => {
             <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             <div className="body">
                 <div className="card-database-flexbox">
-                    <img src={`https://cdn.formatlibrary.com/images/artworks/${format.icon ? `${format.icon}.jpg` : 'nibiru.jpg'}`} alt={format.icon} className="format-icon-medium desktop-only"/>
+                    <img src={`https://cdn.formatlibrary.com/images/artworks/rookie.jpg`} alt={format.icon} className="format-icon-medium desktop-only"/>
                     <div>
-                        <h1>{format.eventName ? format.name + ' ' : ''}Card Database</h1>
-                        <h2 className="desktop-only">{format.eventName || 'May 2002 - Present'}</h2>
+                        <h1>{format.eventName ? format.name + ' ' : ''}Forged Inventory</h1>
+                        <h2 className="desktop-only">{format.eventName || 'May 2025 - Present'}</h2>
                     </div>
-                    <img src={`https://cdn.formatlibrary.com/images/artworks/${format.icon ? `${format.icon}.jpg` : 'nibiru.jpg'}`} alt={format.icon} className="format-icon-medium"/>
+                    <img src={`https://cdn.formatlibrary.com/images/artworks/rookie.jpg`} alt={format.icon} className="format-icon-medium"/>
                 </div>
                 <div className="search-component">
                 {
@@ -779,7 +775,7 @@ export const ForgedTable = () => {
                     </div>
         
                     <div className="buttonWrapper">
-                        {/* <select
+                        <select
                             className="desktop-only"
                             id="viewSwitch"
                             defaultValue="spoilers"
@@ -788,7 +784,7 @@ export const ForgedTable = () => {
                         >
                             <option value="spoilers">Spoilers</option>
                             <option value="gallery">Gallery</option>
-                        </select> */}
+                        </select>
             
                         <select
                             id="cardsPerPageSelector"
@@ -810,8 +806,8 @@ export const ForgedTable = () => {
                         >
                             <option value="forgedPrintId:asc">Release: Old ⮕ New</option>
                             <option value="forgedPrintId:desc">Release: New ⮕ Old</option>
-                            <option value="name:asc">Name: A ⮕ Z</option>
-                            <option value="name:desc">Name: Z ⮕ A</option>
+                            <option value="cardName:asc">Name: A ⮕ Z</option>
+                            <option value="cardName:desc">Name: Z ⮕ A</option>
                             <option value="atk:desc nulls last">ATK: Desc. ⬇</option>
                             <option value="atk:asc nulls last">ATK: Asc. ⬆</option>
                             <option value="def:desc nulls last">DEF: Desc. ⬇</option>
@@ -847,11 +843,11 @@ export const ForgedTable = () => {
                     <table id="cards">
                     <tbody>
                         {total ? (
-                        cards.map((card, index) => {
+                        forgedInventories.map((inv, index) => {
                             if (isTabletOrMobile) {
-                                return <MobileCardRow key={card.id} index={index} card={card} status={banlist[card.id.toString()]}/>
+                                return <MobileCardRow key={inv.card.id} index={index} card={inv.card} status={inv.quantity} isForged={true}/>
                             } else {
-                                return <CardRow key={card.id} index={index} card={card} status={banlist[card.id.toString()]} region={queryParams.region}/>
+                                return <CardRow key={inv.card.id} index={index} card={inv.card} status={inv.quantity} isForged={true}/>
                             }
                         })
                         ) : (
@@ -863,15 +859,16 @@ export const ForgedTable = () => {
                 ) : (
                 <div id="cardGalleryFlexBox">
                     {total ? (
-                    cards.map((card) => {
+                    forgedInventories.map((inv) => {
                         return <
                                 CardImage 
-                                key={card.id} 
-                                card={card} 
+                                key={inv.card.id} 
+                                card={inv.card} 
                                 width="184px"
                                 margin="4px"
                                 padding="2px"
-                                status={banlist[card.id]}
+                                status={inv.quantity}
+                                isForged={true}
                                 />
                     })
                     ) : (

@@ -1,9 +1,20 @@
 
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import './CardRow.css'
 
 export const CardRow = (props) => {
-    const { card, status } = props
+    let { status } = props
+    const { card, isForged } = props
+    if (isForged && status >= 3) {
+        status = 'tres'
+    } else if (isForged && status === 2) {
+        status = 'semi-limited'
+    } else if (isForged && status === 1) {
+        status = 'limited'
+    } else {
+        status = 'zero'
+    }
+
     const { category, attribute, level, rating, scale, atk, def } = card
     const stats = []
   

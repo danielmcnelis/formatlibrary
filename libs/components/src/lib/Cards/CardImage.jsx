@@ -3,8 +3,17 @@ import { camelize } from '@fl/utils'
 import './CardImage.css'
 
 export const CardImage = (props) => {
-    let {addCard, selectCard, removeCard, card, previous, status, rarity, width, margin, padding, index, locale, disableLink, setCard, isDraft, isPackSimulator} = props
-    if (rarity?.includes('Short Print')) rarity = 'Common' 
+    let {isForged, addCard, selectCard, removeCard, card, previous, status, rarity, width, margin, padding, index, locale, disableLink, setCard, isDraft, isPackSimulator} = props
+    if (rarity?.includes('Short Print')) rarity = 'Common'
+    if (isForged && status >= 3) {
+        status = 'tres'
+    } else if (isForged && status === 2) {
+        status = 'semi-limited'
+    } else if (isForged && status === 1) {
+        status = 'limited'
+    } else {
+        status = 'zero'
+    }
     
     if (isDraft) {
         return (

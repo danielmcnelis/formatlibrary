@@ -13,6 +13,7 @@ import {
  DraftLobby,
  EventGallery,
  EventTable,
+ ForgedTable,
  FormatMaker,
  FormatMenu,
  FormatIntro,
@@ -58,6 +59,7 @@ export const Router = (props) => {
 					<Route path="/apps" element=<Page roles={roles} disableAds={disableAds} element=<UserPortal roles={roles}/> /> />
 					<Route path="/deck-builder" element=<Page roles={roles} disableAds={true} element=<Builder /> /> />
 					<Route path="/deck-builder/:id" element=<Page roles={roles} disableAds={true} element=<Builder /> /> />
+					<Route path="/forged-inventory/:id" element=<Page roles={roles} disableAds={true} element=<ForgedTable /> /> />
 					<Route path="/pack-simulator" element=<Page roles={roles} element=<PackSimulator /> /> />
 					<Route path="/settings" element=<Page roles={roles} disableAds={true} element=<Settings /> /> />
 					<Route path="/cube-maker" element=<Page roles={roles} disableAds={true} element=<CubeMaker /> /> />
