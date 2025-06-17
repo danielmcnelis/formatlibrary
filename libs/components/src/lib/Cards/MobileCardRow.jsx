@@ -58,10 +58,10 @@ export const MobileCardRow = (props) => {
         status = 'semi-limited'
     } else if (isForged && status === 1) {
         status = 'limited'
-    } else {
+    } else if (isForged && status === 0) {
         status = 'zero'
     }
-    
+
     const { category, attribute, level, rating, atk, def } = card
     const line = card.type
     
