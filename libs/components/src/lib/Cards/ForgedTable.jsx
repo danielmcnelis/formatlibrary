@@ -127,7 +127,7 @@ export const ForgedTable = () => {
     // COUNT
     const count = useCallback(async () => {
       let url = `/api/forged/count?`   
-      let filter = `,playerId:eq:${playerId}`
+      let filter = `,playerId:eq:${playerId},quantity:gt:0`
     // let filter = ''
       if (queryParams.name) filter += `,$card.name$:inc:${queryParams.name}`
       if (queryParams.category) filter += `,$card.category$:eq:${queryParams.category}`
@@ -178,7 +178,7 @@ export const ForgedTable = () => {
     // SEARCH
     const search = useCallback(async () => {
       let url = `/api/forged?limit=${cardsPerPage}&page=${page}&sort=${sortBy}`
-      let filter = `,playerId:eq:${playerId}`
+      let filter = `,playerId:eq:${playerId},quantity:gt:0`
     // let filter = ''
       let headers = {}
       if (queryParams.cardName) headers.cardName = queryParams.cardName
