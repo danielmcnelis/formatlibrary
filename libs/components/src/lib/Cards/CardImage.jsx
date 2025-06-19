@@ -11,7 +11,7 @@ export const CardImage = (props) => {
         status = 'semi-limited'
     } else if (isForged && status === 1) {
         status = 'limited'
-    } else {
+    } else if (isForged && status === 0) {
         status = 'zero'
     }
     
