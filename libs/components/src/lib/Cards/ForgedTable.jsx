@@ -181,7 +181,7 @@ export const ForgedTable = () => {
       let filter = `,playerId:eq:${playerId},quantity:gt:0`
     // let filter = ''
       let headers = {}
-      if (queryParams.cardName) headers.cardName = queryParams.cardName
+      if (queryParams.name) filter += `,$card.name$:inc:${queryParams.name}`
       if (queryParams.category) filter += `,$card.category$:eq:${queryParams.category}`
       if (queryParams.description) headers.description = queryParams.description
   
