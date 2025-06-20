@@ -367,7 +367,7 @@ export const ForgedTable = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const {data: banlistData} = await axios.get(`/api/banlists/cards/may-2025?category=forged}`)
+            const {data: banlistData} = await axios.get(`/api/banlists/cards/may-2025?category=forged`)
             setBanlist(banlistData)
         }
 
@@ -845,9 +845,9 @@ export const ForgedTable = () => {
                         {total ? (
                         forgedInventories.map((inv, index) => {
                             if (isTabletOrMobile) {
-                                return <MobileCardRow key={inv.card.id} index={index} card={inv.card} status={inv.quantity} isForged={true}/>
+                                return <MobileCardRow key={inv.card?.id} index={index} card={inv.card} status={inv.quantity} isForged={true}/>
                             } else {
-                                return <CardRow key={inv.card.id} index={index} card={inv.card} status={inv.quantity} isForged={true}/>
+                                return <CardRow key={inv.card?.id} index={index} card={inv.card} status={inv.quantity} isForged={true}/>
                             }
                         })
                         ) : (
