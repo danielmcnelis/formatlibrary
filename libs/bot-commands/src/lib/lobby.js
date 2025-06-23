@@ -2,6 +2,7 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { Format, Pool } from '@fl/models'
 import { emojis } from '@fl/bot-emojis'
+import { Op } from 'sequelize'
 
 export default {
 	data: new SlashCommandBuilder()
@@ -10,12 +11,12 @@ export default {
 	async execute(interaction) {
         try {
             await interaction.deferReply()
-            // const oneDayAgo = new Date(Date.now() - (24 * 60 * 60 * 1000))
+            const oneWeekAgo = new Date(Date.now() - (7 * 24 * 60 * 60 * 1000))
 
             const pools = [...await Pool.findAll({ 
-                // where: { 
-                //     createdAt: {[Op.gte]: oneDayAgo}
-                // }, 
+                where: { 
+                    createdAt: {[Op.gte]: oneWeekAgo}
+                }, 
                 include: Format,
                 order: [['createdAt', 'DESC']] 
             })].map((pool) => {

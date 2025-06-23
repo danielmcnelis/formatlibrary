@@ -11,7 +11,6 @@ import { drawDeck } from './utility'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 import { client } from '../client'
 import { getForgedIssues } from './forged'
-import { time } from 'console'
 
 // GET RATED CONFIRMATION
 export const getRatedConfirmation = async (player, opponent, format, guild) => {
@@ -228,6 +227,8 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
 
     for (let i = 0; i < potentialPairs.length; i++) {
         const potentialPair = potentialPairs[i]
+        const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
+        const fiveMinutesAgo = new Date(Date.now() - (5 * 60 * 1000))
         
         const potentialPairStats = await Stats.findOne({ where: { formatId: format.id, playerId: potentialPair.playerId }})
         const potentialPairElo = format?.useSeasonalElo ? potentialPairStats?.seasonalElo : potentialPairStats?.elo
@@ -235,7 +236,8 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
         if (format.name === 'Forged in Chaos' && (
             yourElo <= 420 && potentialPairElo <= 420 ||
             yourElo > 420 && potentialPairElo > 420 ||
-            Math.abs(yourElo - potentialPairElo) <= 80
+            Math.abs(yourElo - potentialPairElo) <= 100 ||
+            potentialPair.createdAt < fiveMinutesAgo
         )) {
             console.log(`Acceptable pairing`)
         } else if (format.name === 'Forged in Chaos') {
@@ -247,8 +249,14 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
         //     continue
         // }
 
-        const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
-        const cutoff = new Date(new Date() - (15 * 60 * 1000))
+        let cutoff
+
+        if (format.name === 'Forged in Chaos') {
+            cutoff = new Date(new Date() - (5 * 60 * 1000))
+            console.log(`Acceptable pairing`)
+        } else {
+            cutoff = new Date(new Date() - (15 * 60 * 1000))
+        }
 
         const mostRecentMatch = await Match.findOne({
             where: {

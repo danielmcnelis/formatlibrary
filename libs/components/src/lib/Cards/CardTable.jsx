@@ -12,7 +12,7 @@ import { capitalize } from '@fl/utils'
 import { useMediaQuery } from 'react-responsive'
 import { useLocation } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
-import './CardTable.css' 
+import './CardTable.css'
 
 const now = new Date()
 
