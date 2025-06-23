@@ -241,7 +241,7 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
             Math.abs(yourElo - potentialPairElo) <= 100 ||
             (potentialPair.createdAt < fiveMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 133) ||
             (potentialPair.createdAt < tenMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 167) ||
-            (potentialPair.createdAt < tenMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 200)
+            (potentialPair.createdAt < fifteenMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 200)
         )) {
             console.log(`Acceptable pairing`)
         } else if (format.name === 'Forged in Chaos') {
