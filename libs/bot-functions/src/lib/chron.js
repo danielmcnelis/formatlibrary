@@ -626,6 +626,8 @@ export const lookForAllPotentialPairs = async (client) => {
             try {
                 const potentialPair = potentialPairs[i]
                 const fiveMinutesAgo = new Date(Date.now() - (5 * 60 * 1000))
+                const tenMinutesAgo = new Date(Date.now() - (10 * 60 * 1000))
+                const fifteenMinutesAgo = new Date(Date.now() - (15 * 60 * 1000))
 
                 const potentialPairStats = await Stats.findOne({ where: { formatId: format.id, playerId: potentialPair.playerId }})
                 const potentialPairElo = format.useSeasonalElo ? potentialPairStats?.seasonalElo : potentialPairStats?.elo
@@ -633,7 +635,9 @@ export const lookForAllPotentialPairs = async (client) => {
                     yourElo <= 420 && potentialPairElo <= 420 ||
                     yourElo > 420 && potentialPairElo > 420 ||
                     Math.abs(yourElo - potentialPairElo) <= 100 ||
-                    (pool.createdAt < fiveMinutesAgo && potentialPair.createdAt < fiveMinutesAgo)
+                    (pool.createdAt < fiveMinutesAgo && potentialPair.createdAt < fiveMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 133) ||
+                    (pool.createdAt < tenMinutesAgo && potentialPair.createdAt < tenMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 167) ||
+                    (pool.createdAt < fifteenMinutesAgo && potentialPair.createdAt < fifteenMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 200)
                 )) {
                     console.log(`Acceptable pairing`)
                 } else if (format.name === 'Forged in Chaos') {
