@@ -49,11 +49,15 @@ const privateKey = useHttps ? readFileSync('../../../certs/privkey.pem', 'utf8')
 const certificate = useHttps ? readFileSync('../../../certs/fullchain.pem', 'utf8') || '' : ''
 const credentials = { key: privateKey, cert: certificate }
 
-const server = useHttps ? https.createServer(credentials, app).listen(port, () =>
-    console.log(chalk.cyan(`Listening on https://${config.services.site.host ? config.services.site.host : '0.0.0.0'}:${port}`))
-) : http.createServer(app).listen(port, () =>
-    console.log(chalk.cyan(`Listening on http://${config.services.site.host ? config.services.site.host : '0.0.0.0'}:${port}`))
-)
+let httpServer, httpsServer
 
-server.on('error', console.error)
+if (useHttps) {
+    httpsServer = https.createServer(credentials, app).listen(port, () => console.log(chalk.cyan(`Listening on https://${config.services.site.host ? config.services.site.host : '0.0.0.0'}:${port}`)))
+    httpServer = http.createServer(app).listen(80, () => console.log(chalk.cyan(`Listening on https://${config.services.site.host ? config.services.site.host : '0.0.0.0'}:${80}`)))
+} else {
+    httpServer = http.createServer(app).listen(port, () => console.log(chalk.cyan(`Listening on http://${config.services.site.host ? config.services.site.host : '0.0.0.0'}:${port}`)))
+}
+
+httpServer.on('error', console.error)
+httpsServer.on('error', console.error)
 
