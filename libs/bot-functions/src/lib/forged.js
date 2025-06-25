@@ -50,7 +50,6 @@ export const getForgedIssues = async (player, deckArr, format) => {
     const oneCopyOwned = []
     const twoCopiesOwned = []
 
-
     for (let i = 0; i < quantityKeys.length; i++) {
         const quantityKey = quantityKeys[i]
         let quantityOwned = 0

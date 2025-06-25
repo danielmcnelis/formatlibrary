@@ -62,15 +62,12 @@ export const createDecks = async (interaction, event, participants, standings = 
                         })
 
                         const {data} = await axios.get(`https://api.challonge.com/v1/tournaments/${topCutTournamentId}/participants/${topCutEntry.participantId}.json?api_key=${challongeApiKey}`) 
-                        console.log('!!data', !!data)
                         if (data?.participant?.final_rank) {
                             placement = data.participant.final_rank
                         }
                     }
     
                     const deckType = await getDeckType(entry.ydk, event.formatName)
-                    console.log('!!deckType', !!deckType)
-                    console.log('deckType?.name', deckType?.name)
     
                     await Deck.create({
                         deckTypeName: deckType.name,

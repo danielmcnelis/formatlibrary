@@ -2,7 +2,6 @@ import { Format, Deck, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 
 export const getFormatByName = async (req, res, next) => {
-    console.log('req.params.name.replace', req.params.name.replaceAll(' ', '_').replaceAll('-', '_'))
   try {
     const format = await Format.findOne({
       where: {
@@ -14,8 +13,6 @@ export const getFormatByName = async (req, res, next) => {
         'previousFormatId', 'previousFormatName', 'nextFormatId', 'nextFormatName'
       ]
     })
-
-    console.log('!!format', !!format)
 
     const deckCount = await Deck.count({
       where: {
