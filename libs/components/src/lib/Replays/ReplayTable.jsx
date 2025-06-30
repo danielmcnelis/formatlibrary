@@ -96,7 +96,12 @@ export const ReplayTable = (props) => {
                     let url = `/api/replays?page=${page}&limit=${replaysPerPage}&sort=${sortBy}`
                     if (filter.length) url += ('&filter=' + filter.slice(1))
 
-                    const { data } = await axios.get(url)                
+                    const { data } = await axios.get(url, {
+                        headers: {
+                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                        }
+                    })                
+                    
                     setReplays(data)
                 }
             } catch (err) {

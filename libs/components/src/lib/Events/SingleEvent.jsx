@@ -21,6 +21,7 @@ ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tool
 export const SingleEvent = (props) => {
     const isAdmin = props.roles?.admin
     const isSubscriber = props.roles?.subscriber
+    const accessToken = getCookie('access')
 
     const [event, setEvent] = useState({})
     console.log('event', event)
@@ -92,7 +93,11 @@ export const SingleEvent = (props) => {
                 }
             } else {
                 try {
-                    const {data} = await axios.get(`/api/events/${id}`)
+                    const {data} = await axios.get(`/api/events/${id}`, {
+                        headers: {
+                            ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                        }
+                    })
                     setEventData(data)
                 } catch (err) {
                     console.log(err)

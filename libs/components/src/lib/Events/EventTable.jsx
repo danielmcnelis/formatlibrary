@@ -8,9 +8,11 @@ import { Pagination } from '../General/Pagination'
 import { useMediaQuery } from 'react-responsive'
 import { Helmet } from 'react-helmet'
 import './EventTable.css' 
+import { getCookie } from '@fl/utils'
 
 export const EventTable = (props) => {
     const isMounted = useRef(false)
+    const accessToken = getCookie('access')
     const [communityName, setCommunityName] = useState(null)
     const [communities, setCommunities] = useState(['All Communities'])
     const [events, setEvents] = useState([])
@@ -50,7 +52,11 @@ export const EventTable = (props) => {
         if (format) filter += `,format:eq:${format}`
         if (filter.length) url += ('?filter=' + filter.slice(1))
   
-        const { data } = await axios.get(url)
+        const { data } = await axios.get(url, {
+            headers: {
+                ...(accessToken && {authorization: `Bearer ${accessToken}`})
+            }
+        })
         setTotal(data)
     }
 

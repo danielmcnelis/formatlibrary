@@ -7,13 +7,13 @@ import { Subscriptions } from '@fl/components'
 // import { client } from 'libs/bot-functions/src/client'
 
 const App = () => {
-    console.log('navigator.userAgent', navigator.userAgent)
+    // console.log('navigator.userAgent', navigator.userAgent)
     const adBlockDetected = useDetectAdBlock()
-    console.log('adBlockDetected', adBlockDetected)
+    // console.log('adBlockDetected', adBlockDetected)
     const playerId = getCookie('playerId')
     const visited = getCookie('visited')
-    console.log('playerId', playerId)
-    console.log('visited', visited)
+    // console.log('playerId', playerId)
+    // console.log('visited', visited)
     const [roles, setRoles] = useState({
         admin: false, 
         contentManager: false, 
@@ -21,12 +21,12 @@ const App = () => {
     })
     
     const [checkedSubscription, setCheckedSubscription] = useState(false)  
-    console.log('checkedSubscription', checkedSubscription)
+    // console.log('checkedSubscription', checkedSubscription)
     const [showReminder, setShowReminder] = useState(false) 
-    console.log('showReminder', showReminder)
+    // console.log('showReminder', showReminder)
     const oneDayAgo = new Date(Date.now() - (24 * 60 * 60 * 1000))
-    console.log('oneDayAgo', oneDayAgo)
-    console.log(`adBlockDetected && (Number(visited) < oneDayAgo.getTime()`, adBlockDetected && (Number(visited) < oneDayAgo.getTime()))
+    // console.log('oneDayAgo', oneDayAgo)
+    // console.log(`adBlockDetected && (Number(visited) < oneDayAgo.getTime()`, adBlockDetected && (Number(visited) < oneDayAgo.getTime()))
 
     // USE EFFECT
     useEffect(() => {

@@ -11,6 +11,6 @@ router.get('/api/replays/admin', [authenticate, getReplaysAsAdmin])
 
 router.get('/api/replays/subscriber', [authenticate, getReplaysAsSubscriber])
 
-router.get('/api/replays/', getReplaysAsRegularUser)
+router.get('/api/replays/', [authenticate, getReplaysAsRegularUser])
 
 export default router

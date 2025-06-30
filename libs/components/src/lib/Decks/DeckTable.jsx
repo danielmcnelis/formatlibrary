@@ -103,7 +103,12 @@ export const DeckTable = (props) => {
                 let url = `/api/decks?page=${page}&limit=${decksPerPage}&sort=${sortBy}`
                 if (filter.length) url += ('&filter=' + filter.slice(1))
     
-                const {data: deckData} = await axios.get(url)
+                const {data: deckData} = await axios.get(url, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                })
+                
                 setDecks(deckData)
             } catch (err) {
                 console.log(err)

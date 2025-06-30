@@ -109,7 +109,12 @@ export const SingleDeck = (props) => {
                 }
         } else {
             try {
-                const {data: deckData} = await axios.get(`/api/decks/${id}`)
+                const {data: deckData} = await axios.get(`/api/decks/${id}`, {
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
+                }
+            )
                 setDeck(deckData)
             } catch (err) {
                 console.log(err)
@@ -192,6 +197,9 @@ export const SingleDeck = (props) => {
             if (deck.display === true) {
                 const {data: blob} = await axios.get(`/api/decks/download/${deck.id}`, {
                     responseType: 'blob',
+                    headers: {
+                        ...(accessToken && {authorization: `Bearer ${accessToken}`})
+                    }
                 })
 
                 fileUrl = window.URL.createObjectURL(blob)
