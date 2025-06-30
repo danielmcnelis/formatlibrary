@@ -17,9 +17,9 @@ router.get('/api/events/count', countEvents)
 
 router.get('/api/events/subscriber/:id', [authenticate, getEventByIdAsSubscriber])
 
-router.get('/api/events/:id', [authenticate, getEventById])
+router.get('/api/events/:id', getEventById)
 
-router.get('/api/events/',  [authenticate, getEvents])
+router.get('/api/events/', getEvents)
 
 router.post('/api/events/create', createEvents)
 

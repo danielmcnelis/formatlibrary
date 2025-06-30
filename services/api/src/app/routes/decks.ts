@@ -65,7 +65,7 @@ router.post('/api/decks/text-to-ydk/', convertTextToYDK)
 
 router.get('/api/decks/download/subscriber/:id', [authenticate, downloadDeck])
 
-router.get('/api/decks/download/:id', [authenticate, downloadDeck])
+router.get('/api/decks/download/:id', downloadDeck)
 
 router.get('/api/decks/count', countDecks)
 
@@ -77,9 +77,9 @@ router.get('/api/decks/admin', [authenticate, getDecksAsAdmin])
 
 router.get('/api/decks/subscriber', [authenticate, getDecksAsSubscriber])
 
-router.get('/api/decks/:id', [authenticate, getDeckAsRegularUser])
+router.get('/api/decks/:id', getDeckAsRegularUser)
 
-router.get('/api/decks/', [authenticate, getDecksAsRegularUser])
+router.get('/api/decks/', getDecksAsRegularUser)
 
 router.post('/api/decks/labels', [authenticate, updateDeckLabels])
 
