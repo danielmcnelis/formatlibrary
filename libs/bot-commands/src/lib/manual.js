@@ -256,7 +256,7 @@ export default {
                         
                     chipsWinner = Math.round(chipsWinner * chipBonusWinner)
                     chipsLoser = Math.round(chipsLoser * chipBonusLoser)
-                    if (chipsWinner <= chipsLoser) chipsWinner = Math.round(chipsWinner * 1.5)
+                    if (chipsWinner <= chipsLoser) chipsWinner = 15
 
                     // const bar = Math.round(chipsLoser * 1.5)
                     // if (chipsWinner < bar) chipsWinner = bar
