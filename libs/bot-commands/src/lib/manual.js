@@ -246,7 +246,10 @@ export default {
                     
                     const chipBonusWinner =  winnerIsBenefactor ? 2 :
                         winnerIsPatron ? 1.6 :
+                        loserIsBenefactor ? 1.5 :
                         winnerIsSupporter ? 1.3 :
+                        loserIsPatron ? 1.2 :
+                        loserIsSupporter ? 1.1 :
                         1
                     
                     const chipBonusLoser =  loserIsBenefactor ? 2 :
@@ -256,7 +259,7 @@ export default {
                         
                     chipsWinner = Math.round(chipsWinner * chipBonusWinner)
                     chipsLoser = Math.round(chipsLoser * chipBonusLoser)
-                    if (chipsWinner <= chipsLoser) chipsWinner = 15
+                    if (chipsWinner <= chipsLoser) chipsWinner = chipsLoser + 1
 
                     // const bar = Math.round(chipsLoser * 1.5)
                     // if (chipsWinner < bar) chipsWinner = bar
