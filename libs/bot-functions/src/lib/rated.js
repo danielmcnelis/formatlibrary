@@ -36,6 +36,8 @@ export const getRatedConfirmation = async (player, opponent, format, guild) => {
         }
     })
 
+    if (!opponentsPool) return
+
     await yourPool.update({ status: 'confirming' })
  
     const row = new ActionRowBuilder()
