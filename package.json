@@ -36,7 +36,7 @@
     "cookie-session": "^2.0.0",
     "core-js": "^3.6.5",
     "discord.js": "^14.15.3",
-    "express": "^4.18.1",
+    "express": "^4.21.2",
     "express-ejs-layouts": "^2.5.1",
     "fuzzyset": "^1.0.7",
     "googleapis": "^148.0.0",
