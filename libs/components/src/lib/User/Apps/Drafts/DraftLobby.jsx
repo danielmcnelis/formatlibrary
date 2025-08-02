@@ -96,7 +96,8 @@ export const DraftLobby = (props) => {
     }
 
     // JOIN
-    const join = () => {     
+    const join = () => {    
+        console.log('join()') 
         try {            
             if (!playerId) {
                 alert('Must be logged in to join a Draft.')
@@ -273,7 +274,7 @@ export const DraftLobby = (props) => {
         }
     }, [])
 
-    return (
+    return (ff
         <div className="cube-portal">
             {
                 draft.state === 'pending' ? (
