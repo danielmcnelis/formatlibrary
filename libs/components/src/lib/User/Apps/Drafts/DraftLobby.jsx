@@ -98,6 +98,7 @@ export const DraftLobby = (props) => {
     // JOIN
     const join = () => {    
         console.log('join()') 
+        console.log('playerId', playerId)
         try {            
             if (!playerId) {
                 alert('Must be logged in to join a Draft.')
