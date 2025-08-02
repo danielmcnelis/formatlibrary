@@ -274,7 +274,7 @@ export const DraftLobby = (props) => {
         }
     }, [])
 
-    return (ff
+    return (
         <div className="cube-portal">
             {
                 draft.state === 'pending' ? (
