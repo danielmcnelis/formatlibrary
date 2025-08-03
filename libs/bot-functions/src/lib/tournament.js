@@ -787,8 +787,8 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
     const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
-    const data = tournament.format.name === 'Forged in Chaos' ? await getForgedDeckList(interaction.member, player, format) :
-        tournament.format.category === tournament.format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
+    const data = tournament.format.name === 'Forged in Chaos' ? await getForgedDeckList(interaction.member, player, tournament.format) :
+        tournament.format.category === tournament.format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, tournament.format) :
         await getDeckList(interaction.member, player, tournament.format, true, !tournament.isRated)
 
     if (!data) return
