@@ -156,7 +156,7 @@ export const DraftLobby = (props) => {
     // SELECT CARD
     const selectRandomCard = async () => {    
         try {
-            const cardId = pack[Math.floor(Math.random() * pack.length)]?.id
+            const cardId = pack[Math.floor(Math.random() * pack.length)]?.card?.id
             const data = { draftId: draft.id, round: draft.round, pick: draft.pick, playerId: playerId, cardId: cardId }            
             socket.emit('select card', data, processSelection)            
         } catch (err) {
