@@ -52,7 +52,10 @@ io.on('connection', (socket) => {
         count--
     })
 
-    socket.on('join draft', (data, setEntry) => joinDraft(data.playerId, data.draftId, socket, setEntry))
+    socket.on('join draft', (data, setEntry) => { 
+        console.log(`client side socket joining draft`)
+        return joinDraft(data.playerId, data.draftId, socket, setEntry)
+    })
     socket.on('leave draft', (data, setEntry) => leaveDraft(data.playerId, data.draftId, socket, setEntry))
     socket.on('start draft', (data) => startDraft(data.draftId, socket))
     socket.on('start sealed', (data) => startSealed(data.draftId, socket))
