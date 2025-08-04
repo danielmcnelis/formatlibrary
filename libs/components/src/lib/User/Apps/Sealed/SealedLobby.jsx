@@ -158,12 +158,12 @@ export const SealedLobby = () => {
         });
     }, [])
 
-    useEffect(() => {
-        return () => {
-            console.log('disconnectSocket()')
-            socket.disconnect()
-        }
-    }, [])
+    // useEffect(() => {
+    //     return () => {
+    //         console.log('disconnectSocket()')
+    //         socket.disconnect()
+    //     }
+    // }, [])
     
     // HOOK - FETCH INITIAL DRAFT DATA
     useEffect(() => {

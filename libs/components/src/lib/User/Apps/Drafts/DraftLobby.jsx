@@ -268,12 +268,12 @@ export const DraftLobby = (props) => {
         fetchData()
     }, [])
 
-    useEffect(() => {
-        return () => {
-            console.log('disconnectSocket()')
-            socket.disconnect()
-        }
-    }, [])
+    // useEffect(() => {
+    //     return () => {
+    //         console.log('disconnectSocket()')
+    //         socket.disconnect()
+    //     }
+    // }, [])
 
     return (
         <div className="cube-portal">
