@@ -235,6 +235,7 @@ export const unpublishCube = async (req, res, next) => {
 
 
 export const drawCube = async (req, res, next) => {  
+    console.log('drawCube()')
   try {
       const cube = await Cube.findOne({
           where: {
