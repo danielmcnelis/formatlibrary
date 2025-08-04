@@ -66,6 +66,7 @@ export const DraftLobby = (props) => {
     const [entry, setEntry] = useState({})
     const [inventory, setInventory] = useState([])
     const [pack, setPack] = useState({})
+    console.log('pack', pack)
     const [card, setCard] = useState({})
     const [selection, setSelection] = useState(null)
     const [timer, setTimer] = useState(null)
@@ -97,8 +98,6 @@ export const DraftLobby = (props) => {
 
     // JOIN
     const join = () => {    
-        console.log('join()') 
-        console.log('playerId', playerId)
         try {            
             if (!playerId) {
                 alert('Must be logged in to join a Draft.')
@@ -148,6 +147,17 @@ export const DraftLobby = (props) => {
     const selectCard = async (card) => {    
         try {
             const data = { draftId: draft.id, round: draft.round, pick: draft.pick, playerId: playerId, cardId: card.id }            
+            socket.emit('select card', data, processSelection)            
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    // SELECT CARD
+    const selectRandomCard = async () => {    
+        try {
+            const cardId = pack[Math.floor(Math.random() * pack.length)]?.id
+            const data = { draftId: draft.id, round: draft.round, pick: draft.pick, playerId: playerId, cardId: cardId }            
             socket.emit('select card', data, processSelection)            
         } catch (err) {
             console.log(err)
@@ -368,7 +378,10 @@ export const DraftLobby = (props) => {
                                         seconds={timer}
                                         alpha={0.9}
                                         size={96}
-                                        onComplete={() => setOnTheClock(false)}
+                                        onComplete={() => {
+                                            selectRandomCard()
+                                            setOnTheClock(false)
+                                        }}
                                     />
                                 ) : <div className="empty-clock"/>
                             }
