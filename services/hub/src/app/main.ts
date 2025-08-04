@@ -40,17 +40,17 @@ io.on('connection', (socket) => {
     count++
     console.log(`new socket ${socket.id} connection (${count})`)
 
-    // socket.on('disconnect', () => {
-    //     console.log(`client side socket ${socket.id} disconnect -> remove all listeners`)
-    //     socket.removeAllListeners()
-    //     count--
-    // })
+    socket.on('disconnect', () => {
+        console.log(`client side socket ${socket.id} disconnect -> remove all listeners`)
+        socket.removeAllListeners()
+        count--
+    })
 
-    // socket.on('disconnection', () => {
-    //     console.log(`client side socket ${socket.id} disconnection -> remove all listeners`)
-    //     socket.removeAllListeners()
-    //     count--
-    // })
+    socket.on('disconnection', () => {
+        console.log(`client side socket ${socket.id} disconnection -> remove all listeners`)
+        socket.removeAllListeners()
+        count--
+    })
 
     socket.on('join draft', (data, setEntry) => joinDraft(data.playerId, data.draftId, socket, setEntry))
     socket.on('leave draft', (data, setEntry) => leaveDraft(data.playerId, data.draftId, socket, setEntry))
