@@ -84,7 +84,8 @@ const setInternalTimer = async (draftId, round, pick, timer = 60, socket) => {
                             draftId: draftId,
                             draftEntryId: entry.id,
                             round: round,
-                            pick: pick
+                            pick: pick,
+                            compositeKey: entry.id + pick
                         })
     
                         await packContent.destroy()
