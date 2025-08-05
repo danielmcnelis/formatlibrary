@@ -73,15 +73,18 @@ export const getInventory = async (req, res, next) => {
 // DOWNLOAD INVENTORY
 export const downloadInventory = async (req, res, next) => {
     try {
-        const inventoryCodes = [...await Inventory.findAll({
+        const cards = [...await Inventory.findAll({
             where: {
                 draftEntryId: req.query.entryId
             },
-            order: [["createdAt", "ASC"]],
-            include: Card
-        })].map((c) => c.card?.konamiCode)
+            include: Card,
+            order: [[Card, "sortPriority", "ASC"], [Card, "name", "ASC"]]
+        })].map((i) => i.card)
 
-        const ydk = 'created by...\n#main\n' + inventoryCodes.join('\n') + '\n#extra\n!side\n'
+        const mainDeckCodes = cards.filter((c) => !c.isExtraDeck).map((c) => c.konamiCode )
+        const extraDeckCodes = cards.filter((c) => c.isExtraDeck).map((c) => c.konamiCode )
+
+        const ydk = 'created by...\n#main\n' + mainDeckCodes.join('\n') + '\n#extra' + extraDeckCodes.join('\n') + '\n!side\n'
         res.send(ydk)
     } catch (err) {
       next(err)
