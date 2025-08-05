@@ -340,7 +340,7 @@ export const selectCard = async (cardId, playerId, draftId, round, pick, socket,
 
         const card = packContent.card
 
-        const count = await Inventory.count({
+        const pickHasBeenMade = await Inventory.count({
             where: {
                 draftEntryId: entry.id,
                 round: round,
@@ -348,8 +348,16 @@ export const selectCard = async (cardId, playerId, draftId, round, pick, socket,
             }
         })
 
+        const count = await Inventory.count({
+            where: {
+                draftEntryId: entry.id
+            }
+        })
+
+        const n = round * draft.packSize + pick
+
         // If this player has not made their pick yet:
-        if (!count) {
+        if (!pickHasBeenMade && count < n) {
             const inventory = await Inventory.create({
                 draftId: draftId,
                 draftEntryId: entry.id,
