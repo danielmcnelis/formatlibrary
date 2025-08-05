@@ -359,6 +359,7 @@ export const selectCard = async (cardId, playerId, draftId, round, pick, socket,
 
         // If this player has not made their pick yet:
         if (!pickHasBeenMade && count < n) {
+            console.log(`compositeKey:`, `${entry.id}${pick}`)
             const inventory = await Inventory.create({
                 draftId: draftId,
                 draftEntryId: entry.id,
