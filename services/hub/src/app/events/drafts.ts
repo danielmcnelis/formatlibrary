@@ -85,7 +85,7 @@ const setInternalTimer = async (draftId, round, pick, timer = 60, socket) => {
                             draftEntryId: entry.id,
                             round: round,
                             pick: pick,
-                            compositeKey: entry.id + pick
+                            compositeKey: `${entry.id}${pick}`
                         })
     
                         await packContent.destroy()
@@ -366,7 +366,7 @@ export const selectCard = async (cardId, playerId, draftId, round, pick, socket,
                 cardName: card.name,
                 round: round,
                 pick: pick,
-                compositeKey: entry.id + pick
+                compositeKey: `${entry.id}${pick}`
             })
     
             if (inventory) {

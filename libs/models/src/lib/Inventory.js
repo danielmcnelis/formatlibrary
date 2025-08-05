@@ -23,7 +23,7 @@ export const Inventory = db.define('inventories', {
         type: Sequelize.INTEGER
     },
     compositeKey: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         unique: true
     }
 })
