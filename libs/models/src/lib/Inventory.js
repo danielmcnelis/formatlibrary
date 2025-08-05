@@ -21,5 +21,9 @@ export const Inventory = db.define('inventories', {
     },
     pick: {
         type: Sequelize.INTEGER
+    },
+    compositeKey: {
+        type: Sequelize.INTEGER,
+        unique: true
     }
 })

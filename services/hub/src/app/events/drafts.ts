@@ -354,7 +354,7 @@ export const selectCard = async (cardId, playerId, draftId, round, pick, socket,
             }
         })
 
-        const n = round * draft.packSize + pick
+        const n = round * draft.packSize + pick % draft.packSize
 
         // If this player has not made their pick yet:
         if (!pickHasBeenMade && count < n) {
@@ -364,7 +364,8 @@ export const selectCard = async (cardId, playerId, draftId, round, pick, socket,
                 cardId: cardId,
                 cardName: card.name,
                 round: round,
-                pick: pick
+                pick: pick,
+                compositeKey: entry.id + pick
             })
     
             if (inventory) {
