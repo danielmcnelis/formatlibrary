@@ -631,19 +631,19 @@ export const lookForAllPotentialPairs = async (client) => {
 
                 const potentialPairStats = await Stats.findOne({ where: { formatId: format.id, playerId: potentialPair.playerId }})
                 const potentialPairElo = format.useSeasonalElo ? potentialPairStats?.seasonalElo : potentialPairStats?.elo
-                if (format.name === 'Forged in Chaos' && (
-                    yourElo <= 420 && potentialPairElo <= 420 ||
-                    yourElo > 420 && potentialPairElo > 420 ||
-                    Math.abs(yourElo - potentialPairElo) <= 100 ||
-                    (pool.createdAt < fiveMinutesAgo && potentialPair.createdAt < fiveMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 133) ||
-                    (pool.createdAt < tenMinutesAgo && potentialPair.createdAt < tenMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 167) ||
-                    (pool.createdAt < fifteenMinutesAgo && potentialPair.createdAt < fifteenMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 200)
-                )) {
-                    console.log(`Acceptable pairing`)
-                } else if (format.name === 'Forged in Chaos') {
-                    console.log(`<!> ${player.name} and ${potentialPair.playerName} are TOO FAR APART IN ELO. Look for another opponent.`)
-                    continue
-                }
+                // if (format.name === 'Forged in Chaos' && (
+                //     yourElo <= 420 && potentialPairElo <= 420 ||
+                //     yourElo > 420 && potentialPairElo > 420 ||
+                //     Math.abs(yourElo - potentialPairElo) <= 100 ||
+                //     (pool.createdAt < fiveMinutesAgo && potentialPair.createdAt < fiveMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 133) ||
+                //     (pool.createdAt < tenMinutesAgo && potentialPair.createdAt < tenMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 167) ||
+                //     (pool.createdAt < fifteenMinutesAgo && potentialPair.createdAt < fifteenMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 200)
+                // )) {
+                //     console.log(`Acceptable pairing`)
+                // } else if (format.name === 'Forged in Chaos') {
+                //     console.log(`<!> ${player.name} and ${potentialPair.playerName} are TOO FAR APART IN ELO. Look for another opponent.`)
+                //     continue
+                // }
 
                 // if (format.name === 'Forged in Chaos' && ((yourElo <= 430 && potentialPairElo > 500) || (yourElo > 500 && potentialPairElo <= 430))) {
                 // if (format.name === 'Forged in Chaos' && Math.abs(yourElo - potentialPairElo) > 100) {
