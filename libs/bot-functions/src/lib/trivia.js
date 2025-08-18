@@ -87,13 +87,13 @@ export const initiateTrivia = async (interaction) => {
 
         const remainingEntries = await TriviaEntry.findAll({ where: { isConfirmed: true }})
 
-        if (remainingEntries.length < 4) {    
+        if (remainingEntries.length < 2) {    
             for (let i = 0; i < remainingEntries.length; i++) {
                 const entry = remainingEntries[i]
                 await entry?.update({ status: 'pending', isConfirmed: false })
             }
 
-            return interaction.channel.send({ content: `Unfortunately, Trivia cannot begin without at least 4 players. 📚 🐛\n\nThe following players have been removed from the queue:\n${missingNames.sort().join("\n")}`})
+            return interaction.channel.send({ content: `Unfortunately, Trivia cannot begin without at least 3 players. 📚 🐛\n\nThe following players have been removed from the queue:\n${missingNames.sort().join("\n")}`})
         } else {
             for (let i = 0; i < remainingEntries.length; i++) {
                 const entry = entries[i]
