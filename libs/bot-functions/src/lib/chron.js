@@ -865,7 +865,7 @@ export const recalculateFormatStats = async (format) => {
             console.log('recalculating OVERALL stats')
             const allMatches = await Match.findAll({ 
                 where: { serverId: server.id }, 
-                attributes: ['id', 'formatId', 'serverId', 'winnerName', 'loserName', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'classicDelta', 'createdAt', 'isSeasonal'], 
+                attributes: ['id', 'formatId', 'formatName', 'serverId', 'winnerName', 'loserName', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'classicDelta', 'createdAt', 'isSeasonal'], 
                 order: [["createdAt", "ASC"]]
             })
 
