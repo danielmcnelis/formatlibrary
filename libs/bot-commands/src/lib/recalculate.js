@@ -37,7 +37,10 @@ export default {
                 })
 
                 const allMatches = await Match.findAll({ attributes: ['id']})
+                console.log('!!allMatches', !!allMatches)
                 count = allMatches.length
+                console.log('allMatches.length', allMatches?.length)
+                console.log('count', count)
             } else {
                 count = await Match.count({ where: { formatName: format.name, serverId: serverId }})
             }
