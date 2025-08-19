@@ -25,12 +25,23 @@ export default {
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
             if (!hasPartnerAccess(server)) return await interaction.reply({ content: `This feature is only available with partner access. ${emojis.legend}`})
             if (!isModerator(server, interaction.member)) return await interaction.reply({ content: `You do not have permission to do that.`})
-            const format = await Format.findByServerOrInputOrChannelId(server, formatName, interaction.channelId)
-            if (!format) return await interaction.reply({ content: `Try using **/recalculate** in channels like: <#414575168174948372> or <#629464112749084673>.`})
+            let format = await Format.findByServerOrInputOrChannelId(server, formatName, interaction.channelId)
             const serverId = server.hasInternalLadder ? server.id : '414551319031054346'
-            const count = await Match.count({ where: { formatName: format.name, serverId: serverId }})
+            if (!format && (!server.id !== '414551319031054346' || interaction.channel?.name !== 'bot-spam')) return await interaction.reply({ content: `Try using **/recalculate** in channels like: <#414575168174948372> or <#629464112749084673>.`})
+            let count = 0
+            if (!format && formatName === 'Overall' && server.id === '414551319031054346' && interaction.channel?.name === 'bot-spam') {
+                format = await Format.findOne({
+                    where: {
+                        name: 'Overall'
+                    }
+                })
+
+                count = await Match.count()
+            } else {
+                count = await Match.count({ where: { formatName: format.name, serverId: serverId }})
+            }
+
             interaction.reply({ content: `Recalculating data from ${count} ${format.name} ${format.emoji} matches. Please wait...`})
-            
             await recalculateFormatStats(format)
             return await interaction.channel.send({ content: `Recalculation complete!`})	
         } catch (err) {
