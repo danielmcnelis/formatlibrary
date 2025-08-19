@@ -863,7 +863,7 @@ export const recalculateFormatStats = async (format) => {
         } else {
             console.log('recalculating OVERALL stats')
             const allMatches = await Match.findAll({ 
-                where: { serverId: server.id }, 
+                where: { serverId: server.id, category: {[Op.not]: 'Custom'} }, 
                 attributes: ['id', 'formatId', 'formatName', 'serverId', 'winnerName', 'loserName', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'classicDelta', 'createdAt', 'isSeasonal'], 
                 order: [["createdAt", "ASC"]]
             })
@@ -909,7 +909,7 @@ export const recalculateFormatStats = async (format) => {
                             attributes: attributes
                         })
                     }
-                    
+
                     const winnerId = match.winnerId
                     const loserId = match.loserId
                     const winnerStats = allStats.find((s) => s.playerId === winnerId)
