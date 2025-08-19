@@ -721,7 +721,7 @@ export const recalculateFormatStats = async (format) => {
         })
 
 
-            if (format.name !== 'Overall') {
+        if (format.name !== 'Overall') {
 
             const allMatches = await Match.findAll({ 
                 where: { formatId: format.id, serverId: server.id }, 
@@ -863,69 +863,85 @@ export const recalculateFormatStats = async (format) => {
             }
         } else {
             console.log('recalculating OVERALL stats')
-            const matches = Match.findAll()
-            const match = matches[i]
+            const allMatches = await Match.findAll({ 
+                where: { serverId: server.id }, 
+                attributes: ['id', 'formatId', 'serverId', 'winnerName', 'loserName', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'classicDelta', 'createdAt', 'isSeasonal'], 
+                order: [["createdAt", "ASC"]]
+            })
 
-            try {
-                if (nextMonth < match.createdAt) {
-                    await applyGeneralDecay(format.id, format.name, server.id, currentMonth || currentDate, nextMonth)
-                    currentMonth = nextMonth
-                    nextMonth = getStartOfNextMonthAtMidnight(currentMonth)
+            if (!allMatches.length) { 
+                console.log(`No matches for ${format.name}.`)
+                continue
+            }
 
-                    allStats = await Stats.findAll({ 
-                        where: { formatId: format.id, serverId: server.id }, 
-                        attributes: attributes
-                    })
+            // const today = new Date()
+            let currentDate = allMatches[0].createdAt
+            let currentMonth
+            let nextMonth = getStartOfNextMonthAtMidnight(currentDate)
+
+            for (let i = 0; i < allMatches.length; i++) {
+                const match = allMatches[i]
+                try {
+                    if (nextMonth < match.createdAt) {
+                        await applyGeneralDecay(format.id, format.name, server.id, currentMonth || currentDate, nextMonth)
+                        currentMonth = nextMonth
+                        nextMonth = getStartOfNextMonthAtMidnight(currentMonth)
+
+                        allStats = await Stats.findAll({ 
+                            where: { formatId: format.id, serverId: server.id }, 
+                            attributes: attributes
+                        })
+                    }
+        
+                    const winnerId = match.winnerId
+                    const loserId = match.loserId
+                    const winnerStats = allStats.find((s) => s.playerId === winnerId)
+                    const loserStats = allStats.find((s) => s.playerId === loserId)
+        
+                    if (!winnerStats) {
+                        const stats = await Stats.create({
+                            playerName: match.winnerName,
+                            playerId: winnerId,
+                            elo: baseElo,
+                            bestElo: baseElo,
+                            classicElo: baseElo,
+                            formatName: format.name,
+                            formatId: format.id,
+                            serverId: server.id,
+                            isInternal: server.hasInternalLadder
+                        })
+        
+                        console.log('created new winner stats', winnerId)
+                        allStats.push(stats)
+                        i--
+                        continue
+                    }
+        
+                    if (!loserStats) {
+                        const stats = await Stats.create({
+                            playerName: match.loserName,
+                            playerId: loserId,
+                            elo: baseElo,
+                            bestElo: baseElo,
+                            classicElo: baseElo,
+                            formatName: format.name,
+                            formatId: format.id,
+                            serverId: server.id,
+                            isInternal: server.hasInternalLadder
+                        })
+        
+                        console.log('created new loser stats:', loserId)
+                        allStats.push(stats)
+                        i--
+                        continue
+                    }
+        
+                    const [winnerDelta, loserDelta, classicDelta] = await updateGeneralStats(winnerStats, loserStats)
+                    await match.update({ winnerDelta, loserDelta, classicDelta })
+                    console.log(`${format.name} Match ${i+1}: ${winnerStats.playerName} > ${loserStats.playerName}`)
+                } catch (err) {
+                    console.log(err)
                 }
-    
-                const winnerId = match.winnerId
-                const loserId = match.loserId
-                const winnerStats = allStats.find((s) => s.playerId === winnerId)
-                const loserStats = allStats.find((s) => s.playerId === loserId)
-    
-                if (!winnerStats) {
-                    const stats = await Stats.create({
-                        playerName: match.winnerName,
-                        playerId: winnerId,
-                        elo: baseElo,
-                        bestElo: baseElo,
-                        classicElo: baseElo,
-                        formatName: format.name,
-                        formatId: format.id,
-                        serverId: server.id,
-                        isInternal: server.hasInternalLadder
-                    })
-    
-                    console.log('created new winner stats', winnerId)
-                    allStats.push(stats)
-                    i--
-                    continue
-                }
-    
-                if (!loserStats) {
-                    const stats = await Stats.create({
-                        playerName: match.loserName,
-                        playerId: loserId,
-                        elo: baseElo,
-                        bestElo: baseElo,
-                        classicElo: baseElo,
-                        formatName: format.name,
-                        formatId: format.id,
-                        serverId: server.id,
-                        isInternal: server.hasInternalLadder
-                    })
-    
-                    console.log('created new loser stats:', loserId)
-                    allStats.push(stats)
-                    i--
-                    continue
-                }
-    
-                const [winnerDelta, loserDelta, classicDelta] = await updateGeneralStats(winnerStats, loserStats)
-                await match.update({ winnerDelta, loserDelta, classicDelta })
-                console.log(`${format.name} Match ${i+1}: ${winnerStats.playerName} > ${loserStats.playerName}`)
-            } catch (err) {
-                console.log(err)
             }
         }
 
