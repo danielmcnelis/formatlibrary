@@ -899,16 +899,16 @@ export const recalculateFormatStats = async (format) => {
             for (let i = 0; i < allMatches.length; i++) {
                 const match = allMatches[i]
                 try {
-                    if (nextMonth < match.createdAt) {
-                        await applyGeneralDecay(format.id, format.name, server.id, currentMonth || currentDate, nextMonth)
-                        currentMonth = nextMonth
-                        nextMonth = getStartOfNextMonthAtMidnight(currentMonth)
+                    // if (nextMonth < match.createdAt) {
+                    //     await applyGeneralDecay(format.id, format.name, server.id, currentMonth || currentDate, nextMonth)
+                    //     currentMonth = nextMonth
+                    //     nextMonth = getStartOfNextMonthAtMidnight(currentMonth)
 
-                        allStats = await Stats.findAll({ 
-                            where: { formatId: format.id, serverId: server.id }, 
-                            attributes: attributes
-                        })
-                    }
+                    //     allStats = await Stats.findAll({ 
+                    //         where: { formatId: format.id, serverId: server.id }, 
+                    //         attributes: attributes
+                    //     })
+                    // }
 
                     const winnerId = match.winnerId
                     const loserId = match.loserId
