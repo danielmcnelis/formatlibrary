@@ -29,7 +29,7 @@ export default {
             const serverId = server.hasInternalLadder ? server.id : '414551319031054346'
             if (!format && (!server.id !== '414551319031054346' || interaction.channel?.name !== 'bot-spam')) return await interaction.reply({ content: `Try using **/recalculate** in channels like: <#414575168174948372> or <#629464112749084673>.`})
             let count = 0
-            if (!format && formatName === 'Overall' && server.id === '414551319031054346') {
+            if (formatName === 'Overall') {
                 format = await Format.findOne({
                     where: {
                         name: 'Overall'
