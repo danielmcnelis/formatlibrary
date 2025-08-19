@@ -722,7 +722,6 @@ export const recalculateFormatStats = async (format) => {
 
 
         if (format.name !== 'Overall') {
-
             const allMatches = await Match.findAll({ 
                 where: { formatId: format.id, serverId: server.id }, 
                 attributes: ['id', 'formatId', 'serverId', 'winnerName', 'loserName', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'classicDelta', 'createdAt', 'isSeasonal'], 
@@ -874,14 +873,43 @@ export const recalculateFormatStats = async (format) => {
                 continue
             }
 
+            for (let i = 0; i < allStats.length; i++) {
+                const stats = allStats[i]
+                await stats.update({
+                    elo: baseElo,
+                    bestElo: baseElo,
+                    backupElo: null,
+                    wins: 0,
+                    losses: 0,
+                    games: 0,
+                    classicElo: baseElo,
+                    backupClassicElo: null,
+                    currentStreak: 0,
+                    bestStreak: 0,
+                    vanquished: 0
+                })
+            }
+
             // const today = new Date()
             let currentDate = allMatches[0].createdAt
             let currentMonth
             let nextMonth = getStartOfNextMonthAtMidnight(currentDate)
+            
 
             for (let i = 0; i < allMatches.length; i++) {
                 const match = allMatches[i]
                 try {
+                    if (nextMonth < match.createdAt) {
+                        await applyGeneralDecay(format.id, format.name, server.id, currentMonth || currentDate, nextMonth)
+                        currentMonth = nextMonth
+                        nextMonth = getStartOfNextMonthAtMidnight(currentMonth)
+
+                        allStats = await Stats.findAll({ 
+                            where: { formatId: format.id, serverId: server.id }, 
+                            attributes: attributes
+                        })
+                    }
+                    
                     const winnerId = match.winnerId
                     const loserId = match.loserId
                     const winnerStats = allStats.find((s) => s.playerId === winnerId)
@@ -925,8 +953,7 @@ export const recalculateFormatStats = async (format) => {
                         continue
                     }
         
-                    const [winnerDelta, loserDelta, classicDelta] = await updateGeneralStats(winnerStats, loserStats)
-                    await match.update({ winnerDelta, loserDelta, classicDelta })
+                    await updateGeneralStats(winnerStats, loserStats)
                     console.log(`${format.name} Match ${i+1} (${match.formatName}): ${winnerStats.playerName} > ${loserStats.playerName}`)
                 } catch (err) {
                     console.log(err)
