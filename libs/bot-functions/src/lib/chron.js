@@ -860,26 +860,6 @@ export const recalculateFormatStats = async (format) => {
                 } catch (err) {
                     console.log(err)
                 }
-
-                for (let i = 0; i < allStats.length; i++) {
-                    const stats = allStats[i]
-                    const victories = await Match.findAll({
-                        where: {
-                            winnerId: stats.playerId,
-                            formatId: format.id, 
-                            serverId: server.id
-                        },
-                        attributes: ['winnerId', 'loserId', 'formatId', 'serverId']
-                    })
-            
-                    const vanquishedIds = []
-                    victories.forEach((v) => {
-                        if (!vanquishedIds.includes(v.loserId)) vanquishedIds.push(v.loserId)
-                    })
-            
-                    console.log(`${stats.playerName} has defeated ${vanquishedIds.length} unique opponents`)
-                    await stats.update({ vanquished: vanquishedIds.length })
-                }
             }
         } else {
             console.log('recalculating OVERALL stats')
@@ -947,6 +927,26 @@ export const recalculateFormatStats = async (format) => {
             } catch (err) {
                 console.log(err)
             }
+        }
+
+        for (let i = 0; i < allStats.length; i++) {
+            const stats = allStats[i]
+            const victories = await Match.findAll({
+                where: {
+                    winnerId: stats.playerId,
+                    formatId: format.id, 
+                    serverId: server.id
+                },
+                attributes: ['winnerId', 'loserId', 'formatId', 'serverId']
+            })
+    
+            const vanquishedIds = []
+            victories.forEach((v) => {
+                if (!vanquishedIds.includes(v.loserId)) vanquishedIds.push(v.loserId)
+            })
+    
+            console.log(`${stats.playerName} has defeated ${vanquishedIds.length} unique opponents`)
+            await stats.update({ vanquished: vanquishedIds.length })
         }
     }
 
