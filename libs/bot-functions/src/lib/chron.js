@@ -927,7 +927,7 @@ export const recalculateFormatStats = async (format) => {
         
                     const [winnerDelta, loserDelta, classicDelta] = await updateGeneralStats(winnerStats, loserStats)
                     await match.update({ winnerDelta, loserDelta, classicDelta })
-                    console.log(`${format.name} Match ${i+1}: ${winnerStats.playerName} > ${loserStats.playerName}`)
+                    console.log(`${format.name} Match ${i+1} (${match.formatName}): ${winnerStats.playerName} > ${loserStats.playerName}`)
                 } catch (err) {
                     console.log(err)
                 }
