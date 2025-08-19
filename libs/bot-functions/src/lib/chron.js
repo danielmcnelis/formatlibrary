@@ -886,7 +886,7 @@ export const recalculateFormatStats = async (format) => {
             console.log('recalculating OVERALL stats')
             const matches = Match.findAll()
             const match = matches[i]
-            
+
             try {
                 if (nextMonth < match.createdAt) {
                     await applyGeneralDecay(format.id, format.name, server.id, currentMonth || currentDate, nextMonth)
@@ -949,6 +949,7 @@ export const recalculateFormatStats = async (format) => {
                 console.log(err)
             }
         }
+    }
 
     return console.log(`Recalculation for ${format.name} Format is complete!`)
 }
