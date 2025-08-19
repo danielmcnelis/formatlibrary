@@ -60,8 +60,15 @@ export default {
                     + `\nCorrectly Answered: ${smarts} ${emojis.stoned}`
                 })
             } else {
-                const format = await Format.findByServerOrChannelId(server, interaction.channelId)
-                if (!format) return await interaction.reply({ content: `Try using **/stats** in channels like: <#414575168174948372> or <#629464112749084673>.`})
+                let format = await Format.findByServerOrChannelId(server, interaction.channelId)
+                if (!format && !interaction.channelId === '976947534234812437') return await interaction.reply({ content: `Try using **/stats** in channels like: <#414575168174948372> or <#629464112749084673>.`})
+                if (!format) {
+                    format = await Format.findOne({
+                        where: {
+                            name: 'Overall'
+                        }
+                    })
+                }
                 
                 const season = getSeason(now.getMonth())
                 const [eloType, winsType, lossesType, gamesType, statsType] = !server.hasInternalLadder && format.useSeasonalElo && format.seasonResetDate < now ? 
