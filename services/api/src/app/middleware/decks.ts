@@ -1001,6 +1001,7 @@ export const getDeckData = async (filter) => {
         where: {
             [Op.or]: {
                 konamiCode: konamiCode,
+                artworkId: mainKonamiCodes[i],
                 ypdId: mainKonamiCodes[i]
             }
         },

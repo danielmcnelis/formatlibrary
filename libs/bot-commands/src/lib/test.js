@@ -28,6 +28,7 @@ export default {
                 // console.log('member', member)
                 // await runNightlyTasks(client)
                 // const format = await Format.findOne({ where: { name: 'Forged in Chaos' }})
+                await interaction.editReply('🧪')
                 await recalculateAllStats()
                 // await updateAvatars(client)
                 // await updateMarketPrices()
