@@ -545,6 +545,7 @@ export const getFavoriteDecks = async (req, res, next) => {
           }))
 
         types.push(deckType.id)
+        if (!deckThumb) continue
         data.push({ ...deckType.dataValues, ...deckThumb.dataValues })
       } catch (err) {
         console.log(err)
