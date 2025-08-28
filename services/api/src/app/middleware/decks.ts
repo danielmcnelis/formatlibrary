@@ -526,7 +526,7 @@ export const getFavoriteDecks = async (req, res, next) => {
           attributes: ['id', 'name', 'cleanName']
         })
 
-        if (types.includes(deckType.id)) continue
+        if (!deckType || types.includes(deckType.id)) continue
 
         const deckThumb =
           (await DeckThumb.findOne({
