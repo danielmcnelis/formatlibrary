@@ -62,7 +62,7 @@ export const PlayerCreator = () => {
                     id="firstName"
                     value={firstName || ''}
                     type="text"
-                    onChange={(e) => setFirstName(e.target.value)}
+                    onChange={(e) => setFirstName(e.target.value?.trim())}
                 />
             </label>
             <label>Last Name:
@@ -70,7 +70,7 @@ export const PlayerCreator = () => {
                     id="lastName"
                     value={lastName || ''}
                     type="text"
-                    onChange={(e) => setLastName(e.target.value)}
+                    onChange={(e) => setLastName(e.target.value?.trim())}
                 />
             </label>
             <label>PFP:
@@ -97,7 +97,7 @@ export const PlayerCreator = () => {
                     id="discordName"
                     value={discordName || ''}
                     type="text"
-                    onChange={(e) => setDiscordName(e.target.value)}
+                    onChange={(e) => setDiscordName(e.target.value?.trim())}
                 />
             </label>
             <div

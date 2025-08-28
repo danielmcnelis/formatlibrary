@@ -491,7 +491,8 @@ export const getFavoriteDecks = async (req, res, next) => {
       where: {
         builderId: req.params.id,
         origin: 'event',
-        deckTypeName: { [Op.not]: 'Other' }
+        deckTypeName: { [Op.not]: 'Other' },
+        deckTypeId: { [Op.not]: null }
       },
       attributes: ['id', 'deckTypeName', 'formatName']
     })
