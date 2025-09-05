@@ -25,7 +25,7 @@ export default {
                 include: Tournament,
                 order: [['createdAt', 'DESC']] 
             })].map((entry) => {
-                return `${entry.tournament.name} ${entry.tournament.logo}` 
+                return `- ${entry.tournament.name} ${entry.tournament.logo} ${entry.tournament.emoji}` 
             })
             
             if (!entries.length) {
