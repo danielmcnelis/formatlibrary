@@ -33,11 +33,7 @@ export default {
             } else {
                 entries.unshift(`${emojis.placing} __**Your Tournament Entries**__ ${emojis.placing}`)
 
-                if (interaction.channel) {
-                    return await interaction.channel.send(entries.join('\n'))
-                } else {
-                    return await interaction.user.send(entries.join('\n'))
-                }
+                return await interaction.editReply(entries.join('\n'))    
             }
         } catch (err) {
             console.log(err)
