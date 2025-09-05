@@ -14,6 +14,7 @@ import { Helmet } from 'react-helmet'
 import './CubeBrowser.css' 
 
 export const CubeBrowser = (props) => {
+
     const isMounted = useRef(false)
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1000px)' })
     const [page, setPage] = useState(1)

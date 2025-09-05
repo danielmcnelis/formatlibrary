@@ -54,6 +54,7 @@ import timer from './lib/timer'
 import team from './lib/team'
 import teams from './lib/teams'
 import test from './lib/test'
+import tournaments from './lib/tournaments'
 import trivia from './lib/trivia'
 import undo from './lib/undo'
 import username from './lib/username'
@@ -119,6 +120,7 @@ export default {
         teams,
         tiebreakers,
         timer,
+        tournaments,
         undo,
         username
     }

@@ -8,6 +8,9 @@ import { getCookie } from '@fl/utils'
 import ReactCountdownClock from 'react-countdown-clock'
 import { Helmet } from 'react-helmet'
 import { useSocket } from '@fl/hooks'
+import { SocketProvider } from '@fl/context'
+import {config} from '@fl/config'
+import io from 'socket.io-client'
 
 import './DraftLobby.css'
 
@@ -85,6 +88,8 @@ export const DraftLobby = (props) => {
     const logoName = draft?.type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${draft?.cube?.logo || 'cube.png'}` :
         `https://cdn.formatlibrary.com/images/artworks/${draft?.set?.setCode || 'back'}.jpg`
     const logoWidth = draft?.type === 'cube' ? '128px' : '100px'
+
+    const socketProviderSocket = io(config.siteUrl, { transports: ["websocket"] })
 
     // FETCH PARTICIPANTS
     const fetchParticipants = async (draftId) => {
@@ -286,6 +291,7 @@ export const DraftLobby = (props) => {
     // }, [])
 
     return (
+        <SocketProvider value={socketProviderSocket}>
         <div className="cube-portal">
             {
                 draft.state === 'pending' ? (
@@ -493,7 +499,7 @@ export const DraftLobby = (props) => {
                     </>
                 )
             }
-
         </div>
+        </SocketProvider>
     )
 }
