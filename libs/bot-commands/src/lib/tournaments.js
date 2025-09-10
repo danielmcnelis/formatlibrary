@@ -13,7 +13,8 @@ export default {
 
             const tournaments = [...await Tournament.findAll({ 
                 where: { 
-                    state: 'pending'
+                    state: 'pending',
+                    '$server.hasInternalLadder': false
                 },
                 include: Server,
                 order: [['createdAt', 'DESC']] 
@@ -26,7 +27,19 @@ export default {
             } else {
                 tournaments.unshift(`${emojis.placing} __**Pending Tournaments**__ ${emojis.placing}`)
 
-                return await interaction.editReply(tournaments.join('\n'))    
+                for (let i = 0; i < tournaments.length; i += 10) {
+                    if (i === 0) {
+                        await interaction.editReply(tournaments.slice(i, i + 10).join('\n'))
+                    } else {
+                        if (interaction.channel) {
+                            await interaction.channel.send(tournaments.slice(i, i + 10).join('\n'))
+                        } else {
+                            await interaction.user.send(tournaments.slice(i, i + 10).join('\n'))
+                        }
+                    }
+                }
+
+                return  
             }
         } catch (err) {
             console.log(err)
