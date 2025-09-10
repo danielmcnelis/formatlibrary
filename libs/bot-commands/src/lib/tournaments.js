@@ -14,7 +14,7 @@ export default {
             const tournaments = [...await Tournament.findAll({ 
                 where: { 
                     state: 'pending',
-                    '$server.hasInternalLadder': false
+                    '$server.hasInternalLadder$': false
                 },
                 include: Server,
                 order: [['createdAt', 'DESC']] 
