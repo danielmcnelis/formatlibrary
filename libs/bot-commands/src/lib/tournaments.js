@@ -1,39 +1,32 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Entry, Player, Tournament } from '@fl/models'
+import { Server, Tournament } from '@fl/models'
 import { emojis } from '@fl/bot-emojis'
 
 export default {
 	data: new SlashCommandBuilder()
 		.setName('tournaments')
-		.setDescription('Check your Tournament Entries. 🛎️'),
+		.setDescription('Check Open Tournaments. 🛎️'),
 	async execute(interaction) {
         try {
             await interaction.deferReply()
 
-            const player = await Player.findOne({
-                where: {
-                    discordId: interaction.user.id
-                }
-            })
-
-            const entries = [...await Entry.findAll({ 
+            const tournaments = [...await Tournament.findAll({ 
                 where: { 
-                    playerId: player.id,
-                    isActive: true
-                }, 
-                include: Tournament,
+                    state: 'pending'
+                },
+                include: Server,
                 order: [['createdAt', 'DESC']] 
-            })].map((entry) => {
-                return `- ${entry.tournament.name} ${entry.tournament.logo} ${entry.tournament.emoji}` 
+            })].map((tournament) => {
+                return `- ${tournament.name} ${tournament.logo} ${tournament.emoji} (${tournament.server?.name})` 
             })
             
-            if (!entries.length) {
-                return await interaction.editReply({ content: `You are not an active participant in any tournaments.` })
+            if (!tournaments.length) {
+                return await interaction.editReply({ content: `There are no pending tournaments.` })
             } else {
-                entries.unshift(`${emojis.placing} __**Your Tournament Entries**__ ${emojis.placing}`)
+                tournaments.unshift(`${emojis.placing} __**Pending Tournaments**__ ${emojis.placing}`)
 
-                return await interaction.editReply(entries.join('\n'))    
+                return await interaction.editReply(tournaments.join('\n'))    
             }
         } catch (err) {
             console.log(err)
