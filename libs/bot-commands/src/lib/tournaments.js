@@ -20,7 +20,15 @@ export default {
                 include: Server,
                 order: [['createdAt', 'DESC']] 
             })].map((tournament) => {
-                return `- ${tournament.name} ${tournament.logo} ${tournament.emoji} (${tournament.server?.name})` 
+                if (tournament.server) {
+                    if (tournament.server.inviteLink) {
+                        return `- ${tournament.name} ${tournament.logo} ${tournament.emoji} [(${tournament.server?.name})](<${tournament.server?.inviteLink}>) ` 
+                    } else {
+                        return `- ${tournament.name} ${tournament.logo} ${tournament.emoji} (${tournament.server?.name}) ` 
+                    }
+                } else {
+                    return `- ${tournament.name} ${tournament.logo} ${tournament.emoji}`
+                }
             })
             
             if (!tournaments.length) {
