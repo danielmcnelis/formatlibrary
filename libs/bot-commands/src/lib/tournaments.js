@@ -39,12 +39,12 @@ export default {
 
                 for (let i = 0; i < tournaments.length; i += 10) {
                     if (i === 0) {
-                        await interaction.editReply({ content: tournaments.slice(i, i + 10).join('\n'), embeds: [], flags: MessageFlags.SuppressEmbeds})
+                        await interaction.editReply({ content: tournaments.slice(i, i + 10).join('\n'), flags: MessageFlags.SuppressEmbeds})
                     } else {
                         if (interaction.channel) {
-                            await interaction.channel.send({ content: tournaments.slice(i, i + 10).join('\n'), embeds: [], flags: MessageFlags.SuppressEmbeds})
+                            await interaction.channel.send({ content: tournaments.slice(i, i + 10).join('\n'), flags: MessageFlags.SuppressEmbeds})
                         } else {
-                            await interaction.user.send({ content: tournaments.slice(i, i + 10).join('\n'), embeds: [], flags: MessageFlags.SuppressEmbeds})
+                            await interaction.user.send({ content: tournaments.slice(i, i + 10).join('\n'), flags: MessageFlags.SuppressEmbeds})
                         }
                     }
                 }
