@@ -22,11 +22,11 @@ export default {
                 order: [['createdAt', 'DESC']] 
             })].map((tournament) => {
                 if (tournament.server) {
-                    if (tournament.server.inviteLink) {
-                        return `- ${tournament.name} ${tournament.logo} ${tournament.emoji} [(${tournament.server?.name})](<${tournament.server?.inviteLink}>) ` 
-                    } else {
-                        return `- ${tournament.name} ${tournament.logo} ${tournament.emoji} (${tournament.server?.name}) ` 
-                    }
+                    // if (tournament.server.inviteLink) {
+                    //     return `- ${tournament.name} ${tournament.logo} ${tournament.emoji} [(${tournament.server?.name})](<${tournament.server?.inviteLink}>) ` 
+                    // } else {
+                        return `- ${tournament.name} ${tournament.logo} ${tournament.emoji} [(${tournament.server?.name}](<https://discord.com/channels/${tournament.serverId}>)) ` 
+                    // }
                 } else {
                     return `- ${tournament.name} ${tournament.logo} ${tournament.emoji}`
                 }
@@ -39,12 +39,12 @@ export default {
 
                 for (let i = 0; i < tournaments.length; i += 10) {
                     if (i === 0) {
-                        await interaction.editReply({ content: tournaments.slice(i, i + 10).join('\n'), flags: MessageFlags.SuppressEmbeds})
+                        await interaction.editReply({ content: tournaments.slice(i, i + 10).join('\n')})
                     } else {
                         if (interaction.channel) {
-                            await interaction.channel.send({ content: tournaments.slice(i, i + 10).join('\n'), flags: MessageFlags.SuppressEmbeds})
+                            await interaction.channel.send({ content: tournaments.slice(i, i + 10).join('\n')})
                         } else {
-                            await interaction.user.send({ content: tournaments.slice(i, i + 10).join('\n'), flags: MessageFlags.SuppressEmbeds})
+                            await interaction.user.send({ content: tournaments.slice(i, i + 10).join('\n')})
                         }
                     }
                 }
