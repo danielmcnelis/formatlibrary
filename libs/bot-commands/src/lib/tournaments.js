@@ -2,6 +2,7 @@
 import { SlashCommandBuilder } from 'discord.js'
 import { Server, Tournament } from '@fl/models'
 import { emojis } from '@fl/bot-emojis'
+const { MessageFlags } = require('discord.js');
 
 export default {
 	data: new SlashCommandBuilder()
@@ -38,12 +39,12 @@ export default {
 
                 for (let i = 0; i < tournaments.length; i += 10) {
                     if (i === 0) {
-                        await interaction.editReply({ content: tournaments.slice(i, i + 10).join('\n'), embeds: []})
+                        await interaction.editReply({ content: tournaments.slice(i, i + 10).join('\n'), embeds: [], flags: MessageFlags.SuppressEmbeds})
                     } else {
                         if (interaction.channel) {
-                            await interaction.channel.send({ content: tournaments.slice(i, i + 10).join('\n'), embeds: []})
+                            await interaction.channel.send({ content: tournaments.slice(i, i + 10).join('\n'), embeds: [], flags: MessageFlags.SuppressEmbeds})
                         } else {
-                            await interaction.user.send({ content: tournaments.slice(i, i + 10).join('\n'), embeds: []})
+                            await interaction.user.send({ content: tournaments.slice(i, i + 10).join('\n'), embeds: [], flags: MessageFlags.SuppressEmbeds})
                         }
                     }
                 }
