@@ -9,9 +9,12 @@ export const BracketCreator = () => {
     const [useStandings, setUseStandings] = useState(true)
     const [participants, setParticipants] = useState([])
     const [useNewLogic, setUseNewLogic] = useState(true)
-    const newLogic = [[32, 1], [2, 31], [17, 16], [18, 15], [25, 8], [26, 7], [9, 24], [10, 23], [29, 4], [30, 3], [13, 20], [19, 14], [28, 5], [27, 6], [12, 21], [11, 22]].flat()
-    const oldLogic = [[1, 32], [16, 17], [8, 25], [9, 24], [4, 29], [13, 20], [5, 28], [12, 21], [2, 31], [15, 18], [7, 26], [10, 23], [3, 30], [14, 19], [6, 27], [11, 22]].flat()
-         
+    const [useThirtyTwoLogic, setUseThirtyTwoLogic] = useState(true)
+    const newLogic = useThirtyTwoLogic ? [[32, 1], [2, 31], [17, 16], [18, 15], [25, 8], [26, 7], [9, 24], [10, 23], [29, 4], [30, 3], [13, 20], [19, 14], [28, 5], [27, 6], [12, 21], [11, 22]].flat() :
+        [[64, 1], [2, 63], [32, 33], [31, 34], [16, 49], [15, 50], [17, 48],[18, 47], [8, 57], [7, 58], [25, 40], [26, 39], [9, 56], [10, 55], [24, 41], [23, 42], [4, 61], [3, 62], [29, 36], [30, 35], [13, 52], [14, 51], [20, 45], [19, 46], [5, 60], [6, 59], [28, 37], [27, 38], [12, 53], [11, 54], [21, 44], [22, 43]].flat()
+    const oldLogic = useThirtyTwoLogic ? [[1, 32], [16, 17], [8, 25], [9, 24], [4, 29], [13, 20], [5, 28], [12, 21], [2, 31], [15, 18], [7, 26], [10, 23], [3, 30], [14, 19], [6, 27], [11, 22]].flat() :
+        [[1, 64], [32, 33], [16, 49], [17, 48], [8, 57], [25, 40], [9, 56], [24, 41], [4, 61], [29, 36], [13, 52], [20, 45], [5, 60], [28, 37], [12, 53], [21, 44], [2, 63], [31, 34], [15, 50], [18, 47], [7, 58], [26, 39], [10, 55], [23, 42], [3, 62], [30, 35], [14, 51], [19, 46], [6, 59], [27, 38], [11, 54], [22, 43]].flat()
+
     // RESET
     const reset = async () => {
         setName(null) 
@@ -93,8 +96,19 @@ export const BracketCreator = () => {
                 <div id={`option-toggle-${useStandings ? 'on' : 'off'}`} onClick={() => setUseStandings(!useStandings)}>
                     <div id={`option-toggle-inner-circle-${useStandings ? 'on' : 'off'}`}></div>
                 </div>
-                <div>{useStandings ? 'Final Standings:' : 'Top 32 Pairings:'}</div>
+                <div>{useStandings ? 'Final Standings:' : 'Top X Pairings:'}</div>
             </div>
+
+            {
+                !useStandings ? (
+                    <div className="option-toggle-flexbox">
+                        <div id={`option-toggle-${useThirtyTwoLogic ? 'on' : 'off'}`} onClick={() => setUseThirtyTwoLogic(!useThirtyTwoLogic)}>
+                            <div id={`option-toggle-inner-circle-${useThirtyTwoLogic ? 'on' : 'off'}`}></div>
+                        </div>
+                        <div>{useThirtyTwoLogic ? '32 Players' : '64 Players'}</div>
+                    </div>
+                ) : ''
+            }
 
             {
                 !useStandings ? (
