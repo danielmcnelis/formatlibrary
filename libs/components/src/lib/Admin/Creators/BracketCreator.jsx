@@ -46,6 +46,7 @@ export const BracketCreator = () => {
     // REVERSE ENGINEER PARTICIPANTS
     const reverseEngineerParticipants = (raw) => {
         const logic = useNewLogic ? newLogic : oldLogic
+        console.log('logic', logic)
         const keys = Array.from(logic.keys()).sort((a, b) => logic[a] - logic[b])
         const pairings = raw.replace(/[0-9+\t]/g, '').split('\n').map((e) => e.split('vs.')).flat().map((e) => {
             if (e.includes(',')) {
