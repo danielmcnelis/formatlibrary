@@ -1,10 +1,10 @@
 // Set your secret key. Remember to switch to your live secret key in production.
 // See your keys here: https://dashboard.stripe.com/apikeys
-import stripe from 'stripe'
+// import stripe from 'stripe'
 import {config} from '@fl/config'
 import { Player, Subscription } from '@fl/models'
 import { Op } from 'sequelize'
-const Stripe = new stripe(config.stripe.clientSecret)
+// const Stripe = new stripe(config.stripe.clientSecret)
 console.log('config', config)
 // import {manageSubscriptions} from '@fl/bot-functions'
 // import {Elements} from '@stripe/react-stripe-js'
@@ -34,79 +34,79 @@ console.log('config', config)
 
 //RECEIVE STRIPE WEBHOOKS
 export const receiveStripeWebhooks = async (req, res, next) => {
-    try {
-        if (req.body.data.object.object === 'subscription') {
-            const subscriptionId = req.body.data.object.id.toString()
-            const stripeSubscription = req.body.data.object
-            const product = await Stripe.products.retrieve(stripeSubscription?.plan.product.toString())
-            const customer = await Stripe.customers.retrieve(stripeSubscription?.customer)
-            const tier = product?.name?.toString().replace('Format Library ', '')
+    // try {
+    //     if (req.body.data.object.object === 'subscription') {
+    //         const subscriptionId = req.body.data.object.id.toString()
+    //         const stripeSubscription = req.body.data.object
+    //         const product = await Stripe.products.retrieve(stripeSubscription?.plan.product.toString())
+    //         const customer = await Stripe.customers.retrieve(stripeSubscription?.customer)
+    //         const tier = product?.name?.toString().replace('Format Library ', '')
 
-            let subscription = await Subscription.findOne({
-                where: {
-                    id: subscriptionId
-                }
-            })
+    //         let subscription = await Subscription.findOne({
+    //             where: {
+    //                 id: subscriptionId
+    //             }
+    //         })
 
-            if (subscription) {
-                const player = await Player.findOne({
-                    where: {
-                        [Op.or]: {
-                            email: customer['email'],
-                            alternateEmail: customer['email']
-                        }
-                    }
-                })
+    //         if (subscription) {
+    //             const player = await Player.findOne({
+    //                 where: {
+    //                     [Op.or]: {
+    //                         email: customer['email'],
+    //                         alternateEmail: customer['email']
+    //                     }
+    //                 }
+    //             })
 
-                await subscription.update({
-                    playerName: player?.name,
-                    playerId: player?.id,
-                    customerName: customer['name'],
-                    customerEmail: customer['email'],
-                    customerId: stripeSubscription.customer,
-                    tier: tier,
-                    status: stripeSubscription.status,
-                    currentPeriodStart: stripeSubscription.current_period_start * 1000,
-                    currentPeriodEnd: stripeSubscription.current_period_end * 1000,
-                    endedAt: stripeSubscription.ended_at * 1000
-                })
-            } else {
-                const player = await Player.findOne({
-                    where: {
-                        [Op.or]: {
-                            email: customer['email'],
-                            alternateEmail: customer['email']
-                        }
-                    }
-                })
+    //             await subscription.update({
+    //                 playerName: player?.name,
+    //                 playerId: player?.id,
+    //                 customerName: customer['name'],
+    //                 customerEmail: customer['email'],
+    //                 customerId: stripeSubscription.customer,
+    //                 tier: tier,
+    //                 status: stripeSubscription.status,
+    //                 currentPeriodStart: stripeSubscription.current_period_start * 1000,
+    //                 currentPeriodEnd: stripeSubscription.current_period_end * 1000,
+    //                 endedAt: stripeSubscription.ended_at * 1000
+    //             })
+    //         } else {
+    //             const player = await Player.findOne({
+    //                 where: {
+    //                     [Op.or]: {
+    //                         email: customer['email'],
+    //                         alternateEmail: customer['email']
+    //                     }
+    //                 }
+    //             })
 
-                if (stripeSubscription.status === 'active' && player) {
-                    await player.update({
-                        subscriber: true,
-                        subscriberTier: tier,
-                    })
-                }
+    //             if (stripeSubscription.status === 'active' && player) {
+    //                 await player.update({
+    //                     subscriber: true,
+    //                     subscriberTier: tier,
+    //                 })
+    //             }
 
-                subscription = await Subscription.create({
-                    id: stripeSubscription.id,
-                    playerName: player?.name,
-                    playerId: player?.id,
-                    customerName: customer['name'],
-                    customerEmail: customer['email'],
-                    customerId: stripeSubscription.customer,
-                    tier: tier,
-                    status: stripeSubscription.status,
-                    currentPeriodStart: stripeSubscription.current_period_start * 1000,
-                    currentPeriodEnd: stripeSubscription.current_period_end * 1000,
-                    endedAt: stripeSubscription.ended_at * 1000
-                })
-            }
-        }
+    //             subscription = await Subscription.create({
+    //                 id: stripeSubscription.id,
+    //                 playerName: player?.name,
+    //                 playerId: player?.id,
+    //                 customerName: customer['name'],
+    //                 customerEmail: customer['email'],
+    //                 customerId: stripeSubscription.customer,
+    //                 tier: tier,
+    //                 status: stripeSubscription.status,
+    //                 currentPeriodStart: stripeSubscription.current_period_start * 1000,
+    //                 currentPeriodEnd: stripeSubscription.current_period_end * 1000,
+    //                 endedAt: stripeSubscription.ended_at * 1000
+    //             })
+    //         }
+    //     }
 
-        res.status(200)
-    } catch (err) {
-        next(err)
-    }
+    //     res.status(200)
+    // } catch (err) {
+    //     next(err)
+    // }
 }
 
 //GET SUBSCRIPTIONS
