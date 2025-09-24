@@ -5,15 +5,14 @@ import { Op } from 'sequelize'
 export const getPoints = async (req, res, next) => {
     console.log('getPoints()')
     try {
-        const points = await Card.findAll({
+        const cards = await Card.findAll({
             where: {
                 genesysPoints: {[Op.gt]: 0}
             },
-            attributes: ['id', 'name', 'cleanName', 'genesysPoints']
+            attributes: ['id', 'name', 'artworkId', 'cleanName', 'genesysPoints']
         })
-        console.log('points.length', points.length)
 
-        return res.json(points)
+        return res.json(cards)
     } catch (err) {
         next(err)
     }
