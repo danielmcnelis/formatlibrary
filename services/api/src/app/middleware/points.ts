@@ -7,7 +7,7 @@ export const getPoints = async (req, res, next) => {
     try {
         const points = await Card.findAll({
             where: {
-                genesysPoints: {[Op.not]: null}
+                genesysPoints: {[Op.gt]: 0}
             },
             attributes: ['id', 'name', 'cleanName', 'genesysPoints']
         })
