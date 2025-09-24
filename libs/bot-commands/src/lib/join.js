@@ -80,6 +80,7 @@ export default {
                 format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
                 await getDeckList(interaction.member, player, format, false, !tournament.isRated)
 
+            console.log('data', data)
             if (!data) return
 
             if (entry) {

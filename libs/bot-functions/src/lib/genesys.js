@@ -39,7 +39,6 @@ export const getGenesysIssues = async (deckArr) => {
     
     illegalCards.sort()
     unrecognizedCards.sort()
-    // nonZeroGenesysPointCards.sort((a, b) => b[1] - a[1])
 
     const issues = {
         illegalCards,
@@ -94,7 +93,7 @@ export const getGenesysDeckList = async (member, player, override = false) => {
             if (!issues) return false
 
             const { illegalCards, unrecognizedCards, nonZeroGenesysPointCards, points } = issues
-            if (!illegalCards || !unrecognizedCards || !nonZeroGenesysPointCards || !isNaN(points)) return false
+            if (!illegalCards || !unrecognizedCards || !nonZeroGenesysPointCards || isNaN(points)) return false
             
             if (illegalCards.length) {
                 let response = [`I'm sorry, ${member.user.username}, ${pronoun} deck is not legal. ${emojis.mad}`]
