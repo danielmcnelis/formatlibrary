@@ -110,7 +110,7 @@ export const CardImage = (props) => {
                   >
                       <div className="card-image-cell">
                         {
-                          <img src={`https://cdn.formatlibrary.com/images/emojis/${points}.png`} alt={points} className="points-icon"/>
+                          <img src={`https://cdn.formatlibrary.com/images/emojis/${points}.png`} alt={points} className="status-icon"/>
                         }
                         <img
                           src={`https://cdn.formatlibrary.com/images/medium_cards/${card.artworkId}.jpg`}
