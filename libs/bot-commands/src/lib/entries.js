@@ -5,7 +5,7 @@ import { emojis } from '@fl/bot-emojis'
 
 export default {
 	data: new SlashCommandBuilder()
-		.setName(w)
+		.setName('entries')
 		.setDescription('Check your Tournament Entries. 🛎️'),
 	async execute(interaction) {
         try {
