@@ -64,7 +64,6 @@ export const getFormats = async (req, res, next) => {
       ]
     })
 
-    console.log('formats', formats)
     return res.json(formats)
   } catch (err) {
     next(err)

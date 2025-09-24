@@ -9,6 +9,7 @@ import './BanList.css'
 
 export const BanList = (props) => {
     const [banlist, setBanlist] = useState({})
+    const [points, setPoints] = useState([])
     const [searchParams, ] = useSearchParams()
     const {format} = props
     const [id, setId] = useState(null)
@@ -20,6 +21,21 @@ export const BanList = (props) => {
     const BL = format?.banlist || id
     
   
+    // USE EFFECT SET CARD
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const {data} = await axios.get(`/api/points/`)
+          return setPoints(data)
+        } catch (err) {
+          console.log(err)
+          setPoints(null)
+        }
+      }
+  
+      if (format.name === 'Genesys') fetchData()
+    }, [format?.name])
+
     // USE EFFECT SET CARD
     useEffect(() => {
       const fetchData = async () => {
