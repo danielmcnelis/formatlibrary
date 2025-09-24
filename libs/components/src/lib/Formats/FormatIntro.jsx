@@ -4,6 +4,7 @@ import axios from 'axios'
 import { BanList } from './BanList'
 import { MiniBoard } from './MiniBoard'
 import { NotFound } from '../General/NotFound'
+import { Points } from './Points'
 import { PopularDecks } from './PopularDecks'
 import { RecentEvents } from '../Events/RecentEvents'
 import { useParams } from 'react-router-dom'
@@ -199,7 +200,13 @@ export const FormatIntro = (props) => {
         <PopularDecks id="popular-decks" formatName={format.name}/>
         <RecentEvents id="recent-events" formatName={format.name}/>
         <MiniBoard limit={10} format={format}/>
-        <BanList id="banlist" format={format}/>
+        {
+            format.name === 'Genesys' ? (
+                <Points/>
+            ) : (
+                <BanList id="banlist" format={format}/>
+            )
+        }
     </div>
     </>
 
