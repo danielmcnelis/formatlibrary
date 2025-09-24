@@ -32,7 +32,7 @@ export const getGenesysIssues = async (deckArr) => {
                 unrecognizedCards.push(konamiCode)
             }
         } else if (card && card.genesysPoints) {
-            nonZeroGenesysPointCards.push(`${card.name}: ${card.genesysPoints} * ${copies}`)
+            nonZeroGenesysPointCards.push(`${card.name}: ${card.genesysPoints} * ${copies} = ${card.genesysPoints * copies}`)
             points += card.genesysPoints * copies
         }
     }
