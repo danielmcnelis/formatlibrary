@@ -3233,8 +3233,9 @@ const shuffleArray = (arr) => {
     let e = 0
 
     for (let i = 0; i < genesys_points.length; i++) {
+        const [cardName, genesysPoints] = genesys_points[i]
+        
         try {
-            const [cardName, genesysPoints] = genesys_points[i]
             const card = await Card.findOne({
                 where: {
                     name: cardName
@@ -3245,6 +3246,7 @@ const shuffleArray = (arr) => {
             b++
             
         } catch (err) {
+            console.log(`error with ${cardName}, points ${genesysPoints}`)
             console.log(err)
             e++
         }
