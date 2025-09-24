@@ -748,17 +748,21 @@ export const getNewRatedDeck = async (user, player, format, deckToReplace) => {
             const deckArr = [...main, ...extra, ...side,]
 
             let issues
+            const pointsCap = 100
 
             if (format.name === 'Forged in Chaos') {
                 issues = await getForgedIssues(player, deckArr, format)
+                if (!issues) return false
+            } else if (format.name === 'Genesys') {
+                issues = await getGenesysIssues(deckArr)
                 if (!issues) return false
             } else {
                 issues = await getIssues(deckArr, format)
                 if (!issues) return false
             }
 
-            const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards, zeroCopiesOwned, oneCopyOwned, twoCopiesOwned } = issues
-            if (!illegalCards || !forbiddenCards || !limitedCards || !semiLimitedCards || !unrecognizedCards) return false
+            const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards, zeroCopiesOwned, oneCopyOwned, twoCopiesOwned, nonZeroGenesysPointCards, points } = issues
+            if (!illegalCards || !unrecognizedCards) return false
             
             if (illegalCards.length || forbiddenCards.length || limitedCards.length || semiLimitedCards.length || zeroCopiesOwned?.length || oneCopyOwned?.length || twoCopiesOwned?.length) {
                 let response = [`I'm sorry, ${user.username}, your deck is not legal. ${emojis.mad}`]
@@ -786,7 +790,13 @@ export const getNewRatedDeck = async (user, player, format, deckToReplace) => {
                 
                 user.send({ content: response.toString() }).catch((err) => console.log(err))
                 return false
-             } else {
+             }  else if (points > pointsCap) {
+                let response = `I'm sorry, ${user.username}, your deck contains cards that cost more than ${pointsCap} points:\n${nonZeroGenesysPointCards.join('\n')}`
+                response += `\n\nPlease adjust your deck list to comply with the ${pointsCap} point limit.`
+                
+                user.send({ content: response.toString() }).catch((err) => console.log(err))
+                return false
+            } else {
                 user.send({ content: `Thanks, ${user.username}, your deck is perfectly legal. ${emojis.legend}`}).catch((err) => console.log(err))
                 if (deckToReplace) {                    
                     await deckToReplace.update({

@@ -7,6 +7,7 @@ import { convertArrayToObject } from "./utility"
 
 // GET GENESYS ISSUES
 export const getGenesysIssues = async (deckArr) => {
+    console.log('getGenesysIssues()')
     const deck = convertArrayToObject(deckArr)   
     const cardIds = [...await Card.findAll()].flatMap(c => [c.konamiCode, c.ypdId])
     console.log('cardIds', cardIds)
@@ -51,7 +52,8 @@ export const getGenesysIssues = async (deckArr) => {
 
 
 //GET GENESYS DECK LIST
-export const getGenesysDeckList = async (member, player, override = false) => {            
+export const getGenesysDeckList = async (member, player, override = false) => {  
+    console.log('getGenesysDeckList()')          
     const filter = m => m.author.id === (member.id || member.user?.id)
     const pronoun = override ? `${player.name}'s` : 'your'
     const message = await member.send({ content: `To submit ${pronoun} tournament deck, please either:\n- copy and paste a **__YDKe code__**\n- upload a **__YDK file__**`}).catch((err) => console.log(err))
