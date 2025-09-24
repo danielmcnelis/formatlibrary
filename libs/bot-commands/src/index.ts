@@ -12,7 +12,7 @@ import destroy from './lib/destroy'
 import dice from './lib/dice'
 import drop from './lib/drop'
 import end from './lib/end'
-import entries from './lib/entries'ww
+import entries from './lib/entries'
 import exit from './lib/exit'
 import film from './lib/film'
 import fix from './lib/fix'
