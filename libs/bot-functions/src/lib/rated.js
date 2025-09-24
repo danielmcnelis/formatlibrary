@@ -765,7 +765,7 @@ export const getNewRatedDeck = async (user, player, format, deckToReplace) => {
             const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards, zeroCopiesOwned, oneCopyOwned, twoCopiesOwned, nonZeroGenesysPointCards, points } = issues
             if (!illegalCards || !unrecognizedCards) return false
             
-            if (illegalCards.length || forbiddenCards.length || limitedCards?.length || semiLimitedCards?.length || zeroCopiesOwned?.length || oneCopyOwned?.length || twoCopiesOwned?.length) {
+            if (illegalCards.length || forbiddenCards?.length || limitedCards?.length || semiLimitedCards?.length || zeroCopiesOwned?.length || oneCopyOwned?.length || twoCopiesOwned?.length) {
                 let response = [`I'm sorry, ${user.username}, your deck is not legal. ${emojis.mad}`]
                 if (illegalCards.length) response = [...response, `\nThe following cards are not included in this format:`, ...illegalCards]
                 if (forbiddenCards.length) response = [...response, `\nThe following cards are forbidden:`, ...forbiddenCards]
