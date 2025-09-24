@@ -2414,16 +2414,20 @@ export const downloadNewCards = async () => {
                 c++
 
                 for (let i = 0; i < images.length; i++) {
-                    const cardImageId = images[i].id
-                    const isOriginal = i === 0
-                    const artwork = await findOrCreateArtwork(cardImageId.toString(), name, card.id, isOriginal)
-                    
-                    if (isOriginal && artwork?.artworkId) {
-                        await card.update({ artworkId: artwork?.artworkId })
-                    }
+                    try {
+                        const cardImageId = images[i].id
+                        const isOriginal = i === 0
+                        const artwork = await findOrCreateArtwork(cardImageId.toString(), name, card.id, isOriginal)
+                        
+                        if (isOriginal && artwork?.artworkId) {
+                            await card.update({ artworkId: artwork?.artworkId })
+                        }
 
-                    const successes = await uploadCardImages(s3, cardImageId)
-                    if (successes[0]) console.log(`Image saved (${name})`)
+                        const successes = await uploadCardImages(s3, cardImageId)
+                        if (successes[0]) console.log(`Image saved (${name})`)
+                    } catch (err) {
+                        console.log(err)
+                    }
                 }
 
                 console.log(`New name and/or ID: ${card.name} (${card.ypdId}) is now: ${name} (${id})`)
