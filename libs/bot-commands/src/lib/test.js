@@ -18,7 +18,7 @@ export default {
         .setDMPermission(false),
     async execute(interaction) {
         try {
-            // await interaction.deferReply()
+            await interaction.deferReply()
             if (!isProgrammer(interaction.member)) return await interaction.editReply('🧪')
                 // await interaction.editReply(emojis.yellow)
                 // const guild = await client.guilds.fetch('414551319031054346')
@@ -28,6 +28,7 @@ export default {
                 // console.log('member', member)
                 // await runNightlyTasks(client)
                 // const format = await Format.findOne({ where: { name: 'Forged in Chaos' }})
+                await downloadNewCards(client)
                 await interaction.editReply('🧪')
                 // await recalculateAllStats()
                 // await updateAvatars(client)
@@ -36,7 +37,6 @@ export default {
                 // return await conductCensus(client)
                 // await updateDeckType()
                 // await updateDecks()
-                await downloadNewCards(client)
                 // await updateMatchups()
                 // await purgeBetaCards(client)
                 // await downloadMissingCardImages()
