@@ -9,7 +9,7 @@ export const getPoints = async (req, res, next) => {
                 genesysPoints: {[Op.gt]: 0}
             },
             attributes: ['id', 'name', 'artworkId', 'cleanName', 'genesysPoints', 'sortPriority'],
-            order: [['genesysPoints', 'DESC'], ['sortPriority', 'ASC']]
+            order: [['genesysPoints', 'DESC'], ['sortPriority', 'ASC'], ['name', 'ASC']]
         })
 
         return res.json(cards)
