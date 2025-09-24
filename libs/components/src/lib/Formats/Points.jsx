@@ -46,9 +46,9 @@ export const Points = () => {
                                     width='72px' 
                                     padding='1px' 
                                     margin='0px'
-                                    points={el[1]}
-                                    key={el[0].id} 
-                                    card={el[0].card}
+                                    points={el.genesysPoints}
+                                    key={el.id} 
+                                    card={el}
                                 />
                                 )
                                 }

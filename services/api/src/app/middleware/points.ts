@@ -9,7 +9,7 @@ export const getPoints = async (req, res, next) => {
             where: {
                 genesysPoints: {[Op.not]: null}
             },
-            attributes: ['id', 'cardName', 'genesysPoints']
+            attributes: ['id', 'name', 'cleanName', 'genesysPoints']
         })
         console.log('points.length', points.length)
 
