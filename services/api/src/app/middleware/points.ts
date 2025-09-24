@@ -3,6 +3,7 @@ import { Op } from 'sequelize'
 
 // GET PRICES
 export const getPoints = async (req, res, next) => {
+    console.log('getPoints()')
     try {
         const points = await Card.findAll({
             where: {
@@ -10,6 +11,7 @@ export const getPoints = async (req, res, next) => {
             },
             attributes: ['id', 'cardName', 'genesysPoints']
         })
+        console.log('points.length', points.length)
 
         return res.json(points)
     } catch (err) {
