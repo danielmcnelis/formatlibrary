@@ -792,7 +792,7 @@ export const getNewRatedDeck = async (user, player, format, deckToReplace) => {
                 user.send({ content: response.toString() }).catch((err) => console.log(err))
                 return false
              }  else if (points > pointsCap) {
-                let response = `I'm sorry, ${user.username}, your deck contains cards that cost more than ${pointsCap} points:\n${nonZeroGenesysPointCards.join('\n')}`
+                let response = `I'm sorry, ${user.username}, your deck contains cards that cost ${points} points, which is more than ${pointsCap} points limit):\n${nonZeroGenesysPointCards.join('\n')}`
                 response += `\n\nPlease adjust your deck list to comply with the ${pointsCap} point limit.`
                 
                 user.send({ content: response.toString() }).catch((err) => console.log(err))

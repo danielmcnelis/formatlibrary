@@ -20,6 +20,7 @@ export const getGenesysIssues = async (deckArr) => {
     const keys = Object.keys(deck)
     for (let i = 0; i < keys.length; i++) {
         let konamiCode = keys[i]
+        const copies = deck[konamiCode]
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode 
         if (konamiCode === '00000000') continue
         const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
@@ -31,14 +32,14 @@ export const getGenesysIssues = async (deckArr) => {
                 unrecognizedCards.push(konamiCode)
             }
         } else if (card && card.genesysPoints) {
-            nonZeroGenesysPointCards.push([card.name, card.genesysPoints])
-            points += card.genesysPoints
-        } 
+            nonZeroGenesysPointCards.push(`${card.name}: ${card.genesysPoints} * ${copies}`)
+            points += card.genesysPoints * copies
+        }
     }
     
     illegalCards.sort()
     unrecognizedCards.sort()
-    nonZeroGenesysPointCards.sort((a, b) => b[1] - a[1])
+    // nonZeroGenesysPointCards.sort((a, b) => b[1] - a[1])
 
     const issues = {
         illegalCards,
