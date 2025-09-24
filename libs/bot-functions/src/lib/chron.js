@@ -2304,9 +2304,14 @@ export const downloadNewCards = async () => {
                     ]
                 }
             })
+
+            if (name === 'Crystron Sulfador') console.log('Crystron Sulfador id', id)
+            if (name === 'Crystron Sulfador') console.log('Crystron Sulfador !!card', !!card)
     
             let konamiCode = id
             while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+
+            if (name === 'Crystron Sulfador') console.log('Crystron Sulfador konamiCode', konamiCode)
             const type = datum.type.toLowerCase()
             const category = type.includes('monster') ? 'Monster' :
                 type.includes('spell') ? 'Spell' :
