@@ -11,6 +11,7 @@ import { drawDeck } from './utility'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 import { client } from '../client'
 import { getForgedIssues } from './forged'
+import { getGenesysIssues } from './genesys'
 
 // GET RATED CONFIRMATION
 export const getRatedConfirmation = async (player, opponent, format, guild) => {
