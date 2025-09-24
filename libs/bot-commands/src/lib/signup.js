@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Server, Team, Tournament } from '@fl/models'
-import { isModerator, hasPartnerAccess, askForSimName, getDeckList, getForgedDeckList, getSpeedDeckList, postParticipant, selectTournament } from '@fl/bot-functions'
+import { isModerator, hasPartnerAccess, askForSimName, getDeckList, getForgedDeckList, getGenesysDeckList, getSpeedDeckList, postParticipant, selectTournament } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
 
@@ -74,8 +74,9 @@ export default {
             
             const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
             if (!simName) return
-
-            const data = format.name === 'Forged in Chaos' ? await getForgedDeckList(interaction.member, player, format) :
+            
+            const data = format.name === 'Genesys' ? await getGenesysDeckList(interaction.member, player) :
+                format.name === 'Forged in Chaos' ? await getForgedDeckList(interaction.member, player, format) :
                 format.category === format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
                 await getDeckList(interaction.member, player, format, true, !tournament.isRated)
 

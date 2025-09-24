@@ -8,6 +8,7 @@ import './FormatMenu.css'
 
 export const FormatMenu = (props) => {
     const [formats, setFormats] = useState(null)
+    console.log('formats',  formats)
     const [category, setCategory] = useState('TCG')
     const isMobile = useMediaQuery({ query: '(max-width: 480px)' })
 

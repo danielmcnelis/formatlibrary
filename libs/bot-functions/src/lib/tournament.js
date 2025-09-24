@@ -9,6 +9,7 @@ import { Deck, Entry, Event, Format, Match, Player, Replay, Stats, Server, Team,
 import { getIssues, getSkillCard } from './deck.js'
 import { createDecks } from './coverage.js'
 import { getForgedDeckList } from './forged.js'
+import { getGenesysDeckList } from './genesys.js'
 import { capitalize, drawDeck, generateRandomString, getRoundName, isModerator, shuffleArray } from './utility.js'
 import { emojis } from '@fl/bot-emojis'
 
@@ -608,7 +609,8 @@ export const joinTournament = async (interaction, tournamentId) => {
     const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
-    const data = tournament.format.name === 'Forged in Chaos' ? await getForgedDeckList(interaction.member, player, format) :
+    const data = format.name === 'Genesys' ? await getGenesysDeckList(interaction.member, player) :
+        tournament.format.name === 'Forged in Chaos' ? await getForgedDeckList(interaction.member, player, format) :
         tournament.format.category === tournament.format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
         await getDeckList(interaction.member, player, tournament.format, true, !tournament.isRated)
 
@@ -787,7 +789,8 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
     const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
-    const data = tournament.format.name === 'Forged in Chaos' ? await getForgedDeckList(interaction.member, player, tournament.format) :
+    const data = format.name === 'Genesys' ? await getGenesysDeckList(interaction.member, player) :        
+        tournament.format.name === 'Forged in Chaos' ? await getForgedDeckList(interaction.member, player, tournament.format) :
         tournament.format.category === tournament.format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, tournament.format) :
         await getDeckList(interaction.member, player, tournament.format, true, !tournament.isRated)
 

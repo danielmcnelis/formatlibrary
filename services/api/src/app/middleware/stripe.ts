@@ -5,6 +5,12 @@ import {config} from '@fl/config'
 import { Player, Subscription } from '@fl/models'
 import { Op } from 'sequelize'
 const Stripe = new stripe(config.stripe.clientSecret)
+
+// IF THIS EVER BREAKS
+// DELETE ALL PM2 PROCESSES
+// THIS ENSURES NEW ENVARs ARE USED IN PROCESSES
+// THIS IS A PM2 ISSUE
+
 console.log('config', config)
 // import {manageSubscriptions} from '@fl/bot-functions'
 // import {Elements} from '@stripe/react-stripe-js'

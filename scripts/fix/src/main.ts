@@ -10,6 +10,7 @@ import { Upload } from '@aws-sdk/lib-storage'
 import { S3, DeleteObjectCommand } from '@aws-sdk/client-s3'
 // import { statuses } from './ocg-banlists.json' 
 // const imported_prices = require('./prices.json')
+import { genesys_points } from './genesys.json'
 
 //SHUFFLE ARRAY
 const shuffleArray = (arr) => {
@@ -3199,21 +3200,48 @@ const shuffleArray = (arr) => {
 // })()
 
 
+// ;(async () => {
+//     const forgedInventories = await ForgedInventory.findAll()
+//     let b = 0
+//     let e = 0
+
+//     for (let i = 0; i < forgedInventories.length; i++) {
+//         try {
+//             const inv = forgedInventories[i]
+//             const card = await Card.findOne({
+//                 where: {
+//                     name: inv.cardName
+//                 }
+//             })
+
+//             await inv.update({ cardId: card.id })
+//             b++
+            
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
+
+//     return console.log(`updated ${b} cardIds, encountered ${e} errors`)
+// })()
+
+
+
 ;(async () => {
-    const forgedInventories = await ForgedInventory.findAll()
     let b = 0
     let e = 0
 
-    for (let i = 0; i < forgedInventories.length; i++) {
+    for (let i = 0; i < genesys_points.length; i++) {
         try {
-            const inv = forgedInventories[i]
+            const [cardName, genesysPoints] = genesys_points[i]
             const card = await Card.findOne({
                 where: {
-                    name: inv.cardName
+                    name: cardName
                 }
             })
 
-            await inv.update({ cardId: card.id })
+            await card.update({ genesysPoints })
             b++
             
         } catch (err) {
@@ -3222,5 +3250,5 @@ const shuffleArray = (arr) => {
         }
     }
 
-    return console.log(`updated ${b} cardIds, encountered ${e} errors`)
+    return console.log(`updated ${b} cards, encountered ${e} errors`)
 })()

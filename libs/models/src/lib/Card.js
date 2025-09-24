@@ -126,6 +126,10 @@ export const Card = db.define('cards', {
   },
   sortPriority: {
     type: Sequelize.INTEGER
+  },
+  genesysPoints: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
   }
 })
 
