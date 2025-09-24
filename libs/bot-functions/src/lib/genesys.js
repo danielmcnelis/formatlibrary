@@ -8,7 +8,7 @@ import { convertArrayToObject } from "./utility"
 // GET GENESYS ISSUES
 export const getGenesysIssues = async (deckArr) => {
     const deck = convertArrayToObject(deckArr)   
-    const cardIds = [...await Card.findAll()].flatMap(fp => [fp.card.konamiCode, fp.card.ypdId])
+    const cardIds = [...await Card.findAll()].flatMap(c => [c.konamiCode, c.ypdId])
     
     const illegalCards = []
     const unrecognizedCards = []
