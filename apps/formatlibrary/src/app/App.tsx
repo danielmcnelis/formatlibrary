@@ -92,9 +92,9 @@ const App = () => {
                             <a className="show-cursor reminder-button" href="/auth/login/">
                                 <h1 className="login">LOGIN</h1>
                             </a>
-                            <a className="show-cursor reminder-button" href="/subscribe/" /* onClick={() => window.location.reload()} */>
+                            {/* <div className="show-cursor reminder-button" onClick={() => window.location.reload()}/>
                                 <h1 className="login">SUBSCRIBE</h1>
-                            </a>
+                            </div> */}
                         </div>
                     </div>
              ) : (
