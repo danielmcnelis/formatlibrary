@@ -47,20 +47,20 @@ export const EventCreator = () => {
     setIsRepresentative(true)
     setUrl(null)
 
-    document.getElementById('abbreviation').value = null
-    document.getElementById('bracket').value = null
     document.getElementById('community').value = null
-    document.getElementById('format').value = null
     document.getElementById('url').value = ''
     document.getElementById('full-name').value = ''
-    document.getElementById('abbreviation').value = ''
-    document.getElementById('size').value = ''
+    document.getElementById('abbreviation').value = null
     document.getElementById('format').value = null
+    document.getElementById('size').value = ''
+    document.getElementById('type').value = null
+    document.getElementById('bracket').value = null
+    document.getElementById('abbreviation').value = ''
+    document.getElementById('is-team-event').value = false
     document.getElementById('series').value = true
     document.getElementById('representative').value = true
     document.getElementById('start-date').value = 'mm/dd/yyyy'
-    document.getElementById('type').value = null
-    document.getElementById('winner').value = ''
+    document.getElementById('winner-name').value = ''
   }
 
   // CREATE EVENT
@@ -244,8 +244,7 @@ export const EventCreator = () => {
       <label>
         Winner:
         <input
-          id="winner"
-          
+          id="winner-name"
           type="search"
           onKeyDown={(e) => {
             if (e.key === 'Enter') findPlayers(e.target.value)

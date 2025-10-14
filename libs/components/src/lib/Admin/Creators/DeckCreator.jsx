@@ -32,11 +32,13 @@ export const DeckCreator = () => {
         setYDK(null)  
 
         document.getElementById('builder-name').value = ''
-        document.getElementById('deck-type').value = null
-        document.getElementById('display').value = true
-        document.getElementById('community-name').value = null
+        document.getElementById('decktype').value = null
+        document.getElementById('community').value = null
         document.getElementById('event-name').value = null
+        document.getElementById('placement').value = 1
+        document.getElementById('display').value = true
         document.getElementById('ydk').value = null
+        document.getElementById('ydke').value = ''
     }
 
     const createDeck = async () => {
@@ -154,7 +156,7 @@ export const DeckCreator = () => {
             
             <label>Deck Type:
                 <select
-                    id="deck-type"
+                    id="decktype"
                     onChange={(e) => getDeckType(e.target.value || null)}
                 >
                 <option value=""></option>
