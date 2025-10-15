@@ -8,7 +8,6 @@ import './FormatMenu.css'
 
 export const FormatMenu = (props) => {
     const [formats, setFormats] = useState(null)
-    console.log('formats',  formats)
     const [category, setCategory] = useState('TCG')
     const isMobile = useMediaQuery({ query: '(max-width: 480px)' })
 
@@ -117,7 +116,7 @@ export const FormatMenu = (props) => {
                 <div id="other-formats">
                     {
                         dmFormats.length ? (
-                            <>
+                            <div>
                                 <h1 className="format-menu-title">DM Formats</h1>
                                 <div className="format-menu">
                                 {
@@ -125,12 +124,12 @@ export const FormatMenu = (props) => {
                                 }
                                 </div>
                                 <div className="divider"/>
-                            </>
+                            </div>
                         ) : ''
                     }
                     {
                         gxFormats.length ? (
-                            <>
+                            <div>
                                 <h1 className="format-menu-title">GX Formats</h1>
                                 <div className="format-menu">
                                 {
@@ -138,12 +137,12 @@ export const FormatMenu = (props) => {
                                 }
                                 </div>
                                 <div className="divider"/>
-                            </>
+                            </div>
                         ) : ''
                     }
                     {
                         fiveDsFormats.length ? (
-                            <>
+                            <div>
                                 <h1 className="format-menu-title">5D's Formats</h1>
                                 <div className="format-menu">
                                 {
@@ -151,12 +150,12 @@ export const FormatMenu = (props) => {
                                 }
                                 </div>
                                 <div className="divider"/>
-                            </>
+                            </div>
                         ) : ''
                     }
                     {
                         zexalFormats.length ? (
-                            <>
+                            <div>
                                 <h1 className="format-menu-title">ZEXAL Formats</h1>
                                 <div className="format-menu">
                                 {
@@ -164,12 +163,12 @@ export const FormatMenu = (props) => {
                                 }
                                 </div>
                                 <div className="divider"/>
-                            </>
+                            </div>
                         ) : ''
                     }
                     {
                         arcVFormats.length ? (
-                            <>
+                            <div>
                                 <h1 className="format-menu-title">ARC-V Formats</h1>
                                 <div className="format-menu">
                                 {
@@ -177,12 +176,12 @@ export const FormatMenu = (props) => {
                                 }
                                 </div>
                                 <div className="divider"/>
-                            </>
+                            </div>
                         ) : ''
                     }
                     {
                         vrainsFormats.length ? (
-                            <>
+                            <div>
                                 <h1 className="format-menu-title">VRAINS Formats</h1>
                                 <div className="format-menu">
                                 {
@@ -190,12 +189,12 @@ export const FormatMenu = (props) => {
                                 }
                                 </div>
                                 <div className="divider"/>
-                            </>
+                            </div>
                         ) : ''
                     }
                     {
                         sevensFormats.length ? (
-                            <>
+                            <div>
                                 <h1 className="format-menu-title">SEVENS Formats</h1>
                                 <div className="format-menu">
                                 {
@@ -203,12 +202,12 @@ export const FormatMenu = (props) => {
                                 }
                                 </div>
                                 <div className="divider"/>
-                            </>
+                            </div>
                         ) : ''
                     }
                     {
                         goRushFormats.length ? (
-                            <>
+                            <div>
                                 <h1 className="format-menu-title">GO RUSH!! Formats</h1>
                                 <div className="format-menu">
                                 {
@@ -216,7 +215,7 @@ export const FormatMenu = (props) => {
                                 }
                                 </div>
                                 <div className="divider"/>
-                            </>
+                            </div>
                         ) : ''
                     }
                 </div>
