@@ -1177,6 +1177,15 @@ export const manageSubscriptions = async (client) => {
                     await player.update({ isSubscriber: true, subscriberTier: 'Supporter' })
                     a++
                 }
+
+                if (!subscription && player.isSubscriber && !member?._roles.includes(discordSupporterRoleId) && !member?._roles.includes(discordPremiumRoleId)) {
+                    await programmer.send({ content: `${player.name} is no longer a subscriber (${player.subscriberTier})`})
+                    console.log(`${player.name} is no longer a subscriber (${player.subscriberTier})`)
+                    await player.update({
+                        isSubscriber: false,
+                        subscriberTier: null
+                    })
+                }
             } catch (err) {
                 console.log(err)
             }

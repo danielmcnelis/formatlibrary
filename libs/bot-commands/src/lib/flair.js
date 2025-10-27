@@ -16,12 +16,11 @@ export default {
 					{ name: 'Breaker the Magical Warrior', value: '1103204327927074847' },
 					{ name: 'Brionac, Dragon of the Ice Barrier', value: '1105196485630501008' },
 					{ name: 'Cyber Dragon', value: '1103204393760870490' },
+                    { name: 'Dandylion', value: '1429828735044948088' },
 					{ name: 'Dante, Traveler of the Burning Abyss', value: '1105198759769538570' },
 					{ name: 'Dupe Frog', value: '1103204047571390494' },
 					{ name: 'El Shaddoll Winda', value: '1105199258442940506' },
 					{ name: 'Elemental Hero Stratos', value: '1105202857566802010' },
-                    { name: 'Formula Synchron', value: '1105199417419636816' },
-                    { name: 'Genex Ally Birdman', value: '1105201167358754827' },
 					{ name: 'Gorz the Emissary of Darkness', value: '1105203194927263766' },
                     { name: 'Magical Scientist', value: '1105203007647387748' },
                     { name: 'Magician of Faith', value: '1105200857236111430' },
@@ -36,7 +35,8 @@ export default {
                     { name: 'Time Wizard', value: '1105203831542911027' },
                     { name: 'Traptrix Myrmeleo', value: '1105200619570090097' },
                     { name: 'Thunder Dragon', value: '1105203082909986866' },
-                    { name: 'XX-Saber Darksoul', value: '1105206904352952450' }
+                    { name: 'XX-Saber Darksoul', value: '1105206904352952450' },
+                    { name: 'None', value: null }
 				)
         )
         .setDMPermission(false),
@@ -61,12 +61,16 @@ export default {
             }
 
             // ADD SELECTED SUBSCRIBER ROLE
-            try {
-                await interaction.member.roles.add(roleId)
-                return await interaction.reply({ content: `Enjoy your new flair! ${emojis.mlady}`})
-            } catch (err) {
-                console.log(err)
-                return await interaction.reply({ content: `Error: Unable to add flair.`})
+            if (roleId) {
+                try {
+                    await interaction.member.roles.add(roleId)
+                    return await interaction.reply({ content: `Enjoy your new flair! ${emojis.mlady}`})
+                } catch (err) {
+                    console.log(err)
+                    return await interaction.reply({ content: `Error: Unable to add flair.`})
+                }
+            } else {
+                return await interaction.reply({ content: `Removed flair.`})
             }
         } catch (err) {
             console.log(err)
