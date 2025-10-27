@@ -28,7 +28,8 @@ export default {
                 // console.log('member', member)
                 // await runNightlyTasks(client)
                 // const format = await Format.findOne({ where: { name: 'Forged in Chaos' }})
-                await downloadNewCards(client)
+                // await downloadNewCards(client)
+                await manageSubscriptions(client)
                 await interaction.editReply('🧪')
                 // await recalculateAllStats()
                 // await updateAvatars(client)
@@ -46,7 +47,6 @@ export default {
                 // return downloadMissingCardImages()
                 // return lookForAllPotentialPairs(client)
                 // return runMonthlyTasks(client)
-                // await manageSubscriptions(client)
                 // await assignTournamentRoles(client)
                 // return assignSeasonalLadderRoles(client)
                 
