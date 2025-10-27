@@ -11,7 +11,7 @@ const Stripe = new stripe(config.stripe.clientSecret)
 // THIS ENSURES NEW ENVARs ARE USED IN PROCESSES
 // THIS IS A PM2 ISSUE
 
-console.log('config', config)
+// console.log('config', config)
 // import {manageSubscriptions} from '@fl/bot-functions'
 // import {Elements} from '@stripe/react-stripe-js'
 // import {loadStripe} from '@stripe/stripe-js'
@@ -122,6 +122,8 @@ export const getSubscriptions = async (req, res, next) => {
             include: Player,
             order: [['createdAt', 'DESC']]
         })
+
+        console.log('subscriptions', subscriptions)
 
         for (let i = 0; i < subscriptions.length; i++) {
             const subscription = subscriptions[i]

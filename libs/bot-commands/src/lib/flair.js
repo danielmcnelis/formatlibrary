@@ -61,7 +61,7 @@ export default {
             }
 
             // ADD SELECTED SUBSCRIBER ROLE
-            if (roleId) {
+            if (roleId && roleId !== 'none') {
                 try {
                     await interaction.member.roles.add(roleId)
                     return await interaction.reply({ content: `Enjoy your new flair! ${emojis.mlady}`})
