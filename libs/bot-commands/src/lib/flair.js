@@ -36,7 +36,7 @@ export default {
                     { name: 'Traptrix Myrmeleo', value: '1105200619570090097' },
                     { name: 'Thunder Dragon', value: '1105203082909986866' },
                     { name: 'XX-Saber Darksoul', value: '1105206904352952450' },
-                    { name: 'None', value: '' }
+                    { name: 'None', value: 'none' }
 				)
         )
         .setDMPermission(false),
