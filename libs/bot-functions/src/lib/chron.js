@@ -360,21 +360,24 @@ export const updateGlobalNames = async () => {
 
     const gamesPlayed = {}
 
-    const stats = [...await Stats.findAll({
-        include: Player
-    })]
+    const stats = await Stats.findAll({
+        where: {
+            games: {[Op.gte]: 3}
+        }
+    })
     
     stats.forEach((s) => {
-        if (!s.player?.globalName) {
-            if (gamesPlayed[s.playerId]) {
-                gamesPlayed[s.playerId] += s.games
-            } else {
-                gamesPlayed[s.playerId] = s.games
-            }
+        if (gamesPlayed[s.playerId]) {
+            gamesPlayed[s.playerId] += s.games
+        } else {
+            gamesPlayed[s.playerId] = s.games
         }
     })
 
-    let playerIdsSortedByGamesPlayed = Object.entries(gamesPlayed).sort((a, b) => b[1] - a[1])
+    const games = Object.entries(gamesPlayed).sort((a, b) => b[1] - a[1]).map((e) => e[1])
+    console.log('games', games)
+
+    let playerIdsSortedByGamesPlayed = Object.entries(gamesPlayed).sort((a, b) => b[1] - a[1])[0]
     playerIdsSortedByGamesPlayed = playerIdsSortedByGamesPlayed.filter((el, index) => {
         return playerIdsSortedByGamesPlayed.indexOf(el) === index;
     })
@@ -385,7 +388,7 @@ export const updateGlobalNames = async () => {
     let discordPfpUpdateCount = 0
     for (let i = 0; i < playerIdsSortedByGamesPlayed.length; i++) {
         try {
-            const playerId = playerIdsSortedByGamesPlayed?.[i]?.[0]
+            const playerId = playerIdsSortedByGamesPlayed[i]
             const player = await Player.findOne({ where: { id: playerId } })
             if (!player?.discordId) continue
 
