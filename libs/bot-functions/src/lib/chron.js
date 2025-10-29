@@ -392,6 +392,7 @@ export const updateGlobalNames = async () => {
     let discordPfpUpdateCount = 0
     for (let i = 0; i < playerIdsSortedByGamesPlayed.length; i++) {
         try {
+            console.log('i', i)
             const playerId = playerIdsSortedByGamesPlayed[i]
             const player = await Player.findOne({ where: { id: playerId } })
             if (!player?.discordId) continue
@@ -402,14 +403,13 @@ export const updateGlobalNames = async () => {
                 }
             })
 
-            console.log('data', data)
             console.log('data.global_name', data.global_name)
             console.log('data.username', data.username)
             console.log('data.avatar', data.avatar)
 
             try {
                 if (data.global_name) {
-                    const count = await Player.count({ where: { globalName: data.global_name }})
+                    const count = await Player.count({ where: { globalName: data.global_name, discordId: {[Op.not]: playerId }}})
                     
                     if (count) {
                         console.log(`Sorry, ${player.discordName}, but ${data.global_name} is already taken by a player with a higher priority.`)
