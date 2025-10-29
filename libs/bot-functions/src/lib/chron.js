@@ -365,6 +365,7 @@ export const updateGlobalNames = async () => {
             games: { [Op.gte]: 3 }
         }
     })
+
     
     stats.forEach((s) => {
         if (gamesPlayed[s.playerId]) {
@@ -396,6 +397,14 @@ export const updateGlobalNames = async () => {
             const playerId = playerIdsSortedByGamesPlayed[i]
             const player = await Player.findOne({ where: { id: playerId } })
             if (!player?.discordId) continue
+
+            const deckCount = await Deck.count({
+                where: {
+                    builderId: playerId,
+                }
+            })
+
+            if (!deckCount) continue
 
             const {data} = await axios.get(`https://discord.com/api/v9/users/${player.discordId}`, {
                 headers: {
