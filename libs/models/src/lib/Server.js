@@ -65,9 +65,6 @@ export const Server = db.define('servers', {
   discordIconId: {
     type: Sequelize.STRING
   },
-  logoName: {
-    type: Sequelize.STRING
-  },
   hasRatedPermission: {
     type: Sequelize.BOOLEAN
   }
