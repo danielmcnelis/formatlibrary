@@ -399,7 +399,7 @@ export const updateGlobalNames = async () => {
 
             try {
                 if (data.global_name) {
-                    const count = await Player.count({ where: { globalName:  }})
+                    const count = await Player.count({ where: { globalName: data.global_name }})
                     
                     if (count) {
                         console.log(`Sorry, ${player.discordName}, but ${data.global_name} is already taken by a player with a higher priority.`)
