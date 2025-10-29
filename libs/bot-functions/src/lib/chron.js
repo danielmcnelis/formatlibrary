@@ -362,7 +362,7 @@ export const updateGlobalNames = async () => {
 
     const stats = await Stats.findAll({
         where: {
-            games: {[Op.gte]: 3}
+            games: { [Op.gte]: 3 }
         }
     })
     
@@ -375,9 +375,13 @@ export const updateGlobalNames = async () => {
     })
 
     const games = Object.entries(gamesPlayed).sort((a, b) => b[1] - a[1]).map((e) => e[1])
-    console.log('games', games)
+    console.log('games 0-100', games.slice(0, 100))
+    console.log('games 100-200', games.slice(100, 200))
+    console.log('games 200-300', games.slice(200, 300))
+    console.log('games 300-400', games.slice(300, 400))
+    console.log('games 400-500', games.slice(400, 500))
 
-    let playerIdsSortedByGamesPlayed = Object.entries(gamesPlayed).sort((a, b) => b[1] - a[1])[0]
+    let playerIdsSortedByGamesPlayed = Object.entries(gamesPlayed).sort((a, b) => b[1] - a[1]).map((e) => e[0])
     playerIdsSortedByGamesPlayed = playerIdsSortedByGamesPlayed.filter((el, index) => {
         return playerIdsSortedByGamesPlayed.indexOf(el) === index;
     })
