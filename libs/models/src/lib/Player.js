@@ -218,10 +218,6 @@ Player.generateId = async () => {
     }
   }
 
-  Player.updateDiscordProfile = async (user) => {
-    const { discordName,  }
-  }
-
   Player.prototype.getToken = function () {
     const jwt = new JWT({
         algorithm: 'RS256',
