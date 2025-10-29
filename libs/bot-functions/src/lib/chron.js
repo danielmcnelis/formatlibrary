@@ -392,6 +392,8 @@ export const updateGlobalNames = async () => {
                 }
             })
 
+            console.log('data', data)
+
             try {
                 if (data.user.global_name) {
                     const count = await Player.count({ where: { globalName: data.user.global_name }})
