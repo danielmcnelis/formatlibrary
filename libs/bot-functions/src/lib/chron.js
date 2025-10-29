@@ -375,7 +375,9 @@ export const updateGlobalNames = async () => {
     })
 
     let playerIdsSortedByGamesPlayed = Object.entries(gamesPlayed).sort((a, b) => b[1] - a[1])
-    playerIdsSortedByGamesPlayed = [...new Set(playerIdsSortedByGamesPlayed)]
+    playerIdsSortedByGamesPlayed = playerIdsSortedByGamesPlayed.filter((el, index) => {
+        return playerIdsSortedByGamesPlayed.indexOf(el) === index;
+    })
 
     let globalNameUpdateCount = 0
     let nameUpdateCount = 0
