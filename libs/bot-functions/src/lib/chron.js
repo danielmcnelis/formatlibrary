@@ -365,7 +365,7 @@ export const updateGlobalNames = async () => {
     })]
     
     stats.forEach((s) => {
-        if (!s.player.globalName) {
+        if (!s.player?.globalName) {
             if (gamesPlayed[s.playerId]) {
                 gamesPlayed[s.playerId] += s.games
             } else {
@@ -382,7 +382,7 @@ export const updateGlobalNames = async () => {
     let discordPfpUpdateCount = 0
     for (let i = 0; i < playerIdsSortedByGamesPlayed.length; i++) {
         try {
-            const playerId = playerIdsSortedByGamesPlayed[i][0]
+            const playerId = playerIdsSortedByGamesPlayed?.[i]?.[0]
             const player = await Player.findOne({ where: { id: playerId } })
             if (!player?.discordId) continue
 
