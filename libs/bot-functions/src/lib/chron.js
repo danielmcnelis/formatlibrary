@@ -392,17 +392,17 @@ export const updateGlobalNames = async () => {
                 }
             })
 
-            if (data.global_name) {
-                try {
-                    const count = await Player.count({ where: { globalName: data.global_name }})
+            try {
+                if (data.user.global_name) {
+                    const count = await Player.count({ where: { globalName: data.user.global_name }})
                     
                     if (count) {
-                        console.log(`Sorry, ${player.discordName}, but ${data.global_name} is already taken by a player with a higher priority.`)
+                        console.log(`Sorry, ${player.discordName}, but ${data.user.global_name} is already taken by a player with a higher priority.`)
                         continue
                     } else {
-                        console.log(`updating ${player.discordName}'s global name: ${player.globalName} -> ${data.global_name}`)
+                        console.log(`updating ${player.discordName}'s global name: ${player.globalName} -> ${data.user.global_name}`)
                         if (!player.firstName && !player.lastName) {
-                            await player.update({ name: global_name, globalName: data.global_name })
+                            await player.update({ name: global_name, globalName: data.user.global_name })
                             globalNameUpdateCount++
                             nameUpdateCount++
                         } else if (player.firstName && player.lastName) {
@@ -410,19 +410,27 @@ export const updateGlobalNames = async () => {
                             nameUpdateCount++
                         }
                     }
-                } catch (err) {
-                    console.log(err)
                 }
+            } catch (err) {
+                console.log(err)
+            }    
+
+            try {
+                if (data.user.username !== player.discordName) {
+                    await player.update({ discordName: data.user.username })
+                    discordNameUpdateCount++
+                }
+            } catch (err) {
+                console.log(err)
             }
 
-            if (data.user.username !== player.discordName) {
-                await player.update({ discordName: data.user.username })
-                discordNameUpdateCount++
-            }
-
-            if (data.user.avatar !== player.discordPfp) {
-                await player.update({ discordPfp: data.user.avatar })
-                discordPfpUpdateCount++
+            try {
+                if (data.user.avatar !== player.discordPfp) {
+                    await player.update({ discordPfp: data.user.avatar })
+                    discordPfpUpdateCount++
+                }
+            } catch (err) {
+                console.log(err)
             }
         } catch (err) {
             console.log(`error message:`, err?.message)
