@@ -410,7 +410,7 @@ export const updateGlobalNames = async () => {
                     } else {
                         console.log(`updating ${player.discordName}'s global name: ${player.globalName} -> ${data.global_name}`)
                         if (!player.firstName && !player.lastName) {
-                            await player.update({ name: global_name, globalName: data.global_name })
+                            await player.update({ name: data.global_name, globalName: data.global_name })
                             globalNameUpdateCount++
                             nameUpdateCount++
                         } else if (player.firstName && player.lastName) {
