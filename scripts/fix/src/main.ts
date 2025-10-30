@@ -3257,7 +3257,7 @@ const shuffleArray = (arr) => {
 
 ;(async () => {
     let b = 0
-
+    let e = 0
     const players = await Player.findAll({
         where: {
             globalName: {[Op.not]: null}
@@ -3265,10 +3265,15 @@ const shuffleArray = (arr) => {
     })
 
     for (let i = 0; i < players.length; i++) {
-        const player = players[i]
-        await player.update({ name: player.globalName })
-        b++
+        try {
+            const player = players[i]
+            await player.update({ name: player.globalName })
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
     }
 
-    return console.log(`updated ${b} players`)
+    return console.log(`updated ${b} players, encountered ${e} errors`)
 })()
