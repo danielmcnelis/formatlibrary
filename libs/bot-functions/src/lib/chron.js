@@ -388,7 +388,7 @@ export const updateGlobalNames = async () => {
     })
 
     let globalNameUpdateCount = 0
-    let nameUpdateCount = 0
+    // let nameUpdateCount = 0
     let discordNameUpdateCount = 0
     let discordPfpUpdateCount = 0
     for (let i = 0; i < playerIdsSortedByGamesPlayed.length; i++) {
@@ -424,20 +424,27 @@ export const updateGlobalNames = async () => {
                             id: {[Op.not]: playerId }
                         }
                     })
+
+                    // const nameUnchanged = await Player.count({ 
+                    //     where: { 
+                    //         globalName: data.global_name, 
+                    //         id: playerId
+                    //     }
+                    // })
                     
                     if (count) {
                         console.log(`Sorry, ${player.discordName}, but ${data.global_name} is already taken by a player with a higher priority.`)
                         continue
                     } else {
                         console.log(`updating ${player.discordName}'s global name: ${player.globalName} -> ${data.global_name}`)
-                        if (!player.firstName && !player.lastName) {
+                        // if (!player.firstName && !player.lastName) {
                             await player.update({ name: data.global_name, globalName: data.global_name })
                             globalNameUpdateCount++
-                            nameUpdateCount++
-                        } else if (player.firstName && player.lastName) {
-                            await player.update({ name: `${player.firstName} ${player.lastName}` })
-                            nameUpdateCount++
-                        }
+                            // nameUpdateCount++
+                        // } else if (player.firstName && player.lastName) {
+                        //     await player.update({ name: `${player.firstName} ${player.lastName}` })
+                        //     nameUpdateCount++
+                        // }
                     }
                 }
             } catch (err) {
@@ -478,7 +485,8 @@ export const updateGlobalNames = async () => {
         runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
     })
 
-    console.log(`Monthly Task Complete: Updated ${globalNameUpdateCount} global names, ${nameUpdateCount} primary names, ${discordNameUpdateCount} Discord names, and ${discordPfpUpdateCount} Discord pfps.`)
+                                                                        //, ${nameUpdateCount} primary names,
+    console.log(`Monthly Task Complete: Updated ${globalNameUpdateCount} global names,  ${discordNameUpdateCount} Discord names, and ${discordPfpUpdateCount} Discord pfps.`)
     return console.log(`updateGlobalNames() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
