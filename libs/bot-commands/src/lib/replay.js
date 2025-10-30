@@ -91,7 +91,7 @@ export default {
     async execute(interaction) {
         try {
             await interaction.deferReply()
-            const url = interaction.options.getString('url')
+            const url = interaction.options.getString('url')?.replaceAll('  ', ' ')?.replaceAll(' ', '> <')
             const tournamentId = interaction.options.getString('tournament')
             const winner = interaction.options.getUser('winner')
             const loser = interaction.options.getUser('loser')

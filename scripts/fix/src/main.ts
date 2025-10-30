@@ -3268,6 +3268,7 @@ const shuffleArray = (arr) => {
     for (let i = 0; i < players.length; i++) {
         try {
             const player = players[i]
+            console.log(`changing ${player.name} to ${player.discordName}`)
             await player.update({ name: player.discordName })
             b++
         } catch (err) {
