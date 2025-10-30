@@ -38,7 +38,9 @@
   
   .player-cell-pfp {
     border: 1px solid black;
-    border-radius: 32px;
+    border-radius: 50%;
+    height: 32px;
+    object-fit: cover;
     width: 32px;
     margin: 0px 20px;
   }

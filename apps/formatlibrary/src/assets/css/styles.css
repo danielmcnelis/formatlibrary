@@ -796,9 +796,12 @@
   
   .player-cell-pfp {
     border: 1px solid black;
-    border-radius: 32px;
+    border-radius: 50%;
     width: 32px;
     margin: 0px 20px;
+
+    height: 32px;
+    object-fit: cover;
   }
   
   .medal-cell img {
@@ -963,12 +966,10 @@
   
   .player-pfp {
     border: 3px solid black;
-    border-radius: 50%;
+    border-radius: 2px;
     display: block;
     margin: 10px auto;
     width: 128px;
-    height: 128px;
-    object-fit: cover;
   }
   
   .player-profile-title {

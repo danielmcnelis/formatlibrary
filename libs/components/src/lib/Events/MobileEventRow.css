@@ -42,8 +42,10 @@
   
   .player-cell-pfp {
     border: 1px solid black;
-    border-radius: 32px;
+    border-radius: 50%;
     width: 32px;
+    height: 32px;
+    object-fit: cover;
     margin: 0px 20px;
   }
 
