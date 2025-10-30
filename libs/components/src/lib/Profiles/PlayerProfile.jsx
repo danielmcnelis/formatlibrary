@@ -85,12 +85,13 @@ export const PlayerProfile = (props) => {
                 <div className="player-profile-title">{player.name}</div>
                     <img
                         className="player-pfp"
-                        src={`https://cdn.formatlibrary.com/images/pfps/${player.discordId || player.name}.png`}
+                        // src={player.discordPfp ? `https://cdn.discordapp.com/avatars/${player.discordId}/${player.discordPfp}.webp` : `https://cdn.formatlibrary.com/images/pfps/${player.discordId || player.name}.png`}
+                        src={`/api/players/${player.id}/avatar`} 
                         alt={player.name}
-                        onError={(e) => {
-                        e.target.onerror = null
-                        e.target.src = 'https://cdn.discordapp.com/embed/avatars/1.png'
-                        }}
+                        // onError={(e) => {
+                        // e.target.onerror = null
+                        // e.target.src = 'https://cdn.discordapp.com/embed/avatars/1.png'
+                        // }}
                     />
                     <div className="profile-info"> 
                         {
