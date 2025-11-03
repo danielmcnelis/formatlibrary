@@ -2826,6 +2826,7 @@ export const updateServers = async (client) => {
         status: 'underway'
     })
     const guilds = [...client.guilds.cache.values()]
+    console.log('guilds', guilds)
 
     for (let i = 0; i < guilds.length; i++) {
         const guild = guilds[i]
