@@ -31,7 +31,7 @@ export default {
                 // await downloadNewCards(client)
                 // await manageSubscriptions(client)
                 // await updateGlobalNames()
-                await updateServers(client)
+                await runNightlyTasks(client)
                 await interaction.editReply('🧪')
                 // await recalculateAllStats()
                 // await updateAvatars(client)
