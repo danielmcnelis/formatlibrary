@@ -70,7 +70,7 @@ export const runNightlyTasks = async (client) => {
         ]
     
         for (let i = 0; i < tasks.length; i++) {
-            console.log(`RUNNING TASK ${i}`)
+            console.log(`RUNNING TASK ${i}, ${tasks[i]}`)
             await tasks[i](client)
     
             if (i === tasks.length - 1) {
@@ -1256,7 +1256,6 @@ export const manageSubscriptions = async (client) => {
 
     console.log(`added ${a} new subscriptions and removed ${b} old subscriptions`)
     return console.log(`manageSubscriptions() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
-
 }
 
 // ASSIGN SEASONAL LADDER ROLES
