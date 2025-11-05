@@ -609,7 +609,7 @@ export const joinTournament = async (interaction, tournamentId) => {
     const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
-    const data = format.name === 'Genesys' ? await getGenesysDeckList(interaction.member, player) :
+    const data = tournament.format.name === 'Genesys' ? await getGenesysDeckList(interaction.member, player) :
         tournament.format.name === 'Forged in Chaos' ? await getForgedDeckList(interaction.member, player, format) :
         tournament.format.category === tournament.format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
         await getDeckList(interaction.member, player, tournament.format, true, !tournament.isRated)
