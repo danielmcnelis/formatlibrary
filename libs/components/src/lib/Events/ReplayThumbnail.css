@@ -23,9 +23,10 @@
   
   .replayThumbnail-player-pfp {
     border: 5px solid black;
-    border-radius: 100px;
+    border-radius: 50%;
     background-color: #000000;
     width: 100px;
+    height: 100px;
     margin: 0px 3px;
   }
 

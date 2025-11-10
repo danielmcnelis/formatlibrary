@@ -133,8 +133,9 @@
   
     .single-deck-builder-cell-pfp {
         border: 1px solid black;
-        border-radius: 28px;
+        border-radius: 50%;
         width: 28px;
+        height: 32px;
         margin: 0px 7px;
       }
 
