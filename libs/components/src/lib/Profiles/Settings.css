@@ -11,6 +11,7 @@
 .settings-settings-pfp {
     width: 150px;
     height: 150px;
+    border-radius: 100%;
     border: 2px solid black;
 }
 

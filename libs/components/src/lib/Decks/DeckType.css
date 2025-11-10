@@ -161,7 +161,8 @@
   
   .single-decktype-builder-cell-pfp {
     border: 1px solid black;
-    border-radius: 28px;
+    /* border-radius: 28px; */
+    border-radius: 100%;
     width: 28px;
     margin: 0px 7px;
   }

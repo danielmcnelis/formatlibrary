@@ -145,7 +145,7 @@
     
     .blogpost-pfp, .blogpost-community {
         display: none;
-        border-radius: 50%;
+        border-radius: 100%;
     }
       
     .blogpost-deck-link {
