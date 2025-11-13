@@ -817,8 +817,12 @@ export const getAlphas = (str) => str.replace(/[\d]/g, '')
 // GET KNOWN ABBREVIATION
 export const getKnownAbbreviation = async (name = '') => {
     const allSeries = await Series.findAll()
-    const series = allSeries.find((e) => name.toLowerCase().includes(e.toLowerCase))
+    console.log('allSeries', allSeries)
+    console.log('name', name)
+    const series = allSeries.find((e) => name.toLowerCase().includes(e.name.toLowerCase))
+    console.log('series', series)
     const knownAbbreviation = series?.abbreviation
+    console.log('knownAbbreviation', knownAbbreviation)
     
     // name = name.toLowerCase()
     // const knownAbbreviation = name.includes('abyssgaios gigachads') ? 'AGGC' :
