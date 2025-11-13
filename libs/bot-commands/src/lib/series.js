@@ -61,6 +61,7 @@ export default {
         try {
             if (!isProgrammer(interaction.member)) return await interaction.editReply('🧪')
             const serverId = interaction.options.getString('server')
+        console.log('serverId', serverId)
             const server = await Server.findOne({ where: { id: serverId }})
             const communityName = server.communityName
             if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
