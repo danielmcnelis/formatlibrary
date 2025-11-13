@@ -48,7 +48,8 @@ export default {
                 where: {
                     access: {[Op.not]: 'free'},
                     name: {[Op.substring]: `%${focusedValue}%`}
-                }
+                },
+                limit: 25
             })
 
             await interaction.respond(
