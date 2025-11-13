@@ -274,7 +274,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 interaction.customId?.includes('DE') ? 'double elimination' :
                 'round robin'
                 
-            const knownAbbreviation = getKnownAbbreviation(name)
+            const knownAbbreviation = await getKnownAbbreviation(name)
+            console.log('knownAbbreviation', knownAbbreviation)
             const suggestedAbbreviation = getSuggestedAbbreviation(name)
 
             // REMOVE ALL NON ALPHA NUMERICS. CONFIRM ALPHAS PRECEDE NUMERICS. PUT EXACTLY ONE ZERO AT FRONT OF NUMBERS.
@@ -288,7 +289,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const isLive = interaction.fields.fields.get('duration') ? decipherDurationInput(interaction.fields.getTextInputValue('duration')) : true
             
             const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
-            console.log('formatName', formatName)
             const channelName = interaction.fields.fields.get('channelName') ? interaction.fields.getTextInputValue('channelName') : null
         
             return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, isRated, isLive)

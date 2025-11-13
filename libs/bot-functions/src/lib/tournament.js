@@ -5,7 +5,7 @@
 import axios from 'axios'
 import { Op } from 'sequelize'
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } from 'discord.js'
-import { Deck, Entry, Event, Format, Match, Player, Replay, Stats, Server, Team, Tournament } from '@fl/models'
+import { Deck, Entry, Event, Format, Match, Player, Replay, Stats, Series, Server, Team, Tournament } from '@fl/models'
 import { getIssues, getSkillCard } from './deck.js'
 import { createDecks } from './coverage.js'
 import { getForgedDeckList } from './forged.js'
@@ -2556,22 +2556,27 @@ export const createTournament = async (interaction, formatName, name, abbreviati
 
     const str = generateRandomString(10, '0123456789abcdefghijklmnopqrstuvwxyz')
 
-    const logo = name.toLowerCase().includes('format library championship') ? emojis.FL :
-        name.toLowerCase().includes('retro series') ? emojis.mlady :
-        name.toLowerCase().includes('drama llama') ? emojis.lmfao :
-        name.toLowerCase().includes('digbic') ? emojis.stoned :
-        name.toLowerCase().includes('ellietincan') ? emojis.lipton :
-        name.toLowerCase().includes('ajtbls') ? emojis.toad :
-        name.toLowerCase().includes('ke$ha') ? emojis.UredU :
-        name.toLowerCase().includes('crown') ? emojis.king :
-        name.toLowerCase().includes('patron battle royale') ? emojis.cheers :
-        name.toLowerCase().includes('dark side') ? emojis.evil :
-        name.toLowerCase().includes('woawa') ? '🦉 ⚽' :
-        name.toLowerCase().includes('gigachad') ? emojis.gigachad :
-        name.toLowerCase().includes('retro world') ? emojis.celtic :
-        name.toLowerCase().includes('future world') ? emojis.farqred :
-        name.toLowerCase().includes('blazing cheaters') ? emojis.speeder :
-        server.logo || emojis.legend
+    const allSeries = await Series.findAll()
+    const series = allSeries.find((e) => name.toLowerCase().includes(e.toLowerCase))
+
+    const logo = series?.emoji || server.logo || emojis.legend
+
+    // const logo = name.toLowerCase().includes('format library championship') ? emojis.FL :
+    //     name.toLowerCase().includes('retro series') ? emojis.mlady :
+    //     name.toLowerCase().includes('drama llama') ? emojis.lmfao :
+    //     name.toLowerCase().includes('digbic') ? emojis.stoned :
+    //     name.toLowerCase().includes('ellietincan') ? emojis.lipton :
+    //     name.toLowerCase().includes('ajtbls') ? emojis.toad :
+    //     name.toLowerCase().includes('ke$ha') ? emojis.UredU :
+    //     name.toLowerCase().includes('crown') ? emojis.king :
+    //     name.toLowerCase().includes('patron battle royale') ? emojis.cheers :
+    //     name.toLowerCase().includes('dark side') ? emojis.evil :
+    //     name.toLowerCase().includes('woawa') ? '🦉 ⚽' :
+    //     name.toLowerCase().includes('gigachad') ? emojis.gigachad :
+    //     name.toLowerCase().includes('retro world') ? emojis.celtic :
+    //     name.toLowerCase().includes('future world') ? emojis.farqred :
+    //     name.toLowerCase().includes('blazing cheaters') ? emojis.speeder :
+    //     server.logo || emojis.legend
     
     try {
         const tournament = server.challongeSubdomain ? {
@@ -2614,6 +2619,8 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                 formatId: format.id,
                 logo: logo,
                 emoji: format.emoji,
+                requiredRoleId: series?.requiredRoleId,
+                alternateRoleId: series?.alternateRoleId,
                 url: data.tournament.url,
                 channelId: channelId,
                 serverId: interaction.guildId,
@@ -2680,6 +2687,8 @@ export const createTournament = async (interaction, formatName, name, abbreviati
                     formatId: format.id,
                     logo: logo,
                     emoji: format.emoji,
+                    requiredRoleId: series?.requiredRoleId,
+                    alternateRoleId: series?.alternateRoleId,
                     url: data.tournament.url,
                     channelId: channelId,
                     serverId: interaction.guildId,

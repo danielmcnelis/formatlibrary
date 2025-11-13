@@ -16,5 +16,11 @@ export const Series = db.define('series', {
   },
   serverId: {
     type: Sequelize.STRING
+  },
+  requiredRoleId: {
+    type: Sequelize.STRING
+  },
+  alternateRoleId: {
+    type: Sequelize.STRING
   }
 })
