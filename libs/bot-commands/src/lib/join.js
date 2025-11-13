@@ -31,7 +31,7 @@ export default {
             // } else 
             if (tournament.requiredRoleId && tournament.alternateRoleId && !tournament.isTeamTournament && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
                 return interaction.editReply({ content: `Sorry, you must have the <@&${tournament.requiredRoleId}> or <@&${tournament.alternateRoleId}> role to join ${tournament.name}.`})
-            } else if (tournament.requiredRoleId && !tournament.isTeamTournament && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
+            } else if (tournament.requiredRoleId && !tournament.isTeamTournament && !interaction.member?._roles.includes(tournament.requiredRoleId)) {
                 return interaction.editReply({ content: `Sorry, you must have the <@&${tournament.requiredRoleId}> role to join ${tournament.name}.`})
             } 
 
