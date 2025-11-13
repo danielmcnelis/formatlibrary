@@ -44,6 +44,7 @@ import replay from './lib/replay'
 import reset from './lib/reset'
 import rng from './lib/rng'
 import role from './lib/role'
+import series from './lib/series'
 import settimer from './lib/settimer'
 import settings from './lib/settings'
 import signup from './lib/signup'
@@ -68,6 +69,7 @@ export default {
         flair,
         queue,
         recalculate,
+        series,
         trivia,
         test
     },

@@ -9,6 +9,12 @@ export default {
     data: new SlashCommandBuilder()
         .setName('series')
         .setDescription('Admin Only - Create a new tournament series.')
+        .addStringOption(option =>
+			option.setName('server')
+				.setDescription('Enter host server')
+				.setAutocomplete(true)
+                .setRequired(true)
+        )
 		.addStringOption(option =>
 			option.setName('name')
 				.setDescription('Enter series name')
@@ -34,13 +40,30 @@ export default {
             option.setName('role-2')
                 .setDescription('Role that allows users to enter.')
                 .setRequired(false))
-        .setDMPermission(false),    
+        .setDMPermission(false),  
+    async autocomplete(interaction) {
+        try {
+            const focusedValue = interaction.options.getFocused()
+            const servers = await Server.findAll({
+                where: {
+                    access: {[Op.not]: 'free'},
+                    name: {[Op.startsWith]: {[Op.iLike]: focusedValue }}
+                }
+            })
+
+            await interaction.respond(
+                servers.map(s => ({ name: s.name, value: s.id })),
+            )
+        } catch (err) {
+            console.log(err)
+        }
+    },      
     async execute(interaction) {
         try {
             if (!isProgrammer(interaction.member)) return await interaction.editReply('🧪')
-            const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
+            const serverId = interaction.options.getString('server')
+            const server = await Server.findOne({ where: { id: serverId }})
             const communityName = server.communityName
-            const serverId = server.id
             if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
             const name = interaction.options.getString('name')
             const abbreviation = interaction.options.getString('abbreviation')
