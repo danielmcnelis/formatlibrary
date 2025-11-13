@@ -18,18 +18,15 @@ export default {
 		.addStringOption(option =>
 			option.setName('name')
 				.setDescription('Enter series name')
-				.setAutocomplete(true)
                 .setRequired(true)
         ).addStringOption(option =>
 			option.setName('abbreviation')
 				.setDescription('Enter series abbreviation')
-				.setAutocomplete(true)
                 .setRequired(true)
         )
         .addStringOption(option =>
 			option.setName('emoji')
 				.setDescription('Enter series emoji')
-				.setAutocomplete(true)
                 .setRequired(false)
         )
         .addRoleOption(option =>
