@@ -47,7 +47,7 @@ export default {
             const servers = await Server.findAll({
                 where: {
                     access: {[Op.not]: 'free'},
-                    name: {[Op.startsWith]: {[Op.iLike]: focusedValue }}
+                    name: {[Op.substring]: `%${focusedValue}%`}
                 }
             })
 
