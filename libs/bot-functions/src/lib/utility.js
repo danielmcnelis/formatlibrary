@@ -819,7 +819,7 @@ export const getKnownAbbreviation = async (name = '') => {
     const allSeries = await Series.findAll()
     console.log('allSeries', allSeries)
     console.log('name', name)
-    const series = allSeries.find((e) => name.toLowerCase().includes(e.name.toLowerCase))
+    const series = allSeries.find((e) => name.toLowerCase().includes(e.name.toLowerCase()))
     console.log('series', series)
     const knownAbbreviation = series?.abbreviation
     console.log('knownAbbreviation', knownAbbreviation)
