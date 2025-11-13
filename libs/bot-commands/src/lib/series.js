@@ -46,7 +46,7 @@ export default {
                     access: {[Op.not]: 'free'},
                     name: {[Op.substring]: `%${focusedValue}%`}
                 },
-                order: [['size', 'ASC']],
+                order: [['size', 'DESC']],
                 limit: 25
             })
 
