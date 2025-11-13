@@ -44,7 +44,7 @@ export default {
             const servers = await Server.findAll({
                 where: {
                     access: {[Op.not]: 'free'},
-                    name: {[Op.substring]: `%${focusedValue}%`}
+                    name: {[Op.iLike]: `%${focusedValue}%`}
                 },
                 order: [['size', 'DESC']],
                 limit: 25
