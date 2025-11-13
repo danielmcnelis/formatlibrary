@@ -2557,7 +2557,7 @@ export const createTournament = async (interaction, formatName, name, abbreviati
     const str = generateRandomString(10, '0123456789abcdefghijklmnopqrstuvwxyz')
 
     const allSeries = await Series.findAll()
-    const series = allSeries.find((e) => name.toLowerCase().includes(e.toLowerCase))
+    const series = allSeries.find((e) => name.toLowerCase().includes(e.name.toLowerCase()))
 
     const logo = series?.emoji || server.logo || emojis.legend
 
