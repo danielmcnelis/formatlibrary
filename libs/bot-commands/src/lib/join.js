@@ -26,11 +26,14 @@ export default {
             const tournament = await selectTournament(interaction, tournaments, 'ASC')
             if (!tournament) return
 
-            if (tournament.isPremiumTournament && (!player.isSubscriber || player.subscriberTier === 'Supporter')) {
-                return interaction.editReply({ content: `Sorry, premium tournaments are only open to premium subscribers.`})
+            // if (tournament.isPremiumTournament && (!player.isSubscriber || player.subscriberTier === 'Supporter')) {
+            //     return interaction.editReply({ content: `Sorry, premium tournaments are only open to premium subscribers.`})
+            // } else 
+            if (tournament.requiredRoleId && tournament.alternateRoleId && !tournament.isTeamTournament && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
+                return interaction.editReply({ content: `Sorry, you must have the <@&${tournament.requiredRoleId}> or <@&${tournament.alternateRoleId}> role to join ${tournament.name}.`})
             } else if (tournament.requiredRoleId && !tournament.isTeamTournament && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
                 return interaction.editReply({ content: `Sorry, you must have the <@&${tournament.requiredRoleId}> role to join ${tournament.name}.`})
-            }
+            } 
 
             let entry = await Entry.findOne({ where: { playerId: player.id, tournamentId: tournament.id }})
             if (!format) format = await Format.findOne({ where: { id: tournament.formatId }})
