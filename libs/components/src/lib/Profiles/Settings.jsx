@@ -138,7 +138,11 @@ export const Settings = () => {
 //   }, [isMounted])
 
 
-  if (player === null) return <NotFound /> 
+  if (player === null) {
+    logOut()
+    return <NotFound /> 
+  }
+  
   let {id, name, firstName, lastName, discordName, country, timeZone, youtube, twitch, twitter, duelingBookName, email} = player
   if (!id) return <div style={{height: '100vh'}}/>
   return (
