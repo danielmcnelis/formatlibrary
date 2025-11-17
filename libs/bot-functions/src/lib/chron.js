@@ -1448,14 +1448,14 @@ export const updateBlogPosts = async () => {
         where: {
             '$event.isTeamEvent$': false
         },
-        include: [Event, Deck]
+        include: [Event, { model: Deck, as: 'WinningDeck' }]
     })
 
     let b = 0
 
     for (let i = 0; i < blogposts.length; i++) {
         const blogpost = blogposts[i]
-        const deck = blogpost.deck
+        const deck = blogpost.winningDeck
 
         const decks = await Deck.findAll({ 
             where: {
