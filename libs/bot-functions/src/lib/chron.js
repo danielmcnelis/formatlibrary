@@ -1448,7 +1448,7 @@ export const updateBlogPosts = async () => {
         where: {
             '$event.isTeamEvent$': false
         },
-        include: [Event, { model: Deck, as: 'WinningDeck' }]
+        include: [Event, { model: Deck, as: 'winningDeck' }]
     })
 
     let b = 0
