@@ -3258,18 +3258,17 @@ const shuffleArray = (arr) => {
 ;(async () => {
     let b = 0
     let e = 0
-    const players = await Player.findAll({
+    const pairingsA = await Pairing.findAll({
         where: {
-            discordName: {[Op.not]: null},
-            globalName: null
+            playerAId: null,
+            playerAName: null
         }
     })
 
-    for (let i = 0; i < players.length; i++) {
+    for (let i = 0; i < pairingsA.length; i++) {
         try {
-            const player = players[i]
-            console.log(`changing ${player.name} to ${player.discordName}`)
-            await player.update({ name: player.discordName })
+            const pairing = pairingsA[i]
+            await pairing.update({ playerAName: 'Jazz', playerAId: 'UeyvnNBD6CD53gsqRQsxCY' })
             b++
         } catch (err) {
             console.log(err)
@@ -3277,5 +3276,128 @@ const shuffleArray = (arr) => {
         }
     }
 
-    return console.log(`updated ${b} players, encountered ${e} errors`)
+    const pairingsB = await Pairing.findAll({
+        where: {
+            playerBId: null,
+            playerBName: null
+        }
+    })
+
+    for (let i = 0; i < pairingsB.length; i++) {
+        try {
+            const pairing = pairingsB[i]
+            await pairing.update({ playerBName: 'Jazz', playerBId: 'UeyvnNBD6CD53gsqRQsxCY' })
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+
+    const invs = await ForgedInventory.findAll({
+        where: {
+            playerId: null
+        }
+    })
+
+    for (let i = 0; i < invs.length; i++) {
+        try {
+            const inv = invs[i]
+            await inv.update({ playerName: 'Jazz', playerId: 'UeyvnNBD6CD53gsqRQsxCY' })
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    const matchesW = await Match.findAll({
+        where: {
+            winnerId: null
+        }
+    })
+
+    for (let i = 0; i < matchesW.length; i++) {
+        try {
+            const m = matchesW[i]
+            await m.update({ winnerName: 'Jazz', winnerId: 'UeyvnNBD6CD53gsqRQsxCY' })
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    const matchesL = await Match.findAll({
+        where: {
+            loserId: null
+        }
+    })
+
+    for (let i = 0; i < matchesL.length; i++) {
+        try {
+            const m = matchesL[i]
+            await m.update({ loserName: 'Jazz', loserId: 'UeyvnNBD6CD53gsqRQsxCY' })
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+
+    const replaysW = await Replay.findAll({
+        where: {
+            winnerId: null
+        }
+    })
+
+    for (let i = 0; i < replaysW.length; i++) {
+        try {
+            const r = replaysW[i]
+            await r.update({ winnerName: 'Jazz', winnerId: 'UeyvnNBD6CD53gsqRQsxCY' })
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    const replaysL = await Replay.findAll({
+        where: {
+            loserId: null
+        }
+    })
+
+    for (let i = 0; i < replaysL.length; i++) {
+        try {
+            const r = replaysL[i]
+            await r.update({ loserName: 'Jazz', loserId: 'UeyvnNBD6CD53gsqRQsxCY' })
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+
+    const stats = await Stats.findAll({
+        where: {
+            playerId: null
+        }
+    })
+
+    for (let i = 0; i < stats.length; i++) {
+        try {
+            const s = stats[i]
+            await s.update({ playerName: 'Jazz', playerId: 'UeyvnNBD6CD53gsqRQsxCY' })
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    return console.log(`updated ${b} rows, encountered ${e} errors`)
 })()
