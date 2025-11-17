@@ -1452,6 +1452,7 @@ export const updateBlogPosts = async () => {
     })
 
     let b = 0
+    let c = 0
 
     for (let i = 0; i < blogposts.length; i++) {
         const blogpost = blogposts[i]
