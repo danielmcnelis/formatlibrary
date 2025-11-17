@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt'
 import { customAlphabet } from 'nanoid'
 import {JWT} from '@fl/tokens'
 import { config } from '@fl/config'
+import { Deck } from './Deck'
 
 export const Player = db.define('players', {
   id: {
@@ -131,27 +132,51 @@ Player.generateId = async () => {
   }
   
   Player.discordLogin = async (user) => {
-      const existingPlayer = await Player.findOne({ 
+      const existingDiscordPlayer = await Player.findOne({ 
           where: { 
               discordId: user.id
           }
-      }) || await Player.findOne({ 
+      })
+      
+      const existingGooglePlayer = await Player.findOne({ 
           where: { 
               email: user.email
           }
       })
   
-      if (existingPlayer) {
+      if (existingDiscordPlayer && existingGooglePlayer) {
+          await Player.replaceDecks(existingGooglePlayer, existingDiscordPlayer)
+          await existingGooglePlayer.destroy()
           const googleId = user.email?.includes('@gmail.com') ? user.email?.slice(0, -10) : null
-          await existingPlayer.update({
-              name: existingPlayer.name || user.username,
+          await existingDiscordPlayer.update({
+              name: existingDiscordPlayer.name || user.username,
               discordName: user.username,
               discordPfp: user.avatar,
-              email: existingPlayer.email || user.email,
-              googleId: existingPlayer.googleId || googleId
+              email: existingDiscordPlayer.email || user.email,
+              googleId: existingDiscordPlayer.googleId || googleId
           })
 
-          return existingPlayer
+          return existingDiscordPlayer
+      } else if (!existingDiscordPlayer && existingGooglePlayer) {
+          const googleId = user.email?.includes('@gmail.com') ? user.email?.slice(0, -10) : null
+
+          const newPlayer = await Player.create({
+              id: await Player.generateId(),
+              discordId: user.id,
+              name: user.username,
+              discordName: user.username,
+              discordPfp: user.avatar
+          })
+
+          await Player.replaceDecks(existingGooglePlayer, newPlayer)
+          await existingGooglePlayer.destroy()
+            
+          await newPlayer.update({
+              email: user.email || null,
+              googleId: googleId || null
+          })
+
+          return newPlayer
       } else {
         try {
             const newPlayer = await Player.create({
@@ -215,6 +240,14 @@ Player.generateId = async () => {
         return player
     } else {
         throw new Error('Player not found.')
+    }
+  }
+
+  Player.replaceDecks = async (oldAccount, newAccount) => {
+    const decks = await Deck.findAll({ where: { builderId: oldAccount.id }})
+    for (let i = 0; i < decks.length; i++) {
+        const deck = decks[i]
+        await deck.update({ builderId: newAccount.id, builderName: newAccount.name })
     }
   }
 

@@ -406,10 +406,6 @@ export const updateGlobalNames = async () => {
                 }
             })
 
-            console.log('data.global_name', data.global_name)
-            console.log('data.username', data.username)
-            console.log('data.avatar', data.avatar)
-
             try {
                 if (data.global_name && player.globalName !== data.globalName) {
                     const count = await Player.count({ 
