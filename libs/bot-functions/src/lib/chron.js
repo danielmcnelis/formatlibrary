@@ -65,7 +65,7 @@ export const runNightlyTasks = async (client) => {
         const tasks = [
             manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
             assignSeasonalLadderRoles, purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, updateSets, 
-            updateMarketPrices, updateDecks, updateDeckTypes, downloadNewCards, 
+            updateMarketPrices, updateDecks, updateDeckTypes, updateBlogPosts, downloadNewCards, 
             downloadAltArtworks, downloadMissingCardImages, updateServers
         ]
     
@@ -1396,6 +1396,7 @@ export const updateDeckTypes = async () => {
         status: 'underway'
     })
     let b = 0
+    let c = 0
 
     // UPDATE USER DECKS LABELED AS "OTHER"
     const decks = await Deck.findAll({
@@ -1433,6 +1434,65 @@ export const updateDeckTypes = async () => {
 
     console.log(`updated ${b} decks with suggested deck-types`)
     return console.log(`updateDeckTypes() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+}
+
+// UPDATE BLOGPOSTS
+export const updateBlogPosts = async () => {
+    const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'updateBlogPosts',
+        status: 'underway'
+    })
+
+    const blogposts = await BlogPost.findAll({
+        where: {
+            '$event.isTeamEvent$': false
+        },
+        include: [Event, Deck]
+    })
+
+    let b = 0
+
+    for (let i = 0; i < blogposts.length; i++) {
+        const blogpost = blogposts[i]
+        const deck = blogpost.deck
+
+        const decks = await Deck.findAll({ 
+            where: {
+                formatId: blogpost.formatId
+            }
+        })
+    
+        if (!decks.length) return await interaction.channel.send(`No decks found for ${blogpost.formatName}.`)
+                    
+        const freqs = decks.reduce((acc, curr) => (acc[curr.deckTypeName] ? acc[curr.deckTypeName]++ : acc[curr.deckTypeName] = 1, acc), {})
+        const popularDecks = Object.entries(freqs).sort((a, b) => b[1] - a[1]).map((e) => e[0]).slice(0, 6)
+        
+        const winningDeckTypeIsPopular = popularDecks.includes(deck.deckTypeName)
+
+        if (
+            blogpost.winningDeckTypeIsPopular !== winningDeckTypeIsPopular || 
+            blogpost.winningDeckTypeName !== deck.deckTypeName
+        ) {
+            await blogpost.update({
+                winningDeckTypeName: deck.deckTypeName,
+                winningDeckTypeIsPopular
+            })
+
+            console.log(`winning deck from ${blogpost.eventName} is now labeled ${deck.deckTypeName} and ${winningDeckTypeIsPopular ? 'popular' : 'rogue'}.`)
+            b++
+        } else {
+            c++
+        }
+    }
+    
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
+    console.log(`updated ${b} blogposts checked ${c} other(s)`)
+    return console.log(`updateBlogPosts() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // UPDATE MARKET PRICES
