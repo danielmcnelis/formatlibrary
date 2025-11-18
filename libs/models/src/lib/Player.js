@@ -184,8 +184,8 @@ Player.generateId = async () => {
               discordPfp: user.avatar
           })
 
-        //   await Player.replaceDecks(existingEmailPlayer, newPlayer)
-        //   await existingEmailPlayer.destroy()
+          await Player.replaceDecks(existingEmailPlayer, newPlayer)
+          await existingEmailPlayer.destroy()
             
           await newPlayer.update({
               email: user.email || null,
