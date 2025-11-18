@@ -261,6 +261,11 @@ export const conductCensus = async (client) => {
         for (let i = 0; i < members.length; i++) {
             const member = members[i]
             if (member.user.bot ) continue
+            if (member.user?.username === 'Jazz') {
+                console.log('Jazz')
+            } else {
+                console.log('.')
+            }
 
             if (!checkedDiscordIds.includes(member.user.id)) {
                 try {
