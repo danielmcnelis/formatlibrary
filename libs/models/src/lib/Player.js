@@ -109,9 +109,6 @@ export const Player = db.define('players', {
   },
   forgedSubscriberTier: {
     type: Sequelize.STRING
-  },
-  mergeRequestPlayerId: {
-    type: Sequelize.STRING
   }
 })
 
