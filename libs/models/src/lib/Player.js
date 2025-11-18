@@ -159,8 +159,8 @@ Player.generateId = async () => {
           return existingDiscordPlayer
       } else if (existingDiscordPlayer && existingEmailPlayer) {
         console.log(`existingDiscordPlayer && existingEmailPlayer -> merge accounts (delete existingEmailPlayer ${existingEmailPlayer.name} - ${existingEmailPlayer.id})`)
-        //   await Player.replaceDecks(existingEmailPlayer, existingDiscordPlayer)
-        //   await existingEmailPlayer.destroy()
+          await Player.replaceDecks(existingEmailPlayer, existingDiscordPlayer)
+          await existingEmailPlayer.destroy()
 
           const googleId = user.email?.includes('@gmail.com') ? user.email?.slice(0, -10) : null
           await existingDiscordPlayer.update({
@@ -184,8 +184,8 @@ Player.generateId = async () => {
               discordPfp: user.avatar
           })
 
-          await Player.replaceDecks(existingEmailPlayer, newPlayer)
-          await existingEmailPlayer.destroy()
+        //   await Player.replaceDecks(existingEmailPlayer, newPlayer)
+        //   await existingEmailPlayer.destroy()
             
           await newPlayer.update({
               email: user.email || null,
