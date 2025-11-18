@@ -261,8 +261,8 @@ export const conductCensus = async (client) => {
         for (let i = 0; i < members.length; i++) {
             const member = members[i]
             if (member.user.bot ) continue
-            if (member.user?.username === 'Jazz') {
-                console.log('Jazz')
+            if (member.user?.username === 'daniel.mcnelis' || member.user?.username === 'Jazz') {
+                console.log('JAZZ')
             } else {
                 console.log('.')
             }
