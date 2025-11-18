@@ -315,7 +315,7 @@ export const Settings = () => {
                 <div className="settings-info">
                     <div className="settings-profile-title">{name}</div>
                     <PfpUploader/>
-                    <div className="profile-info"> 
+                    <div className="profile-info">
                         <div className="profile-line"><b>Name:</b> {firstName && lastName ? `${firstName} ${lastName}` : ''}</div>
                         <div className="profile-line"><b>DuelingBook:</b> {duelingBookName || ''}</div>
                         <div className="profile-line"><b>Discord:</b> {discordName}</div>

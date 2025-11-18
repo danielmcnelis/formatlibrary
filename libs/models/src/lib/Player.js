@@ -180,8 +180,11 @@ Player.generateId = async () => {
               id: await Player.generateId(),
               discordId: user.id,
               name: user.username,
+              firstName: existingEmailPlayer.firstName,
+              lastName: existingEmailPlayer.lastName,
               discordName: user.username,
-              discordPfp: user.avatar
+              discordPfp: user.avatar,
+              googlePfp: existingEmailPlayer.googlePfp
           })
 
           await Player.replaceDecks(existingEmailPlayer, newPlayer)

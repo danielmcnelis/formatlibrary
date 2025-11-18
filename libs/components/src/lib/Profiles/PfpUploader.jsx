@@ -56,11 +56,12 @@ export const PfpUploader = (props) => {
             <img
                 className="settings-pfp"
                 src={
-                    playerId ? `https://cdn.formatlibrary.com/images/pfps/${playerId}.png` :
-                    googlePfp ? `https://lh3.googleusercontent.com/a/${googlePfp}` :
-                    discordPfp ? `https://cdn.discordapp.com/avatars/${discordId}/${discordPfp}.webp` :
-                    discordId ? `https://cdn.formatlibrary.com/images/pfps/${discordId}.png` :
-                    `https://cdn.formatlibrary.com/images/pfps/${player?.name}.png`
+                    `/api/players/${player?.id}/avatar`
+                    // playerId ? `https://cdn.formatlibrary.com/images/pfps/${playerId}.png` :
+                    // googlePfp ? `https://lh3.googleusercontent.com/a/${googlePfp}` :
+                    // discordPfp ? `https://cdn.discordapp.com/avatars/${discordId}/${discordPfp}.webp` :
+                    // discordId ? `https://cdn.formatlibrary.com/images/pfps/${discordId}.png` :
+                    // `https://cdn.formatlibrary.com/images/pfps/${player?.name}.png`
                 }
                 onError={(e) => {
                         e.target.onerror = null
