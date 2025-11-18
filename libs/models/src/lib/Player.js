@@ -147,6 +147,8 @@ Player.generateId = async () => {
       if (existingDiscordPlayer && existingGooglePlayer) {
         //   await Player.replaceDecks(existingGooglePlayer, existingDiscordPlayer)
         //   await existingGooglePlayer.destroy()
+
+        console.log('line 151')
           const googleId = user.email?.includes('@gmail.com') ? user.email?.slice(0, -10) : null
           await existingDiscordPlayer.update({
               name: existingDiscordPlayer.name || user.username,
@@ -167,6 +169,8 @@ Player.generateId = async () => {
               discordName: user.username,
               discordPfp: user.avatar
           })
+
+        console.log('line 173')
 
         //   await Player.replaceDecks(existingGooglePlayer, newPlayer)
         //   await existingGooglePlayer.destroy()
