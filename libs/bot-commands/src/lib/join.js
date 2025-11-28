@@ -29,9 +29,9 @@ export default {
             // if (tournament.isPremiumTournament && (!player.isSubscriber || player.subscriberTier === 'Supporter')) {
             //     return interaction.editReply({ content: `Sorry, premium tournaments are only open to premium subscribers.`})
             // } else 
-            if (tournament.requiredRoleId && tournament.alternateRoleId && !tournament.isTeamTournament && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
+            if (tournament.requiredRoleId && tournament.alternateRoleId && !interaction.member?._roles.includes(tournament.requiredRoleId) && !interaction.member?._roles.includes(tournament.alternateRoleId)) {
                 return interaction.editReply({ content: `Sorry, you must have the <@&${tournament.requiredRoleId}> or <@&${tournament.alternateRoleId}> role to join ${tournament.name}.`})
-            } else if (tournament.requiredRoleId && !tournament.isTeamTournament && !interaction.member?._roles.includes(tournament.requiredRoleId)) {
+            } else if (tournament.requiredRoleId && !tournament.alternateRoleId && !interaction.member?._roles.includes(tournament.requiredRoleId)) {
                 return interaction.editReply({ content: `Sorry, you must have the <@&${tournament.requiredRoleId}> role to join ${tournament.name}.`})
             } 
 

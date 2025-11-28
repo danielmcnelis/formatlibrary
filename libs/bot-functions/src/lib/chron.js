@@ -66,7 +66,7 @@ export const runNightlyTasks = async (client) => {
             manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
             assignSeasonalLadderRoles, purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, updateSets, 
             updateMarketPrices, updateDecks, updateDeckTypes, updateBlogPosts, downloadNewCards, 
-            downloadAltArtworks, downloadMissingCardImages, updateServers
+            downloadAltArtworks, downloadMissingCardImages, updateServers, conductCensus
         ]
     
         for (let i = 0; i < tasks.length; i++) {
@@ -261,10 +261,9 @@ export const conductCensus = async (client) => {
         for (let i = 0; i < members.length; i++) {
             const member = members[i]
             if (member.user.bot ) continue
+            console.log('member.user?.username', member.user?.username)
             if (member.user?.username === 'daniel.mcnelis' || member.user?.username === 'Jazz') {
-                console.log('JAZZ')
-            } else {
-                console.log('.')
+                console.log('<!> JAZZ <!>')
             }
 
             if (!checkedDiscordIds.includes(member.user.id)) {
