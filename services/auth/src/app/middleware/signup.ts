@@ -46,13 +46,13 @@ export const signup = (options) => {
 
         if (player && player.id) {
             res.cookie('access', access, {
-        	    maxAge: 100 * 24 * 60 * 60 * 1000
+            maxAge: 60 * 1000
             }).cookie('playerId', player.id, {
-        	    maxAge: 100 * 24 * 60 * 60 * 1000
+            maxAge: 60 * 1000
             }).cookie('googleId', player.googleId, {
-        	    maxAge: 100 * 24 * 60 * 60 * 1000
+            maxAge: 60 * 1000
             }).cookie('playerName', player.name, {
-        	    maxAge: 100 * 24 * 60 * 60 * 1000
+            maxAge: 60 * 1000
             }).redirect(config.siteUrl)
         } else {
             res.status(404).send('Error creating account.')   

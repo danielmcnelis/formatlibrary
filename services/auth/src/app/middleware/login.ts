@@ -45,19 +45,20 @@ export const login = (options) => {
         const {id, name, discordId, discordPfp, googleId, googlePfp} = player
 
         res.cookie('access', access, {
-            maxAge: 100 * 24 * 60 * 60 * 1000
+            maxAge: 60 * 1000
+            // maxAge: 100 * 24 * 60 * 60 * 1000
         }).cookie('playerId', id, {
-            maxAge: 100 * 24 * 60 * 60 * 1000
+            maxAge: 60 * 1000
         }).cookie('discordId', discordId, {
-            maxAge: 100 * 24 * 60 * 60 * 1000
+            maxAge: 60 * 1000
         }).cookie('discordPfp', discordPfp, {
-            maxAge: 100 * 24 * 60 * 60 * 1000
+            maxAge: 60 * 1000
         }).cookie('googleId', googleId, {
-            maxAge: 100 * 24 * 60 * 60 * 1000
+            maxAge: 60 * 1000
         }).cookie('googlePfp', googlePfp, {
-            maxAge: 100 * 24 * 60 * 60 * 1000
+            maxAge: 60 * 1000
         }).cookie('playerName', name, {
-            maxAge: 100 * 24 * 60 * 60 * 1000
+            maxAge: 60 * 1000
         }).redirect(config.siteUrl)
     }
 

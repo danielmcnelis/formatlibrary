@@ -43,15 +43,16 @@ export const oidcResponse = (options) => {
     const {id, googleId, googlePfp, name} = player
     
     res.cookie('access', access, {
-        maxAge: 100 * 24 * 60 * 60 * 1000
+        maxAge: 60 * 1000
+        // maxAge: 100 * 24 * 60 * 60 * 1000
     }).cookie('playerId', id, {
-        maxAge: 100 * 24 * 60 * 60 * 1000
+        maxAge: 60 * 1000
     }).cookie('googleId', googleId, {
-        maxAge: 100 * 24 * 60 * 60 * 1000
+        maxAge: 60 * 1000
     }).cookie('googlePfp', googlePfp, {
-        maxAge: 100 * 24 * 60 * 60 * 1000
+        maxAge: 60 * 1000
     }).cookie('playerName', name, {
-        maxAge: 100 * 24 * 60 * 60 * 1000
+        maxAge: 60 * 1000
     }).clearCookie('discordPfp')
     .redirect(returnTo || 'https://formatlibrary.com')
   }

@@ -58,17 +58,18 @@ export const discordResponse = (options) => {
     const player = await Player.discordLogin(userinfo.data)
     const access = await player.getToken()
     const {id, discordId, discordPfp, name} = player
+//        maxAge: 100 * 24 * 60 * 60 * 1000
 
     res.cookie('access', access, {
-        maxAge: 100 * 24 * 60 * 60 * 1000
+        maxAge: 60 * 1000
     }).cookie('playerId', id, {
-        maxAge: 100 * 24 * 60 * 60 * 1000
+        maxAge: 60 * 1000
     }).cookie('discordId', discordId, {
-        maxAge: 100 * 24 * 60 * 60 * 1000
+        maxAge: 60 * 1000
     }).cookie('discordPfp', discordPfp, {
-        maxAge: 100 * 24 * 60 * 60 * 1000
+        maxAge: 60 * 1000
     }).cookie('playerName', name, {
-        maxAge: 100 * 24 * 60 * 60 * 1000
+        maxAge: 60 * 1000
     }).clearCookie('googlePfp')
     .redirect(returnTo || 'https://formatlibrary.com')
   }
