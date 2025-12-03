@@ -65,6 +65,7 @@ const App = () => {
                 setCheckedSubscription(true)
             } catch (err) {
                 setCheckedSubscription(true)
+                
                 console.log(err)
             }
         }

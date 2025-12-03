@@ -29,7 +29,7 @@ export const authenticate = async (req, res, next) => {
             claims = await jwt.verify(accessToken)
         } catch (err) {
             console.error(err)
-            res.status(401).send("Unauthenticated")
+            res.clearCookie('access').status(401).send("Unauthenticated")
             return
         }
         
