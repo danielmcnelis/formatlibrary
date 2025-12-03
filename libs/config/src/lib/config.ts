@@ -6,7 +6,7 @@ export const config = {
     siteIKS: process.env.SITE_IKS,
     siteAudience: 'urn:formatlibrary:api',
     siteIssuer: 'urn:formatlibrary:auth',
-    accessExpires: '1d',
+    accessExpires: '100d',
     sessionSecret: process.env.SESSION_SECRET,
     // server: {
     //   https: process.env.SERVER_HTTPS,
