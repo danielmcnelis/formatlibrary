@@ -23,10 +23,13 @@ export const authenticate = async (req, res, next) => {
         }
     }
 
+    console.log('accessToken', accessToken)
+
     if (accessToken) {
         let claims
         try {
             claims = await jwt.verify(accessToken)
+            console.log('claims?', claims)
         } catch (err) {
             console.error(err)
             res.clearCookie('access')
