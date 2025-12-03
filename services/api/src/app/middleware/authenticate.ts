@@ -29,7 +29,14 @@ export const authenticate = async (req, res, next) => {
             claims = await jwt.verify(accessToken)
         } catch (err) {
             console.error(err)
-            res.clearCookie('access').status(401).send("Unauthenticated")
+            res.clearCookie('access')
+                .clearCookie('discordId')
+                .clearCookie('discordPfp')
+                .clearCookie('googleId')
+                .clearCookie('googlePfp')
+                .clearCookie('playerId')
+                .clearCookie('playerName')
+                .status(401).send("Unauthenticated")
             return
         }
         
