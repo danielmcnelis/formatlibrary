@@ -11,7 +11,7 @@ const App = () => {
     const adBlockDetected = useDetectAdBlock()
     // console.log('adBlockDetected', adBlockDetected)
     const playerId = getCookie('playerId')
-    const visited = getCookie('visited')
+    // const visited = getCookie('visited')
     // console.log('playerId', playerId)
     // console.log('visited', visited)
     const [roles, setRoles] = useState({
@@ -65,7 +65,7 @@ const App = () => {
                 setCheckedSubscription(true)
             } catch (err) {
                 setCheckedSubscription(true)
-                
+
                 console.log(err)
             }
         }

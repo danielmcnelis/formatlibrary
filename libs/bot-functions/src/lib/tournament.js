@@ -624,7 +624,7 @@ export const joinTournament = async (interaction, tournamentId) => {
     const data = tournament.format.name === 'Genesys' ? await getGenesysDeckList(interaction.member, player) :
         tournament.format.name === 'Forged in Chaos' ? await getForgedDeckList(interaction.member, player, format) :
         tournament.format.category === tournament.format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
-        await getDeckList(interaction.member, player, tournament.format, true, !tournament.isRated)
+        await getDeckList(interaction.member, player, tournament.format, false, !tournament.isRated)           
 
     if (!data) return
 
