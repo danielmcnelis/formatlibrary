@@ -322,7 +322,7 @@ export default {
                     })
 
                     if (!count) {
-                        return interaction.channel.send(`<@${winningPlayer.discordId}>, reminder: you are required to share the replay of your match against ${losingPlayer.name} (use the **/replay** command). ${emojis.one_week}`)
+                        return interaction.channel.send(`<@${winningPlayer.discordId}>, reminder: you are required to share the DuelingBook replay of your match against ${losingPlayer.name} (use the **/replay** command). ${emojis.one_week}`)
                     }
                 }, 5 * 60 * 1000)
             }
