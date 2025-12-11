@@ -10,7 +10,7 @@ export default {
             str
                 .setName('time-zone')
                 .setDescription('Enter your time zone (abbreviation).')
-                .setRequired(true)
+                .setRequired(false)
         )
 		.addUserOption(user =>
             user
