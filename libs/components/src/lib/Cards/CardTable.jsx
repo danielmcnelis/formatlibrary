@@ -1,8 +1,8 @@
 
 import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react'
 import axios from 'axios'
-import { AdvButton } from './AdvButton'
-import { MiniAdvButton } from './MiniAdvButton'
+import { AdvButton } from '../Buttons/AdvButton'
+import { MiniAdvButton } from '../Buttons/MiniAdvButton'
 import { CardRow } from './CardRow'
 import { CardImage } from './CardImage'
 import { MobileCardRow } from './MobileCardRow'

@@ -4,9 +4,9 @@ import axios from 'axios'
 import { getCookie } from '@fl/utils'
 import { Helmet } from 'react-helmet'
 import './DraftLauncher.css' 
-import { SocketProvider } from '@fl/context'
-import {config} from '@fl/config'
-import io from 'socket.io-client'
+// import { SocketProvider } from '@fl/context'
+// import {config} from '@fl/config'
+// import io from 'socket.io-client'
 
 // DRAFT LAUNCHER
 export const DraftLauncher = () => {
@@ -25,7 +25,7 @@ export const DraftLauncher = () => {
         
     const logoWidth = type === 'cube' ? '128px' : '100px'
 
-    const socketProviderSocket = io(config.siteUrl, { transports: ["websocket"] })
+    // const socketProviderSocket = io(config.siteUrl, { transports: ["websocket"] })
 
     const packSizeOptions = []
     if (type === 'cube') {
@@ -87,7 +87,7 @@ export const DraftLauncher = () => {
                 <meta name="description" content={`Draft cards from any cube or booster set with your friends. ${cubes?.slice(0, 3)?.map((c) => `${c.name} by ${c.builder}`).join('•')}`}/>
                 <meta name="og:description" content={`Draft cards from any cube or booster set with your friends. ${cubes?.slice(0, 3)?.map((c) => `${c.name} by ${c.builder}`).join('•')}`}/>
             </Helmet>
-            <SocketProvider value={socketProviderSocket}>
+            {/* <SocketProvider value={socketProviderSocket}> */}
             <div className="draft-portal">
                 <div className="card-database-flexbox">
                     <img style={{ width:logoWidth }} src={logoName} alt="draft-logo"/>
@@ -208,7 +208,7 @@ export const DraftLauncher = () => {
                     ) : ''
                 }
             </div>
-            </SocketProvider>
+            {/* </SocketProvider> */}
         </>
     )
 }

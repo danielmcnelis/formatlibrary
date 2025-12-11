@@ -136,10 +136,6 @@ const setInternalTimer = async (draftId, round, pick, timer = 60, socket) => {
 
 // JOIN DRAFT
 export const joinDraft = async (playerId, draftId, socket, setEntry) => {
-    console.log('playerId', playerId)
-    console.log('draftId', draftId)
-    console.log('socket', socket)
-    console.log('setEntry', setEntry)
     try {
         const count = await DraftEntry.count({
             where: {

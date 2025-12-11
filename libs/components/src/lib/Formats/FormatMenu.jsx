@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import axios from 'axios'
-import { FormatButton } from './FormatButton'
+import { FormatButton } from '../Buttons/FormatButton'
 import { Helmet } from 'react-helmet'
 import './FormatMenu.css'
 

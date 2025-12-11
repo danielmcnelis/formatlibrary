@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Server, Team, Tournament } from '@fl/models'
-import { drawDeck, getForgedDeckList, getGenesysDeckList, hasPartnerAccess, askForSimName, createPlayer, getDeckList, getSpeedDeckList, isNewUser, postParticipant, selectTournament } from '@fl/bot-functions'
+import { drawDeck, getForgedDeckList, getGenesysDeckList, hasPartnerAccess, askForSimName, askForTimeZone, createPlayer, getDeckList, getSpeedDeckList, isNewUser, postParticipant, selectTournament } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import { emojis } from '@fl/bot-emojis'
 
@@ -75,15 +75,16 @@ export default {
             interaction.editReply({ content: `Please check your DMs.` })
             
             let simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
-
             if (!simName) return
+
+            let timeZone = !tournament.isLive ? player.timeZone || await askForTimeZone(interaction.member, player) : 'N/A'
+            if (!timeZone) return
 
             const data = format.name === 'Genesys' ? await getGenesysDeckList(interaction.member, player) :
                 format.name === 'Forged in Chaos' ? await getForgedDeckList(interaction.member, player, format) :
                 format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
                 await getDeckList(interaction.member, player, format, false, !tournament.isRated)
 
-            console.log('data', data)
             if (!data) return
 
             if (entry) {

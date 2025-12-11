@@ -1,7 +1,7 @@
 
 
 import { useState, useEffect, useLayoutEffect } from 'react'
-import {MiniAdvButton} from '../../../Cards/MiniAdvButton'
+import {MiniAdvButton} from '../../../Buttons/MiniAdvButton'
 import {CardImage} from '../../../Cards/CardImage'
 import {ModdedSlider} from '../../../General/Slider'
 import {MiniPagination} from '../../../General/MiniPagination'

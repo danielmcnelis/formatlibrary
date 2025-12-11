@@ -15,13 +15,25 @@ import { emojis } from '@fl/bot-emojis'
 
 ////// TOURNAMENT REGISTRATION FUNCTIONS ///////
 
+// GENERATE PAIRING NOTIFICATION
+const generatePairingNotification = (tournament, server, player) => {
+    return (
+        `New pairing for ${tournament.name}! ${tournament.logo}` +
+        `\nServer: ${server.name} ${server.logo}` +
+        `\nChannel: <#${tournament.channelId}>` +
+        `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
+        `\nDiscord Name: ${player.globalName ? `${player.globalName} (${player.discordName})` : player.discordName}` +
+        `\nDuelingbook Name: ${player.duelingBookName}` +
+        `${!tournament.isLive ? `\nTime Zone: ${player.timeZone || 'N/A'}` : ''}`
+    )
+}
+
 //ASK FOR DB NAME
-export const askForSimName = async (member, player, simulator, override = false, error = false, attempt = 1) => {
+export const askForSimName = async (member, player, simulator, override = false) => {
     const filter = m => m.author.id === (member.id || member.user?.id)
     const pronoun = override ? `${player.name}'s` : 'your'
     const greeting = override ? '' : 'Hi! '
-    const prompt = error ? `I think you're getting ahead of yourself. First, I need ${pronoun} ${simulator} name.`
-    : `${greeting}This appears to be ${pronoun} first time using our system. Can you please provide ${pronoun} ${simulator} name?`
+    const prompt = `${greeting}This appears to be ${pronoun} first time using our system. Can you please provide ${pronoun} ${simulator} name?`
 	const message = await member.send({ content: prompt.toString() }).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     
@@ -31,21 +43,13 @@ export const askForSimName = async (member, player, simulator, override = false,
         time: 15000
     }).then(async (collected) => {
         const name = collected.first().content
-        if (name.toLowerCase().includes("duelingbook.com") || name.toLowerCase().includes("imgur.com")) {
-            if (attempt >= 3) {
-                member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))
-                return false
-            } else {
-                return askForSimName(member, player, simulator, override, true, attempt++)
-            }
-        } else {
-            if (simulator === 'DuelingBook') {
-                await player.update({ duelingBookName: name })
-            }
 
-            member.send({ content: `Thanks! I saved ${pronoun} ${simulator} name as: ${name}. If that's wrong, go back to the server and type **/username**.`}).catch((err) => console.log(err))
-            return name
+        if (simulator === 'DuelingBook') {
+            await player.update({ duelingBookName: name })
         }
+
+        member.send({ content: `Thanks! I saved ${pronoun} ${simulator} name as: ${name}. If that's wrong, go back to the server and type **/username**.`}).catch((err) => console.log(err))
+        return name
     }).catch((err) => {
         console.log(err)
         member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))
@@ -54,12 +58,10 @@ export const askForSimName = async (member, player, simulator, override = false,
 }
 
 //ASK FOR TIME ZONE
-export const askForTimeZone = async (member, player, override = false, error = false, attempt = 1) => {
+export const askForTimeZone = async (member, player, override = false) => {
     const filter = m => m.author.id === (member.id || member.user?.id)
     const pronoun = override ? `${player.name}'s` : 'your'
-    const greeting = override ? '' : 'Hi! '
-    const prompt = error ? `I think you're getting ahead of yourself. First, I need ${pronoun} DuelingBook name.`
-    : `${greeting}This appears to be ${pronoun} first time using our system. Can you please provide ${pronoun} DuelingBook name?`
+    const prompt = `Can you please provide ${pronoun} the abbreviation of your Time Zone?`
 	const message = await member.send({ content: prompt.toString() }).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     
@@ -68,19 +70,10 @@ export const askForTimeZone = async (member, player, override = false, error = f
 		max: 1,
         time: 15000
     }).then(async (collected) => {
-        const name = collected.first().content
-        if (name.toLowerCase().includes("duelingbook.com") || name.toLowerCase().includes("imgur.com")) {
-            if (attempt >= 3) {
-                member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))
-                return false
-            } else {
-                return askForSimName(member, player, 'DuelingBook', override, true, attempt++)
-            }
-        } else {
-            await player.update({ duelingBookName: name })
-            member.send({ content: `Thanks! I saved ${pronoun} DuelingBook name as: ${name}. If that's wrong, go back to the server and type **/username**.`}).catch((err) => console.log(err))
-            return name
-        }
+        const timeZone = collected.first().content?.toUpperCase()
+        await player.update({ timeZone: timeZone })
+        member.send({ content: `Thanks! I saved ${pronoun} Time Zone as: ${timeZone}. If that's wrong, go back to the server and type **/timezone**.`}).catch((err) => console.log(err))
+        return timeZone
     }).catch((err) => {
         console.log(err)
         member.send({ content: `Sorry, time's up. Go back to the server and try again.`}).catch((err) => console.log(err))
@@ -621,6 +614,9 @@ export const joinTournament = async (interaction, tournamentId) => {
     const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
+    let timeZone = !tournament.isLive ? player.timeZone || await askForTimeZone(interaction.member, player) : 'N/A'
+    if (!timeZone) return
+    
     const data = tournament.format.name === 'Genesys' ? await getGenesysDeckList(interaction.member, player) :
         tournament.format.name === 'Forged in Chaos' ? await getForgedDeckList(interaction.member, player, format) :
         tournament.format.category === tournament.format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, format) :
@@ -801,6 +797,9 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
     const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
+    let timeZone = !tournament.isLive ? player.timeZone || await askForTimeZone(interaction.member, player) : 'N/A'
+    if (!timeZone) return
+    
     const data = tournament.format.name === 'Genesys' ? await getGenesysDeckList(interaction.member, player) :        
         tournament.format.name === 'Forged in Chaos' ? await getForgedDeckList(interaction.member, player, tournament.format) :
         tournament.format.category === tournament.format.category === 'Speed' ? await getSpeedDeckList(interaction.member, player, tournament.format) :
@@ -1537,31 +1536,15 @@ export const processMatchResult = async (server, interaction, winner, winningPla
             if (loserEliminated) {
                 return await interaction.channel.send({ content: `${losingPlayer.name}, You are eliminated from the tournament. Better luck next time!`})
             } else if (loserNextOpponent) {
-                const loserNextOpponentGlobalName = loserNextOpponent.player.globalName
-                const loserNextOpponentDiscordName = loserNextOpponent.player.discordName
                 try {
-                    loser.send(
-                        `New pairing for ${tournament.name}! ${tournament.logo}` +
-                        `\nServer: ${server.name} ${server.logo}` +
-                        `\nChannel: <#${tournament.channelId}>` +
-                        `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                        `\nDiscord Name: ${loserNextOpponentGlobalName ? `${loserNextOpponentGlobalName} (${loserNextOpponentDiscordName})` : loserNextOpponentDiscordName}` +
-                        `\nDuelingbook Name: ${loserNextOpponent.player.duelingBookName}`
-                    )
+                    loser.send(generatePairingNotification(tournament, server, loserNextOpponent.player))
                 } catch (err) {
                     console.log(err)
                 }
 
                 try {
                     const member = await interaction.guild?.members.fetch(loserNextOpponent.player.discordId)
-                    member.user.send(
-                        `New Match for ${tournament.name}! ${tournament.logo}` +
-                        `\nServer: ${server.name} ${server.logo}` +
-                        `\nChannel: <#${tournament.channelId}>` +
-                        `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                        `\nDiscord Name: ${losingPlayer.globalName ? `${losingPlayer.globalName} (${losingPlayer.discordName})` : losingPlayer.discordName}` +
-                        `\nDuelingbook Name: ${losingPlayer.duelingBookName}`
-                    )
+                    member.user.send(generatePairingNotification(tournament, server, losingPlayer))
                 } catch (err) {
                     console.log(err)
                 }
@@ -1771,30 +1754,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pA1Member = await interaction.guild?.members.fetch(playerA1.discordId)
-                        const pA2DiscordUsername =  playerA2.discordName
-                        pA1Member.user.send(
-                            `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                            `\nServer: ${server.name} ${server.logo}` +
-                            `\nChannel: <#${tournament.channelId}>` +
-                            `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
-                            `\nDiscord Name: ${playerA2.globalName ? `${playerA2.globalName} (${pA2DiscordUsername})` : pA2DiscordUsername}` +
-                            `\nDuelingbook Name: ${playerA2.duelingBookName}`
-                        )
+                        pA1Member.user.send(generatePairingNotification(tournament, server, playerA2))
                     } catch (err) {
                         console.log(err)
                     }
 
                     try {
                         const pA2Member = await interaction.guild?.members.fetch(playerA2.discordId)
-                        const pA1DiscordUsername = playerA1.discordName
-                        pA2Member.user.send(
-                            `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                            `\nServer: ${server.name} ${server.logo}` +
-                            `\nChannel: <#${tournament.channelId}>` +
-                            `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
-                            `\nDiscord Name: ${playerA1.globalName ? `${playerA1.globalName} (${pA1DiscordUsername})` : pA1DiscordUsername}` +
-                            `\nDuelingbook Name: ${playerA1.duelingBookName}`
-                        )
+                        pA2Member.user.send(generatePairingNotification(tournament, server, playerA1))
                     } catch (err) {
                         console.log(err)
                     }
@@ -1806,30 +1773,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pB1Member = await interaction.guild?.members.fetch(playerB1.discordId)
-                        const pB2DiscordUsername = playerB2.discordName
-                        pB1Member.user.send(
-                            `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                            `\nServer: ${server.name} ${server.logo}` +
-                            `\nChannel: <#${tournament.channelId}>` +
-                            `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
-                            `\nDiscord Name: ${playerB2.globalName ? `${playerB2.globalName} (${pB2DiscordUsername})` : pB2DiscordUsername}` +
-                            `\nDuelingbook Name: ${playerB2.duelingBookName}`
-                        )
+                        pB1Member.user.send(generatePairingNotification(tournament, server, playerB2))
                     } catch (err) {
                         console.log(err)
                     }
 
                     try {
                         const pB2Member = await interaction.guild?.members.fetch(playerB2.discordId)
-                        const pB1DiscordUsername = playerB1.discordName
-                        pB2Member.user.send(
-                            `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                            `\nServer: ${server.name} ${server.logo}` +
-                            `\nChannel: <#${tournament.channelId}>` +
-                            `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
-                            `\nDiscord Name: ${playerB1.globalName ? `${playerB1.globalName} (${pB1DiscordUsername})` : pB1DiscordUsername}` +
-                            `\nDuelingbook Name: ${playerB1.duelingBookName}`
-                        )
+                        pB2Member.user.send(generatePairingNotification(tournament, server, playerB1))
                     } catch (err) {
                         console.log(err)
                     }
@@ -1841,30 +1792,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pC1Member = await interaction.guild?.members.fetch(playerC1.discordId)
-                        const pC2DiscordUsername = playerC2.discordName
-                        pC1Member.user.send(
-                            `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                            `\nServer: ${server.name} ${server.logo}` +
-                            `\nChannel: <#${tournament.channelId}>` +
-                            `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
-                            `\nDiscord Name: ${playerC2.globalName ? `${playerC2.globalName} (${pC2DiscordUsername})` : pC2DiscordUsername}` +
-                            `\nDuelingbook Name: ${playerC2.duelingBookName}`
-                        )
+                        pC1Member.user.send(generatePairingNotification(tournament, server, playerC2))
                     } catch (err) {
                         console.log(err)
                     }
 
                     try {
                         const pC2Member = await interaction.guild?.members.fetch(playerC2.discordId)
-                        const pC1DiscordUsername = playerC1.discordName
-                        pC2Member.user.send(
-                            `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                            `\nServer: ${server.name} ${server.logo}` +
-                            `\nChannel: <#${tournament.channelId}>` +
-                            `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
-                            `\nDiscord Name: ${playerC1.globalName ? `${playerC1.globalName} (${pC1DiscordUsername})` : pC1DiscordUsername}` +
-                            `\nDuelingbook Name: ${playerC1.duelingBookName}`
-                        )
+                        pC2Member.user.send(generatePairingNotification(tournament, server, playerC1))
                     } catch (err) {
                         console.log(err)
                     }
@@ -1900,30 +1835,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     
                         try {
                             const pA1Member = await interaction.guild?.members.fetch(playerA1.discordId)
-                            const pA2DiscordUsername = playerA2.discordName
-                            pA1Member.user.send(
-                                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                                `\nServer: ${server.name} ${server.logo}` +
-                                `\nChannel: <#${tournament.channelId}>` +
-                                `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
-                                `\nDiscord Name: ${playerA2.globalName ? `${playerA2.globalName} (${pA2DiscordUsername})` : pA2DiscordUsername}` +
-                                `\nDuelingbook Name: ${playerA2.duelingBookName}`
-                            )
+                            pA1Member.user.send(generatePairingNotification(tournament, server, playerA2))
                         } catch (err) {
                             console.log(err)
                         }
     
                         try {
                             const pA2Member = await interaction.guild?.members.fetch(playerA2.discordId)
-                            const pA1DiscordUsername = playerA1.discordName
-                            pA2Member.user.send(
-                                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                                `\nServer: ${server.name} ${server.logo}` +
-                                `\nChannel: <#${tournament.channelId}>` +
-                                `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
-                                `\nDiscord Name: ${playerA1.globalName ? `${playerA1.globalName} (${pA1DiscordUsername})` : pA1DiscordUsername}` +
-                                `\nDuelingbook Name: ${playerA1.duelingBookName}`
-                            )
+                            pA2Member.user.send(generatePairingNotification(tournament, server, playerA1) )
                         } catch (err) {
                             console.log(err)
                         }
@@ -1935,30 +1854,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     
                         try {
                             const pB1Member = await interaction.guild?.members.fetch(playerB1.discordId)
-                            const pB2DiscordUsername = playerB2.discordName
-                            pB1Member.user.send(
-                                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                                `\nServer: ${server.name} ${server.logo}` +
-                                `\nChannel: <#${tournament.channelId}>` +
-                                `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
-                                `\nDiscord Name: ${playerB2.globalName ? `${playerB2.globalName} (${pB2DiscordUsername})` : pB2DiscordUsername}` +
-                                `\nDuelingbook Name: ${playerB2.duelingBookName}`
-                            )
+                            pB1Member.user.send(generatePairingNotification(tournament, server, playerB2))
                         } catch (err) {
                             console.log(err)
                         }
     
                         try {
                             const pB2Member = await interaction.guild?.members.fetch(playerB2.discordId)
-                            const pB1DiscordUsername = playerB1.discordName
-                            pB2Member.user.send(
-                                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                                `\nServer: ${server.name} ${server.logo}` +
-                                `\nChannel: <#${tournament.channelId}>` +
-                                `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
-                                `\nDiscord Name: ${playerB1.globalName ? `${playerB1.globalName} (${pB1DiscordUsername})` : pB1DiscordUsername}` +
-                                `\nDuelingbook Name: ${playerB1.duelingBookName}`
-                            )
+                            pB2Member.user.send(generatePairingNotification(tournament, server, playerB1) )
                         } catch (err) {
                             console.log(err)
                         }
@@ -1970,30 +1873,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     
                         try {
                             const pC1Member = await interaction.guild?.members.fetch(playerC1.discordId)
-                            const pC2DiscordUsername = playerC2.discordName
-                            pC1Member.user.send(
-                                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                                `\nServer: ${server.name} ${server.logo}` +
-                                `\nChannel: <#${tournament.channelId}>` +
-                                `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
-                                `\nDiscord Name: ${playerC2.globalName ? `${playerC2.globalName} (${pC2DiscordUsername})` : pC2DiscordUsername}` +
-                                `\nDuelingbook Name: ${playerC2.duelingBookName}`
-                            )
+                            pC1Member.user.send(generatePairingNotification(tournament, server, playerC2))
                         } catch (err) {
                             console.log(err)
                         }
     
                         try {
                             const pC2Member = await interaction.guild?.members.fetch(playerC2.discordId)
-                            const pC1DiscordUsername = playerC1.discordName
-                            pC2Member.user.send(
-                                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                                `\nServer: ${server.name} ${server.logo}` +
-                                `\nChannel: <#${tournament.channelId}>` +
-                                `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
-                                `\nDiscord Name: ${playerC1.globalName ? `${playerC1.globalName} (${pC1DiscordUsername})` : pC1DiscordUsername}` +
-                                `\nDuelingbook Name: ${playerC1.duelingBookName}`
-                            )
+                            pC2Member.user.send(generatePairingNotification(tournament, server, playerC1))
                         } catch (err) {
                             console.log(err)
                         }
@@ -2039,30 +1926,14 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
 
         try {
             const pA1Member = await guild.members.fetch(playerA1.discordId)
-            const pA2DiscordUsername = playerA2.discordName
-            pA1Member.user.send(
-                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                `\nServer: ${server.name} ${server.logo}` +
-                `\nChannel: <#${tournament.channelId}>` +
-                `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
-                `\nDiscord Name: ${playerA2.globalName ? `${playerA2.globalName} (${pA2DiscordUsername})` : pA2DiscordUsername}` +
-                `\nDuelingbook Name: ${playerA2.duelingBookName}`
-            )
+            pA1Member.user.send(generatePairingNotification(tournament, server, playerA2))
         } catch (err) {
             console.log(err)
         }
 
         try {
             const pA2Member = await guild.members.fetch(playerA2.discordId)
-            const pA1DiscordUsername = playerA1.discordName
-            pA2Member.user.send(
-                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                `\nServer: ${server.name} ${server.logo}` +
-                `\nChannel: <#${tournament.channelId}>` +
-                `\nFormat: ${tournament.formatName || 'Goat <:bluesheep:646866933605466131>'} ${tournament.emoji}` +
-                `\nDiscord Name: ${playerA1.globalName ? `${playerA1.globalName} (${pA1DiscordUsername})` : pA1DiscordUsername}` +
-                `\nDuelingbook Name: ${playerA1.duelingBookName}`
-            )
+            pA2Member.user.send(generatePairingNotification(tournament, server, playerA1))
         } catch (err) {
             console.log(err)
         }
@@ -2074,30 +1945,14 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
 
         try {
             const pB1Member = await guild.members.fetch(playerB1.discordId)
-            const pB2DiscordUsername = playerB2.discordName
-            pB1Member.user.send(
-                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                `\nServer: ${server.name} ${server.logo}` +
-                `\nChannel: <#${tournament.channelId}>` +
-                `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
-                `\nDiscord Name: ${playerB2.globalName ? `${playerB2.globalName} (${pB2DiscordUsername})` : pB2DiscordUsername}` +
-                `\nDuelingbook Name: ${playerB2.duelingBookName}`
-            )
+            pB1Member.user.send(generatePairingNotification(tournament, server, playerB2))
         } catch (err) {
             console.log(err)
         }
 
         try {
             const pB2Member = await guild.members.fetch(playerB2.discordId)
-            const pB1DiscordUsername = playerB1.discordName
-            pB2Member.user.send(
-                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                `\nServer: ${server.name} ${server.logo}` +
-                `\nChannel: <#${tournament.channelId}>` +
-                `\nFormat: ${tournament.formatName || 'Edison <:dandy:647150339388211201>'} ${tournament.emoji}` +
-                `\nDiscord Name: ${playerB1.globalName ? `${playerB1.globalName} (${pB1DiscordUsername})` : pB1DiscordUsername}` +
-                `\nDuelingbook Name: ${playerB1.duelingBookName}`
-            )
+            pB2Member.user.send(generatePairingNotification(tournament, server, playerB1))
         } catch (err) {
             console.log(err)
         }
@@ -2109,30 +1964,14 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
 
         try {
             const pC1Member = await guild.members.fetch(playerC1.discordId)
-            const pC2DiscordUsername = playerC2.discordName
-            pC1Member.user.send(
-                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                `\nServer: ${server.name} ${server.logo}` +
-                `\nChannel: <#${tournament.channelId}>` +
-                `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
-                `\nDiscord Name: ${playerC2.globalName ? `${playerC2.globalName} (${pC2DiscordUsername})` : pC2DiscordUsername}` +
-                `\nDuelingbook Name: ${playerC2.duelingBookName}`
-            )
+            pC1Member.user.send(generatePairingNotification(tournament, server, playerC2))
         } catch (err) {
             console.log(err)
         }
 
         try {
             const pC2Member = await guild.members.fetch(playerC2.discordId)
-            const pC1DiscordUsername = playerC1.discordName
-            pC2Member.user.send(
-                `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                `\nServer: ${server.name} ${server.logo}` +
-                `\nChannel: <#${tournament.channelId}>` +
-                `\nFormat: ${tournament.formatName || 'Tengu Plant <:spore:647198947185524746>'} ${tournament.emoji}` +
-                `\nDiscord Name: ${playerC1.globalName ? `${playerC1.globalName} (${pC1DiscordUsername})` : pC1DiscordUsername}` +
-                `\nDuelingbook Name: ${playerC1.duelingBookName}`
-            )
+            pC2Member.user.send(generatePairingNotification(tournament, server, playerC1))
         } catch (err) {
             console.log(err)
         }
@@ -2173,30 +2012,14 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
     
             try {
                 const p1Member = await guild.members.fetch(player1.discordId)
-                const p2DiscordUsername = player2.discordName
-                p1Member.user.send(
-                    `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                    `\nServer: ${server.name} ${server.logo}` +
-                    `\nChannel: <#${tournament.channelId}>` +
-                    `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                    `\nDiscord Name: ${player2.globalName ? `${player2.globalName} (${p2DiscordUsername})` : p2DiscordUsername}` +
-                    `\nDuelingbook Name: ${player2.duelingBookName}`
-                )
+                p1Member.user.send(generatePairingNotification(tournament, server, player2))
             } catch (err) {
                 console.log(err)
             }
     
             try {
                 const p2Member = await guild.members.fetch(player2.discordId)
-                const p1DiscordUsername = player1.discordName
-                p2Member.user.send(
-                    `New pairing for ${round} of ${tournament.name}! ${tournament.logo}` +
-                    `\nServer: ${server.name} ${server.logo}` +
-                    `\nChannel: <#${tournament.channelId}>` +
-                    `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
-                    `\nDiscord Name: ${player1.globalName ? `${player1.globalName} (${p1DiscordUsername})` : p1DiscordUsername}` +
-                    `\nDuelingbook Name: ${player1.duelingBookName}`
-                )
+                p2Member.user.send(generatePairingNotification(tournament, server, player1))
             } catch (err) {
                 console.log(err)
             }

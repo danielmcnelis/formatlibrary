@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import { CardImage } from '../../../Cards/CardImage'
 import { FocalCard } from '../Builders/FocalCard'
+import './DraftLobby.css'
 import { getCookie } from '@fl/utils'
 import ReactCountdownClock from 'react-countdown-clock'
 import { Helmet } from 'react-helmet'
@@ -12,15 +13,13 @@ import { SocketProvider } from '@fl/context'
 import {config} from '@fl/config'
 import io from 'socket.io-client'
 
-import './DraftLobby.css'
-
 const playerId = getCookie('playerId')
 
 // USE AUDIO
 const useAudio = (url) => {
   const [audio] = useState(new Audio(url))
   const [playing, setPlaying] = useState(false)
-  const toggle = () => setPlaying(!playing)
+  const play = () => setPlaying(!playing)
 
   // HOOK - PLAY AUDIO
   useEffect(() => {
@@ -44,7 +43,7 @@ const useAudio = (url) => {
     }
   })
 
-  return [toggle]
+  return [play]
 }
 
 // SORT FUNCTION
@@ -62,6 +61,8 @@ const sortFn = (a, b) => {
     }
 }
 
+let socket
+
 // DRAFT LOBBY
 export const DraftLobby = (props) => {
     const [draft, setDraft] = useState({})
@@ -69,15 +70,16 @@ export const DraftLobby = (props) => {
     const [entry, setEntry] = useState({})
     const [inventory, setInventory] = useState([])
     const [pack, setPack] = useState({})
-    console.log('pack', pack)
     const [card, setCard] = useState({})
     const [selection, setSelection] = useState(null)
     const [timer, setTimer] = useState(null)
     const [onTheClock, setOnTheClock] = useState(false)
-    // const [toggleDraw] = useAudio('/assets/sounds/draw.mp3')
-    const [toggleChime] = useAudio('/assets/sounds/chime.mp3')
-    const [toggleHorn] = useAudio('/assets/sounds/horn.mp3')
-    const [socket] = useState(useSocket())
+    const [playDraw] = useAudio('/assets/sounds/draw.mp3')
+    const [playChime] = useAudio('/assets/sounds/chime.mp3')
+    const [playHorn] = useAudio('/assets/sounds/horn.mp3')
+    const [playPop] = useAudio('/assets/sounds/pop.mp3')
+    // const socket = io(config.siteUrl, { transports: ["websocket"] })
+    // const [socket] = useState(useSocket())
     // const [{id}] = useState(useParams())
     const [id, setId] = useState(null)
     const { id: useParamsId } = useParams()
@@ -89,7 +91,7 @@ export const DraftLobby = (props) => {
         `https://cdn.formatlibrary.com/images/artworks/${draft?.set?.setCode || 'back'}.jpg`
     const logoWidth = draft?.type === 'cube' ? '128px' : '100px'
 
-    const socketProviderSocket = io(config.siteUrl, { transports: ["websocket"] })
+    if (!socket) socket = io(config.siteUrl, { transports: ["websocket"] })
 
     // FETCH PARTICIPANTS
     const fetchParticipants = async (draftId) => {
@@ -109,6 +111,7 @@ export const DraftLobby = (props) => {
             } else {
                 const data = { playerId, draftId: draft.id }
                 socket.emit('join draft', data, setEntry)   
+                playPop()
             }
         } catch (err) {
             console.log(err)
@@ -138,11 +141,11 @@ export const DraftLobby = (props) => {
     // PROCESS SELCTION
     const processSelection = async (inv) => {
         try {
+            playDraw()
             setPack(pack.filter((p) => p.cardId !== inv.cardId))
             setOnTheClock(false)
             setSelection(inv.cardName)
             setInventory([...inventory, inv])
-            // toggleDraw()
         } catch (err) {
             console.log(err)
         }
@@ -248,7 +251,7 @@ export const DraftLobby = (props) => {
             setOnTheClock(true)
             setDraft(data)
             alert('The Draft is Starting Now!')
-            toggleHorn()
+            playHorn()
         })
 
         socket.on('next pick', (data) => {
@@ -257,7 +260,7 @@ export const DraftLobby = (props) => {
             setDraft(data)
             setOnTheClock(true)
             setTimer(draft.timer)
-            toggleChime()
+            playChime()
         })
 
         socket.on('draft complete', (data) => {
@@ -291,7 +294,7 @@ export const DraftLobby = (props) => {
     // }, [])
 
     return (
-        <SocketProvider value={socketProviderSocket}>
+        // <SocketProvider value={socket}>
         <div className="cube-portal">
             {
                 draft.state === 'pending' ? (
@@ -302,6 +305,7 @@ export const DraftLobby = (props) => {
                             <meta name="description" content={`Click here to join the next draft for ${draft?.cubeName || draft?.setName}.`}/>
                             <meta name="og:description" content={`Click here to join the next draft for ${draft?.cubeName || draft?.setName}.`}/>
                         </Helmet>
+                        <SocketProvider value={socket}>
                         <div className="card-database-flexbox">
                             <img className="desktop-only" style={{ width:logoWidth}} src={logoName} alt="draft-logo"/>
                             <div>
@@ -367,6 +371,7 @@ export const DraftLobby = (props) => {
                                 </div>
                             ) : ''
                         }
+                        </SocketProvider>
                     </>
                 ) : (
                     <>
@@ -376,6 +381,7 @@ export const DraftLobby = (props) => {
                             <meta name="description" content={`Click here to join the next draft for ${draft.cubeName || draft.setName}.`}/>
                             <meta name="og:description" content={`Click here to join the next draft for ${draft.cubeName || draft.setName}.`}/>
                         </Helmet>
+                        <SocketProvider value={socket}>
                         <div className="space-between">
                             {
                                 draft?.state === 'underway' && timer >= 0 && timer <= draft.timer ? (
@@ -496,10 +502,11 @@ export const DraftLobby = (props) => {
                             </div>
                         </div>
                         <br/>
+                        </SocketProvider>
                     </>
                 )
             }
         </div>
-        </SocketProvider>
+        // </SocketProvider>
     )
 }
