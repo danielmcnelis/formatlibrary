@@ -48,6 +48,9 @@ export const Navigation = (props) => {
                 <div onClick={() => {window.location.href="/events/"}}>
                     <h2 className="nav-header">EVENTS</h2>
                 </div>
+                <div onClick={() => {window.location.href="/players/"}}>
+                    <h2 className="nav-header">PLAYERS</h2>
+                </div>
                 <div onClick={() => {window.location.href="/replays/"}}>
                     <h2 className="nav-header">REPLAYS</h2>
                 </div>
@@ -122,6 +125,9 @@ export const Navigation = (props) => {
                 </div>
                 <div onClick={() => {window.location.href="/events/"}}>
                     <h3 className="hamburger-header">Events</h3>
+                </div>
+                <div onClick={() => {window.location.href="/players/"}}>
+                    <h3 className="hamburger-header">Players</h3>
                 </div>
                 <div onClick={() => {window.location.href="/replays/"}}>
                     <h3 className="hamburger-header">Replays</h3>

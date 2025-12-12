@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { authenticate, getPlayerAvatarById, getPlayerRoles, getPlayersByPartialName, updatePassword, createPlayer, getPlayerById, getPlayers, updatePlayer } from '../middleware'
+import { authenticate, getPlayerAvatarById, getPlayerRoles, getPlayersByPartialName, updatePassword, createPlayer, getPlayerById, getPlayers, countPlayers, updatePlayer } from '../middleware'
 
 const router = Router()
 
@@ -10,6 +10,8 @@ router.put('/api/players/update/:id', updatePlayer)
 router.put('/api/players/password/:id', updatePassword)
 
 router.get('/api/players/roles', [authenticate, getPlayerRoles])
+
+router.get('/api/players/count', countPlayers)
 
 router.get('/api/players/:id/avatar', getPlayerAvatarById)
 

@@ -109,6 +109,14 @@ export const Player = db.define('players', {
   },
   forgedSubscriberTier: {
     type: Sequelize.STRING
+  },
+  hasPlayed: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+  tops: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
   }
 })
 

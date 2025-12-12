@@ -23,6 +23,7 @@ import {
  PackSimulator,
  Page,
  PlayerProfile,
+ PlayerTable,
  Subscriptions,
  RatedLobby,
  ReplayTable,
@@ -103,6 +104,7 @@ export const Router = (props) => {
 					<Route path="/leaderboards/:id/:statsType" element=<Page roles={roles} disableAds={disableAds} element= <LeaderBoard /> /> />
 					{/* <Route path="/manage-subscription/" element=<Page roles={roles} disableAds={true} element=<Subscriptions /> /> /> */}
 					<Route path="/subscribe/" element=<Page roles={roles} disableAds={true} element=<Subscriptions /> /> />
+					<Route path="/players/" element=<Page roles={roles} disableAds={disableAds} element= <PlayerTable roles={roles}/> /> />
 					<Route path="/replays/" element=<Page roles={roles} disableAds={disableAds} element= <ReplayTable roles={roles}/> /> />
                     <Route path="/start-draft/" element=<Page roles={roles} disableAds={disableAds} element= <DraftLauncher/> /> />
                     {/* <Route path="/start-draft/" element=<Page roles={roles} disableAds={disableAds} element= <SocketProvider value={socket}><DraftLauncher/></SocketProvider> /> /> */}

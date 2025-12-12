@@ -3407,17 +3407,76 @@ const shuffleArray = (arr) => {
     let b = 0
     let e = 0
 
+    const players = await Player.findAll()
+
+    for (let i = 0; i < players.length; i++) {
+        const player = players[i]
+
+        const decks = await Deck.count({
+            where: {
+                builderId: player.id,
+                origin: 'event'
+            }
+        })
+
+        const tops = await Deck.count({
+            where: {
+                builderId: player.id,
+                origin: 'event',
+                display: true
+            }
+        })
+
+        const stats = await Stats.count({
+            where: {
+                playerId: player.id,
+                games: {[Op.gt]: 0}
+            }
+        })
+
+        if (decks || stats) {
+            try {
+                await player.update({hasPlayed: true, tops})
+                b++
+            } catch (err) {
+                console.log(err)
+                e++
+            }
+        }
+    }
+
+    return console.log(`updated ${b} out of ${players.length} players, encountered ${e} errors`)
+})()
+
+
+;(async () => {
+    let b = 0
+    let e = 0
+
     const players = await Player.findAll({
         where: {
-            timeZone: {[Op.not]: null}
+            [Op.or]: [
+                {name: {[Op.startsWith]: ' '}},
+                {name: {[Op.endsWith]: ' '}},
+                {name: {[Op.substring]: '  '}},
+                {firstName: {[Op.startsWith]: ' '}},
+                {firstName: {[Op.endsWith]: ' '}},
+                {firstName: {[Op.substring]: '  '}},
+                {lastName: {[Op.startsWith]: ' '}},
+                {lastName: {[Op.endsWith]: ' '}},
+                {lastName: {[Op.substring]: '  '}}
+            ]
         }
     })
 
     for (let i = 0; i < players.length; i++) {
         const player = players[i]
-        
         try {
-            await player.update({timeZone: null})
+            await player.update({ 
+                name: player.name?.trim().replaceAll(' ', ''),
+                firstName: player.name?.trim().replaceAll(' ', ''),
+                lastName: player.name?.trim().replaceAll(' ', '')
+            })
             b++
         } catch (err) {
             console.log(err)
@@ -3425,5 +3484,5 @@ const shuffleArray = (arr) => {
         }
     }
 
-    return console.log(`updated ${b} players, encountered ${e} errors`)
+    return console.log(`trimmed ${b} out of ${players.length} players, encountered ${e} errors`)
 })()

@@ -1,4 +1,4 @@
-import { Player } from '@fl/models'
+import { Deck, DeckThumb, DeckType, Player, Stats } from '@fl/models'
 import { Op } from 'sequelize'
 import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
@@ -65,14 +65,83 @@ export const getPlayerById = async (req, res, next) => {
   }
 }
 
-export const getPlayers = async (req, res, next) => {
-  try {
-    const players = await Player.findAll({
-      attributes: ['id', 'name', 'discordId', 'discordPfp', 'firstName', 'lastName', 'duelingBookName'],
-      order: [['name', 'ASC']]
+export const countPlayers = async (req, res, next) => {
+    const name = req.query.name
+    const count = await Player.count({
+      where: {
+        [Op.or]: [
+            {name: {[Op.iLike]: '%' + name + '%'}},
+            {discordName: {[Op.iLike]: '%' + name + '%'}},
+            {duelingBookName: {[Op.iLike]: '%' + name + '%'}}
+        ],
+        hasPlayed: true
+      }
     })
 
-    return res.json(players)
+    return res.json(count)
+}
+
+export const getPlayers = async (req, res, next) => {
+  try {
+    const name = req.query.name
+    const limit = req.query.limit || 10
+
+    const sort = req.query.sort?.split(',').reduce((reduced, val) => {
+        const [field, value] = val.split(':')
+        reduced.push([field, value])
+        return reduced
+    }, [])
+
+    const players = await Player.findAll({
+      where: {
+        [Op.or]: [
+            {name: {[Op.iLike]: '%' + name + '%'}},
+            {discordName: {[Op.iLike]: '%' + name + '%'}},
+            {duelingBookName: {[Op.iLike]: '%' + name + '%'}}
+        ],
+        hasPlayed: true
+      },
+      attributes: ['id', 'name', 'tops'],
+      order: sort,
+      limit
+    })
+
+    const detailedPlayers = []
+
+    for (let i = 0 ; i < players.length; i++) {
+        const player = players[i]
+        const stats = await Stats.findAll({
+            where: {
+                playerId: player.id,
+                games: {[Op.gte]: 3}
+            },
+            order: [['elo', 'DESC']],
+            limit: 3
+        })
+
+        const decks = await Deck.findAll({
+            where: {
+                builderId: player.id,
+                display: true,
+                origin: 'event',
+            },
+            order: [['placement', 'ASC'], ['createdAt', 'DESC']],
+            limit: 3
+        })
+
+        const tops = await Deck.count({
+            where: {
+                builderId: player.id,
+                display: true,
+                origin: 'event',
+            }
+        })
+
+        const deckTypes = await getFavoriteDecks(player.id)
+        detailedPlayers.push({ ...player.dataValues, tops, stats, decks, deckTypes })
+    }
+
+    return res.json(detailedPlayers)
   } catch (err) {
     next(err)
   }
@@ -272,5 +341,78 @@ export const createPlayer = async (req, res, next) => {
         return res.json(player)
     } catch (err) {
       next(err)
+    }
+}
+
+const getFavoriteDecks = async (builderId) => {
+  try {
+    const decks = await Deck.findAll({
+        where: {
+            builderId,
+            origin: 'event',
+            deckTypeName: { [Op.not]: 'Other' },
+            deckTypeId: { [Op.not]: null }
+        },
+        attributes: ['id', 'deckTypeName', 'formatName']
+    })
+
+    if (!decks.length) return false
+
+    const freqs = decks.reduce(
+    (acc, curr) => (
+        acc[`${curr.formatName}_${curr.deckTypeName}`]
+        ? acc[`${curr.formatName}_${curr.deckTypeName}`]++
+        : (acc[`${curr.formatName}_${curr.deckTypeName}`] = 1),
+        acc
+    ),
+    {}
+    )
+    const arr = Object.entries(freqs)
+    .sort((a: never, b: never) => b[1] - a[1])
+    .map((e) => e[0])
+    const data = []
+    const types = []
+
+    for (let i = 0; i < arr.length; i++) {
+        try {
+            const elem = arr[i]
+            const name = elem.slice(elem.indexOf('_') + 1)
+            const format = elem.slice(0, elem.indexOf('_'))
+            const deckType = await DeckType.findOne({
+            where: {
+                name: { [Op.iLike]: name }
+            },
+            attributes: ['id', 'name', 'cleanName']
+            })
+
+            if (!deckType || types.includes(deckType.id)) continue
+
+            const deckThumb =
+            (await DeckThumb.findOne({
+                where: {
+                deckTypeId: deckType.id,
+                formatName: format
+                },
+                attributes: ['id', 'deckTypeName', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
+            })) ||
+            (await DeckThumb.findOne({
+                where: {
+                deckTypeId: deckType.id,
+                isPrimary: true
+                },
+                attributes: ['id', 'deckTypeName', 'leftCardArtworkId', 'centerCardArtworkId', 'rightCardArtworkId']
+            }))
+
+            types.push(deckType.id)
+            if (!deckThumb) continue
+            data.push({ ...deckType.dataValues, ...deckThumb.dataValues })
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+            return data.slice(0, 6)
+    } catch (err) {
+        console.log(err)
     }
 }
