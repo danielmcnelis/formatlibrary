@@ -3449,40 +3449,40 @@ const shuffleArray = (arr) => {
 })()
 
 
-;(async () => {
-    let b = 0
-    let e = 0
+// ;(async () => {
+//     let b = 0
+//     let e = 0
 
-    const players = await Player.findAll({
-        where: {
-            [Op.or]: [
-                {name: {[Op.startsWith]: ' '}},
-                {name: {[Op.endsWith]: ' '}},
-                {name: {[Op.substring]: '  '}},
-                {firstName: {[Op.startsWith]: ' '}},
-                {firstName: {[Op.endsWith]: ' '}},
-                {firstName: {[Op.substring]: '  '}},
-                {lastName: {[Op.startsWith]: ' '}},
-                {lastName: {[Op.endsWith]: ' '}},
-                {lastName: {[Op.substring]: '  '}}
-            ]
-        }
-    })
+//     const players = await Player.findAll({
+//         where: {
+//             [Op.or]: [
+//                 {name: {[Op.startsWith]: ' '}},
+//                 {name: {[Op.endsWith]: ' '}},
+//                 {name: {[Op.substring]: '  '}},
+//                 {firstName: {[Op.startsWith]: ' '}},
+//                 {firstName: {[Op.endsWith]: ' '}},
+//                 {firstName: {[Op.substring]: '  '}},
+//                 {lastName: {[Op.startsWith]: ' '}},
+//                 {lastName: {[Op.endsWith]: ' '}},
+//                 {lastName: {[Op.substring]: '  '}}
+//             ]
+//         }
+//     })
 
-    for (let i = 0; i < players.length; i++) {
-        const player = players[i]
-        try {
-            await player.update({ 
-                name: player.name?.trim().replaceAll(' ', ''),
-                firstName: player.name?.trim().replaceAll(' ', ''),
-                lastName: player.name?.trim().replaceAll(' ', '')
-            })
-            b++
-        } catch (err) {
-            console.log(err)
-            e++
-        }
-    }
+//     for (let i = 0; i < players.length; i++) {
+//         const player = players[i]
+//         try {
+//             await player.update({ 
+//                 name: player.name?.trim().replaceAll(' ', ''),
+//                 firstName: player.name?.trim().replaceAll(' ', ''),
+//                 lastName: player.name?.trim().replaceAll(' ', '')
+//             })
+//             b++
+//         } catch (err) {
+//             console.log(err)
+//             e++
+//         }
+//     }
 
-    return console.log(`trimmed ${b} out of ${players.length} players, encountered ${e} errors`)
-})()
+//     return console.log(`trimmed ${b} out of ${players.length} players, encountered ${e} errors`)
+// })()
