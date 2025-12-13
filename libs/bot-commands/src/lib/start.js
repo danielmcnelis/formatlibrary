@@ -90,7 +90,7 @@ export default {
                         entryCount >= 13 && entryCount <= 21 ? [5, 4] :
                         entryCount >= 22 && entryCount <= 32 ? [5, 8] :
                         entryCount >= 33 && entryCount <= 64 ? [6, 8] :
-                        entryCount >= 65 && entryCount <= 96 ? [7, 8] :
+                        entryCount >= 65 && entryCount <= 96 ? [7, 8] :f
                         entryCount >= 97 && entryCount <= 128 ? [7, 16] :
                         entryCount >= 129 && entryCount <= 256 ? [8, 16] :
                         [9, 16]

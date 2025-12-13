@@ -546,7 +546,7 @@ export const SingleEvent = (props) => {
                     <h2 className="subheading"><b>{event.abbreviation}</b> Replays:</h2>
                     <img 
                         style={{ height:'64px'}} 
-                        src={'https://cdn.formatlibrary.com/images/emojis/film.png'}
+                        src={'https://cdn.formatlibrary.com/images/emojis/film-flipped.png'}
                         alt="film"
                     />
                     </div>

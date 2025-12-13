@@ -386,7 +386,7 @@ export const ReplayTable = (props) => {
                         <h1>Replay Database</h1>
                         {
                             isSubscriber ? (
-                                <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/film.png'} alt="film"/>
+                                <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/film-flipped.png'} alt="film"/>
                             ) : (
                                 <div className="horizontal-centered-flexbox" style={{alignItems: 'flex-end', padding: '10px 0px 10px'}}>
                                     <div style={{'padding': '0px 10px'}} className="desktop-only"><i>Subscribe to view all replays.</i></div>

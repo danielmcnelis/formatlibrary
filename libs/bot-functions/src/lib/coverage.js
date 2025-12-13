@@ -572,6 +572,13 @@ export const displayDecks = async (interaction, event) => {
     for (let i = 0; i < decks.length; i++) {
         const deck = decks[i]
         await deck.update({ display: true })
+        const player = await Player.findOne({
+            where: {
+                id: deck.builderId
+            }
+        })
+        
+        await player.update({ tops: player.tops + 1 })
     }
     
     return await interaction.channel.send(`Displayed ${decks.length} new deck lists for ${event.name}.`)

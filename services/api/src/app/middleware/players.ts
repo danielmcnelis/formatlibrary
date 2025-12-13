@@ -125,7 +125,7 @@ export const getPlayers = async (req, res, next) => {
                 display: true,
                 origin: 'event',
             },
-            order: [['placement', 'ASC'], ['createdAt', 'DESC']],
+            order: [['createdAt', 'DESC']],
             limit: 3
         })
 

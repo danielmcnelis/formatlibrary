@@ -67,7 +67,7 @@ export const runNightlyTasks = async (client) => {
             manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
             assignSeasonalLadderRoles, purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, updateSets, 
             updateMarketPrices, updateDecks, updateDeckTypes, updateBlogPosts, downloadNewCards, 
-            downloadAltArtworks, downloadMissingCardImages, updateServers, conductCensus
+            downloadAltArtworks, downloadMissingCardImages, updateServers, updateTops, conductCensus
         ]
     
         for (let i = 0; i < tasks.length; i++) {
@@ -2968,6 +2968,47 @@ export const updateServers = async (client) => {
     })
 
     return console.log(`updateServers() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+}
+
+// UPDATE TOPS
+export const updateTops = async () => {
+    console.log('updateTops()')
+    const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'updateTops',
+        status: 'underway'
+    })
+    let b = 0
+    let e = 0
+
+    const players = await Player.findAll()
+
+    for (let i = 0; i < players.length; i++) {
+        try {
+            const player = players[i]
+            const tops = await Deck.count({
+                where: {
+                    builderId: player.id,
+                    origin: 'event',
+                    display: true
+                }
+            })
+
+            await player.update({ tops })
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
+    console.log(`updated ${b} player tops, encountered ${e} errors`)
+    return console.log(`updateTops() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 

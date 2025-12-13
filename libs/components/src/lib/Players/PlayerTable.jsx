@@ -237,7 +237,7 @@ export const PlayerTable = (props) => {
                     <div className="player-database-flexbox">
                         <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/nerd.png'} alt="nerd"/>
                         <h1>Player Database</h1>
-                        <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/nerd.png'} alt="nerd"/>
+                        <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/nerd-flipped.png'} alt="nerd"/>
                     </div>
                     
                     <br />
@@ -336,7 +336,7 @@ export const PlayerTable = (props) => {
                                 <th>Player</th>
                                 <th>Best Medals</th>
                                 <th>Recent Finishes</th>
-                                <th>Favorite Deck Types</th>
+                                <th>Favorite Decks</th>
                             </tr>
                             </thead>
                             <tbody>

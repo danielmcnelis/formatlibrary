@@ -1170,6 +1170,10 @@ export const createDeck = async (req, res, next) => {
       display: req.body.display
     })
 
+    if (deck.display) {
+        await player.update({ tops: player.tops + 1 })
+    }
+
     return res.json(deck)
   } catch (err) {
     console.log('err', err)
