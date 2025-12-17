@@ -25,7 +25,7 @@ export const getOCGExclusives = async (req, res, next) => {
             ]
         })
 
-        console.log('ocgExclusives')
+        console.log('ocgExclusives', ocgExclusives)
 
         const data = { ocgExclusives }
         res.json(data)

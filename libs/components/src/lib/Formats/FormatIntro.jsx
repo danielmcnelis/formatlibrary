@@ -24,6 +24,7 @@ export const FormatIntro = (props) => {
     const [inEditMode, setInEditMode] = useState(false)
     const [description, setDescription] = useState('')
     const [ocgExclusives, setOcgExclusives] = useState([])
+    console.log("ocgExclusives", ocgExclusives)
     const [id, setId] = useState(null)
     const { id: useParamsId } = useParams()
     if (useParamsId && id !== useParamsId) {
