@@ -2464,7 +2464,7 @@ export const downloadNewCards = async () => {
             const ocgDate = category !== 'Skill' ? datum.misc_info[0]?.ocg_date || null : null
 
             if (!card) {
-                await Card.create({
+                card = await Card.create({
                     name: name,
                     cleanName: cleanName,
                     konamiCode: konamiCode,
