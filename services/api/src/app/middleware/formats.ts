@@ -14,7 +14,7 @@ export const getOCGExclusives = async (req, res, next) => {
 
         console.log('format', format)
 
-        let ocgExclusives, any[] = [...await Card.findAll({
+        const ocgExclusives = [...await Card.findAll({
             where: {
                 isOcgLegal: true,
                 isTcgLegal: false,
@@ -26,9 +26,9 @@ export const getOCGExclusives = async (req, res, next) => {
         })]
 
         console.log('ocgExclusives', ocgExclusives)
-        ocgExclusives = Object.fromEntries(ocgExclusives)
+        const exclusives = Object.fromEntries(ocgExclusives)
 
-        const data = { ocgExclusives }
+        const data = { ocgExclusives: exclusives }
         res.json(data)
     } catch (err) {
         next(err)
