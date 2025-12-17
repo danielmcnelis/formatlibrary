@@ -12,6 +12,8 @@ export const getOCGExclusives = async (req, res, next) => {
             ]
         })
 
+        console.log('format', format)
+
         const ocgExclusives = await Card.findAll({
             where: {
                 isOcgLegal: true,
@@ -22,6 +24,8 @@ export const getOCGExclusives = async (req, res, next) => {
                 'id', 'artworkId', 'sortPriority', 'isOcgLegal', 'isTcgLegal', 'ocgDate'
             ]
         })
+
+        console.log('ocgExclusives')
 
         const data = { ocgExclusives }
         res.json(data)
