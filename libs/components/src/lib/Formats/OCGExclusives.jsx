@@ -4,7 +4,8 @@ import './OCGExclusives.css'
 
 export const OCGExclusives = (props) => {
     const ocgExclusives = {props}
-    if (!ocgExclusives) return <div />
+    console.log('OCG EXCLUSIVES')
+    if (!ocgExclusives?.length) return <div />
   
     return (
         <div>
