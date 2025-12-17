@@ -23,8 +23,8 @@ export const OCGExclusives = (props) => {
                                     width='72px' 
                                     padding='1px' 
                                     margin='0px'
-                                    key={el.card.id} 
-                                    card={el.card}
+                                    key={el.id} 
+                                    card={el}
                                 />
                                 )
                                 }
