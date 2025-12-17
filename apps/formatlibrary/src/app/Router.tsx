@@ -42,10 +42,10 @@ import {
 // import io from 'socket.io-client'
 // const socket = io(config.siteUrl, { transports: ["websocket"] })
 
-const AdsTxtRedirect = () => {
- window.location.href = 'https://ads.adthrive.com/sites/66e1eae5fdcedc15a412ead6/ads.txt';
- return null;
-}
+// const AdsTxtRedirect = () => {
+//  window.location.href = 'https://ads.adthrive.com/sites/66e1eae5fdcedc15a412ead6/ads.txt';
+//  return null;
+// }
 
 export const Router = (props) => {
  const {disableAds, roles} = props
@@ -54,7 +54,7 @@ export const Router = (props) => {
                 <RedirectWWW />
 				<Routes>
 					<Route path="/" element=<Page roles={roles} disableAds={disableAds} element=<Home /> /> />
-                    <Route path='/ads.txt' element=<AdsTxtRedirect /> />
+                    {/* <Route path='/ads.txt' element=<AdsTxtRedirect /> /> */}
 					<Route path="/home" element=<Page roles={roles} disableAds={disableAds} element=<Home /> /> />
                     <Route path="/auth/"/>
 					<Route path="/apps" element=<Page roles={roles} disableAds={disableAds} element=<UserPortal roles={roles}/> /> />

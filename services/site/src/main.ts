@@ -20,6 +20,11 @@ app.use(morgan('dev'))
 // compression
 app.use(compression())
 
+// ads.txt redirect
+app.get('/ads.txt', (req, res) => {
+  res.redirect(301, 'https://ads.adthrive.com/sites/66e1eae5fdcedc15a412ead6/ads.txt');
+});
+
 // proxies
 if (config.services.site.proxy) {
   const proxies = { api, auth, bot }
