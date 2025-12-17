@@ -21,13 +21,11 @@ export const getOCGExclusives = async (req, res, next) => {
                 // isOcgLegal: true,
                 // isTcgLegal: false,
                 ocgDate: {[Op.lte]: format.date },
-                [Op.or]: {
-                    tcgDate: [{[Op.gte]: cutoff}, null]
-                },
+                tcgDate: {[Op.not]: {[Op.lte]: cutoff }},
                 sortPriority: {[Op.not]: 1}
             },
             attributes: [
-                'name', 'cleanName', 'id', 'artworkId', 'sortPriority', 'isOcgLegal', 'isTcgLegal', 'ocgDate'
+                'name', 'cleanName', 'id', 'artworkId', 'sortPriority', 'isOcgLegal', 'isTcgLegal', 'ocgDate', 'tcgDate'
             ],
             order: [['sortPriority', 'ASC'], ['cleanName', 'ASC']]
         })
