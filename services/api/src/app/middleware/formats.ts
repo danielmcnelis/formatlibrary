@@ -8,7 +8,7 @@ export const getOCGExclusives = async (req, res, next) => {
                 name: { [Op.iLike]: req.params.name.replaceAll(' ', '_').replaceAll('-', '_') }
             },
             attributes: [
-                'id', 'date'
+                'id', 'date', 'tcgEquivalentDate'
             ]
         })
 
