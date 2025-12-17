@@ -3,7 +3,7 @@ import { CardImage } from '../Cards/CardImage'
 import './OCGExclusives.css'
 
 export const OCGExclusives = (props) => {
-    const ocgExclusives = {props}
+    const {ocgExclusives} = props
     console.log('OCG EXCLUSIVES', ocgExclusives)
     if (!ocgExclusives?.length) return <div />
   
