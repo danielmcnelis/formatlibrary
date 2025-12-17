@@ -3228,32 +3228,32 @@ const shuffleArray = (arr) => {
 
 
 
-// ;(async () => {
-//     let b = 0
-//     let e = 0
+;(async () => {
+    let b = 0
+    let e = 0
 
-//     for (let i = 0; i < genesys_points.length; i++) {
-//         const [cardName, genesysPoints] = genesys_points[i]
+    for (let i = 0; i < genesys_points.length; i++) {
+        const [cardName, genesysPoints] = genesys_points[i]
         
-//         try {
-//             const card = await Card.findOne({
-//                 where: {
-//                     name: cardName
-//                 }
-//             })
+        try {
+            const card = await Card.findOne({
+                where: {
+                    name: cardName
+                }
+            })
 
-//             await card.update({ genesysPoints })
-//             b++
+            await card.update({ genesysPoints })
+            b++
             
-//         } catch (err) {
-//             console.log(`error with ${cardName}, points ${genesysPoints}`)
-//             console.log(err)
-//             e++
-//         }
-//     }
+        } catch (err) {
+            console.log(`error with ${cardName}, points ${genesysPoints}`)
+            console.log(err)
+            e++
+        }
+    }
 
-//     return console.log(`updated ${b} cards, encountered ${e} errors`)
-// })()
+    return console.log(`updated ${b} cards, encountered ${e} errors`)
+})()
 
 // ;(async () => {
 //     let b = 0
@@ -3403,50 +3403,50 @@ const shuffleArray = (arr) => {
 // })()
 
 
-;(async () => {
-    let b = 0
-    let e = 0
+// ;(async () => {
+//     let b = 0
+//     let e = 0
 
-    const players = await Player.findAll()
+//     const players = await Player.findAll()
 
-    for (let i = 0; i < players.length; i++) {
-        const player = players[i]
+//     for (let i = 0; i < players.length; i++) {
+//         const player = players[i]
 
-        const decks = await Deck.count({
-            where: {
-                builderId: player.id,
-                origin: 'event'
-            }
-        })
+//         const decks = await Deck.count({
+//             where: {
+//                 builderId: player.id,
+//                 origin: 'event'
+//             }
+//         })
 
-        const tops = await Deck.count({
-            where: {
-                builderId: player.id,
-                origin: 'event',
-                display: true
-            }
-        })
+//         const tops = await Deck.count({
+//             where: {
+//                 builderId: player.id,
+//                 origin: 'event',
+//                 display: true
+//             }
+//         })
 
-        const stats = await Stats.count({
-            where: {
-                playerId: player.id,
-                games: {[Op.gt]: 0}
-            }
-        })
+//         const stats = await Stats.count({
+//             where: {
+//                 playerId: player.id,
+//                 games: {[Op.gt]: 0}
+//             }
+//         })
 
-        if (decks || stats) {
-            try {
-                await player.update({hasPlayed: true, tops})
-                b++
-            } catch (err) {
-                console.log(err)
-                e++
-            }
-        }
-    }
+//         if (decks || stats) {
+//             try {
+//                 await player.update({hasPlayed: true, tops})
+//                 b++
+//             } catch (err) {
+//                 console.log(err)
+//                 e++
+//             }
+//         }
+//     }
 
-    return console.log(`updated ${b} out of ${players.length} players, encountered ${e} errors`)
-})()
+//     return console.log(`updated ${b} out of ${players.length} players, encountered ${e} errors`)
+// })()
 
 
 // ;(async () => {
