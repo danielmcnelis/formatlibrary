@@ -13,12 +13,15 @@ export const getOCGExclusives = async (req, res, next) => {
         })
 
         // console.log('format', format)
+        const cutoff = format.tcgEquivalentDate ? format.tcgEquivalentDate : format.date
 
         const ocgExclusives = await Card.findAll({
             where: {
-                isOcgLegal: true,
-                isTcgLegal: false,
-                ocgDate: {[Op.lte]: format.date }
+                // isOcgLegal: true,
+                // isTcgLegal: false,
+                ocgDate: {[Op.lte]: format.date },
+                tcgDate: {[Op.not]: { [Op.lte]: cutoff }},
+                sortPriority: {[Op.not]: 1}
             },
             attributes: [
                 'name', 'cleanName', 'id', 'artworkId', 'sortPriority', 'isOcgLegal', 'isTcgLegal', 'ocgDate'

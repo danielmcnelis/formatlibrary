@@ -11,7 +11,7 @@ export const OCGExclusives = (props) => {
         <div>
             <div className="divider"/>
                 <div id="ocg-exclusives" className="ocg-exclusives">
-                    <h2 className="subheading">{'OCG Exclusives'}</h2>
+                    <h2 className="subheading">{'OCG Exclusives (excluding Normal Monsters)'}</h2>
                     {
                         <div>
                             <div id="limited" className="ocg-exclusives-bubble">

@@ -93,6 +93,9 @@ export const Format = db.define('formats', {
   },
   nextFormatName: {
     type: Sequelize.STRING
+  },
+  tcgEquivalentDate: {
+    type: Sequelize.STRING
   }
 })
 
