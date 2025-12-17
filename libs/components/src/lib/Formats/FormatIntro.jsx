@@ -4,6 +4,7 @@ import axios from 'axios'
 import { BanList } from './BanList'
 import { MiniBoard } from './MiniBoard'
 import { NotFound } from '../General/NotFound'
+import { OCGExclusives } from './OCGExclusives'
 import { Points } from './Points'
 import { PopularDecks } from './PopularDecks'
 import { RecentEvents } from '../Events/RecentEvents'
@@ -22,6 +23,7 @@ export const FormatIntro = (props) => {
     const [statsCount, setStatsCount] = useState(0)
     const [inEditMode, setInEditMode] = useState(false)
     const [description, setDescription] = useState('')
+    const [ocgExclusives, setOcgExclusives] = useState([])
     const [id, setId] = useState(null)
     const { id: useParamsId } = useParams()
     if (useParamsId && id !== useParamsId) {
@@ -58,8 +60,23 @@ export const FormatIntro = (props) => {
             console.log(err)
         }
     }
-    
 
+    // USE LAYOUT EFFECT
+    useEffect(() => {
+        try {
+            if (format.category === 'OCG') {
+                const fetchData = async () => {
+                    const { data } = await axios.get(`/api/formats/ocg-exclusives/${id}`)
+                    setOcgExclusives(data)
+                }
+
+                fetchData()
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }, [format, id])
+  
     // USE LAYOUT EFFECT
     useLayoutEffect(() => window.scrollTo(0, 0))
   
@@ -169,6 +186,13 @@ export const FormatIntro = (props) => {
                 <li>
                 <a href={`/formats/${urlize(format.name)}#banlist`}>Ban List</a>
                 </li>
+                {
+                    ocgExclusives.length ? (
+                        <li>
+                        <a href={`/formats/${urlize(format.name)}#ocg-exclusives`}>OCG Exclusives</a>
+                        </li>
+                    ) : ''
+                }
             </div>
             <div className="vertical-centered-flexbox" style={{margin: '24px 0px'}}>
             {
@@ -205,6 +229,13 @@ export const FormatIntro = (props) => {
                 <Points/>
             ) : (
                 <BanList id="banlist" format={format}/>
+            )
+        }
+        {
+            ocgExclusives.length ? (
+                <OCGExclusives ocgExclusives={ocgExclusives}/>
+            ) : (
+                ''
             )
         }
     </div>

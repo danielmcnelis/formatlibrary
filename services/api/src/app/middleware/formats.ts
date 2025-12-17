@@ -1,5 +1,34 @@
-import { Format, Deck, Stats, Tournament } from '@fl/models'
+import { Card, Deck, Format, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
+
+export const getOCGExclusives = async (req, res, next) => {
+    try {
+        const format = await Format.findOne({
+            where: {
+                name: { [Op.iLike]: req.params.name.replaceAll(' ', '_').replaceAll('-', '_') }
+            },
+            attributes: [
+                'id', 'date'
+            ]
+        })
+
+        const ocgExclusives = await Card.findAll({
+            where: {
+                isOcgLegal: true,
+                isTcgLegal: false,
+                ocgDate: {[Op.lte]: format.date }
+            },
+            attributes: [
+                'id', 'artworkId', 'sortPriority'
+            ]
+        })
+
+        const data = { ocgExclusives }
+        res.json(data)
+    } catch (err) {
+        next(err)
+    }
+}
 
 export const getFormatByName = async (req, res, next) => {
   try {

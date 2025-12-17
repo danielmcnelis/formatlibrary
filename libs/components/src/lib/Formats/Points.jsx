@@ -32,13 +32,12 @@ export const Points = () => {
             <div className="divider"/>
                 <div id="banlist" className="banlist">
                     <h2 className="subheading">{'Genesys Point System'}</h2>
-                    <h3 className="banlist-date">Effective - September 24, 2025</h3>
+                    <h3 className="banlist-date">Effective - December 15, 2025</h3>
                     {
                     points?.length ? (
                         <div>
-                            <div id="forbidden" className="banlist-bubble">
-                                <div id="forbidden" className="banlist-category">Forbidden:</div>
-                                <div id="forbidden" className="banlist-flexbox">
+                            <div id="limited" className="banlist-bubble">
+                                <div id="limited" className="banlist-flexbox">
                                 {
                                 points.map((el) => 
                                 <

@@ -1,7 +1,9 @@
 import { Router } from 'express'
-import { getFormatByName, getFormats, updateFormatInfo } from '../middleware'
+import { getFormatByName, getFormats, getOCGExclusives, updateFormatInfo } from '../middleware'
 
 const router = Router()
+
+router.get('/api/formats/ocg-exclusives/:name', getOCGExclusives)
 
 router.get('/api/formats/:name', getFormatByName)
 
