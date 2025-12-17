@@ -19,7 +19,7 @@ export const getOCGExclusives = async (req, res, next) => {
                 ocgDate: {[Op.lte]: format.date }
             },
             attributes: [
-                'id', 'artworkId', 'sortPriority'
+                'id', 'artworkId', 'sortPriority', 'isOcgLegal', 'isTcgLegal', 'ocgDate'
             ]
         })
 
