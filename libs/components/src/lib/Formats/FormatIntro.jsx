@@ -68,7 +68,7 @@ export const FormatIntro = (props) => {
             if (format.category === 'OCG') {
                 const fetchData = async () => {
                     const { data } = await axios.get(`/api/formats/ocg-exclusives/${id}`)
-                    setOcgExclusives(data)
+                    setOcgExclusives(data.ocgExclusives)
                 }
 
                 fetchData()
