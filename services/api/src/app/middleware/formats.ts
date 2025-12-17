@@ -28,7 +28,7 @@ export const getOCGExclusives = async (req, res, next) => {
                 'name', 'cleanName', 'id', 'artworkId', 'sortPriority', 'isOcgLegal', 'isTcgLegal', 'ocgDate', 'tcgDate'
             ],
             order: [['sortPriority', 'ASC'], ['cleanName', 'ASC']]
-        })].filter((c) => c.tcgDate <= cutoff && c.tcgDate !== null )
+        })].filter((c) => c.tcgDate > cutoff || c.tcgDate === null )
 
         // console.log('ocgExclusives', ocgExclusives)
         // const exclusives = Object.fromEntries(ocgExclusives)
