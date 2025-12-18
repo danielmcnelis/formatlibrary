@@ -5,6 +5,7 @@ import { BanList } from './BanList'
 import { MiniBoard } from './MiniBoard'
 import { NotFound } from '../General/NotFound'
 import { OCGExclusives } from './OCGExclusives'
+import { TCGExclusives } from './TCGExclusives'
 import { Points } from './Points'
 import { PopularDecks } from './PopularDecks'
 import { RecentEvents } from '../Events/RecentEvents'
@@ -24,7 +25,9 @@ export const FormatIntro = (props) => {
     const [inEditMode, setInEditMode] = useState(false)
     const [description, setDescription] = useState('')
     const [ocgExclusives, setOcgExclusives] = useState([])
+    const [tcgExclusives, setTcgExclusives] = useState([])
     console.log("ocgExclusives", ocgExclusives)
+    console.log("tcgExclusives", tcgExclusives)
     const [id, setId] = useState(null)
     const { id: useParamsId } = useParams()
     if (useParamsId && id !== useParamsId) {
@@ -65,13 +68,14 @@ export const FormatIntro = (props) => {
     // USE LAYOUT EFFECT
     useEffect(() => {
         try {
-            if (format.category === 'OCG') {
-                const fetchData = async () => {
-                    const { data } = await axios.get(`/api/formats/ocg-exclusives/${id}`)
+            if (format?.category === 'OCG' && format.tcgEquivalentDate) {
+                const fetchExclusives = async () => {
+                    const { data } = await axios.get(`/api/formats/exclusives/${id}`)
                     setOcgExclusives(data.ocgExclusives)
+                    setTcgExclusives(data.tcgExclusives)
                 }
 
-                fetchData()
+                fetchExclusives()
             }
         } catch (err) {
             console.log(err)
@@ -235,6 +239,13 @@ export const FormatIntro = (props) => {
         {
             ocgExclusives.length ? (
                 <OCGExclusives ocgExclusives={ocgExclusives}/>
+            ) : (
+                ''
+            )
+        }
+        {
+            tcgExclusives.length ? (
+                <TCGExclusives tcgExclusives={tcgExclusives}/>
             ) : (
                 ''
             )

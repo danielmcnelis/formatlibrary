@@ -1,7 +1,7 @@
 import { Card, Deck, Format, Stats, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 
-export const getOCGExclusives = async (req, res, next) => {
+export const getExclusives = async (req, res, next) => {
     try {
         const format = await Format.findOne({
             where: {
@@ -12,16 +12,11 @@ export const getOCGExclusives = async (req, res, next) => {
             ]
         })
 
-        console.log('format.tcgEquivalentDate', format.tcgEquivalentDate)
         const cutoff = format.tcgEquivalentDate ? format.tcgEquivalentDate : format.date
-        console.log('cutoff', cutoff)
 
         const ocgExclusives = [...await Card.findAll({
             where: {
-                // isOcgLegal: true,
-                // isTcgLegal: false,
                 ocgDate: {[Op.lte]: format.date },
-                // tcgDate: {[Op.not]: {[Op.lte]: cutoff }},
                 sortPriority: {[Op.not]: 1}
             },
             attributes: [
@@ -30,9 +25,18 @@ export const getOCGExclusives = async (req, res, next) => {
             order: [['sortPriority', 'ASC'], ['cleanName', 'ASC']]
         })].filter((c) => c.tcgDate > cutoff || c.tcgDate === null )
 
-        // console.log('ocgExclusives', ocgExclusives)
-        // const exclusives = Object.fromEntries(ocgExclusives)
-        const data = { ocgExclusives }
+        const tcgExclusives = [...await Card.findAll({
+            where: {
+                tcgDate: {[Op.lte]: format.date },
+                sortPriority: {[Op.not]: 1}
+            },
+            attributes: [
+                'name', 'cleanName', 'id', 'artworkId', 'sortPriority', 'isOcgLegal', 'isTcgLegal', 'ocgDate', 'tcgDate'
+            ],
+            order: [['sortPriority', 'ASC'], ['cleanName', 'ASC']]
+        })].filter((c) => c.ocgDate > cutoff || c.ocgDate === null )
+
+        const data = { ocgExclusives, tcgExclusives }
         res.json(data)
     } catch (err) {
         next(err)
