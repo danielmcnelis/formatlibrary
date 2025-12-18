@@ -19,6 +19,7 @@ export const FormatIntro = (props) => {
     const isAdmin = props.roles?.admin
     const isContentManager = props.roles?.contentManager
     const [format, setFormat] = useState({})
+    console.log('format', format)
     const [deckCount, setDeckCount] = useState(0)
     const [eventCount, setEventCount] = useState(0)
     const [statsCount, setStatsCount] = useState(0)
