@@ -57,7 +57,7 @@ export const getFormatByName = async (req, res, next) => {
       attributes: [
         'id', 'name', 'icon', 'date', 'banlist', 'category', 'eventName', 'description', 
         'isPopular', 'isSpotlight', 'videoEmbed', 'videoId', 'videoPlaylistId', 'useSeasonalElo', 'seasonResetDate',
-        'previousFormatId', 'previousFormatName', 'nextFormatId', 'nextFormatName'
+        'previousFormatId', 'previousFormatName', 'nextFormatId', 'nextFormatName', 'tcgEquivalentDate'
       ]
     })
 

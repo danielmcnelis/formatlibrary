@@ -68,7 +68,7 @@ export const FormatIntro = (props) => {
     // USE LAYOUT EFFECT
     useEffect(() => {
         try {
-            if (format?.category === 'OCG' && format.tcgEquivalentDate) {
+            if (format?.category === 'OCG' && format?.tcgEquivalentDate) {
                 const fetchExclusives = async () => {
                     const { data } = await axios.get(`/api/formats/exclusives/${id}`)
                     setOcgExclusives(data.ocgExclusives)
