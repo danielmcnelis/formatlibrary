@@ -1,4 +1,3 @@
-
 export const config = { 
     siteUrl: process.env.SITE_URL,
     siteProxy: process.env.SITE_PROXY,
