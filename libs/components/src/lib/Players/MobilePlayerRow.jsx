@@ -19,7 +19,7 @@ export const MobilePlayerRow = (props) => {
                 <div style={{fontSize: '18px'}}>{player.name}</div>
                 </div>
             </td>
-            
+{/*             
             <td style={{paddingTop: '2px', paddingBottom: '2px', paddingLeft: '12px', paddingRight: '12px', height: '76px', width: '25%'}}>    
                 {stats.length ? (
                     <div className="horizontal-centered-flexbox link">
@@ -30,7 +30,7 @@ export const MobilePlayerRow = (props) => {
                 ) : (
                     'N/A'
                 )}
-            </td>
+            </td> */}
 
             <td style={{paddingTop: '2px', paddingBottom: '2px', paddingLeft: '12px', paddingRight: '12px', width: '25%'}}>   
                 {decks.length ? (

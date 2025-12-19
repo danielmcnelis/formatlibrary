@@ -23,8 +23,6 @@ export const authenticate = async (req, res, next) => {
         }
     }
 
-    console.log('accessToken', accessToken)
-
     if (accessToken) {
         let claims
         try {
