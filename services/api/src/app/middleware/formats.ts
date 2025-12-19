@@ -32,14 +32,14 @@ export const getExclusives = async (req, res, next) => {
 
         const tcgExclusives = [...await Card.findAll({
             where: {
-                tcgDate: {[Op.lte]: cutoff },
+                tcgDate: {[Op.lte]: cutoff }, //2003-04-01
                 sortPriority: {[Op.not]: 1}
             },
             attributes: [
                 'name', 'cleanName', 'id', 'artworkId', 'sortPriority', 'isOcgLegal', 'isTcgLegal', 'ocgDate', 'tcgDate'
             ],
             order: [['sortPriority', 'ASC'], ['cleanName', 'ASC']]
-        })].filter((c) => c.ocgDate > cutoff || c.ocgDate === null )
+        })].filter((c) => c.ocgDate > format.date || c.ocgDate === null ) //2001-
 
         const data = { ocgExclusives, tcgExclusives }
         res.json(data)
