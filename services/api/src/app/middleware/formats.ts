@@ -13,8 +13,6 @@ export const getExclusives = async (req, res, next) => {
         })
 
         console.log('format.tcgEquivalentDate', format.tcgEquivalentDate)
-        const cutoff = format.tcgEquivalentDate ? format.tcgEquivalentDate : format.date
-        console.log('cutoff', cutoff)
 
         const ocgExclusives = [...await Card.findAll({
             where: {
@@ -28,7 +26,7 @@ export const getExclusives = async (req, res, next) => {
                 'name', 'cleanName', 'id', 'artworkId', 'sortPriority', 'isOcgLegal', 'isTcgLegal', 'ocgDate', 'tcgDate'
             ],
             order: [['sortPriority', 'ASC'], ['cleanName', 'ASC']]
-        })].filter((c) => c.tcgDate > cutoff || c.tcgDate === null )
+        })].filter((c) => c.tcgDate > format.date || c.tcgDate === null )
 
         const tcgExclusives = [...await Card.findAll({
             where: {
