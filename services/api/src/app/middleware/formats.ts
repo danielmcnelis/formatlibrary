@@ -12,7 +12,9 @@ export const getExclusives = async (req, res, next) => {
             ]
         })
 
-        console.log('format.tcgEquivalentDate', )
+        console.log('format.tcgEquivalentDate', format.tcgEquivalentDate)
+        const cutoff = format.tcgEquivalentDate ? format.tcgEquivalentDate : format.date
+        console.log('cutoff', cutoff)
 
         const ocgExclusives = [...await Card.findAll({
             where: {
@@ -26,18 +28,18 @@ export const getExclusives = async (req, res, next) => {
                 'name', 'cleanName', 'id', 'artworkId', 'sortPriority', 'isOcgLegal', 'isTcgLegal', 'ocgDate', 'tcgDate'
             ],
             order: [['sortPriority', 'ASC'], ['cleanName', 'ASC']]
-        })].filter((c) => c.tcgDate > format.tcgEquivalentDate || c.tcgDate === null )
+        })].filter((c) => c.tcgDate > cutoff || c.tcgDate === null )
 
         const tcgExclusives = [...await Card.findAll({
             where: {
-                tcgDate: {[Op.lte]: format.tcgEquivalentDate },
+                tcgDate: {[Op.lte]: cutoff },
                 sortPriority: {[Op.not]: 1}
             },
             attributes: [
                 'name', 'cleanName', 'id', 'artworkId', 'sortPriority', 'isOcgLegal', 'isTcgLegal', 'ocgDate', 'tcgDate'
             ],
             order: [['sortPriority', 'ASC'], ['cleanName', 'ASC']]
-        })].filter((c) => c.ocgDate > format.ocgDate || c.ocgDate === null )
+        })].filter((c) => c.ocgDate > cutoff || c.ocgDate === null )
 
         const data = { ocgExclusives, tcgExclusives }
         res.json(data)
