@@ -18,7 +18,7 @@ import { emojis } from '@fl/bot-emojis'
 // GENERATE PAIRING NOTIFICATION
 const generatePairingNotification = (tournament, server, player) => {
     return (
-        `New pairing for ${tournament.name}! ${tournament.logo}` +
+        `New pairing for Round ${tournament.round} ${tournament.name}! ${tournament.logo}` +
         `\nServer: ${server.name} ${server.logo}` +
         `\nChannel: <#${tournament.channelId}>` +
         `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
