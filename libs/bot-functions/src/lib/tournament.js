@@ -1532,16 +1532,19 @@ export const processMatchResult = async (server, interaction, winner, winningPla
         const loserWaitingOnP1 = loserMatchWaitingOn && loserMatchWaitingOn.p1 && loserMatchWaitingOn.p2 ? await Entry.findOne({ where: { tournamentId: tournament.id, participantId: loserMatchWaitingOn.p1 }, include: Player }) : null
         const loserWaitingOnP2 = loserMatchWaitingOn && loserMatchWaitingOn.p1 && loserMatchWaitingOn.p2 ? await Entry.findOne({ where: { tournamentId: tournament.id, participantId: loserMatchWaitingOn.p2 }, include: Player }) : null
 
-        console.log('loserNextMatch', loserNextMatch)
-        console.log('loserNextOpponent', loserNextOpponent)
-        const round = tournament.type === 'double elimination' && loserNextMatch.round < 0 ? `Losers Round ${Math.abs(loserNextMatch.round)}` :
-            tournament.type === 'double elimination' && loserNextMatch.round > 0 ? `Winners Round ${Math.abs(loserNextMatch.round)}` :
-            `Round ${loserNextMatch?.round}`
-        return
         setTimeout(async () => {
+            const round = tournament.type === 'double elimination' && loserNextMatch.round < 0 ? `Losers Round ${Math.abs(loserNextMatch.round)}` :
+                tournament.type === 'double elimination' && loserNextMatch.round > 0 ? `Winners Round ${Math.abs(loserNextMatch.round)}` :
+                `Round ${loserNextMatch?.round}`
+
+            console.log('loserNextMatch', loserNextMatch)
+            console.log('loserNextOpponent', loserNextOpponent)
+            console.log('round', round)
+                
             if (loserEliminated) {
                 return await interaction.channel.send({ content: `${losingPlayer.name}, You are eliminated from the tournament. Better luck next time!`})
             } else if (loserNextOpponent) {
+                console.log('!!loserNextOpponent', !!loserNextOpponent)
                 try {
                     loser.send(generatePairingNotification(tournament, server, loserNextOpponent.player, round))
                 } catch (err) {
