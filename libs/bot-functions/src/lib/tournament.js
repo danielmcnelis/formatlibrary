@@ -16,9 +16,9 @@ import { emojis } from '@fl/bot-emojis'
 ////// TOURNAMENT REGISTRATION FUNCTIONS ///////
 
 // GENERATE PAIRING NOTIFICATION
-const generatePairingNotification = (tournament, server, player) => {
+const generatePairingNotification = (tournament, server, player, round) => {
     return (
-        `New pairing for Round ${tournament.round} ${tournament.name}! ${tournament.logo}` +
+        `New pairing for ${round ? `Round ${round}`: ''} ${tournament.name}! ${tournament.logo}` +
         `\nServer: ${server.name} ${server.logo}` +
         `\nChannel: <#${tournament.channelId}>` +
         `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
@@ -1532,19 +1532,23 @@ export const processMatchResult = async (server, interaction, winner, winningPla
         const loserWaitingOnP1 = loserMatchWaitingOn && loserMatchWaitingOn.p1 && loserMatchWaitingOn.p2 ? await Entry.findOne({ where: { tournamentId: tournament.id, participantId: loserMatchWaitingOn.p1 }, include: Player }) : null
         const loserWaitingOnP2 = loserMatchWaitingOn && loserMatchWaitingOn.p1 && loserMatchWaitingOn.p2 ? await Entry.findOne({ where: { tournamentId: tournament.id, participantId: loserMatchWaitingOn.p2 }, include: Player }) : null
 
+        const round = tournament.type === 'double elimination' && loserNextMatch.round < 0 ? `Losers Round ${Math.abs(loserNextMatch.round)}` :
+            tournament.type === 'double elimination' && loserNextMatch.round > 0 ? `Winners Round ${Math.abs(loserNextMatch.round)}` :
+            `Round ${loserNextMatch.round}`
+            
         setTimeout(async () => {
             if (loserEliminated) {
                 return await interaction.channel.send({ content: `${losingPlayer.name}, You are eliminated from the tournament. Better luck next time!`})
             } else if (loserNextOpponent) {
                 try {
-                    loser.send(generatePairingNotification(tournament, server, loserNextOpponent.player))
+                    loser.send(generatePairingNotification(tournament, server, loserNextOpponent.player, round))
                 } catch (err) {
                     console.log(err)
                 }
 
                 try {
                     const member = await interaction.guild?.members.fetch(loserNextOpponent.player.discordId)
-                    member.user.send(generatePairingNotification(tournament, server, losingPlayer))
+                    member.user.send(generatePairingNotification(tournament, server, losingPlayer, round))
                 } catch (err) {
                     console.log(err)
                 }
@@ -1754,14 +1758,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pA1Member = await interaction.guild?.members.fetch(playerA1.discordId)
-                        pA1Member.user.send(generatePairingNotification(tournament, server, playerA2))
+                        pA1Member.user.send(generatePairingNotification(tournament, server, playerA2, round))
                     } catch (err) {
                         console.log(err)
                     }
 
                     try {
                         const pA2Member = await interaction.guild?.members.fetch(playerA2.discordId)
-                        pA2Member.user.send(generatePairingNotification(tournament, server, playerA1))
+                        pA2Member.user.send(generatePairingNotification(tournament, server, playerA1, round))
                     } catch (err) {
                         console.log(err)
                     }
@@ -1773,14 +1777,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pB1Member = await interaction.guild?.members.fetch(playerB1.discordId)
-                        pB1Member.user.send(generatePairingNotification(tournament, server, playerB2))
+                        pB1Member.user.send(generatePairingNotification(tournament, server, playerB2, round))
                     } catch (err) {
                         console.log(err)
                     }
 
                     try {
                         const pB2Member = await interaction.guild?.members.fetch(playerB2.discordId)
-                        pB2Member.user.send(generatePairingNotification(tournament, server, playerB1))
+                        pB2Member.user.send(generatePairingNotification(tournament, server, playerB1, round))
                     } catch (err) {
                         console.log(err)
                     }
@@ -1792,14 +1796,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
 
                     try {
                         const pC1Member = await interaction.guild?.members.fetch(playerC1.discordId)
-                        pC1Member.user.send(generatePairingNotification(tournament, server, playerC2))
+                        pC1Member.user.send(generatePairingNotification(tournament, server, playerC2, round))
                     } catch (err) {
                         console.log(err)
                     }
 
                     try {
                         const pC2Member = await interaction.guild?.members.fetch(playerC2.discordId)
-                        pC2Member.user.send(generatePairingNotification(tournament, server, playerC1))
+                        pC2Member.user.send(generatePairingNotification(tournament, server, playerC1, round))
                     } catch (err) {
                         console.log(err)
                     }
@@ -1835,14 +1839,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     
                         try {
                             const pA1Member = await interaction.guild?.members.fetch(playerA1.discordId)
-                            pA1Member.user.send(generatePairingNotification(tournament, server, playerA2))
+                            pA1Member.user.send(generatePairingNotification(tournament, server, playerA2, round))
                         } catch (err) {
                             console.log(err)
                         }
     
                         try {
                             const pA2Member = await interaction.guild?.members.fetch(playerA2.discordId)
-                            pA2Member.user.send(generatePairingNotification(tournament, server, playerA1) )
+                            pA2Member.user.send(generatePairingNotification(tournament, server, playerA1, round) )
                         } catch (err) {
                             console.log(err)
                         }
@@ -1854,14 +1858,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     
                         try {
                             const pB1Member = await interaction.guild?.members.fetch(playerB1.discordId)
-                            pB1Member.user.send(generatePairingNotification(tournament, server, playerB2))
+                            pB1Member.user.send(generatePairingNotification(tournament, server, playerB2, round))
                         } catch (err) {
                             console.log(err)
                         }
     
                         try {
                             const pB2Member = await interaction.guild?.members.fetch(playerB2.discordId)
-                            pB2Member.user.send(generatePairingNotification(tournament, server, playerB1) )
+                            pB2Member.user.send(generatePairingNotification(tournament, server, playerB1, round) )
                         } catch (err) {
                             console.log(err)
                         }
@@ -1873,14 +1877,14 @@ export const processTeamResult = async (server, interaction, winningPlayer, losi
     
                         try {
                             const pC1Member = await interaction.guild?.members.fetch(playerC1.discordId)
-                            pC1Member.user.send(generatePairingNotification(tournament, server, playerC2))
+                            pC1Member.user.send(generatePairingNotification(tournament, server, playerC2, round))
                         } catch (err) {
                             console.log(err)
                         }
     
                         try {
                             const pC2Member = await interaction.guild?.members.fetch(playerC2.discordId)
-                            pC2Member.user.send(generatePairingNotification(tournament, server, playerC1))
+                            pC2Member.user.send(generatePairingNotification(tournament, server, playerC1, round, round))
                         } catch (err) {
                             console.log(err)
                         }
@@ -1926,14 +1930,14 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
 
         try {
             const pA1Member = await guild.members.fetch(playerA1.discordId)
-            pA1Member.user.send(generatePairingNotification(tournament, server, playerA2))
+            pA1Member.user.send(generatePairingNotification(tournament, server, playerA2, round))
         } catch (err) {
             console.log(err)
         }
 
         try {
             const pA2Member = await guild.members.fetch(playerA2.discordId)
-            pA2Member.user.send(generatePairingNotification(tournament, server, playerA1))
+            pA2Member.user.send(generatePairingNotification(tournament, server, playerA1, round))
         } catch (err) {
             console.log(err)
         }
@@ -1945,14 +1949,14 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
 
         try {
             const pB1Member = await guild.members.fetch(playerB1.discordId)
-            pB1Member.user.send(generatePairingNotification(tournament, server, playerB2))
+            pB1Member.user.send(generatePairingNotification(tournament, server, playerB2, round))
         } catch (err) {
             console.log(err)
         }
 
         try {
             const pB2Member = await guild.members.fetch(playerB2.discordId)
-            pB2Member.user.send(generatePairingNotification(tournament, server, playerB1))
+            pB2Member.user.send(generatePairingNotification(tournament, server, playerB1, round))
         } catch (err) {
             console.log(err)
         }
@@ -1964,14 +1968,14 @@ export const sendTeamPairings = async (guild, server, tournament, ignoreRound1) 
 
         try {
             const pC1Member = await guild.members.fetch(playerC1.discordId)
-            pC1Member.user.send(generatePairingNotification(tournament, server, playerC2))
+            pC1Member.user.send(generatePairingNotification(tournament, server, playerC2, round))
         } catch (err) {
             console.log(err)
         }
 
         try {
             const pC2Member = await guild.members.fetch(playerC2.discordId)
-            pC2Member.user.send(generatePairingNotification(tournament, server, playerC1))
+            pC2Member.user.send(generatePairingNotification(tournament, server, playerC1, round))
         } catch (err) {
             console.log(err)
         }
@@ -2010,16 +2014,20 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
                 include: Player
             })
     
+            const round = tournament.type === 'double elimination' && match.round < 0 ? `Losers Round ${Math.abs(match.round)}` :
+                tournament.type === 'double elimination' && match.round > 0 ? `Winners Round ${Math.abs(match.round)}` :
+                `Round ${match.round}`
+
             try {
                 const p1Member = await guild.members.fetch(player1.discordId)
-                p1Member.user.send(generatePairingNotification(tournament, server, player2))
+                p1Member.user.send(generatePairingNotification(tournament, server, player2, round))
             } catch (err) {
                 console.log(err)
             }
     
             try {
                 const p2Member = await guild.members.fetch(player2.discordId)
-                p2Member.user.send(generatePairingNotification(tournament, server, player1))
+                p2Member.user.send(generatePairingNotification(tournament, server, player1, round))
             } catch (err) {
                 console.log(err)
             }
