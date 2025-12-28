@@ -996,7 +996,7 @@ export const setTimers = async (client) => {
             const channel = guild.channels.cache.get(tournament.channelId)
 
             setTimeout(() => {
-                return channel.send(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`)
+                return channel.send(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`).catch((err) => console.log(err))
             }, timeRemaining)
         } catch (err) {
             console.log(err)

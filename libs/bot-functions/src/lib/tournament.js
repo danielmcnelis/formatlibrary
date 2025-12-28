@@ -18,7 +18,7 @@ import { emojis } from '@fl/bot-emojis'
 // GENERATE PAIRING NOTIFICATION
 const generatePairingNotification = (tournament, server, player, round) => {
     return (
-        `New pairing for ${round ? `Round ${round}`: ''} ${tournament.name}! ${tournament.logo}` +
+        `New pairing for ${round || ''} ${tournament.name}! ${tournament.logo}` +
         `\nServer: ${server.name} ${server.logo}` +
         `\nChannel: <#${tournament.channelId}>` +
         `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
@@ -927,7 +927,7 @@ export const setTimerForTournament = async (interaction, tournamentId, hours, mi
     }
 
     return setTimeout(async () => {
-        return await interaction.editReply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`)
+        return await interaction.editReply(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`).catch((err) => console.log(err))
     }, timeRemaining)
 }
 

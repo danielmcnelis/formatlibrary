@@ -67,7 +67,7 @@ export default {
             }
 
             return setTimeout(async () => {
-                return await interaction.channel.send(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`)
+                return await interaction.channel.send(`${emojis.high_alert} **Attention: ${tournament.name} Participants!** ${emojis.high_alert} Time is up in the round! ${emojis.vince}`).catch((err) => console.log(err))
             }, timeRemaining)
         } catch (err) {
             console.log(err)

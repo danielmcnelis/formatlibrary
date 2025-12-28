@@ -953,7 +953,6 @@ export const recalculateAllStats = async () => {
     })
 
     const formats = await Format.findAll({
-        attributes: ['id', 'name'],
         order: [["name", "ASC"]]
     })
     
