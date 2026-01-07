@@ -43,6 +43,9 @@ export const Match = db.define('matches', {
     challongeMatchId: {
         type: Sequelize.INTEGER
     },
+    challongeMatchRound: {
+        type: Sequelize.INTEGER
+    },
     round: {
         type: Sequelize.INTEGER
     },

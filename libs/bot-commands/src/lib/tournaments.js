@@ -25,7 +25,7 @@ export default {
                     // if (tournament.server.inviteLink) {
                     //     return `- ${tournament.name} ${tournament.logo} ${tournament.emoji} [(${tournament.server?.name})](<${tournament.server?.inviteLink}>) ` 
                     // } else {
-                        return `- ${tournament.name} ${tournament.logo} ${tournament.emoji} [(${tournament.server?.name}](<https://discord.com/channels/${tournament.serverId}>)) ` 
+                        return `- ${tournament.name} ${tournament.logo} ${tournament.emoji} ([${tournament.server?.name}](<https://discord.com/channels/${tournament.serverId}>)) ` 
                     // }
                 } else {
                     return `- ${tournament.name} ${tournament.logo} ${tournament.emoji}`

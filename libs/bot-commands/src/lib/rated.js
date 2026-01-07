@@ -92,7 +92,7 @@ const getRatedInformation = async (interaction, player, format) => {
         
         if (!count) {
             try {
-                channel.send(`Somebody joined the ${format.name} ${format.emoji} Rated Pool! ${emojis.megaphone}`)
+                channel.send(`Somebody joined the ${format.name} ${format.emoji} Rated Pool! ${emojis.megaphone} - DM **/rated** to <@730922003296419850> to challenge them! ${emojis.wokefrog}`)
             } catch (err) {
                 console.log(err)
             }

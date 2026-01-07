@@ -450,18 +450,26 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
     const winningPlayer = await Player.findOne({ where: { id: match.winnerId }})
     const losingPlayer = await Player.findOne({ where: { id: match.loserId }})
 
-    const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`).catch((err) => console.log(err))
+    const participants_count = tournament.size
+    // const {data: {tournament: { participants_count }}} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`).catch((err) => console.log(err))
     if (!participants_count) return await interaction.channel.send({ content: `Error: Challonge tournament data not found.`})	
-    const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeApiKey}`).catch((err) => console.log(err))
-    if (!challongeMatch) return await interaction.channel.send({ content: `Error: Challonge match data not found.`})	
+    let challongeMatchRound = match.challongeMatchRound
+
+    if (!challongeMatchRound) {
+        const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeApiKey}`).catch((err) => console.log(err))
+        if (!challongeMatch) return await interaction.channel.send({ content: `Error: Challonge match data not found.`})	
+        challongeMatchRound = challongeMatch?.match?.round
+        await match.update({ challongeMatchRound })
+    } 
+
     const replay = await Replay.findOne({ where: { matchId: match.id }})
-    if (replay && await isModerator(server, interaction.member)) {
+    if (replay /*&& await isModerator(server, interaction.member)*/) {
         await replay.update({ url })
-        return await interaction.channel.send({ content: `Replay updated for Round ${challongeMatch?.match?.round} of ${tournament.name} ${tournament.logo}:\nMatch: ${replay.winnerName} vs ${replay.loserName}\nURL: <${url}>`})	
-    } if (replay) {
-        return await interaction.channel.send({ content: `The replay from this match was already saved:\n<${replay.url}>\n\nIf this link is incorrect, please get a Moderator to help you.`})	
+        return await interaction.channel.send({ content: `Replay updated for Round ${challongeMatchRound} of ${tournament.name} ${tournament.logo}:\nMatch: ${replay.winnerName} vs ${replay.loserName}\nURL: <${url}>`})	
+    // } if (replay) {
+    //     return await interaction.channel.send({ content: `The replay from this match was already saved:\n<${replay.url}>\n\nIf this link is incorrect, please get a Moderator to help you.`})	
     } else {
-        const round = challongeMatch?.match?.round || ''
+        const round = challongeMatchRound || ''
         let roundName 
 
         if (tournament.type === 'single elimination') {
@@ -498,7 +506,7 @@ export const saveReplay = async (server, interaction, match, tournament, url) =>
                     `Loser's Round ${Math.abs(round)}`
             }
         } else {
-            roundName = `Round ${challongeMatch?.match?.round}`
+            roundName = `Round ${challongeMatchRound}`
         }
         
         try {

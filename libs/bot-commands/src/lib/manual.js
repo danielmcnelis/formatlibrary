@@ -216,6 +216,7 @@ export default {
                     loserId: losingPlayer.id,
                     tournamentId: tournament?.id,
                     challongeMatchId: challongeMatch?.id,
+                    challongeMatchRound: challongeMatch?.round,
                     round: challongeMatch?.round,
                     formatName: format.name,
                     formatId: format.id,
