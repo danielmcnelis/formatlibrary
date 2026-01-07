@@ -3486,3 +3486,30 @@ const shuffleArray = (arr) => {
 
 //     return console.log(`trimmed ${b} out of ${players.length} players, encountered ${e} errors`)
 // })()
+
+;(async () => {
+    let b = 0
+    let e = 0
+
+    const tournaments = await Tournament.findAll({
+        where: {
+            state: 'underway'
+        }
+    })
+
+    for (let i = 0; i < tournaments.length; i++) {
+        const tournament = tournaments[i]
+        try {
+            const entryCount = await Entry.count({ where: { tournamentId: tournament.id }})
+            await tournament.update({ 
+                size: entryCount
+            })
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    return console.log(`updated ${b} out of ${tournaments.length} tournaments, encountered ${e} errors`)
+})()

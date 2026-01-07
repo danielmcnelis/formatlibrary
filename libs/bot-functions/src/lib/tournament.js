@@ -2871,6 +2871,8 @@ export const startTournament = async (interaction, tournamentId) => {
         return await interaction.editReply({ content: `Error: No entrants found.`})
     } else if (entryCount < 2) {
         return await interaction.editReply({ content: `At least 2 players are required to start a tournament.`})
+    } else {
+        await tournament.update({ size: entryCount })
     }
     
     if (tournament?.type?.toLowerCase() === 'swiss') {

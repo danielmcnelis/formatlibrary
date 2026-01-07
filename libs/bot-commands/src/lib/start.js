@@ -34,6 +34,8 @@ export default {
                 return await interaction.editReply({ content: `Error: No tournament entrants found.`})
             } else if (entryCount < 2) {
                 return await interaction.editReply({ content: `Error: At least 2 players are required to start a tournament.`})
+            } else {
+                await tournament.update({ size: entryCount })
             }
 
             if (tournament.isTeamTournament) {
