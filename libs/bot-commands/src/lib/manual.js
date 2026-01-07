@@ -175,6 +175,7 @@ export default {
                     
                 if (tournaments.length) {
                     const tournament = await selectTournament(interaction, tournaments, interaction.user.id)
+                    if (!tournament) return
                     if (tournament) {
                         isTournament = true
                         const index = tournaments.indexOf(tournament)

@@ -1436,6 +1436,7 @@ export const postParticipant = async (server, tournament, name) => {
 
 //PROCESS MATCH RESULT
 export const processMatchResult = async (server, interaction, openChallongeMatch, winner, winningPlayer, loser, losingPlayer, tournament, format, noshow = false) => {
+    console.log('processMatchResult openChallongeMatch', openChallongeMatch)
     const losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id }, include: Player })
     const winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id }, include: Player })
     
