@@ -153,6 +153,7 @@ export default {
                 const winnerTournamentIds = [...await Entry.findByPlayerIdAndFormatId(winningPlayer.id, format.id)].map((e) => e.tournamentId)
                 const commonTournamentIds = loserTournamentIds.filter((id) => winnerTournamentIds.includes(id))
                 const tournaments = []
+                const openChallongeMatches = []
                 
                 if (commonTournamentIds.length) {
                     for (let i = 0; i < commonTournamentIds.length; i++) {
@@ -167,6 +168,7 @@ export default {
                         if (!data[0]) continue
                         if (checkPairing(data[0].match, losingEntry.participantId, winningEntry.participantId)) {
                             tournaments.push(tournament)
+                            openChallongeMatches.push(data[0].match)
                             break
                         }
                     }
@@ -176,8 +178,13 @@ export default {
                     const tournament = await selectTournament(interaction, tournaments, interaction.user.id)
                     if (tournament) {
                         isTournament = true
+                        const index = tournaments.indexOf(tournament)
+                        console.log('tournaments.length', tournaments.length)
+                        console.log('index', index)
+                        const openChallongeMatch = openChallongeMatches[index]
+                        console.log('openChallongeMatch', openChallongeMatch)
                         challongeMatch = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament, format) :
-                            await processMatchResult(server, interaction, winner, winningPlayer, loser, losingPlayer, tournament, format)
+                            await processMatchResult(server, interaction, null, winner, winningPlayer, loser, losingPlayer, tournament, format)
                         if (!challongeMatch) return
                     } else {
                         return

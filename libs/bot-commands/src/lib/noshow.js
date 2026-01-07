@@ -41,12 +41,15 @@ export default {
             const noShowEntry = await Entry.findOne({ where: { playerId: noShowPlayer.id, tournamentId: tournament.id } })
             if (!noShowEntry) return await interaction.editReply({ content: `Sorry, I could not find that player's tournament entry in the database.`})
 
+            let openChallongeMatch
+
             const matchesArr = await getMatches(server, tournament.id)
             let winnerParticipantId = false
             for (let i = 0; i < matchesArr.length; i++) {
                 const match = matchesArr[i].match
                 if (match.state !== 'open') continue
                 winnerParticipantId = findNoShowOpponent(match, noShowEntry.participantId)
+                openChallongeMatch = match
                 if (winnerParticipantId) break
             }
 
@@ -57,7 +60,7 @@ export default {
             const winningPlayer = winningEntry.player
             const winner = await interaction.guild?.members.fetch(winningPlayer.discordId)
             const success = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, noShowPlayer, tournament, format, true) :
-                await processMatchResult(server, interaction, winner.user, winningPlayer, noShow.user, noShowPlayer, tournament, format, true)
+                await processMatchResult(server, interaction, openChallongeMatch, winner.user, winningPlayer, noShow.user, noShowPlayer, tournament, format, true)
             if (!success) return
 
             return await interaction.editReply({ content: `<@${noShowPlayer.discordId}>, your Tournament loss to <@${winningPlayer.discordId}> has been recorded as a no-show.`})	

@@ -133,13 +133,14 @@ export default {
             }
 
             const activeTournament = await Tournament.count({ where: { state: {[Op.iLike]: '%underway%'}, serverId: interaction.guildId, formatName: {[Op.or]: [format.name, 'Multiple']} }}) 
-            let isTournament, winningEntry, losingEntry, tournament, match, challongeMatch
+            let isTournament, winningEntry, losingEntry, tournament, match, challongeMatch, openChallongeMatch
 
             if (activeTournament) {
                 const loserTournamentIds = [...await Entry.findByPlayerIdAndFormatId(losingPlayer.id, format.id)].map((e) => e.tournamentId)
                 const winnerTournamentIds = [...await Entry.findByPlayerIdAndFormatId(winningPlayer.id, format.id)].map((e) => e.tournamentId)
                 const commonTournamentIds = loserTournamentIds.filter((id) => winnerTournamentIds.includes(id))
                 const tournaments = []
+                const openChallongeMatches = []
 
                 if (commonTournamentIds.length) {
                     for (let i = 0; i < commonTournamentIds.length; i++) {
@@ -154,20 +155,26 @@ export default {
                         if (!data[0]) continue
                         if (checkPairing(data[0].match, losingEntry.participantId, winningEntry.participantId)) {
                             tournaments.push(tournament)
+                            openChallongeMatches.push(data[0].match)
                             break
                         }
                     }
                 }
 
                 if (tournaments.length) {
-                    const tournament = await selectTournament(interaction, tournaments, interaction.member.user.id)
+                    tournament = await selectTournament(interaction, tournaments, interaction.member.user.id)
                     if (tournament) {
                         isTournament = true
+                        const index = tournaments.indexOf(tournament)
+                        console.log('tournaments.length', tournaments.length)
+                        console.log('index', index)
+                        const openChallongeMatch = openChallongeMatches[index]
+                        console.log('openChallongeMatch', openChallongeMatch)
                         if (tournament.state === 'pending') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
                         if (tournament.state === 'processing') return await interaction.editReply({ content: `Sorry, another API request is processing for ${tournament.name}. Please try again shortly.`})
                         if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})
                         challongeMatch = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament, format) :
-                            await processMatchResult(server, interaction, winningUser, winningPlayer, interaction.member.user, losingPlayer, tournament, format)
+                            await processMatchResult(server, interaction, openChallongeMatch, winningUser, winningPlayer, interaction.member.user, losingPlayer, tournament, format)
                         if (!challongeMatch) return
                     } else {
                         return

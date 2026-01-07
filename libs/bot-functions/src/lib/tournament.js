@@ -1435,7 +1435,7 @@ export const postParticipant = async (server, tournament, name) => {
 }
 
 //PROCESS MATCH RESULT
-export const processMatchResult = async (server, interaction, winner, winningPlayer, loser, losingPlayer, tournament, format, noshow = false) => {
+export const processMatchResult = async (server, interaction, openChallongeMatch, winner, winningPlayer, loser, losingPlayer, tournament, format, noshow = false) => {
     const losingEntry = await Entry.findOne({ where: { playerId: losingPlayer.id, tournamentId: tournament.id }, include: Player })
     const winningEntry = await Entry.findOne({ where: { playerId: winningPlayer.id, tournamentId: tournament.id }, include: Player })
     
@@ -1450,10 +1450,16 @@ export const processMatchResult = async (server, interaction, winner, winningPla
         return false
     }
 
-    const data = await getMatches(server, tournament.id, 'open', losingEntry.participantId) || []
+    let match
     let matchId = false
     let scores = false
-    const match = data[0].match
+    
+    if (openChallongeMatch) {
+        match = openChallongeMatch
+    } else {
+        const data = await getMatches(server, tournament.id, 'open', losingEntry.participantId) || []
+        match = data[0].match
+    }
  
     if (match && checkPairing(match, losingEntry.participantId, winningEntry.participantId)) {
         matchId = match.id    
@@ -3626,12 +3632,14 @@ export const processNoShow = async (interaction, tournamentId, userId) => {
     const noShowEntry = await Entry.findOne({ where: { playerId: noShowPlayer.id, tournamentId: tournament.id } })
     if (!noShowEntry) return await interaction.editReply({ content: `Sorry, I could not find that player's tournament entry in the database.`})
 
+    let openChallongeMatch
     const matchesArr = await getMatches(server, tournament.id)
     let winnerParticipantId = false
     for (let i = 0; i < matchesArr.length; i++) {
         const match = matchesArr[i].match
         if (match.state !== 'open') continue
         winnerParticipantId = findNoShowOpponent(match, noShowEntry.participantId)
+        openChallongeMatch = match
         if (winnerParticipantId) break
     }
 
@@ -3641,7 +3649,7 @@ export const processNoShow = async (interaction, tournamentId, userId) => {
     if (!winningEntry) return await interaction.editReply({ content: `Error: could not find opponent.`})
     const winningPlayer = winningEntry.player
     const winner = await interaction.guild?.members.fetch(winningPlayer.discordId)
-    const success = await processMatchResult(server, interaction, winner, winningPlayer, noShow, noShowPlayer, tournament, tournament.format, true)
+    const success = await processMatchResult(server, interaction, openChallongeMatch, winner, winningPlayer, noShow, noShowPlayer, tournament, tournament.format, true)
     if (!success) return
 
     return await interaction.editReply({ content: `<@${noShowPlayer.discordId}>, your Tournament loss to <@${winningPlayer.discordId}> has been recorded as a no-show.`})	
