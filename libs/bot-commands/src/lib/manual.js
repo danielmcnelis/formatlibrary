@@ -169,7 +169,6 @@ export default {
                         if (checkPairing(data[0].match, losingEntry.participantId, winningEntry.participantId)) {
                             tournaments.push(tournament)
                             openChallongeMatches.push(data[0].match)
-                            break
                         }
                     }
                 }

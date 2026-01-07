@@ -139,6 +139,7 @@ export default {
                 const loserTournamentIds = [...await Entry.findByPlayerIdAndFormatId(losingPlayer.id, format.id)].map((e) => e.tournamentId)
                 const winnerTournamentIds = [...await Entry.findByPlayerIdAndFormatId(winningPlayer.id, format.id)].map((e) => e.tournamentId)
                 const commonTournamentIds = loserTournamentIds.filter((id) => winnerTournamentIds.includes(id))
+                console.log('commonTournamentIds', commonTournamentIds)
                 const tournaments = []
                 const openChallongeMatches = []
 
@@ -156,7 +157,6 @@ export default {
                         if (checkPairing(data[0].match, losingEntry.participantId, winningEntry.participantId)) {
                             tournaments.push(tournament)
                             openChallongeMatches.push(data[0].match)
-                            break
                         }
                     }
                 }
