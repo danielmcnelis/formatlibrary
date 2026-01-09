@@ -327,7 +327,7 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
             }
 
             opposingMember.user.send(
-                `New pairing for Rated ${format.name} Format ${format.emoji}!` +
+                `New pairing for Rated ${format.name} Format! ${format.emoji}` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${channel.id}>` +
                 `\nDiscord Name: ${playerGlobalName ? `${playerGlobalName} (${playerDiscordName})` : playerDiscordName}` +
@@ -335,7 +335,7 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
             ).catch((err) => console.log(err))
 
             member.user.send(
-                `New pairing for Rated ${format.name} Format ${format.emoji}!` + 
+                `New pairing for Rated ${format.name} Format! ${format.emoji}` + 
                 `\nServer: ${server.name} ${server.logo}` + 
                 `\nChannel: <#${channel.id}>` +
                 `\nDiscord Name: ${opponentGlobalName ? `${opponentGlobalName} (${opponentDiscordName})` : opponentDiscordName}` +
@@ -458,7 +458,7 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
             console.log(`handleRatedConfirmation() New Pairing!`)
 
             opposingMember.user.send(
-                `New pairing for Rated ${format.name} Format ${format.emoji}!` +
+                `New pairing for Rated ${format.name} Format! ${format.emoji}` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${channelId}>` +
                 `\nDiscord Name: ${playerGlobalName ? `${playerGlobalName} (${playerDiscordName})` : playerDiscordName}` +
@@ -466,7 +466,7 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
             ).catch((err) => console.log(err))
             
             member.user.send(
-                `New pairing for Rated ${format.name} Format ${format.emoji}!` +
+                `New pairing for Rated ${format.name} Format! ${format.emoji}` +
                 `\nServer: ${server.name} ${server.logo}` +
                 `\nChannel: <#${channelId}>` +
                 `\nDiscord Name: ${opponentGlobalName ? `${opponentGlobalName} (${opponentDiscordName})` : opponentDiscordName}` +
