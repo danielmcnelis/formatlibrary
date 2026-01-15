@@ -1057,7 +1057,7 @@ export const applyGeneralDecay = async (formatId, formatName, serverId, currentD
 
 // APPLY SEASONAL DECAY
 export const applySeasonalDecay = async (formatId, formatName, serverId, currentDate, nextDate) => {
-    console.log('dates', currentDate, nextDate)
+    // console.log('dates', currentDate, nextDate)
     const allStats = await Stats.findAll({
         where: {
             formatId: formatId,
