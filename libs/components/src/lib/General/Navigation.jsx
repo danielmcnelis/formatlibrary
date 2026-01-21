@@ -163,15 +163,15 @@ export const Navigation = (props) => {
                 }
             </div>
         </div>
-            {/* <div className="announcement-banner">
+            <div className="announcement-banner">
                 <h2>
                     <a
                         className="inherit-color" 
-                        href="https://discord.com/channels/414551319031054346/414577532969418753/1362067266451144704"
+                        href="https://docs.google.com/forms/d/e/1FAIpQLSeYRFRjSIjXo50bEiq8gAPFjaT6IEDdebc_sE0TpXVo87Emww/viewform?usp=dialog"
                         rel="noreferrer"
                         target="_blank"
-                    >The Goat Format Seasonal Ladder is Underway - Click for More Info!</a></h2>
-            </div> */}
+                    >Applications for hosting Edison World Championship Qualifier are now open!</a></h2>
+            </div>
         </>
     )
 }
