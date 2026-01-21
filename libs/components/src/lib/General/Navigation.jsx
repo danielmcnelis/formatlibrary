@@ -170,7 +170,7 @@ export const Navigation = (props) => {
                         href="https://docs.google.com/forms/d/e/1FAIpQLSeYRFRjSIjXo50bEiq8gAPFjaT6IEDdebc_sE0TpXVo87Emww/viewform?usp=dialog"
                         rel="noreferrer"
                         target="_blank"
-                    >Applications for hosting Edison World Championship Qualifier are now open!</a></h2>
+                    >Applications for hosting Edison World Championship Qualifiers are now open!</a></h2>
             </div>
         </>
     )
