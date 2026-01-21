@@ -214,6 +214,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
             console.log('ids', ids)
             const yourPoolId = ids[0]
             const opponentsPoolId = ids[1]
+            // const opponentsPool = await Pool.findOne({ where: { id: opponentsPoolId }})
+            // const opponentsPoolIsOld = 
+            // if (opponentsPoolIsOld) {
+            //     await opponentsPool.update({ status: 'pending' })
+            // }
             const guildId = ids[2]
             console.log('guildId main.js 200', guildId)
             if (isConfirmed && !opponentIsConfirmed) {

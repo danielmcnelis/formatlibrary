@@ -74,7 +74,7 @@ export const getRatedConfirmation = async (player, opponent, format, guild) => {
                 } else {
                     return true
                 }
-            }, time);
+            }, 5 * 60 * 1000);
         });
       }
 
