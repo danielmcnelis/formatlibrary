@@ -73,12 +73,12 @@ export default {
                         continue
                     }
                     if (tier === 'Premium') {
-                        member.roles.add('1335316985097093290').catch((err) => console.log(err))
-                        member.roles.add('1336745321186988084').catch((err) => console.log(err))
+                        await member.roles.add('1335316985097093290').catch((err) => console.log(err))
+                        await member.roles.add('1336745321186988084').catch((err) => console.log(err))
                         console.log('added premium/stripe roles back to', member.user.username)
                     } else if (tier === 'Supporter') {
-                        member.roles.add('1335317256921682053').catch((err) => console.log(err))
-                        member.roles.add('1336745321186988084').catch((err) => console.log(err))
+                        await member.roles.add('1335317256921682053').catch((err) => console.log(err))
+                        await member.roles.add('1336745321186988084').catch((err) => console.log(err))
                         console.log('added supporter/stripe roles back to', member.user.username)
                     }
                 }
