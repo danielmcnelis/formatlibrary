@@ -62,6 +62,10 @@ export default {
                 for (let i = 0; i < subscriptions.length; i++) {
                     const subscriber = subscriptions[i]
                     const player = subscriber.player
+                    if (!player) {
+                        console.log(`no player found:`, subscriber.customerName)
+                        continue
+                    }
                     const tier = subscriber.tier
                     const member = members.find((m) => m.id === player.discordId)
                     if (!member) {
