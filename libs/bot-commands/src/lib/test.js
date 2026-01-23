@@ -69,14 +69,17 @@ export default {
                     const player = subscriber.player
                     const tier = subscriber.tier
                     const member = members.find((m) => m.id === player.discordId)
-                    if (!member) continue
+                    if (!member) {
+                        console.log(`no member found:`, player.name)
+                        continue
+                    }
                     if (tier === 'Premium') {
-                        member.roles.add('1335316985097093290')
-                        member.roles.add('1336745321186988084')
+                        member.roles.add('1335316985097093290').catch((err) => console.log(err))
+                        member.roles.add('1336745321186988084').catch((err) => console.log(err))
                         console.log('added premium/stripe roles back to', member.user.username)
                     } else if (tier === 'Supporter') {
-                        member.roles.add('1335317256921682053')
-                        member.roles.add('1336745321186988084')
+                        member.roles.add('1335317256921682053').catch((err) => console.log(err))
+                        member.roles.add('1336745321186988084').catch((err) => console.log(err))
                         console.log('added supporter/stripe roles back to', member.user.username)
                     }
                 }
