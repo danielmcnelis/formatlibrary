@@ -69,6 +69,7 @@ export default {
                     const player = subscriber.player
                     const tier = subscriber.tier
                     const member = members.find((m) => m.id === player.discordId)
+                    if (!member) continue
                     if (tier === 'Premium') {
                         member.roles.add('1335316985097093290')
                         member.roles.add('1336745321186988084')
