@@ -29,57 +29,57 @@ export default {
                 // await runNightlyTasks(client)
                 // const format = await Format.findOne({ where: { name: 'Forged in Chaos' }})
                 // await downloadNewCards(client)
-                await manageSubscriptions(client)
+                // await manageSubscriptions(client)
                 // await updateGlobalNames()
                 // await updateBlogPosts()
                 // await runNightlyTasks(client)
 
-                // const server = await Server.findOne({ where: { id: interaction.guildId }})
-                // const guild = client.guilds.cache.get(server.id)
-                // const membersMap = await guild.members.fetch()
-                // const members = [...membersMap.values()]
+                const server = await Server.findOne({ where: { id: interaction.guildId }})
+                const guild = client.guilds.cache.get(server.id)
+                const membersMap = await guild.members.fetch()
+                const members = [...membersMap.values()]
 
-                // for (let i = 0; i < members.length; i++) {
-                //     const member = members[i]
-                //     if (member.user.bot ) continue
-                //     if (
-                //         member.roles.cache.has('1335316985097093290') ||
-                //         member.roles.cache.has('1335317256921682053') ||
-                //         member.roles.cache.has('1336745321186988084') ||
-                //         member.roles.cache.has('1102002844850208810')
-                //     ) {
-                //         member.roles.remove('1335316985097093290')
-                //         member.roles.remove('1335317256921682053')
-                //         member.roles.remove('1336745321186988084')
-                //         member.roles.remove('1102002844850208810')
-                //         console.log('removed roles from', member.user.username)
+                for (let i = 0; i < members.length; i++) {
+                    const member = members[i]
+                    if (member.user.bot ) continue
+                    if (
+                        member.roles.cache.has('1335316985097093290') ||
+                        member.roles.cache.has('1335317256921682053') ||
+                        member.roles.cache.has('1336745321186988084') ||
+                        member.roles.cache.has('1102002844850208810')
+                    ) {
+                        member.roles.remove('1335316985097093290')
+                        member.roles.remove('1335317256921682053')
+                        member.roles.remove('1336745321186988084')
+                        member.roles.remove('1102002844850208810')
+                        console.log('removed roles from', member.user.username)
 
-                //         if (member.roles.cache.has('1102002847056400464') || member.roles.cache.has('1102020060631011400')) {
-                //             member.roles.add('1102002844850208810')
-                //             console.log('added discord subscriber role back')
-                //         } else {
-                //             console.log('DID NOT ADD BACK TO', member.user.username)
-                //         }
-                //     }
-                // }
+                        if (member.roles.cache.has('1102002847056400464') || member.roles.cache.has('1102020060631011400')) {
+                            member.roles.add('1102002844850208810')
+                            console.log('added discord subscriber role back')
+                        } else {
+                            console.log('DID NOT ADD BACK TO', member.user.username)
+                        }
+                    }
+                }
 
-                // const subscriptions = await Subscription.findAll({ where: { status: 'active' }, include: Player })
-                // for (let i = 0; i < subscriptions.length; i++) {
-                //     const subscriber = subscriptions[i]
-                //     const player = subscriber.player
-                //     const tier = subscriber.tier
-                //     const member = members.find((m) => m.id === player.discordId)
-                //     if (!member) continue
-                //     if (tier === 'Premium') {
-                //         member.roles.add('1335316985097093290')
-                //         member.roles.add('1336745321186988084')
-                //         console.log('added premium/stripe roles back to', member.user.username)
-                //     } else if (tier === 'Supporter') {
-                //         member.roles.add('1335317256921682053')
-                //         member.roles.add('1336745321186988084')
-                //         console.log('added supporter/stripe roles back to', member.user.username)
-                //     }
-                // }
+                const subscriptions = await Subscription.findAll({ where: { status: 'active' }, include: Player })
+                for (let i = 0; i < subscriptions.length; i++) {
+                    const subscriber = subscriptions[i]
+                    const player = subscriber.player
+                    const tier = subscriber.tier
+                    const member = members.find((m) => m.id === player.discordId)
+                    if (!member) continue
+                    if (tier === 'Premium') {
+                        member.roles.add('1335316985097093290')
+                        member.roles.add('1336745321186988084')
+                        console.log('added premium/stripe roles back to', member.user.username)
+                    } else if (tier === 'Supporter') {
+                        member.roles.add('1335317256921682053')
+                        member.roles.add('1336745321186988084')
+                        console.log('added supporter/stripe roles back to', member.user.username)
+                    }
+                }
 
                 return await interaction.editReply('🧪')
                 // await recalculateAllStats()
