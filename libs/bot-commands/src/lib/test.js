@@ -43,10 +43,10 @@ export default {
                     const member = members[i]
                     if (member.user.bot ) continue
                     if (
-                        member.roles.has('1335316985097093290') ||
-                        member.roles.has('1335317256921682053') ||
-                        member.roles.has('1336745321186988084') ||
-                        member.roles.has('1102002844850208810')
+                        member.roles.cache.has('1335316985097093290') ||
+                        member.roles.cache.has('1335317256921682053') ||
+                        member.roles.cache.has('1336745321186988084') ||
+                        member.roles.cache.has('1102002844850208810')
                     ) {
                         member.roles.remove('1335316985097093290')
                         member.roles.remove('1335317256921682053')
@@ -54,7 +54,7 @@ export default {
                         member.roles.remove('1102002844850208810')
                         console.log('removed roles from', member.user.username)
 
-                        if (member.roles.has('1102002847056400464') || member.roles.has('1102020060631011400')) {
+                        if (member.roles.cache.has('1102002847056400464') || member.roles.cache.has('1102020060631011400')) {
                             member.roles.add('1102002844850208810')
                             console.log('added discord subscriber role back')
                         } else {
