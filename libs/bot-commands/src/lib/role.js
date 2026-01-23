@@ -25,6 +25,7 @@ export default {
             if (!interaction.member.roles.cache.some(role => role.id === roleId)) {
                 try {
                     await interaction.member.roles.add(roleId)
+
                     const count = await Role.count({ where: { membershipId: membership.id, roleId: roleId } })
                     if (!count) {
                         await Role.create({ 
@@ -33,6 +34,7 @@ export default {
                             roleName: discordRole.name
                         })
                     }
+
                     return await interaction.reply({ content: `You now have the ${discordRole.name} role.`})
                 } catch (err) {
                     console.log(err)

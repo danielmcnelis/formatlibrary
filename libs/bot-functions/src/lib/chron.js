@@ -293,19 +293,32 @@ export const conductCensus = async (client) => {
                     await createMembership(guild, member)
                 }
 
-                for (let j = 0; j < member._roles.length; j ++) {
-                    const roleId = member._roles[j]
-                    const membership = await Membership.findOne({ where: { '$player.discordId$': member.user.id, serverId: guild.id }, include: Player })
-                    if (!membership) break
-                    const count = await Role.count({ where: { membershipId: membership.id, roleId: roleId }})
-                    if (!count) {
-                        await Role.create({
-                            membershipId: membership.id,
-                            roleId: roleId,
-                            roleName: roles[roleId]
-                        })
+                if (server.name === 'Format Library') {
+                    for (let j = 0; j < member._roles.length; j ++) {
+                        const roleId = member._roles[j]
 
-                        roleCount++
+                        if (
+                            roleId !== '1335316985097093290' && 
+                            roleId !== '1335317256921682053' && 
+                            roleId !== '1336745321186988084' && 
+                            roleId !== '1102002844850208810'
+                        ) {
+                            continue
+                        }
+
+                        const membership = await Membership.findOne({ where: { '$player.discordId$': member.user.id, serverId: guild.id }, include: Player })
+                        if (!membership) break
+                        
+                        const count = await Role.count({ where: { membershipId: membership.id, roleId: roleId }})
+                        if (!count) {
+                            await Role.create({
+                                membershipId: membership.id,
+                                roleId: roleId,
+                                roleName: roles[roleId]
+                            })
+
+                            roleCount++
+                        }
                     }
                 }
             } catch (err) {
