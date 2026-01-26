@@ -46,55 +46,55 @@ export const createDecks = async (interaction, event, participants, standings = 
                     }
                 })
 
-                if (!count) {
-                    const standing = standings?.find((s) => s.participantId === participant.id)
-                    let placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
-                        participant.final_rank ? parseInt(participant.final_rank) :
-                        null
+                // if (!count) {
+                //     const standing = standings?.find((s) => s.participantId === participant.id)
+                //     let placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) :
+                //         participant.final_rank ? parseInt(participant.final_rank) :
+                //         null
 
-                        console.log("placement", placement)
-                    if (topCutSize && placement <= topCutSize) {
-                        console.log('entry.playerId', entry.playerId)
-                        console.log('topCutTournamentId', topCutTournamentId)
-                        const topCutEntry = await Entry.findOne({
-                            where: {
-                                playerId: entry.playerId,
-                                tournamentId: topCutTournamentId
-                            }
-                        })
+                //         console.log("placement", placement)
+                //     if (topCutSize && placement <= topCutSize) {
+                //         console.log('entry.playerId', entry.playerId)
+                //         console.log('topCutTournamentId', topCutTournamentId)
+                //         const topCutEntry = await Entry.findOne({
+                //             where: {
+                //                 playerId: entry.playerId,
+                //                 tournamentId: topCutTournamentId
+                //             }
+                //         })
 
-                        const {data} = await axios.get(`https://api.challonge.com/v1/tournaments/${topCutTournamentId}/participants/${topCutEntry.participantId}.json?api_key=${challongeApiKey}`) 
-                        if (data?.participant?.final_rank) {
-                            placement = data.participant.final_rank
-                        }
-                    }
+                //         const {data} = await axios.get(`https://api.challonge.com/v1/tournaments/${topCutTournamentId}/participants/${topCutEntry.participantId}.json?api_key=${challongeApiKey}`) 
+                //         if (data?.participant?.final_rank) {
+                //             placement = data.participant.final_rank
+                //         }
+                //     }
     
-                    const deckType = await getDeckType(entry.ydk, event.formatName)
+                //     const deckType = await getDeckType(entry.ydk, event.formatName)
     
-                    await Deck.create({
-                        deckTypeName: deckType.name,
-                        deckTypeId: deckType.id,
-                        category: deckType.category,
-                        builderName: entry.player?.name,
-                        builderId: entry.playerId,
-                        formatName: event.formatName,
-                        formatId: event.formatId,
-                        ydk: entry.ydk,
-                        placement: placement,
-                        eventAbbreviation: event.abbreviation,
-                        eventDate: event.startedAt,
-                        communityName: event.communityName,
-                        eventId: event.id,
-                        origin: 'event',
-                        display: false
-                    })
+                //     await Deck.create({
+                //         deckTypeName: deckType.name,
+                //         deckTypeId: deckType.id,
+                //         category: deckType.category,
+                //         builderName: entry.player?.name,
+                //         builderId: entry.playerId,
+                //         formatName: event.formatName,
+                //         formatId: event.formatId,
+                //         ydk: entry.ydk,
+                //         placement: placement,
+                //         eventAbbreviation: event.abbreviation,
+                //         eventDate: event.startedAt,
+                //         communityName: event.communityName,
+                //         eventId: event.id,
+                //         origin: 'event',
+                //         display: false
+                //     })
     
-                    b++
-                    console.log(`uploaded ${event.abbreviation || event.name} #${placement} ${deckType.name} deck built by ${entry.playerName}`)
-                } else {
-                    c++
-                    console.log(`already have ${entry.playerName}'s deck for ${event.name}`)
-                }
+                //     b++
+                //     console.log(`uploaded ${event.abbreviation || event.name} #${placement} ${deckType.name} deck built by ${entry.playerName}`)
+                // } else {
+                //     c++
+                //     console.log(`already have ${entry.playerName}'s deck for ${event.name}`)
+                // }
             }
         } catch (err) {
             e++
