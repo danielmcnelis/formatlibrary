@@ -3221,7 +3221,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         }
 
         // If the number of decks saved for the event is less than the size of the event, create the remaining decks:
-        // let count = await Deck.count({ where: { eventId: event.id }})
+        let count = 37 || await Deck.count({ where: { eventId: event.id }})
         // if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
         //     try {
         //         const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeApiKey}`)
@@ -3357,7 +3357,7 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         }
         
         // If the number of decks saved for the event is less than the size of the event, create the remaining decks:
-        // let count = await Deck.count({ where: { eventId: event.id }})
+        let count = 37 ||  await Deck.count({ where: { eventId: event.id }})
         // if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
         //     try {                    
         //         const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/matches.json?api_key=${server.challongeApiKey}`)
@@ -3543,7 +3543,7 @@ export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId
     }
     
     // If the number of decks saved for the event is less than the size of the event, create the remaining decks:
-    // let count = await Deck.count({ where: { eventId: event.id }})
+    let count = 37 || await Deck.count({ where: { eventId: event.id }})
     // if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
     //     try {
     //         const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeApiKey}`)
