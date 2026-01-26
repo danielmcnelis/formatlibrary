@@ -54,6 +54,8 @@ export const createDecks = async (interaction, event, participants, standings = 
 
                         console.log("placement", placement)
                     if (topCutSize && placement <= topCutSize) {
+                        console.log('entry.playerId', entry.playerId)
+                        console.log('topCutTournamentId', topCutTournamentId)
                         const topCutEntry = await Entry.findOne({
                             where: {
                                 playerId: entry.playerId,
