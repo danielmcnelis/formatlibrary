@@ -333,7 +333,7 @@ export default {
                         const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/matches.json?api_key=${server.challongeApiKey}`)
                         const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/participants.json?api_key=${server.challongeApiKey}`)
                         const standings = await calculateStandings(primaryTournament, matches, participants)                
-                        const success = await createDecks(interaction, event, participants, standings, tournament.size, tournament.id, server.challongeApiKey) || true
+                        const success = await createDecks(interaction, event, participants, standings, tournament.size, tournament.id, server.challongeApiKey)
 
                         if (!success) {
                             return await interaction.editReply(`Failed to save all decks.`)
