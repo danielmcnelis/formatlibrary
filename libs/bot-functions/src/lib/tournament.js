@@ -3221,23 +3221,23 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         }
 
         // If the number of decks saved for the event is less than the size of the event, create the remaining decks:
-        let count = 37 || await Deck.count({ where: { eventId: event.id }})
-        // if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
-        //     try {
-        //         const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeApiKey}`)
-        //         const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeApiKey}`)
-        //         const standings = await calculateStandings(tournament, matches, participants)          
-        //         const success = await createDecks(interaction, event, participants, standings)
-        //         if (!success) {
-        //             return await interaction.editReply(`Failed to save all decks.`)
-        //         } else {
-        //             count = event.size
-        //         }
-        //     } catch (err) {
-        //         console.log(err)
-        //         return await interaction.editReply(`Failed to save all decks.`)
-        //     }
-        // }
+        let count = await Deck.count({ where: { eventId: event.id }})
+        if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
+            try {
+                const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeApiKey}`)
+                const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeApiKey}`)
+                const standings = await calculateStandings(tournament, matches, participants)          
+                const success = await createDecks(interaction, event, participants, standings)
+                if (!success) {
+                    return await interaction.editReply(`Failed to save all decks.`)
+                } else {
+                    count = event.size
+                }
+            } catch (err) {
+                console.log(err)
+                return await interaction.editReply(`Failed to save all decks.`)
+            }
+        }
         
         // If the number of decks saved for the event is equal to the size of the event:
         // (1) delete all of this tournament's participant entries saved in the database
@@ -3357,24 +3357,24 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
         }
         
         // If the number of decks saved for the event is less than the size of the event, create the remaining decks:
-        let count = 37 ||  await Deck.count({ where: { eventId: event.id }})
-        // if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
-        //     try {                    
-        //         const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/matches.json?api_key=${server.challongeApiKey}`)
-        //         const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/participants.json?api_key=${server.challongeApiKey}`)
-        //         const standings = await calculateStandings(tournament, matches, participants)                
-        //         const success = await createDecks(interaction, event, participants, standings, tournament.size, tournament.id, server.challongeApiKey)
+        let count = await Deck.count({ where: { eventId: event.id }})
+        if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
+            try {                    
+                const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/matches.json?api_key=${server.challongeApiKey}`)
+                const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${primaryTournament.id}/participants.json?api_key=${server.challongeApiKey}`)
+                const standings = await calculateStandings(tournament, matches, participants)                
+                const success = await createDecks(interaction, event, participants, standings, tournament.size, tournament.id, server.challongeApiKey)
 
-        //         if (!success) {
-        //             return await interaction.editReply(`Failed to save all decks.`)
-        //         } else {
-        //             count = event.size
-        //         }
-        //     } catch (err) {
-        //         console.log(err)
-        //         return await interaction.editReply(`Failed to save all decks.`)
-        //     }
-        // }
+                if (!success) {
+                    return await interaction.editReply(`Failed to save all decks.`)
+                } else {
+                    count = event.size
+                }
+            } catch (err) {
+                console.log(err)
+                return await interaction.editReply(`Failed to save all decks.`)
+            }
+        }
         
         // If the number of decks saved for the event is equal to the size of the event:
         // (1) delete all of this tournament's participant entries saved in the database
@@ -3543,23 +3543,23 @@ export const endSwissTournamentWithoutPlayoff = async (interaction, tournamentId
     }
     
     // If the number of decks saved for the event is less than the size of the event, create the remaining decks:
-    let count = 37 || await Deck.count({ where: { eventId: event.id }})
-    // if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
-    //     try {
-    //         const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeApiKey}`)
-    //         const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeApiKey}`)
-    //         const standings = await calculateStandings(tournament, matches, participants)                
-    //         const success = await createDecks(interaction, event, participants, standings)
-    //         if (!success) {
-    //             return await interaction.editReply(`Failed to save all decks.`)
-    //         } else {
-    //             count = event.size
-    //         }
-    //     } catch (err) {
-    //         console.log(err)
-    //         return await interaction.editReply(`Failed to save all decks.`)
-    //     }
-    // }
+    let count = await Deck.count({ where: { eventId: event.id }})
+    if (event && event.size > 0 && ((!event.isTeamEvent && event.size !== count) || (event.isTeamEvent && (event.size * 3) !== count))) {
+        try {
+            const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${server.challongeApiKey}`)
+            const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${server.challongeApiKey}`)
+            const standings = await calculateStandings(tournament, matches, participants)                
+            const success = await createDecks(interaction, event, participants, standings)
+            if (!success) {
+                return await interaction.editReply(`Failed to save all decks.`)
+            } else {
+                count = event.size
+            }
+        } catch (err) {
+            console.log(err)
+            return await interaction.editReply(`Failed to save all decks.`)
+        }
+    }
     
     // If the number of decks saved for the event is equal to the size of the event:
     // (1) delete all of this tournament's participant entries saved in the database
