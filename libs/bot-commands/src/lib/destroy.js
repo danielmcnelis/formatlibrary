@@ -34,8 +34,8 @@ export default {
                     url: `https://api.challonge.com/v2.1/tournaments/${tournamentId}.json?community_id`,
                     headers: {
                         "Authorization": server.challongeApiKey,
-                        "Accept": "",
-                        "Authorization-Type": ""
+                        "Accept": "application/json",
+                        "Content-Type": "application/vnd.api+json"
                     }
                 })
             
