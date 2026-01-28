@@ -39,7 +39,7 @@ export default {
                     }
                 })
             
-                if (status === 200) {
+                if (status === 204) {
                     const entries = await Entry.findAll({ where: { tournamentId: tournament.id }, include: Player })
                     for (let i = 0; i < entries.length; i++) {
                         try {
