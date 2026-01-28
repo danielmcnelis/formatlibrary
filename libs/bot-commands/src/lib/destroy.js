@@ -31,7 +31,7 @@ export default {
                 const tournamentId = server.challongeSubdomain ? `${server.challongeSubdomain}-${tournament.url}` : tournament.id
                 const { status } = await axios({
                     method: 'delete',
-                    url: `https://api.challonge.com/v2.1/tournaments/${tournamentId}.json}`,
+                    url: `https://api.challonge.com/v2.1/tournaments/${tournamentId}.json?community_id`,
                     headers: {
                         "Authorization": server.challongeApiKey,
                         "Accept": "",
