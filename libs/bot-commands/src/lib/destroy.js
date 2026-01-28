@@ -33,8 +33,8 @@ export default {
                     method: 'delete',
                     url: `https://api.challonge.com/v2.1/tournaments/${tournamentId}.json}`,
                     headers: {
-                        Authorization: server.challongeApiKey,
-                        Accept: "",
+                        "Authorization": server.challongeApiKey,
+                        "Accept": "",
                         "Authorization-Type": ""
                     }
                 })
