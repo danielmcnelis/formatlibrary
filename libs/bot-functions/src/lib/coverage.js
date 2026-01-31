@@ -13,7 +13,6 @@ import { checkExpiryDate, uploadDeckFolder } from './drive'
 
 // CREATE DECKS
 export const createDecks = async (interaction, event, participants, standings = [], topCutSize, topCutTournamentId, challongeApiKey) => {
-    console.log("createDecks()")
     let b = 0
     let c = 0
     let e = 0

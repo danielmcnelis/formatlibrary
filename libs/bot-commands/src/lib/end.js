@@ -81,7 +81,6 @@ export default {
 
                 return await interaction.editReply({ content: `Do you wish to create a top cut for this tournament?`, components: [row] })
             } else if (!tournament.isRated || tournament.isInternal) {
-                console.log('84', 84)
                 const entries = await Entry.findAll({ where: { tournamentId: tournament.id }, include: Player })
                 for (let i = 0; i < entries.length; i++) {
                     try {
@@ -89,7 +88,7 @@ export default {
                         const playerName = entry.playerName
                         const playerId = entry.playerId
                         const discordId = entry.player.discordId	
-                        console.log(`Deleting ${entry.playerName}'s entry for ${event.name}.`)
+                        console.log(`Deleting ${entry.playerName}'s entry for ${tournament.name}.`)
                         await entry.destroy()
     
                         if (!server.tournamentRoleId) continue
