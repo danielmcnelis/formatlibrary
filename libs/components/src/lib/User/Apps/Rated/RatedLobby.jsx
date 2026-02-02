@@ -281,7 +281,7 @@ export const RatedLobby = () => {
                                             <b style={{padding: '0px 6px'}}>New</b>
                                             <img 
                                                 style={{width:'28px'}} 
-                                                src={`https://cdn.formatlibrary.com/images/emojis/new-file.png`} 
+                                                src={`https://cdn.formatlibrary.com/images/emojis/new-file.webp`} 
                                                 alt="new-file"
                                             />
                                         </div>   
@@ -292,7 +292,7 @@ export const RatedLobby = () => {
                                             <b style={{padding: '0px 6px'}}>Replace</b>
                                             <img
                                                 style={{width:'28px'}} 
-                                                src={`https://cdn.formatlibrary.com/images/emojis/upload.png`} 
+                                                src={`https://cdn.formatlibrary.com/images/emojis/upload.webp`} 
                                                 alt="upload"
                                             />              
                                         </div>
@@ -301,7 +301,7 @@ export const RatedLobby = () => {
                                                 <b style={{padding: '0px 6px'}}>Edit</b>
                                                 <img 
                                                     style={{width:'28px'}} 
-                                                    src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`}
+                                                    src={`https://cdn.formatlibrary.com/images/emojis/open-file.webp`}
                                                     alt="open"
                                                 />
                                             </div>
@@ -313,7 +313,7 @@ export const RatedLobby = () => {
                                             <b style={{padding: '0px 6px'}}>Delete</b>
                                             <img 
                                                 style={{width:'28px'}} 
-                                                src={`https://cdn.formatlibrary.com/images/emojis/delete.png`} 
+                                                src={`https://cdn.formatlibrary.com/images/emojis/delete.webp`} 
                                                 alt="trash"
                                             />
                                         </div>
@@ -330,7 +330,7 @@ export const RatedLobby = () => {
                                             <b style={{padding: '0px 6px'}}>New</b>
                                             <img 
                                                 style={{width:'28px'}} 
-                                                src={`https://cdn.formatlibrary.com/images/emojis/new-file.png`} 
+                                                src={`https://cdn.formatlibrary.com/images/emojis/new-file.webp`} 
                                                 alt="new-file"
                                             />
                                         </div>   
@@ -341,7 +341,7 @@ export const RatedLobby = () => {
                                             <b style={{padding: '0px 6px'}}>Replace</b>    
                                             <img
                                                 style={{width:'28px'}} 
-                                                src={`https://cdn.formatlibrary.com/images/emojis/upload.png`} 
+                                                src={`https://cdn.formatlibrary.com/images/emojis/upload.webp`} 
                                                 alt="upload"
                                             />              
                                         </div>
@@ -350,7 +350,7 @@ export const RatedLobby = () => {
                                                 <b style={{padding: '0px 6px'}}>Edit</b>
                                                 <img
                                                     style={{width:'28px'}} 
-                                                    src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`}
+                                                    src={`https://cdn.formatlibrary.com/images/emojis/open-file.webp`}
                                                     alt="open"
                                                 />
                                             </div>
@@ -362,7 +362,7 @@ export const RatedLobby = () => {
                                             <b style={{padding: '0px 6px'}}>Delete</b>
                                             <img 
                                                 style={{width:'28px'}} 
-                                                src={`https://cdn.formatlibrary.com/images/emojis/delete.png`} 
+                                                src={`https://cdn.formatlibrary.com/images/emojis/delete.webp`} 
                                                 alt="trash"
                                             />
                                         </div>
@@ -377,7 +377,7 @@ export const RatedLobby = () => {
                                         <b style={{padding: '0px 6px'}}>New Deck</b>
                                         <img 
                                             style={{width:'28px'}} 
-                                            src={`https://cdn.formatlibrary.com/images/emojis/new-file.png`} 
+                                            src={`https://cdn.formatlibrary.com/images/emojis/new-file.webp`} 
                                             alt="new-file"
                                         />
                                     </div>
@@ -481,13 +481,13 @@ export const RatedLobby = () => {
                                         format={pool.format}
                                         createdAt={pool.createdAt}
                                         color={colors[(colorRng + index) % 8]}
-                                        silhouette={`https://cdn.formatlibrary.com/images/emojis/silhouette-${(silhouetteRng + index) % 10 + 1}.png`}
+                                        silhouette={`https://cdn.formatlibrary.com/images/emojis/silhouette-${(silhouetteRng + index) % 10 + 1}.webp`}
                                     />
                                 )
                             })
                         ) : (
                             <div>
-                                <img className="sanwitch" src="https://cdn.formatlibrary.com/images/emojis/sanwitch.png" alt="sanwitch"/>
+                                <img className="sanwitch" src="https://cdn.formatlibrary.com/images/emojis/sanwitch.webp" alt="sanwitch"/>
                                 <p className="center">The Rated Lobby is empty.</p>
                             </div>
                         )
@@ -526,7 +526,7 @@ export const RatedLobby = () => {
                             })
                         ) : (
                             <div>
-                                <img className="thousand-dragon" src="https://cdn.formatlibrary.com/images/emojis/thousand-dragon.png" alt="thousand-dragon"/>
+                                <img className="thousand-dragon" src="https://cdn.formatlibrary.com/images/emojis/thousand-dragon.webp" alt="thousand-dragon"/>
                                 <p className="center">There are no Active Matches.</p>
                             </div>
                         )

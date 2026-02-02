@@ -9,7 +9,7 @@ import * as sharp from 'sharp'
 export const getBracketImage = async (req, res, next) => {
     const bracketId = req.params.id
     try {
-        await axios.head(`https://cdn.formatlibrary.com/images/brackets/${bracketId}.png`)
+        await axios.head(`https://cdn.formatlibrary.com/images/brackets/${bracketId}.webp`)
         console.log(`${bracketId} Bracket Found.`)
         return res.json(true)    
     } catch (err) {

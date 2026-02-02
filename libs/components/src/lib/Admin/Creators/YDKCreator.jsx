@@ -58,13 +58,13 @@ export const YDKCreator = () => {
                 >                                    
                     <div className="ydk-button">
                         <b style={{padding: '0px 6px'}}>Download</b>
-                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`} alt="floppy-disk"/>
+                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.webp`} alt="floppy-disk"/>
                     </div>
                 </a>
 
                 <div className="ydk-button" onClick={() => setText('')}>                                    
                     <b style={{padding: '0px 6px'}}>Clear Text</b>
-                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/erase.png`} alt="sweeping broom"/> 
+                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/erase.webp`} alt="sweeping broom"/> 
                 </div>
             </div>
         </div>

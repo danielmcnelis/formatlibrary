@@ -86,7 +86,7 @@
 }
 
 #theme-toggle-inner-circle-dark {
-    background: url("https://em-content.zobj.net/source/apple/354/crescent-moon_1f319.png") no-repeat center;
+    background: url("https://em-content.zobj.net/source/apple/354/crescent-moon_1f319.webp") no-repeat center;
     background-size: 16px;
     background-color: rgb(40, 136, 200);
     border-radius: 24px;
@@ -95,7 +95,7 @@
 }
 
 #theme-toggle-inner-circle-light {
-    background: url("https://em-content.zobj.net/source/apple/354/sun_2600-fe0f.png") no-repeat center;
+    background: url("https://em-content.zobj.net/source/apple/354/sun_2600-fe0f.webp") no-repeat center;
     background-size: 16px;
     background-color: rgb(172, 111, 57);
     border-radius: 24px;

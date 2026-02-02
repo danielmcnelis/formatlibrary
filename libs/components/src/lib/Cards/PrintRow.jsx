@@ -13,7 +13,7 @@ export const PrintRow = (props) => {
   return (
     <tr onClick={() => window.open(tcgPlayerUrl, "_blank")} className={`${evenOrOdd}-print-row`}>
         <td className="print-cell-1">{minPrice}</td>
-        <td className="rarity-cell" style={{backgroundImage: `url(https://cdn.formatlibrary.com/images/rarities/${raritySymbol}.png)`}}/>
+        <td className="rarity-cell" style={{backgroundImage: `url(https://cdn.formatlibrary.com/images/rarities/${raritySymbol}.webp)`}}/>
         <td className="print-cell-2 desktop-only">{print.rarity}</td>
         <td className="print-cell-3">{print.cardCode}</td>
         <td className="print-cell-4 desktop-only">{print.setName}</td>

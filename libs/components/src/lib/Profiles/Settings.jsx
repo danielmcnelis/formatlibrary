@@ -321,7 +321,7 @@ export const Settings = () => {
                         <div className="profile-line"><b>Discord:</b> {discordName}</div>
                         <div className="profile-line"><b>Country:</b> {country || ''} {country ? <img className="country" src={`https://www.worldometers.info/img/flags/${countries[country].fips}-flag.gif`} alt={country + '-flag'}/> : ''}</div>
                         <div className="profile-line"><b>Time Zone:</b> {timeZone || ''}</div>
-                        <div className="profile-line"><b>YouTube:</b> {youtube ? <a href={youtube} target="_blank" rel="noopener noreferrer"><img className="social-icon" src="https://cdn.formatlibrary.com/images/logos/youtube.png" alt="YouTube"/></a>: ''}</div>
+                        <div className="profile-line"><b>YouTube:</b> {youtube ? <a href={youtube} target="_blank" rel="noopener noreferrer"><img className="social-icon" src="https://cdn.formatlibrary.com/images/logos/youtube.webp" alt="YouTube"/></a>: ''}</div>
                         <div className="profile-line"><b>Twitch:</b> {twitch || ''}</div>
                         <div className="profile-line"><b>Twitter:</b> {twitter || ''}</div>
                     </div>
@@ -334,7 +334,7 @@ export const Settings = () => {
                     style={{width: '220px', margin: '15px auto', textAlign: 'center'}}
                 >
                     <b style={{padding: '0px 6px'}}>Edit Password</b>
-                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/lock.png`} alt="edit"/>
+                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/lock.webp`} alt="edit"/>
                 </div>
                 <div 
                     className="show-cursor deck-button"
@@ -342,7 +342,7 @@ export const Settings = () => {
                     style={{width: '180px', margin: '15px auto', textAlign: 'center'}}
                 >
                     <b style={{padding: '0px 6px'}}>Edit Profile</b>
-                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/edit.png`} alt="edit"/>
+                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/edit.webp`} alt="edit"/>
                 </div>
                 <div 
                     className="show-cursor deck-button"
@@ -350,7 +350,7 @@ export const Settings = () => {
                     style={{width: '180px', margin: '15px auto', textAlign: 'center'}}
                 >
                     <b style={{padding: '0px 6px'}}>Log Out</b>
-                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/owl.png`} alt="edit"/>
+                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/owl.webp`} alt="edit"/>
                 </div>
             </div>
            

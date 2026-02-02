@@ -244,7 +244,7 @@ export const ReplayTable = (props) => {
 
                                 <div className="horizontal-centered-flexbox" style={{alignItems: 'flex-end', padding: '10px 0px 10px'}}>
                                     <div style={{'padding': '0px 10px'}} className="desktop-only"><i>Subscribe to view all replays.</i></div>
-                                    <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/artworks/fl-arrow.png'} alt="deck-box"/>
+                                    <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/artworks/fl-arrow.webp'} alt="deck-box"/>
                                 </div>
                             ) : ''
                         }
@@ -382,11 +382,11 @@ export const ReplayTable = (props) => {
                 <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
                 <div className="body">
                     <div className="replay-database-flexbox">
-                        <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/film.png'} alt="film"/>
+                        <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/film.webp'} alt="film"/>
                         <h1>Replay Database</h1>
                         {
                             isSubscriber ? (
-                                <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/film-flipped.png'} alt="film"/>
+                                <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/film-flipped.webp'} alt="film"/>
                             ) : (
                                 <div className="horizontal-centered-flexbox" style={{alignItems: 'flex-end', padding: '10px 0px 10px'}}>
                                     <div style={{'padding': '0px 10px'}} className="desktop-only"><i>Subscribe to view all replays.</i></div>

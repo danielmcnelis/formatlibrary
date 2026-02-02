@@ -17,11 +17,11 @@ export const UserPortal = (props) => {
             <div className="body">
                 <h1>Applications</h1>
                 <div className="user-menu">
-                    {/* <PortalButton label="Rated Lobby" to="/rated-lobby" icon="/emojis/master.png" /> */}
-                    <PortalButton label="Deck Builder" to="/deck-builder" icon="/emojis/deckbox.png" />
+                    {/* <PortalButton label="Rated Lobby" to="/rated-lobby" icon="/emojis/master.webp" /> */}
+                    <PortalButton label="Deck Builder" to="/deck-builder" icon="/emojis/deckbox.webp" />
                     <PortalButton label="Pack Simulator" to="/pack-simulator" icon="/artworks/LOB.jpg" />
-                    <PortalButton label="Draft App" to="/start-draft" icon="/emojis/cube.png" />
-                    <PortalButton label="Sealed App" to="/start-sealed" icon="/emojis/seal.png" />
+                    <PortalButton label="Draft App" to="/start-draft" icon="/emojis/cube.webp" />
+                    <PortalButton label="Sealed App" to="/start-sealed" icon="/emojis/seal.webp" />
                 </div>
             </div>
         </>

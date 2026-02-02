@@ -26,7 +26,7 @@ export const ReplayThumbnail = (props = {}) => {
 
                     <img 
                         className="replayThumbnail-image" 
-                        src={`https://cdn.formatlibrary.com/images/emojis/versus.png`}
+                        src={`https://cdn.formatlibrary.com/images/emojis/versus.webp`}
                         alt="vs"
                     />
                     

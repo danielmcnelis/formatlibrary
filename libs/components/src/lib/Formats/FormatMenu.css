@@ -43,7 +43,7 @@
 
 
 #category-toggle-inner-circle-TCG {
-    background: url("https://cdn.formatlibrary.com/images/emojis/white-checkmark.png") no-repeat center;
+    background: url("https://cdn.formatlibrary.com/images/emojis/white-checkmark.webp") no-repeat center;
     background-size: 16px;
     background-color: rgb(204, 128, 34);
     border-radius: 24px;
@@ -52,7 +52,7 @@
 }
 
 #category-toggle-inner-circle-OCG {
-    background: url("https://cdn.formatlibrary.com/images/emojis/black-x.png") no-repeat center;
+    background: url("https://cdn.formatlibrary.com/images/emojis/black-x.webp") no-repeat center;
     background-size: 16px;
     background-color: rgb(142, 113, 213);
     border-radius: 24px;

@@ -83,7 +83,7 @@ export default {
             })
 
             if (series) {
-                return await interaction.replay({ content: `Error: series already exists. (${series.name} - ${series.abbreviation})`})  
+                return await interaction.reply({ content: `Error: series already exists. (${series.name} - ${series.abbreviation})`})  
             } else {
                 series = await Series.create({
                     communityName,

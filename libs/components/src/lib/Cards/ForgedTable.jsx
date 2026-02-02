@@ -715,7 +715,7 @@ export const ForgedTable = () => {
                                     <ModdedSlider
                                         id="level"
                                         type="range-slider"
-                                        symbol="https://cdn.formatlibrary.com/images/symbols/star.png"
+                                        symbol="https://cdn.formatlibrary.com/images/symbols/star.webp"
                                         label="Level"
                                         step={1}
                                         min={1}
@@ -729,7 +729,7 @@ export const ForgedTable = () => {
                                     <ModdedSlider
                                         id="atk"
                                         type="range-slider"
-                                        symbol="https://cdn.formatlibrary.com/images/emojis/swords.png"
+                                        symbol="https://cdn.formatlibrary.com/images/emojis/swords.webp"
                                         label="ATK"
                                         step={50}
                                         min={0}
@@ -743,7 +743,7 @@ export const ForgedTable = () => {
                                     <ModdedSlider
                                         id="def"
                                         type="range-slider"
-                                        symbol="https://cdn.formatlibrary.com/images/emojis/shield.png"
+                                        symbol="https://cdn.formatlibrary.com/images/emojis/shield.webp"
                                         label="DEF"
                                         step={50}
                                         min={0}

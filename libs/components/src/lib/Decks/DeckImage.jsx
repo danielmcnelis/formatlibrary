@@ -25,13 +25,13 @@ export const DeckImage = (props) => {
                         <div className="profile-deck-flexbox">
                             <img 
                                 style={{ width:'32px'}} 
-                                src={`https://cdn.formatlibrary.com/images/emojis/deckbox.png`}
+                                src={`https://cdn.formatlibrary.com/images/emojis/deckbox.webp`}
                                 alt={formatIcon}
                             />
                             <h4 style={{width: width-64}}>{title}</h4>
                             <img 
                                 style={{ width:'32px'}} 
-                                src={`https://cdn.formatlibrary.com/images/emojis/${formatIcon}.png`}
+                                src={`https://cdn.formatlibrary.com/images/emojis/${formatIcon}.webp`}
                                 alt={formatIcon}
                             />
                         </div>

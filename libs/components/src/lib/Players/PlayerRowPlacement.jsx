@@ -4,10 +4,10 @@ import { Link } from "react-router-dom"
 import './PlayerRowPlacement.css'
 
 const emojis = {
-  First: 'https://cdn.formatlibrary.com/images/emojis/1st.png',
-  Second: 'https://cdn.formatlibrary.com/images/emojis/2nd.png',
-  Third: 'https://cdn.formatlibrary.com/images/emojis/3rd.png',
-  Consolation: 'https://cdn.formatlibrary.com/images/emojis/consolation.png'
+  First: 'https://cdn.formatlibrary.com/images/emojis/1st.webp',
+  Second: 'https://cdn.formatlibrary.com/images/emojis/2nd.webp',
+  Third: 'https://cdn.formatlibrary.com/images/emojis/3rd.webp',
+  Consolation: 'https://cdn.formatlibrary.com/images/emojis/consolation.webp'
 }
 const { First, Second, Third, Consolation } = emojis
 

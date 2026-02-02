@@ -48,9 +48,9 @@ export const MiniBoard = (props) => {
         <div className="divider"/> 
         <div id="leaderboard" className="miniboard">
           <div onClick={() => goToLeaderBoard()} className="miniboard-title-flexbox">
-            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt="format-icon"/>
+            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.webp`} alt="format-icon"/>
             <h2 className="subheading">{capitalize(format.name, true)} Leaderboard</h2>
-            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt="format-icon"/>
+            <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.webp`} alt="format-icon"/>
           </div>
           <table id="miniboard-table">
             <thead>

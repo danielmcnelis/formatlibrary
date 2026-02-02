@@ -497,12 +497,12 @@ export const CubeBrowser = (props) => {
             </Helmet>
             <div className="body">
                 <div className="card-database-flexbox">
-                    <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
+                    <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.webp'}`} alt="cube-logo"/>
                     <div>
                         <h1>{cube.name}</h1>
                         <h2 className="desktop-only">Created By {cube.builderName}</h2>
                     </div>
-                    <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.png'}`} alt="cube-logo"/>
+                    <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${cube.logo || 'cube.webp'}`} alt="cube-logo"/>
                 </div>
 
             {
@@ -659,7 +659,7 @@ export const CubeBrowser = (props) => {
                                 <ModdedSlider
                                     id="level"
                                     type="range-slider"
-                                    symbol="https://cdn.formatlibrary.com/images/symbols/star.png"
+                                    symbol="https://cdn.formatlibrary.com/images/symbols/star.webp"
                                     label="Level"
                                     step={1}
                                     min={1}
@@ -672,7 +672,7 @@ export const CubeBrowser = (props) => {
                                 <ModdedSlider
                                     id="atk"
                                     type="range-slider"
-                                    symbol="https://cdn.formatlibrary.com/images/emojis/swords.png"
+                                    symbol="https://cdn.formatlibrary.com/images/emojis/swords.webp"
                                     label="ATK"
                                     step={50}
                                     min={0}
@@ -685,7 +685,7 @@ export const CubeBrowser = (props) => {
                                 <ModdedSlider
                                     id="def"
                                     type="range-slider"
-                                    symbol="https://cdn.formatlibrary.com/images/emojis/shield.png"
+                                    symbol="https://cdn.formatlibrary.com/images/emojis/shield.webp"
                                     label="DEF"
                                     step={50}
                                     min={0}

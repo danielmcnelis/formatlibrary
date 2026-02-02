@@ -237,7 +237,7 @@ export const EventCreator = () => {
         <input
           id="bracket"
           type="file"
-          accept=".png"
+          accept=".webp"
           onChange={(e) => readBracket(e.target.files[0])}
         />
       </label>

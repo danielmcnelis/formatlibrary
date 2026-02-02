@@ -11,7 +11,7 @@ export const MobileDeckRow = (props) => {
         <td className="no-padding">
             <div className="format-cell-flexbox">
                 <img 
-                    src={`https://cdn.formatlibrary.com/images/emojis/${deck.format?.icon}.png`}
+                    src={`https://cdn.formatlibrary.com/images/emojis/${deck.format?.icon}.webp`}
                     alt="format icon"
                 />
             </div>

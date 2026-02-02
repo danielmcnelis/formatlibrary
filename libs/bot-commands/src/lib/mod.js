@@ -22,7 +22,7 @@ export default {
                 .setDescription('A Yu-Gi-Oh! Bot powered by FormatLibrary.com.\n' )
                 .setURL('https://discord.com/invite/formatlibrary')
                 .setAuthor({ name: 'Jazz#2704', iconURL: 'https://i.imgur.com/wz5TqmR.png', url: 'https://discord.com/invite/formatlibrary' })
-                .setThumbnail('https://cdn.formatlibrary.com/images/logos/Format%20Library.png')
+                .setThumbnail('https://cdn.formatlibrary.com/images/logos/Format%20Library.webp')
                 .addFields(
                     { name: 'Rated Play', value: '\n/manual - Manually record a match result. \n/records - View a player\'s match records. \n/undo - Undo one of the recent match results. \n/format - Set the format for your server.'},
                     { name: 'Tournament Creation', value: '\n/create -  Create a new tournament. \n/destroy -  Delete a tournament. \n/start - Start a tournament. \n/end - End a tournament. \n/points - Edit points per Win/Tie/Bye. \n/tiebreakers - Edit tiebreakers (Swiss only).'},

@@ -78,17 +78,17 @@ export const LeaderBoard = () => {
                     {
                         statsType === 'seasonal' ? (
                             <div className="subcategory-title-flexbox">
-                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${season}.png`} alt="season"/>
-                                <img className={"desktop-only"} style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt="format-icon"/>
+                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${season}.webp`} alt="season"/>
+                                <img className={"desktop-only"} style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.webp`} alt="format-icon"/>
                                 <h1 className={`leaderboard-title`}>Seasonal {capitalize(format.name, true)} Leaderboard</h1>
-                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt="format-icon"/>
-                                <img className={"desktop-only"} style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${season}.png`} alt="season"/>
+                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.webp`} alt="format-icon"/>
+                                <img className={"desktop-only"} style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${season}.webp`} alt="season"/>
                             </div>
                         ) : (
                             <div className="subcategory-title-flexbox">
-                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt="format-icon"/>
+                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.webp`} alt="format-icon"/>
                                 <h1 className={`leaderboard-title`}>{capitalize(format.name, true)} Leaderboard</h1>
-                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt="format-icon"/>
+                                <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.webp`} alt="format-icon"/>
                             </div>
                         )
                     }

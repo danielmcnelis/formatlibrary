@@ -193,11 +193,11 @@ export const SealedLobby = () => {
                             <meta name="og:description" content={`Click here to play Sealed Yu-Gi-Oh!`}/>
                         </Helmet>
                         <div className="card-database-flexbox">
-                            <img style={{ width:'100px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="sealed-logo"/>
+                            <img style={{ width:'100px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.webp'}`} alt="sealed-logo"/>
                             <div>
                                 <h1>Upcoming Sealed!</h1>
                             </div>
-                            <img style={{ width:'100px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="sealed-logo"/>
+                            <img style={{ width:'100px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.webp'}`} alt="sealed-logo"/>
                         </div>
                         <br/>
                         <div className="slideshow">
@@ -258,11 +258,11 @@ export const SealedLobby = () => {
                             <meta name="og:description" content={`Click here to play Sealed Yu-Gi-Oh!`}/>
                         </Helmet>
                         <div className="card-database-flexbox">
-                            <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="sealed-logo"/>
+                            <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.webp'}`} alt="sealed-logo"/>
                             <div>
                                 <h1>{'Sealed Complete!'}</h1>
                             </div>
-                            <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.png'}`} alt="sealed-logo"/>
+                            <img style={{ width:'128px'}} src={`https://cdn.formatlibrary.com/images/emojis/${draft.cube?.logo || 'cube.webp'}`} alt="sealed-logo"/>
                         </div>
                         
             <div className="single-deck-title-flexbox">
@@ -275,7 +275,7 @@ export const SealedLobby = () => {
                         <b style={{padding: '0px 6px'}}>Download</b>
                         <img 
                             style={{width:'28px'}} 
-                            src={`https://cdn.formatlibrary.com/images/emojis/download.png`}
+                            src={`https://cdn.formatlibrary.com/images/emojis/download.webp`}
                             alt="download"
                         />
                     </div>
@@ -285,7 +285,7 @@ export const SealedLobby = () => {
                         <b style={{padding: '0px 6px'}}>Deck Builder</b>
                         <img 
                             style={{width:'28px'}} 
-                            src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`}
+                            src={`https://cdn.formatlibrary.com/images/emojis/open-file.webp`}
                             alt="open"
                         />
                     </div>
@@ -333,7 +333,7 @@ export const SealedLobby = () => {
                                                     <b style={{padding: '0px 6px'}}>Sort Inventory</b>
                                                     <img 
                                                         style={{width:'28px'}} 
-                                                        src={`https://cdn.formatlibrary.com/images/emojis/sort.png`}
+                                                        src={`https://cdn.formatlibrary.com/images/emojis/sort.webp`}
                                                         alt="sort"
                                                     />
                                                 </div>
@@ -350,7 +350,7 @@ export const SealedLobby = () => {
                                                     <b style={{padding: '0px 6px'}}>Download Inventory</b>
                                                     <img 
                                                         style={{width:'28px'}} 
-                                                        src={`https://cdn.formatlibrary.com/images/emojis/download.png`}
+                                                        src={`https://cdn.formatlibrary.com/images/emojis/download.webp`}
                                                         alt="download"
                                                     />
                                                 </div>

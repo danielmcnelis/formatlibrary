@@ -277,7 +277,7 @@ export const SingleEvent = (props) => {
                             }
                             <img 
                                 style={{width:'32px'}} 
-                                src={`https://cdn.formatlibrary.com/images/emojis/1st.png`}
+                                src={`https://cdn.formatlibrary.com/images/emojis/1st.webp`}
                                 alt="1st"
                             />
                         </div>
@@ -287,7 +287,7 @@ export const SingleEvent = (props) => {
                             <div onClick={() => goToCommunity()} className="single-event-community-link" style={{paddingRight:'7px'}}><b>Community:</b> {event.communityName}</div> 
                             <img 
                                 style={{width:'32px'}} 
-                                src={`https://cdn.formatlibrary.com/images/logos/${event.communityName?.replaceAll('+', '%2B')}.png`}
+                                src={`https://cdn.formatlibrary.com/images/logos/${event.communityName?.replaceAll('+', '%2B')}.webp`}
                                 alt={event.communityName}
                             />
                         </div>
@@ -310,7 +310,7 @@ export const SingleEvent = (props) => {
                             <div onClick={() => goToFormat()} className="single-event-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {capitalize(event.formatName, true)}</div>
                             <img 
                                 style={{width:'32px'}}
-                                src={`https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png`}
+                                src={`https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.webp`}
                                 alt={event.format.name}
                             />
                         </div>     
@@ -375,24 +375,24 @@ export const SingleEvent = (props) => {
                             <div className="subcategory-title-flexbox">
                                 <img 
                                     style={{ width:'64px'}} 
-                                    src={`https://cdn.formatlibrary.com/images/emojis/${event.format?.icon}.png`}
+                                    src={`https://cdn.formatlibrary.com/images/emojis/${event.format?.icon}.webp`}
                                     alt={event.format.name}
                                 />
                                 <h2 className="subheading"><b>{event.abbreviation}</b> Bracket:</h2>
                                 <img
                                     style={{ width:'64px'}} 
-                                    src={'https://cdn.formatlibrary.com/images/logos/Challonge.png'}
+                                    src={'https://cdn.formatlibrary.com/images/logos/Challonge.webp'}
                                     alt="challonge"
                                 />
                             </div>
                             <img 
                                 style={{width:'800px'}}
                                 className="bracket" 
-                                src={`https://cdn.formatlibrary.com/images/brackets/${event.abbreviation}.png`}
+                                src={`https://cdn.formatlibrary.com/images/brackets/${event.abbreviation}.webp`}
                                 onError={(e) => {
                                     e.target.onerror = null
                                     e.target.style.width = "300px"
-                                    e.target.src="https://cdn.formatlibrary.com/images/artworks/dig.jpg"
+                                    e.target.src="https://cdn.formatlibrary.com/images/artworks/dig.webp"
                                 }}
                                 alt="bracket"
                             />
@@ -430,13 +430,13 @@ export const SingleEvent = (props) => {
                     <div className="subcategory-title-flexbox">
                     <img 
                         style={{ width:'64px'}} 
-                        src={`https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png`}
+                        src={`https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.webp`}
                         alt={event.format.name}
                     />
                     <h2 className="subheading"><b>{event.abbreviation}</b> {topDecks?.length === 1 ? 'Winning Deck' : (isSubscriber || isAdmin) ? `Decks` : `Top ${topDecks?.length} Decks`}:</h2>
                     <img 
                         style={{ height:'64px'}} 
-                        src={'https://cdn.formatlibrary.com/images/emojis/deckbox.png'}
+                        src={'https://cdn.formatlibrary.com/images/emojis/deckbox.webp'}
                         alt="deckbox"
                     />
                     </div>
@@ -466,13 +466,13 @@ export const SingleEvent = (props) => {
                     <div className="subcategory-title-flexbox">
                     <img 
                         style={{ width:'64px'}} 
-                        src={`https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.png`}
+                        src={`https://cdn.formatlibrary.com/images/emojis/${event.format.icon}.webp`}
                         alt={event.format.name}
                     />
                     <h2 className="subheading"><b>{event.abbreviation}</b> Metagame Stats:</h2>
                     <img 
                         style={{ height:'64px'}} 
-                        src={'https://cdn.formatlibrary.com/images/emojis/microscope.png'}
+                        src={'https://cdn.formatlibrary.com/images/emojis/microscope.webp'}
                         alt="microscope"
                     />
                     </div>
@@ -540,13 +540,13 @@ export const SingleEvent = (props) => {
                     <div className="subcategory-title-flexbox">
                     <img 
                         style={{ width:'64px'}} 
-                        src={`https://cdn.formatlibrary.com/images/emojis/film.png`}
+                        src={`https://cdn.formatlibrary.com/images/emojis/film.webp`}
                         alt="film"
                     />
                     <h2 className="subheading"><b>{event.abbreviation}</b> Replays:</h2>
                     <img 
                         style={{ height:'64px'}} 
-                        src={'https://cdn.formatlibrary.com/images/emojis/film-flipped.png'}
+                        src={'https://cdn.formatlibrary.com/images/emojis/film-flipped.webp'}
                         alt="film"
                     />
                     </div>

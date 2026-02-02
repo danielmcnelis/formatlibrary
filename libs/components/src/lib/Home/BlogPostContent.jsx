@@ -29,15 +29,15 @@ export const BlogPostContent = (props) => {
                     <p class="BlogPostContent-date">{dateToVerbose(eventDate, false, false, true)}</p>
                 </div>
                 <div class="BlogPostContent-title-emojis">
-                    <img class="BlogPostContent-format-icon" src={`https://cdn.formatlibrary.com/images/emojis/${formatIcon}.png`} alt={formatIcon || 'format icon'}/>
-                    <img class="BlogPostContent-event-icon" src="https://cdn.formatlibrary.com/images/emojis/event.png" alt="trophy"/></div>
+                    <img class="BlogPostContent-format-icon" src={`https://cdn.formatlibrary.com/images/emojis/${formatIcon}.webp`} alt={formatIcon || 'format icon'}/>
+                    <img class="BlogPostContent-event-icon" src="https://cdn.formatlibrary.com/images/emojis/event.webp" alt="trophy"/></div>
             </div>
             <div class="BlogPostContent-content-flexbox">
                 <p class="BlogPostContent-paragraph">{winnerName} won <a class="BlogPostContent-event-link" href={`/events/${eventAbbreviation}`}>{eventName}</a> on {dateToVerbose(eventDate, true, true, false)} with a {winningDeckTypeIsPopular ? 'popular' : 'rogue'} deck, {winningDeckTypeName}!</p>
                 <div class="BlogPostContent-images-flexbox">
                     <div class="BlogPostContent-pfp-community-flexbox">
                         <img class="BlogPostContent-pfp" src={`/api/players/${winnerId}/avatar`} alt="winner pfp"/>
-                        <img class="BlogPostContent-community" src={`https://cdn.formatlibrary.com/images/logos/${communityName}.png`} alt="server logo"/>
+                        <img class="BlogPostContent-community" src={`https://cdn.formatlibrary.com/images/logos/${communityName}.webp`} alt="server logo"/>
                     </div>
                     <div class="BlogPostContent-deck-box">
                         <a class="BlogPostContent-deck-link" href={`/decks/${winningDeckId}`}>

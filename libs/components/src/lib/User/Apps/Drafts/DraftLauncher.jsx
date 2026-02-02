@@ -20,7 +20,7 @@ export const DraftLauncher = () => {
     const [timer, setTimer] = useState(60)
     const [draftLink, setDraftLink] = useState(null)
     const playerId = getCookie('playerId')
-    const logoName = type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${cube?.logo || 'cube.png'}` :
+    const logoName = type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${cube?.logo || 'cube.webp'}` :
         `https://cdn.formatlibrary.com/images/artworks/${booster?.setCode || 'back'}.jpg`
         
     const logoWidth = type === 'cube' ? '128px' : '100px'

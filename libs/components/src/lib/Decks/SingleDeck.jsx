@@ -10,22 +10,22 @@ import { Helmet } from 'react-helmet'
 import './SingleDeck.css'
 
 const emojis = {
-  Helmet: 'https://cdn.formatlibrary.com/images/emojis/helmet.png',
-  Controller: 'https://cdn.formatlibrary.com/images/emojis/controller.png',
-  Orb: 'https://cdn.formatlibrary.com/images/emojis/orb.png',
-  Unicorn: 'https://cdn.formatlibrary.com/images/emojis/unicorn.png',
-  Volcano: 'https://cdn.formatlibrary.com/images/emojis/volcano.png',
-  Bow: 'https://cdn.formatlibrary.com/images/emojis/bow.png',
-  Voltage: 'https://cdn.formatlibrary.com/images/emojis/voltage.png',
-  Lock: 'https://cdn.formatlibrary.com/images/emojis/lock.png',
-  Thinking: 'https://cdn.formatlibrary.com/images/emojis/thinking.png',
-  First: 'https://cdn.formatlibrary.com/images/emojis/1st.png',
-  Second: 'https://cdn.formatlibrary.com/images/emojis/2nd.png',
-  Third: 'https://cdn.formatlibrary.com/images/emojis/3rd.png',
-  Consolation: 'https://cdn.formatlibrary.com/images/emojis/consolation.png',
-  Heart: 'https://cdn.formatlibrary.com/images/emojis/heart.png',
-  Disk: 'https://cdn.formatlibrary.com/images/emojis/disk.png',
-  Eye: 'https://cdn.formatlibrary.com/images/emojis/eye.png'
+  Helmet: 'https://cdn.formatlibrary.com/images/emojis/helmet.webp',
+  Controller: 'https://cdn.formatlibrary.com/images/emojis/controller.webp',
+  Orb: 'https://cdn.formatlibrary.com/images/emojis/orb.webp',
+  Unicorn: 'https://cdn.formatlibrary.com/images/emojis/unicorn.webp',
+  Volcano: 'https://cdn.formatlibrary.com/images/emojis/volcano.webp',
+  Bow: 'https://cdn.formatlibrary.com/images/emojis/bow.webp',
+  Voltage: 'https://cdn.formatlibrary.com/images/emojis/voltage.webp',
+  Lock: 'https://cdn.formatlibrary.com/images/emojis/lock.webp',
+  Thinking: 'https://cdn.formatlibrary.com/images/emojis/thinking.webp',
+  First: 'https://cdn.formatlibrary.com/images/emojis/1st.webp',
+  Second: 'https://cdn.formatlibrary.com/images/emojis/2nd.webp',
+  Third: 'https://cdn.formatlibrary.com/images/emojis/3rd.webp',
+  Consolation: 'https://cdn.formatlibrary.com/images/emojis/consolation.webp',
+  Heart: 'https://cdn.formatlibrary.com/images/emojis/heart.webp',
+  Disk: 'https://cdn.formatlibrary.com/images/emojis/disk.webp',
+  Eye: 'https://cdn.formatlibrary.com/images/emojis/eye.webp'
 }
 
 const { Unicorn, Voltage, Bow, Volcano, Controller, Orb, Lock, Thinking, First, Second, Third, Consolation, Heart, Disk, Eye } = emojis
@@ -304,7 +304,7 @@ export const SingleDeck = (props) => {
                         <b style={{padding: '0px 6px'}}>Download</b>
                         <img 
                             style={{width:'28px'}} 
-                            src={`https://cdn.formatlibrary.com/images/emojis/download.png`}
+                            src={`https://cdn.formatlibrary.com/images/emojis/download.webp`}
                             alt="download"
                         />
                     </div>
@@ -351,7 +351,7 @@ export const SingleDeck = (props) => {
                         <b style={{padding: '0px 6px'}}>Open Deck</b>
                         <img 
                             style={{width:'28px'}} 
-                            src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`}
+                            src={`https://cdn.formatlibrary.com/images/emojis/open-file.webp`}
                             alt="open"
                         />
                     </div>
@@ -399,7 +399,7 @@ export const SingleDeck = (props) => {
                         <div className="single-deck-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {deck.formatName}</div>
                         <img 
                             style={{width:'28px'}} 
-                            src={`https://cdn.formatlibrary.com/images/emojis/${deck.format.icon}.png`}
+                            src={`https://cdn.formatlibrary.com/images/emojis/${deck.format.icon}.webp`}
                             alt={deck.format.icon}
                         />
                     </div>       
@@ -435,7 +435,7 @@ export const SingleDeck = (props) => {
                             <div className="single-deck-event-link" style={{paddingRight:'7px'}}><b>Event:</b> {deck.eventAbbreviation}</div> 
                             <img 
                                 style={{width:'28px'}} 
-                                src={`https://cdn.formatlibrary.com/images/logos/${deck.communityName?.replaceAll('+', '%2B')}.png`}
+                                src={`https://cdn.formatlibrary.com/images/logos/${deck.communityName?.replaceAll('+', '%2B')}.webp`}
                                 alt={deck.communityName}
                             />
                         </div>   

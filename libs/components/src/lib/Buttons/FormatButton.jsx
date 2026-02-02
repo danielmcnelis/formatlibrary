@@ -21,7 +21,7 @@ export const FormatButton = (props) => {
           <div 
             onClick={() => {window.location.href=`${urlize(`/formats/${format.name.toLowerCase().replaceAll(' ', '-')}`)}`}}
             className="format-link" 
-            style={{ backgroundImage: `url(https://cdn.formatlibrary.com/images/emojis/${format.icon}.png)`}}
+            style={{ backgroundImage: `url(https://cdn.formatlibrary.com/images/emojis/${format.icon}.webp)`}}
           >
             <div className="format-button">
               <div>{format.name}</div>

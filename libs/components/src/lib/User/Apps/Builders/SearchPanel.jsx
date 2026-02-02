@@ -13,14 +13,14 @@ import {Draggable} from '../../../General/Draggable'
 import './Builder.css'
 
 const symbols = {
-    Star: 'https://cdn.formatlibrary.com/images/symbols/star.png'
+    Star: 'https://cdn.formatlibrary.com/images/symbols/star.webp'
 }
 
 const { Star } = symbols
 
 const emojis = {
-    Shield: 'https://cdn.formatlibrary.com/images/emojis/shield.png',
-    Swords: 'https://cdn.formatlibrary.com/images/emojis/swords.png'
+    Shield: 'https://cdn.formatlibrary.com/images/emojis/shield.webp',
+    Swords: 'https://cdn.formatlibrary.com/images/emojis/swords.webp'
 }
 
 const { Shield, Swords } = emojis

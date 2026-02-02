@@ -37,13 +37,13 @@ export const CardRow = (props) => {
     }
   
     const line = stats.join(' / ')
-    const symbol = card.attribute ? `https://cdn.formatlibrary.com/images/symbols/${card.attribute.toLowerCase()}.png` :
-        `https://cdn.formatlibrary.com/images/symbols/${card.category.toLowerCase()}.png`
+    const symbol = card.attribute ? `https://cdn.formatlibrary.com/images/symbols/${card.attribute.toLowerCase()}.webp` :
+        `https://cdn.formatlibrary.com/images/symbols/${card.category.toLowerCase()}.webp`
 
-    const symbol2 = card.isLink ? `https://cdn.formatlibrary.com/images/arrows/${card.arrows}.png` :
-      card.isXyz ? `https://cdn.formatlibrary.com/images/symbols/rank.png` :
-      category === 'Monster' ? `https://cdn.formatlibrary.com/images/symbols/star.png` :
-      card.icon ? `https://cdn.formatlibrary.com/images/symbols/${card.icon.toLowerCase().replaceAll(' ', '-')}.png` :
+    const symbol2 = card.isLink ? `https://cdn.formatlibrary.com/images/arrows/${card.arrows}.webp` :
+      card.isXyz ? `https://cdn.formatlibrary.com/images/symbols/rank.webp` :
+      category === 'Monster' ? `https://cdn.formatlibrary.com/images/symbols/star.webp` :
+      card.icon ? `https://cdn.formatlibrary.com/images/symbols/${card.icon.toLowerCase().replaceAll(' ', '-')}.webp` :
       ''
   
     const line2 = card.isLink ? `Link ${rating}` :
@@ -51,7 +51,7 @@ export const CardRow = (props) => {
         category === 'Monster' ? `Level ${level}` :
         card.icon
   
-    const symbol3 = category === 'Monster' && card.type ? `https://cdn.formatlibrary.com/images/symbols/${card.type.toLowerCase().replaceAll(' ', '-')}.png` : null
+    const symbol3 = category === 'Monster' && card.type ? `https://cdn.formatlibrary.com/images/symbols/${card.type.toLowerCase().replaceAll(' ', '-')}.webp` : null
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
     const filePath = `https://cdn.formatlibrary.com/images/medium_cards/${card.artworkId}.jpg`
     
@@ -69,7 +69,7 @@ export const CardRow = (props) => {
                       status ? (
                           <img
                           className="small-status-icon"
-                          src={`https://cdn.formatlibrary.com/images/emojis/${status}.png`}
+                          src={`https://cdn.formatlibrary.com/images/emojis/${status}.webp`}
                           alt={status}
                           />
                       ) : ''
@@ -165,7 +165,7 @@ export const CardRow = (props) => {
                               <tr>
                               <td height="25px" width="110px" style={{borderRight: '2px solid #CFDCE5', borderTop: '2px solid #CFDCE5'}}>
                                   <img
-                                  src={`https://cdn.formatlibrary.com/images/symbols/scale.png`}
+                                  src={`https://cdn.formatlibrary.com/images/symbols/scale.webp`}
                                   height="24px"
                                   style={{verticalAlign: 'middle'}}
                                   alt="Scale"

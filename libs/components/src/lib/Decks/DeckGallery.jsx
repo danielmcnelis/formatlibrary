@@ -55,9 +55,9 @@ export const DeckGallery = (props) => {
                 }
                 <div id="popular-decks" className="popular-decks">
                     <div className="subcategory-title-flexbox">
-                        <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                        <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.webp`} alt={format.icon}/>
                         <h1 className="leaderboard-title">{format.name} Deck Gallery</h1>
-                        <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`} alt={format.icon}/>
+                        <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.webp`} alt={format.icon}/>
                     </div>
                     {
                         indices.map((index) => (

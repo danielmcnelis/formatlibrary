@@ -11,7 +11,7 @@ const discordPfp = getCookie('playerId')
 export const PfpUploader = (props) => {
     const {player} = props
     const [image, setImage] = useState(null)
-    const fileName = playerId + '.png'
+    const fileName = playerId + '.webp'
     const folder = 'pfps'
     const [updated, setUpdated] = useState(false)
 
@@ -74,7 +74,7 @@ export const PfpUploader = (props) => {
             <input
                 id="image"
                 type="file"
-                accept=".png"
+                accept=".webp"
                 onChange={(e) => {
                     readImage(e.target.files[0])}
                 }

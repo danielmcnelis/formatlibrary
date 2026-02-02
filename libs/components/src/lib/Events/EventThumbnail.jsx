@@ -17,7 +17,7 @@ export const EventThumbnail = (props = {}) => {
               <div className="eventThumbnail-flexbox">
                   <img 
                     className="eventThumbnail-format-icon" 
-                    src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`}
+                    src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.webp`}
                     alt={format.name}
                   />
                   <img 
@@ -27,7 +27,7 @@ export const EventThumbnail = (props = {}) => {
                   />
                   <img 
                     className="eventThumbnail-logo" 
-                    src={`https://cdn.formatlibrary.com/images/logos/${event.communityName?.replaceAll('+', '%2B')}.png`} 
+                    src={`https://cdn.formatlibrary.com/images/logos/${event.communityName?.replaceAll('+', '%2B')}.webp`} 
                     alt={event.communityName}
                   />
               </div>

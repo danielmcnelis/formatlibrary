@@ -152,28 +152,28 @@ export const SingleCard = (props) => {
     if (data === null) return <NotFound/>
     if (!card?.id) return <div style={{height: '100vh'}}/>
   
-    const template = card.category === 'Spell' ? `https://cdn.formatlibrary.com/images/templates/spellCard.png` :
+    const template = card.category === 'Spell' ? `https://cdn.formatlibrary.com/images/templates/spellCard.webp` :
       card.category === 'Trap' ? `https://cdn.formatlibrary.com/images/templates/trapCard.jpeg` :
       card.isFusion ? `https://cdn.formatlibrary.com/images/templates/fusionCard.jpg` :
       card.isRitual ? `https://cdn.formatlibrary.com/images/templates/ritualCard.jpg` :
-      card.isSynchro ? `https://cdn.formatlibrary.com/images/templates/synchroCard.png` :
-      card.isXyz ? `https://cdn.formatlibrary.com/images/templates/xyzCard.png` :
-      card.isPendulum ? `https://cdn.formatlibrary.com/images/templates/pendulumCard.png` :
-      card.link ? `https://cdn.formatlibrary.com/images/templates/isLinkCard.png` :
+      card.isSynchro ? `https://cdn.formatlibrary.com/images/templates/synchroCard.webp` :
+      card.isXyz ? `https://cdn.formatlibrary.com/images/templates/xyzCard.webp` :
+      card.isPendulum ? `https://cdn.formatlibrary.com/images/templates/pendulumCard.webp` :
+      card.link ? `https://cdn.formatlibrary.com/images/templates/isLinkCard.webp` :
       card.isNormal ? `https://cdn.formatlibrary.com/images/templates/monsterCard.jpg` :
-      card.isEffect ? `https://cdn.formatlibrary.com/images/templates/effectCard.png` :
+      card.isEffect ? `https://cdn.formatlibrary.com/images/templates/effectCard.webp` :
       null
   
-    const attribute = card.attribute ? `https://cdn.formatlibrary.com/images/symbols/${card.attribute.toLowerCase()}.png` : null
-    const type = card.type ? `https://cdn.formatlibrary.com/images/symbols/${card.type.replace(/\s/g, '-').toLowerCase()}.png` : null
+    const attribute = card.attribute ? `https://cdn.formatlibrary.com/images/symbols/${card.attribute.toLowerCase()}.webp` : null
+    const type = card.type ? `https://cdn.formatlibrary.com/images/symbols/${card.type.replace(/\s/g, '-').toLowerCase()}.webp` : null
     
     const starWord = card.isXyz ? `Rank` : 
       card.isLink ? `Link` : 
       card.category === 'Monster' ? `Level` : 
       null
   
-    const starType = `https://cdn.formatlibrary.com/images/symbols/${starWord?.toLowerCase()}.png`
-    const icon = `https://cdn.formatlibrary.com/images/symbols/${card.icon?.toLowerCase()}.png`
+    const starType = `https://cdn.formatlibrary.com/images/symbols/${starWord?.toLowerCase()}.webp`
+    const icon = `https://cdn.formatlibrary.com/images/symbols/${card.icon?.toLowerCase()}.webp`
   
     const classes = [card.category]
     if (card.isFusion) classes.push('Fusion')
@@ -307,7 +307,7 @@ export const SingleCard = (props) => {
                                             }
                                         </div>
                                         <div className="card-info-cell pwk-border-right">
-                                            <img src="https://cdn.formatlibrary.com/images/emojis/swords.png" className="card-symbol-standard" alt="sword"/>
+                                            <img src="https://cdn.formatlibrary.com/images/emojis/swords.webp" className="card-symbol-standard" alt="sword"/>
                                             {
                                                 isMobile ? (
                                                     <div style={{padding: '12px 8px'}}>{card.atk}</div>
@@ -317,7 +317,7 @@ export const SingleCard = (props) => {
                                             }
                                         </div>
                                         <div className="card-info-cell">
-                                            <img src="https://cdn.formatlibrary.com/images/emojis/shield.png" className="card-symbol-standard" alt="shield"/>
+                                            <img src="https://cdn.formatlibrary.com/images/emojis/shield.webp" className="card-symbol-standard" alt="shield"/>
                                             {
                                                 isMobile ? (
                                                     <div style={{padding: '12px 8px'}}>{card.def}</div>
@@ -517,7 +517,7 @@ export const SingleCard = (props) => {
                                             </div>
                                         </div>
                                         <div className="card-info-cell pwk-border-right">
-                                            <img src="https://cdn.formatlibrary.com/images/emojis/swords.png" className="card-symbol-standard" alt="sword"/>
+                                            <img src="https://cdn.formatlibrary.com/images/emojis/swords.webp" className="card-symbol-standard" alt="sword"/>
                                             <div>
                                                 ATK:
                                                 <input
@@ -530,7 +530,7 @@ export const SingleCard = (props) => {
                                             </div>
                                         </div>
                                         <div className="card-info-cell">
-                                            <img src="https://cdn.formatlibrary.com/images/emojis/shield.png" className="card-symbol-standard" alt="shield"/>
+                                            <img src="https://cdn.formatlibrary.com/images/emojis/shield.webp" className="card-symbol-standard" alt="shield"/>
                                             <div>
                                                 DEF:
                                                 <input
@@ -637,7 +637,7 @@ export const SingleCard = (props) => {
                             <h2 style={{marginBottom: '10px'}}>Price History</h2>
                             <div className="horizontal-centered-flexbox" style={{alignItems: 'center'}}>
                                 <div>{prices.edition}</div>
-                                <div className="rarity-cell" style={{backgroundImage: `url(https://cdn.formatlibrary.com/images/rarities/${raritySymbol}.png)`, height: '28px', margin: '0px 3px'}}/>
+                                <div className="rarity-cell" style={{backgroundImage: `url(https://cdn.formatlibrary.com/images/rarities/${raritySymbol}.webp)`, height: '28px', margin: '0px 3px'}}/>
                                 {
                                     isMobile ? (<div>{prices.mobileTitle}</div>) : (<div>{prices.desktopTitle}</div>)
                                 }   

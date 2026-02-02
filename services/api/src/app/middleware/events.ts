@@ -602,7 +602,7 @@ export const createEvents = async (req, res, next) => {
 
           params: { 
               Bucket: 'formatlibrary', 
-              Key: `images/brackets/${req.body.abbreviation}.png`, 
+              Key: `images/brackets/${req.body.abbreviation}.webp`, 
               Body: buffer,
               ContentType: 'image/png'
           }

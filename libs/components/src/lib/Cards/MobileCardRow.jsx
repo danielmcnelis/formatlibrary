@@ -2,50 +2,50 @@ import { Link } from 'react-router-dom'
 import './MobileCardRow.css'
 
 const symbols = {
-  Aqua: 'https://cdn.formatlibrary.com/images/symbols/aqua.png',
-  Beast: 'https://cdn.formatlibrary.com/images/symbols/beast.png',
-  BeastWarrior: 'https://cdn.formatlibrary.com/images/beast-warrior.png',
-  Continuous: 'https://cdn.formatlibrary.com/images/symbols/continuous.png',
-  Counter: 'https://cdn.formatlibrary.com/images/symbols/counter.png',
-  Cyberse: 'https://cdn.formatlibrary.com/images/symbols/cyberse.png',
-  DARK: 'https://cdn.formatlibrary.com/images/symbols/dark.png',
-  Dinosaur: 'https://cdn.formatlibrary.com/images/symbols/dinosaur.png',
-  DIVINE: 'https://cdn.formatlibrary.com/images/symbols/divine.png',
-  DivineBeast: 'https://cdn.formatlibrary.com/images/symbols/divine-beast.png',
-  Dragon: 'https://cdn.formatlibrary.com/images/symbols/dragon.png',
-  EARTH: 'https://cdn.formatlibrary.com/images/symbols/earth.png',
-  Equip: 'https://cdn.formatlibrary.com/images/symbols/equip.png',
-  Fairy: 'https://cdn.formatlibrary.com/images/symbols/fairy.png',
-  Field: 'https://cdn.formatlibrary.com/images/symbols/field.png',
-  Fiend: 'https://cdn.formatlibrary.com/images/symbols/fiend.png',
-  FIRE: 'https://cdn.formatlibrary.com/images/symbols/fire.png',
-  Fish: 'https://cdn.formatlibrary.com/images/symbols/fish.png',
-  Insect: 'https://cdn.formatlibrary.com/images/symbols/insect.png',
-  LIGHT: 'https://cdn.formatlibrary.com/images/symbols/light.png',
-  LinkSymbol: 'https://cdn.formatlibrary.com/images/symbols/link.png',
-  Machine: 'https://cdn.formatlibrary.com/images/symbols/machine.png',
-  Normal: 'https://cdn.formatlibrary.com/images/symbols/normal.png',
-  Plant: 'https://cdn.formatlibrary.com/images/symbols/plant.png',
-  Psychic: 'https://cdn.formatlibrary.com/images/symbols/psychic.png',
-  Pyro: 'https://cdn.formatlibrary.com/images/symbols/pyro.png',
-  QuickPlay: 'https://cdn.formatlibrary.com/images/symbols/quick-play.png',
-  Rank: 'https://cdn.formatlibrary.com/images/symbols/rank.png',
-  Reptile: 'https://cdn.formatlibrary.com/images/symbols/reptile.png',
-  Ritual: 'https://cdn.formatlibrary.com/images/symbols/ritual.png',
-  Rock: 'https://cdn.formatlibrary.com/images/symbols/rock.png',
-  Scale: 'https://cdn.formatlibrary.com/images/symbols/Scale.png',
-  SeaSerpent: 'https://cdn.formatlibrary.com/images/symbols/sea-serpent.png',
-  Spell: 'https://cdn.formatlibrary.com/images/symbols/spell.png',
-  Spellcaster: 'https://cdn.formatlibrary.com/images/symbols/spellcaster.png',
-  Star: 'https://cdn.formatlibrary.com/images/symbols/star.png',
-  Thunder: 'https://cdn.formatlibrary.com/images/symbols/thunder.png',
-  Trap: 'https://cdn.formatlibrary.com/images/symbols/trap.png',
-  Warrior: 'https://cdn.formatlibrary.com/images/symbols/warrior.png',
-  WATER: 'https://cdn.formatlibrary.com/images/symbols/water.png',
-  WIND: 'https://cdn.formatlibrary.com/images/symbols/wind.png',
-  WingedBeast: 'https://cdn.formatlibrary.com/images/symbols/winged-beast.png',
-  Wyrm: 'https://cdn.formatlibrary.com/images/symbols/wyrm.png',
-  Zombie: 'https://cdn.formatlibrary.com/images/symbols/zombie.png'
+  Aqua: 'https://cdn.formatlibrary.com/images/symbols/aqua.webp',
+  Beast: 'https://cdn.formatlibrary.com/images/symbols/beast.webp',
+  BeastWarrior: 'https://cdn.formatlibrary.com/images/beast-warrior.webp',
+  Continuous: 'https://cdn.formatlibrary.com/images/symbols/continuous.webp',
+  Counter: 'https://cdn.formatlibrary.com/images/symbols/counter.webp',
+  Cyberse: 'https://cdn.formatlibrary.com/images/symbols/cyberse.webp',
+  DARK: 'https://cdn.formatlibrary.com/images/symbols/dark.webp',
+  Dinosaur: 'https://cdn.formatlibrary.com/images/symbols/dinosaur.webp',
+  DIVINE: 'https://cdn.formatlibrary.com/images/symbols/divine.webp',
+  DivineBeast: 'https://cdn.formatlibrary.com/images/symbols/divine-beast.webp',
+  Dragon: 'https://cdn.formatlibrary.com/images/symbols/dragon.webp',
+  EARTH: 'https://cdn.formatlibrary.com/images/symbols/earth.webp',
+  Equip: 'https://cdn.formatlibrary.com/images/symbols/equip.webp',
+  Fairy: 'https://cdn.formatlibrary.com/images/symbols/fairy.webp',
+  Field: 'https://cdn.formatlibrary.com/images/symbols/field.webp',
+  Fiend: 'https://cdn.formatlibrary.com/images/symbols/fiend.webp',
+  FIRE: 'https://cdn.formatlibrary.com/images/symbols/fire.webp',
+  Fish: 'https://cdn.formatlibrary.com/images/symbols/fish.webp',
+  Insect: 'https://cdn.formatlibrary.com/images/symbols/insect.webp',
+  LIGHT: 'https://cdn.formatlibrary.com/images/symbols/light.webp',
+  LinkSymbol: 'https://cdn.formatlibrary.com/images/symbols/link.webp',
+  Machine: 'https://cdn.formatlibrary.com/images/symbols/machine.webp',
+  Normal: 'https://cdn.formatlibrary.com/images/symbols/normal.webp',
+  Plant: 'https://cdn.formatlibrary.com/images/symbols/plant.webp',
+  Psychic: 'https://cdn.formatlibrary.com/images/symbols/psychic.webp',
+  Pyro: 'https://cdn.formatlibrary.com/images/symbols/pyro.webp',
+  QuickPlay: 'https://cdn.formatlibrary.com/images/symbols/quick-play.webp',
+  Rank: 'https://cdn.formatlibrary.com/images/symbols/rank.webp',
+  Reptile: 'https://cdn.formatlibrary.com/images/symbols/reptile.webp',
+  Ritual: 'https://cdn.formatlibrary.com/images/symbols/ritual.webp',
+  Rock: 'https://cdn.formatlibrary.com/images/symbols/rock.webp',
+  Scale: 'https://cdn.formatlibrary.com/images/symbols/Scale.webp',
+  SeaSerpent: 'https://cdn.formatlibrary.com/images/symbols/sea-serpent.webp',
+  Spell: 'https://cdn.formatlibrary.com/images/symbols/spell.webp',
+  Spellcaster: 'https://cdn.formatlibrary.com/images/symbols/spellcaster.webp',
+  Star: 'https://cdn.formatlibrary.com/images/symbols/star.webp',
+  Thunder: 'https://cdn.formatlibrary.com/images/symbols/thunder.webp',
+  Trap: 'https://cdn.formatlibrary.com/images/symbols/trap.webp',
+  Warrior: 'https://cdn.formatlibrary.com/images/symbols/warrior.webp',
+  WATER: 'https://cdn.formatlibrary.com/images/symbols/water.webp',
+  WIND: 'https://cdn.formatlibrary.com/images/symbols/wind.webp',
+  WingedBeast: 'https://cdn.formatlibrary.com/images/symbols/winged-beast.webp',
+  Wyrm: 'https://cdn.formatlibrary.com/images/symbols/wyrm.webp',
+  Zombie: 'https://cdn.formatlibrary.com/images/symbols/zombie.webp'
 }
 
 /* eslint-disable complexity */
@@ -66,7 +66,7 @@ export const MobileCardRow = (props) => {
     const line = card.type
     
     const symbol = symbols[card.attribute] || symbols[card.category]
-    const symbol2 = card.isLink ? `https://cdn.formatlibrary.com/images/arrows/${card.arrows}.png` :
+    const symbol2 = card.isLink ? `https://cdn.formatlibrary.com/images/arrows/${card.arrows}.webp` :
       card.isXyz ? symbols.Rank :
       category === 'Monster' ? symbols.Star :
       card.icon ? symbols[card.icon.replace('-', '')] :
@@ -95,7 +95,7 @@ export const MobileCardRow = (props) => {
                     status ? (
                         <img
                         className="small-status-icon"
-                        src={`https://cdn.formatlibrary.com/images/emojis/${status}.png`}
+                        src={`https://cdn.formatlibrary.com/images/emojis/${status}.webp`}
                         alt={status}
                         />
                     ) : ''

@@ -87,7 +87,7 @@ export const DraftLobby = (props) => {
         setId(useParamsId)
     }
     const timerColor = JSON.parse(localStorage.getItem('theme')) === 'dark' ? '#00bca6' : '#334569'
-    const logoName = draft?.type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${draft?.cube?.logo || 'cube.png'}` :
+    const logoName = draft?.type === 'cube' ? `https://cdn.formatlibrary.com/images/emojis/${draft?.cube?.logo || 'cube.webp'}` :
         `https://cdn.formatlibrary.com/images/artworks/${draft?.set?.setCode || 'back'}.jpg`
     const logoWidth = draft?.type === 'cube' ? '128px' : '100px'
 
@@ -475,7 +475,7 @@ export const DraftLobby = (props) => {
                                                     <b style={{padding: '0px 6px'}}>Sort Inventory</b>
                                                     <img 
                                                         style={{width:'28px'}} 
-                                                        src={`https://cdn.formatlibrary.com/images/emojis/sort.png`}
+                                                        src={`https://cdn.formatlibrary.com/images/emojis/sort.webp`}
                                                         alt="sort"
                                                     />
                                                 </div>
@@ -491,7 +491,7 @@ export const DraftLobby = (props) => {
                                                     <b style={{padding: '0px 6px'}}>Download Inventory</b>
                                                     <img 
                                                         style={{width:'28px'}} 
-                                                        src={`https://cdn.formatlibrary.com/images/emojis/download.png`}
+                                                        src={`https://cdn.formatlibrary.com/images/emojis/download.webp`}
                                                         alt="download"
                                                     />
                                                 </div>

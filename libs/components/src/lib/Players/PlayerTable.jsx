@@ -235,9 +235,9 @@ export const PlayerTable = (props) => {
                 <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
                 <div className="body">
                     <div className="player-database-flexbox">
-                        <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/nerd.png'} alt="nerd"/>
+                        <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/nerd.webp'} alt="nerd"/>
                         <h1>Player Database</h1>
-                        <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/nerd-flipped.png'} alt="nerd"/>
+                        <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/nerd-flipped.webp'} alt="nerd"/>
                     </div>
                     
                     <br />

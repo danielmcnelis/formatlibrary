@@ -352,7 +352,7 @@ export const FormatMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => newCardPool()}
                         >                                    
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/new-file.png`} alt="new file"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/new-file.webp`} alt="new file"/></div> 
                             <div className="control-panel-text"><b>New Card Pool</b></div> 
                         </div>
                         
@@ -360,7 +360,7 @@ export const FormatMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => setShowOpenModal(true)}
                         >                                    
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`} alt="open file"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.webp`} alt="open file"/></div> 
                             <div className="control-panel-text"><b>Open Card Pool</b></div> 
                         </div> 
 
@@ -368,7 +368,7 @@ export const FormatMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => setShowUploadModal(true)}
                         >                                    
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/upload.png`} alt="upload"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/upload.webp`} alt="upload"/></div> 
                             <div className="control-panel-text"><b>Upload Card Pool</b></div> 
                         </div>
 
@@ -376,7 +376,7 @@ export const FormatMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => clearCardPool()}
                         >                                    
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/erase.png`} alt="clear"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/erase.webp`} alt="clear"/></div> 
                             <div className="control-panel-text"><b>Clear Card Pool</b></div>
                         </div> 
 
@@ -384,7 +384,7 @@ export const FormatMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => copyCardPool()}
                         >                  
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/copy.png`} alt="copy"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/copy.webp`} alt="copy"/></div> 
                             <div className="control-panel-text"><b>Copy Card Pool</b></div> 
                         </div> 
 
@@ -392,7 +392,7 @@ export const FormatMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => updateFormat(format.name)}
                         >                  
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/revert.png`} alt="revert"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/revert.webp`} alt="revert"/></div> 
                             <div className="control-panel-text"><b>Revert Card Pool</b></div> 
                         </div> 
 
@@ -400,7 +400,7 @@ export const FormatMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => sortCardPool()}
                         >                         
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/sort.png`} alt="sort"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/sort.webp`} alt="sort"/></div> 
                             <div className="control-panel-text"><b>Sort Card Pool</b></div> 
                         </div>
 
@@ -408,7 +408,7 @@ export const FormatMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => format.id ? saveCardPool() : setShowSaveModal(true)}
                         >                  
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/save.png`} alt="save"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/save.webp`} alt="save"/></div> 
                             <div className="control-panel-text"><b>Save Card Pool</b></div> 
                         </div> 
                     </div>
@@ -416,7 +416,7 @@ export const FormatMaker = () => {
                     <div>
                         <div className="single-deck-title-flexbox">
                             <div style={{width: '80px'}}/>
-                            <div className="single-deck-title">{format?.name || 'New Format'} <img style={{width:'32px', margin: '10px 20px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon || 'master'}.png`} alt={format.icon || 'millennium-puzzle'}/></div>
+                            <div className="single-deck-title">{format?.name || 'New Format'} <img style={{width:'32px', margin: '10px 20px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon || 'master'}.webp`} alt={format.icon || 'millennium-puzzle'}/></div>
                             <div style={{width: '80px', color: '#CBC5C3', margin: '0px', alignSelf: 'center'}}>{edited ? <i>Edited</i> : ''}</div>
                         </div>
 
@@ -484,7 +484,7 @@ export const FormatMaker = () => {
                                             >                                    
                                                 <div className="deck-button">
                                                     <b style={{padding: '0px 6px'}}>Download</b>
-                                                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`} alt="download"/>
+                                                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.webp`} alt="download"/>
                                                 </div> 
                                             </a>
                                         </div>   

@@ -797,7 +797,7 @@ export const CardTable = () => {
                                     <ModdedSlider
                                         id="level"
                                         type="range-slider"
-                                        symbol="https://cdn.formatlibrary.com/images/symbols/star.png"
+                                        symbol="https://cdn.formatlibrary.com/images/symbols/star.webp"
                                         label="Level"
                                         step={1}
                                         min={1}
@@ -811,7 +811,7 @@ export const CardTable = () => {
                                     <ModdedSlider
                                         id="atk"
                                         type="range-slider"
-                                        symbol="https://cdn.formatlibrary.com/images/emojis/swords.png"
+                                        symbol="https://cdn.formatlibrary.com/images/emojis/swords.webp"
                                         label="ATK"
                                         step={50}
                                         min={0}
@@ -825,7 +825,7 @@ export const CardTable = () => {
                                     <ModdedSlider
                                         id="def"
                                         type="range-slider"
-                                        symbol="https://cdn.formatlibrary.com/images/emojis/shield.png"
+                                        symbol="https://cdn.formatlibrary.com/images/emojis/shield.webp"
                                         label="DEF"
                                         step={50}
                                         min={0}
@@ -841,7 +841,7 @@ export const CardTable = () => {
                                     <ModdedSlider
                                         id="year"
                                         type="continuous-slider"
-                                        symbol="https://cdn.formatlibrary.com/images/emojis/calendar.png"
+                                        symbol="https://cdn.formatlibrary.com/images/emojis/calendar.webp"
                                         label="Year"
                                         step={1}
                                         min={queryParams?.region === 'ocg' ? 1999 : 2002}
@@ -854,7 +854,7 @@ export const CardTable = () => {
                                     <ModdedSlider
                                         id="month"
                                         type="continuous-slider"
-                                        symbol="https://cdn.formatlibrary.com/images/emojis/calendar.png"
+                                        symbol="https://cdn.formatlibrary.com/images/emojis/calendar.webp"
                                         label="Month"
                                         step={1}
                                         min={1}
@@ -867,7 +867,7 @@ export const CardTable = () => {
                                     <ModdedSlider
                                         id="day"
                                         type="continuous-slider"
-                                        symbol="https://cdn.formatlibrary.com/images/emojis/calendar.png"
+                                        symbol="https://cdn.formatlibrary.com/images/emojis/calendar.webp"
                                         label="Day"
                                         step={1}
                                         min={1}

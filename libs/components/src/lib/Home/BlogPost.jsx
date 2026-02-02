@@ -33,7 +33,7 @@ export const BlogPost = (props) => {
                                 >
                                 <div>
                                     <img 
-                                        src="https://cdn.formatlibrary.com/images/logos/Discord.png" 
+                                        src="https://cdn.formatlibrary.com/images/logos/Discord.webp" 
                                         alt="Discord" 
                                     />
                                     <p className="ad-description">Join our Discord server!</p>
@@ -47,7 +47,7 @@ export const BlogPost = (props) => {
                                     className="black-text hover-green"
                                 >
                                 <img 
-                                    src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" 
+                                    src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.webp" 
                                     alt="Buy Me A Coffee" 
                                 />
                                 <p className="ad-description">Small donations support our work!</p>
@@ -60,7 +60,7 @@ export const BlogPost = (props) => {
                                     className="black-text hover-green"
                                 >
                                     <img 
-                                        src="https://cdn.formatlibrary.com/images/logos/TCGPlayer.png" 
+                                        src="https://cdn.formatlibrary.com/images/logos/TCGPlayer.webp" 
                                         alt="TCG Player" 
                                     />
                                     <p className="ad-description">Shop to support FormatLibrary.com!</p>

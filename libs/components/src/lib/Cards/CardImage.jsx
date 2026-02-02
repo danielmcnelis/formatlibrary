@@ -20,7 +20,7 @@ export const CardImage = (props) => {
             <div className="CardImage-box">
                 <div className="card-image-cell"  >
                 {
-                    rarity ? <img src={`https://cdn.formatlibrary.com/images/rarities/${camelize(rarity)}.png`} alt={rarity} className="rarity-icon"/> : null
+                    rarity ? <img src={`https://cdn.formatlibrary.com/images/rarities/${camelize(rarity)}.webp`} alt={rarity} className="rarity-icon"/> : null
                 }
                 <img
                     src={`https://cdn.formatlibrary.com/images/medium_cards/${card.artworkId}.jpg`}
@@ -43,7 +43,7 @@ export const CardImage = (props) => {
                 >
                     <div className="card-image-cell"  >
                     {
-                        rarity ? <img src={`https://cdn.formatlibrary.com/images/rarities/${camelize(rarity)}.png`} alt={rarity} className="rarity-icon"/> : null
+                        rarity ? <img src={`https://cdn.formatlibrary.com/images/rarities/${camelize(rarity)}.webp`} alt={rarity} className="rarity-icon"/> : null
                     }
                     <img
                         src={`https://cdn.formatlibrary.com/images/medium_cards/${card.artworkId}.jpg`}
@@ -63,7 +63,7 @@ export const CardImage = (props) => {
             <div className="CardImage-box">
                 <div className="card-image-cell"  >
                 {
-                    status && status !== 'no longer on list' ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.png`} alt={status} className="status-icon"/> : null
+                    status && status !== 'no longer on list' ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.webp`} alt={status} className="status-icon"/> : null
                 }
                 <img
                     src={`https://cdn.formatlibrary.com/images/medium_cards/${card.artworkId}.jpg`}
@@ -86,7 +86,7 @@ export const CardImage = (props) => {
                     alt={card.name}
                 />
                 {
-                    previous ? <img src={`https://cdn.formatlibrary.com/images/emojis/${previous === 'forbidden' ? 'from0' : previous === 'limited' ? 'from1' : previous === 'semi-limited' ? "from2" : 'new'}.png`} alt={card.name} className="remarks-icon"/> : null
+                    previous ? <img src={`https://cdn.formatlibrary.com/images/emojis/${previous === 'forbidden' ? 'from0' : previous === 'limited' ? 'from1' : previous === 'semi-limited' ? "from2" : 'new'}.webp`} alt={card.name} className="remarks-icon"/> : null
                 }
                 </div>
             </div>
@@ -110,7 +110,7 @@ export const CardImage = (props) => {
                   >
                       <div className="card-image-cell">
                         {
-                          <img src={`https://cdn.formatlibrary.com/images/emojis/${points}.png`} alt={points} className="status-icon"/>
+                          <img src={`https://cdn.formatlibrary.com/images/emojis/${points}.webp`} alt={points} className="status-icon"/>
                         }
                         <img
                           src={`https://cdn.formatlibrary.com/images/medium_cards/${card.artworkId}.jpg`}
@@ -138,7 +138,7 @@ export const CardImage = (props) => {
                     >
                         <div className="card-image-cell">
                           {
-                            status && status !== 'no longer on list' ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.png`} alt={status} className="status-icon"/> : null
+                            status && status !== 'no longer on list' ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.webp`} alt={status} className="status-icon"/> : null
                           }
                           <img
                             src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`}
@@ -158,7 +158,7 @@ export const CardImage = (props) => {
                             alt={card.name}
                           />
                           {
-                            previous ? <img src={`https://cdn.formatlibrary.com/images/emojis/${previous === 'forbidden' ? 'from0' : previous === 'limited' ? 'from1' : previous === 'semi-limited' ? "from2" : 'new'}.png`} alt={card.name} className="remarks-icon"/> : null
+                            previous ? <img src={`https://cdn.formatlibrary.com/images/emojis/${previous === 'forbidden' ? 'from0' : previous === 'limited' ? 'from1' : previous === 'semi-limited' ? "from2" : 'new'}.webp`} alt={card.name} className="remarks-icon"/> : null
                           }
                         </div>
                   </Link>
@@ -185,7 +185,7 @@ export const CardImage = (props) => {
                   >
                       <div className="card-image-cell">
                         {
-                          status && status !== 'no longer on list' ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.png`} alt={status} className="status-icon"/> : null
+                          status && status !== 'no longer on list' ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.webp`} alt={status} className="status-icon"/> : null
                         }
                         <img
                           src={`https://cdn.formatlibrary.com/images/medium_cards/${card.artworkId}.jpg`}
@@ -205,7 +205,7 @@ export const CardImage = (props) => {
                           alt={card.name}
                         />
                         {
-                          previous ? <img src={`https://cdn.formatlibrary.com/images/emojis/${previous === 'forbidden' ? 'from0' : previous === 'limited' ? 'from1' : previous === 'semi-limited' ? "from2" : 'new'}.png`} alt={card.name} className="remarks-icon"/> : null
+                          previous ? <img src={`https://cdn.formatlibrary.com/images/emojis/${previous === 'forbidden' ? 'from0' : previous === 'limited' ? 'from1' : previous === 'semi-limited' ? "from2" : 'new'}.webp`} alt={card.name} className="remarks-icon"/> : null
                         }
                       </div>
                 </Link>
@@ -216,7 +216,7 @@ export const CardImage = (props) => {
                     >
                         <div className="card-image-cell">
                           {
-                            status && status !== 'no longer on list' ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.png`} alt={status} className="status-icon"/> : null
+                            status && status !== 'no longer on list' ? <img src={`https://cdn.formatlibrary.com/images/emojis/${status}.webp`} alt={status} className="status-icon"/> : null
                           }
                           <img
                             src={`https://cdn.formatlibrary.com/images/cards/${card.artworkId}.jpg`}
@@ -236,7 +236,7 @@ export const CardImage = (props) => {
                             alt={card.name}
                           />
                           {
-                            previous ? <img src={`https://cdn.formatlibrary.com/images/emojis/${previous === 'forbidden' ? 'from0' : previous === 'limited' ? 'from1' : previous === 'semi-limited' ? "from2" : 'new'}.png`} alt={card.name} className="remarks-icon"/> : null
+                            previous ? <img src={`https://cdn.formatlibrary.com/images/emojis/${previous === 'forbidden' ? 'from0' : previous === 'limited' ? 'from1' : previous === 'semi-limited' ? "from2" : 'new'}.webp`} alt={card.name} className="remarks-icon"/> : null
                           }
                         </div>
                   </Link>

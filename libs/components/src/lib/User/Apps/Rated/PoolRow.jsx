@@ -16,7 +16,7 @@ export const PoolRow = (props = {}) => {
                 <div>{format.name}</div>
                 <img
                     className="format-icon-small" 
-                    src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.png`}
+                    src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.webp`}
                     alt={format.name}
                 />
             </div>

@@ -77,7 +77,7 @@ export const PlayerCreator = () => {
                 <input
                     id="pfp"
                     type="file"
-                    accept=".png"
+                    accept=".webp"
                     onChange={(e) => readPfp(e.target.files[0])}
                 />
             </label>

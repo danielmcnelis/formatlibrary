@@ -9,7 +9,7 @@ export const ReplayRow = (props) => {
         <tr onClick={() => window.open(replay.url, "_blank")} className={`${evenOrOdd}-search-results-row`}>
           <td className="no-padding">
               <div className="format-cell-flexbox">
-                <img src={`https://cdn.formatlibrary.com/images/emojis/${replay.format?.icon}.png`} alt={replay.format?.icon}/>
+                <img src={`https://cdn.formatlibrary.com/images/emojis/${replay.format?.icon}.webp`} alt={replay.format?.icon}/>
                 <div>{replay.formatName}</div>
               </div>
           </td>
@@ -18,7 +18,7 @@ export const ReplayRow = (props) => {
               <div className="replay-event-cell">
                 {replay.eventAbbreviation}
               </div>
-              <img src={`https://cdn.formatlibrary.com/images/logos/${replay.event?.communityName?.replaceAll('+', '%2B')}.png`} alt={replay.event?.communityName}/>
+              <img src={`https://cdn.formatlibrary.com/images/logos/${replay.event?.communityName?.replaceAll('+', '%2B')}.webp`} alt={replay.event?.communityName}/>
         </td>
 
           <td className="no-padding">

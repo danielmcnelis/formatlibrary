@@ -392,7 +392,7 @@ export const CubeMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => newCube()}
                         >                                    
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/new-file.png`} alt="new file"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/new-file.webp`} alt="new file"/></div> 
                             <div className="control-panel-text"><b>New Cube</b></div> 
                         </div>
                         
@@ -400,7 +400,7 @@ export const CubeMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => setShowOpenModal(true)}
                         >                                    
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`} alt="open file"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.webp`} alt="open file"/></div> 
                             <div className="control-panel-text"><b>Open Cube</b></div> 
                         </div> 
 
@@ -408,7 +408,7 @@ export const CubeMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => setShowUploadModal(true)}
                         >                                    
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/upload.png`} alt="upload"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/upload.webp`} alt="upload"/></div> 
                             <div className="control-panel-text"><b>Upload Cube</b></div> 
                         </div>
 
@@ -416,7 +416,7 @@ export const CubeMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => clearCube()}
                         >                                    
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/erase.png`} alt="clear"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/erase.webp`} alt="clear"/></div> 
                             <div className="control-panel-text"><b>Clear Cube</b></div>
                         </div> 
 
@@ -424,7 +424,7 @@ export const CubeMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => copyCube()}
                         >                  
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/copy.png`} alt="copy"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/copy.webp`} alt="copy"/></div> 
                             <div className="control-panel-text"><b>Copy Cube</b></div> 
                         </div> 
 
@@ -432,7 +432,7 @@ export const CubeMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => updateCube(cube?.id)}
                         >                  
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/revert.png`} alt="revert"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/revert.webp`} alt="revert"/></div> 
                             <div className="control-panel-text"><b>Revert Cube</b></div> 
                         </div> 
 
@@ -440,7 +440,7 @@ export const CubeMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => sortCube()}
                         >                         
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/sort.png`} alt="sort"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/sort.webp`} alt="sort"/></div> 
                             <div className="control-panel-text"><b>Sort Cube</b></div> 
                         </div>
 
@@ -448,7 +448,7 @@ export const CubeMaker = () => {
                             className={"show-cursor control-panel-button"}
                             onClick={() => cube?.id ? saveCube() : setShowSaveModal(true)}
                         >                  
-                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/save.png`} alt="save"/></div> 
+                            <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/save.webp`} alt="save"/></div> 
                             <div className="control-panel-text"><b>Save Cube</b></div> 
                         </div> 
                     </div>
@@ -513,7 +513,7 @@ export const CubeMaker = () => {
                                 onClick={() => setShowDeleteModal(true)}
                             >
                                 <b style={{padding: '0px 6px'}}>Delete</b>
-                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/delete.png`} alt="delete"/>
+                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/delete.webp`} alt="delete"/>
                             </div>                     
                             <div className="show-cursor cube-button">
                                 <a
@@ -523,7 +523,7 @@ export const CubeMaker = () => {
                                 >                                    
                                     <div className="cube-button">
                                         <b style={{padding: '0px 6px'}}>Download</b>
-                                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`} alt="download"/>
+                                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.webp`} alt="download"/>
                                     </div> 
                                 </a>
                             </div>  
@@ -536,12 +536,12 @@ export const CubeMaker = () => {
                                     cube.display ? (
                                         <div className="cube-button">
                                             <b style={{padding: '0px 6px'}}>Unpublish</b>
-                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/hide.png`} alt="disguised"/>
+                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/hide.webp`} alt="disguised"/>
                                         </div> 
                                     ) : (
                                         <div className="cube-button">
                                             <b style={{padding: '0px 6px'}}>Publish</b>
-                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/globe.png`} alt="globe"/>
+                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/globe.webp`} alt="globe"/>
                                         </div> 
                                     )
                                 }

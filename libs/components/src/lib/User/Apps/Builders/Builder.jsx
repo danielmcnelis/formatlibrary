@@ -743,7 +743,7 @@ useEffect(() => {
                     className={"show-cursor control-panel-button"}
                     onClick={() => newDeck()}
                 >                                    
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/new-file.png`} alt="new-file"/></div> 
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/new-file.webp`} alt="new-file"/></div> 
                     <div className="control-panel-text"><b>New Deck</b></div> 
                 </div> 
                 
@@ -753,7 +753,7 @@ useEffect(() => {
                         setShowOpenModal(true)
                     }}
                 >                                    
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`} alt="open-file"/></div> 
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.webp`} alt="open-file"/></div> 
                     <div className="control-panel-text"><b>Open Deck</b></div> 
                 </div> 
 
@@ -761,7 +761,7 @@ useEffect(() => {
                     className={"show-cursor control-panel-button"}
                     onClick={() => setShowUploadModal(true)}
                 >                                    
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/upload.png`}/></div> 
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/upload.webp`}/></div> 
                     <div className="control-panel-text"><b>Upload Deck</b></div> 
                 </div>
 
@@ -769,7 +769,7 @@ useEffect(() => {
                     className={"show-cursor control-panel-button"}
                     onClick={() => setShowSaveModal(true)}
                 >                                   
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/edit.png`}/></div> 
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/edit.webp`}/></div> 
                     <div className="control-panel-text"><b>Edit Labels</b></div> 
                 </div>
 
@@ -777,7 +777,7 @@ useEffect(() => {
                     className={"show-cursor control-panel-button"}
                     onClick={() => clearDeck()}
                 >                                    
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/erase.png`}/></div> 
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/erase.webp`}/></div> 
                     <div className="control-panel-text"><b>Clear Deck</b></div> 
                 </div> 
 
@@ -785,7 +785,7 @@ useEffect(() => {
                     className={"show-cursor control-panel-button"}
                     onClick={() => copyDeck()}
                 >                  
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/copy.png`}/></div> 
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/copy.webp`}/></div> 
                     <div className="control-panel-text"><b>Copy Deck</b></div> 
                 </div> 
 
@@ -793,7 +793,7 @@ useEffect(() => {
                     className={"show-cursor control-panel-button"}
                     onClick={() => getDeck(deck.id)}
                 >                  
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/revert.png`}/></div> 
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/revert.webp`}/></div> 
                     <div className="control-panel-text"><b>Revert Deck</b></div> 
                 </div> 
 
@@ -801,7 +801,7 @@ useEffect(() => {
                     className={"show-cursor control-panel-button"}
                     onClick={() => sortDeck()}
                 >                         
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/sort.png`}/></div> 
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/sort.webp`}/></div> 
                     <div className="control-panel-text"><b>Sort Deck</b></div> 
                 </div>
 
@@ -809,7 +809,7 @@ useEffect(() => {
                     className={"show-cursor control-panel-button"}
                     onClick={() => deck.id ? saveDeck() : setShowSaveModal(true)}
                 >                  
-                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/save.png`}/></div> 
+                    <div><img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/save.webp`}/></div> 
                     <div className="control-panel-text"><b>Save Deck</b></div> 
                 </div> 
             </div>
@@ -950,7 +950,7 @@ useEffect(() => {
                                     onClick={() => setShowDeleteModal(true)}
                                 >
                                     <b style={{padding: '0px 6px'}}>Delete</b>
-                                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/delete.png`} alt="trash"/>
+                                    <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/delete.webp`} alt="trash"/>
                                 </div>   
                                     
                                 <div className="show-cursor deck-button">
@@ -961,7 +961,7 @@ useEffect(() => {
                                     >                                    
                                         <div className="builder-button">
                                             <b style={{padding: '0px 6px'}}>Download</b>
-                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`} alt="download"/>
+                                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.webp`} alt="download"/>
                                         </div> 
                                     </a>
                                 </div>   
@@ -980,7 +980,7 @@ useEffect(() => {
                                         }}
                                     >
                                         <b style={{padding: '0px 6px'}}>Share</b>
-                                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/share.png`} alt="social"/>
+                                        <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/share.webp`} alt="social"/>
                                     </div>
                                 </div>
                                     
@@ -992,12 +992,12 @@ useEffect(() => {
                                         deck.display ? (
                                             <div className="builder-button">
                                                 <b style={{padding: '0px 6px'}}>Unpublish</b>
-                                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/hide.png`} alt="disguised"/>
+                                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/hide.webp`} alt="disguised"/>
                                             </div> 
                                         ) : (
                                             <div className="builder-button">
                                                 <b style={{padding: '0px 6px'}}>Publish</b>
-                                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/globe.png`} alt="globe"/>
+                                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/globe.webp`} alt="globe"/>
                                             </div> 
                                         )
                                     }

@@ -13,15 +13,15 @@ import './DeckType.css'
 const playerId = getCookie('playerId')
 
 const emojis = {
-  Helmet: 'https://cdn.formatlibrary.com/images/emojis/helmet.png',
-  Controller: 'https://cdn.formatlibrary.com/images/emojis/controller.png',
-  Orb: 'https://cdn.formatlibrary.com/images/emojis/orb.png',
-  Lock: 'https://cdn.formatlibrary.com/images/emojis/lock.png',
-  Bow: 'https://cdn.formatlibrary.com/images/emojis/bow.png',
-  Voltage: 'https://cdn.formatlibrary.com/images/emojis/voltage.png',
-  Unicorn: 'https://cdn.formatlibrary.com/images/emojis/unicorn.png',
-  Volcano: 'https://cdn.formatlibrary.com/images/emojis/volcano.png',
-  Thinking: 'https://cdn.formatlibrary.com/images/emojis/thinking.png'
+  Helmet: 'https://cdn.formatlibrary.com/images/emojis/helmet.webp',
+  Controller: 'https://cdn.formatlibrary.com/images/emojis/controller.webp',
+  Orb: 'https://cdn.formatlibrary.com/images/emojis/orb.webp',
+  Lock: 'https://cdn.formatlibrary.com/images/emojis/lock.webp',
+  Bow: 'https://cdn.formatlibrary.com/images/emojis/bow.webp',
+  Voltage: 'https://cdn.formatlibrary.com/images/emojis/voltage.webp',
+  Unicorn: 'https://cdn.formatlibrary.com/images/emojis/unicorn.webp',
+  Volcano: 'https://cdn.formatlibrary.com/images/emojis/volcano.webp',
+  Thinking: 'https://cdn.formatlibrary.com/images/emojis/thinking.webp'
 }
 
 const { Controller, Orb, Lock, Bow, Voltage, Volcano, Unicorn, Thinking } = emojis
@@ -160,14 +160,14 @@ export const DeckType = (props) => {
                     >                                    
                         <div className="deck-button">
                             <b style={{padding: '0px 6px'}}>Download</b>
-                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.png`} alt="download"/>
+                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/download.webp`} alt="download"/>
                         </div>
                     </a>
                     <div className="single-decktype-title">{summary.deckType}</div>
                     <Link to="/deck-builder" state={{ deck: {name: summary.deckType, formatName: summary.format?.name}, skeleton: `/api/decktypes/download?id=${id}&format=${format}` }} className="desktop-only">                                    
                         <div className="deck-button">
                             <b style={{padding: '0px 6px'}}>Open Deck</b>
-                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.png`} alt="open-file"/>
+                            <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/open-file.webp`} alt="open-file"/>
                         </div>
                     </Link>
                 </div>
@@ -177,7 +177,7 @@ export const DeckType = (props) => {
                             <td>
                                 <div onClick={() => {window.location.href=`/formats/${summary.format?.name ? urlize(summary.format.name) : ''}`}} className="single-decktype-cell">
                                 <div className="single-decktype-format-link" style={{paddingRight:'7px'}}><b>Format:</b> {summary.format?.name}</div>
-                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/${summary.format?.icon}.png`} alt="format-icon"/>
+                                <img style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/${summary.format?.icon}.webp`} alt="format-icon"/>
                                 </div>       
                             </td>
                             <td className='desktop-only'>
@@ -189,7 +189,7 @@ export const DeckType = (props) => {
                             <td>
                                 <div className="single-decktype-cell">
                                 <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Frequency:</b> {summary.percent}%</div>
-                                <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.png`} alt="calculator"/>
+                                <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/math.webp`} alt="calculator"/>
                                 </div>
                             </td>
                         </tr>
@@ -200,19 +200,19 @@ export const DeckType = (props) => {
                                         <td>
                                             <div className="single-decktype-cell">
                                             <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Overall Win Rate:</b> {winRateData.overallWinRate ? `${winRateData.overallWinRate}%` : 'N/A'}</div>
-                                            <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/abacus.png`} alt="abacus"/>
+                                            <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/abacus.webp`} alt="abacus"/>
                                             </div>
                                         </td>
                                         <td>
                                             <div className="single-decktype-cell">
                                             <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Conversion Rate:</b> {winRateData.conversionRate ? `${winRateData.conversionRate}%` : 'N/A'}</div>
-                                            <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/microscope.png`} alt="microscope"/>
+                                            <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/microscope.webp`} alt="microscope"/>
                                             </div>
                                         </td>
                                         <td className='desktop-only'>
                                             <div className="single-decktype-cell">
                                             <div className="single-decktype-category" style={{paddingRight:'7px'}}><b>Tournament Wins:</b> {winRateData.tournamentWinRate ? `${winRateData.tournamentWinRate}%` : 'N/A'}</div>
-                                            <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/1st.png`} alt="1st.png"/>
+                                            <img className="single-decktype-category-emoji" style={{width:'28px'}} src={`https://cdn.formatlibrary.com/images/emojis/1st.webp`} alt="1st.webp"/>
                                             </div>
                                         </td>
                                     </tr>
@@ -413,13 +413,13 @@ export const DeckType = (props) => {
                             <div className="subcategory-title-flexbox">
                                 <img 
                                     style={{ width:'64px'}} 
-                                    src={`https://cdn.formatlibrary.com/images/emojis/${summary.format.icon}.png`}
+                                    src={`https://cdn.formatlibrary.com/images/emojis/${summary.format.icon}.webp`}
                                     alt={format.name}
                                 />
                                 <h2 className="subheading">{summary.examples[1] ? 'Example Decks:' : 'Example Deck:'}</h2>
                                 <img 
                                     style={{ height:'64px'}} 
-                                    src={'https://cdn.formatlibrary.com/images/emojis/deckbox.png'}
+                                    src={'https://cdn.formatlibrary.com/images/emojis/deckbox.webp'}
                                     alt="deckbox"
                                 />
                                 </div>

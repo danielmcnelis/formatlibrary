@@ -15,7 +15,7 @@ export const Footer = () => (
       <br />
       <a href="https://www.buymeacoffee.com/danielmcnelis" target="_blank" rel="noreferrer" className="desktop-only">
         <img
-          src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
+          src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.webp"
           alt="Buy Me A Coffee"
           className="coffee-logo"
         />
@@ -65,7 +65,7 @@ export const Footer = () => (
         rel="noreferrer"
         className="desktop-only"
       >
-        <img src="https://cdn.formatlibrary.com/images/logos/TCGPlayer.png" alt="TCG Player" className="tcgplayer-logo" />
+        <img src="https://cdn.formatlibrary.com/images/logos/TCGPlayer.webp" alt="TCG Player" className="tcgplayer-logo" />
         <p className="tcgplayer-desc" >Shop to support us!</p>
       </a>
     </div>
