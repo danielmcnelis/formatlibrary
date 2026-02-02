@@ -185,7 +185,7 @@ export const updateAvatars = async (client) => {
                         }
                     )
 
-                    const buffer = await sharp(data).toFormat('png').toBuffer()
+                    const buffer = await sharp(data).toBuffer()
 
                     const s3 = new S3({
                         region: config.s3.region,
@@ -197,7 +197,7 @@ export const updateAvatars = async (client) => {
 
                     const { Location: uri} = await new Upload({
                         client: s3,
-                        params: { Bucket: 'formatlibrary', Key: `images/pfps/${player.discordId}.png`, Body: buffer, ContentType: `image/png` },
+                        params: { Bucket: 'formatlibrary', Key: `images/pfps/${player.discordId}.webp`, Body: buffer, ContentType: `image/webp` },
                     }).done()
                     console.log('uri', uri)
                     console.log(`saved new pfp for ${player.name}`)

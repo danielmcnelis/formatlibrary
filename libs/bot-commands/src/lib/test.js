@@ -34,58 +34,58 @@ export default {
                 // await updateBlogPosts()
                 // await runNightlyTasks(client)
 
-                const server = await Server.findOne({ where: { id: interaction.guildId }})
-                const guild = client.guilds.cache.get(server.id)
-                const membersMap = await guild.members.fetch()
-                const members = [...membersMap.values()]
+                // const server = await Server.findOne({ where: { id: interaction.guildId }})
+                // const guild = client.guilds.cache.get(server.id)
+                // const membersMap = await guild.members.fetch()
+                // const members = [...membersMap.values()]
 
-                for (let i = 0; i < members.length; i++) {
-                    const member = members[i]
-                    if (member.user.bot ) continue
-                    if (
-                        member.roles.cache.has('1335316985097093290') ||
-                        member.roles.cache.has('1335317256921682053') ||
-                        member.roles.cache.has('1336745321186988084')
-                    ) {
-                        member.roles.remove('1335316985097093290')
-                        member.roles.remove('1335317256921682053')
-                        member.roles.remove('1336745321186988084')
-                        console.log('removed roles from', member.user.username)
+                // for (let i = 0; i < members.length; i++) {
+                //     const member = members[i]
+                //     if (member.user.bot ) continue
+                //     if (
+                //         member.roles.cache.has('1335316985097093290') ||
+                //         member.roles.cache.has('1335317256921682053') ||
+                //         member.roles.cache.has('1336745321186988084')
+                //     ) {
+                //         member.roles.remove('1335316985097093290')
+                //         member.roles.remove('1335317256921682053')
+                //         member.roles.remove('1336745321186988084')
+                //         console.log('removed roles from', member.user.username)
 
-                        if (!member.roles.cache.has('1102002847056400464') && !member.roles.cache.has('1102020060631011400')) {
-                            console.log('DID NOT ADD BACK TO', member.user.username)
-                        }
-                    }
-                }
+                //         if (!member.roles.cache.has('1102002847056400464') && !member.roles.cache.has('1102020060631011400')) {
+                //             console.log('DID NOT ADD BACK TO', member.user.username)
+                //         }
+                //     }
+                // }
 
-                const subscriptions = await Subscription.findAll({ where: { status: 'active' }, include: Player })
-                for (let i = 0; i < subscriptions.length; i++) {
-                    const subscriber = subscriptions[i]
-                    const player = subscriber.player
-                    if (!player) {
-                        console.log(`no player found:`, subscriber.customerName)
-                        continue
-                    }
-                    const tier = subscriber.tier
-                    const member = members.find((m) => m.id === player.discordId)
-                    if (!member) {
-                        console.log(`no member found:`, player.name)
-                        continue
-                    }
-                    if (tier === 'Premium') {
-                        await member.roles.add('1335316985097093290').catch((err) => console.log(err))
-                        await member.roles.add('1336745321186988084').catch((err) => console.log(err))
-                        console.log('added premium/stripe roles back to', member.user.username)
-                    } else if (tier === 'Supporter') {
-                        await member.roles.add('1335317256921682053').catch((err) => console.log(err))
-                        await member.roles.add('1336745321186988084').catch((err) => console.log(err))
-                        console.log('added supporter/stripe roles back to', member.user.username)
-                    }
-                }
+                // const subscriptions = await Subscription.findAll({ where: { status: 'active' }, include: Player })
+                // for (let i = 0; i < subscriptions.length; i++) {
+                //     const subscriber = subscriptions[i]
+                //     const player = subscriber.player
+                //     if (!player) {
+                //         console.log(`no player found:`, subscriber.customerName)
+                //         continue
+                //     }
+                //     const tier = subscriber.tier
+                //     const member = members.find((m) => m.id === player.discordId)
+                //     if (!member) {
+                //         console.log(`no member found:`, player.name)
+                //         continue
+                //     }
+                //     if (tier === 'Premium') {
+                //         await member.roles.add('1335316985097093290').catch((err) => console.log(err))
+                //         await member.roles.add('1336745321186988084').catch((err) => console.log(err))
+                //         console.log('added premium/stripe roles back to', member.user.username)
+                //     } else if (tier === 'Supporter') {
+                //         await member.roles.add('1335317256921682053').catch((err) => console.log(err))
+                //         await member.roles.add('1336745321186988084').catch((err) => console.log(err))
+                //         console.log('added supporter/stripe roles back to', member.user.username)
+                //     }
+                // }
 
-                return await interaction.editReply('🧪')
+                await interaction.editReply('🧪')
                 // await recalculateAllStats()
-                // await updateAvatars(client)
+                return await updateAvatars(client)
                 // await updateMarketPrices()
                 // await purgeDuplicatePrices()
                 // return await conductCensus(client)
