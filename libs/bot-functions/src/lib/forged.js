@@ -149,7 +149,7 @@ export const getForgedDeckList = async (member, player, format, override = false
             const { illegalCards, forbiddenCards, limitedCards, semiLimitedCards, unrecognizedCards, zeroCopiesOwned, oneCopyOwned, twoCopiesOwned } = issues
             if (!illegalCards || !forbiddenCards || !limitedCards || !semiLimitedCards || !unrecognizedCards || !zeroCopiesOwned || !oneCopyOwned || !twoCopiesOwned) return false
             
-            if (format.category !== 'TCG' && format.category !== 'OCG' && format.category !== 'Speed' && format.name !== 'Forged in Chaos') {
+            if (format.category !== 'TCG' && format.category !== 'OCG' && format.category !== 'Discontinued' && format.category !== 'Speed' && format.name !== 'Forged in Chaos') {
                 member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck has been saved. ${emojis.legend}\n\nPlease note: Decks for ${format.category} Formats cannot be verified at this time. Be sure your deck is legal for this tournament!`}).catch((err) => console.log(err))
                 return { url, ydk }
             } else if (illegalCards.length || forbiddenCards.length || limitedCards.length || semiLimitedCards.length || zeroCopiesOwned?.length || oneCopyOwned?.length || twoCopiesOwned?.length) {

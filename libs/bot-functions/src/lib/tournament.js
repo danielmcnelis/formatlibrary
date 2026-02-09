@@ -133,7 +133,7 @@ export const getDeckList = async (member, player, format, override = false, unra
             } else if (unranked) {
                 member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck has been saved. ${emojis.legend}\n\nPlease note: Decks for unranked tournaments are not checked for legality. Be sure your deck is legal for this tournament!`}).catch((err) => console.log(err))
                 return { url, ydk }
-            } else if (format.category !== 'TCG' && format.category !== 'OCG' && format.category !== 'Speed') {
+            } else if (format.category !== 'TCG' && format.category !== 'Discontinued' && format.category !== 'OCG' && format.category !== 'Speed') {
                 member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck has been saved. ${emojis.legend}\n\nPlease note: Decks for ${format.category} Formats cannot be verified at this time. Be sure your deck is legal for this tournament!`}).catch((err) => console.log(err))
                 return { url, ydk }
             } else if (illegalCards.length || forbiddenCards.length || limitedCards.length || semiLimitedCards.length) {
@@ -221,7 +221,7 @@ export const getSpeedDeckList = async (member, player, format, override = false)
             if (override) {
                 member.send({ content: `Thanks, ${member.user.username}, I saved a copy of ${pronoun} deck. ${emojis.legend}`}).catch((err) => console.log(err))
                 return { url, ydk }
-            } else if (format.category !== 'TCG' && format.category !== 'Speed') {
+            } else if (format.category !== 'TCG' && format.category !== 'Discontinued' && format.category !== 'Speed') {
                 member.send({ content: `Thanks, ${member.user.username}, ${pronoun} deck has been saved. ${emojis.legend}\n\nPlease note: Decks for ${format.category} Formats cannot be verified at this time. Be sure your deck is legal for this tournament!`}).catch((err) => console.log(err))
                 return { url, ydk }
             } else if (illegalCards.length || forbiddenCards.length || limited1Cards.length || limited2Cards.length || limited3Cards.length) {
