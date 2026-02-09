@@ -102,7 +102,7 @@ export const PlayerProfile = (props) => {
                         <div className="profile-line"><b>DuelingBook:</b> {player.duelingBookName || 'N/A'}</div>   
                         <div className="profile-line"><b>Discord:</b> {player.discordName}</div>
                         {
-                            player.country ? (
+                            player.country && countries[player.country]?.fips ? (
                                 <div className="profile-line"><b>Country:</b> {player.country} <img className="country" src={`https://www.worldometers.info/img/flags/${(countries[player.country].fips).toLowerCase()}-flag.gif`} alt="flag"/></div>
                             ) : ''
                         }
