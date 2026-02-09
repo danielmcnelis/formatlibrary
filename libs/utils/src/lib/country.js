@@ -157,7 +157,8 @@ export const countries = {
 		"fips": "CA"
 	},
 	"Caribbean Netherlands": {
-		"iso2": "BQ"
+		"iso2": "BQ",
+        "fips": "NL",
 	},
 	"Cayman Islands": {
 		"iso2": "KY",
@@ -212,7 +213,8 @@ export const countries = {
 		"fips": "CU"
 	},
 	"Curaçao": {
-		"iso2": "CW"
+		"iso2": "CW",
+        "fips": "UC"
 	},
 	"Cyprus": {
 		"iso2": "CY",
@@ -223,7 +225,8 @@ export const countries = {
 		"fips": "EZ"
 	},
 	"Democratic Republic of the Congo": {
-		"iso2": "CD"
+		"iso2": "CD",
+        "fips": "CG"
 	},
 	"Denmark": {
 		"iso2": "DK",
@@ -354,7 +357,8 @@ export const countries = {
 		"fips": "GT"
 	},
 	"Guernsey": {
-		"iso2": "GG"
+		"iso2": "GG",
+        "fips": "GK"
 	},
 	"Guinea": {
 		"iso2": "GN",
@@ -417,7 +421,8 @@ export const countries = {
 		"fips": "EI"
 	},
 	"Isle of Man": {
-		"iso2": "IM"
+		"iso2": "IM",
+        "fips": "IM"
 	},
 	"Israel": {
 		"iso2": "IL",
@@ -440,7 +445,8 @@ export const countries = {
 		"fips": "JA"
 	},
 	"Jersey": {
-		"iso2": "JE"
+		"iso2": "JE",
+        "fips": "JE"
 	},
 	"Jordan": {
 		"iso2": "JO",
@@ -555,7 +561,8 @@ export const countries = {
 		"fips": "MX"
 	},
 	"Micronesia": {
-		"iso2": "FM"
+		"iso2": "FM",
+        "fips": "FM"
 	},
 	"Moldova": {
 		"iso2": "MD",
@@ -570,7 +577,8 @@ export const countries = {
 		"fips": "MG"
 	},
 	"Montenegro": {
-		"iso2": "ME"
+		"iso2": "ME",
+        "fips": "MJ"
 	},
 	"Montserrat": {
 		"iso2": "MS",
@@ -661,7 +669,8 @@ export const countries = {
 		"fips": "PS"
 	},
 	"Palestine": {
-		"iso2": "PS"
+		"iso2": "PS",
+        "fips": "palestine"
 	},
 	"Panama": {
 		"iso2": "PA",
@@ -724,7 +733,8 @@ export const countries = {
 		"fips": "RE"
 	},
 	"Saint Barthélemy": {
-		"iso2": "BL"
+		"iso2": "BL",
+        "fips": "TB"
 	},
 	"Saint Helena, Ascension and Tristan da Cunha": {
 		"iso2": "SH",
@@ -739,7 +749,8 @@ export const countries = {
 		"fips": "ST"
 	},
 	"Saint Martin": {
-		"iso2": "MF"
+		"iso2": "MF",
+        "fips": "RN"
 	},
 	"Saint Pierre and Miquelon": {
 		"iso2": "PM",
@@ -770,7 +781,8 @@ export const countries = {
 		"fips": "SG"
 	},
 	"Serbia": {
-		"iso2": "RS"
+		"iso2": "RS",
+		"fips": "RI"
 	},
 	"Seychelles": {
 		"iso2": "SC",
@@ -785,7 +797,8 @@ export const countries = {
 		"fips": "SN"
 	},
 	"Sint Maarten": {
-		"iso2": "SX"
+		"iso2": "SX",
+        "fips": "NN"
 	},
 	"Slovakia": {
 		"iso2": "SK",
@@ -816,7 +829,8 @@ export const countries = {
 		"fips": "KS"
 	},
 	"South Sudan": {
-		"iso2": "SS"
+		"iso2": "SS",
+        "fips": "OD"
 	},
 	"Spain": {
 		"iso2": "ES",
@@ -867,7 +881,8 @@ export const countries = {
 		"fips": "TH"
 	},
 	"Timor-Leste": {
-		"iso2": "TL"
+		"iso2": "TL",
+        "fips": "TT"
 	},
 	"Togo": {
 		"iso2": "TG",
@@ -922,7 +937,8 @@ export const countries = {
 		"fips": "UK"
 	},
 	"United States Minor Outlying Islands": {
-		"iso2": "UM"
+		"iso2": "UM",
+        "fips": "UM"
 	},
 	"United States of America": {
 		"iso2": "US",
@@ -977,7 +993,8 @@ export const countries = {
 		"fips": "ZI"
 	},
 	"Åland Islands": {
-		"iso2": "AX"
+		"iso2": "AX",
+        "fips": "NO"
 	}
 }
 
