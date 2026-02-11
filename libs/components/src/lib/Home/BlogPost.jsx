@@ -47,7 +47,7 @@ export const BlogPost = (props) => {
                                     className="black-text hover-green"
                                 >
                                 <img 
-                                    src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.webp" 
+                                    src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" 
                                     alt="Buy Me A Coffee" 
                                 />
                                 <p className="ad-description">Small donations support our work!</p>
