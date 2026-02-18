@@ -17,6 +17,12 @@ export const createDecks = async (interaction, event, participants, standings = 
     let c = 0
     let e = 0
 
+    const server = await Server.findOne({
+        where: {
+            id: '414551319031054346'
+        }
+    })
+
     for (let i = 0; i < participants.length; i++) {
         try {
             const {participant} = participants[i]
