@@ -2,7 +2,7 @@
 import { Sequelize } from 'sequelize'
 import { db } from './db'
 
-export const ApiRequests = db.define('ApiRequests', {
+export const ApiRequests = db.define('apiRequests', {
   serverName: {
     type: Sequelize.STRING
   },

@@ -60,6 +60,7 @@ import { Wallet } from './Wallet'
 Alius.belongsTo(Player)
 Player.hasMany(Alius)
 
+// API REQUESTS
 ApiRequests.belongsTo(Server)
 Server.hasMany(ApiRequests)
 
