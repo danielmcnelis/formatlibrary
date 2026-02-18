@@ -22,6 +22,7 @@ export const formatDate = (timestamp) => {
 
 // UPDATE API REQUESTS
 export const updateApiRequests = async (server) => {
+    console.log(`updateApiRequests():`, server.name)
     const date = formatDate(new Date())
     
     const apiRequests = await ApiRequests.findOne({
