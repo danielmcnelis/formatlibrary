@@ -6,7 +6,7 @@ import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
 import { Op } from 'sequelize'
 import { Alius, Artwork, BlogPost, Card, Deck, DeckThumb, DeckType, Entry, Match, Matchup, Player, Replay, Team, Tournament, Server, Stats }  from '@fl/models'
-import { capitalize, dateToVerbose, s3FileExists } from './utility'
+import { capitalize, dateToVerbose, s3FileExists, updateApiRequests } from './utility'
 import { getDeckType } from './deck'
 import { config } from '@fl/config'
 import { checkExpiryDate, uploadDeckFolder } from './drive'
