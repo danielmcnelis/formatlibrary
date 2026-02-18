@@ -1,7 +1,7 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
 import { Entry, Format, Player, Server, Team, Tournament } from '@fl/models'
-import { startChallongeBracket, initiateEndTournament, selectTournament, sendPairings, sendTeamPairings, postParticipant } from '@fl/bot-functions'
+import { startChallongeBracket, initiateEndTournament, selectTournament, sendPairings, sendTeamPairings, postParticipant, updateApiRequests } from '@fl/bot-functions'
 import { isModerator, hasPartnerAccess, shuffleArray } from '@fl/bot-functions'
 import { Op } from 'sequelize'
 import axios from 'axios'
@@ -108,6 +108,9 @@ export default {
                             }
                         }
                     })
+
+                    await updateApiRequests(server)
+
                 } catch (err) {
                     console.log(err)
                     return await interaction.channel.send({ content: `Error connecting to Challonge.`})
@@ -120,7 +123,8 @@ export default {
 
             try {
                 const { data } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}.json?api_key=${server.challongeApiKey}`)
-            
+                await updateApiRequests(server)
+
                 if (data?.tournament?.state === 'underway') {
                     await tournament.update({ state: 'underway' })
                     interaction.editReply({ content: `Let's go! Your tournament is starting now: https://challonge.com/${tournament.url} ${tournament.emoji}`})

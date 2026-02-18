@@ -6,10 +6,42 @@ const Canvas = require('canvas')
 import { ActionRowBuilder, EmbedBuilder, AttachmentBuilder, StringSelectMenuBuilder } from 'discord.js'
 import { Op } from 'sequelize'
 import axios from 'axios'
-import { Event, Match, Pairing, Replay, Deck, Alius, Card, Membership, Player, Print, Role, Series, Server, Set, Status, Tournament } from '@fl/models'
+import { ApiRequests, Event, Match, Pairing, Replay, Deck, Alius, Card, Membership, Player, Print, Role, Series, Server, Set, Status, Tournament } from '@fl/models'
 import { emojis, rarities } from '@fl/bot-emojis'
 import { config } from '@fl/config'
 import { HeadObjectCommand, S3Client } from '@aws-sdk/client-s3'
+
+// FORMAT DATE
+export const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+// UPDATE API REQUESTS
+export const updateApiRequests = async (server) => {
+    const date = formatDate(new Date())
+    
+    const apiRequests = await ApiRequests.findOne({
+        where: {
+            serverId: server.id,
+            date: date
+        }
+    })
+
+    if (apiRequests) {
+        await apiRequests.update({ count: apiRequests.count + 1 })
+    } else {
+        await ApiRequests.create({
+            serverName: server.name,
+            serverId: server.id,
+            count: 1,
+            date: date
+        })
+    }
+}
 
 // GET NEXT DATE AT MIDNIGHT
 export const getNextDateAtMidnight = (date) => {

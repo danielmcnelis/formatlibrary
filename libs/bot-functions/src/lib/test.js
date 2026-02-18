@@ -51,6 +51,7 @@ export const testSeed = async (tournamentId = '12464468', shuffle = false) => {
                 url: `https://api.challonge.com/v1/tournaments/${tournament.id}/participants/randomize.json?api_key=${server.challongeApiKey}`
             })
             
+            await updateApiRequests(server)
             console.log(`Success! Your seeds 🌱 have been shuffled! 🎲`)
         } catch (err) {
             console.log(`Error: Your seeds 🥀 have not been shuffled. 😢`)
@@ -95,6 +96,7 @@ export const testSeed = async (tournamentId = '12464468', shuffle = false) => {
                     }
                 })
                 
+                await updateApiRequests(server)
                 results.push(`${name} is now the ${i+1} seed.`)
                 count++
             } catch (err) {

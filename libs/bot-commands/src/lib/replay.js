@@ -1,6 +1,6 @@
 
 import { SlashCommandBuilder } from 'discord.js'    
-import { isProgrammer, isModerator, selectMatch } from '@fl/bot-functions'
+import { isProgrammer, isModerator, selectMatch, updateApiRequests } from '@fl/bot-functions'
 import { Entry, Format, Match, Player, Replay, Server, Tournament } from '@fl/models'
 import { Op } from 'sequelize'
 import axios from 'axios'
@@ -137,6 +137,7 @@ export default {
 
             if (!challongeMatchRound) {
                 const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeApiKey}`).catch((err) => console.log(err))
+                await updateApiRequests(server)
                 if (!challongeMatch) return await interaction.editReply({ content: `Error: Challonge match not found.`})	
                 challongeMatchRound = challongeMatch?.match?.round
                 await match.update({ challongeMatchRound: challongeMatch?.match?.round })

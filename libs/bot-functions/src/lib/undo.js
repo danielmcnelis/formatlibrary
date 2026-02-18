@@ -1,6 +1,8 @@
 
 import { Format, Match, Pairing, Player, Stats } from '@fl/models'
+import { updateApiRequests } from '@fl/bot-functions'
 import axios from 'axios'
+import { updateApiRequests } from './utility'
 
 // UNDO MATCH
 export const undoMatch = async (interaction, server, matchId, authorIsMod) => {
@@ -19,6 +21,8 @@ export const undoMatch = async (interaction, server, matchId, authorIsMod) => {
                     method: 'post',
                     url: `https://api.challonge.com/v1/tournaments/${match.tournamentId}/matches/${match.challongeMatchId}/reopen.json?api_key=${server.challongeApiKey}`
                 })
+
+                await updateApiRequests(server)
             } catch (err) {
                 console.log(err)
             }

@@ -1,6 +1,7 @@
 
 import { db } from './db'
 import { Alius } from './Alius'
+import { ApiRequests } from './ApiRequests'
 import { Archetype } from './Archetype'
 import { Article } from './Article'
 import { Artwork } from './Artwork'
@@ -58,6 +59,9 @@ import { Wallet } from './Wallet'
 //ALIUS
 Alius.belongsTo(Player)
 Player.hasMany(Alius)
+
+ApiRequests.belongsTo(Server)
+Server.hasMany(ApiRequests)
 
 //ARTICLE
 Article.belongsTo(Player, {
@@ -463,6 +467,7 @@ Player.hasMany(Video)
 export {
   db,
   Alius,
+  ApiRequests,
   Archetype,
   Article,
   Artwork,

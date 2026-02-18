@@ -66,6 +66,8 @@ export const createDecks = async (interaction, event, participants, standings = 
                         if (data?.participant?.final_rank) {
                             placement = data.participant.final_rank
                         }
+
+                        await updateApiRequests(server)
                     }
     
                     const deckType = await getDeckType(entry.ydk, event.formatName)
@@ -742,7 +744,9 @@ export const displayReplays = async (interaction, event) => {
 // GENERATE MATCHUP DATA
 export const generateMatchupData = async (interaction, event, tournament) => {
     const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${event.server?.challongeApiKey}`)
+    await updateApiRequests(server)
     const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${event.server?.challongeApiKey}`)
+    await updateApiRequests(server)
     const deckMap = {}
     let b = 0
     let c = 0

@@ -586,6 +586,8 @@ client.on('guildMemberRemove', async (member) => {
                     method: 'delete',
                     url: `https://api.challonge.com/v1/tournaments/${entry.tournament.id}/participants/${entry.participantId}.json?api_key=${server.challongeApiKey}`
                 })
+
+                await updateApiRequests(server)
                 
                 // DE-ACTIVATE ENTRY DATA IF UNDERWAY, OTHERWISE DELETE ENTRY DATA
                 if (entry.tournament.state === 'underway') {

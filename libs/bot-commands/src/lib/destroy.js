@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
-import { Entry, Player, Server, Tournament } from '@fl/models'
-import { isModerator, isProgrammer, hasPartnerAccess } from '@fl/bot-functions'
+import { ApiRequests, Entry, Player, Server, Tournament } from '@fl/models'
+import { isModerator, isProgrammer, hasPartnerAccess, updateApiRequests } from '@fl/bot-functions'
 import axios from 'axios'
 import { emojis } from '@fl/bot-emojis'
 
@@ -38,6 +38,8 @@ export default {
                         "Content-Type": "application/vnd.api+json"
                     }
                 })
+
+                await updateApiRequests(server)
             
                 if (status === 204) {
                     const entries = await Entry.findAll({ where: { tournamentId: tournament.id }, include: Player })

@@ -18,6 +18,7 @@ export const getTournamentByChallongeName = async (req, res, next) => {
         config.challonge[req.headers.communityName]
       }`
     )
+
     return res.json(data.tournament)
   } catch (err) {
     next(err)
@@ -41,6 +42,7 @@ export const createMockBracket = async (req, res, next) => {
             }
         })
 
+        await updateApiRequests(server)
         tournament = data.tournament
     } catch (err) {
         console.log(err)
@@ -61,6 +63,7 @@ export const createMockBracket = async (req, res, next) => {
                 }
             })
 
+            await updateApiRequests(server)
             tournament = data.tournament
         } catch (err) {
             console.log(err)
@@ -86,6 +89,7 @@ export const createMockBracket = async (req, res, next) => {
             }
         }
 
+        await updateApiRequests(server)
         return res.json(tournament)
     } catch (err) {
       next(err)
