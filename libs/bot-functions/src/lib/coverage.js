@@ -749,6 +749,12 @@ export const displayReplays = async (interaction, event) => {
 
 // GENERATE MATCHUP DATA
 export const generateMatchupData = async (interaction, event, tournament) => {
+    const server = await Server.findOne({
+        where: {
+            id: '414551319031054346'
+        }
+    })
+    
     const { data: participants } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/participants.json?api_key=${event.server?.challongeApiKey}`)
     await updateApiRequests(server)
     const { data: matches } = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches.json?api_key=${event.server?.challongeApiKey}`)
