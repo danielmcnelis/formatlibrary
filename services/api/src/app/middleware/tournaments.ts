@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {config} from '@fl/config'
+// import {updateApiRequests} from '@fl/bot-functions'
 
 //GENERATE RANDOM STRING
 const generateRandomString = (length, chars) => {
@@ -42,7 +43,7 @@ export const createMockBracket = async (req, res, next) => {
             }
         })
 
-        await updateApiRequests(server)
+        // await updateApiRequests(server)
         tournament = data.tournament
     } catch (err) {
         console.log(err)
@@ -63,7 +64,7 @@ export const createMockBracket = async (req, res, next) => {
                 }
             })
 
-            await updateApiRequests(server)
+            // await updateApiRequests(server)
             tournament = data.tournament
         } catch (err) {
             console.log(err)
@@ -89,7 +90,7 @@ export const createMockBracket = async (req, res, next) => {
             }
         }
 
-        await updateApiRequests(server)
+        // await updateApiRequests(server)
         return res.json(tournament)
     } catch (err) {
       next(err)
