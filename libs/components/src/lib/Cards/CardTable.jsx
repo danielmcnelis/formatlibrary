@@ -43,7 +43,6 @@ export const CardTable = () => {
       atk: [0, 5000],
       def: [0, 5000]
     })
-    console.log('sliders', sliders)
   
     const [queryParams, setQueryParams] = useState({
       name: null,

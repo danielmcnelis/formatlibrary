@@ -66,7 +66,7 @@ export const CardRow = (props) => {
                         alt={card.name}
                       />
                       {
-                      status ? (
+                      status && status !== 'no longer on list' ? (
                           <img
                           className="small-status-icon"
                           src={`https://cdn.formatlibrary.com/images/emojis/${status}.webp`}
