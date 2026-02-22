@@ -68,6 +68,8 @@ export const createDecks = async (interaction, event, participants, standings = 
                             }
                         })
 
+                        if (!topCutEntry) continue
+
                         const {data} = await axios.get(`https://api.challonge.com/v1/tournaments/${topCutTournamentId}/participants/${topCutEntry.participantId}.json?api_key=${challongeApiKey}`) 
                         if (data?.participant?.final_rank) {
                             placement = data.participant.final_rank
