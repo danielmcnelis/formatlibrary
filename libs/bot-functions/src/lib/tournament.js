@@ -1609,7 +1609,8 @@ export const processMatchResult = async (server, interaction, openChallongeMatch
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                             `\nDiscord Name: ${name}` +
-                            `\nDuelingbook Name: ${winnerNextOpponent.player.duelingBookName}`
+                            `\nDuelingbook Name: ${winnerNextOpponent.player.duelingBookName}` +
+                            `${!tournament.isLive ? `\nTime Zone: ${winnerNextOpponent.player.timeZone || 'N/A'}` : ''}`
                         winner.send({ content: content })
                     } catch (err) {
                         console.log(err)
@@ -1624,7 +1625,8 @@ export const processMatchResult = async (server, interaction, openChallongeMatch
                             `\nChannel: <#${tournament.channelId}>` +
                             `\nFormat: ${tournament.formatName} ${tournament.emoji}` +
                             `\nDiscord Name: ${name}` +
-                            `\nDuelingbook Name: ${winningPlayer.duelingBookName}`
+                            `\nDuelingbook Name: ${winningPlayer.duelingBookName}` +
+                            `${!tournament.isLive ? `\nTime Zone: ${winningPlayer.timeZone || 'N/A'}` : ''}`
                         member.user.send({ content: content })
                     } catch (err) {
                         console.log(err)
