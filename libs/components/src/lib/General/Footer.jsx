@@ -45,12 +45,12 @@ export const Footer = () => (
         affiliated with 4K Media or Konami Digital Entertainment.
       </p>
       <div id="footer-menu">
-        <div to="https://formatlibrary.com/terms.html" target="_blank" rel="noopener noreferrer">
+        <a href="/terms.html" target="_blank" rel="noopener noreferrer">
           <p className="footer-item">Terms & Conditions</p>
-        </div>
-        <div to="https://formatlibrary.com/privacy.html" target="_blank" rel="noopener noreferrer">
+        </a>
+        <a href="/privacy.html" target="_blank" rel="noopener noreferrer">
           <p className="footer-item">Privacy Policy</p>
-        </div>
+        </a>
       </div>
     </div>
 
