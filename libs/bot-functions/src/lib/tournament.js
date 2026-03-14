@@ -2844,7 +2844,7 @@ export const dropFromTournament = async (interaction, tournamentId) => {
                 if (match.winnerId === player.id || match.loserId === player.id) success = true 
             })
     
-            if (!success) return await interaction.editReply({ content: `__**- If you played a match:**__ please report the result before dropping!\n__**- If you did not play a match:**__ ask a Moderator to help you!!! __**DO NOT REPORT A LOSS WITH THE BOT**__`})
+            if (!success) return await interaction.editReply({ content: `__**- If you played a match AND didn't report yet:**__ please report the result before dropping!\n__**- If you played a match AND did report:**__ ask a Moderator to help you\n__**- If you did not play a match:**__ ask a Moderator to help you!!! __**DO NOT REPORT A LOSS WITH THE BOT**__`})
         }
     
         const entry = await Entry.findOne({ 
