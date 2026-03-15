@@ -388,7 +388,7 @@ export const SingleEvent = (props) => {
                             <img 
                                 style={{width:'800px'}}
                                 className="bracket" 
-                                src={`https://cdn.formatlibrary.com/images/brackets/${event.abbreviation}.webp`}
+                                src={`https://cdn.formatlibrary.com/images/brackets/${event.abbreviation}.png`}
                                 onError={(e) => {
                                     e.target.onerror = null
                                     e.target.style.width = "300px"
