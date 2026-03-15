@@ -75,7 +75,7 @@ export default {
             const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
             if (!simName) return
             
-            let timeZone = !tournament.isLive ? player.timeZone || await askForTimeZone(interaction.member, player) : 'N/A'
+            let timeZone = !tournament.isLive ? player.timeZone || await askForTimeZone(interaction.member, player, true) : 'N/A'
             if (!timeZone) return
 
             const data = format.name === 'Genesys' ? await getGenesysDeckList(interaction.member, player) :

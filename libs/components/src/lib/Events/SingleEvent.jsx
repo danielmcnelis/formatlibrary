@@ -344,21 +344,21 @@ export const SingleEvent = (props) => {
                 {
                     topDecks?.length ? (
                     <li>
-                        <a href="#top-decks">Top Decks</a>
+                        <a href={`/events/${event.abbreviation}#top-decks`}>Top Decks</a>
                     </li>
                     ) : ''
                 }
                 {
                     metagame.deckTypes?.length ? (
                     <li>
-                    <a href="#metagame-stats">Metagame Stats</a>
+                        <a href={`/events/${event.abbreviation}#metagame-stats`}>Metagame Stats</a>
                     </li>
                     ) : ''
                 }
                 {
                     replays?.length ? (
                     <li>
-                        <a href="#replays">Replays</a>
+                        <a href={`/events/${event.abbreviation}#replays`}>Replays</a>
                     </li>
                     ) : ''
                 }

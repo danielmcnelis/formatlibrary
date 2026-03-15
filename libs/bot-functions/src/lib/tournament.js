@@ -61,14 +61,14 @@ export const askForSimName = async (member, player, simulator, override = false)
 export const askForTimeZone = async (member, player, override = false) => {
     const filter = m => m.author.id === (member.id || member.user?.id)
     const pronoun = override ? `${player.name}'s` : 'your'
-    const prompt = `Can you please provide ${pronoun} the abbreviation of your Time Zone?`
+    const prompt = `Can you please provide the abbreviation of ${pronoun} Time Zone?`
 	const message = await member.send({ content: prompt.toString() }).catch((err) => console.log(err))
     if (!message || !message.channel) return false
     
     return await message.channel.awaitMessages({
         filter,
 		max: 1,
-        time: 15000
+        time: 30000
     }).then(async (collected) => {
         const timeZone = collected.first().content?.toUpperCase()
         await player.update({ timeZone: timeZone })
@@ -806,7 +806,7 @@ export const signupForTournament = async (interaction, tournamentId, userId) => 
     const simName = player.duelingBookName || await askForSimName(interaction.member, player, 'DuelingBook')
     if (!simName) return
 
-    let timeZone = !tournament.isLive ? player.timeZone || await askForTimeZone(interaction.member, player) : 'N/A'
+    let timeZone = !tournament.isLive ? player.timeZone || await askForTimeZone(interaction.member, player, true) : 'N/A'
     if (!timeZone) return
     
     const data = tournament.format.name === 'Genesys' ? await getGenesysDeckList(interaction.member, player) :        
@@ -2272,7 +2272,7 @@ export const calculateStandings = async (tournament, matches, participants) => {
         arr.pop()
         data[k].rawBuchholz = data[k].opponentScores.reduce((accum, val) => accum + val, 0)
         data[k].medianBuchholz = arr.reduce((accum, val) => accum + val, 0)
-        data[k].opponentsWinTotal = data[k].opponentWins.reduce((accum, val) => accum + val, 0)
+        data[k].opponentsWinTotal = data[k].opponentScores.reduce((accum, val) => accum + val, 0)
         data[k].opponentsLossTotal = data[k].opponentLosses.reduce((accum, val) => accum + val, 0)
         data[k].opponentsWinPercentage = data[k].opponentsWinTotal / (data[k].opponentsWinTotal + data[k].opponentsLossTotal)
     })
@@ -2844,7 +2844,7 @@ export const dropFromTournament = async (interaction, tournamentId) => {
                 if (match.winnerId === player.id || match.loserId === player.id) success = true 
             })
     
-            if (!success) return await interaction.editReply({ content: `__**- If you played a match AND didn't report yet:**__ please report the result before dropping!\n__**- If you played a match AND did report:**__ ask a Moderator to help you\n__**- If you did not play a match:**__ ask a Moderator to help you!!! __**DO NOT REPORT A LOSS WITH THE BOT**__`})
+            if (!success) return await interaction.editReply({ content: `__**- (1) If you played a match AND didn't report yet:**__ report the result before dropping!\n__**- (2) If you played a match AND did report:**__ ask a Moderator to help you!\n__**- (3) If you did not play a match:**__ ask a Moderator to help you!!! __**DO NOT REPORT A LOSS WITH THE BOT**__`})
         }
     
         const entry = await Entry.findOne({ 
