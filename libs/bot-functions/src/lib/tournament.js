@@ -112,7 +112,7 @@ export const getDeckList = async (member, player, format, override = false, unra
 
             if (main?.length < minimum) {
                 member.send(`I'm sorry, your deck must contain at least ${minimum} cards.`).catch((err) => console.log(err))    
-                return false 
+                return false
             }
             
             if (format.category === 'OCG' && format.date < '2000-04-20' && side?.length > 10) {
