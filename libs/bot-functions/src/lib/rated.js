@@ -216,8 +216,8 @@ export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, pl
 
 // LOOK FOR POTENTIAL PAIRS
 export const lookForPotentialPairs = async (interaction, pool, player, format, server, guild, channel) => {
-    // const yourStats = await Stats.findOne({ where: { formatId: format.id, playerId: player.id }})
-    // const yourElo = format.useSeasonalElo ? yourStats.seasonalElo : yourStats.elo
+    const yourStats = await Stats.findOne({ where: { formatId: format.id, playerId: player.id }})
+    const yourElo = format.useSeasonalElo ? yourStats.seasonalElo : yourStats.elo
     const potentialPairs = await Pool.findAll({ 
         where: { 
             playerId: {[Op.not]: player.id },
@@ -231,26 +231,26 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
     for (let i = 0; i < potentialPairs.length; i++) {
         const potentialPair = potentialPairs[i]
         const twoMinutesAgo = new Date(Date.now() - (2 * 60 * 1000))
-        // const fiveMinutesAgo = new Date(Date.now() - (5 * 60 * 1000))
-        // const tenMinutesAgo = new Date(Date.now() - (10 * 60 * 1000))
-        // const fifteenMinutesAgo = new Date(Date.now() - (15 * 60 * 1000))
+        const fiveMinutesAgo = new Date(Date.now() - (5 * 60 * 1000))
+        const tenMinutesAgo = new Date(Date.now() - (10 * 60 * 1000))
+        const fifteenMinutesAgo = new Date(Date.now() - (15 * 60 * 1000))
         
-        // const potentialPairStats = await Stats.findOne({ where: { formatId: format.id, playerId: potentialPair.playerId }})
-        // const potentialPairElo = format?.useSeasonalElo ? potentialPairStats?.seasonalElo : potentialPairStats?.elo
+        const potentialPairStats = await Stats.findOne({ where: { formatId: format.id, playerId: potentialPair.playerId }})
+        const potentialPairElo = format?.useSeasonalElo ? potentialPairStats?.seasonalElo : potentialPairStats?.elo
         // if (format.name === 'Forged in Chaos' && ((yourElo <= 430 && potentialPairElo > 500) || (yourElo > 500 && potentialPairElo <= 430))) {
-        // if (format.name === 'Forged in Chaos' && (
-        //     yourElo <= 420 && potentialPairElo <= 420 ||
-        //     yourElo > 420 && potentialPairElo > 420 ||
-        //     Math.abs(yourElo - potentialPairElo) <= 100 ||
-        //     (potentialPair.createdAt < fiveMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 133) ||
-        //     (potentialPair.createdAt < tenMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 167) ||
-        //     (potentialPair.createdAt < fifteenMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 200)
-        // )) {
-        //     console.log(`Acceptable pairing`)
-        // } else if (format.name === 'Forged in Chaos') {
-        //     console.log(`<!> ${player.name} and ${potentialPair.playerName} are TOO FAR APART IN ELO. Look for another opponent.`)
-        //     continue
-        // }
+        if (format.name === 'Forged in Chaos' && (
+            yourElo <= 420 && potentialPairElo <= 420 ||
+            yourElo > 420 && potentialPairElo > 420 ||
+            Math.abs(yourElo - potentialPairElo) <= 100 ||
+            (potentialPair.createdAt < fiveMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 133) ||
+            (potentialPair.createdAt < tenMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 167) ||
+            (potentialPair.createdAt < fifteenMinutesAgo && Math.abs(yourElo - potentialPairElo) <= 200)
+        )) {
+            console.log(`Acceptable pairing`)
+        } else if (format.name === 'Forged in Chaos') {
+            console.log(`<!> ${player.name} and ${potentialPair.playerName} are TOO FAR APART IN ELO. Look for another opponent.`)
+            continue
+        }
         
         // if (format.name === 'Forged in Chaos' && (Math.abs(yourElo - potentialPairElo) > 80)) {
         //     continue
