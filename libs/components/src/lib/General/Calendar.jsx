@@ -5,7 +5,7 @@
 import { useLayoutEffect } from 'react'
 import './NotFound.css'
 
-export const NotFound = () => {
+export const Calendar = () => {
   // USE LAYOUT EFFECT
   useLayoutEffect(() => window.scrollTo(0, 0))
 
