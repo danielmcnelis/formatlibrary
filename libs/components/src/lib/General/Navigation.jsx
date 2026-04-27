@@ -60,6 +60,9 @@ export const Navigation = (props) => {
                 <div onClick={() => {window.location.href="/apps/"}}>
                     <h2 className="nav-header">APPS</h2>
                 </div>
+                <div onClick={() => {window.location.href="/calendar/"}}>
+                    <h2 className="nav-header"><span role="img" aria-label="calendar">🗓️</span></h2>
+                </div>
                 {
                     isContentManager ? (
                         <div onClick={() => {window.location.href="/admin-portal/"}}>
@@ -163,7 +166,7 @@ export const Navigation = (props) => {
                 }
             </div>
         </div>
-            <div className="announcement-banner">
+            {/* <div className="announcement-banner">
                 <h2>
                     <a
                         className="inherit-color" 
@@ -171,7 +174,7 @@ export const Navigation = (props) => {
                         rel="noreferrer"
                         target="_blank"
                     >Applications for hosting Edison World Championship Qualifiers are now open!</a></h2>
-            </div>
+            </div> */}
         </>
     )
 }

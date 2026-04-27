@@ -3060,3 +3060,38 @@ export const updateDecks = async () => {
     console.log(`updated ${b} decks, encountered ${e} errors`)
     return console.log(`updateDecks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
+
+// UPDATE DECKS
+export const purgeOldPrices = async () => {
+    console.log('purgeOldPrices()')
+    const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'purgeOldPrices',
+        status: 'underway'
+    })
+
+    let b = 0
+    let e = 0
+    const prices = await Price.findAll({ where: {
+        date: {[Op.lte]: }
+    } })
+
+    for (let i = 0; i < prices.length; i++) {
+        try {
+            const price = prices[i]
+            await price.destroy()
+            b++
+        } catch (err) {
+            e++
+            console.log(err)
+        }
+    }
+
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
+    console.log(`purged ${b} prices, encountered ${e} errors`)
+    return console.log(`purgeOldPrices() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+}

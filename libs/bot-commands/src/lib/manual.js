@@ -245,12 +245,12 @@ export default {
                     chipsWinner = (Math.round((classicDelta))) < 5 ? 5 : (Math.round((classicDelta))) > 20 ? 20 : (Math.round((classicDelta)))
                     chipsLoser = (origStatsLoser - origStatsWinner) < 72 ? 5 : (origStatsLoser - origStatsWinner) >=150 ? 3 : 4
                     
-                    const winnerIsSupporter = winningMember.roles.cache.has('1375131869036810302') || winningPlayer.forgedSubscriberTier === 'Supporter'
-                    const winnerIsPatron = winningMember.roles.cache.has('1375132712070811689') || winningPlayer.forgedSubscriberTier === 'Patron'
-                    const winnerIsBenefactor = winningMember.roles.cache.has('1375133829521608784') || winningPlayer.forgedSubscriberTier === 'Benefactor' || winningPlayer.id === 'Cc2FhYrRPctZ4y72Y79gKp'
-                    const loserIsSupporter = losingMember.roles.cache.has('1375131869036810302') || losingPlayer.forgedSubscriberTier === 'Supporter'
-                    const loserIsPatron = losingMember.roles.cache.has('1375132712070811689') || losingPlayer.forgedSubscriberTier === 'Patron'
-                    const loserIsBenefactor = losingMember.roles.cache.has('1375133829521608784') || losingPlayer.forgedSubscriberTier === 'Benefactor' || losingPlayer.id === 'Cc2FhYrRPctZ4y72Y79gKp'
+                    const winnerIsSupporter = winningMember.roles.cache.has('1488934384827371731') || winningPlayer.forgedSubscriberTier === 'Supporter'
+                    const winnerIsPatron = winningMember.roles.cache.has('1488935689189068870') || winningPlayer.forgedSubscriberTier === 'Patron'
+                    const winnerIsBenefactor = winningMember.roles.cache.has('1488936887187013652') || winningPlayer.forgedSubscriberTier === 'Benefactor' || winningPlayer.id === 'Cc2FhYrRPctZ4y72Y79gKp'
+                    const loserIsSupporter = losingMember.roles.cache.has('1488934384827371731') || losingPlayer.forgedSubscriberTier === 'Supporter'
+                    const loserIsPatron = losingMember.roles.cache.has('1488935689189068870') || losingPlayer.forgedSubscriberTier === 'Patron'
+                    const loserIsBenefactor = losingMember.roles.cache.has('1488936887187013652') || losingPlayer.forgedSubscriberTier === 'Benefactor' || losingPlayer.id === 'Cc2FhYrRPctZ4y72Y79gKp'
                     
                     const chipBonusWinner =  winnerIsBenefactor ? 2 :
                         winnerIsPatron ? 1.6 :
@@ -268,9 +268,6 @@ export default {
                     chipsWinner = Math.round(chipsWinner * chipBonusWinner)
                     chipsLoser = Math.round(chipsLoser * chipBonusLoser)
                     if (chipsWinner <= chipsLoser) chipsWinner = chipsLoser + 1
-
-                    // const bar = Math.round(chipsLoser * 1.5)
-                    // if (chipsWinner < bar) chipsWinner = bar
 
                     const newChipsWinner = winnersWallet.starchips + chipsWinner
                     const newChipsLoser = losersWallet.starchips + chipsLoser

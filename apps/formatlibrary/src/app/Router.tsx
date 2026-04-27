@@ -3,6 +3,7 @@ import RedirectWWW from './RedirectWWW'
 import {
  AdminPortal,
  Builder,
+ Calendar,
  CardTable,
  CubeBrowser,
  DraftLauncher,
@@ -63,6 +64,7 @@ export const Router = (props) => {
 					<Route path="/forged-inventory/:id" element=<Page roles={roles} disableAds={true} element=<ForgedTable /> /> />
 					<Route path="/pack-simulator" element=<Page roles={roles} element=<PackSimulator /> /> />
 					<Route path="/settings" element=<Page roles={roles} disableAds={true} element=<Settings /> /> />
+					<Route path="/calendar" element=<Page roles={roles} disableAds={disableAds} element=<Calendar /> /> />
 					<Route path="/cube-maker" element=<Page roles={roles} disableAds={true} element=<CubeMaker /> /> />
 					<Route path="/rated-lobby" element=<Page roles={roles} disableAds={true} element=<RatedLobby /> /> />
 					<Route path="/cubes/:id" element=<Page roles={roles} disableAds={true} element=<CubeBrowser /> /> />
