@@ -3070,11 +3070,14 @@ export const purgeOldPrices = async () => {
         status: 'underway'
     })
 
+    const now = new Date()
+    const oneYearAgo = new Date(Date.now() - (365 * 24 * 60 * 60 * 1000))
+
     let b = 0
     let e = 0
     const prices = await Price.findAll({ where: {
-        date: {[Op.lte]: }
-    } })
+        createdAt: {[Op.lte]: oneYearAgo }
+    }})
 
     for (let i = 0; i < prices.length; i++) {
         try {
