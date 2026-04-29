@@ -469,6 +469,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const match = await Match.findOne({ where: { id: interaction.values[0] }})
             const tournament = await Tournament.findOne({ where: { id: match.tournamentId }})
             const url = `https://www.duelingbook.com/replay?id=${replayExtension}`
+            const url = interaction.options.getString('url')?.replaceAll('  ', ' ')?.replaceAll(' ', '> <')
             await saveReplay(server, interaction, match, tournament, url)
             return interaction.message?.edit({components: []}).catch((err) => console.log(err))
         } else if (command.data.name === 'settimer') {
