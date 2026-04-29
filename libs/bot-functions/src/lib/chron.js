@@ -3075,19 +3075,26 @@ export const purgeOldPrices = async () => {
 
     let b = 0
     let e = 0
-    const prices = await Price.findAll({ where: {
-        createdAt: {[Op.lte]: oneYearAgo }
-    }})
+    
+    for (let offset = 0; offset < count; offset += 100) {
+        const prices = await Price.findAll({ 
+            where: {
+                createdAt: {[Op.lte]: oneYearAgo },
+            },
+            limit: 100,
+            offset: offset
+        })
 
-    for (let i = 0; i < prices.length; i++) {
-        try {
-            const price = prices[i]
-            console.log(`destroying price from ${price.createdAt}`)
-            await price.destroy()
-            b++
-        } catch (err) {
-            e++
-            console.log(err)
+        for (let i = 0; i < prices.length; i++) {
+            try {
+                const price = prices[i]
+                console.log(`destroying price from ${price.createdAt}`)
+                await price.destroy()
+                b++
+            } catch (err) {
+                e++
+                console.log(err)
+            }
         }
     }
 
