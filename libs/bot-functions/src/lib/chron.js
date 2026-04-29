@@ -3082,6 +3082,7 @@ export const purgeOldPrices = async () => {
     for (let i = 0; i < prices.length; i++) {
         try {
             const price = prices[i]
+            console.log(`destroying price from ${price.createdAt}`)
             await price.destroy()
             b++
         } catch (err) {
