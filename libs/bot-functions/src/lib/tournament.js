@@ -3783,10 +3783,25 @@ export const postStandings = async (interaction, tournamentId) => {
     }
 
     const channel = interaction.guild?.channels?.cache?.get(server.botSpamChannelId) || interaction.channel
-    if (interaction.channel !== channel.id && server.botSpamChannelId === channel.id) await interaction.channel.send(`Please visit <#${channel.id}> to view the ${tournament.name} standings. ${tournament.logo}`)
     
-    for (let i = 0; i < results.length; i += 30) {
-        channel.send(results.slice(i, i + 30).join('\n'))
+    if (interaction.channel !== channel.id && server.botSpamChannelId === channel.id) {
+        let messageLink = ''
+
+        for (let i = 0; i < results.length; i += 30) {
+            if (i === 0) {
+                const interaction = await channel.send({ content: results.slice(i, i + 30).join('\n'), fetchReply: true})
+                console.log('interaction', interaction)
+                messageLink = `https://discord.com/channels/${server.id}/${channel.id}/${interaction.id}`
+            } else {
+                await channel.send(results.slice(i, i + 30).join('\n'))
+            }
+        }
+        
+        await interaction.channel.send(`Please visit ${messageLink} to view the ${tournament.name} standings. ${tournament.logo}`)                
+    } else {
+        for (let i = 0; i < results.length; i += 30) {
+            channel.send(results.slice(i, i + 30).join('\n'))
+        }
     }
 
     return
