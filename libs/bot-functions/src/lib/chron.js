@@ -3086,8 +3086,7 @@ export const purgeOldPrices = async () => {
             attributes: ['id'],
             // raw: true,
             limit: 100,
-            offset: offset,
-            logging: console.log
+            offset: offset
         })
 
         console.log(`offset ${offset}`)
