@@ -3076,18 +3076,18 @@ export const purgeOldPrices = async () => {
     let b = 0
     let e = 0
     
-    const count = 34000000 || await Price.count()
-    console.log('count', count)
-    for (let offset = 0; offset < count; offset += 1000) {
+    // const count = 34000000 || await Price.count()
+    // console.log('count', count)
+    // for (let offset = 0; offset < count; offset += 1000) {
         await Price.destroy({ 
             where: {
                 createdAt: {[Op.lte]: oneYearAgo },
             },
-            limit: 1000,
-            offset: offset
+            // limit: 1000,
+            // offset: offset
         })
 
-        console.log(`offset ${offset}`)
+        console.log(`finished`)
 
         // for (let i = 0; i < prices.length; i++) {
         //     try {
@@ -3099,7 +3099,7 @@ export const purgeOldPrices = async () => {
         //         console.log(err)
         //     }
         // }
-    }
+    // }
 
     await chronRecord.update({
         status: 'complete',
