@@ -3084,7 +3084,7 @@ export const purgeOldPrices = async () => {
                 createdAt: {[Op.lte]: oneYearAgo },
             },
             attributes: ['id'],
-            raw: true,
+            // raw: true,
             limit: 100,
             offset: offset,
             logging: console.log
