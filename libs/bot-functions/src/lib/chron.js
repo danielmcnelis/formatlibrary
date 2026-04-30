@@ -3087,7 +3087,21 @@ export const purgeOldPrices = async () => {
             // offset: offset
         })
 
-        console.log(`finished`)
+        let deletedRows = 0;
+        let i = 0
+        do {
+            // Delete a limited amount of rows at a time
+            deletedRows = await Price.destroy({ 
+                where: {
+                    createdAt: {[Op.lte]: oneYearAgo },
+                },
+                limit: 1000
+            });
+            i+=1000
+            console.log(`destroyed: ${i}`)
+        } while (deletedRows > 0); // Continue until no more rows to delete
+
+        console.log(`finished.`)
 
         // for (let i = 0; i < prices.length; i++) {
         //     try {
