@@ -3078,13 +3078,13 @@ export const purgeOldPrices = async () => {
     
     const count = 34000000 || await Price.count()
     console.log('count', count)
-    for (let offset = 0; offset < count; offset += 100) {
+    for (let offset = 0; offset < count; offset += 1000) {
         await Price.destroy({ 
             where: {
                 createdAt: {[Op.lte]: oneYearAgo },
             },
             attributes: ['id'],
-            limit: 100,
+            limit: 1000,
             offset: offset
         })
 
