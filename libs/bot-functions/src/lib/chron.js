@@ -3086,10 +3086,11 @@ export const purgeOldPrices = async () => {
             offset: offset
         })
 
+        console.log(`offset ${offset}`)
+
         for (let i = 0; i < prices.length; i++) {
             try {
                 const price = prices[i]
-                console.log(`destroying price from ${price.createdAt}`)
                 await price.destroy()
                 b++
             } catch (err) {
