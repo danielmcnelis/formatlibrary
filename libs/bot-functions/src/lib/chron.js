@@ -3077,6 +3077,7 @@ export const purgeOldPrices = async () => {
     let e = 0
     
     const count = await Price.count()
+    console.log('count', count)
     for (let offset = 0; offset < count; offset += 100) {
         const prices = await Price.findAll({ 
             where: {
