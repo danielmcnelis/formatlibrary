@@ -1175,11 +1175,17 @@ export const manageSubscriptions = async (client) => {
             try {
                 const player = players[i]
                 const member = await membersMap.get(player.discordId)
+                if (player.name === 'WagaMuffin') {
+                    console.log('WagaMuffin member', member)
+                }
                 const subscription = await Subscription.findOne({
                     where: {
                         playerId: player.id,
                     }
                 })
+                if (player.name === 'WagaMuffin') {
+                    console.log('WagaMuffin subscription', subscription)
+                }
 
                 if (subscription && subscription.status === 'active' && subscription.tier === 'Premium') {
                     if (!player.isSubscriber || player.subscriberTier !== 'Premium') {

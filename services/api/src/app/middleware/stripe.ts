@@ -133,6 +133,7 @@ export const getSubscriptions = async (req, res, next) => {
 
             // const stripeSubscription = stripeSubscriptions[i]
             const customer = await Stripe.customers.retrieve(stripeSubscription.customer.toString())
+            console.log('customer', customer)
 
             let player = subscription?.player
             if (!player) {
@@ -157,9 +158,11 @@ export const getSubscriptions = async (req, res, next) => {
         }
             
         const {data: stripeSubscriptions} = await Stripe.subscriptions.list({
-            limit: 100,
+            limit: 200,
             status: 'active'
           });
+
+        console.log('data', data)
         
         for (let i = 0; i < stripeSubscriptions.length; i++) {
             const stripeSubscription = stripeSubscriptions[i]
