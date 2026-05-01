@@ -242,5 +242,5 @@ const listAllStripeSubscriptions = async (id, subscriptions) => {
         }
     }
 
-    listAllStripeSubscriptions(id)
+    listAllStripeSubscriptions(id, subscriptions)
 }
