@@ -162,7 +162,7 @@ export const getSubscriptions = async (req, res, next) => {
             status: 'active'
           });
 
-        console.log('data', data)
+        console.log('stripeSubscriptions data', stripeSubscriptions)
         
         for (let i = 0; i < stripeSubscriptions.length; i++) {
             const stripeSubscription = stripeSubscriptions[i]

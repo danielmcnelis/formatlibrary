@@ -1146,6 +1146,7 @@ export const applySeasonalDecay = async (formatId, formatName, serverId, current
 
 // MANAGE SUBSCRIBERS
 export const manageSubscriptions = async (client) => {
+    console.log('manageSubscriptions()')
     const start = Date.now()
     const chronRecord = await ChronRecord.create({
         function: 'manageSubscriptions',
