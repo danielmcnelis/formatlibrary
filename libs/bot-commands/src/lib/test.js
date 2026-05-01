@@ -29,7 +29,7 @@ export default {
                 // await runNightlyTasks(client)
                 // const format = await Format.findOne({ where: { name: 'Forged in Chaos' }})
                 // await downloadNewCards(client)
-                // await manageSubscriptions(client)
+                await manageSubscriptions(client)
                 // await updateGlobalNames()
                 // await updateBlogPosts()
                 // await runNightlyTasks(client)
@@ -83,9 +83,9 @@ export default {
                 //     }
                 // }
 
-                await interaction.editReply('🧪')
+                return await interaction.editReply('🧪')
                 // await recalculateAllStats()
-                return await purgeOldPrices()
+                // return await purgeOldPrices()
                 // await updateAvatars(client)
                 // await updateMarketPrices()
                 // await purgeDuplicatePrices()

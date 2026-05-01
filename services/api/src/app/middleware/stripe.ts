@@ -156,71 +156,8 @@ export const getSubscriptions = async (req, res, next) => {
                 console.log('deleting stripeSubscription from FL DB:', stripeSubscription)
             } 
         }
-            
-        const {data: stripeSubscriptions} = await Stripe.subscriptions.list({
-            limit: 200,
-            status: 'active'
-          });
 
-        console.log('stripeSubscriptions data', stripeSubscriptions)
-        
-        for (let i = 0; i < stripeSubscriptions.length; i++) {
-            const stripeSubscription = stripeSubscriptions[i]
-            const customer = await Stripe.customers.retrieve(stripeSubscription.customer.toString())
-            const tier = stripeSubscription.items.data[0].price.unit_amount === 899 ? 'Premium' : 'Supporter'
-
-            let subscription = await Subscription.findOne({
-                where: {
-                    id: stripeSubscription.id
-                },
-                include: Player
-            })
-
-            let player = subscription?.player
-            if (!player) {
-                player = customer['email'] ? await Player.findOne({
-                    where: {
-                        [Op.or]: {
-                            email: {[Op.iLike]: customer['email']},
-                            alternateEmail: {[Op.iLike]: customer['email']},
-                        }
-                    }
-                }) : {}
-            }
-
-            if (player && player.email !== customer['email']) {
-                await player.update({ alternateEmail: customer['email'] })
-            }
-
-            if (subscription) {
-                await subscription.update({
-                    playerName: player?.name,
-                    playerId: player?.id,
-                    customerEmail: customer['email'],
-                    customerName: customer['name'],
-                    customerId: customer?.id,
-                    tier: tier,
-                    status: stripeSubscription.status,
-                    currentPeriodStart: stripeSubscription.current_period_start * 1000,
-                    currentPeriodEnd: stripeSubscription.current_period_end * 1000,
-                    endedAt: stripeSubscription.ended_at * 1000
-                })
-            } else {
-                subscription = await Subscription.create({
-                    id: stripeSubscription?.id,
-                    playerName: player?.name,
-                    playerId: player?.id,
-                    customerEmail: customer['email'],
-                    customerName: customer['name'],
-                    customerId: customer?.id,
-                    tier: tier,
-                    status: stripeSubscription.status,
-                    currentPeriodStart: stripeSubscription.current_period_start * 1000,
-                    currentPeriodEnd: stripeSubscription.current_period_end * 1000,
-                    endedAt: stripeSubscription.ended_at * 1000
-                })
-            }
-        }
+        const stripeSubscriptions = listAllStripeSubscriptions()
 
         return res.json(stripeSubscriptions)
     } catch (err) {
@@ -229,3 +166,81 @@ export const getSubscriptions = async (req, res, next) => {
 }
 
 
+const listAllStripeSubscriptions = async (id:string, subscriptions:Array<object> = []) => {
+    console.log('id:', id)
+    const {data: stripeSubscriptions} = await Stripe.subscriptions.list({
+        limit: 100,
+        status: 'active',
+        starting_after: id
+    });
+    console.log('stripeSubscriptions.length', stripeSubscriptions.length)
+
+    subscriptions = [...subscriptions, ...stripeSubscriptions]
+    if (!stripeSubscriptions.length) {
+        return subscriptions
+    } else {
+        id = stripeSubscriptions[stripeSubscriptions.length - 1].id
+    }
+
+    console.log('stripeSubscriptions data', stripeSubscriptions)
+    
+    for (let i = 0; i < stripeSubscriptions.length; i++) {
+        const stripeSubscription = stripeSubscriptions[i]
+        const customer = await Stripe.customers.retrieve(stripeSubscription.customer.toString())
+        const tier = stripeSubscription.items.data[0].price.unit_amount === 899 ? 'Premium' : 'Supporter'
+
+        let subscription = await Subscription.findOne({
+            where: {
+                id: stripeSubscription.id
+            },
+            include: Player
+        })
+
+        let player = subscription?.player
+        if (!player) {
+            player = customer['email'] ? await Player.findOne({
+                where: {
+                    [Op.or]: {
+                        email: {[Op.iLike]: customer['email']},
+                        alternateEmail: {[Op.iLike]: customer['email']},
+                    }
+                }
+            }) : {}
+        }
+
+        if (player && player.email !== customer['email']) {
+            await player.update({ alternateEmail: customer['email'] })
+        }
+
+        if (subscription) {
+            await subscription.update({
+                playerName: player?.name,
+                playerId: player?.id,
+                customerEmail: customer['email'],
+                customerName: customer['name'],
+                customerId: customer?.id,
+                tier: tier,
+                status: stripeSubscription.status,
+                currentPeriodStart: stripeSubscription.current_period_start * 1000,
+                currentPeriodEnd: stripeSubscription.current_period_end * 1000,
+                endedAt: stripeSubscription.ended_at * 1000
+            })
+        } else {
+            subscription = await Subscription.create({
+                id: stripeSubscription?.id,
+                playerName: player?.name,
+                playerId: player?.id,
+                customerEmail: customer['email'],
+                customerName: customer['name'],
+                customerId: customer?.id,
+                tier: tier,
+                status: stripeSubscription.status,
+                currentPeriodStart: stripeSubscription.current_period_start * 1000,
+                currentPeriodEnd: stripeSubscription.current_period_end * 1000,
+                endedAt: stripeSubscription.ended_at * 1000
+            })
+        }
+    }
+
+    listAllStripeSubscriptions(id)
+}
