@@ -157,7 +157,7 @@ export const getSubscriptions = async (req, res, next) => {
             } 
         }
 
-        const stripeSubscriptions = listAllStripeSubscriptions(null, [])
+        const stripeSubscriptions = await listAllStripeSubscriptions(null, [])
 
         return res.json(stripeSubscriptions)
     } catch (err) {
@@ -166,7 +166,7 @@ export const getSubscriptions = async (req, res, next) => {
 }
 
 
-const listAllStripeSubscriptions = async (id, subscriptions) => {
+const listAllStripeSubscriptions = async (id = null, subscriptions = []) => {
     console.log('obj id:', id)
     let stripeSubscriptions
     if (id) {
