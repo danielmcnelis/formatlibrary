@@ -167,12 +167,22 @@ export const getSubscriptions = async (req, res, next) => {
 
 
 const listAllStripeSubscriptions = async (id, subscriptions) => {
-    console.log('id:', id)
-    const {data: stripeSubscriptions} = await Stripe.subscriptions.list({
-        limit: 100,
-        status: 'active',
-        starting_after: id
-    });
+    console.log('obj id:', id)
+    let stripeSubscriptions
+    if (id) {
+        const {data} = await Stripe.subscriptions.list({
+            limit: 100,
+            status: 'active',
+            starting_after: id
+        });
+        stripeSubscriptions = data
+    } else {
+        const {data} = await Stripe.subscriptions.list({
+            limit: 100,
+            status: 'active'
+        });
+        stripeSubscriptions = data
+    }
     console.log('stripeSubscriptions.length', stripeSubscriptions.length)
 
     subscriptions = [...subscriptions, ...stripeSubscriptions]
