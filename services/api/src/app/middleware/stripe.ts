@@ -157,7 +157,7 @@ export const getSubscriptions = async (req, res, next) => {
             } 
         }
 
-        const stripeSubscriptions = listAllStripeSubscriptions()
+        const stripeSubscriptions = listAllStripeSubscriptions(null, [])
 
         return res.json(stripeSubscriptions)
     } catch (err) {
@@ -166,7 +166,7 @@ export const getSubscriptions = async (req, res, next) => {
 }
 
 
-const listAllStripeSubscriptions = async (id:string, subscriptions:Array<object> = []) => {
+const listAllStripeSubscriptions = async (id, subscriptions) => {
     console.log('id:', id)
     const {data: stripeSubscriptions} = await Stripe.subscriptions.list({
         limit: 100,
