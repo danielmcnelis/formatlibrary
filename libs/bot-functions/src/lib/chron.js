@@ -1171,7 +1171,7 @@ export const manageSubscriptions = async (client) => {
         const players = await Player.findAll()
         // UPDATE SUBSCRIPTIONS
         // const {data} = await axios.get(`https://formatlibrary.com/api/stripe/subscriptions/`)
-        console.log('data', data)
+        // console.log('data', data)
                         
         for (let i = 0; i < players.length; i++) {
             try {

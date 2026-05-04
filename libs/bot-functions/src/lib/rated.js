@@ -911,6 +911,24 @@ export const sendRatedJoinNotifications = async (client, player, format, deck, i
             const guild = client.guilds.cache.get('414551319031054346')
             const channel = guild.channels.cache.get(format.channelId || format.categoryChannelId)
             if (channel) await channel.send(`Somebody joined the ${format.name} ${format.emoji} Rated Pool! ${emojis.megaphone}`)
+
+            const otherServers = await Server.findAll({
+                where: {
+                    formatId: format.id,
+                    ratedChannelId: {[Op.not]: null}
+                }
+            })
+
+            for (let i = 0; i < otherServers.length; i++) {
+                try {
+                    const otherServer = otherServers[i]
+                    const otherGuild = client.guilds.cache.get(otherServer.id)
+                    const otherChannel = otherGuild.channels.cache.get(otherServer.ratedChannelId)
+                    if (otherChannel) await otherChannel.send(`Somebody joined the ${format.name} ${format.emoji} Rated Pool! ${emojis.megaphone} - DM **/rated** to RetroBot to challenge them! ${emojis.wokefrog}`)
+                } catch (err) {
+                    console.log(err)
+                }
+            }
         }
 
         const user = await client.users.fetch(player.discordId)

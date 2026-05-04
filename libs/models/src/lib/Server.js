@@ -44,6 +44,9 @@ export const Server = db.define('servers', {
   welcomeChannelId: {
       type: Sequelize.STRING
   },
+  ratedChannelId: {
+      type: Sequelize.STRING
+  },
   botSpamChannelId: {
       type: Sequelize.STRING
   },

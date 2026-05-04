@@ -97,6 +97,24 @@ const getRatedInformation = async (interaction, player, format) => {
                 console.log(err)
             }
 
+            const otherServers = await Server.findAll({
+                where: {
+                    formatId: format.id,
+                    ratedChannelId: {[Op.not]: null}
+                }
+            })
+
+            for (let i = 0; i < otherServers.length; i++) {
+                try {
+                    const otherServer = otherServers[i]
+                    const otherGuild = client.guilds.cache.get(otherServer.id)
+                    const otherChannel = otherGuild.channels.cache.get(otherServer.ratedChannelId)
+                    if (otherChannel) await otherChannel.send(`Somebody joined the ${format.name} ${format.emoji} Rated Pool! ${emojis.megaphone} - DM **/rated** to RetroBot to challenge them! ${emojis.wokefrog}`)
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+
             return await interaction.user.send(`You've joined the ${format.name} Rated Pool. ${format.emoji} You'll receive a DM when you're paired.`)
         } else {
             return await interaction.user.send(`You've resubmitted your deck for the ${format.name} Rated Pool. ${format.emoji} You'll receive a DM when you're paired.`)
