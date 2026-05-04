@@ -109,7 +109,7 @@ const getRatedInformation = async (interaction, player, format) => {
                     const otherServer = otherServers[i]
                     const otherGuild = client.guilds.cache.get(otherServer.id)
                     const otherChannel = otherGuild.channels.cache.get(otherServer.ratedChannelId)
-                    if (otherChannel) await otherChannel.send(`${otherServer.ratedRoleId ? `<@&${otherServer.ratedRoleId}>` : ''}Somebody joined the ${format.name} ${format.emoji} Rated Pool! ${emojis.megaphone} - DM **/rated** to RetroBot to challenge them! ${emojis.wokefrog}`)
+                    if (otherChannel) await otherChannel.send(`${otherServer.ratedRoleId ? `<@&${otherServer.ratedRoleId}>, ` : ''}Somebody joined the ${format.name} ${format.emoji} Rated Pool! ${emojis.megaphone} - DM **/rated** to RetroBot to challenge them! ${emojis.wokefrog}`)
                 } catch (err) {
                     console.log(err)
                 }
