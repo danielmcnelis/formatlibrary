@@ -50,6 +50,9 @@ export const Server = db.define('servers', {
   botSpamChannelId: {
       type: Sequelize.STRING
   },
+  ratedRoleId: {
+      type: Sequelize.STRING
+  },
   adminRoleId: {
       type: Sequelize.STRING
   },
