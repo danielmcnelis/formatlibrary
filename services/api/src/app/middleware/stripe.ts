@@ -123,7 +123,7 @@ export const getSubscriptions = async (req, res, next) => {
             order: [['createdAt', 'DESC']]
         })
 
-        console.log('subscriptions', subscriptions)
+        // console.log('subscriptions', subscriptions)
 
         for (let i = 0; i < subscriptions.length; i++) {
             const subscription = subscriptions[i]
@@ -175,21 +175,25 @@ const listAllStripeSubscriptions = async (id = null, subscriptions = []) => {
             status: 'active',
             starting_after: id
         });
+        console.log('data 178', data)
         stripeSubscriptions = data
     } else {
         const {data} = await Stripe.subscriptions.list({
             limit: 100,
             status: 'active'
         });
+        console.log('data 185', data)
         stripeSubscriptions = data
     }
     console.log('stripeSubscriptions.length', stripeSubscriptions.length)
 
     subscriptions = [...subscriptions, ...stripeSubscriptions]
     if (!stripeSubscriptions.length) {
+        console.log('RETURNING')
         return subscriptions
     } else {
-        id = stripeSubscriptions[stripeSubscriptions.length - 1].id
+        id = stripeSubscriptions[stripeSubscriptions.length - 1]?.id
+        console.log('next id', id)
     }
 
     console.log('stripeSubscriptions data', stripeSubscriptions)

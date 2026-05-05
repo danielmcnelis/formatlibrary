@@ -1170,8 +1170,8 @@ export const manageSubscriptions = async (client) => {
         const programmer = await client.users.fetch('194147938786738176')
         const players = await Player.findAll()
         // UPDATE SUBSCRIPTIONS
-        // const {data} = await axios.get(`https://formatlibrary.com/api/stripe/subscriptions/`)
-        // console.log('data', data)
+        const {data} = await axios.get(`https://formatlibrary.com/api/stripe/subscriptions/`)
+        console.log('data', data)
                         
         for (let i = 0; i < players.length; i++) {
             try {
@@ -1280,6 +1280,7 @@ export const assignSeasonalLadderRoles = async (client) => {
     const hatLadderPlayersRoleId = '1333090132991148072'
     const goatLadderPlayersRoleId = '1333090182819483831'
     const tenguLadderPlayersRoleId = '1333090222262452284'
+    const windupLadderPlayersRoleId = '1500969089034621100'
 
     const edisonLadderPlayers = await Stats.findAll({
         where: {
@@ -1348,6 +1349,24 @@ export const assignSeasonalLadderRoles = async (client) => {
             const {player} = tenguLadderPlayers[i]
             const member = await guild.members.fetch(player?.discordId)
             member.roles.add(tenguLadderPlayersRoleId)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const windupLadderPlayers = await Stats.findAll({
+        where: {
+            formatName: 'Wind-Up',
+            seasonalGames: {[Op.gt]: 0}
+        },
+        include: Player
+    })
+
+    for (let i = 0; i < windupLadderPlayers.length; i++) {
+        try {
+            const {player} = windupLadderPlayers[i]
+            const member = await guild.members.fetch(player?.discordId)
+            member.roles.add(windupLadderPlayersRoleId)
         } catch (err) {
             console.log(err)
         }
