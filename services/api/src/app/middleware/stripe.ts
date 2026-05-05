@@ -133,7 +133,7 @@ export const getSubscriptions = async (req, res, next) => {
 
             // const stripeSubscription = stripeSubscriptions[i]
             const customer = await Stripe.customers.retrieve(stripeSubscription.customer.toString())
-            console.log('customer', customer)
+            // console.log('customer', customer)
 
             let player = subscription?.player
             if (!player) {
@@ -175,14 +175,14 @@ const listAllStripeSubscriptions = async (id = null, subscriptions = []) => {
             status: 'active',
             starting_after: id
         });
-        console.log('data 178', data)
+        // console.log('data 178', data)
         stripeSubscriptions = data
     } else {
         const {data} = await Stripe.subscriptions.list({
             limit: 100,
             status: 'active'
         });
-        console.log('data 185', data)
+        // console.log('data 185', data)
         stripeSubscriptions = data
     }
     console.log('stripeSubscriptions.length', stripeSubscriptions.length)
@@ -196,7 +196,7 @@ const listAllStripeSubscriptions = async (id = null, subscriptions = []) => {
         console.log('next id', id)
     }
 
-    console.log('stripeSubscriptions data', stripeSubscriptions)
+    // console.log('stripeSubscriptions data', stripeSubscriptions)
     
     for (let i = 0; i < stripeSubscriptions.length; i++) {
         const stripeSubscription = stripeSubscriptions[i]
