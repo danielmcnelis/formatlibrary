@@ -159,7 +159,7 @@ export const getSubscriptions = async (req, res, next) => {
 
         const stripeSubscriptions = await listAllStripeSubscriptions(null, [])
 
-        return res.json(stripeSubscriptions)
+        return res.json({data: stripeSubscriptions})
     } catch (err) {
         next(err)
     }

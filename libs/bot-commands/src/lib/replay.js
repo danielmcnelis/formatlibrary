@@ -133,7 +133,6 @@ export default {
             if (!match) return
 
             let challongeMatchRound = match.challongeMatchRound
-            console.log('challongeMatchRound', challongeMatchRound)
 
             if (!challongeMatchRound) {
                 const {data: challongeMatch} = await axios.get(`https://api.challonge.com/v1/tournaments/${tournament.id}/matches/${match.challongeMatchId}.json?api_key=${server.challongeApiKey}`).catch((err) => console.log(err))
@@ -142,8 +141,6 @@ export default {
                 challongeMatchRound = challongeMatch?.match?.round
                 await match.update({ challongeMatchRound: challongeMatch?.match?.round })
             }
-
-            console.log('challongeMatchRound', challongeMatchRound)
 
             const replay = await Replay.findOne({ where: { matchId: match.id }})
             if (replay /*&& await isModerator(server, interaction.member)*/) {

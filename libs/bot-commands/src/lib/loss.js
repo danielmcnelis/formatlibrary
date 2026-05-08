@@ -139,7 +139,6 @@ export default {
                 const loserTournamentIds = [...await Entry.findByPlayerIdAndFormatId(losingPlayer.id, format.id)].map((e) => e.tournamentId)
                 const winnerTournamentIds = [...await Entry.findByPlayerIdAndFormatId(winningPlayer.id, format.id)].map((e) => e.tournamentId)
                 const commonTournamentIds = loserTournamentIds.filter((id) => winnerTournamentIds.includes(id))
-                console.log('commonTournamentIds', commonTournamentIds)
                 const tournaments = []
                 const openChallongeMatches = []
 
@@ -167,10 +166,7 @@ export default {
                     if (tournament) {
                         isTournament = true
                         const index = tournaments.indexOf(tournament)
-                        console.log('tournaments.length', tournaments.length)
-                        console.log('index', index)
                         const openChallongeMatch = openChallongeMatches[index]
-                        console.log('openChallongeMatch', openChallongeMatch)
                         if (tournament.state === 'pending') return await interaction.editReply({ content: `Sorry, ${tournament.name} has not started yet.`})
                         if (tournament.state === 'processing') return await interaction.editReply({ content: `Sorry, another API request is processing for ${tournament.name}. Please try again shortly.`})
                         if (tournament.state !== 'underway') return await interaction.editReply({ content: `Sorry, ${tournament.name} is not underway.`})

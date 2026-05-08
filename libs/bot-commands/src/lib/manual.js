@@ -179,12 +179,9 @@ export default {
                     if (tournament) {
                         isTournament = true
                         const index = tournaments.indexOf(tournament)
-                        console.log('tournaments.length', tournaments.length)
-                        console.log('index', index)
                         const openChallongeMatch = openChallongeMatches[index]
-                        console.log('openChallongeMatch', openChallongeMatch)
                         challongeMatch = tournament.isTeamTournament ? await processTeamResult(server, interaction, winningPlayer, losingPlayer, tournament, format) :
-                            await processMatchResult(server, interaction, null, winner, winningPlayer, loser, losingPlayer, tournament, format)
+                            await processMatchResult(server, interaction, openChallongeMatch, winner, winningPlayer, loser, losingPlayer, tournament, format)
                         if (!challongeMatch) return
                     } else {
                         return
