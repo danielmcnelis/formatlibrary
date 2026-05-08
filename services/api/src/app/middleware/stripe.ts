@@ -189,7 +189,7 @@ const listAllStripeSubscriptions = async (id = null, subscriptions = []) => {
 
     subscriptions = [...subscriptions, ...stripeSubscriptions]
     if (!stripeSubscriptions.length) {
-        console.log('RETURNING')
+        console.log('RETURNING', subscriptions)
         return subscriptions
     } else {
         id = stripeSubscriptions[stripeSubscriptions.length - 1]?.id

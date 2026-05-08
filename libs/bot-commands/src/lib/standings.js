@@ -84,7 +84,6 @@ export default {
                 for (let i = 0; i < results.length; i += 30) {
                     if (i === 0) {
                         const interaction = await channel.send({ content: results.slice(i, i + 30).join('\n'), fetchReply: true})
-                        console.log('interaction', interaction)
                         messageLink = `https://discord.com/channels/${server.id}/${channel.id}/${interaction.id}`
                     } else {
                         await channel.send(results.slice(i, i + 30).join('\n'))

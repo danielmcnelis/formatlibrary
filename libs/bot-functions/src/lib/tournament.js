@@ -2352,21 +2352,16 @@ export const calculateStandings = async (tournament, matches, participants) => {
         }
     }
 
-    console.log('tiebreakers:', tieBreaker1, tieBreaker2, tieBreaker3)
-    console.log('standings:', '\n', standings.map((s) => `${s.rank}. ${s.name} ${s.wins}-${s.losses}-${s.ties}${s.byes > 0 ? ` +${s.byes} BYE` : ''} [${s[tieBreaker1] || ''} ${s[tieBreaker2] || ''} ${s[tieBreaker3] || ''}]`).join('\n'))
     return standings
 }
 
 // GET PARTICIPANT FINAL RANK
 export const getParticipantFinalRank = async (server, tournament, participantName) => {
-    console.log('participantName', participantName)
     const participants = await getParticipants(server, tournament.id)
-    console.log('participants.length', participants.length)
     
     for (let i = 0; i < participants.length; i++) {
         const {participant} = participants[i]
         if (participant.name === participantName) {
-            console.log('NAME MATCH -> RETURN', participant.name, participant.final_rank)
             return participant.final_rank
         }
     }
@@ -3789,7 +3784,6 @@ export const postStandings = async (interaction, tournamentId) => {
         for (let i = 0; i < results.length; i += 30) {
             if (i === 0) {
                 const interaction = await channel.send({ content: results.slice(i, i + 30).join('\n'), fetchReply: true})
-                console.log('interaction', interaction)
                 messageLink = `https://discord.com/channels/${server.id}/${channel.id}/${interaction.id}`
             } else {
                 await channel.send(results.slice(i, i + 30).join('\n'))
