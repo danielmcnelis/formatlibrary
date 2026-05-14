@@ -83,13 +83,13 @@ export default {
                 //     }
                 // }
 
-                return await interaction.editReply('🧪')
+                await interaction.editReply('🧪')
                 // await recalculateAllStats()
                 // return await purgeOldPrices()
                 // await updateAvatars(client)
                 // await updateMarketPrices()
                 // await purgeDuplicatePrices()
-                // return await conductCensus(client)
+                return await conductCensus(client)
                 // await updateDeckType()
                 // await updateDecks()
                 // await updateMatchups()
