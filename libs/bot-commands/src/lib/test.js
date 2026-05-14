@@ -30,7 +30,6 @@ export default {
                 // const format = await Format.findOne({ where: { name: 'Forged in Chaos' }})
                 // await downloadNewCards(client)
                 // await manageSubscriptions(client)
-                // await updateGlobalNames()
                 // await updateBlogPosts()
                 // await runNightlyTasks(client)
 
@@ -84,6 +83,7 @@ export default {
                 // }
 
                 await interaction.editReply('🧪')
+                await updateGlobalNames()
                 // await recalculateAllStats()
                 // return await purgeOldPrices()
                 // await updateAvatars(client)
