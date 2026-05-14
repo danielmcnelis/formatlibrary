@@ -29,7 +29,7 @@ export default {
                 // await runNightlyTasks(client)
                 // const format = await Format.findOne({ where: { name: 'Forged in Chaos' }})
                 // await downloadNewCards(client)
-                await manageSubscriptions(client)
+                // await manageSubscriptions(client)
                 // await updateGlobalNames()
                 // await updateBlogPosts()
                 // await runNightlyTasks(client)
