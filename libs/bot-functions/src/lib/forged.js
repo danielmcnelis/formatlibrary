@@ -6,6 +6,7 @@ import { convertArrayToObject } from "./utility"
 
 // GET FORGED ISSUES
 export const getForgedIssues = async (player, deckArr, format) => {
+    console.log('getForgedIssues()')
     const deck = convertArrayToObject(deckArr)   
     const cardIds = [...await ForgedPrint.findAll({ include: Card })].flatMap(fp => [fp.card.konamiCode, fp.card.ypdId])
     const forbiddenIds = [...await Status.findAll({ where: { banlist: format.banlist, category: 'Forged', restriction: 'forbidden' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId])
@@ -102,7 +103,8 @@ export const getForgedIssues = async (player, deckArr, format) => {
 
 
 //GET DECK LIST
-export const getForgedDeckList = async (member, player, format, override = false, unranked = false) => {            
+export const getForgedDeckList = async (member, player, format, override = false, unranked = false) => {       
+    console.log('getForgedDeckList()')     
     const filter = m => m.author.id === (member.id || member.user?.id)
     const pronoun = override ? `${player.name}'s` : 'your'
     const pronoun2 = override ? 'They' : 'You'
