@@ -27,7 +27,8 @@ const getRatedInformation = async (interaction, player, format) => {
 
         const server = membership?.server
         if (!membership || !server) return await interaction.user.send(`Sorry, you are not a member of a server that supports rated play for ${format.name} Format. ${format.emoji}`)
-        const guild = client.guilds.cache.get(server?.id)
+        const serverId = format.name === 'Forged in Chaos' ? '1488566624536494364' : server?.id
+        const guild = client.guilds.cache.get(serverId)
         const channel = guild.channels.cache.get(format.channelId) || guild.channels.cache.get(format.categoryChannelId)
         const simName = player.duelingBookName || await askForSimName(interaction.user, player, 'DuelingBook')
         if (!simName) return

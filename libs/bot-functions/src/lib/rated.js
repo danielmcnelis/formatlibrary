@@ -217,7 +217,8 @@ export const getSecondOfTwoRatedConfirmations = async (client, player1PoolId, pl
 // LOOK FOR POTENTIAL PAIRS
 export const lookForPotentialPairs = async (interaction, pool, player, format, server, guild, channel) => {
     const yourStats = await Stats.findOne({ where: { formatId: format.id, playerId: player.id }})
-    const yourElo = format.useSeasonalElo ? yourStats.seasonalElo : yourStats.elo
+    const baseElo = format.name === 'Forged in Chaos' ? 400.00 : 500.00
+    const yourElo = format.useSeasonalElo ? yourStats?.seasonalElo : yourStats?.elo || baseElo
     const potentialPairs = await Pool.findAll({ 
         where: { 
             playerId: {[Op.not]: player.id },
