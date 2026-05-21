@@ -753,6 +753,7 @@ export const getNewRatedDeck = async (user, player, format, deckToReplace) => {
 
             if (format.name === 'Forged in Chaos') {
                 issues = await getForgedIssues(player, deckArr, format)
+                console.log('forged Issues', issues)
                 if (!issues) return false
             } else if (format.name === 'Genesys') {
                 issues = await getGenesysIssues(deckArr)
@@ -886,7 +887,7 @@ export const checkPreviousForgedRatedDeck = async (user, player, ydk, format) =>
 
 //ASK FOR DECK NAME
 export const askForDeckName = async (member, player, override = false) => {
-    const filter = m => m.author.id === member.id || member.user.id
+    const filter = m => m.author.id === member.id || member.user?.id
     const pronoun = override ? `${player.name}'s` : 'your'
     const message = await member.send({ content: `Please provide a nickname for ${pronoun} deck.` }).catch((err) => console.log(err))
     if (!message || !message.channel) return false
