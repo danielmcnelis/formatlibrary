@@ -24,7 +24,6 @@ export const SingleEvent = (props) => {
     const accessToken = getCookie('access')
 
     const [event, setEvent] = useState({})
-    console.log('event', event)
     const [winner, setWinner] = useState({})
     const [replays, setReplays] = useState({})
     const [topDecks, setTopDecks] = useState({})

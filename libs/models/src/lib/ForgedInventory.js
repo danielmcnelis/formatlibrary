@@ -121,7 +121,7 @@ ForgedInventory.find = async (filter = {}, booster, limit = 10, page = 1, sort =
     if (booster) filter['$prints.cardCode$'] = {[Op.iLike]: booster + '%' }
 
     const cards = await ForgedInventory.findAll({
-        where: filter,
+        where: {...filter, quantity: {[Op.gte]: 1 }},
         offset: (page - 1) * limit,
         limit: limit,
         subQuery: false,
