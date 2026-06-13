@@ -696,7 +696,7 @@ export const lookForAllPotentialPairs = async (client) => {
     
         for (let i = 0; i < potentialPairs.length; i++) {
             try {
-                // const potentialPair = potentialPairs[i]
+                const potentialPair = potentialPairs[i]
                 // const fiveMinutesAgo = new Date(Date.now() - (5 * 60 * 1000))
                 // const tenMinutesAgo = new Date(Date.now() - (10 * 60 * 1000))
                 // const fifteenMinutesAgo = new Date(Date.now() - (15 * 60 * 1000))

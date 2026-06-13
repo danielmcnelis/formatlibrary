@@ -40,7 +40,7 @@ export default {
             }) || await selectTournament(interaction, tournaments)
             if (!tournament) return
             
-            if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `This tournament has not begun.`})
+            if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `Please wait.`})
             if (tournament.state === 'complete' || tournament.state === 'topcut') return await interaction.editReply({ content: `This tournament has already ended.`})
             const tournamentId = tournament.id
 
