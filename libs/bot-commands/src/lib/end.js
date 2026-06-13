@@ -58,6 +58,7 @@ export default {
                     await updateApiRequests(server)
         
                     if (status === 200) {   
+                        await tournament.update({ state: 'complete' })
                         interaction.channel.send({ content: `Congrats! The results of ${tournament.name} ${tournament.logo} have been finalized on Challonge.com.`})
                     } else {
                         return await interaction.editReply({ content: `Unable to finalize ${tournament.name} ${tournament.logo} on Challonge.com.`})
