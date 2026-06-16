@@ -96,6 +96,10 @@ export const Format = db.define('formats', {
   },
   tcgEquivalentDate: {
     type: Sequelize.STRING
+  },
+  serverId: {
+    type: Sequelize.STRING,
+    default: '414551319031054346'
   }
 })
 

@@ -401,6 +401,11 @@ Card.hasMany(Ruling)
 Series.belongsTo(Server)
 Server.hasMany(Series)
 
+
+//SERVERS
+Server.hasMany(Format)
+Format.belongsTo(Server)
+
 //STATS
 Stats.belongsTo(Player)
 Player.hasMany(Stats)

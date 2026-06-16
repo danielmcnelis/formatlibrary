@@ -124,7 +124,8 @@ export const joinRatedPool = async (req, res, next) => {
                     deckFileA: pool.deckFile,
                     playerBName: potentialPair.playerName,
                     playerBId: potentialPair.playerId,
-                    deckFileB: potentialPair.deckFile
+                    deckFileB: potentialPair.deckFile,
+                    serverId: format.serverId
                 })
                 
                 await pool.destroy()
