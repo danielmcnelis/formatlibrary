@@ -239,9 +239,9 @@ export default {
                     const winnersWallet = await Wallet.findOne({ where: { playerId: winningPlayer.id }})
                     const losersWallet = await Wallet.findOne({ where: { playerId: losingPlayer.id }})
                     
-                    chipsWinner = (Math.round((classicDelta))) < 5 ? 5 : (Math.round((classicDelta))) > 20 ? 20 : (Math.round((classicDelta)))
-                    chipsLoser = (origStatsLoser - origStatsWinner) < 72 ? 5 : (origStatsLoser - origStatsWinner) >=150 ? 3 : 4
-                    
+                    chipsWinner = (Math.round((winnerDelta))) < 5 ? 5 : (Math.round((winnerDelta))) > 20 ? 20 : (Math.round((winnerDelta )))
+                    chipsLoser = (loserStats.seasonalElo - winnerStats.seasonalElo) < 72 ? 5 : (loserStats.seasonalElo - winnerStats.seasonalElo) >=150 ? 3 : 4
+
                     const winnerIsSupporter = winningMember.roles.cache.has('1488934384827371731') || winningPlayer.forgedSubscriberTier === 'Supporter'
                     const winnerIsPatron = winningMember.roles.cache.has('1488935689189068870') || winningPlayer.forgedSubscriberTier === 'Patron'
                     const winnerIsBenefactor = winningMember.roles.cache.has('1502092705591853188') || winningMember.roles.cache.has('1488566624536494368') || winningPlayer.forgedSubscriberTier === 'Benefactor' || winningPlayer.id === 'Cc2FhYrRPctZ4y72Y79gKp'
