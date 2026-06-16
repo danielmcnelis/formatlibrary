@@ -212,7 +212,7 @@ export default {
             if (isRated) { 
                 const origStatsWinner = winnerStats.elo
                 const origStatsLoser = loserStats.elo
-                const [winnerDelta, loserDelta, classicDelta] = await updateGeneralStats(winnerStats, loserStats)
+                const [winnerDelta, loserDelta, classicDelta] = format.name === 'Forged in Chaos' ?  await updateSeasonalStats(winnerStats, loserStats) : await updateGeneralStats(winnerStats, loserStats)
                 match = await Match.create({
                     winnerName: winningPlayer.name,
                     winnerId: winningPlayer.id,
@@ -239,7 +239,7 @@ export default {
                     const winnersWallet = await Wallet.findOne({ where: { playerId: winningPlayer.id }})
                     const losersWallet = await Wallet.findOne({ where: { playerId: losingPlayer.id }})
                     
-                    chipsWinner = (Math.round((winnerDelta))) < 5 ? 5 : (Math.round((winnerDelta))) > 20 ? 20 : (Math.round((winnerDelta )))
+                    chipsWinner = (Math.round((classicDelta))) < 5 ? 5 : (Math.round((classicDelta))) > 20 ? 20 : (Math.round((classicDelta )))
                     chipsLoser = (loserStats.seasonalElo - winnerStats.seasonalElo) < 72 ? 5 : (loserStats.seasonalElo - winnerStats.seasonalElo) >=150 ? 3 : 4
 
                     const winnerIsSupporter = winningMember.roles.cache.has('1488934384827371731') || winningPlayer.forgedSubscriberTier === 'Supporter'

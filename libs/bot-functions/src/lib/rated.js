@@ -1081,6 +1081,7 @@ export const updateSeasonalStats = async (winnerStats, loserStats) => {
     const loserKFactor = getKFactor(loserStats.seasonalGames, loserStats.bestSeasonalElo)
     const winnerDelta = getEloDelta(winnerKFactor, winnerStats.seasonalElo, loserStats.seasonalElo)
     const loserDelta = getEloDelta(loserKFactor, winnerStats.seasonalElo, loserStats.seasonalElo)
+    const classicDelta = getEloDelta(20, winnerStats.seasonalElo, loserStats.seasonalElo)
     
     await winnerStats.update({
         seasonalElo: winnerStats.seasonalElo + winnerDelta,
@@ -1096,4 +1097,6 @@ export const updateSeasonalStats = async (winnerStats, loserStats) => {
         seasonalLosses: loserStats.seasonalLosses + 1,
         seasonalGames: loserStats.seasonalGames + 1
     })
+
+    return [winnerDelta, loserDelta, classicDelta]
 }
