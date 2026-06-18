@@ -346,7 +346,7 @@ export const lookForPotentialPairs = async (interaction, pool, player, format, s
             await Pairing.create({
                 formatId: format.id,
                 formatName: format.name,
-                serverId: server.id,
+                serverId: format.serverId,
                 communityName: server.name,
                 playerAName: pool.playerName,
                 playerAId: pool.playerId,
@@ -477,7 +477,7 @@ export const handleRatedConfirmation = async (client, interaction, isConfirmed, 
             await Pairing.create({
                 formatId: format.id,
                 formatName: format.name,
-                serverId: server.id,
+                serverId: format.serverId,
                 communityName: server.name,
                 playerAName: yourPool.playerName,
                 playerAId: yourPool.playerId,
