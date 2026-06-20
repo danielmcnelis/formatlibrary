@@ -313,7 +313,7 @@ export const drawDeck = async (ydk) => {
     for (let i = 0; i < mainArr.length; i++) {
         let konamiCode = mainArr[i]
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-        const card = await Card.findOne({ where: { konamiCode: konamiCode }})
+        const card = await Card.findOne({ where: { [Op.or]: {konamiCode: konamiCode, ydpId: konamiCode, artworkId: konamiCode}}})
         if (!card) continue
         main.push(card)
     }
