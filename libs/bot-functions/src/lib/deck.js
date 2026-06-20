@@ -213,7 +213,7 @@ export const getIssues = async (deckArr, format) => {
     for (let i = 0; i < keys.length; i++) {
         const key = keys[i]
         let konamiCode = keys[i]
-        while (konamiCode.length < 8) konamiCode = '0' + konamiCode 
+        // while (konamiCode.length < 8) konamiCode = '0' + konamiCode 
         if (konamiCode === '00000000' && format.name === 'Advanced') continue
         if (!artworkIds.includes(konamiCode)) {
             const artwork = await Artwork.findOne({ where: { artworkId: konamiCode }, include: Card })
