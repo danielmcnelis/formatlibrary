@@ -69,7 +69,7 @@ export const getIssues = async (deckArr, format) => {
     const day = now.getDate().toString().padStart(2, '0')
     const formatDate = format.name === 'Advanced' || format.name === 'Traditional' ? `${year}-${month}-${day}` : format.date
 
-    const konamiIds = format.category === 'Custom' ? [...await Card.findAll()].map(c => [c.konamiCode]) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: formatDate } }})].map(c => c.konamiCode)
+    const konamiIds = format.category === 'Custom' ? [...await Card.findAll()].map(c => c.konamiCode) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: formatDate } }})].map(c => c.konamiCode)
     const artworkIds = []
     for (let i = 0; i < konamiIds.length; i++) {
         let konamiId = konamiIds[i]
@@ -87,7 +87,7 @@ export const getIssues = async (deckArr, format) => {
         }
     }
 
-    const forbiddenCardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'forbidden' } })].map((s => s.cardId))
+    const forbiddenCardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'forbidden' }, include: Card })].map((s => s.card.konamiCode))
     const forbiddenArtworkIds = []
     for (let i = 0; i < forbiddenCardIds.length; i++) {
         const forbiddenCardId = forbiddenCardIds[i]
@@ -105,7 +105,7 @@ export const getIssues = async (deckArr, format) => {
         }
     }
 
-    const limitedCardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited' } })].map((s => s.cardId))
+    const limitedCardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited' }, include: Card })].map((s => s.card.konamiCode))
     const limitedArtworkIds = []
     for (let i = 0; i < limitedCardIds.length; i++) {
         const limitedCardId = limitedCardIds[i]
@@ -123,7 +123,7 @@ export const getIssues = async (deckArr, format) => {
         }
     }
 
-    const semiLimitedCardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'semi-limited' } })].map((s => s.cardId))
+    const semiLimitedCardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'semi-limited' }, include: Card })].map((s => s.card.konamiCode))
     const semiLimitedArtworkIds = []
     for (let i = 0; i < semiLimitedCardIds.length; i++) {
         const semiLimitedCardId = semiLimitedCardIds[i]
@@ -141,7 +141,7 @@ export const getIssues = async (deckArr, format) => {
         }
     }
 
-    const limited1CardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-1' } })].map((s => s.cardId))
+    const limited1CardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-1' }, include: Card })].map((s => s.card.konamiCode))
     const limited1ArtworkIds = []
     for (let i = 0; i < limited1CardIds.length; i++) {
         const limited1CardId = limited1CardIds[i]
@@ -159,7 +159,7 @@ export const getIssues = async (deckArr, format) => {
         }
     }
 
-    const limited2CardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-2' } })].map((s => s.cardId))
+    const limited2CardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-2' }, include: Card })].map((s => s.card.konamiCode))
     const limited2ArtworkIds = []
     for (let i = 0; i < limited2CardIds.length; i++) {
         const limited2CardId = limited2CardIds[i]
@@ -177,7 +177,7 @@ export const getIssues = async (deckArr, format) => {
         }
     }
 
-    const limited3CardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-3' } })].map((s => s.cardId))
+    const limited3CardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-3' }, include: Card })].map((s => s.card.konamiCode))
     const limited3ArtworkIds = []
     for (let i = 0; i < limited3CardIds.length; i++) {
         const limited3CardId = limited3CardIds[i]
