@@ -11,9 +11,11 @@ export const getForgedIssues = async (player, deckArr, format) => {
     const artworkIds = []
     for (let i = 0; i < cardIds.length; i++) {
         const cardId = cardIds[i]
+        console.log('cardId', cardId)
+        if (!cardId) continue
         const artworks = await Artwork.findAll({
             where: {
-                cardId
+                cardId: cardId
             }
         })
 
