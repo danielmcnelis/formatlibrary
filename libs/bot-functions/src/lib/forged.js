@@ -1,18 +1,76 @@
 import axios from "axios"
-import { Card, ForgedInventory, ForgedPrint, Status } from "@fl/models"
+import { Artwork, Card, ForgedInventory, ForgedPrint, Status } from "@fl/models"
 import { Op } from "sequelize"
 import { emojis } from '@fl/bot-emojis'
 import { convertArrayToObject } from "./utility"
 
 // GET FORGED ISSUES
 export const getForgedIssues = async (player, deckArr, format) => {
-    console.log('getForgedIssues()')
     const deck = convertArrayToObject(deckArr)   
     const cardIds = [...await ForgedPrint.findAll({ include: Card })].flatMap(fp => [fp.card.konamiCode, fp.card.ypdId, fp.card.artworkId])
-    const forbiddenIds = [...await Status.findAll({ where: { banlist: format.banlist, category: 'Forged', restriction: 'forbidden' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId, s.card.artworkId])
-    const limitedIds = [...await Status.findAll({ where: { banlist: format.banlist, category: 'Forged', restriction: 'limited' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId, s.card.artworkId])
-    const semiIds = [...await Status.findAll({ where: { banlist: format.banlist, category: 'Forged', restriction: 'semi-limited' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId, s.card.artworkId])
+    const artworkIds = []
+    for (let i = 0; i < cardIds.length; i++) {
+        const cardId = cardIds[i]
+        const artworks = await Artwork.findAll({
+            where: {
+                cardId
+            }
+        })
+
+        for (let j = 0; j < artworks.length; j++) {
+            const artwork = artworks[j]
+            artworkIds.push(artwork.artworkId)
+        }
+    }
     
+    const forbiddenCardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: 'Forged', restriction: 'forbidden' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId, s.card.artworkId])
+    const forbiddenArtworkIds = []
+    for (let i = 0; i < forbiddenCardIds.length; i++) {
+        const forbiddenCardId = forbiddenCardIds[i]
+        const artworks = await Artwork.findAll({
+            where: {
+                cardId: forbiddenCardId
+            }
+        })
+
+        for (let j = 0; j < artworks.length; j++) {
+            const artwork = artworks[j]
+            forbiddenArtworkIds.push(artwork.artworkId)
+        }
+    }
+    
+    const limitedCardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: 'Forged', restriction: 'limited' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId, s.card.artworkId])
+    const limitedArtworkIds = []
+    for (let i = 0; i < limitedCardIds.length; i++) {
+        const limitedCardId = limitedCardIds[i]
+        const artworks = await Artwork.findAll({
+            where: {
+                cardId: limitedCardId
+            }
+        })
+
+        for (let j = 0; j < artworks.length; j++) {
+            const artwork = artworks[j]
+            limitedArtworkIds.push(artwork.artworkId)
+        }
+    }
+    
+    const semiLimitedCardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: 'Forged', restriction: 'semi-limited' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId, s.card.artworkId])
+    const semiLimitedArtworkIds = []
+    for (let i = 0; i < semiLimitedCardIds.length; i++) {
+        const semiLimitedCardId = semiLimitedCardIds[i]
+        const artworks = await Artwork.findAll({
+            where: {
+                cardId: semiLimitedCardId
+            }
+        })
+
+        for (let j = 0; j < artworks.length; j++) {
+            const artwork = artworks[j]
+            semiLimitedArtworkIds.push(artwork.artworkId)
+        }
+    }
+
     const illegalCards = []
     const forbiddenCards = []
     const limitedCards = []
@@ -27,22 +85,22 @@ export const getForgedIssues = async (player, deckArr, format) => {
         let konamiCode = keys[i]
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode 
         if (konamiCode === '00000000' && format.name === 'Advanced') continue
-        const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
+        const artwork = await Artwork.findOne({ where: { [Op.or]: { artworkId: konamiCode } } })
 
-        totalQuantities[card.name] = deck[key]
+        totalQuantities[artwork.cardName] = deck[key]
 
         if (!cardIds.includes(konamiCode)) {
-            if (card) {
-                illegalCards.push(card.name)
+            if (artwork) {
+                illegalCards.push(artwork.cardName)
             } else {
                 unrecognizedCards.push(konamiCode)
             }
-        } else if (forbiddenIds.includes(konamiCode)) {
-            if (card) forbiddenCards.push(card.name)
-        } else if ((format.isHighlander || limitedIds.includes(konamiCode)) && deck[key] > 1) {
-            if (card) limitedCards.push(card.name)
-        } else if (semiIds.includes(konamiCode) && deck[key] > 2) {
-            if (card) semiLimitedCards.push(card.name)
+        } else if (forbiddenCardIds.includes(konamiCode)) {
+            if (artwork) forbiddenCards.push(artwork.cardName)
+        } else if ((format.isHighlander || limitedCardIds.includes(konamiCode)) && deck[key] > 1) {
+            if (artwork) limitedCards.push(artwork.cardName)
+        } else if (semiLimitedCardIds.includes(konamiCode) && deck[key] > 2) {
+            if (artwork) semiLimitedCards.push(artwork.cardName)
         }
     }
 

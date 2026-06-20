@@ -6,7 +6,7 @@ const Canvas = require('canvas')
 import { ActionRowBuilder, EmbedBuilder, AttachmentBuilder, StringSelectMenuBuilder } from 'discord.js'
 import { Op } from 'sequelize'
 import axios from 'axios'
-import { ApiRequests, Event, Match, Pairing, Replay, Deck, Alius, Card, Membership, Player, Print, Role, Series, Server, Set, Status, Tournament } from '@fl/models'
+import { ApiRequests, Artwork, Event, Match, Pairing, Replay, Deck, Alius, Card, Membership, Player, Print, Role, Series, Server, Set, Status, Tournament } from '@fl/models'
 import { emojis, rarities } from '@fl/bot-emojis'
 import { config } from '@fl/config'
 import { HeadObjectCommand, S3Client } from '@aws-sdk/client-s3'
@@ -313,7 +313,9 @@ export const drawDeck = async (ydk) => {
     for (let i = 0; i < mainArr.length; i++) {
         let konamiCode = mainArr[i]
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-        const card = await Card.findOne({ where: { [Op.or]: {konamiCode: konamiCode, ypdId: konamiCode, artworkId: konamiCode}}})
+        const artwork = await Artwork.findOne({ where: { artworkId: konamiCode }, include: Card })
+        const card = artwork.card
+        // const card = await Card.findOne({ where: { [Op.or]: {konamiCode: konamiCode, ypdId: konamiCode, artworkId: konamiCode}}})
         if (!card) continue
         main.push(card)
     }
@@ -321,7 +323,9 @@ export const drawDeck = async (ydk) => {
     for (let i = 0; i < sideArr.length; i++) {
         let konamiCode = sideArr[i]
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-        const card = await Card.findOne({ where: { konamiCode: konamiCode }})
+        const artwork = await Artwork.findOne({ where: { artworkId: konamiCode }, include: Card })
+        const card = artwork.card
+        // const card = await Card.findOne({ where: { konamiCode: konamiCode }})
         if (!card) continue
         side.push(card)
     }
@@ -329,7 +333,9 @@ export const drawDeck = async (ydk) => {
     for (let i = 0; i < extraArr.length; i++) {
         let konamiCode = extraArr[i]
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-        const card = await Card.findOne({ where: { konamiCode: konamiCode }})
+        const artwork = await Artwork.findOne({ where: { artworkId: konamiCode }, include: Card })
+        const card = artwork.card
+        // const card = await Card.findOne({ where: { konamiCode: konamiCode }})
         if (!card) continue
         extra.push(card)
     }

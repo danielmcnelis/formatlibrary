@@ -5,7 +5,7 @@
 import axios from 'axios'
 const FuzzySet = require('fuzzyset')
 import { Op } from 'sequelize'
-import { Card, Format, Status, Deck, DeckType } from '@fl/models'
+import { Artwork, Card, Format, Status, Deck, DeckType } from '@fl/models'
 import { convertArrayToObject, fetchSkillCardNames, findCard } from './utility.js'
 
 // COMPARE DECKS
@@ -69,15 +69,118 @@ export const getIssues = async (deckArr, format) => {
     const day = now.getDate().toString().padStart(2, '0')
     const formatDate = format.name === 'Advanced' || format.name === 'Traditional' ? `${year}-${month}-${day}` : format.date
 
-    const cardIds = format.category === 'Custom' ? [...await Card.findAll()].flatMap(c => [c.konamiCode, c.ypdId, c.artworkId]) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: formatDate } }})].flatMap(c => [c.konamiCode, c.ypdId, c.artworkId])
-    const forbiddenIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'forbidden' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId, s.card.artworkId])
-    const limitedIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId, s.card.artworkId])
-    const semiIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'semi-limited' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId, s.card.artworkId])
-    
-    const limited1Ids = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-1' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId, s.card.artworkId])
-    const limited2Ids = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-2' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId, s.card.artworkId])
-    const limited3Ids = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-3' }, include: Card })].flatMap(s => [s.card.konamiCode, s.card.ydpId, s.card.artworkId])
-    
+    const cardIds = format.category === 'Custom' ? [...await Artwork.findAll()].flatMap(a => [a.artworkId]) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: formatDate } }})].flatMap(c => [c.konamiCode, c.ypdId, c.artworkId])
+    const artworkIds = []
+    for (let i = 0; i < cardIds.length; i++) {
+        const cardId = cardIds[i]
+        const artworks = await Artwork.findAll({
+            where: {
+                cardId
+            }
+        })
+
+        for (let j = 0; j < artworks.length; j++) {
+            const artwork = artworks[j]
+            artworkIds.push(artwork.artworkId)
+        }
+    }
+
+    const forbiddenCardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'forbidden' } })].map((s => s.cardId))
+    const forbiddenArtworkIds = []
+    for (let i = 0; i < forbiddenCardIds.length; i++) {
+        const forbiddenCardId = forbiddenCardIds[i]
+        const artworks = await Artwork.findAll({
+            where: {
+                cardId: forbiddenCardId
+            }
+        })
+
+        for (let j = 0; j < artworks.length; j++) {
+            const artwork = artworks[j]
+            forbiddenArtworkIds.push(artwork.artworkId)
+        }
+    }
+
+    const limitedCardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited' } })].map((s => s.cardId))
+    const limitedArtworkIds = []
+    for (let i = 0; i < limitedCardIds.length; i++) {
+        const limitedCardId = limitedCardIds[i]
+        const artworks = await Artwork.findAll({
+            where: {
+                cardId: limitedCardId
+            }
+        })
+
+        for (let j = 0; j < artworks.length; j++) {
+            const artwork = artworks[j]
+            limitedArtworkIds.push(artwork.artworkId)
+        }
+    }
+
+    const semiLimitedCardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'semi-limited' } })].map((s => s.cardId))
+    const semiLimitedArtworkIds = []
+    for (let i = 0; i < semiLimitedCardIds.length; i++) {
+        const semiLimitedCardId = semiLimitedCardIds[i]
+        const artworks = await Artwork.findAll({
+            where: {
+                cardId: semiLimitedCardId
+            }
+        })
+
+        for (let j = 0; j < artworks.length; j++) {
+            const artwork = artworks[j]
+            semiLimitedArtworkIds.push(artwork.artworkId)
+        }
+    }
+
+    const limited1CardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-1' } })].map((s => s.cardId))
+    const limited1ArtworkIds = []
+    for (let i = 0; i < limited1CardIds.length; i++) {
+        const limited1CardId = limited1CardIds[i]
+        const artworks = await Artwork.findAll({
+            where: {
+                cardId: limited1CardId
+            }
+        })
+
+        for (let j = 0; j < artworks.length; j++) {
+            const artwork = artworks[j]
+            limited1ArtworkIds.push(artwork.artworkId)
+        }
+    }
+
+    const limited2CardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-2' } })].map((s => s.cardId))
+    const limited2ArtworkIds = []
+    for (let i = 0; i < limited2CardIds.length; i++) {
+        const limited2CardId = limited2CardIds[i]
+        const artworks = await Artwork.findAll({
+            where: {
+                cardId: limited2CardId
+            }
+        })
+
+        for (let j = 0; j < artworks.length; j++) {
+            const artwork = artworks[j]
+            limited2ArtworkIds.push(artwork.artworkId)
+        }
+    }
+
+    const limited3CardIds = [...await Status.findAll({ where: { banlist: format.banlist, category: format.category, restriction: 'limited-3' } })].map((s => s.cardId))
+    const limited3ArtworkIds = []
+    for (let i = 0; i < limited3CardIds.length; i++) {
+        const limited3CardId = limited3CardIds[i]
+        const artworks = await Artwork.findAll({
+            where: {
+                cardId: limited3CardId
+            }
+        })
+
+        for (let j = 0; j < artworks.length; j++) {
+            const artwork = artworks[j]
+            limited3ArtworkIds.push(artwork.artworkId)
+        }
+    }
+
     const illegalCards = []
     const forbiddenCards = []
     const limitedCards = []
@@ -98,33 +201,34 @@ export const getIssues = async (deckArr, format) => {
         let konamiCode = keys[i]
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode 
         if (konamiCode === '00000000' && format.name === 'Advanced') continue
-        if (!cardIds.includes(konamiCode)) {
-            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
-            if (card) {
-                illegalCards.push(card.name)
+        if (!artworkIds.includes(konamiCode)) {
+            const artwork = await Artwork.findOne({ where: { artworkId: konamiCode }, include: Card })
+
+            if (artwork) {
+                illegalCards.push(artwork.cardName)
             } else {
                 unrecognizedCards.push(konamiCode)
             }
-        } else if (forbiddenIds.includes(konamiCode)) {
-            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
-            if (card) forbiddenCards.push(card.name)
-        } else if ((format.isHighlander || limitedIds.includes(konamiCode)) && deck[key] > 1) {
-            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
-            if (card) limitedCards.push(card.name)
-        } else if (semiIds.includes(konamiCode) && deck[key] > 2) {
-            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
-            if (card) semiLimitedCards.push(card.name)
-        } else if (limited1Ids.includes(konamiCode)) {
-            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
-            if (card) limited1Cards.push(card.name)
+        } else if (forbiddenArtworkIds.includes(konamiCode)) {
+            const artwork = await Artwork.findOne({ where: { artworkId: konamiCode } })
+            if (artwork) forbiddenCards.push(artwork.cardName)
+        } else if ((format.isHighlander || limitedArtworkIds.includes(konamiCode)) && deck[key] > 1) {
+            const artwork = await Artwork.findOne({ where: { artworkId: konamiCode } })
+            if (artwork) limitedCards.push(artwork.cardName)
+        } else if (semiLimitedArtworkIds.includes(konamiCode) && deck[key] > 2) {
+            const artwork = await Artwork.findOne({ where: { artworkId: konamiCode } })
+            if (artwork) semiLimitedCards.push(artwork.cardName)
+        } else if (limited1ArtworkIds.includes(konamiCode)) {
+            const artwork = await Artwork.findOne({ where: { artworkId: konamiCode } })
+            if (artwork) limited1Cards.push(artwork.cardName)
             limited1Count += deck[key]
-        } else if (limited2Ids.includes(konamiCode)) {
-            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
-            if (card) limited2Cards.push(card.name)
+        } else if (limited2ArtworkIds.includes(konamiCode)) {
+            const artwork = await Artwork.findOne({ where: { artworkId: konamiCode } })
+            if (artwork) limited2Cards.push(artwork.cardName)
             limited2Count += deck[key]
-        } else if (limited3Ids.includes(konamiCode)) {
-            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
-            if (card) limited3Cards.push(card.name)
+        } else if (limited3ArtworkIds.includes(konamiCode)) {
+            const artwork = await Artwork.findOne({ where: { artworkId: konamiCode } })
+            if (artwork) limited3Cards.push(artwork.cardName)
             limited3Count += deck[key]
         }
     }
