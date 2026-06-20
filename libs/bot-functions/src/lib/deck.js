@@ -72,7 +72,8 @@ export const getIssues = async (deckArr, format) => {
     const cardIds = format.category === 'Custom' ? [...await Artwork.findAll()].flatMap(a => [a.artworkId]) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: formatDate } }})].flatMap(c => [c.konamiCode, c.ypdId, c.artworkId])
     const artworkIds = []
     for (let i = 0; i < cardIds.length; i++) {
-        const cardId = cardIds[i]
+        let cardId = cardIds[i]
+        while (cardId.length < 8) cardId = '0' + cardId 
         console.log('cardId', cardId)
         if (!cardId) continue
         const artworks = await Artwork.findAll({

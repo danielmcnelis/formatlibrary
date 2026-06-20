@@ -10,7 +10,8 @@ export const getForgedIssues = async (player, deckArr, format) => {
     const cardIds = [...await ForgedPrint.findAll({ include: Card })].flatMap(fp => [fp.card.konamiCode, fp.card.ypdId, fp.card.artworkId])
     const artworkIds = []
     for (let i = 0; i < cardIds.length; i++) {
-        const cardId = cardIds[i]
+        let cardId = cardIds[i]
+        while (cardId.length < 8) cardId = '0' + cardId 
         console.log('cardId', cardId)
         if (!cardId) continue
         const artworks = await Artwork.findAll({
