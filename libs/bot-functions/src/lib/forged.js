@@ -106,7 +106,7 @@ export const getForgedIssues = async (player, deckArr, format) => {
         if (konamiCode === '00000000' && format.name === 'Advanced') continue
         const artwork = await Artwork.findOne({ where: { [Op.or]: { artworkId: konamiCode } } })
 
-        totalQuantities[artwork.cardName] = deck[key]
+        totalQuantities[artwork?.cardName] = deck[key]
 
         if (!konamiIds.includes(konamiCode)) {
             if (artwork) {
