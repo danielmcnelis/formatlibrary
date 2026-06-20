@@ -73,12 +73,13 @@ export const getIssues = async (deckArr, format) => {
     const artworkIds = []
     for (let i = 0; i < konamiIds.length; i++) {
         let konamiId = konamiIds[i]
-        const card = await Card.findOne({ where: { konamiCode: konamiId }})
+        const card = await Card.findOne({ where: { konamiCode: konamiId }, attributes: ['id', 'konamiCode']})
         
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
-            }
+            },
+            attributes: ['id', 'cardId', 'artworkId']
         })
 
         for (let j = 0; j < artworks.length; j++) {
@@ -91,12 +92,13 @@ export const getIssues = async (deckArr, format) => {
     const forbiddenArtworkIds = []
     for (let i = 0; i < forbiddenCardIds.length; i++) {
         const forbiddenCardId = forbiddenCardIds[i]
-        const card = await Card.findOne({ where: { konamiCode: forbiddenCardId }})
+        const card = await Card.findOne({ where: { konamiCode: forbiddenCardId }, attributes: ['id', 'konamiCode']})
         
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
-            }
+            },
+            attributes: ['id', 'cardId', 'artworkId']
         })
 
         for (let j = 0; j < artworks.length; j++) {
@@ -109,12 +111,13 @@ export const getIssues = async (deckArr, format) => {
     const limitedArtworkIds = []
     for (let i = 0; i < limitedCardIds.length; i++) {
         const limitedCardId = limitedCardIds[i]
-        const card = await Card.findOne({ where: { konamiCode: limitedCardId }})
+        const card = await Card.findOne({ where: { konamiCode: limitedCardId }, attributes: ['id', 'konamiCode']})
         
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
-            }
+            },
+            attributes: ['id', 'cardId', 'artworkId']
         })
 
         for (let j = 0; j < artworks.length; j++) {
@@ -127,12 +130,13 @@ export const getIssues = async (deckArr, format) => {
     const semiLimitedArtworkIds = []
     for (let i = 0; i < semiLimitedCardIds.length; i++) {
         const semiLimitedCardId = semiLimitedCardIds[i]
-        const card = await Card.findOne({ where: { konamiCode: semiLimitedCardId }})
+        const card = await Card.findOne({ where: { konamiCode: semiLimitedCardId }, attributes: ['id', 'konamiCode']})
         
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
-            }
+            },
+            attributes: ['id', 'cardId', 'artworkId']
         })
 
         for (let j = 0; j < artworks.length; j++) {
@@ -145,12 +149,13 @@ export const getIssues = async (deckArr, format) => {
     const limited1ArtworkIds = []
     for (let i = 0; i < limited1CardIds.length; i++) {
         const limited1CardId = limited1CardIds[i]
-        const card = await Card.findOne({ where: { konamiCode: limited1CardId }})
+        const card = await Card.findOne({ where: { konamiCode: limited1CardId }, attributes: ['id', 'konamiCode']})
         
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
-            }
+            },
+            attributes: ['id', 'cardId', 'artworkId']
         })
 
         for (let j = 0; j < artworks.length; j++) {
@@ -163,12 +168,13 @@ export const getIssues = async (deckArr, format) => {
     const limited2ArtworkIds = []
     for (let i = 0; i < limited2CardIds.length; i++) {
         const limited2CardId = limited2CardIds[i]
-        const card = await Card.findOne({ where: { konamiCode: limited2CardId }})
+        const card = await Card.findOne({ where: { konamiCode: limited2CardId }, attributes: ['id', 'konamiCode']})
         
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
-            }
+            },
+            attributes: ['id', 'cardId', 'artworkId']
         })
 
         for (let j = 0; j < artworks.length; j++) {
@@ -181,12 +187,13 @@ export const getIssues = async (deckArr, format) => {
     const limited3ArtworkIds = []
     for (let i = 0; i < limited3CardIds.length; i++) {
         const limited3CardId = limited3CardIds[i]
-        const card = await Card.findOne({ where: { konamiCode: limited3CardId }})
+        const card = await Card.findOne({ where: { konamiCode: limited3CardId }, attributes: ['id', 'konamiCode']})
         
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
-            }
+            },
+            attributes: ['id', 'cardId', 'artworkId']
         })
 
         for (let j = 0; j < artworks.length; j++) {
