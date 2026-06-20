@@ -99,7 +99,7 @@ export const getIssues = async (deckArr, format) => {
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode 
         if (konamiCode === '00000000' && format.name === 'Advanced') continue
         if (!cardIds.includes(konamiCode)) {
-            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
+            const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode, artworkId: konamiCode } } })
             if (card) {
                 illegalCards.push(card.name)
             } else {

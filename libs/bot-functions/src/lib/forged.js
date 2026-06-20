@@ -27,7 +27,7 @@ export const getForgedIssues = async (player, deckArr, format) => {
         let konamiCode = keys[i]
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode 
         if (konamiCode === '00000000' && format.name === 'Advanced') continue
-        const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode } } })
+        const card = await Card.findOne({ where: { [Op.or]: { konamiCode: konamiCode, ypdId: konamiCode, artworkId: konamiCode } } })
 
         totalQuantities[card.name] = deck[key]
 
