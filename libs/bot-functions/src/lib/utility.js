@@ -313,6 +313,7 @@ export const drawDeck = async (ydk) => {
     for (let i = 0; i < mainArr.length; i++) {
         let konamiCode = mainArr[i]
         // while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+        konamiCode = konamiCode.replace(/^0+/, '')
         const artwork = await Artwork.findOne({ where: { artworkId: konamiCode }, include: Card })
         const card = artwork.card
         // const card = await Card.findOne({ where: { [Op.or]: {konamiCode: konamiCode, ypdId: konamiCode, artworkId: konamiCode}}})
