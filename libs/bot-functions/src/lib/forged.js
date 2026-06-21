@@ -115,6 +115,7 @@ export const getForgedIssues = async (player, deckArr, format) => {
             totalQuantities[artwork?.cardName] = deck[key]
             if (!konamiIds.includes(konamiCode)) {
                 if (artwork) {
+                    console.log('illegal card', konamiCode)
                     illegalCards.push(artwork.cardName)
                 } else {
                     unrecognizedCards.push(konamiCode)
