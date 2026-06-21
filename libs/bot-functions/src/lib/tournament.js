@@ -3153,7 +3153,6 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
             await updateApiRequests(server)
 
             if (status === 200) {  
-                await tournament.update({ state: 'complete' }) 
                 interaction.channel.send({ content: `Congrats! The results of ${tournament.name} ${tournament.logo} have been finalized on Challonge.com.`})
             } else {
                 interaction.channel.send({ content: `Unable to finalize ${tournament.name} ${tournament.logo} on Challonge.com.`})
