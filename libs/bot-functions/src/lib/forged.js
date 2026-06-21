@@ -74,6 +74,7 @@ export const getForgedIssues = async (player, deckArr, format) => {
     const semiLimitedArtworkIds = []
     for (let i = 0; i < semiLimitedCardIds.length; i++) {
         const semiLimitedCardId = semiLimitedCardIds[i]
+        console.log('semiLimitedCardId', semiLimitedCardId)
         const card = await Card.findOne({ where: {
             konamiCode: semiLimitedCardId
         }})
@@ -99,6 +100,7 @@ export const getForgedIssues = async (player, deckArr, format) => {
     const totalQuantities = {}
 
     const keys = Object.keys(deck)
+    console.log('keys', keys)
     for (let i = 0; i < keys.length; i++) {
         const key = keys[i]
         let konamiCode = keys[i]
