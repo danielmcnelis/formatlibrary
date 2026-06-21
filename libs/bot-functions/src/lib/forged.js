@@ -104,25 +104,28 @@ export const getForgedIssues = async (player, deckArr, format) => {
     for (let i = 0; i < keys.length; i++) {
         const key = keys[i]
         let konamiCode = keys[i]
-        if (konamiCode === '00000000' && format.name === 'Advanced') continue
+        konamiCode = konamiCode.replace(/^0+/, '')
         const artwork = await Artwork.findOne({ where: { [Op.or]: { artworkId: konamiCode } } })
         console.log('konamiCode:', konamiCode, 'artwork?.cardName:', artwork?.cardName)
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode 
 
-        totalQuantities[artwork?.cardName] = deck[key]
-
-        if (!konamiIds.includes(konamiCode)) {
-            if (artwork) {
-                illegalCards.push(artwork.cardName)
-            } else {
-                unrecognizedCards.push(konamiCode)
+        if (!artwork) {
+            unrecognizedCards.push(konamiCode)
+        } else {
+            totalQuantities[artwork?.cardName] = deck[key]
+            if (!konamiIds.includes(konamiCode)) {
+                if (artwork) {
+                    illegalCards.push(artwork.cardName)
+                } else {
+                    unrecognizedCards.push(konamiCode)
+                }
+            } else if (forbiddenCardIds.includes(konamiCode)) {
+                if (artwork) forbiddenCards.push(artwork.cardName)
+            } else if ((format.isHighlander || limitedCardIds.includes(konamiCode)) && deck[key] > 1) {
+                if (artwork) limitedCards.push(artwork.cardName)
+            } else if (semiLimitedCardIds.includes(konamiCode) && deck[key] > 2) {
+                if (artwork) semiLimitedCards.push(artwork.cardName)
             }
-        } else if (forbiddenCardIds.includes(konamiCode)) {
-            if (artwork) forbiddenCards.push(artwork.cardName)
-        } else if ((format.isHighlander || limitedCardIds.includes(konamiCode)) && deck[key] > 1) {
-            if (artwork) limitedCards.push(artwork.cardName)
-        } else if (semiLimitedCardIds.includes(konamiCode) && deck[key] > 2) {
-            if (artwork) semiLimitedCards.push(artwork.cardName)
         }
     }
 
