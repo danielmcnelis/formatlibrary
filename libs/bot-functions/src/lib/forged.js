@@ -125,7 +125,9 @@ export const getForgedIssues = async (player, deckArr, format) => {
         }
     }
 
+    console.log('totalQuantities', totalQuantities)
     const quantityKeys = Object.keys(totalQuantities)
+    console.log('quantityKeys', quantityKeys)
     const zeroCopiesOwned = []
     const oneCopyOwned = []
     const twoCopiesOwned = []
