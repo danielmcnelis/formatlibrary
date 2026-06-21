@@ -273,7 +273,7 @@ export default {
                 }
             }
             
-            if (isSeasonal) {
+            if (isSeasonal && format.name !== 'Forged in Chaos') {
                 await updateSeasonalStats(winnerStats, loserStats)
             } else if (!isRated && !isTournament) {
                 return await interaction.editReply({ content: `Sorry, outside of tournaments and war leagues, rated matches may only be played via the official rated pool.`})
