@@ -324,6 +324,7 @@ export const drawDeck = async (ydk) => {
     for (let i = 0; i < sideArr.length; i++) {
         let konamiCode = sideArr[i]
         // while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+        konamiCode = konamiCode.replace(/^0+/, '')
         const artwork = await Artwork.findOne({ where: { artworkId: konamiCode }, include: Card })
         const card = artwork.card
         // const card = await Card.findOne({ where: { konamiCode: konamiCode }})
@@ -334,6 +335,7 @@ export const drawDeck = async (ydk) => {
     for (let i = 0; i < extraArr.length; i++) {
         let konamiCode = extraArr[i]
         // while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+        konamiCode = konamiCode.replace(/^0+/, '')
         const artwork = await Artwork.findOne({ where: { artworkId: konamiCode }, include: Card })
         const card = artwork.card
         // const card = await Card.findOne({ where: { konamiCode: konamiCode }})
