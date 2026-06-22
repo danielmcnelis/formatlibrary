@@ -379,8 +379,20 @@ export const composeBlogPost = async (interaction, event) => {
     
             for (let i = 0; i < mainKonamiCodes.length; i++) {
                 let konamiCode = mainKonamiCodes[i]
-                while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-                const card = await Card.findOne({ where: { konamiCode }})
+                // while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+                konamiCode = konamiCode.replace(/^0+/, '')
+                const artwork = await Artwork.findOne({
+                    where: {
+                        artworkId: konamiCode
+                    }
+                })
+
+                const card = await Card.findOne({ 
+                    where: { 
+                        id: artwork?.cardId
+                    }
+                })
+                
                 if (!card) continue
                 main.push(card)
             }
@@ -486,13 +498,17 @@ export const composeThumbnails = async (interaction, event) => {
 
         for (let i = 0; i < mainKonamiCodes.length; i++) {
             let konamiCode = mainKonamiCodes[i]
-            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+            // while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+            konamiCode = konamiCode.replace(/^0+/, '')
+            const artwork = await Artwork.findOne({
+                where: {
+                    artworkId: konamiCode
+                }
+            })
+
             const card = await Card.findOne({ 
                 where: { 
-                    [Op.or]: {
-                        konamiCode: konamiCode,
-                        ypdId: mainKonamiCodes[i]
-                    }
+                    id: artwork?.cardId
                 }
             })
 
