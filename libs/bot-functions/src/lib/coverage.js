@@ -387,6 +387,8 @@ export const composeBlogPost = async (interaction, event) => {
                     }
                 })
 
+                console.log(`konamiCode`, konamiCode, `artwork?.cardName`, artwork?.cardName)
+
                 const card = await Card.findOne({ 
                     where: { 
                         id: artwork?.cardId

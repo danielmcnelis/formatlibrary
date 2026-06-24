@@ -222,6 +222,7 @@ export const getIssues = async (deckArr, format) => {
         let konamiCode = keys[i]
         // while (konamiCode.length < 8) konamiCode = '0' + konamiCode 
         if (konamiCode === '00000000' && format.name === 'Advanced') continue
+        konamiCode = konamiCode.replace(/^0+/, '')
         if (!artworkIds.includes(konamiCode)) {
             const artwork = await Artwork.findOne({ where: { artworkId: konamiCode }, include: Card })
 
