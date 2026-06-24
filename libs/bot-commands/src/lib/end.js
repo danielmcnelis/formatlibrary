@@ -41,7 +41,8 @@ export default {
             if (!tournament) return
             
             if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `Please wait.`})
-            if (tournament.state === 'complete' || tournament.state === 'topcut') return await interaction.editReply({ content: `This tournament has already ended.`})
+            if (tournament.state === 'complete') return await interaction.editReply({ content: `This tournament has already ended.`})
+            if (tournament.state === 'topcut') return await interaction.editReply({ content: `Please end the top cut tournament instead.`})
             const tournamentId = tournament.id
 
             // Finalize tournament on Challonge.com if not yet finalized

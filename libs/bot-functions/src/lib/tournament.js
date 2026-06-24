@@ -3139,7 +3139,8 @@ export const initiateEndTournament = async (interaction, tournamentId) => {
     const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
     const tournament = await Tournament.findOne({ where: { id: tournamentId }})    
     if (tournament.state === 'pending' || tournament.state === 'standby') return await interaction.editReply({ content: `This tournament has not begun.`})
-    if (tournament.state === 'complete' || tournament.state === 'topcut') return await interaction.editReply({ content: `This tournament has already ended.`})
+    if (tournament.state === 'complete') return await interaction.editReply({ content: `This tournament has already ended.`})
+    if (tournament.state === 'topcut') return await interaction.editReply({ content: `Please end the top cut tournament instead.`})
 
     // Finalize tournament on Challonge.com if not yet finalized
     try {

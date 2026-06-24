@@ -132,6 +132,7 @@ export default {
                             const placement = await getParticipantFinalRank(server, event.topCutTournament, standing.name)
 
                             if (!placement) {
+                                console.log('here 135')
                                 console.log(`Warning (!) No placement found: ${player.name}`)
                             } else if (placement === deck.placement) {
                                 console.log(`${player.name}'s deck already has the correct placement (${placement})`)
@@ -149,6 +150,7 @@ export default {
                             const placement = standing && standing.rank ? parseInt(standing.rank.replace(/^\D+/g, '')) : null
                             
                             if (!placement) {
+                                console.log('here 152')
                                 console.log(`Warning (!) No placement found: ${player.name}`)
                             } else if (placement === deck.placement) {
                                 console.log(`${player.name}'s deck already has the correct placement (${placement})`)
