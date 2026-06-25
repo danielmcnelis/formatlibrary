@@ -93,7 +93,16 @@ export default {
             }
 
             if (!format) return await interaction.editReply({ content: `Try using **/manual** in channels like: <#414575168174948372> or <#629464112749084673>.`})
-            
+
+            const pairing = await Pairing.findOne({
+                where: {
+                    formatId: format.id,
+                    status: 'active',
+                    playerAId: {[Op.or]: [winningPlayer.id, losingPlayer.id]},
+                    playerBId: {[Op.or]: [winningPlayer.id, losingPlayer.id]}
+                }
+            })
+
             let winnerStats = await Stats.findOne({
                 where: {
                     playerId: winningPlayer.id, 
@@ -148,7 +157,7 @@ export default {
             const activeTournament = await Tournament.count({ where: { state: {[Op.iLike]: '%underway%'}, serverId: interaction.guildId, formatName: {[Op.or]: [format.name, 'Multiple']} }}) 
             let isTournament, winningEntry, losingEntry, tournament, match, challongeMatch
 
-            if (activeTournament) {
+            if (activeTournament && !pairing) {
                 const loserTournamentIds = [...await Entry.findByPlayerIdAndFormatId(losingPlayer.id, format.id)].map((e) => e.tournamentId)
                 const winnerTournamentIds = [...await Entry.findByPlayerIdAndFormatId(winningPlayer.id, format.id)].map((e) => e.tournamentId)
                 const commonTournamentIds = loserTournamentIds.filter((id) => winnerTournamentIds.includes(id))
@@ -189,15 +198,6 @@ export default {
                 }
             }
             
-            const pairing = await Pairing.findOne({
-                where: {
-                    formatId: format.id,
-                    status: 'active',
-                    playerAId: {[Op.or]: [winningPlayer.id, losingPlayer.id]},
-                    playerBId: {[Op.or]: [winningPlayer.id, losingPlayer.id]}
-                }
-            })
-
             const isSeasonal = pairing && format.useSeasonalElo && format.seasonResetDate < now
             let isRated 
             

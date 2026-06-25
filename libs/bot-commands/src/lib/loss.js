@@ -81,6 +81,15 @@ export default {
 
             if (!format) return await interaction.editReply({ content: `Try using **/loss** in channels like: <#414575168174948372> or <#629464112749084673>.`})
             
+            const pairing = await Pairing.findOne({
+                where: {
+                    formatId: format.id,
+                    status: 'active',
+                    playerAId: {[Op.or]: [winningPlayer.id, losingPlayer.id]},
+                    playerBId: {[Op.or]: [winningPlayer.id, losingPlayer.id]}
+                }
+            })
+
             let winnerStats = await Stats.findOne({
                 where: {
                     playerId: winningPlayer.id,
@@ -131,11 +140,11 @@ export default {
                     isInternal: server.hasInternalLadder
                 })
             }
-
-            const activeTournament = await Tournament.count({ where: { state: {[Op.iLike]: '%underway%'}, serverId: interaction.guildId, formatName: {[Op.or]: [format.name, 'Multiple']} }}) 
+            
             let isTournament, winningEntry, losingEntry, tournament, match, challongeMatch, openChallongeMatch
-
-            if (activeTournament) {
+            const activeTournament = await Tournament.count({ where: { state: {[Op.iLike]: '%underway%'}, serverId: interaction.guildId, formatName: {[Op.or]: [format.name, 'Multiple']} }}) 
+            
+            if (activeTournament && !pairing) {
                 const loserTournamentIds = [...await Entry.findByPlayerIdAndFormatId(losingPlayer.id, format.id)].map((e) => e.tournamentId)
                 const winnerTournamentIds = [...await Entry.findByPlayerIdAndFormatId(winningPlayer.id, format.id)].map((e) => e.tournamentId)
                 const commonTournamentIds = loserTournamentIds.filter((id) => winnerTournamentIds.includes(id))
@@ -179,17 +188,8 @@ export default {
                 }
             }
 
-            const pairing = await Pairing.findOne({
-                where: {
-                    formatId: format.id,
-                    status: 'active',
-                    playerAId: {[Op.or]: [winningPlayer.id, losingPlayer.id]},
-                    playerBId: {[Op.or]: [winningPlayer.id, losingPlayer.id]}
-                }
-            })
-
             const isSeasonal = pairing && format.useSeasonalElo && format.seasonResetDate < now
-            let isRated 
+            let isRated
             
             if (isTournament) {
                 if (tournament.isRated) {
@@ -203,8 +203,6 @@ export default {
              
 
             if (isRated) { 
-                const origStatsWinner = winnerStats.elo
-                const origStatsLoser = loserStats.elo
                 const [winnerDelta, loserDelta, classicDelta] = format.name === 'Forged in Chaos' ?  await updateSeasonalStats(winnerStats, loserStats) : await updateGeneralStats(winnerStats, loserStats)
                 match = await Match.create({
                     winnerName: winningPlayer.name,
@@ -270,7 +268,6 @@ export default {
             } else if (!isRated && !isTournament) {
                 return await interaction.editReply({ content: `Sorry, outside of tournaments and war leagues, rated matches may only be played via the official rated pool.`})
             }
-
 
             if (!isTournament && pairing) {
                 const winnerIsPlayerA = pairing.playerAId === winningPlayer.id
