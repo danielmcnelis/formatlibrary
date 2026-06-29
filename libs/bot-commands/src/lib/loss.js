@@ -203,7 +203,7 @@ export default {
              
 
             if (isRated) { 
-                const [winnerDelta, loserDelta, classicDelta] = format.name === 'Forged in Chaos' ?  await updateSeasonalStats(winnerStats, loserStats) : await updateGeneralStats(winnerStats, loserStats)
+                const [winnerDelta, loserDelta, classicDelta] = format.name === 'Forged in Chaos' && isSeasonal ?  await updateSeasonalStats(winnerStats, loserStats) : await updateGeneralStats(winnerStats, loserStats)
                 match = await Match.create({
                     winnerName: winningPlayer.name,
                     winnerId: winningPlayer.id,
