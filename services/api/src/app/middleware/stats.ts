@@ -53,7 +53,6 @@ export const getSeasonalLeaderboard = async (req, res, next) => {
       where: {
         formatName: { [Op.iLike]: req.params.format.replace(' ', '_').replace('-', '_') },
         seasonalGames: { [Op.gte]: 3 },
-        serverId: '414551319031054346',
         '$player.isHidden$': false
       },
       attributes: [
