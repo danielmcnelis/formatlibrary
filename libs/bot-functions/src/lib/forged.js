@@ -106,7 +106,6 @@ export const getForgedIssues = async (player, deckArr, format) => {
         let konamiCode = keys[i]
         konamiCode = konamiCode.replace(/^0+/, '')
         const artwork = await Artwork.findOne({ where: { [Op.or]: { artworkId: konamiCode } } })
-        console.log('konamiCode:', konamiCode, 'artwork?.cardName:', artwork?.cardName)
         while (konamiCode.length < 8) konamiCode = '0' + konamiCode 
 
         if (!artwork) {

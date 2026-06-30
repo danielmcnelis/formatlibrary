@@ -998,17 +998,19 @@ export const getDeckData = async (filter) => {
 
     for (let i = 0; i < mainKonamiCodes.length; i++) {
       let konamiCode = mainKonamiCodes[i]
-      while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-      const card = await Card.findOne({
-        where: {
-            [Op.or]: {
-                konamiCode: konamiCode,
-                artworkId: mainKonamiCodes[i],
-                ypdId: mainKonamiCodes[i]
+      konamiCode = konamiCode.replace(/^0+/, '')
+        const artwork = await Artwork.findOne({
+            where: {
+                artworkId: konamiCode
             }
-        },
-        attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']
-      })
+        })
+
+        const card = await Card.findOne({ 
+            where: { 
+                id: artwork?.cardId
+            },
+            attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']
+        }) 
 
       if (!card) {
         continue
@@ -1035,16 +1037,19 @@ export const getDeckData = async (filter) => {
 
     for (let i = 0; i < extraKonamiCodes.length; i++) {
       let konamiCode = extraKonamiCodes[i]
-      while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-      const card = await Card.findOne({
-        where: {
-            [Op.or]: {
-                konamiCode: konamiCode,
-                ypdId: extraKonamiCodes[i]
+      konamiCode = konamiCode.replace(/^0+/, '')
+        const artwork = await Artwork.findOne({
+            where: {
+                artworkId: konamiCode
             }
-        },
-        attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']
-      })
+        })
+
+        const card = await Card.findOne({ 
+            where: { 
+                id: artwork?.cardId
+            },
+            attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']
+        }) 
 
       if (!card) continue
       extra.push(card)
@@ -1054,16 +1059,19 @@ export const getDeckData = async (filter) => {
 
     for (let i = 0; i < sideKonamiCodes.length; i++) {
       let konamiCode = sideKonamiCodes[i]
-      while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-      const card = await Card.findOne({
-        where: {
-            [Op.or]: {
-                konamiCode: konamiCode,
-                ypdId: sideKonamiCodes[i]
+      konamiCode = konamiCode.replace(/^0+/, '')
+        const artwork = await Artwork.findOne({
+            where: {
+                artworkId: konamiCode
             }
-        },
-        attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']
-      })
+        })
+
+        const card = await Card.findOne({ 
+            where: { 
+                id: artwork?.cardId
+            },
+            attributes: ['name', 'cleanName', 'id', 'artworkId', 'sortPriority']
+        }) 
 
       if (!card) continue
       side.push(card)
