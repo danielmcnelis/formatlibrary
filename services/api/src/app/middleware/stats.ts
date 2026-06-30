@@ -5,7 +5,7 @@ export const getClassicLeaderboard = async (req, res, next) => {
     try {
       const stats = await Stats.findAll({
         where: {
-          formatName: { [Op.iLike]: req.params.format.replace(' ', '_').replace('-', '_') },
+          formatName: { [Op.iLike]: req.params.format.replaceAll(' ', '_').replaceAll('-', '_') },
           games: { [Op.gte]: 3 },
           serverId: '414551319031054346',
           '$player.isHidden$': false
@@ -49,9 +49,11 @@ export const getGeneralLeaderboard = async (req, res, next) => {
 
 export const getSeasonalLeaderboard = async (req, res, next) => {
   try {
+    const formatName = req.params.format.replaceAll(' ', '_').replaceAll('-', '_')
+    console.log('formatName', formatName)
     const stats = await Stats.findAll({
       where: {
-        formatName: { [Op.iLike]: req.params.format.replace(' ', '_').replace('-', '_') },
+        formatName: { [Op.iLike]: req.params.format.replaceAll(' ', '_').replaceAll('-', '_') },
         seasonalGames: { [Op.gte]: 3 },
         '$player.isHidden$': false
       },
