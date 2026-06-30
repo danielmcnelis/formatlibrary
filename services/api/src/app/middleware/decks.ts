@@ -29,10 +29,16 @@ export const readDeckYdk = async (req, res, next) => {
 
         for (let i = 0; i < mainKonamiCodes.length; i++) {
             let konamiCode = mainKonamiCodes[i]
-            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+            konamiCode = konamiCode.replace(/^0+/, '')
+            const artwork = await Artwork.findOne({
+                where: {
+                    artworkId: konamiCode
+                }
+            })
+
             const card = await Card.findOne({ 
                 where: { 
-                    konamiCode: konamiCode
+                    id: artwork?.cardId
                 },
                 attributes: ['name', 'cleanName', 'id', 'konamiCode', 'artworkId', 'sortPriority'],
             })
@@ -43,10 +49,16 @@ export const readDeckYdk = async (req, res, next) => {
 
         for (let i = 0; i < extraKonamiCodes.length; i++) {
             let konamiCode = extraKonamiCodes[i]
-            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+            konamiCode = konamiCode.replace(/^0+/, '')
+            const artwork = await Artwork.findOne({
+                where: {
+                    artworkId: konamiCode
+                }
+            })
+
             const card = await Card.findOne({ 
                 where: { 
-                    konamiCode: konamiCode
+                    id: artwork?.cardId
                 },
                 attributes: ['name', 'cleanName', 'id', 'konamiCode', 'artworkId', 'sortPriority'],
             })
@@ -57,10 +69,16 @@ export const readDeckYdk = async (req, res, next) => {
 
         for (let i = 0; i < sideKonamiCodes.length; i++) {
             let konamiCode = sideKonamiCodes[i]
-            while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+            konamiCode = konamiCode.replace(/^0+/, '')
+            const artwork = await Artwork.findOne({
+                where: {
+                    artworkId: konamiCode
+                }
+            })
+
             const card = await Card.findOne({ 
                 where: { 
-                    konamiCode: konamiCode
+                    id: artwork?.cardId
                 },
                 attributes: ['name', 'cleanName', 'id', 'konamiCode', 'artworkId', 'sortPriority'],
             })
