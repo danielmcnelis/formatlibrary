@@ -16,6 +16,7 @@ export const LeaderBoard = () => {
     const [format, setFormat] = useState({})
     const [leaderboard, setLeaderboard] = useState([])
     const {id, statsType} = useParams()
+    console.log('statsType', statsType)
     // const videoPlaylistId = format?.videoPlaylistId
     const season = getSeason(new Date().getMonth())
 
@@ -42,6 +43,7 @@ export const LeaderBoard = () => {
         try {
             if (statsType === 'seasonal') {
                 const {data} = await axios.get(`/api/stats/seasonal-leaders/1000/${id.toLowerCase()}`)
+                console.log('data', data)
                 setLeaderboard(data)
             } else if (statsType === 'classic') {
                 const {data} = await axios.get(`/api/stats/classic-leaders/1000/${id.toLowerCase()}`)
