@@ -69,7 +69,7 @@ export const getIssues = async (deckArr, format) => {
     const day = now.getDate().toString().padStart(2, '0')
     const formatDate = format.name === 'Advanced' || format.name === 'Traditional' ? `${year}-${month}-${day}` : format.date
 
-    const konamiIds = format.category === 'Custom' ? [...await Card.findAll({ attributes: ["id", "konamiCode"] })].map(c => c.konamiCode) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: formatDate }}, attributes: ["id", "konamiCode", "ocgDate", "speedDate", "isTcgDate", "isOcgLegal", "isSpeedLegal", "tcgLegal"]})].map(c => c.konamiCode)
+    const konamiIds = format.category === 'Custom' ? [...await Card.findAll({ attributes: ["id", "konamiCode"] })].map(c => c.konamiCode) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: formatDate }}, attributes: ["id", "konamiCode", "ocgDate", "speedDate", "tcgDate", "isOcgLegal", "isSpeedLegal", "isTcgLegal"]})].map(c => c.konamiCode)
     const artworkIds = []
     for (let i = 0; i < konamiIds.length; i++) {
         let konamiId = konamiIds[i]
