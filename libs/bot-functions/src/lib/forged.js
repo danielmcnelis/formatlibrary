@@ -7,19 +7,22 @@ import { convertArrayToObject } from "./utility"
 // GET FORGED ISSUES
 export const getForgedIssues = async (player, deckArr, format) => {
     const deck = convertArrayToObject(deckArr)   
-    const konamiIds = [...await ForgedPrint.findAll({ include: Card })].map(fp => fp.card.konamiCode)
+    const konamiIds = [...await ForgedPrint.findAll({ include: {Model: Card, attributes: ['id', 'konamiCode'] } })].map(fp => fp.card.konamiCode)
     const artworkIds = []
     for (let i = 0; i < konamiIds.length; i++) {
         let konamiId = konamiIds[i]
-        console.log('konamiId', konamiId)
-        const card = await Card.findOne({ where: {
-            konamiCode: konamiId
-        }})
+        const card = await Card.findOne({ 
+            where: {
+                konamiCode: konamiId
+            }, 
+            attributes: ['id', 'konamiCode']
+        })
         
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
-            }
+            }, 
+            attributes: ['id', 'cardId', 'artworkId']
         })
 
         for (let j = 0; j < artworks.length; j++) {
@@ -32,15 +35,18 @@ export const getForgedIssues = async (player, deckArr, format) => {
     const forbiddenArtworkIds = []
     for (let i = 0; i < forbiddenCardIds.length; i++) {
         const forbiddenCardId = forbiddenCardIds[i]
-        console.log('forbiddenCardId', forbiddenCardId)
-        const card = await Card.findOne({ where: {
-            konamiCode: forbiddenCardId
-        }})
+        const card = await Card.findOne({ 
+            where: {
+                konamiCode: forbiddenCardId
+            }, 
+            attributes: ['id', 'konamiCode']
+        })
         
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
-            }
+            }, 
+            attributes: ['id', 'cardId', 'artworkId']
         })
 
         for (let j = 0; j < artworks.length; j++) {
@@ -53,15 +59,18 @@ export const getForgedIssues = async (player, deckArr, format) => {
     const limitedArtworkIds = []
     for (let i = 0; i < limitedCardIds.length; i++) {
         const limitedCardId = limitedCardIds[i]
-        console.log('limitedCardId', limitedCardId)
-        const card = await Card.findOne({ where: {
-            konamiCode: limitedCardId
-        }})
+        const card = await Card.findOne({ 
+            where: {
+                konamiCode: limitedCardId
+            }, 
+            attributes: ['id', 'konamiCode']
+        })
         
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
-            }
+            }, 
+            attributes: ['id', 'cardId', 'artworkId']
         })
 
         for (let j = 0; j < artworks.length; j++) {
@@ -74,15 +83,18 @@ export const getForgedIssues = async (player, deckArr, format) => {
     const semiLimitedArtworkIds = []
     for (let i = 0; i < semiLimitedCardIds.length; i++) {
         const semiLimitedCardId = semiLimitedCardIds[i]
-        console.log('semiLimitedCardId', semiLimitedCardId)
-        const card = await Card.findOne({ where: {
-            konamiCode: semiLimitedCardId
-        }})
+        const card = await Card.findOne({ 
+            where: {
+                konamiCode: semiLimitedCardId
+            }, 
+            attributes: ['id', 'konamiCode']
+        })
         
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
-            }
+            }, 
+            attributes: ['id', 'cardId', 'artworkId']
         })
 
         for (let j = 0; j < artworks.length; j++) {
@@ -129,9 +141,7 @@ export const getForgedIssues = async (player, deckArr, format) => {
         }
     }
 
-    console.log('totalQuantities', totalQuantities)
     const quantityKeys = Object.keys(totalQuantities)
-    console.log('quantityKeys', quantityKeys)
     const zeroCopiesOwned = []
     const oneCopyOwned = []
     const twoCopiesOwned = []
