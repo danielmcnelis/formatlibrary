@@ -70,11 +70,13 @@ export const getIssues = async (deckArr, format) => {
     const formatDate = format.name === 'Advanced' || format.name === 'Traditional' ? `${year}-${month}-${day}` : format.date
 
     const konamiIds = format.category === 'Custom' ? [...await Card.findAll({ attributes: ["id", "konamiCode"] })].map(c => c.konamiCode) : [...await Card.findAll({ where: { [legalType]: true, [dateType]: { [Op.lte]: formatDate }, attributes: ["id", "konamiCode", "ocgDate", "speedDate", "tcgDate", "ocgLegal", "speedLegal", "tcgLegal"]}})].map(c => c.konamiCode)
+    console.log('LINE 73')
     const artworkIds = []
     for (let i = 0; i < konamiIds.length; i++) {
         let konamiId = konamiIds[i]
         const card = await Card.findOne({ where: { konamiCode: konamiId }, attributes: ['id', 'konamiCode']})
-        
+            console.log('LINE 78')
+
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
@@ -93,7 +95,8 @@ export const getIssues = async (deckArr, format) => {
     for (let i = 0; i < forbiddenCardIds.length; i++) {
         const forbiddenCardId = forbiddenCardIds[i]
         const card = await Card.findOne({ where: { konamiCode: forbiddenCardId }, attributes: ['id', 'konamiCode']})
-        
+            console.log('LINE 98')
+
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
@@ -112,7 +115,8 @@ export const getIssues = async (deckArr, format) => {
     for (let i = 0; i < limitedCardIds.length; i++) {
         const limitedCardId = limitedCardIds[i]
         const card = await Card.findOne({ where: { konamiCode: limitedCardId }, attributes: ['id', 'konamiCode']})
-        
+            console.log('LINE 118')
+
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
@@ -131,7 +135,8 @@ export const getIssues = async (deckArr, format) => {
     for (let i = 0; i < semiLimitedCardIds.length; i++) {
         const semiLimitedCardId = semiLimitedCardIds[i]
         const card = await Card.findOne({ where: { konamiCode: semiLimitedCardId }, attributes: ['id', 'konamiCode']})
-        
+            console.log('LINE 138')
+
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
@@ -150,7 +155,8 @@ export const getIssues = async (deckArr, format) => {
     for (let i = 0; i < limited1CardIds.length; i++) {
         const limited1CardId = limited1CardIds[i]
         const card = await Card.findOne({ where: { konamiCode: limited1CardId }, attributes: ['id', 'konamiCode']})
-        
+            console.log('LINE 158')
+
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
@@ -169,7 +175,8 @@ export const getIssues = async (deckArr, format) => {
     for (let i = 0; i < limited2CardIds.length; i++) {
         const limited2CardId = limited2CardIds[i]
         const card = await Card.findOne({ where: { konamiCode: limited2CardId }, attributes: ['id', 'konamiCode']})
-        
+            console.log('LINE 178')
+
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
@@ -188,7 +195,8 @@ export const getIssues = async (deckArr, format) => {
     for (let i = 0; i < limited3CardIds.length; i++) {
         const limited3CardId = limited3CardIds[i]
         const card = await Card.findOne({ where: { konamiCode: limited3CardId }, attributes: ['id', 'konamiCode']})
-        
+            console.log('LINE 198')
+
         const artworks = await Artwork.findAll({
             where: {
                 cardId: card.id
