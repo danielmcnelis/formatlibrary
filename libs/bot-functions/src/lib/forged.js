@@ -7,7 +7,7 @@ import { convertArrayToObject } from "./utility"
 // GET FORGED ISSUES
 export const getForgedIssues = async (player, deckArr, format) => {
     const deck = convertArrayToObject(deckArr)   
-    const konamiIds = [...await ForgedPrint.findAll({ include: {Model: Card, attributes: ['id', 'konamiCode'] } })].map(fp => fp.card.konamiCode)
+    const konamiIds = [...await ForgedPrint.findAll({ include: { model: Card, attributes: ['id', 'konamiCode'] } })].map(fp => fp.card.konamiCode)
     const artworkIds = []
     for (let i = 0; i < konamiIds.length; i++) {
         let konamiId = konamiIds[i]
