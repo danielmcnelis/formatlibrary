@@ -2,13 +2,13 @@ import { Router } from './Router'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { getCookie } from '@fl/utils'
-import { useDetectAdBlock } from 'adblock-detect-react'
+// import { useDetectAdBlock } from 'adblock-detect-react'
 import { Subscriptions } from '@fl/components'
 // import { client } from 'libs/bot-functions/src/client'
 
 const App = () => {
     // console.log('navigator.userAgent', navigator.userAgent)
-    const adBlockDetected = useDetectAdBlock()
+    // const adBlockDetected = useDetectAdBlock()
     // console.log('adBlockDetected', adBlockDetected)
     const playerId = getCookie('playerId')
     // const visited = getCookie('visited')
