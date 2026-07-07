@@ -1,4 +1,3 @@
-const fs = require('fs')
 const getWebpackConfig = require('@nrwl/react/plugins/webpack')
 
 module.exports = (config) => {

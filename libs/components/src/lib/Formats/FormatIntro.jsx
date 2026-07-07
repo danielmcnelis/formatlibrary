@@ -19,7 +19,6 @@ export const FormatIntro = (props) => {
     const isAdmin = props.roles?.admin
     const isContentManager = props.roles?.contentManager
     const [format, setFormat] = useState({})
-    console.log('format', format)
     const [deckCount, setDeckCount] = useState(0)
     const [eventCount, setEventCount] = useState(0)
     const [statsCount, setStatsCount] = useState(0)
@@ -27,8 +26,6 @@ export const FormatIntro = (props) => {
     const [description, setDescription] = useState('')
     const [ocgExclusives, setOcgExclusives] = useState([])
     const [tcgExclusives, setTcgExclusives] = useState([])
-    console.log("ocgExclusives", ocgExclusives)
-    console.log("tcgExclusives", tcgExclusives)
     const [id, setId] = useState(null)
     const { id: useParamsId } = useParams()
     if (useParamsId && id !== useParamsId) {
