@@ -30,9 +30,9 @@ export const Page = (props) => {
             </div>
         ) : (
             <>
-                <Helmet>
+                {/* <Helmet>
                     <script data-no-optimize="1" data-cfasync="false" src="https://formatlibrary.com/raptive.js"></script>
-                </Helmet>
+                </Helmet> */}
                 <div id="theme" data-theme={theme}>
                     <Navigation switchTheme={switchTheme} theme={theme} roles={roles}/>
                     {element}
