@@ -239,10 +239,6 @@ export const SingleCard = (props) => {
                 <meta name="image" content={`https://cdn.formatlibrary.com/images/artworks/${card.artworkId}.jpg`}/>
                 <meta name="og:image" content={`https://cdn.formatlibrary.com/images/artworks/${card.artworkId}.jpg`}/>
             </Helmet>
-            {
-                // videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
-                <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
-            }
             <div className="body">
                 <div className="place-ads-below"/>
                 <div className="single-card">

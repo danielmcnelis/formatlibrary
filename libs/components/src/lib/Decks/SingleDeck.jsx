@@ -283,10 +283,6 @@ export const SingleDeck = (props) => {
                 }
             />
         </Helmet>
-        {
-            // videoPlaylistId ? <div className="adthrive-content-specific-playlist" data-playlist-id={videoPlaylistId}></div> :
-            <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
-        }
         <div className="body">
             <div className="single-deck-title-flexbox">
                 <div>

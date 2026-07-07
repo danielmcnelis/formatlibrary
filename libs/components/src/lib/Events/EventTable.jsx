@@ -153,8 +153,6 @@ export const EventTable = (props) => {
                 <meta name="description" content={`Search a complete database of recent and historic Yu-Gi-Oh! tournaments. Includes detailed coverage of decklists, metagame charts, and match replays.`}/>
                 <meta name="og:description" content={`Search a complete database of recent and historic Yu-Gi-Oh! tournaments. Includes detailed coverage of decklists, metagame charts, and match replays.`}/>
             </Helmet>
-            {/* Default Gaming Playlist */}
-            <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             <div className="body">
                 <div className="event-database-flexbox">
                     <h1>Event Database</h1>
@@ -287,8 +285,6 @@ export const EventTable = (props) => {
                 <meta name="description" content={`Search a complete database of recent and historic Yu-Gi-Oh! tournaments. Includes detailed coverage of decklists, metagame charts, and match replays.`}/>
                 <meta name="og:description" content={`Search a complete database of recent and historic Yu-Gi-Oh! tournaments. Includes detailed coverage of decklists, metagame charts, and match replays.`}/>
            </Helmet>
-           {/* Default Gaming Playlist */}
-           <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             <div className="body">
                 <div className="event-database-flexbox">
                 <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/event.webp'} alt="trophy"/>

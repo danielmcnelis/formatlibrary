@@ -460,7 +460,6 @@ export const ForgedTable = () => {
                 <meta name="og:description" content={`Find any Yu-Gi-Oh! card from the TCG, OCG, or Speed Duels. View release dates, rulings, prints, prices, banlist history, etc.`}/>
             </Helmet>
             {/* Default Gaming Playlist */}
-            <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             <div className="body">
                 <div className="card-database-flexbox">
                     <img src={`https://cdn.formatlibrary.com/images/artworks/rookie.jpg`} alt={format.icon} className="format-icon-medium desktop-only"/>

@@ -57,7 +57,6 @@ export const FormatMenu = (props) => {
                 <meta name="og:description" content={`Learn more about any Yu-Gi-Oh! format from 2002 to today.`}/>
             </Helmet>
             {/* Default Gaming Playlist */}
-            <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             <div className="body">
                 <div className="desktop-only" style={{"position":"absolute", "top":"20vh", "right":"0vw", "padding":"10px 20px"}}>
                     <h2>{category}</h2>

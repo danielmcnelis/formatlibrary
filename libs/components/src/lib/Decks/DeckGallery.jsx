@@ -49,10 +49,6 @@ export const DeckGallery = (props) => {
                 <meta name="og:description" content={`A complete list of Yu-Gi-Oh! decks played in ${format?.name} Format. Includes example decklists and breakdowns of card choices, popularity, and performance.`}/>
             </Helmet>
             <div className="body">
-                {
-                    // videoEmbed ? videoEmbed :
-                    <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
-                }
                 <div id="popular-decks" className="popular-decks">
                     <div className="subcategory-title-flexbox">
                         <img style={{ width:'64px'}} src={`https://cdn.formatlibrary.com/images/emojis/${format.icon}.webp`} alt={format.icon}/>

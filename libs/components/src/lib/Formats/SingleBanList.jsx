@@ -23,8 +23,6 @@ export const SingleBanList = (props) => {
                 <meta name="description" content={`An interactive list of Forbidden, Limited, and Semi-Limited Yu-Gi-Oh! cards from ${capitalize(id?.replaceAll('-', ' '), true)}.`}/>
                 <meta name="og:description" content={`An interactive list of Forbidden, Limited, and Semi-Limited Yu-Gi-Oh! cards from ${capitalize(id?.replaceAll('-', ' '), true)}.`}/>
             </Helmet>
-            {/* Default Gaming Playlist */}
-            <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
             <div className="body">
                 <BanList {...props}/>
             </div>

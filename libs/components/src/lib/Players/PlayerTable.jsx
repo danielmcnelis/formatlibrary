@@ -112,8 +112,6 @@ export const PlayerTable = (props) => {
                     <meta name="description" content={`Search through an interactive database of Yu-Gi-Oh! players.`}/>
                     <meta name="og:description" content={`Search through an interactive database of Yu-Gi-Oh! players.`}/>
                 </Helmet>
-                {/* Default Gaming Playlist */}
-                <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
                 <div className="body">
                     <div className="Player-database-flexbox">
                         <h1>Player Database</h1>
@@ -231,8 +229,6 @@ export const PlayerTable = (props) => {
                     <meta name="description" content={`Search through an interactive database of Yu-Gi-Oh! players.`}/>
                     <meta name="og:description" content={`Search through an interactive database of Yu-Gi-Oh! players.`}/>
                 </Helmet>
-                {/* Default Gaming Playlist */}
-                <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"></div>
                 <div className="body">
                     <div className="player-database-flexbox">
                         <img style={{ height:'80px'}} src={'https://cdn.formatlibrary.com/images/emojis/nerd.webp'} alt="nerd"/>

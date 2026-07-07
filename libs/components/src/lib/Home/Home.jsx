@@ -49,8 +49,6 @@ export const Home = () => {
                 />
             </Helmet>
             <div id="blog">
-        {/* Default Gaming Playlist */}
-            <div className="adthrive-content-specific-playlist" data-playlist-id="1TIGVxvL"/>
             {
                 blogPosts.map((bp, index) => {
                 return (
