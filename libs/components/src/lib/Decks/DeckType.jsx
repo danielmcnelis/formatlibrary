@@ -42,7 +42,9 @@ export const DeckType = (props) => {
     // const videoPlaylistId = summary?.format?.videoPlaylistId
 
     // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, 0), [])
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
 
     // USE EFFECT FETCH DATA
     useEffect(() => {

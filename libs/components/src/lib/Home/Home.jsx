@@ -18,7 +18,9 @@ export const Home = () => {
     console.log('Home render count', n)
 
     // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, document.getElementById('blog')?.offsetTop || 0), [page])
+    useLayoutEffect(() => {
+        window.scrollTo(0, document.getElementById('blog')?.offsetTop || 0)
+    }, [page])
 
     // USE EFFECT
     useEffect(() => {

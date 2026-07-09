@@ -70,7 +70,9 @@ export const SingleEvent = (props) => {
     const goToCommunity = () => window.open(communityLink, "_blank")
 
     // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, 0), [])
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
 
     // USE EFFECT SET EVENT DATA
     useEffect(() => {

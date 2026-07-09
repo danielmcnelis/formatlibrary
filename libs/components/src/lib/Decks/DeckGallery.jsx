@@ -20,7 +20,9 @@ export const DeckGallery = (props) => {
     // const videoEmbed = format?.videoEmbed
 
     // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, 0))
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0)
+    })
     
     // USE EFFECT
     useEffect(() => {

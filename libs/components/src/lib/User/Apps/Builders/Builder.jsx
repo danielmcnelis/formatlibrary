@@ -452,7 +452,9 @@ export const Builder = (props) => {
     }
 
   // USE LAYOUT EFFECT
-  useLayoutEffect(() => window.scrollTo(0, 0), [])
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0)
+}, [])
 
   // USE EFFECT SET DECK
 useEffect(() => {

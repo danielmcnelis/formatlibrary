@@ -33,7 +33,9 @@ export const DeckTable = (props) => {
     })
   
     // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, 0), [page]) 
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0)
+    }, [page]) 
   
     // USE LAYOUT EFFECT
     useLayoutEffect(() => {

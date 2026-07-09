@@ -4,7 +4,9 @@ import './NotFound.css'
 
 export const NotFound = () => {
   // USE LAYOUT EFFECT
-  useLayoutEffect(() => window.scrollTo(0, 0))
+  useLayoutEffect(() => {
+        window.scrollTo(0, 0)
+    })
 
   return (
     <div className="body">

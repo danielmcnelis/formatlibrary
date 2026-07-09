@@ -81,7 +81,9 @@ export const FormatIntro = (props) => {
     }, [format, id])
   
     // USE LAYOUT EFFECT
-    useLayoutEffect(() => window.scrollTo(0, 0))
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0)
+    })
   
     // USE EFFECT
     useEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop), [inEditMode])
@@ -91,6 +93,7 @@ export const FormatIntro = (props) => {
       const fetchData = async () => {
         try {
           const {data} = await axios.get(`/api/formats/${id}`)
+          console.log('data', data)
           setFormat(data.format)
           setDescription(data.format.description || '')
           setDeckCount(data.deckCount)

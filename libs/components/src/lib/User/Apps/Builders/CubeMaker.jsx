@@ -252,7 +252,9 @@ export const CubeMaker = () => {
     }
 
   // USE LAYOUT EFFECT
-  useLayoutEffect(() => window.scrollTo(0, 0), [])
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0)
+}, [])
 
     // UPDATE CUBE
     const updateCube = async (id) => {

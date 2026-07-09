@@ -53,7 +53,9 @@ export const SingleDeck = (props) => {
     // const videoPlaylistId = deck?.format?.videoPlaylistId
     
   // USE LAYOUT EFFECT
-  useLayoutEffect(() => window.scrollTo(0, 0), [])
+  useLayoutEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
 
     // UPDATE DECK INFO
     const updateDeckInfo = async () => {
