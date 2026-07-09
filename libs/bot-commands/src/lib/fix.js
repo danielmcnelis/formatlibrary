@@ -43,8 +43,6 @@ export default {
                 order: [["name", "ASC"]]
             })
 
-            console.log('cards[0]', cards[0])
-
             await interaction.respond(
                 cards.map(card => ({ name: card.name, value: card.id })),
             )

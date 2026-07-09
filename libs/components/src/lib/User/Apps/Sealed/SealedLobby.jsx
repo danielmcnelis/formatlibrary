@@ -136,6 +136,7 @@ export const SealedLobby = () => {
 
     // HOOK - FETCH PARTICIPANTS
     useEffect(() => {
+        console.log('fetch participants')
     }, [draft.id])
 
     // HOOK - SOCKET.IO

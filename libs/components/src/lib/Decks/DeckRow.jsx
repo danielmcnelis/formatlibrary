@@ -5,7 +5,6 @@ import './DeckRow.css'
 
 export const DeckRow = (props) => {
     const {deck} = props
-    console.log('deck::', deck)
     const evenOrOdd = props.index % 2 ? 'even' : 'odd'
     
     return (

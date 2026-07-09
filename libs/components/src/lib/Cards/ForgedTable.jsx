@@ -23,7 +23,6 @@ export const ForgedTable = () => {
     const {id: playerId} = useParams()
     const [page, setPage] = useState(1)
     const [forgedInventories, setForgedInventories] = useState([])
-    console.log('forgedInventories', forgedInventories)
     const [cardsPerPage, setCardsPerPage] = useState(10)
     const [view, setView] = useState('spoilers')
     const [sortBy, setSortBy] = useState('forgedPrintId:asc')

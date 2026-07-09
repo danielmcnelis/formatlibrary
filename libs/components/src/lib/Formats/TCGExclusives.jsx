@@ -4,7 +4,6 @@ import './TCGExclusives.css'
 
 export const TCGExclusives = (props) => {
     const {tcgExclusives} = props
-    console.log('TCG EXCLUSIVES', tcgExclusives)
     if (!tcgExclusives?.length) return <div />
   
     return (

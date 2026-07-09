@@ -20,7 +20,6 @@ export const CubeMaker = () => {
         name: 'New Cube',
         cardPool: []
     })
-    console.log('cube', cube)
 
     const [cubes, setCubes] = useState([])
     const [card, setCard] = useState({})
@@ -282,7 +281,9 @@ export const CubeMaker = () => {
     }
 
   // USE EFFECT GET CUBES
-  useEffect(() => getCubes(), [])
+  useEffect(() => {
+    getCubes()
+}, [])
 
   return (
     <>

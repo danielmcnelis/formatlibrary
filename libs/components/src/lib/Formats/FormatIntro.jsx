@@ -35,7 +35,9 @@ export const FormatIntro = (props) => {
     const videoEmbed = format?.videoEmbed
     
     // USE EFFECT
-    useEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop), [inEditMode])
+    useEffect(() => {
+        window.scrollTo(0, document.getElementById('body')?.offsetTop)
+    }, [inEditMode])
 
     // SWITCH SPOTLIGHT
     const switchSpotlight = async () => {
@@ -86,14 +88,15 @@ export const FormatIntro = (props) => {
     })
   
     // USE EFFECT
-    useEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop), [inEditMode])
+    useEffect(() => {
+        window.scrollTo(0, document.getElementById('body')?.offsetTop)
+    }, [inEditMode])
 
     // USE EFFECT SET CARD
     useEffect(() => {
       const fetchData = async () => {
         try {
           const {data} = await axios.get(`/api/formats/${id}`)
-          console.log('data', data)
           setFormat(data.format)
           setDescription(data.format.description || '')
           setDeckCount(data.deckCount)

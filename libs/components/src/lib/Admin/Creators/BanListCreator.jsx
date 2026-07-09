@@ -15,7 +15,6 @@ export const BanListCreator = () => {
     const [previous, setPrevious] = useState(null)
     const [restriction, setRestriction] = useState(null)
     const [cards, setCards] = useState([])
-    console.log('changes', changes)
 
     let currentYear = new Date().getFullYear()
     const years = []

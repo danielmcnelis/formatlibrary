@@ -458,7 +458,6 @@ export const Builder = (props) => {
 
   // USE EFFECT SET DECK
 useEffect(() => {
-    console.log('useEffect 455')
     const fetchData = async () => {
         try {
             const accessToken = getCookie('access')
@@ -519,7 +518,6 @@ useEffect(() => {
 
   // USE EFFECT SET DECK
   useEffect(() => {
-    console.log('useEffect 516')
     const fetchData = async () => {
         if (decks.length && id) {
             try {
@@ -538,7 +536,6 @@ useEffect(() => {
 
   // USE EFFECT SET BANLIST
   useEffect(() => {
-    console.log('useEffect 535')
     if (!format.banlist) return
     const fetchData = async () => {
       try {

@@ -15,7 +15,7 @@ export const Home = () => {
     const [blogPosts, setBlogPosts] = useState([])
     const location = useLocation()
     n++
-    console.log('Home render count', n)
+    // console.log('Home render count', n)
 
     // USE LAYOUT EFFECT
     useLayoutEffect(() => {

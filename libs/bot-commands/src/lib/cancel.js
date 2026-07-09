@@ -47,10 +47,8 @@ export default {
             if (!format) return await interaction.editReply(`Hmm... I could not find a format called "${formatName}". Please try again.`)
             
             const server = await Server.findOrCreateByIdOrName(interaction.guildId, interaction.guild?.name)
-            console.log('server?.name', server?.name)
             if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
             const serverId = server.hasInternalLadder || !format.hostedOneFl ? server.id : '414551319031054346'
-            console.log('serverId', serverId)
             const pairings = await Pairing.findAll({ where: { formatId: format.id, serverId: serverId, status: 'active' }, order: [['createdAt', 'DESC']]})
             const authorIsMod = isModerator(server, interaction.member)
             if (!authorIsMod) return await interaction.editReply({ content: `You do not have permission to do that.`})

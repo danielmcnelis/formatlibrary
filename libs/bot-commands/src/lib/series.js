@@ -61,7 +61,6 @@ export default {
         try {
             if (!isProgrammer(interaction.member)) return await interaction.editReply('🧪')
             const serverId = interaction.options.getString('server')
-            console.log('serverId', serverId)
             const server = await Server.findOne({ where: { id: serverId }})
             const communityName = server.communityName
             if (!hasPartnerAccess(server)) return await interaction.editReply({ content: `This feature is only available with partner access. ${emojis.legend}`})
@@ -70,8 +69,6 @@ export default {
             const emoji = interaction.options.getString('emoji')
             const requiredRole1 = interaction.options.getRole('role-1')?.id
             const requiredRole2 = interaction.options.getRole('role-2')?.id
-            console.log('requiredRole1', requiredRole1)
-            console.log('requiredRole2', requiredRole2)
 
             let series = await Series.findOne({
                 where: {

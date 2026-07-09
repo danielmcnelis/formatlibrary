@@ -6,7 +6,6 @@ import { shouldDisplay } from '@fl/utils'
 export const DeckCreator = () => {
     const [communityName, setCommunityName] = useState(null)
     const [communities, setCommunities] = useState([])
-    console.log('communities', communities)
     const [deckType, setDeckType] = useState(null)
     const [deckTypes, setDeckTypes] = useState([])
     const [display, setDisplay] = useState(true)
@@ -16,7 +15,6 @@ export const DeckCreator = () => {
     const [player, setPlayer] = useState(null)
     const [players, setPlayers] = useState([])
     const [ydk, setYDK] = useState(null)
-    console.log('ydk', ydk)
     
     const placementArr = event ? Array.from({length: event.size}, (_, i) => i + 1) : []
 
@@ -74,7 +72,6 @@ export const DeckCreator = () => {
     }
   
     const readYDKe = async (ydke) => {
-        console.log('readYDKe()')
         const {data: ydk} = await axios.put(`/api/decks/convert-ydke-to-ydk`, { ydke: ydke })
         setYDK(ydk)
     }

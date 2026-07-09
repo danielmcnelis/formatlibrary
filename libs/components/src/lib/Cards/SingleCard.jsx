@@ -65,7 +65,9 @@ export const SingleCard = (props) => {
     // const videoPlaylistId = getEraVideoPlaylistId(card?.tcgDate)
 
     // USE EFFECT
-    useEffect(() => window.scrollTo(0, document.getElementById('body')?.offsetTop), [inEditMode])
+    useEffect(() => {
+        window.scrollTo(0, document.getElementById('body')?.offsetTop)
+    }, [inEditMode])
 
     // DOWNLOAD CARD IMAGE
     const downloadCardImage = async () => {

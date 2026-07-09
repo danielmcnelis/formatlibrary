@@ -15,8 +15,6 @@ export const BracketCreator = () => {
     const oldLogic = useThirtyTwoLogic ? [[1, 32], [16, 17], [8, 25], [9, 24], [4, 29], [13, 20], [5, 28], [12, 21], [2, 31], [15, 18], [7, 26], [10, 23], [3, 30], [14, 19], [6, 27], [11, 22]].flat() :
         [[1, 64], [32, 33], [16, 49], [17, 48], [8, 57], [25, 40], [9, 56], [24, 41], [4, 61], [29, 36], [13, 52], [20, 45], [5, 60], [28, 37], [12, 53], [21, 44], [2, 63], [31, 34], [15, 50], [18, 47], [7, 58], [26, 39], [10, 55], [23, 42], [3, 62], [30, 35], [14, 51], [19, 46], [6, 59], [27, 38], [11, 54], [22, 43]].flat()
 
-    console.log('newLogic', newLogic)
-
     // RESET
     const reset = async () => {
         setName(null) 
@@ -46,7 +44,6 @@ export const BracketCreator = () => {
     // REVERSE ENGINEER PARTICIPANTS
     const reverseEngineerParticipants = (raw) => {
         const logic = useNewLogic ? newLogic : oldLogic
-        console.log('logic', logic)
         const keys = Array.from(logic.keys()).sort((a, b) => logic[a] - logic[b])
         const pairings = raw.replace(/[0-9+\t]/g, '').split('\n').map((e) => e.split('vs.')).flat().map((e) => {
             if (e.includes(',')) {
