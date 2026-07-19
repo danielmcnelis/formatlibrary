@@ -229,18 +229,25 @@ export default {
                 if (format.name === 'Forged in Chaos') {
                     const winnersWallet = await Wallet.findOne({ where: { playerId: winningPlayer.id }})
                     const losersWallet = await Wallet.findOne({ where: { playerId: losingPlayer.id }})
+                    
                     chipsWinner = (Math.round((classicDelta))) < 5 ? 5 : (Math.round((classicDelta))) > 20 ? 20 : (Math.round((classicDelta )))
-                    // chipsWinner = chipsWinner * 1.5
+                    console.log('chipsWinner L234', chipsWinner)
                     chipsLoser = (loserStats.seasonalElo - winnerStats.seasonalElo) < 72 ? 5 : (loserStats.seasonalElo - winnerStats.seasonalElo) >=150 ? 3 : 4
-                    // chipsLoser = chipsLoser * 1.5
+                    console.log('chipsLoser L236', chipsLoser)
 
                     const winnerIsSupporter = winningMember.roles.cache.has('1488934384827371731') || winningPlayer.forgedSubscriberTier === 'Supporter'
+                    console.log('winnerIsSupporter', winnerIsSupporter)
                     const winnerIsPatron = winningMember.roles.cache.has('1488935689189068870') || winningPlayer.forgedSubscriberTier === 'Patron'
+                    console.log('winnerIsPatron', winnerIsPatron)
                     const winnerIsBenefactor = winningMember.roles.cache.has('1502092705591853188') || winningMember.roles.cache.has('1488566624536494368') || winningPlayer.forgedSubscriberTier === 'Benefactor'
+                    console.log('winnerIsBenefactor', winnerIsBenefactor)
                     const loserIsSupporter = losingMember.roles.cache.has('1488934384827371731') || losingPlayer.forgedSubscriberTier === 'Supporter'
+                    console.log('loserIsSupporter', loserIsSupporter)
                     const loserIsPatron = losingMember.roles.cache.has('1488935689189068870') || losingPlayer.forgedSubscriberTier === 'Patron'
+                    console.log('loserIsPatron', loserIsPatron)
                     const loserIsBenefactor = losingMember.roles.cache.has('1502092705591853188') || losingMember.roles.cache.has('1488566624536494368') || losingPlayer.forgedSubscriberTier === 'Benefactor'
-                    
+                    console.log('loserIsBenefactor', loserIsBenefactor)
+
                     const chipBonusWinner =  winnerIsBenefactor ? 2 :
                         winnerIsPatron ? 1.6 :
                         loserIsBenefactor ? 1.5 :
@@ -248,18 +255,25 @@ export default {
                         loserIsPatron ? 1.2 :
                         loserIsSupporter ? 1.1 :
                         1
-                    
+                    console.log('chipBonusWinner', chipBonusWinner)
+
                     const chipBonusLoser =  loserIsBenefactor ? 2 :
                         loserIsPatron ? 1.6 :
                         loserIsSupporter ? 1.3 :
                         1
+                    console.log('chipBonusLoser', chipBonusLoser)
                         
                     chipsWinner = Math.round(chipsWinner * chipBonusWinner)
+                    console.log('chipsWinner L267', chipsWinner)
                     chipsLoser = Math.round(chipsLoser * chipBonusLoser)
+                    console.log('chipsLoser L269', chipsLoser)
                     if (chipsWinner <= (chipsLoser + 5)) chipsWinner = chipsLoser + 5
-                    
+                    console.log('chipsWinner L271', chipsWinner)
+
                     const newChipsWinner = winnersWallet.starchips + chipsWinner
+                    console.log('newChipsWinner', newChipsWinner)
                     const newChipsLoser = losersWallet.starchips + chipsLoser
+                    console.log('newChipsLoser', newChipsLoser)
                     await winnersWallet.update({ starchips: newChipsWinner })
                     await losersWallet.update({ starchips: newChipsLoser })
                 }
