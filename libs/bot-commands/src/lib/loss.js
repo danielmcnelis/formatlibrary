@@ -230,14 +230,16 @@ export default {
                     const winnersWallet = await Wallet.findOne({ where: { playerId: winningPlayer.id }})
                     const losersWallet = await Wallet.findOne({ where: { playerId: losingPlayer.id }})
                     chipsWinner = (Math.round((classicDelta))) < 5 ? 5 : (Math.round((classicDelta))) > 20 ? 20 : (Math.round((classicDelta )))
+                    // chipsWinner = chipsWinner * 1.5
                     chipsLoser = (loserStats.seasonalElo - winnerStats.seasonalElo) < 72 ? 5 : (loserStats.seasonalElo - winnerStats.seasonalElo) >=150 ? 3 : 4
+                    // chipsLoser = chipsLoser * 1.5
 
                     const winnerIsSupporter = winningMember.roles.cache.has('1488934384827371731') || winningPlayer.forgedSubscriberTier === 'Supporter'
                     const winnerIsPatron = winningMember.roles.cache.has('1488935689189068870') || winningPlayer.forgedSubscriberTier === 'Patron'
-                    const winnerIsBenefactor = winningMember.roles.cache.has('1502092705591853188') || winningMember.roles.cache.has('1488566624536494368') || winningPlayer.forgedSubscriberTier === 'Benefactor' || winningPlayer.id === 'Cc2FhYrRPctZ4y72Y79gKp'
+                    const winnerIsBenefactor = winningMember.roles.cache.has('1502092705591853188') || winningMember.roles.cache.has('1488566624536494368') || winningPlayer.forgedSubscriberTier === 'Benefactor'
                     const loserIsSupporter = losingMember.roles.cache.has('1488934384827371731') || losingPlayer.forgedSubscriberTier === 'Supporter'
                     const loserIsPatron = losingMember.roles.cache.has('1488935689189068870') || losingPlayer.forgedSubscriberTier === 'Patron'
-                    const loserIsBenefactor = losingMember.roles.cache.has('1502092705591853188') || losingMember.roles.cache.has('1488566624536494368') || losingPlayer.forgedSubscriberTier === 'Benefactor' || losingPlayer.id === 'Cc2FhYrRPctZ4y72Y79gKp'
+                    const loserIsBenefactor = losingMember.roles.cache.has('1502092705591853188') || losingMember.roles.cache.has('1488566624536494368') || losingPlayer.forgedSubscriberTier === 'Benefactor'
                     
                     const chipBonusWinner =  winnerIsBenefactor ? 2 :
                         winnerIsPatron ? 1.6 :
