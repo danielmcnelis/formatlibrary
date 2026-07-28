@@ -112,7 +112,6 @@ Tournament.findRecent = async (format, serverId) => await Tournament.findAll({
             formatId: format?.id || {[Op.not]: null},
             name: {[Op.substring]: 'Multi-Format Spectacular'}
         },
-        isTopCutTournament: false,
         serverId
     },
     limit: 25,
