@@ -115,7 +115,7 @@ Tournament.findRecent = async (format, serverId) => await Tournament.findAll({
         isTopCutTournament: false,
         serverId
     },
-    limit: 5,
+    limit: 25,
     order: [['createdAt', 'DESC']]
 })
 
@@ -128,6 +128,7 @@ Tournament.findActive = async (format, serverId, orderDirection = 'ASC') => awai
         },
         serverId
     },
+    limit: 25,
     order: [['createdAt', orderDirection]]
 })
 
