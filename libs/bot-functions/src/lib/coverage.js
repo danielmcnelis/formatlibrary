@@ -506,6 +506,10 @@ export const composeThumbnails = async (interaction, event) => {
                 }
             })
 
+            if (!artwork) {
+                continue
+            }
+
             const card = await Card.findOne({ 
                 where: { 
                     id: artwork?.cardId
