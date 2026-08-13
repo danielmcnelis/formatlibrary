@@ -2449,7 +2449,7 @@ export const downloadNewCards = async () => {
         const images = datum.card_images
 
         try {
-            const card = await Card.findOne({
+            let card = await Card.findOne({
                 where: {
                     [Op.or]: [
                         {ypdId: id},
