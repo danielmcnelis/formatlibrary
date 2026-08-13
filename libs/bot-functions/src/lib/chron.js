@@ -1118,7 +1118,7 @@ export const applySeasonalDecay = async (formatId, formatName, serverId, current
 
     console.log('seasonalGamesPlayed', seasonalGamesPlayed)
 
-    const k = formatName === 'Edison' ? 1 : 0.5
+    const k = 0.5
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
         const n = seasonalGamesPlayed[stats.playerId] || 0
@@ -2444,6 +2444,7 @@ export const downloadNewCards = async () => {
         const datum = data.data[i]
         const id = datum.id.toString()
         const name = datum.name
+        console.log('name', name)
         const cleanName = datum.name.replaceAll(/['"]/g, '').split(/[^A-Za-z0-9]/).filter((e) => e.length).join(' ')
         const images = datum.card_images
 
@@ -2456,6 +2457,8 @@ export const downloadNewCards = async () => {
                     ]
                 }
             })
+
+            console.log('!!card', !!card)
         
             let konamiCode = id
             while (konamiCode.length < 8) konamiCode = '0' + konamiCode
