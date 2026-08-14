@@ -66,7 +66,7 @@ export const runNightlyTasks = async (client) => {
         const tasks = [
             manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
             assignSeasonalLadderRoles, purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, updateSets, 
-            updateMarketPrices, updateDecks, updateDeckTypes, updateBlogPosts, downloadNewCards, 
+            updateMarketPrices, updateDecks, updateDeckTypes, updateBlogPosts, downloadNewCards, updateCardLegality,
             downloadAltArtworks, downloadMissingCardImages, updateServers, updateTops, conductCensus
         ]
     
@@ -2662,6 +2662,50 @@ export const downloadNewCards = async () => {
     return console.log(`downloadNewCards() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
+
+// UPDATE CARD LEGALITY
+export const updateCardLegality = async () => {
+    const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'updateCardLegality',
+        status: 'underway'
+    })
+    let b = 0
+    let e = 0
+    const today = new Date()
+    const year = now.getFullYear()
+    const month = (now.getMonth() + 1).toString().padStart(2, '0')
+    const day = now.getDate().toString().padStart(2, '0')
+    const date = `${year}-${month}-${day}`
+    const cards = await Card.findAll()
+
+    for (let i = 0; i < cards.length; i++) {
+        try {
+            const card = decks[i]
+            const isTcgLegal = card.tcgDate <= date
+            const isOcgLegal = card.ocgDate <= date
+            const isSpeedLegal = card.speedDate <= date
+
+            if (isTcgLegal !== card.isTcgLegal || isOcgLegal !== card.isOcgLegal || isSpeedLegal !== card.isSpeedLegal) {
+                console.log(`updating legality for ${card.name}`)
+            }
+
+            await card.update({ isTcgLegal, isOcgLegal, isSpeedLegal })
+            b++
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
+    console.log(`Updated ${b} cards, encountered ${e} errors`)
+    return console.log(`updateCardLegality() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+}
 
 // PURGE LOCALS AND INTERNAL DECKS
 export const purgeLocalsAndInternalDecks = async () => {
