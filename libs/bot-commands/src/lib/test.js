@@ -83,20 +83,20 @@ export default {
                 //     }
                 // }
 
-                const players = await Player.findAll()
-                for (let i = 0; i < players.length; i++) {
-                    const player = players[i]
-                    const tops = await Deck.count({
-                        where: {
-                            origin: 'event',
-                            builderId: player.id,
-                            display: true
-                        }
-                    })
+                // const players = await Player.findAll()
+                // for (let i = 0; i < players.length; i++) {
+                //     const player = players[i]
+                //     const tops = await Deck.count({
+                //         where: {
+                //             origin: 'event',
+                //             builderId: player.id,
+                //             display: true
+                //         }
+                //     })
 
-                    await player.update({ tops: tops })
-                    console.log(`updated tops for ${player.name}`)
-                }
+                //     await player.update({ tops: tops })
+                //     console.log(`updated tops for ${player.name}`)
+                // }
 
                 return await interaction.editReply('🧪')
                 // await updateGlobalNames()
