@@ -2672,19 +2672,19 @@ export const updateCardLegality = async () => {
     })
     let b = 0
     let e = 0
-    const today = new Date()
+    const now = new Date()
     const year = now.getFullYear()
     const month = (now.getMonth() + 1).toString().padStart(2, '0')
     const day = now.getDate().toString().padStart(2, '0')
-    const date = `${year}-${month}-${day}`
+    const today = `${year}-${month}-${day}`
     const cards = await Card.findAll()
 
     for (let i = 0; i < cards.length; i++) {
         try {
             const card = decks[i]
-            const isTcgLegal = card.tcgDate <= date
-            const isOcgLegal = card.ocgDate <= date
-            const isSpeedLegal = card.speedDate <= date
+            const isTcgLegal = card.tcgDate <= today
+            const isOcgLegal = card.ocgDate <= today
+            const isSpeedLegal = card.speedDate <= today
 
             if (isTcgLegal !== card.isTcgLegal || isOcgLegal !== card.isOcgLegal || isSpeedLegal !== card.isSpeedLegal) {
                 console.log(`updating legality for ${card.name}`)
