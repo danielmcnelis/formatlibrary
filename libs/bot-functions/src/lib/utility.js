@@ -648,6 +648,10 @@ export const combinePlayers = async (oldPlayer, newPlayer) => {
                 count++
             }
         }
+
+        const tops = oldPlayer.tops + newPlayer.tops
+        await newPlayer.update({ tops: tops, hasPlayed: true })
+        await oldPlayer.update({ hasPlayer: false })
     
         console.log(`combined ${oldPlayer.discordName} and ${newPlayer.discordName}`)
         return [formats, count, violations]
