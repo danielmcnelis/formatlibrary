@@ -28,7 +28,7 @@ export default {
                 // console.log('member', member)
                 // await runNightlyTasks(client)
                 // const format = await Format.findOne({ where: { name: 'Forged in Chaos' }})
-                await downloadNewCards(client)
+                // await downloadNewCards(client)
                 // await manageSubscriptions(client)
                 // await updateBlogPosts()
                 // await runNightlyTasks(client)
@@ -81,6 +81,21 @@ export default {
                 //         console.log('added supporter/stripe roles back to', member.user.username)
                 //     }
                 // }
+
+                const players = await Player.findAll()
+                for (let i = 0; i < players.length; i++) {
+                    const player = players[i]
+                    const tops = await Deck.count({
+                        where: {
+                            origin: 'event',
+                            builderId: player.id,
+                            display: true
+                        }
+                    })
+
+                    await player.update({ tops: tops })
+                    console.log(`updated tops for ${player.name}`)
+                }
 
                 return await interaction.editReply('🧪')
                 // await updateGlobalNames()
