@@ -2681,7 +2681,7 @@ export const updateCardLegality = async () => {
 
     for (let i = 0; i < cards.length; i++) {
         try {
-            const card = decks[i]
+            const card = cards[i]
             const isTcgLegal = card.tcgDate <= today
             const isOcgLegal = card.ocgDate <= today
             const isSpeedLegal = card.speedDate <= today
