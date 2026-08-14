@@ -5,7 +5,7 @@ import { purgeOldPrices, recalculateFormatStats, updateBlogPosts, purgeDuplicate
 import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { s3FileExists } from '@fl/bot-functions'
-import { Match, Tournament, Player, Server, Subscription, TriviaQuestion, Format } from '@fl/models'
+import { Deck, Match, Tournament, Player, Server, Subscription, TriviaQuestion, Format } from '@fl/models'
 import axios from 'axios'
 import { assignTournamentRoles, recalculateAllStats } from '../../../bot-functions/src'
 import { Format, Stats } from '../../../models/src'
