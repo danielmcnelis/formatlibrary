@@ -29,7 +29,7 @@ import { createTopCut, editTieBreakers, getCurrentRound, getMidnightCountdown, g
     assignRoles, createMembership, createPlayer, fetchCardNames, hasPartnerAccess, 
     isModerator, isNewMember, isNewUser, setTimers, handleTriviaConfirmation, handleRatedConfirmation, 
     editPointsSystem, runNightlyTasks, getTournament, extractDigitsAndPadZeros, getSuggestedAbbreviation, 
-    getKnownAbbreviation, capitalize, runFrequentTasks, runSomewhatFrequentTasks
+    getKnownAbbreviation, capitalize, runFrequentTasks, runSomewhatFrequentTasks, updateApiRequests
 } from '@fl/bot-functions'
 
 // STATIC IMPORTS
