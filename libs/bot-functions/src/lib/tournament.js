@@ -1456,6 +1456,9 @@ export const processMatchResult = async (server, interaction, openChallongeMatch
         return false
     }
 
+    await winningEntry.update({ isActive: true, roundDropped: null })
+    await losingEntry.update({ isActive: true, roundDropped: null })
+
     const gameCount = noshow ? [0, 0] : [1, 0]
     if (!gameCount || !gameCount.length) {
         interaction.editReply({ content: `Please specify a valid game count.`})
@@ -2035,15 +2038,18 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
         if (ignoreRound1 && match.round === 1) continue
         
         try {
-            const { player: player1 } = await Entry.findOne({
+            const player1Entry = await Entry.findOne({
                 where: {
                     tournamentId: tournament.id,
                     participantId: match.player1_id
                 },
                 include: Player
             })
+
+            const player1 = player1Entry.player
+            await player1.update({ isActive: true, roundDropped: null })
     
-            const { player: player2 } = await Entry.findOne({
+            const player2Entry = await Entry.findOne({
                 where: {
                     tournamentId: tournament.id,
                     participantId: match.player2_id
@@ -2051,6 +2057,9 @@ export const sendPairings = async (guild, server, tournament, ignoreRound1) => {
                 include: Player
             })
     
+            const player2 = player2Entry.player
+            await player2.update({ isActive: true, roundDropped: null })
+
             const round = tournament.type === 'double elimination' && match.round < 0 ? `Losers Round ${Math.abs(match.round)}` :
                 tournament.type === 'double elimination' && match.round > 0 ? `Winners Round ${Math.abs(match.round)}` :
                 `Round ${match.round}`
