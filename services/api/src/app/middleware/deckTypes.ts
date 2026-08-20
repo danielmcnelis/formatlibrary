@@ -412,116 +412,116 @@ export const getDeckTypeSummary = async (req, res, next) => {
       
             const main = mainKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
             
-            const mainEntries = Object.entries(main)
+            // const mainEntries = Object.entries(main)
 
-            for (let i = 0; i < mainEntries.length; i++) {
-                const [konamiCode, count] = mainEntries[i]
-                const artworkId = konamiCode.replace(/^0+/, '')
+            // for (let i = 0; i < mainEntries.length; i++) {
+            //     const [konamiCode, count] = mainEntries[i]
+            //     const artworkId = konamiCode.replace(/^0+/, '')
 
-                const isOriginalArt = await Artwork.count({
-                    where: {
-                        artworkId: artworkId,
-                        isOriginal: true
-                    }
-                })
+            //     const isOriginalArt = await Artwork.count({
+            //         where: {
+            //             artworkId: artworkId,
+            //             isOriginal: true
+            //         }
+            //     })
 
-                if (!isOriginalArt) {
-                    const artwork = await Artwork.findOne({
-                        where: {
-                            artworkId: artworkId
-                        },
-                        include: Card
-                    })
+            //     if (!isOriginalArt) {
+            //         const artwork = await Artwork.findOne({
+            //             where: {
+            //                 artworkId: artworkId
+            //             },
+            //             include: Card
+            //         })
 
-                    if (!artwork) continue
+            //         if (!artwork) continue
 
-                    const actualKonamiCode = artwork.card?.konamiCode
+            //         const actualKonamiCode = artwork.card?.konamiCode
 
-                    if (main[actualKonamiCode]) {
-                        main[actualKonamiCode] = main[actualKonamiCode] + count
-                    } else {
-                        main[actualKonamiCode] = count
-                    }
+            //         if (main[actualKonamiCode]) {
+            //             main[actualKonamiCode] = main[actualKonamiCode] + count
+            //         } else {
+            //             main[actualKonamiCode] = count
+            //         }
 
-                    delete main[konamiCode]
-                }
-            }
+            //         delete main[konamiCode]
+            //     }
+            // }
 
             const extra = showExtra
               ? extraKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
               : {}
 
-            const extraEntries = Object.entries(main)
+            // const extraEntries = Object.entries(main)
 
-            for (let i = 0; i < extraEntries.length; i++) {
-                const [konamiCode, count] = mainEntries[i]
-                const artworkId = konamiCode.replace(/^0+/, '')
+            // for (let i = 0; i < extraEntries.length; i++) {
+            //     const [konamiCode, count] = mainEntries[i]
+            //     const artworkId = konamiCode.replace(/^0+/, '')
 
-                const isOriginalArt = await Artwork.count({
-                    where: {
-                        artworkId: artworkId,
-                        isOriginal: true
-                    }
-                })
+            //     const isOriginalArt = await Artwork.count({
+            //         where: {
+            //             artworkId: artworkId,
+            //             isOriginal: true
+            //         }
+            //     })
 
-                if (!isOriginalArt) {
-                    const artwork = await Artwork.findOne({
-                        where: {
-                            artworkId: artworkId
-                        },
-                        include: Card
-                    })
+            //     if (!isOriginalArt) {
+            //         const artwork = await Artwork.findOne({
+            //             where: {
+            //                 artworkId: artworkId
+            //             },
+            //             include: Card
+            //         })
 
-                    if (!artwork) continue
+            //         if (!artwork) continue
 
-                    const actualKonamiCode = artwork.card?.konamiCode
+            //         const actualKonamiCode = artwork.card?.konamiCode
 
-                    if (extra[actualKonamiCode]) {
-                        extra[actualKonamiCode] = extra[actualKonamiCode] + count
-                    } else {
-                        extra[actualKonamiCode] = count
-                    }
+            //         if (extra[actualKonamiCode]) {
+            //             extra[actualKonamiCode] = extra[actualKonamiCode] + count
+            //         } else {
+            //             extra[actualKonamiCode] = count
+            //         }
 
-                    delete extra[konamiCode]
-                }
-            }
+            //         delete extra[konamiCode]
+            //     }
+            // }
 
             const side = sideKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
       
-            const sideEntries = Object.entries(main)
+            // const sideEntries = Object.entries(main)
 
-            for (let i = 0; i < sideEntries.length; i++) {
-                const [konamiCode, count] = mainEntries[i]
-                const artworkId = konamiCode.replace(/^0+/, '')
+            // for (let i = 0; i < sideEntries.length; i++) {
+            //     const [konamiCode, count] = mainEntries[i]
+            //     const artworkId = konamiCode.replace(/^0+/, '')
 
-                const isOriginalArt = await Artwork.count({
-                    where: {
-                        artworkId: artworkId,
-                        isOriginal: true
-                    }
-                })
+            //     const isOriginalArt = await Artwork.count({
+            //         where: {
+            //             artworkId: artworkId,
+            //             isOriginal: true
+            //         }
+            //     })
 
-                if (!isOriginalArt) {
-                    const artwork = await Artwork.findOne({
-                        where: {
-                            artworkId: artworkId
-                        },
-                        include: Card
-                    })
+            //     if (!isOriginalArt) {
+            //         const artwork = await Artwork.findOne({
+            //             where: {
+            //                 artworkId: artworkId
+            //             },
+            //             include: Card
+            //         })
 
-                    if (!artwork) continue
+            //         if (!artwork) continue
 
-                    const actualKonamiCode = artwork.card?.konamiCode
+            //         const actualKonamiCode = artwork.card?.konamiCode
 
-                    if (side[actualKonamiCode]) {
-                        side[actualKonamiCode] = side[actualKonamiCode] + count
-                    } else {
-                        side[actualKonamiCode] = count
-                    }
+            //         if (side[actualKonamiCode]) {
+            //             side[actualKonamiCode] = side[actualKonamiCode] + count
+            //         } else {
+            //             side[actualKonamiCode] = count
+            //         }
 
-                    delete side[konamiCode]
-                }
-            }
+            //         delete side[konamiCode]
+            //     }
+            // }
 
             Object.entries(main).forEach((e) => {
               const konamiCode = e[0]
