@@ -180,7 +180,7 @@ export const CardImage = (props) => {
                   />
                 ) : parseInt(width) >= 48 && parseInt(width, 10) < 96 ? (
                   <Link to={`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
-                    target="_blank" 
+                    target="_blank"
                     rel="noopener noreferrer"
                   >
                       <div className="card-image-cell">
