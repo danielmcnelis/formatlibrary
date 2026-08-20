@@ -61,6 +61,7 @@ export const EventCreator = () => {
     document.getElementById('start-date').value = 'mm/dd/yyyy'
     document.getElementById('winner-name').value = ''
     document.getElementById('winner-select').value = null
+  }
 
   // CREATE EVENT
   const createEvent = async () => {
