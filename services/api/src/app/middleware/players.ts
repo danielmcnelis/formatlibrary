@@ -158,6 +158,14 @@ export const getPlayerAvatarById = async (req, res, next) => {
     })
 
     try {
+        await axios.head(`https://cdn.formatlibrary.com/images/pfps/${playerId}.webp`)
+        return res.redirect(`https://cdn.formatlibrary.com/images/pfps/${playerId}.webp`)    
+    } catch (err) {
+        console.log('')
+        // console.log('PlayerId PFP Not Found.')
+    }
+
+    try {
         await axios.head(`https://cdn.formatlibrary.com/images/pfps/${playerId}.png`)
         return res.redirect(`https://cdn.formatlibrary.com/images/pfps/${playerId}.png`)    
     } catch (err) {
@@ -179,6 +187,14 @@ export const getPlayerAvatarById = async (req, res, next) => {
     } catch (err) {
         console.log('')
         // console.log('DiscordId PFP Not Found.')
+    }
+
+    try {
+        await axios.head(`https://cdn.formatlibrary.com/images/pfps/${player.name}.webp`)
+        return res.redirect(`https://cdn.formatlibrary.com/images/pfps/${player.name}.webp`)
+    } catch (err) {
+        console.log('')
+        // console.log('PlayerName PFP Not Found.')
     }
 
     try {
