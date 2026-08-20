@@ -29,6 +29,7 @@ const { Controller, Orb, Lock, Bow, Voltage, Volcano, Unicorn, Thinking } = emoj
 export const DeckType = (props) => {
     const accessToken = getCookie('access')
     const [summary, setSummary] = useState({})
+    console.log('summary', summary)
     const [winRateData, setWinRateData] = useState({})
     const [matchups, setMatchups] = useState({})
     const [banlist, setBanList] = useState({})

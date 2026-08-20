@@ -51,7 +51,6 @@ export const getMatchupH2H = async (req, res, next) => {
 }
 
 export const getMatchupMatrix = async (req, res, next) => {
-    console.log('ROUTE HITITTTT')
     try {
         if (req.query.isSubscriber === 'true' || req.query.isAdmin === 'true') {
             const deckType = await DeckType.findOne({
