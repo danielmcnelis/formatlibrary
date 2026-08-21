@@ -141,16 +141,6 @@ Card.belongsTo(DeckTypeSummary)
 DeckTypeSummary.hasMany(DeckType)
 DeckType.belongsTo(DeckTypeSummary)
 
-DeckTypeSummary.belongsTo(Deck, {
-    as: 'mostPopularExampleDeck',
-    id: 'mostPopularExampleDeckId'
-})
-
-Event.belongsTo(Deck, {
-    as: 'recentExampleDeck',
-    id: 'recentExampleDeckId'
-})
-
 //CUBE
 Draft.belongsTo(Cube)
 Cube.hasMany(Draft)

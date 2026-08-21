@@ -130,6 +130,9 @@ export const Card = db.define('cards', {
   genesysPoints: {
     type: Sequelize.INTEGER,
     defaultValue: 0
+  },
+  deckTypeSummaryId: {
+    type: Sequelize.INTEGER
   }
 })
 

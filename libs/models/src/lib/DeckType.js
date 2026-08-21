@@ -11,5 +11,8 @@ export const DeckType = db.define('deckTypes', {
   },
   category: {
     type: Sequelize.STRING
+  },
+  deckTypeSummaryId: {
+    type: Sequelize.INTEGER
   }
 })
