@@ -2779,11 +2779,12 @@ export const updateDeckTypeSummaries = async () => {
         function: 'updateDeckTypeSummaries',
         status: 'underway'
     })
+
     let b = 0
     let e = 0
 
     const deckThumbs = await DeckThumb.findAll({ include: DeckType })
-    for (let k = 0; k < deckThumbs; k++) {
+    for (let k = 0; k < deckThumbs.length; k++) {
         const deckThumb = deckThumbs[i]
         const deckType = deckThumb.deckType
         const formatName = deckThumb.formatName
