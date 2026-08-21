@@ -2782,7 +2782,7 @@ export const updateDeckTypeSummaries = async () => {
     let b = 0
     let e = 0
 
-    const deckThumbs = await DeckThumb.findAll({ include: [DeckType, Format] })
+    const deckThumbs = await DeckThumb.findAll({ include: DeckType })
     for (let k = 0; k < deckThumbs; k++) {
         const deckThumb = deckThumbs[i]
         const deckType = deckThumb.deckType
