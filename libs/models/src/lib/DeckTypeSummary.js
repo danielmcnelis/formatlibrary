@@ -3,6 +3,9 @@ import { Sequelize } from 'sequelize'
 import { db } from './db'
 
 export const DeckTypeSummary = db.define('deckTypeSummaries', {
+  id: {
+        type: Sequelize.INTEGER
+  },
   deckTypeName: {
     type: Sequelize.STRING
   },
@@ -55,6 +58,12 @@ export const DeckTypeSummary = db.define('deckTypeSummaries', {
     type: Sequelize.INTEGER
   },
   threeCopySideFrequency: {
+    type: Sequelize.INTEGER
+  },
+  mostPopularExampleDeckId: {
+    type: Sequelize.INTEGER
+  },
+  recentExampleDeckId: {
     type: Sequelize.INTEGER
   }
 })
