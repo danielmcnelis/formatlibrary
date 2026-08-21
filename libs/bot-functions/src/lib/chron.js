@@ -66,7 +66,7 @@ export const runNightlyTasks = async (client) => {
         const tasks = [
             manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
             assignSeasonalLadderRoles, purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, updateSets, 
-            updateMarketPrices, updateDecks, updateDeckTypes, updateBlogPosts, downloadNewCards, updateCardLegality,
+            updateMarketPrices, updateDecks, updateDeckTypes, updateBlogPosts, downloadNewCards, removeObsoleteArtworks, updateCardLegality,
             downloadAltArtworks, downloadMissingCardImages, updateServers, updateTops, conductCensus
         ]
     
@@ -1141,7 +1141,6 @@ export const applySeasonalDecay = async (formatId, formatName, serverId, current
 
     console.log(`Applied Seasonal Decay Rate of ${seasonalDecayRate} on ${nextDate} to ${formatName} Format.`)
 }
-
 
 
 // MANAGE SUBSCRIBERS
@@ -2705,6 +2704,72 @@ export const updateCardLegality = async () => {
 
     console.log(`Updated ${b} cards, encountered ${e} errors`)
     return console.log(`updateCardLegality() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+}
+
+// REMOVE OBSOLETE ARTWORKS
+export const removeObsoleteArtworks = async () => {
+    const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'removeObsoleteArtworks',
+        status: 'underway'
+    })
+    let b = 0
+    let e = 0
+
+    const cards = await Card.findAll({ order: [['name', 'ASC']]})
+    
+    for (let i = 0; i < cards.length; i++) {
+        try {
+            const card = cards[i]
+            const count = await Artwork.count({
+                where: {
+                    cardId: card.id,
+                    isOriginal: true
+                }
+            })
+
+            if (count === 0) {
+                console.log(`no origina artwork found for ${card.name}`)
+            } else if (count >= 2) {
+                const artworks = await Artwork.findAll({
+                    where: {
+                        cardId: card.id,
+                        isOriginal: true
+                    }
+                })
+
+                for (let j = 0; j < artworks.length; j++) {
+                    const artwork = artworks[j]
+                    if (artwork.artworkId.length >= 9) {
+                        await artwork.destroy()
+                        b++
+                    }
+                }
+
+                const count2 = await Artwork.count({
+                    where: {
+                        cardId: card.id,
+                        isOriginal: true
+                    }
+                })
+
+                if (count2 >= 2) {
+                    console.log(`multiple original artworks found for ${card.name}`)
+                }
+            }
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
+    console.log(`Deleted ${b} obsolete artworks, encountered ${e} errors`)
+    return console.log(`removeObsoleteArtworks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // PURGE LOCALS AND INTERNAL DECKS
