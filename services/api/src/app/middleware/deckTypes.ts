@@ -413,7 +413,6 @@ export const getDeckTypeSummary = async (req, res, next) => {
             const main = mainKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
             
             const mainEntries = Object.entries(main)
-            console.log(`mainEntries`, mainEntries)
 
             for (let i = 0; i < mainEntries.length; i++) {
                 const [konamiCode, count] = mainEntries[i]
@@ -433,8 +432,11 @@ export const getDeckTypeSummary = async (req, res, next) => {
                         },
                         include: Card
                     })
-
-                    if (!artwork) continue
+                    
+                    if (!artwork) {
+                        console.log(`no alternate artwork found for artworkId:`, artworkId)
+                        continue
+                    }
 
                     const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
 
@@ -453,7 +455,6 @@ export const getDeckTypeSummary = async (req, res, next) => {
               : {}
 
             const extraEntries = Object.entries(extra)
-            console.log(`extraEntries`, extraEntries)
 
             for (let i = 0; i < extraEntries.length; i++) {
                 const [konamiCode, count] = mainEntries[i]
@@ -474,7 +475,10 @@ export const getDeckTypeSummary = async (req, res, next) => {
                         include: Card
                     })
 
-                    if (!artwork) continue
+                    if (!artwork) {
+                        console.log(`no alternate artwork found for artworkId:`, artworkId)
+                        continue
+                    }
 
                     const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
 
@@ -491,7 +495,6 @@ export const getDeckTypeSummary = async (req, res, next) => {
             const side = sideKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
       
             const sideEntries = Object.entries(side)
-            console.log(`sideEntries`, sideEntries)
 
             for (let i = 0; i < sideEntries.length; i++) {
                 const [konamiCode, count] = mainEntries[i]
@@ -512,7 +515,10 @@ export const getDeckTypeSummary = async (req, res, next) => {
                         include: Card
                     })
 
-                    if (!artwork) continue
+                    if (!artwork) {
+                        console.log(`no alternate artwork found for artworkId:`, artworkId)
+                        continue
+                    }
 
                     const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
 
