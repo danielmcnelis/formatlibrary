@@ -2740,7 +2740,7 @@ export const removeObsoleteArtworks = async () => {
 
                 for (let j = 0; j < artworks.length; j++) {
                     const artwork = artworks[j]
-                    if (artwork.artworkId.length >= 9) {
+                    if (artwork.artworkId?.length >= 9) {
                         await artwork.destroy()
                         b++
                     }
