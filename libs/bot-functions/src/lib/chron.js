@@ -3071,9 +3071,11 @@ export const updateDeckTypeSummaries = async () => {
         
                 if (!card?.id) console.log(`no card: ${konamiCode}`)
 
-                const oneCopyPercent = Math.round(e[0]['1'] / data.analyzed * 100)
-                const twoCopyPercent = Math.round(e[0]['2'] / data.analyzed * 100)
-                const threeCopyPercent = Math.round(e[0]['3'] / data.analyzed * 100)
+                console.log()
+
+                const oneCopyPercent = Math.round(e[1]['1'] / data.analyzed * 100)
+                const twoCopyPercent = Math.round(e[1]['2'] / data.analyzed * 100)
+                const threeCopyPercent = Math.round(e[1]['3'] / data.analyzed * 100)
                 let zeroCopyPercent = 100 - oneCopyPercent - twoCopyPercent - threeCopyPercent
                 if (zeroCopyPercent < 0) zeroCopyPercent = 0
                     
@@ -3114,19 +3116,25 @@ export const updateDeckTypeSummaries = async () => {
                     })) || {}
         
                 if (!card?.id) console.log(`no card: ${konamiCode}`)
+                   
+                const oneCopyPercent = Math.round(e[1]['1'] / data.analyzed * 100)
+                const twoCopyPercent = Math.round(e[1]['2'] / data.analyzed * 100)
+                const threeCopyPercent = Math.round(e[1]['3'] / data.analyzed * 100)
+                let zeroCopyPercent = 100 - oneCopyPercent - twoCopyPercent - threeCopyPercent
+                if (zeroCopyPercent < 0) zeroCopyPercent = 0
                     
                 await DeckTypeSummary.create({
                     deckTypeName: deckType.name,
                     deckTypeId: deckType.id,
                     cardName: card.name,
                     cardId: card.Id,
-                    formatName: format.name,
-                    formatId: format.id,
+                    formatName: formatName,
+                    formatId: formatId,
                     location: 'extra',
-                    zeroCopyPercent: Math.round((data.analyzed - e[0]['3'] - e[0]['2'] - e[0]['1']) / data.analyzed * 100),
-                    oneCopyPercent: Math.round(e[0]['1'] / data.analyzed * 100),
-                    twoCopyPercent: Math.round(e[0]['2'] / data.analyzed * 100),
-                    threeCopyPercent: Math.round(e[0]['3'] / data.analyzed * 100),
+                    zeroCopyPercent,
+                    oneCopyPercent,
+                    twoCopyPercent,
+                    threeCopyPercent
                 })
             }
         }
@@ -3153,18 +3161,24 @@ export const updateDeckTypeSummaries = async () => {
         
                 if (!card?.id) console.log(`no card: ${konamiCode}`)
         
+                const oneCopyPercent = Math.round(e[1]['1'] / data.analyzed * 100)
+                const twoCopyPercent = Math.round(e[1]['2'] / data.analyzed * 100)
+                const threeCopyPercent = Math.round(e[1]['3'] / data.analyzed * 100)
+                let zeroCopyPercent = 100 - oneCopyPercent - twoCopyPercent - threeCopyPercent
+                if (zeroCopyPercent < 0) zeroCopyPercent = 0
+                    
                 await DeckTypeSummary.create({
                     deckTypeName: deckType.name,
                     deckTypeId: deckType.id,
                     cardName: card.name,
                     cardId: card.Id,
-                    formatName: format.name,
-                    formatId: format.id,
+                    formatName: formatName,
+                    formatId: formatId,
                     location: 'side',
-                    zeroCopyPercent: Math.round((data.analyzed - e[0]['3'] - e[0]['2'] - e[0]['1']) / data.analyzed * 100),
-                    oneCopyPercent: Math.round(e[0]['1'] / data.analyzed * 100),
-                    twoCopyPercent: Math.round(e[0]['2'] / data.analyzed * 100),
-                    threeCopyPercent: Math.round(e[0]['3'] / data.analyzed * 100),
+                    zeroCopyPercent,
+                    oneCopyPercent,
+                    twoCopyPercent,
+                    threeCopyPercent
                 })
             }
         }
