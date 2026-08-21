@@ -3033,7 +3033,7 @@ export const updateDeckTypeSummaries = async () => {
         const main = Object.entries(data.main)
     
         for (let j = 0; j < main.length; j++) {
-            const e: any = main[j]
+            const e = main[j]
             if (e[1].decks < 0.25 * data.analyzed) {
                 delete data.main[e[0]]
             } else {
@@ -3077,7 +3077,7 @@ export const updateDeckTypeSummaries = async () => {
         const extra = Object.entries(data.extra)
     
         for (let j = 0; j < extra.length; j++) {
-            const e: any = extra[j]
+            const e = extra[j]
             if (e[1].decks < 0.25 * data.analyzed) {
                 delete data.extra[e[0]]
             } else {
@@ -3115,7 +3115,7 @@ export const updateDeckTypeSummaries = async () => {
         const side = Object.entries(data.side)
     
         for (let j = 0; j < side.length; j++) {
-            const e: any = side[j]
+            const e = side[j]
             if (e[1].decks < 0.25 * data.analyzed) {
                 delete data.side[e[0]]
             } else {
