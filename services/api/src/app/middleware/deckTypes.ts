@@ -602,7 +602,10 @@ export const getDeckTypeSummary = async (req, res, next) => {
         const card =
           (await Card.findOne({
             where: {
-              artworkId: konamiCode
+                [Op.or]: {
+                    konamiCode: konamiCode,
+                    artworkId: konamiCode
+                }
             },
             attributes: ['id', 'name', 'cleanName', 'category', 'artworkId']
           })) || {}
@@ -624,7 +627,10 @@ export const getDeckTypeSummary = async (req, res, next) => {
         const card =
           (await Card.findOne({
             where: {
-              artworkId: konamiCode
+                [Op.or]: {
+                    konamiCode: konamiCode,
+                    artworkId: konamiCode
+                }
             },
             attributes: ['id', 'name', 'cleanName', 'category', 'artworkId']
           })) || {}
@@ -646,7 +652,10 @@ export const getDeckTypeSummary = async (req, res, next) => {
         const card =
           (await Card.findOne({
             where: {
-              artworkId: konamiCode
+                [Op.or]: {
+                    konamiCode: konamiCode,
+                    artworkId: konamiCode
+                }
             },
             attributes: ['id', 'name', 'cleanName', 'category', 'artworkId']
           })) || {}
