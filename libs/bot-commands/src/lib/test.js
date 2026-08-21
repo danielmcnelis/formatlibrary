@@ -8,7 +8,8 @@ import { s3FileExists } from '@fl/bot-functions'
 import { Deck, Match, Tournament, Player, Server, Subscription, TriviaQuestion, Format } from '@fl/models'
 import axios from 'axios'
 import { assignTournamentRoles, recalculateAllStats } from '../../../bot-functions/src'
-import { Format, Stats } from '../../../models/src'
+import { Artwork, Format, Stats } from '../../../models/src'
+import { Card } from 'react-bootstrap'
 // import { config } from '@fl/config'
 
 export default {
@@ -32,7 +33,7 @@ export default {
                 // await manageSubscriptions(client)
                 // await updateBlogPosts()
                 // await runNightlyTasks(client)
-                await updateCardLegality()
+                // await updateCardLegality()
 
                 // const server = await Server.findOne({ where: { id: interaction.guildId }})
                 // const guild = client.guilds.cache.get(server.id)
@@ -97,6 +98,49 @@ export default {
                 //     await player.update({ tops: tops })
                 //     console.log(`updated tops for ${player.name}`)
                 // }
+
+                const originalArtworks = await Artwork.findAll({
+                    where: {
+                        isOriginal: true
+                    },
+                    include: Card
+                })
+
+                for (let i = 0; i < originalArtworks.length; i++) {
+                    const artwork = originalArtworks[i]
+                    if (artwork.artworkId !== artwork.card?.konamiCode?.replace(/^0+/, '')) {
+                        console.log(`original artworkId for ${artwork.cardName} (${artwork.artworkId}) does not match card konamiCode (${artwork.card?.konamiCode})`)
+                    }
+                }
+
+                console.log(`----------------------------`)
+                console.log(`----------------------------`)
+                console.log(`----------------------------`)
+                console.log(`----------------------------`)
+                console.log(`----------------------------`)
+                console.log(`----------------------------`)
+                console.log(`----------------------------`)
+                console.log(`----------------------------`)
+                console.log(`----------------------------`)
+                console.log(`----------------------------`)
+
+                const cards = await Card.findAll()
+
+                for (let i = 0; i < cards.length; i++) {
+                    const card = cards[i]
+                    const count = await Artwork.count({
+                        where: {
+                            cardId: card.id,
+                            isOriginal: true
+                        }
+                    })
+
+                    if (count === 0) {
+                        console.log(`no origina artwork found for ${card.name}`)
+                    } else if (count >= 2) {
+                        console.log(`multiple original artworks found for ${card.name}`)
+                    }
+                }
 
                 return await interaction.editReply('🧪')
                 // await updateGlobalNames()

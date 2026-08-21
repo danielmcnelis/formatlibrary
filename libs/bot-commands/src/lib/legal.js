@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder } from 'discord.js'
 import { Format, Server } from '@fl/models'
-import { checkDeckList, checkHighlanderList, getSkillCard } from '@fl/bot-functions'
+import { checkDeckList, getSkillCard } from '@fl/bot-functions'
 
 export default {
     data: new SlashCommandBuilder()
