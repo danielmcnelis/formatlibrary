@@ -432,7 +432,7 @@ export const getDeckTypeSummary = async (req, res, next) => {
                         },
                         include: Card
                     })
-                    
+
                     if (!artwork) {
                         console.log(`no alternate artwork found for artworkId:`, artworkId)
                         continue
@@ -602,12 +602,12 @@ export const getDeckTypeSummary = async (req, res, next) => {
         const card =
           (await Card.findOne({
             where: {
-              konamiCode
+              artworkId: konamiCode
             },
             attributes: ['id', 'name', 'cleanName', 'category', 'artworkId']
           })) || {}
 
-        if (!card) console.log(`no card: ${konamiCode}`)
+        if (!card?.id) console.log(`no card: ${konamiCode}`)
         data.main[e[0]].card = card
       }
     }
@@ -624,12 +624,12 @@ export const getDeckTypeSummary = async (req, res, next) => {
         const card =
           (await Card.findOne({
             where: {
-              konamiCode
+              artworkId: konamiCode
             },
             attributes: ['id', 'name', 'cleanName', 'category', 'artworkId']
           })) || {}
 
-        if (!card) console.log(`no card: ${konamiCode}`)
+        if (!card?.id) console.log(`no card: ${konamiCode}`)
         data.extra[e[0]].card = card
       }
     }
@@ -646,12 +646,12 @@ export const getDeckTypeSummary = async (req, res, next) => {
         const card =
           (await Card.findOne({
             where: {
-              konamiCode
+              artworkId: konamiCode
             },
             attributes: ['id', 'name', 'cleanName', 'category', 'artworkId']
           })) || {}
 
-        if (!card) console.log(`no card: ${konamiCode}`)
+        if (!card?.id) console.log(`no card: ${konamiCode}`)
         data.side[e[0]].card = card
       }
     }
