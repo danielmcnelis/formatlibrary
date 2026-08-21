@@ -12,9 +12,10 @@ import { ChronRecord } from './ChronRecord'
 import { Community } from './Community'
 import { Cube } from './Cube'
 import { Deck } from './Deck'
-import { DeckTypeArchetype } from './DeckTypeArchetype'
 import { DeckThumb } from './DeckThumb'
 import { DeckType } from './DeckType'
+import { DeckTypeArchetype } from './DeckTypeArchetype'
+import { DeckTypeSummary } from './DeckTypeSummary'
 import { Draft } from './Draft'
 import { DraftEntry } from './DraftEntry'
 import { Entry } from './Entry'
@@ -132,6 +133,13 @@ Deck.belongsTo(DeckType)
 
 DeckType.hasMany(DeckThumb)
 DeckThumb.belongsTo(DeckType)
+
+//DECKTYPESUMMARY
+DeckTypeSummary.hasMany(Card)
+Card.belongsTo(DeckTypeSummary)
+
+DeckTypeSummary.hasMany(DeckType)
+DeckType.belongsTo(DeckTypeSummary)
 
 //CUBE
 Draft.belongsTo(Cube)
@@ -484,9 +492,10 @@ export {
   Community,
   Cube,
   Deck,
-  DeckTypeArchetype,
   DeckThumb,
   DeckType,
+  DeckTypeArchetype,
+  DeckTypeSummary,
   Draft,
   DraftEntry,
   Entry,

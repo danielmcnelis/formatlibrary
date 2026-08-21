@@ -526,10 +526,6 @@ export const getDeckTypeSummary = async (req, res, next) => {
                 }
             }
 
-            console.log('main', main)
-            console.log('extra', extra)
-            console.log('side', side)
-
             Object.entries(main).forEach((e) => {
               const konamiCode = e[0]
               const count = e[1]
