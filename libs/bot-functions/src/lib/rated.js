@@ -4,7 +4,7 @@
 //MODULE IMPORTS
 import axios from 'axios'
 import { Op } from 'sequelize'
-import { Deck, Format, Match, Pairing, Player, Pool, Stats, Server } from '@fl/models'
+import { Artwork, Card, Deck, Format, Match, Pairing, Player, Pool, Stats, Server } from '@fl/models'
 import { emojis } from '@fl/bot-emojis'
 import { getIssues } from './deck'
 import { drawDeck } from './utility'
@@ -747,7 +747,21 @@ export const getNewRatedDeck = async (user, player, format, deckToReplace) => {
                 return false 
             }
 
-            const deckArr = [...main, ...extra, ...side,]
+            const deckArr = [...main, ...extra, ...side]
+
+            for (let i = 0 ; i < deckArr.length; i++) {
+                const konamiCode = deckArr[i]
+                const artwork = await Artwork.findOne({ 
+                    where: {
+                        artworkId: konamiCode
+                    },
+                    include: Card
+                })
+
+                if (artwork?.card) {
+                    deckArr[i] = artwork.card.konamiCode
+                }
+            }
 
             let issues
             const pointsCap = 100

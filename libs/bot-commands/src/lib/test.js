@@ -102,6 +102,7 @@ export default {
                     where: {
                         isOriginal: true
                     },
+                    order: [['cardName', 'ASC']],
                     include: Card
                 })
 
@@ -123,7 +124,7 @@ export default {
                 console.log(`----------------------------`)
                 console.log(`----------------------------`)
 
-                const cards = await Card.findAll()
+                const cards = await Card.findAll({ order: [['name', 'ASC']]})
 
                 for (let i = 0; i < cards.length; i++) {
                     const card = cards[i]

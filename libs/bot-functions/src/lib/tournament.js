@@ -5,7 +5,7 @@
 import axios from 'axios'
 import { Op } from 'sequelize'
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } from 'discord.js'
-import { Deck, Entry, Event, Format, Match, Player, Replay, Stats, Series, Server, Team, Tournament } from '@fl/models'
+import { Artwork, Card, Deck, Entry, Event, Format, Match, Player, Replay, Stats, Series, Server, Team, Tournament } from '@fl/models'
 import { getIssues, getSkillCard } from './deck.js'
 import { createDecks } from './coverage.js'
 import { getForgedDeckList } from './forged.js'
@@ -120,7 +120,22 @@ export const getDeckList = async (member, player, format, override = false, unra
                 return false 
             }
 
-            const deckArr = [...main, ...extra, ...side,]
+            const deckArr = [...main, ...extra, ...side]
+
+            for (let i = 0 ; i < deckArr.length; i++) {
+                const konamiCode = deckArr[i]
+                const artwork = await Artwork.findOne({ 
+                    where: {
+                        artworkId: konamiCode
+                    },
+                    include: Card
+                })
+
+                if (artwork?.card) {
+                    deckArr[i] = artwork.card.konamiCode
+                }
+            }
+
             const issues = await getIssues(deckArr, format)
             if (!issues) return false
 
