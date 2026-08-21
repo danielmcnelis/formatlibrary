@@ -2807,9 +2807,15 @@ export const updateDeckTypeSummaries = async () => {
         const count = await Deck.count({
             where: {
                 deckTypeId: deckType.id,
-                formatId: format.id,
+                formatId: formatId,
                 origin: 'event',
                 eventId: { [Op.not]: null }
+            }
+        })
+
+        const format = await Format.findOne({
+            where: {
+                id: formatId
             }
         })
     
