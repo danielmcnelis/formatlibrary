@@ -37,7 +37,7 @@ export const CardImage = (props) => {
     } else if (isPackSimulator) {
          return (
             <div className="CardImage-box">
-                <Link to={`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
+                <Link to={`/cards/${card.cleanName?.toLowerCase()?.replaceAll(' ', '-')}`}
                     target="_blank" 
                     rel="noopener noreferrer"
                 >
@@ -104,7 +104,7 @@ export const CardImage = (props) => {
                     alt={card.name}
                   />
                 ) : parseInt(width) >= 48 && parseInt(width, 10) < 96 ? (
-                  <Link to={`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
+                  <Link to={`/cards/${card.cleanName?.toLowerCase()?.replaceAll(' ', '-')}`}
                     target="_blank" 
                     rel="noopener noreferrer"
                   >
@@ -132,7 +132,7 @@ export const CardImage = (props) => {
                       </div>
                 </Link>
                 ) : (
-                    <Link to={`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
+                    <Link to={`/cards/${card.cleanName?.toLowerCase()?.replaceAll(' ', '-')}`}
                       target="_blank" 
                       rel="noopener noreferrer"
                     >
@@ -179,7 +179,7 @@ export const CardImage = (props) => {
                     alt={card.name}
                   />
                 ) : parseInt(width) >= 48 && parseInt(width, 10) < 96 ? (
-                  <Link to={`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
+                  <Link to={`/cards/${card.cleanName?.toLowerCase()?.replaceAll(' ', '-')}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -210,7 +210,7 @@ export const CardImage = (props) => {
                       </div>
                 </Link>
                 ) : (
-                    <Link to={`/cards/${card.cleanName.toLowerCase().replaceAll(' ', '-')}`}
+                    <Link to={`/cards/${card.cleanName?.toLowerCase()?.replaceAll(' ', '-')}`}
                       target="_blank" 
                       rel="noopener noreferrer"
                     >

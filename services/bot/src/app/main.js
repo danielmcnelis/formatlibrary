@@ -96,7 +96,7 @@ const server = useHttps ? https.createServer(credentials, app).listen(port, () =
 server.on('error', console.error)
 
 // READY
-client.on('ready', async() => {
+client.on('clientReady', async() => {
     console.log('RetroBot is online!')
     try {
         await setTimers(client)
