@@ -3071,7 +3071,9 @@ export const updateDeckTypeSummaries = async () => {
         
                 if (!card?.id) console.log(`no card: ${konamiCode}`)
 
-                console.log()
+                console.log('e', e)
+                console.log('e[1]', e[1])
+                console.log('data.analyzed', data.analyzed)
 
                 const oneCopyPercent = Math.round(e[1]['1'] / data.analyzed * 100)
                 const twoCopyPercent = Math.round(e[1]['2'] / data.analyzed * 100)
@@ -3117,6 +3119,10 @@ export const updateDeckTypeSummaries = async () => {
         
                 if (!card?.id) console.log(`no card: ${konamiCode}`)
                    
+                console.log('e', e)
+                console.log('e[1]', e[1])
+                console.log('data.analyzed', data.analyzed)
+
                 const oneCopyPercent = Math.round(e[1]['1'] / data.analyzed * 100)
                 const twoCopyPercent = Math.round(e[1]['2'] / data.analyzed * 100)
                 const threeCopyPercent = Math.round(e[1]['3'] / data.analyzed * 100)
@@ -3161,6 +3167,10 @@ export const updateDeckTypeSummaries = async () => {
         
                 if (!card?.id) console.log(`no card: ${konamiCode}`)
         
+                console.log('e', e)
+                console.log('e[1]', e[1])
+                console.log('data.analyzed', data.analyzed)
+
                 const oneCopyPercent = Math.round(e[1]['1'] / data.analyzed * 100)
                 const twoCopyPercent = Math.round(e[1]['2'] / data.analyzed * 100)
                 const threeCopyPercent = Math.round(e[1]['3'] / data.analyzed * 100)
