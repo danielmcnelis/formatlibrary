@@ -3073,10 +3073,6 @@ export const updateDeckTypeSummaries = async () => {
         
                 if (!card?.id) console.log(`no card: ${konamiCode}`)
 
-                console.log('e', e)
-                console.log('e[1]', e[1])
-                console.log('data.analyzed', data.analyzed)
-
                 const oneCopyPercent = Math.round(e[1]['1'] / data.analyzed * 100)
                 const twoCopyPercent = Math.round(e[1]['2'] / data.analyzed * 100)
                 const threeCopyPercent = Math.round(e[1]['3'] / data.analyzed * 100)
@@ -3087,7 +3083,7 @@ export const updateDeckTypeSummaries = async () => {
                     deckTypeName: deckType.name,
                     deckTypeId: deckType.id,
                     cardName: card.name,
-                    cardId: card.Id,
+                    cardId: card.id,
                     formatName: formatName,
                     formatId: formatId,
                     location: 'main',
@@ -3120,10 +3116,6 @@ export const updateDeckTypeSummaries = async () => {
                     })) || {}
         
                 if (!card?.id) console.log(`no card: ${konamiCode}`)
-                   
-                console.log('e', e)
-                console.log('e[1]', e[1])
-                console.log('data.analyzed', data.analyzed)
 
                 const oneCopyPercent = Math.round(e[1]['1'] / data.analyzed * 100)
                 const twoCopyPercent = Math.round(e[1]['2'] / data.analyzed * 100)
@@ -3135,7 +3127,7 @@ export const updateDeckTypeSummaries = async () => {
                     deckTypeName: deckType.name,
                     deckTypeId: deckType.id,
                     cardName: card.name,
-                    cardId: card.Id,
+                    cardId: card.id,
                     formatName: formatName,
                     formatId: formatId,
                     location: 'extra',
@@ -3168,10 +3160,6 @@ export const updateDeckTypeSummaries = async () => {
                     })) || {}
         
                 if (!card?.id) console.log(`no card: ${konamiCode}`)
-        
-                console.log('e', e)
-                console.log('e[1]', e[1])
-                console.log('data.analyzed', data.analyzed)
 
                 const oneCopyPercent = Math.round(e[1]['1'] / data.analyzed * 100)
                 const twoCopyPercent = Math.round(e[1]['2'] / data.analyzed * 100)
@@ -3183,7 +3171,7 @@ export const updateDeckTypeSummaries = async () => {
                     deckTypeName: deckType.name,
                     deckTypeId: deckType.id,
                     cardName: card.name,
-                    cardId: card.Id,
+                    cardId: card.id,
                     formatName: formatName,
                     formatId: formatId,
                     location: 'side',
@@ -3193,6 +3181,9 @@ export const updateDeckTypeSummaries = async () => {
                     threeCopyPercent
                 })
             }
+
+
+            console.log(`analyzed ${deckType.name} for ${format.name} format`)
         }
     }
 }
