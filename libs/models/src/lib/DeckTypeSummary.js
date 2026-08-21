@@ -21,46 +21,19 @@ export const DeckTypeSummary = db.define('deckTypeSummaries', {
   formatId: {
     type: Sequelize.INTEGER
   },
-  zeroCopyMainFrequency: {
+  location: {
+    type: Sequelize.STRING
+  },
+  zeroCopyPercent: {
     type: Sequelize.INTEGER
   },
-  oneCopyMainFrequency: {
+  oneCopyPercent: {
     type: Sequelize.INTEGER
   },
-  twoCopyMainFrequency: {
+  twoCopyPercent: {
     type: Sequelize.INTEGER
   },
-  threeCopyMainFrequency: {
-    type: Sequelize.INTEGER
-  },
-  zeroCopyExtraFrequency: {
-    type: Sequelize.INTEGER
-  },
-  oneCopyExtraFrequency: {
-    type: Sequelize.INTEGER
-  },
-  twoCopyExtraFrequency: {
-    type: Sequelize.INTEGER
-  },
-  threeCopyExtraFrequency: {
-    type: Sequelize.INTEGER
-  },
-  zeroCopySideFrequency: {
-    type: Sequelize.INTEGER
-  },
-  oneCopySideFrequency: {
-    type: Sequelize.INTEGER
-  },
-  twoCopySideFrequency: {
-    type: Sequelize.INTEGER
-  },
-  threeCopySideFrequency: {
-    type: Sequelize.INTEGER
-  },
-  mostPopularExampleDeckId: {
-    type: Sequelize.INTEGER
-  },
-  recentExampleDeckId: {
+  threeCopyPercent: {
     type: Sequelize.INTEGER
   }
 })

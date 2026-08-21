@@ -2772,6 +2772,386 @@ export const removeObsoleteArtworks = async () => {
     return console.log(`removeObsoleteArtworks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
+// UPDATE DECKTYPE SUMMARIES
+export const updateDeckTypeSummaries = async () => {
+    const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'updateDeckTypeSummaries',
+        status: 'underway'
+    })
+    let b = 0
+    let e = 0
+
+    const deckThumbs = await DeckThumb.findAll({ include: [DeckType, Format] })
+    for (let k = 0; k < deckThumbs; k++) {
+        const deckThumb = deckThumbs[i]
+        const deckType = deckThumb.deckType
+        const format = deckThumb.format
+    
+        const decks = await Deck.findAll({
+            where: {
+                deckTypeId: deckType.id,
+                formatId: format.id,
+                origin: 'event',
+                eventId: { [Op.not]: null },
+                '$event.isRepresentative$': true
+            },
+            attributes: ['id', 'eventId', 'deckTypeName', 'category', 'ydk', 'formatName'],
+            include: { model: Event, attributes: ['id', 'isRepresentative']},
+            order: [['publishDate', 'DESC']],
+            limit: 100
+        })
+    
+        const count = await Deck.count({
+            where: {
+                deckTypeId: deckType.id,
+                formatId: format.id,
+                origin: 'event',
+                eventId: { [Op.not]: null }
+            }
+        })
+    
+        const showExtra = format.date >= '2008-08-05' || !format.date
+        const total = await Deck.count({ where: { origin: 'event', formatId: format.id }})
+    
+        const data = {
+            percent: Math.round((count / total) * 100) || '<1',
+            main: {},
+            extra: {},
+            side: {},
+            format: format
+        }
+    
+        for (let i = 0; i < decks.length; i++) {
+            try {
+                const deck = decks[i]
+            
+                const mainKonamiCodes = deck.ydk
+                    ?.split('#main')[1]
+                    ?.split('#extra')[0]
+                    ?.split(/[\s]+/)
+                    ?.filter((e) => e.length)
+                    ?.map((e) => e.trim().replace(/^0+/, ''))
+                    || []
+            
+                const extraKonamiCodes = showExtra
+                    ? deck.ydk
+                        ?.split('#extra')[1]
+                        ?.split('!side')[0]
+                        ?.split(/[\s]+/)
+                        ?.filter((e) => e.length)
+                        ?.map((e) => e.trim().replace(/^0+/, ''))
+                    : []
+                    
+                const sideKonamiCodes = deck.ydk
+                    ?.split('!side')[1]
+                    ?.split(/[\s]+/)
+                    ?.filter((e) => e.length)
+                    ?.map((e) => e.trim().replace(/^0+/, ''))
+                    || []
+            
+                const main = mainKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
+                
+                const mainEntries = Object.entries(main)
+    
+                for (let i = 0; i < mainEntries.length; i++) {
+                    const [konamiCode, count] = mainEntries[i]
+                    const artworkId = konamiCode.replace(/^0+/, '')
+    
+                    const isOriginalArt = await Artwork.count({
+                        where: {
+                            artworkId: artworkId,
+                            isOriginal: true
+                        }
+                    })
+    
+                    if (!isOriginalArt) {
+                        const artwork = await Artwork.findOne({
+                            where: {
+                                artworkId: artworkId
+                            },
+                            include: Card
+                        })
+    
+                        if (!artwork) {
+                            console.log(`no alternate artwork found for artworkId:`, artworkId)
+                            continue
+                        }
+    
+                        const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
+    
+                        if (main[actualKonamiCode]) {
+                            main[actualKonamiCode] = main[actualKonamiCode] + count
+                        } else {
+                            main[actualKonamiCode] = count
+                        }
+    
+                        delete main[konamiCode]
+                    }
+                }
+    
+                const extra = showExtra
+                    ? extraKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
+                    : {}
+    
+                const extraEntries = Object.entries(extra)
+    
+                for (let i = 0; i < extraEntries.length; i++) {
+                    const [konamiCode, count] = mainEntries[i]
+                    const artworkId = konamiCode.replace(/^0+/, '')
+    
+                    const isOriginalArt = await Artwork.count({
+                        where: {
+                            artworkId: artworkId,
+                            isOriginal: true
+                        }
+                    })
+    
+                    if (!isOriginalArt) {
+                        const artwork = await Artwork.findOne({
+                            where: {
+                                artworkId: artworkId
+                            },
+                            include: Card
+                        })
+    
+                        if (!artwork) {
+                            console.log(`no alternate artwork found for artworkId:`, artworkId)
+                            continue
+                        }
+    
+                        const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
+    
+                        if (extra[actualKonamiCode]) {
+                            extra[actualKonamiCode] = extra[actualKonamiCode] + count
+                        } else {
+                            extra[actualKonamiCode] = count
+                        }
+    
+                        delete extra[konamiCode]
+                    }
+                }
+    
+                const side = sideKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
+            
+                const sideEntries = Object.entries(side)
+    
+                for (let i = 0; i < sideEntries.length; i++) {
+                    const [konamiCode, count] = mainEntries[i]
+                    const artworkId = konamiCode.replace(/^0+/, '')
+    
+                    const isOriginalArt = await Artwork.count({
+                        where: {
+                            artworkId: artworkId,
+                            isOriginal: true
+                        }
+                    })
+    
+                    if (!isOriginalArt) {
+                        const artwork = await Artwork.findOne({
+                            where: {
+                                artworkId: artworkId
+                            },
+                            include: Card
+                        })
+    
+                        if (!artwork) {
+                            console.log(`no alternate artwork found for artworkId:`, artworkId)
+                            continue
+                        }
+    
+                        const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
+    
+                        if (side[actualKonamiCode]) {
+                            side[actualKonamiCode] = side[actualKonamiCode] + count
+                        } else {
+                            side[actualKonamiCode] = count
+                        }
+    
+                        delete side[konamiCode]
+                    }
+                }
+    
+                Object.entries(main).forEach((e) => {
+                    const konamiCode = e[0]
+                    const count = e[1]
+                    if (data.main[konamiCode]) {
+                    data.main[konamiCode][count] += 1
+                    data.main[konamiCode].decks += 1
+                    data.main[konamiCode].total += count
+                    } else {
+                    data.main[konamiCode] = {
+                        total: count,
+                        decks: 1,
+                        1: count === 1 ? 1 : 0,
+                        2: count === 2 ? 1 : 0,
+                        3: count === 3 ? 1 : 0
+                    }
+                    }
+                })
+            
+                Object.entries(extra).forEach((e) => {
+                    const konamiCode = e[0]
+                    const count = e[1]
+                    if (data.extra[konamiCode]) {
+                    data.extra[konamiCode][count] += 1
+                    data.extra[konamiCode].decks += 1
+                    data.extra[konamiCode].total += count
+                    } else {
+                    data.extra[konamiCode] = {
+                        total: count,
+                        decks: 1,
+                        1: count === 1 ? 1 : 0,
+                        2: count === 2 ? 1 : 0,
+                        3: count === 3 ? 1 : 0
+                    }
+                    }
+                })
+            
+                Object.entries(side).forEach((e) => {
+                    const konamiCode = e[0]
+                    const count = e[1]
+                    if (data.side[konamiCode]) {
+                    data.side[konamiCode][count] += 1
+                    data.side[konamiCode].decks += 1
+                    data.side[konamiCode].total += count
+                    } else {
+                    data.side[konamiCode] = {
+                        total: count,
+                        decks: 1,
+                        1: count === 1 ? 1 : 0,
+                        2: count === 2 ? 1 : 0,
+                        3: count === 3 ? 1 : 0
+                    }
+                    }
+                })
+            } catch (err) {
+                console.log(err)
+            }
+        }
+    
+        const main = Object.entries(data.main)
+    
+        for (let j = 0; j < main.length; j++) {
+            const e: any = main[j]
+            if (e[1].decks < 0.25 * data.analyzed) {
+                delete data.main[e[0]]
+            } else {
+                let konamiCode = e[0]
+                while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+                const card =
+                    (await Card.findOne({
+                    where: {
+                        [Op.or]: {
+                            konamiCode: konamiCode,
+                            artworkId: konamiCode
+                        }
+                    },
+                    attributes: ['id', 'name', 'cleanName', 'category', 'artworkId']
+                    })) || {}
+        
+                if (!card?.id) console.log(`no card: ${konamiCode}`)
+
+                const oneCopyPercent = Math.round(e[0]['1'] / data.analyzed * 100)
+                const twoCopyPercent = Math.round(e[0]['2'] / data.analyzed * 100)
+                const threeCopyPercent = Math.round(e[0]['3'] / data.analyzed * 100)
+                let zeroCopyPercent = 100 - oneCopyPercent - twoCopyPercent - threeCopyPercent
+                if (zeroCopyPercent < 0) zeroCopyPercent = 0
+                    
+                await DeckTypeSummary.create({
+                    deckTypeName: deckType.name,
+                    deckTypeId: deckType.id,
+                    cardName: card.name,
+                    cardId: card.Id,
+                    formatName: format.name,
+                    formatId: format.id,
+                    location: 'main',
+                    zeroCopyPercent,
+                    oneCopyPercent,
+                    twoCopyPercent,
+                    threeCopyPercent
+                })
+            }
+        }
+    
+        const extra = Object.entries(data.extra)
+    
+        for (let j = 0; j < extra.length; j++) {
+            const e: any = extra[j]
+            if (e[1].decks < 0.25 * data.analyzed) {
+                delete data.extra[e[0]]
+            } else {
+                let konamiCode = e[0]
+                while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+                const card =
+                    (await Card.findOne({
+                    where: {
+                        [Op.or]: {
+                            konamiCode: konamiCode,
+                            artworkId: konamiCode
+                        }
+                    },
+                    attributes: ['id', 'name']
+                    })) || {}
+        
+                if (!card?.id) console.log(`no card: ${konamiCode}`)
+                    
+                await DeckTypeSummary.create({
+                    deckTypeName: deckType.name,
+                    deckTypeId: deckType.id,
+                    cardName: card.name,
+                    cardId: card.Id,
+                    formatName: format.name,
+                    formatId: format.id,
+                    location: 'extra',
+                    zeroCopyPercent: Math.round((data.analyzed - e[0]['3'] - e[0]['2'] - e[0]['1']) / data.analyzed * 100),
+                    oneCopyPercent: Math.round(e[0]['1'] / data.analyzed * 100),
+                    twoCopyPercent: Math.round(e[0]['2'] / data.analyzed * 100),
+                    threeCopyPercent: Math.round(e[0]['3'] / data.analyzed * 100),
+                })
+            }
+        }
+    
+        const side = Object.entries(data.side)
+    
+        for (let j = 0; j < side.length; j++) {
+            const e: any = side[j]
+            if (e[1].decks < 0.25 * data.analyzed) {
+                delete data.side[e[0]]
+            } else {
+                let konamiCode = e[0]
+                while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+                const card =
+                    (await Card.findOne({
+                    where: {
+                        [Op.or]: {
+                            konamiCode: konamiCode,
+                            artworkId: konamiCode
+                        }
+                    },
+                    attributes: ['id', 'name']
+                    })) || {}
+        
+                if (!card?.id) console.log(`no card: ${konamiCode}`)
+        
+                await DeckTypeSummary.create({
+                    deckTypeName: deckType.name,
+                    deckTypeId: deckType.id,
+                    cardName: card.name,
+                    cardId: card.Id,
+                    formatName: format.name,
+                    formatId: format.id,
+                    location: 'side',
+                    zeroCopyPercent: Math.round((data.analyzed - e[0]['3'] - e[0]['2'] - e[0]['1']) / data.analyzed * 100),
+                    oneCopyPercent: Math.round(e[0]['1'] / data.analyzed * 100),
+                    twoCopyPercent: Math.round(e[0]['2'] / data.analyzed * 100),
+                    threeCopyPercent: Math.round(e[0]['3'] / data.analyzed * 100),
+                })
+            }
+        }
+    }
+}
+
 // PURGE LOCALS AND INTERNAL DECKS
 export const purgeLocalsAndInternalDecks = async () => {
     const start = Date.now()

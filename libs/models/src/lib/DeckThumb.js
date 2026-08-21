@@ -36,5 +36,8 @@ export const DeckThumb = db.define('deckThumbs', {
   },
   deckTypeId: {
     type: Sequelize.INTEGER
+  },
+  percent: {
+    type: Sequelize.INTEGER
   }
 })

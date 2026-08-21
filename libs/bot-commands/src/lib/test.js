@@ -1,6 +1,6 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
-import { purgeOldPrices, recalculateFormatStats, removeObsoleteArtworks, updateBlogPosts, purgeDuplicatePrices, updateMinMedMaxRarities, assignSeasonalLadderRoles, downloadOriginalArtworks, purgeBetaCards, downloadMissingCardImages, recalculateStats, downloadNewCards, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckType, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runFrequentTasks, updateCardLegality } from '@fl/bot-functions'
+import { updateDeckTypeSummaries, purgeOldPrices, recalculateFormatStats, removeObsoleteArtworks, updateBlogPosts, purgeDuplicatePrices, updateMinMedMaxRarities, assignSeasonalLadderRoles, downloadOriginalArtworks, purgeBetaCards, downloadMissingCardImages, recalculateStats, downloadNewCards, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckType, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runFrequentTasks, updateCardLegality } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { s3FileExists } from '@fl/bot-functions'
@@ -33,6 +33,7 @@ export default {
                 // await runNightlyTasks(client)
                 // await updateCardLegality()
                 // await removeObsoleteArtworks()
+                await updateDeckTypeSummaries()
 
                 // const server = await Server.findOne({ where: { id: interaction.guildId }})
                 // const guild = client.guilds.cache.get(server.id)
@@ -124,46 +125,46 @@ export default {
                 // console.log(`----------------------------`)
                 // console.log(`----------------------------`)
 
-                const cards = await Card.findAll({ order: [['name', 'ASC']]})
+                // const cards = await Card.findAll({ order: [['name', 'ASC']]})
 
-                for (let i = 0; i < cards.length; i++) {
-                    const card = cards[i]
-                    const count = await Artwork.count({
-                        where: {
-                            cardId: card.id,
-                            isOriginal: true
-                        }
-                    })
+                // for (let i = 0; i < cards.length; i++) {
+                //     const card = cards[i]
+                //     const count = await Artwork.count({
+                //         where: {
+                //             cardId: card.id,
+                //             isOriginal: true
+                //         }
+                //     })
 
-                    if (count === 0) {
-                        console.log(`no original artwork found for ${card.name}`)
-                    } else if (count >= 2) {
-                        const artworks = await Artwork.findAll({
-                            where: {
-                                cardId: card.id,
-                                isOriginal: true
-                            }
-                        })
+                //     if (count === 0) {
+                //         console.log(`no original artwork found for ${card.name}`)
+                //     } else if (count >= 2) {
+                //         const artworks = await Artwork.findAll({
+                //             where: {
+                //                 cardId: card.id,
+                //                 isOriginal: true
+                //             }
+                //         })
 
-                        for (let j = 0; j < artworks.length; j++) {
-                            const artwork = artworks[j]
-                            if (artwork.artworkId?.length >= 9) {
-                                await artwork.destroy()
-                            }
-                        }
+                //         for (let j = 0; j < artworks.length; j++) {
+                //             const artwork = artworks[j]
+                //             if (artwork.artworkId?.length >= 9) {
+                //                 await artwork.destroy()
+                //             }
+                //         }
 
-                        const count2 = await Artwork.count({
-                            where: {
-                                cardId: card.id,
-                                isOriginal: true
-                            }
-                        })
+                //         const count2 = await Artwork.count({
+                //             where: {
+                //                 cardId: card.id,
+                //                 isOriginal: true
+                //             }
+                //         })
 
-                        if (count2 >= 2) {
-                            console.log(`multiple original artworks found for ${card.name}`)
-                        }
-                    }
-                }
+                //         if (count2 >= 2) {
+                //             console.log(`multiple original artworks found for ${card.name}`)
+                //         }
+                //     }
+                // }
 
                 return await interaction.editReply('🧪')
                 // await updateGlobalNames()
