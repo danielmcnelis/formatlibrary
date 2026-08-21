@@ -2823,6 +2823,7 @@ export const updateDeckTypeSummaries = async () => {
         const total = await Deck.count({ where: { origin: 'event', formatId: formatId }})
     
         const data = {
+            analyzed: 0,
             percent: Math.round((count / total) * 100) || '<1',
             main: {},
             extra: {},
@@ -2832,6 +2833,7 @@ export const updateDeckTypeSummaries = async () => {
         for (let i = 0; i < decks.length; i++) {
             try {
                 const deck = decks[i]
+                data.analyzed++
             
                 const mainKonamiCodes = deck.ydk
                     ?.split('#main')[1]
