@@ -2786,12 +2786,13 @@ export const updateDeckTypeSummaries = async () => {
     for (let k = 0; k < deckThumbs; k++) {
         const deckThumb = deckThumbs[i]
         const deckType = deckThumb.deckType
-        const format = deckThumb.format
+        const formatName = deckThumb.formatName
+        const formatId = deckThumb.formatId
     
         const decks = await Deck.findAll({
             where: {
                 deckTypeId: deckType.id,
-                formatId: format.id,
+                formatId: formatId,
                 origin: 'event',
                 eventId: { [Op.not]: null },
                 '$event.isRepresentative$': true
@@ -2812,14 +2813,13 @@ export const updateDeckTypeSummaries = async () => {
         })
     
         const showExtra = format.date >= '2008-08-05' || !format.date
-        const total = await Deck.count({ where: { origin: 'event', formatId: format.id }})
+        const total = await Deck.count({ where: { origin: 'event', formatId: formatId }})
     
         const data = {
             percent: Math.round((count / total) * 100) || '<1',
             main: {},
             extra: {},
-            side: {},
-            format: format
+            side: {}
         }
     
         for (let i = 0; i < decks.length; i++) {
@@ -3063,8 +3063,8 @@ export const updateDeckTypeSummaries = async () => {
                     deckTypeId: deckType.id,
                     cardName: card.name,
                     cardId: card.Id,
-                    formatName: format.name,
-                    formatId: format.id,
+                    formatName: formatName,
+                    formatId: formatId,
                     location: 'main',
                     zeroCopyPercent,
                     oneCopyPercent,
