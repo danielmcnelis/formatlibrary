@@ -5,11 +5,10 @@ import { purgeOldPrices, recalculateFormatStats, updateBlogPosts, purgeDuplicate
 import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { s3FileExists } from '@fl/bot-functions'
-import { Deck, Match, Tournament, Player, Server, Subscription, TriviaQuestion, Format } from '@fl/models'
+import { Card, Deck, Match, Tournament, Player, Server, Subscription, TriviaQuestion, Format } from '@fl/models'
 import axios from 'axios'
 import { assignTournamentRoles, recalculateAllStats } from '../../../bot-functions/src'
 import { Artwork, Format, Stats } from '../../../models/src'
-import { Card } from 'react-bootstrap'
 // import { config } from '@fl/config'
 
 export default {
