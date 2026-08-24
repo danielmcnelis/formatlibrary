@@ -762,14 +762,14 @@ export const recalculateFormatStats = async (format) => {
     const count = await Match.count({ where: { formatId: format.id }})
     console.log(`Recalculating data from ${count} ${format.name} ${format.emoji} matches. Please wait...`)
 
-    const attributes = format.useSeasonalElo ? [
-        'id', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 
-        'seasonalElo', 'bestSeasonalElo', 'backupSeasonalElo', 'seasonalWins', 'seasonalLosses', 'seasonalGames', 
-        'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
-    ] : [
-        'id', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games',  
-        'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
-    ]
+    // const attributes = format.useSeasonalElo ? [
+    //     'id', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 
+    //     'seasonalElo', 'bestSeasonalElo', 'backupSeasonalElo', 'seasonalWins', 'seasonalLosses', 'seasonalGames', 
+    //     'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
+    // ] : [
+    //     'id', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games',  
+    //     'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
+    // ]
 
     const servers = await Server.findAll({
         where: {
@@ -787,21 +787,24 @@ export const recalculateFormatStats = async (format) => {
 
     for (let z = 0; z < servers.length; z++) {
         const server = servers[z]
-        console.log('server.name', server.name)
+        // console.log('server.name', server.name)
         let allStats = await Stats.findAll({ 
             where: { formatId: format.id, serverId: server.id }, 
-            attributes: attributes
+            attributes: [
+                'id', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 
+                'seasonalElo', 'bestSeasonalElo', 'backupSeasonalElo', 'seasonalWins', 'seasonalLosses', 'seasonalGames', 
+                'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
+            ]
         })
 
-
-        const allMatches = await Match.findAll({ 
+        const allMatches = await Match.findAll({
             where: { formatId: format.id, serverId: server.id }, 
             attributes: ['id', 'formatId', 'serverId', 'winnerName', 'loserName', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'classicDelta', 'createdAt', 'isSeasonal'], 
             order: [["createdAt", "ASC"]]
         })
 
-        if (!allMatches.length) { 
-            console.log(`No matches for ${format.name}.`)
+        if (!allMatches.length) {
+            // console.log(`No matches for ${format.name}.`)
             continue
         }
 
@@ -900,7 +903,6 @@ export const recalculateFormatStats = async (format) => {
                         isInternal: server.hasInternalLadder
                     })
     
-                    console.log('created new winner stats', winnerId)
                     allStats.push(stats)
                     i--
                     continue
@@ -919,7 +921,6 @@ export const recalculateFormatStats = async (format) => {
                         isInternal: server.hasInternalLadder
                     })
     
-                    console.log('created new loser stats:', loserId)
                     allStats.push(stats)
                     i--
                     continue
@@ -927,7 +928,7 @@ export const recalculateFormatStats = async (format) => {
     
                 await updateGeneralStats(winnerStats, loserStats)
                 if (match.isSeasonal && format.seasonResetDate < match.createdAt) await updateSeasonalStats(winnerStats, loserStats)
-                console.log(`${format.name} Match ${i+1}: ${winnerStats.playerName} > ${loserStats.playerName}`)
+                // console.log(`${format.name} Match ${i+1}: ${winnerStats.playerName} > ${loserStats.playerName}`)
             } catch (err) {
                 console.log(err)
             }
@@ -949,7 +950,7 @@ export const recalculateFormatStats = async (format) => {
                 if (!vanquishedIds.includes(v.loserId)) vanquishedIds.push(v.loserId)
             })
     
-            console.log(`${stats.playerName} has defeated ${vanquishedIds.length} unique opponents`)
+            // console.log(`${stats.playerName} has defeated ${vanquishedIds.length} unique opponents`)
             await stats.update({ vanquished: vanquishedIds.length })
         }
     }
@@ -983,8 +984,6 @@ export const recalculateAllStats = async () => {
     console.log(`All recalculations complete!`)
     return console.log(`recalculateAllStats() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
-
-
 
 
 // APPLY DECAY
@@ -1051,7 +1050,7 @@ export const applyGeneralDecay = async (formatId, formatName, serverId, currentD
         const n = generalGamesPlayed[stats.playerId] || 0
         const standard = Math.floor(days / 7)
         const shields = n > standard ? standard : n
-        console.log(`${stats.playerName}'s shields:`, shields, 'out of', standard)
+        // console.log(`${stats.playerName}'s shields:`, shields, 'out of', standard)
 
         if (
             stats.elo > 500
@@ -1117,8 +1116,6 @@ export const applySeasonalDecay = async (formatId, formatName, serverId, current
         }
     }
 
-    console.log('seasonalGamesPlayed', seasonalGamesPlayed)
-
     const k = 0.5
     for (let i = 0; i < allStats.length; i++) {
         const stats = allStats[i]
@@ -1126,7 +1123,7 @@ export const applySeasonalDecay = async (formatId, formatName, serverId, current
         const standard = Math.floor(k * days)
         const shields = n > standard ? standard : n
 
-        console.log(`${stats.playerName}'s shields:`, shields, 'out of', standard)
+        // console.log(`${stats.playerName}'s shields:`, shields, 'out of', standard)
 
         if (
             stats.seasonalElo > 500
