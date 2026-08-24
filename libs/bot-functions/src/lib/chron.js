@@ -65,9 +65,10 @@ export const runNightlyTasks = async (client) => {
         
         const tasks = [
             manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
-            assignSeasonalLadderRoles, purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, updateSets, 
-            updateMarketPrices, updateDecks, updateDeckTypes, updateBlogPosts, downloadNewCards, removeObsoleteArtworks, updateCardLegality,
-            downloadAltArtworks, downloadMissingCardImages, updateServers, updateTops, conductCensus
+            assignSeasonalLadderRoles, purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, 
+            updateSets, updateMarketPrices, downloadNewCards, removeObsoleteArtworks, updateCardLegality, 
+            downloadAltArtworks, downloadMissingCardImages, updateServers, updateTops, updateDecks, 
+            updateDeckTypes, updateDeckTypeSummaries, updateBlogPosts, conductCensus
         ]
     
         for (let i = 0; i < tasks.length; i++) {
@@ -3181,10 +3182,9 @@ export const updateDeckTypeSummaries = async () => {
                     threeCopyPercent
                 })
             }
-
-
-            console.log(`analyzed ${deckType.name} for ${format.name} format`)
         }
+
+        console.log(`analyzed ${deckType.name} for ${format.name} format`)
     }
 }
 

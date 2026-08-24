@@ -227,14 +227,14 @@ export const DeckType = (props) => {
                         <div id="main" className="deck-flexbox">
                         {
                         summary.mainMonsters.map((data, index) => {
-                            const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
-                            data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
-                            `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
+                            const info = data.oneCopyPercent > data.twoCopyPercent && data.oneCopyPercent > data.threeCopyPercent ? `1x in ${data.oneCopyPercent}%` :
+                                data.twoCopyPercent >= data.oneCopyPercent && data.twoCopyPercent >= data.threeCopyPercent ? `2x in ${data.twoCopyPercent}%` :
+                                `3x in ${data.threeCopyPercent}%` 
             
-                            const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
+                            const details = (data.threeCopyPercent ? `3x in ${data.threeCopyPercent}%\n` : '') +
+                                (data.twoCopyPercent ? `2x in ${data.twoCopyPercent}%\n` : '') +
+                                (data.oneCopyPercent ? `1x in ${data.oneCopyPercent}%\n` : '') +
+                                (data.zeroCopyPercent ? `0x in ${data.zeroCopyPercent}%` : '')
             
                             return (
                                 <div className="popular-main" key={'m' + data.card.artworkId}>
@@ -249,14 +249,14 @@ export const DeckType = (props) => {
                         }
                         {
                         summary.mainSpells.map((data, index) => {
-                            const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
-                            data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
-                            `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
+                            const info = data.oneCopyPercent > data.twoCopyPercent && data.oneCopyPercent > data.threeCopyPercent ? `1x in ${data.oneCopyPercent}%` :
+                                data.twoCopyPercent >= data.oneCopyPercent && data.twoCopyPercent >= data.threeCopyPercent ? `2x in ${data.twoCopyPercent}%` :
+                                `3x in ${data.threeCopyPercent}%` 
             
-                            const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
+                            const details = (data.threeCopyPercent ? `3x in ${data.threeCopyPercent}%\n` : '') +
+                                (data.twoCopyPercent ? `2x in ${data.twoCopyPercent}%\n` : '') +
+                                (data.oneCopyPercent ? `1x in ${data.oneCopyPercent}%\n` : '') +
+                                (data.zeroCopyPercent ? `0x in ${data.zeroCopyPercent}%` : '')
             
                             return (
                                 <div className="popular-main" key={'m' + data.card.artworkId} >
@@ -271,14 +271,14 @@ export const DeckType = (props) => {
                         }
                         {
                         summary.mainTraps.map((data, index) => {
-                            const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
-                            data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
-                            `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
+                            const info = data.oneCopyPercent > data.twoCopyPercent && data.oneCopyPercent > data.threeCopyPercent ? `1x in ${data.oneCopyPercent}%` :
+                                data.twoCopyPercent >= data.oneCopyPercent && data.twoCopyPercent >= data.threeCopyPercent ? `2x in ${data.twoCopyPercent}%` :
+                                `3x in ${data.threeCopyPercent}%` 
             
-                            const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
+                            const details = (data.threeCopyPercent ? `3x in ${data.threeCopyPercent}%\n` : '') +
+                                (data.twoCopyPercent ? `2x in ${data.twoCopyPercent}%\n` : '') +
+                                (data.oneCopyPercent ? `1x in ${data.oneCopyPercent}%\n` : '') +
+                                (data.zeroCopyPercent ? `0x in ${data.zeroCopyPercent}%` : '')
             
                             return (
                                 <div className="popular-main" key={'m' + data.card.artworkId} >
@@ -304,14 +304,14 @@ export const DeckType = (props) => {
                                 <div id="extra" className="deck-flexbox">
                                 {
                                     summary.extraMonsters.map((data, index) => {
-                                    const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
-                                        data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
-                                        `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
-                
-                                        const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                        (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                        (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                        ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
+                                        const info = data.oneCopyPercent > data.twoCopyPercent && data.oneCopyPercent > data.threeCopyPercent ? `1x in ${data.oneCopyPercent}%` :
+                                            data.twoCopyPercent >= data.oneCopyPercent && data.twoCopyPercent >= data.threeCopyPercent ? `2x in ${data.twoCopyPercent}%` :
+                                            `3x in ${data.threeCopyPercent}%` 
+                        
+                                        const details = (data.threeCopyPercent ? `3x in ${data.threeCopyPercent}%\n` : '') +
+                                            (data.twoCopyPercent ? `2x in ${data.twoCopyPercent}%\n` : '') +
+                                            (data.oneCopyPercent ? `1x in ${data.oneCopyPercent}%\n` : '') +
+                                            (data.zeroCopyPercent ? `0x in ${data.zeroCopyPercent}%` : '')
                     
                                         return (
                                         <div className="popular-side" key={'e' + data.card.artworkId} >
@@ -336,14 +336,14 @@ export const DeckType = (props) => {
                             <div id="side" className="deck-flexbox">
                             {
                             summary.sideMonsters.map((data, index) => {
-                                const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
-                                data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
-                                `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
-                
-                                const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
+                            const info = data.oneCopyPercent > data.twoCopyPercent && data.oneCopyPercent > data.threeCopyPercent ? `1x in ${data.oneCopyPercent}%` :
+                                data.twoCopyPercent >= data.oneCopyPercent && data.twoCopyPercent >= data.threeCopyPercent ? `2x in ${data.twoCopyPercent}%` :
+                                `3x in ${data.threeCopyPercent}%` 
+            
+                            const details = (data.threeCopyPercent ? `3x in ${data.threeCopyPercent}%\n` : '') +
+                                (data.twoCopyPercent ? `2x in ${data.twoCopyPercent}%\n` : '') +
+                                (data.oneCopyPercent ? `1x in ${data.oneCopyPercent}%\n` : '') +
+                                (data.zeroCopyPercent ? `0x in ${data.zeroCopyPercent}%` : '')
                 
                                 return (
                                     <div className="popular-side" key={'s' + data.card.artworkId} >
@@ -358,14 +358,14 @@ export const DeckType = (props) => {
                             }
                             {
                             summary.sideSpells.map((data, index) => {
-                                const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
-                                data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
-                                `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
-                
-                                const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
+                            const info = data.oneCopyPercent > data.twoCopyPercent && data.oneCopyPercent > data.threeCopyPercent ? `1x in ${data.oneCopyPercent}%` :
+                                data.twoCopyPercent >= data.oneCopyPercent && data.twoCopyPercent >= data.threeCopyPercent ? `2x in ${data.twoCopyPercent}%` :
+                                `3x in ${data.threeCopyPercent}%` 
+            
+                            const details = (data.threeCopyPercent ? `3x in ${data.threeCopyPercent}%\n` : '') +
+                                (data.twoCopyPercent ? `2x in ${data.twoCopyPercent}%\n` : '') +
+                                (data.oneCopyPercent ? `1x in ${data.oneCopyPercent}%\n` : '') +
+                                (data.zeroCopyPercent ? `0x in ${data.zeroCopyPercent}%` : '')
                 
                                 return (
                                     <div className="popular-side" key={'s' + data.card.artworkId}>
@@ -380,14 +380,14 @@ export const DeckType = (props) => {
                             }
                             {
                             summary.sideTraps.map((data, index) => {
-                                const info = data['1'] > data['2'] && data['1'] > data['3'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100)}%` :
-                                data['2'] >= data['1'] && data['2'] >= data['3'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100)}%` :
-                                `3x in ${Math.round(data['3'] / summary.analyzed * 100)}%` 
-                
-                                const details = (data['3'] ? `3x in ${Math.round(data['3'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                    (data['2'] ? `2x in ${Math.round(data['2'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                    (data['1'] ? `1x in ${Math.round(data['1'] / summary.analyzed * 100) || '<1'}%\n` : '') +
-                                    ((summary.analyzed - data.decks) ? `0x in ${Math.round((summary.analyzed - data.decks) / summary.analyzed * 100) || '<1'}%` : '')
+                            const info = data.oneCopyPercent > data.twoCopyPercent && data.oneCopyPercent > data.threeCopyPercent ? `1x in ${data.oneCopyPercent}%` :
+                                data.twoCopyPercent >= data.oneCopyPercent && data.twoCopyPercent >= data.threeCopyPercent ? `2x in ${data.twoCopyPercent}%` :
+                                `3x in ${data.threeCopyPercent}%` 
+            
+                            const details = (data.threeCopyPercent ? `3x in ${data.threeCopyPercent}%\n` : '') +
+                                (data.twoCopyPercent ? `2x in ${data.twoCopyPercent}%\n` : '') +
+                                (data.oneCopyPercent ? `1x in ${data.oneCopyPercent}%\n` : '') +
+                                (data.zeroCopyPercent ? `0x in ${data.zeroCopyPercent}%` : '')
                 
                                 return (
                                     <div className="popular-side" key={'s' + data.card.artworkId}>
