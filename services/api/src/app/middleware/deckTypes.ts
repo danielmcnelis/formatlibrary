@@ -391,7 +391,7 @@ export const getDeckTypeSummary = async (req, res, next) => {
             '$card.category$': 'Monster',
         },
         include: Card,
-        order: [['zeroCopyPercent', 'DESC', 'cardName', 'ASC']]
+        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })
 
     data.mainSpells = await DeckTypeSummary.findAll({
@@ -402,7 +402,7 @@ export const getDeckTypeSummary = async (req, res, next) => {
             '$card.category$': 'Spell',
         },
         include: Card,
-        order: [['zeroCopyPercent', 'DESC', 'cardName', 'ASC']]
+        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })
 
     data.mainTraps = await DeckTypeSummary.findAll({
@@ -413,7 +413,7 @@ export const getDeckTypeSummary = async (req, res, next) => {
             '$card.category$': 'Trap',
         },
         include: Card,
-        order: [['zeroCopyPercent', 'DESC', 'cardName', 'ASC']]
+        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })
 
     data.extraMonsters = await DeckTypeSummary.findAll({
@@ -423,7 +423,7 @@ export const getDeckTypeSummary = async (req, res, next) => {
             location: 'extra'
         },
         include: Card,
-        order: [['zeroCopyPercent', 'DESC', 'cardName', 'ASC']]
+        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })
 
     data.sideMonsters = await DeckTypeSummary.findAll({
@@ -434,7 +434,7 @@ export const getDeckTypeSummary = async (req, res, next) => {
             '$card.category$': 'Monster',
         },
         include: Card,
-        order: [['zeroCopyPercent', 'DESC', 'cardName', 'ASC']]
+        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })
 
     data.sideSpells = await DeckTypeSummary.findAll({
@@ -445,7 +445,7 @@ export const getDeckTypeSummary = async (req, res, next) => {
             '$card.category$': 'Spell',
         },
         include: Card,
-        order: [['zeroCopyPercent', 'DESC', 'cardName', 'ASC']]
+        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })
 
     data.sideTraps = await DeckTypeSummary.findAll({
@@ -456,7 +456,7 @@ export const getDeckTypeSummary = async (req, res, next) => {
             '$card.category$': 'Trap',
         },
         include: Card,
-        order: [['zeroCopyPercent', 'DESC', 'cardName', 'ASC']]
+        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })
 
     return res.json(data)

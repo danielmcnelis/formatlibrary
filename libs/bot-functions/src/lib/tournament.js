@@ -1016,6 +1016,7 @@ export const removeParticipant = async (server, interaction, member, entry, tour
 
     try {
         await tournament.update({ state: 'processing' })
+        const entryName = entry.name
         // DELETE PARTICIPANT FROM CHALLONGE BRACKET 
         await axios({
             method: 'delete',
@@ -1054,7 +1055,7 @@ export const removeParticipant = async (server, interaction, member, entry, tour
 
             const roundName = getRoundName(tournament, openMatch?.round, participants_count)
             opposingMember.user.send(
-                `Pairing update: Your opponent for ${roundName} of ${tournament.name} ${tournament.logo || tournament.emoji} (${entry.name}) dropped. ${emojis.woe} Enjoy the free win! ${emojis.koolaid}`
+                `Pairing update: Your opponent for ${roundName} of ${tournament.name} ${tournament.logo || tournament.emoji} (${entryName}) dropped. ${emojis.woe} Enjoy the free win! ${emojis.koolaid}`
             )
         }
         
