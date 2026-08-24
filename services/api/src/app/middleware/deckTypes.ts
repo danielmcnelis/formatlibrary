@@ -387,9 +387,9 @@ export const getDeckTypeSummary = async (req, res, next) => {
             deckTypeId: deckType.id,
             formatId: format.id,
             location: 'main',
-            '$card.category$': 'Monster',
+            '$card.category$': 'Monster'
         },
-        include: [Card],
+        include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })
 
@@ -400,9 +400,9 @@ export const getDeckTypeSummary = async (req, res, next) => {
             deckTypeId: deckType.id,
             formatId: format.id,
             location: 'main',
-            '$card.category$': 'Spell',
+            '$card.category$': 'Spell'
         },
-        include: [Card],
+        include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })
 
@@ -411,9 +411,9 @@ export const getDeckTypeSummary = async (req, res, next) => {
             deckTypeId: deckType.id,
             formatId: format.id,
             location: 'main',
-            '$card.category$': 'Trap',
+            '$card.category$': 'Trap'
         },
-        include: [Card],
+        include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })
 
@@ -423,7 +423,7 @@ export const getDeckTypeSummary = async (req, res, next) => {
             formatId: format.id,
             location: 'extra'
         },
-        include: [Card],
+        include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })
 
@@ -432,9 +432,9 @@ export const getDeckTypeSummary = async (req, res, next) => {
             deckTypeId: deckType.id,
             formatId: format.id,
             location: 'side',
-            '$card.category$': 'Monster',
+            '$card.category$': 'Monster'
         },
-        include: [Card],
+        include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })
 
@@ -443,9 +443,9 @@ export const getDeckTypeSummary = async (req, res, next) => {
             deckTypeId: deckType.id,
             formatId: format.id,
             location: 'side',
-            '$card.category$': 'Spell',
+            '$card.category$': 'Spell'
         },
-        include: [Card],
+        include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })
 
@@ -454,9 +454,9 @@ export const getDeckTypeSummary = async (req, res, next) => {
             deckTypeId: deckType.id,
             formatId: format.id,
             location: 'side',
-            '$card.category$': 'Trap',
+            '$card.category$': 'Trap'
         },
-        include: [Card],
+        include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })
 
