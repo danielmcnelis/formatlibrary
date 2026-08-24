@@ -135,11 +135,11 @@ DeckType.hasMany(DeckThumb)
 DeckThumb.belongsTo(DeckType)
 
 //DECKTYPESUMMARY
-DeckTypeSummary.hasMany(Card)
-Card.belongsTo(DeckTypeSummary)
+Card.hasMany(DeckTypeSummary)
+DeckTypeSummary.belongsTo(Card)
 
-DeckTypeSummary.hasMany(DeckType)
-DeckType.belongsTo(DeckTypeSummary)
+DeckType.hasMany(DeckTypeSummary)
+DeckTypeSummary.belongsTo(DeckType)
 
 //CUBE
 Draft.belongsTo(Cube)
