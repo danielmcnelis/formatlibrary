@@ -370,11 +370,10 @@ export const getDeckTypeSummary = async (req, res, next) => {
             deckTypeId: deckType.id,
             formatId: format.id,
             location: 'main',
-            '$cards.category$': 'Monster'
         },
         include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })].filter((e) => e.card.category === 'Monster')
+    })].filter((e) => e.card?.category === 'Monster')
 
     console.log('mainMonsters', mainMonsters)
 
@@ -383,22 +382,20 @@ export const getDeckTypeSummary = async (req, res, next) => {
             deckTypeId: deckType.id,
             formatId: format.id,
             location: 'main',
-            '$cards.category$': 'Spell'
         },
         include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })].filter((e) => e.card.category === 'Spell')
+    })].filter((e) => e.card?.category === 'Spell')
 
     const mainTraps = [...await DeckTypeSummary.findAll({
         where: {
             deckTypeId: deckType.id,
             formatId: format.id,
             location: 'main',
-            '$cards.category$': 'Trap'
         },
         include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })].filter((e) => e.card.category === 'Trap')
+    })].filter((e) => e.card?.category === 'Trap')
 
     const extraMonsters = await DeckTypeSummary.findAll({
         where: {
@@ -418,7 +415,7 @@ export const getDeckTypeSummary = async (req, res, next) => {
         },
         include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })].filter((e) => e.card.category === 'Monster')
+    })].filter((e) => e.card?.category === 'Monster')
 
     const sideSpells = [...await DeckTypeSummary.findAll({
         where: {
@@ -428,7 +425,7 @@ export const getDeckTypeSummary = async (req, res, next) => {
         },
         include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })].filter((e) => e.card.category === 'Spell')
+    })].filter((e) => e.card?.category === 'Spell')
 
     const sideTraps = [...await DeckTypeSummary.findAll({
         where: {
@@ -438,7 +435,7 @@ export const getDeckTypeSummary = async (req, res, next) => {
         },
         include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })].filter((e) => e.card.category === 'Trap')
+    })].filter((e) => e.card?.category === 'Trap')
 
     const data = {
       percent: Math.round((count / total) * 100) || '<1',
