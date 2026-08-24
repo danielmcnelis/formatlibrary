@@ -347,50 +347,38 @@ export const getDeckTypeSummary = async (req, res, next) => {
 
     const total = await Deck.count({ where: { origin: 'event', formatId: format.id }})
 
-    console.log('deckType?.id', deckType?.id)
-    console.log('format?.id', format?.id)
-
-    const mainMonsters = [...await DeckTypeSummary.findAll({
+    const mainMonsters = await DeckTypeSummary.findAll({
         where: {
             deckTypeId: deckType.id,
             formatId: format.id,
             location: 'main',
+            '$card.category$': 'Monster',
         },
         include: Card,
-        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })].filter((e) => e.card?.category === 'Monster')
-
-    const entireMain = await DeckTypeSummary.findAll({
-        where: {
-            deckTypeId: deckType.id,
-            formatId: format.id,
-            location: 'main',
-        },
-        include: Card,
-        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
+        order: [['zeroCopyPercent', 'ASC'], ['cardName', 'ASC']]
     })
 
-    console.log('entireMain', entireMain)
-
-    const mainSpells = [...await DeckTypeSummary.findAll({
+    const mainSpells = await DeckTypeSummary.findAll({
         where: {
             deckTypeId: deckType.id,
             formatId: format.id,
             location: 'main',
+            '$card.category$': 'Spell',
         },
         include: Card,
-        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })].filter((e) => e.card?.category === 'Spell')
+        order: [['zeroCopyPercent', 'ASC'], ['cardName', 'ASC']]
+    })
 
-    const mainTraps = [...await DeckTypeSummary.findAll({
+    const mainTraps = await DeckTypeSummary.findAll({
         where: {
             deckTypeId: deckType.id,
             formatId: format.id,
             location: 'main',
+            '$card.category$': 'Trap',
         },
         include: Card,
-        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })].filter((e) => e.card?.category === 'Trap')
+        order: [['zeroCopyPercent', 'ASC'], ['cardName', 'ASC']]
+    })
 
     const extraMonsters = await DeckTypeSummary.findAll({
         where: {
@@ -399,38 +387,41 @@ export const getDeckTypeSummary = async (req, res, next) => {
             location: 'extra'
         },
         include: Card,
-        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
+        order: [['zeroCopyPercent', 'ASC'], ['cardName', 'ASC']]
     })
 
-    const sideMonsters = [...await DeckTypeSummary.findAll({
+    const sideMonsters = await DeckTypeSummary.findAll({
         where: {
             deckTypeId: deckType.id,
             formatId: format.id,
-            location: 'side'
+            location: 'side',
+            '$card.category$': 'Monster',
         },
         include: Card,
-        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })].filter((e) => e.card?.category === 'Monster')
+        order: [['zeroCopyPercent', 'ASC'], ['cardName', 'ASC']]
+    })
 
-    const sideSpells = [...await DeckTypeSummary.findAll({
+    const sideSpells = await DeckTypeSummary.findAll({
         where: {
             deckTypeId: deckType.id,
             formatId: format.id,
-            location: 'side'
+            location: 'side',
+            '$card.category$': 'Spell',
         },
         include: Card,
-        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })].filter((e) => e.card?.category === 'Spell')
+        order: [['zeroCopyPercent', 'ASC'], ['cardName', 'ASC']]
+    })
 
-    const sideTraps = [...await DeckTypeSummary.findAll({
+    const sideTraps = await DeckTypeSummary.findAll({
         where: {
             deckTypeId: deckType.id,
             formatId: format.id,
-            location: 'side'
+            location: 'side',
+            '$card.category$': 'Trap',
         },
         include: Card,
-        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })].filter((e) => e.card?.category === 'Trap')
+        order: [['zeroCopyPercent', 'ASC'], ['cardName', 'ASC']]
+    })
 
     const data = {
       percent: Math.round((count / total) * 100) || '<1',
