@@ -365,26 +365,7 @@ export const getDeckTypeSummary = async (req, res, next) => {
 
     const total = await Deck.count({ where: { origin: 'event', formatId: format.id }})
 
-    const data = {
-      percent: Math.round((count / total) * 100) || '<1',
-      deckType: deckType.name,
-      deckCategory: deckType.category,
-      analyzed: 0,
-      main: {},
-      mainMonsters: [],
-      mainSpells: [],
-      mainTraps: [],
-      extra: {},
-      extraMonsters: [],
-      side: {},
-      sideMonsters: [],
-      sideSpells: [],
-      sideTraps: [],
-      format: format,
-      examples: [mostPopular, mostRecent]
-    }
-
-    data.mainMonsters = await DeckTypeSummary.findAll({
+    const mainMonsters = [...await DeckTypeSummary.findAll({
         where: {
             deckTypeId: deckType.id,
             formatId: format.id,
@@ -393,11 +374,11 @@ export const getDeckTypeSummary = async (req, res, next) => {
         },
         include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })
+    })].filter((e) => e.card.category === 'Monster')
 
-    console.log('mainMonsters', data.mainMonsters)
+    console.log('mainMonsters', mainMonsters)
 
-    data.mainSpells = await DeckTypeSummary.findAll({
+    const mainSpells = [...await DeckTypeSummary.findAll({
         where: {
             deckTypeId: deckType.id,
             formatId: format.id,
@@ -406,9 +387,9 @@ export const getDeckTypeSummary = async (req, res, next) => {
         },
         include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })
+    })].filter((e) => e.card.category === 'Spell')
 
-    data.mainTraps = await DeckTypeSummary.findAll({
+    const mainTraps = [...await DeckTypeSummary.findAll({
         where: {
             deckTypeId: deckType.id,
             formatId: format.id,
@@ -417,9 +398,9 @@ export const getDeckTypeSummary = async (req, res, next) => {
         },
         include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })
+    })].filter((e) => e.card.category === 'Trap')
 
-    data.extraMonsters = await DeckTypeSummary.findAll({
+    const extraMonsters = await DeckTypeSummary.findAll({
         where: {
             deckTypeId: deckType.id,
             formatId: format.id,
@@ -429,38 +410,50 @@ export const getDeckTypeSummary = async (req, res, next) => {
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })
 
-    data.sideMonsters = await DeckTypeSummary.findAll({
+    const sideMonsters = [...await DeckTypeSummary.findAll({
         where: {
             deckTypeId: deckType.id,
             formatId: format.id,
-            location: 'side',
-            '$cards.category$': 'Monster'
+            location: 'side'
         },
         include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })
+    })].filter((e) => e.card.category === 'Monster')
 
-    data.sideSpells = await DeckTypeSummary.findAll({
+    const sideSpells = [...await DeckTypeSummary.findAll({
         where: {
             deckTypeId: deckType.id,
             formatId: format.id,
-            location: 'side',
-            '$cards.category$': 'Spell'
+            location: 'side'
         },
         include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })
+    })].filter((e) => e.card.category === 'Spell')
 
-    data.sideTraps = await DeckTypeSummary.findAll({
+    const sideTraps = [...await DeckTypeSummary.findAll({
         where: {
             deckTypeId: deckType.id,
             formatId: format.id,
-            location: 'side',
-            '$cards.category$': 'Trap'
+            location: 'side'
         },
         include: Card,
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
-    })
+    })].filter((e) => e.card.category === 'Trap')
+
+    const data = {
+      percent: Math.round((count / total) * 100) || '<1',
+      deckType: deckType.name,
+      deckCategory: deckType.category,
+      mainMonsters,
+      mainSpells,
+      mainTraps,
+      extraMonsters,
+      sideMonsters,
+      sideSpells,
+      sideTraps,
+      format: format,
+      examples: [mostPopular, mostRecent]
+    }
 
     return res.json(data)
   } catch (err) {
