@@ -282,8 +282,6 @@ export const getDeckTypeSummary = async (req, res, next) => {
         }
     })
 
-    console.log('deckType?.id', deckType?.id)
-
     let format
 
     if (req.query.format) {
@@ -308,22 +306,6 @@ export const getDeckTypeSummary = async (req, res, next) => {
             attributes: ['id', 'name', 'banlist', 'date', 'icon']
         })
     }
-
-    console.log('format?.id', format?.id)
-
-    const decks = await Deck.findAll({
-        where: {
-            deckTypeId: deckType.id,
-            formatId: format.id,
-            origin: 'event',
-            eventId: { [Op.not]: null },
-            '$event.isRepresentative$': true
-        },
-        attributes: ['id', 'eventId', 'deckTypeName', 'category', 'ydk', 'formatName'],
-        include: { model: Event, attributes: ['id', 'isRepresentative']},
-        order: [['publishDate', 'DESC']],
-        limit: 100
-    })
 
     const count = await Deck.count({
         where: {
@@ -365,6 +347,9 @@ export const getDeckTypeSummary = async (req, res, next) => {
 
     const total = await Deck.count({ where: { origin: 'event', formatId: format.id }})
 
+    console.log('deckType?.id', deckType?.id)
+    console.log('format?.id', format?.id)
+
     const mainMonsters = [...await DeckTypeSummary.findAll({
         where: {
             deckTypeId: deckType.id,
@@ -375,7 +360,17 @@ export const getDeckTypeSummary = async (req, res, next) => {
         order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
     })].filter((e) => e.card?.category === 'Monster')
 
-    console.log('mainMonsters', mainMonsters)
+    const entireMain = await DeckTypeSummary.findAll({
+        where: {
+            deckTypeId: deckType.id,
+            formatId: format.id,
+            location: 'main',
+        },
+        include: Card,
+        order: [['zeroCopyPercent', 'DESC'], ['cardName', 'ASC']]
+    })
+
+    console.log('entireMain', entireMain)
 
     const mainSpells = [...await DeckTypeSummary.findAll({
         where: {
