@@ -1509,6 +1509,7 @@ export const updateBlogPosts = async () => {
     for (let i = 0; i < blogposts.length; i++) {
         const blogpost = blogposts[i]
         const deck = blogpost.winningDeck
+        if (!deck) continue
 
         const decks = await Deck.findAll({ 
             where: {
