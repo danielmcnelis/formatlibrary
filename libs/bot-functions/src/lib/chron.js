@@ -915,7 +915,11 @@ export const recalculateFormatStats = async (format) => {
 
                     allStats = await Stats.findAll({ 
                         where: { formatId: format.id, serverId: server.id }, 
-                        attributes: attributes
+                        attributes: [
+                            'id', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 
+                            'seasonalElo', 'bestSeasonalElo', 'backupSeasonalElo', 'seasonalWins', 'seasonalLosses', 'seasonalGames', 
+                            'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
+                        ]
                     })
                 }
                 
@@ -926,7 +930,11 @@ export const recalculateFormatStats = async (format) => {
 
                     allStats = await Stats.findAll({
                         where: { formatId: format.id, serverId: server.id }, 
-                        attributes: attributes
+                        attributes: [
+                            'id', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 
+                            'seasonalElo', 'bestSeasonalElo', 'backupSeasonalElo', 'seasonalWins', 'seasonalLosses', 'seasonalGames', 
+                            'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
+                        ]
                     })
                 }
 
