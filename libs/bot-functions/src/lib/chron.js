@@ -805,7 +805,7 @@ export const recalculateFormatStats = async (format) => {
         })
 
         if (!allMatches.length) {
-            // console.log(`No matches for ${format.name}.`)
+            console.log(`No matches for ${format.name}.`)
             continue
         }
 
@@ -859,6 +859,8 @@ export const recalculateFormatStats = async (format) => {
                 })
             }
         }
+
+        allStats = null
         
         for (let i = 0; i < allMatches.length; i++) {
             try {
