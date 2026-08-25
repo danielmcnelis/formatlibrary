@@ -891,7 +891,7 @@ export const recalculateFormatStats = async (format) => {
 
                 let loserStats = await Stats.findOne({
                     where: {
-                        playerId: winnerId,
+                        playerId: loserId,
                         formatId: format.id,
                         serverId: server.id
                     }
