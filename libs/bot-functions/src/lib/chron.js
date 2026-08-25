@@ -762,14 +762,14 @@ export const recalculateFormatStats = async (format) => {
     const count = await Match.count({ where: { formatId: format.id }})
     console.log(`Recalculating data from ${count} ${format.name} ${format.emoji} matches. Please wait...`)
 
-    const attributes = format.useSeasonalElo ? [
-        'id', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 
-        'seasonalElo', 'bestSeasonalElo', 'backupSeasonalElo', 'seasonalWins', 'seasonalLosses', 'seasonalGames', 
-        'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
-    ] : [
-        'id', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games',  
-        'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
-    ]
+    // const attributes = format.useSeasonalElo ? [
+    //     'id', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 
+    //     'seasonalElo', 'bestSeasonalElo', 'backupSeasonalElo', 'seasonalWins', 'seasonalLosses', 'seasonalGames', 
+    //     'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
+    // ] : [
+    //     'id', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games',  
+    //     'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
+    // ]
 
     const servers = await Server.findAll({
         where: {
@@ -791,7 +791,11 @@ export const recalculateFormatStats = async (format) => {
         console.log('server.name', server.name)
         let allStats = await Stats.findAll({ 
             where: { formatId: format.id, serverId: server.id }, 
-            attributes: attributes
+            attributes: [
+                'id', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 
+                'seasonalElo', 'bestSeasonalElo', 'backupSeasonalElo', 'seasonalWins', 'seasonalLosses', 'seasonalGames', 
+                'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
+            ]
         })
 
 
@@ -1052,7 +1056,7 @@ export const applyGeneralDecay = async (formatId, formatName, serverId, currentD
         const n = generalGamesPlayed[stats.playerId] || 0
         const standard = Math.floor(days / 7)
         const shields = n > standard ? standard : n
-        console.log(`${stats.playerName}'s shields:`, shields, 'out of', standard)
+        // console.log(`${stats.playerName}'s shields:`, shields, 'out of', standard)
 
         if (
             stats.elo > 500
@@ -1127,7 +1131,7 @@ export const applySeasonalDecay = async (formatId, formatName, serverId, current
         const standard = Math.floor(k * days)
         const shields = n > standard ? standard : n
 
-        console.log(`${stats.playerName}'s shields:`, shields, 'out of', standard)
+        // console.log(`${stats.playerName}'s shields:`, shields, 'out of', standard)
 
         if (
             stats.seasonalElo > 500
