@@ -64,7 +64,7 @@ export const runNightlyTasks = async (client) => {
         // })
         
         const tasks = [
-            manageSubscriptions, purgeEntries, purgeTournamentRoles, assignTournamentRoles,
+            purgeEntries, purgeTournamentRoles, assignTournamentRoles,
             assignSeasonalLadderRoles, purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, 
             updateSets, updateMarketPrices, downloadNewCards, removeObsoleteArtworks, updateCardLegality, 
             downloadAltArtworks, downloadMissingCardImages, updateServers, updateTops, updateDecks, 
