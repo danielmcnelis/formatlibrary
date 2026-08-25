@@ -787,7 +787,8 @@ export const recalculateFormatStats = async (format) => {
 
     for (let z = 0; z < servers.length; z++) {
         const server = servers[z]
-        // console.log('server.name', server.name)
+        console.log('server.name', server.name)
+
         let allStats = await Stats.findAll({ 
             where: { formatId: format.id, serverId: server.id }, 
             attributes: [
@@ -867,39 +868,35 @@ export const recalculateFormatStats = async (format) => {
                     await applyGeneralDecay(format.id, format.name, server.id, currentMonth || currentDate, nextMonth)
                     currentMonth = nextMonth
                     nextMonth = getStartOfNextMonthAtMidnight(currentMonth)
-
-                    allStats = await Stats.findAll({ 
-                        where: { formatId: format.id, serverId: server.id }, 
-                        attributes: [
-                            'id', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 
-                            'seasonalElo', 'bestSeasonalElo', 'backupSeasonalElo', 'seasonalWins', 'seasonalLosses', 'seasonalGames', 
-                            'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
-                        ]
-                    })
                 }
                 
                 if (match.isSeasonal && format.useSeasonalElo && (format.seasonResetDate < match.createdAt) && (nextSunday < match.createdAt)) {
                     await applySeasonalDecay(format.id, format.name, server.id, currentSunday || firstDayOfSeason, nextSunday)
                     currentSunday = nextSunday
                     nextSunday = getNextSundayAtMidnight(nextSunday)
-
-                    allStats = await Stats.findAll({
-                        where: { formatId: format.id, serverId: server.id }, 
-                        attributes: [
-                            'id', 'formatId', 'elo', 'bestElo', 'backupElo', 'wins', 'losses', 'games', 
-                            'seasonalElo', 'bestSeasonalElo', 'backupSeasonalElo', 'seasonalWins', 'seasonalLosses', 'seasonalGames', 
-                            'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
-                        ]
-                    })
                 }
     
                 const winnerId = match.winnerId
                 const loserId = match.loserId
-                const winnerStats = allStats.find((s) => s.playerId === winnerId)
-                const loserStats = allStats.find((s) => s.playerId === loserId)
+
+                let winnerStats = await Stats.findOne({
+                    where: {
+                        playerId: winnerId,
+                        formatId: format.id,
+                        serverId: server.id
+                    }
+                })
+
+                let loserStats = await Stats.findOne({
+                    where: {
+                        playerId: winnerId,
+                        formatId: format.id,
+                        serverId: server.id
+                    }
+                })
     
                 if (!winnerStats) {
-                    const stats = await Stats.create({
+                    winnerStats = await Stats.create({
                         playerName: match.winnerName,
                         playerId: winnerId,
                         elo: baseElo,
@@ -910,14 +907,10 @@ export const recalculateFormatStats = async (format) => {
                         serverId: server.id,
                         isInternal: server.hasInternalLadder
                     })
-    
-                    allStats.push(stats)
-                    i--
-                    continue
                 }
     
                 if (!loserStats) {
-                    const stats = await Stats.create({
+                    loserStats = await Stats.create({
                         playerName: match.loserName,
                         playerId: loserId,
                         elo: baseElo,
@@ -928,15 +921,11 @@ export const recalculateFormatStats = async (format) => {
                         serverId: server.id,
                         isInternal: server.hasInternalLadder
                     })
-    
-                    allStats.push(stats)
-                    i--
-                    continue
                 }
     
                 await updateGeneralStats(winnerStats, loserStats)
                 if (match.isSeasonal && format.seasonResetDate < match.createdAt) await updateSeasonalStats(winnerStats, loserStats)
-                // console.log(`${format.name} Match ${i+1}: ${winnerStats.playerName} > ${loserStats.playerName}`)
+                console.log(`${format.name} Match ${i+1}: ${winnerStats.playerName} > ${loserStats.playerName}`)
             } catch (err) {
                 console.log(err)
             }
@@ -958,7 +947,7 @@ export const recalculateFormatStats = async (format) => {
                 if (!vanquishedIds.includes(v.loserId)) vanquishedIds.push(v.loserId)
             })
     
-            // console.log(`${stats.playerName} has defeated ${vanquishedIds.length} unique opponents`)
+            console.log(`${stats.playerName} has defeated ${vanquishedIds.length} unique opponents`)
             await stats.update({ vanquished: vanquishedIds.length })
         }
     }
