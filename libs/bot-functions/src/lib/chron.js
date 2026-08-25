@@ -800,7 +800,7 @@ export const recalculateFormatStats = async (format) => {
 
         const allMatches = await Match.findAll({
             where: { formatId: format.id, serverId: server.id }, 
-            attributes: ['id', 'formatId', 'serverId', 'winnerName', 'loserName', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'classicDelta', 'createdAt', 'isSeasonal'], 
+            attributes: ['id', 'formatId', 'serverId', 'createdAt'], 
             order: [["createdAt", "ASC"]]
         })
 
@@ -864,7 +864,11 @@ export const recalculateFormatStats = async (format) => {
         
         for (let i = 0; i < allMatches.length; i++) {
             try {
-                const match = allMatches[i]
+                // const match = allMatches[i]
+                const match = await Match.findOne({ 
+                    where: { id: allMatches[i].id }, 
+                    attributes: ['id', 'formatId', 'serverId', 'winnerName', 'loserName', 'winnerId', 'loserId', 'winnerDelta', 'loserDelta', 'classicDelta', 'createdAt', 'isSeasonal']
+                })
                 
                 if (nextMonth < match.createdAt) {
                     await applyGeneralDecay(format.id, format.name, server.id, currentMonth || currentDate, nextMonth)
@@ -933,6 +937,7 @@ export const recalculateFormatStats = async (format) => {
             }
         }
 
+        allMatches = null
         allStats = await Stats.findAll({ 
             where: { formatId: format.id, serverId: server.id }, 
             attributes: [
