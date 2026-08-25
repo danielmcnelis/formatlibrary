@@ -25,7 +25,7 @@ export default {
                 // const member = membersMap.get('730180640531546275')
                 // const member = await guild.members.fetch('730180640531546275')
                 // console.log('member', member)
-                // await runNightlyTasks(client)
+                runNightlyTasks(client)
                 // const format = await Format.findOne({ where: { name: 'Forged in Chaos' }})
                 // await downloadNewCards(client)
                 // await manageSubscriptions(client)
@@ -33,7 +33,7 @@ export default {
                 // await runNightlyTasks(client)
                 // await updateCardLegality()
                 // await removeObsoleteArtworks()
-                await updateDeckTypeSummaries()
+                // await updateDeckTypeSummaries()
 
                 // const server = await Server.findOne({ where: { id: interaction.guildId }})
                 // const guild = client.guilds.cache.get(server.id)
