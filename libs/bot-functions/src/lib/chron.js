@@ -933,6 +933,13 @@ export const recalculateFormatStats = async (format) => {
             }
         }
 
+        allStats = await Stats.findAll({ 
+            where: { formatId: format.id, serverId: server.id }, 
+            attributes: [
+                'id', 'formatId', 'vanquished', 'playerName', 'playerId', 'serverId'
+            ]
+        })
+
         for (let i = 0; i < allStats.length; i++) {
             const stats = allStats[i]
             const victories = await Match.findAll({
