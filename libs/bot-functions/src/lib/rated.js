@@ -1073,7 +1073,7 @@ export const updateGeneralStats = async (winnerStats, loserStats) => {
         wins: winnerStats.wins + 1,
         games: winnerStats.games + 1,
         currentStreak: winnerStats.currentStreak + 1,
-        bestStreak: Math.max(winnerStats.currentStreak, winnerStats.bestStreak)
+        bestStreak: Math.max(winnerStats.currentStreak + 1, winnerStats.bestStreak)
     })
 
     await loserStats.update({
