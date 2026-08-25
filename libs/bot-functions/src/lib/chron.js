@@ -1499,7 +1499,8 @@ export const updateBlogPosts = async () => {
         where: {
             '$event.isTeamEvent$': false
         },
-        include: [Event, { model: Deck, as: 'winningDeck' }]
+        include: [Event, { model: Deck, as: 'winningDeck' }],
+        order: [['createdAt', 'ASC']]
     })
 
     let b = 0
@@ -1512,7 +1513,8 @@ export const updateBlogPosts = async () => {
         const decks = await Deck.findAll({ 
             where: {
                 formatId: blogpost.formatId
-            }
+            },
+            attributes: ['id', 'deckTypeName']
         })
     
         if (!decks.length) return await interaction.channel.send(`No decks found for ${blogpost.formatName}.`)
@@ -1534,6 +1536,7 @@ export const updateBlogPosts = async () => {
             console.log(`winning deck from ${blogpost.eventName} is now labeled ${deck.deckTypeName} and ${winningDeckTypeIsPopular ? 'popular' : 'rogue'}.`)
             b++
         } else {
+            console.log(`labels for winning deck from ${blogpost.eventName} remain unchanged.`)
             c++
         }
     }
