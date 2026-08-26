@@ -30,11 +30,11 @@ export default {
                 // const format = await Format.findOne({ where: { name: 'Forged in Chaos' }})
                 // await downloadNewCards(client)
                 // await manageSubscriptions(client)
-                updateBlogPosts()
+                // updateBlogPosts()
                 // await runNightlyTasks(client)
                 // await updateCardLegality()
                 // await removeObsoleteArtworks()
-                // await updateDeckTypeSummaries()
+                await updateDeckTypeSummaries()
 
                 // const server = await Server.findOne({ where: { id: interaction.guildId }})
                 // const guild = client.guilds.cache.get(server.id)
