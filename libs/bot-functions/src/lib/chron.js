@@ -2694,7 +2694,7 @@ export const updateCardLegality = async () => {
     const month = (now.getMonth() + 1).toString().padStart(2, '0')
     const day = now.getDate().toString().padStart(2, '0')
     const today = `${year}-${month}-${day}`
-    const cards = await Card.findAll()
+    const cards = await Card.findAll({ order: [['name', 'ASC']] })
 
     for (let i = 0; i < cards.length; i++) {
         try {
