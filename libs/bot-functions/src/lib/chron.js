@@ -2611,7 +2611,7 @@ export const downloadNewCards = async () => {
                     tcgDate: tcgDate,
                     ocgDate: ocgDate
                 })
-            } else if (card && tcgDate && (!card.tcgDate || !card.isTcgLegal || checkTimeBetweenDates(new Date(), new Date(tcgDate), 7))) {
+            } else if (card && tcgDate && (!card.tcgDate || !card.isTcgLegal || checkTimeBetweenDates(new Date(), new Date(tcgDate), 30))) {
                 console.log(`New TCG Card: ${card.name}`)
                 
                 for (let i = 0; i < images.length; i++) {
