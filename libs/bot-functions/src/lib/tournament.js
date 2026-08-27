@@ -2377,7 +2377,7 @@ export const calculateStandings = async (tournament, matches, participants) => {
         }
     }
 
-    console.log('standings', standings)
+    // console.log('standings', standings)
     return standings
 }
 

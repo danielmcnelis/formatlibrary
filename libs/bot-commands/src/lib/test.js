@@ -34,7 +34,7 @@ export default {
                 // await runNightlyTasks(client)
                 // await updateCardLegality()
                 // await removeObsoleteArtworks()
-                updateDeckTypeSummaries()
+                // updateDeckTypeSummaries()
 
                 // const server = await Server.findOne({ where: { id: interaction.guildId }})
                 // const guild = client.guilds.cache.get(server.id)
@@ -167,14 +167,14 @@ export default {
                 //     }
                 // }
 
-                return await interaction.editReply('🧪')
+                await interaction.editReply('🧪')
                 // await updateGlobalNames()
                 // await recalculateAllStats()
                 // return await purgeOldPrices()
                 // await updateAvatars(client)
                 // await updateMarketPrices()
                 // await purgeDuplicatePrices()
-                // return await conductCensus(client)
+                return await conductCensus(client)
                 // await updateDeckType()
                 // await updateDecks()
                 // await updateMatchups()
