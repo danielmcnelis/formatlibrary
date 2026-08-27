@@ -28,11 +28,11 @@ export default {
                 // runNightlyTasks(client)
 
                 // const format = await Format.findOne({ where: { name: 'Forged in Chaos' }})
-                downloadNewCards(client)
+                // downloadNewCards(client)
                 // await manageSubscriptions(client)
                 // updateBlogPosts()
                 // await runNightlyTasks(client)
-                // await updateCardLegality()
+                updateCardLegality()
                 // await removeObsoleteArtworks()
                 // updateDeckTypeSummaries()
 

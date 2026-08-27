@@ -68,7 +68,7 @@ export const runNightlyTasks = async (client) => {
             assignSeasonalLadderRoles, purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, 
             updateSets, updateMarketPrices, downloadNewCards, removeObsoleteArtworks, updateCardLegality, 
             downloadAltArtworks, downloadMissingCardImages, updateServers, updateTops, updateDecks, 
-            updateDeckTypes, updateDeckTypeSummaries, updateBlogPosts, conductCensus
+            updateDeckTypes, conductCensus, updateBlogPosts, updateDeckTypeSummaries
         ]
     
         for (let i = 0; i < tasks.length; i++) {
