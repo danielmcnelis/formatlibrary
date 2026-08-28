@@ -3071,6 +3071,7 @@ export const updateDeckTypeSummaries = async () => {
             }
         
             const main = Object.entries(data.main)
+            console.log('main', main)
         
             for (let j = 0; j < main.length; j++) {
                 const e = main[j]
@@ -3216,8 +3217,8 @@ export const updateDeckTypeSummaries = async () => {
         runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
     })
 
-    console.log(`Deleted ${b} obsolete artworks, encountered ${e} errors`)
-    return console.log(`removeObsoleteArtworks() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+    console.log(`Updated ${b} deck type summaries, encountered ${e} errors`)
+    return console.log(`updateDeckTypeSummaries() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 // PURGE LOCALS AND INTERNAL DECKS
