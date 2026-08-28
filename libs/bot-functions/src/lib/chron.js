@@ -2879,8 +2879,9 @@ export const updateDeckTypeSummaries = async () => {
                         || []
                 
                     const main = mainKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
-                    
+
                     const mainEntries = Object.entries(main)
+                    console.log('mainEntries', mainEntries)
         
                     for (let i = 0; i < mainEntries.length; i++) {
                         const [konamiCode, count] = mainEntries[i]
@@ -2908,7 +2909,7 @@ export const updateDeckTypeSummaries = async () => {
                             }
         
                             const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
-                            if (actualKonamiCode === konamiCode) console.log('WARNING: actualKonamiCode is the same as the konamiCode')
+                            if (actualKonamiCode === artworkId) console.log('WARNING: actualKonamiCode is the same as the artworkId for a non-original art')
         
                             if (main[actualKonamiCode]) {
                                 main[actualKonamiCode] = main[actualKonamiCode] + count
@@ -2919,6 +2920,8 @@ export const updateDeckTypeSummaries = async () => {
                             delete main[konamiCode]
                         }
                     }
+
+                    console.log('main', main)
         
                     const extra = showExtra
                         ? extraKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
