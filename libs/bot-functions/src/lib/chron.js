@@ -2801,7 +2801,7 @@ export const updateDeckTypeSummaries = async () => {
     let b = 0
     let e = 0
 
-    const deckThumbs = await DeckThumb.findAll({ include: DeckType })
+    const deckThumbs = await DeckThumb.findAll({ where: { deckTypeName: 'Stall Mill' }, include: DeckType })
     for (let k = 0; k < deckThumbs.length; k++) {
         try {
             const deckThumb = deckThumbs[k]
@@ -3079,6 +3079,7 @@ export const updateDeckTypeSummaries = async () => {
                 } else {
                     let konamiCode = e[0]
                     while (konamiCode.length < 8) konamiCode = '0' + konamiCode
+                    if (konamiCode === '80604091' || konamiCode === '80604092') console.log('this is UO in main')
                     const card =
                         (await Card.findOne({
                         where: {

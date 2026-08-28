@@ -32,9 +32,9 @@ export default {
                 // await manageSubscriptions(client)
                 // updateBlogPosts()
                 // await runNightlyTasks(client)
-                updateCardLegality()
+                // updateCardLegality()
                 // await removeObsoleteArtworks()
-                // updateDeckTypeSummaries()
+                updateDeckTypeSummaries()
 
                 // const server = await Server.findOne({ where: { id: interaction.guildId }})
                 // const guild = client.guilds.cache.get(server.id)
