@@ -33,7 +33,7 @@ export const BanList = (props) => {
         }
       }
   
-      if (format.name === 'Genesys') fetchData()
+      if (format?.name === 'Genesys') fetchData()
     }, [format?.name])
 
     // USE EFFECT SET CARD
