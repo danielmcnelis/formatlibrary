@@ -2884,9 +2884,7 @@ export const updateDeckTypeSummaries = async () => {
         
                     for (let i = 0; i < mainEntries.length; i++) {
                         const [konamiCode, count] = mainEntries[i]
-                        if (konamiCode === '80604091' || konamiCode === '80604092') console.log('this is UO in main')
                         const artworkId = konamiCode.replace(/^0+/, '')
-                        if (konamiCode === '80604091' || konamiCode === '80604092') console.log('this is its artworkId', artworkId)
 
                         const isOriginalArt = await Artwork.count({
                             where: {
@@ -2910,7 +2908,7 @@ export const updateDeckTypeSummaries = async () => {
                             }
         
                             const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
-                            console.log('actualKonamiCode', actualKonamiCode)
+                            if (actualKonamiCode === konamiCode) console.log('WARNING: actualKonamiCode is the same as the konamiCode')
         
                             if (main[actualKonamiCode]) {
                                 main[actualKonamiCode] = main[actualKonamiCode] + count
@@ -2918,7 +2916,6 @@ export const updateDeckTypeSummaries = async () => {
                                 main[actualKonamiCode] = count
                             }
 
-                            console.log('deleting main[konamiCode] for', konamiCode)
                             delete main[konamiCode]
                         }
                     }
@@ -3085,7 +3082,6 @@ export const updateDeckTypeSummaries = async () => {
                 } else {
                     let konamiCode = e[0]
                     while (konamiCode.length < 8) konamiCode = '0' + konamiCode
-                    if (konamiCode === '80604091' || konamiCode === '80604092') console.log('this is UO in main')
                     const card =
                         (await Card.findOne({
                         where: {
