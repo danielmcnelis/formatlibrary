@@ -2896,6 +2896,7 @@ export const updateDeckTypeSummaries = async () => {
                         })
         
                         if (!isOriginalArt) {
+                            console.log('this is not the original artwork')
                             const artwork = await Artwork.findOne({
                                 where: {
                                     artworkId: artworkId
@@ -2909,13 +2910,15 @@ export const updateDeckTypeSummaries = async () => {
                             }
         
                             const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
+                            console.log('actualKonamiCode', actualKonamiCode)
         
                             if (main[actualKonamiCode]) {
                                 main[actualKonamiCode] = main[actualKonamiCode] + count
                             } else {
                                 main[actualKonamiCode] = count
                             }
-        
+
+                            console.log('deleting main[konamiCode] for', konamiCode)
                             delete main[konamiCode]
                         }
                     }
