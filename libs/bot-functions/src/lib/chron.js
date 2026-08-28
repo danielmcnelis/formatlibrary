@@ -2886,7 +2886,8 @@ export const updateDeckTypeSummaries = async () => {
                         const [konamiCode, count] = mainEntries[i]
                         if (konamiCode === '80604091' || konamiCode === '80604092') console.log('this is UO in main')
                         const artworkId = konamiCode.replace(/^0+/, '')
-        
+                        if (konamiCode === '80604091' || konamiCode === '80604092') console.log('this is its artworkId', artworkId)
+
                         const isOriginalArt = await Artwork.count({
                             where: {
                                 artworkId: artworkId,
