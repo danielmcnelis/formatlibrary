@@ -2954,6 +2954,8 @@ export const updateDeckTypeSummaries = async () => {
                             } else {
                                 main[actualKonamiCode] = count
                             }
+                        
+                            if (deckTypeName === 'Chaos Monarch' && formatName === 'Chaos Return') console.log('main[actualKonamiCode]', main[actualKonamiCode])
 
                             if (actualKonamiCode !== artworkId) delete main[konamiCode]
                         }
@@ -2996,7 +2998,7 @@ export const updateDeckTypeSummaries = async () => {
                             } else {
                                 extra[actualKonamiCode] = count
                             }
-        
+
                             delete extra[konamiCode]
                         }
                     }
