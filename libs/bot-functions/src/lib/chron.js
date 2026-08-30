@@ -2953,7 +2953,7 @@ export const updateDeckTypeSummaries = async () => {
                                 main[actualKonamiCode] = count
                             }
 
-                            delete main[konamiCode]
+                            if (actualKonamiCode !== artworkId) delete main[konamiCode]
                         }
                     }
         
