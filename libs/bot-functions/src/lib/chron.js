@@ -106,7 +106,7 @@ export const runNightlyTasks = async (client) => {
 // RUN MONTHLY TASKS
 export const runWeeklyTasks = async (client) => {
     await updateMinMedMaxRarities()
-    await conductCensus(client)
+    // await conductCensus(client)
     await updateAvatars(client)
 }
 
@@ -2805,8 +2805,6 @@ export const updateDeckTypeSummaries = async () => {
         where: {
             origin: 'event',
             eventId: { [Op.not]: null },
-            formatId: 6,
-            deckTypeId: 51,
             '$event.isRepresentative$': true
         },
         attributes: ['id', 'deckTypeName', 'deckTypeId', 'formatName', 'formatId'],
@@ -2823,20 +2821,20 @@ export const updateDeckTypeSummaries = async () => {
             const formatId = deck.formatId
 
             const now = new Date()
-            const twelveHoursAgo = new Date(now.setHours(now.getHours() - 12))
+            const threeHoursAgo = new Date(now.setHours(now.getHours() - 3))
 
             const alreadyAnalyzed = await DeckTypeSummary.count({
                 where: {
                     formatId,
                     deckTypeName,
-                    createdAt: {[Op.gte]: twelveHoursAgo}
+                    createdAt: {[Op.gte]: threeHoursAgo}
                 }
             })
 
-            // if (alreadyAnalyzed) {
-            //     console.log(`already analyzed ${deckTypeName} for ${formatName}`)
-            //     continue
-            // }
+            if (alreadyAnalyzed) {
+                console.log(`already analyzed ${deckTypeName} for ${formatName}`)
+                continue
+            }
         
             const decks = await Deck.findAll({
                 where: {
@@ -2937,30 +2935,16 @@ export const updateDeckTypeSummaries = async () => {
                             }
         
                             const actualKonamiCode = artwork.card?.artworkId?.replace(/^0+/, '')
-                            // if (actualKonamiCode === artworkId) {
-                            //     console.log(`WARNING: actualKonamiCode ${actualKonamiCode} is the same as the artworkId ${artworkId} for a non-original art`)
-                                
-                            //     if (main[actualKonamiCode]) {
-                            //         main[actualKonamiCode] = main[actualKonamiCode] + count
-                            //     } else {
-                            //         main[actualKonamiCode] = count
-                            //     }
+                            
+                            if (main[actualKonamiCode]) {
+                                main[actualKonamiCode] = main[actualKonamiCode] + count
+                            } else {
+                                main[actualKonamiCode] = count
+                            }
 
-                            //     delete main[konamiCode]
-                            //     continue
-                            // } else {
-                                if (main[actualKonamiCode]) {
-                                    main[actualKonamiCode] = main[actualKonamiCode] + count
-                                } else {
-                                    main[actualKonamiCode] = count
-                                }
-
-                                delete main[konamiCode]
-                            // }
+                            delete main[konamiCode]
                         }
                     }
-
-                    console.log('main', main)
         
                     const extra = showExtra
                         ? extraKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
@@ -2993,18 +2977,13 @@ export const updateDeckTypeSummaries = async () => {
                             }
         
                             const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
-        
-                            if (actualKonamiCode === artworkId) {
-                                console.log(`WARNING: actualKonamiCode ${actualKonamiCode} is the same as the artworkId ${artworkId} for a non-original art`)
-                                continue
+                            
+                            const actualKonamiCode = artwork.card?.artworkId?.replace(/^0+/, '')
+                            
+                            if (extra[actualKonamiCode]) {
+                                extra[actualKonamiCode] = extra[actualKonamiCode] + count
                             } else {
-                                if (extra[actualKonamiCode]) {
-                                    extra[actualKonamiCode] = extra[actualKonamiCode] + count
-                                } else {
-                                    extra[actualKonamiCode] = count
-                                }
-
-                                delete extra[konamiCode]
+                                extra[actualKonamiCode] = count
                             }
 
                             delete extra[konamiCode]
@@ -3039,19 +3018,13 @@ export const updateDeckTypeSummaries = async () => {
                                 continue
                             }
         
-                            const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
-        
-                            if (actualKonamiCode === artworkId) {
-                                console.log(`WARNING: actualKonamiCode ${actualKonamiCode} is the same as the artworkId ${artworkId} for a non-original art`)
-                                continue
+                            
+                            const actualKonamiCode = artwork.card?.artworkId?.replace(/^0+/, '')
+                            
+                            if (side[actualKonamiCode]) {
+                                side[actualKonamiCode] = side[actualKonamiCode] + count
                             } else {
-                                if (side[actualKonamiCode]) {
-                                    side[actualKonamiCode] = side[actualKonamiCode] + count
-                                } else {
-                                    side[actualKonamiCode] = count
-                                }
-
-                                delete side[konamiCode]
+                                side[actualKonamiCode] = count
                             }
                         }
                     }
