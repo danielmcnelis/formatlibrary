@@ -2832,14 +2832,14 @@ export const updateDeckTypeSummaries = async () => {
                 }
             })
             
-            const test = await DeckTypeSummary.findOne({
-                where: {
-                    formatId,
-                    deckTypeName,
-                }
-            })
+            // const test = await DeckTypeSummary.findOne({
+            //     where: {
+            //         formatId,
+            //         deckTypeName,
+            //     }
+            // })
 
-            if (test) console.log('test.createdAt', test.createdAt)
+            // if (test) console.log('test.createdAt', test.createdAt)
 
             if (alreadyAnalyzed) {
                 console.log(`already analyzed ${deckTypeName} for ${formatName}`)
