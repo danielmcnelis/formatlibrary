@@ -2839,7 +2839,7 @@ export const updateDeckTypeSummaries = async () => {
                 }
             })
 
-            console.log('test.createdAt', test.createdAt)
+            if (test) console.log('test.createdAt', test.createdAt)
 
             if (alreadyAnalyzed) {
                 console.log(`already analyzed ${deckTypeName} for ${formatName}`)
