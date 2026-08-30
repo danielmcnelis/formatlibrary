@@ -2869,6 +2869,8 @@ export const updateDeckTypeSummaries = async () => {
                 }
             })
 
+            if (deckTypeName === 'Chaos Monarch' && formatName === 'Chaos Return') console.log('count', count)
+
             const format = await Format.findOne({
                 where: {
                     id: formatId
