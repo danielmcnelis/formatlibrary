@@ -2951,6 +2951,8 @@ export const updateDeckTypeSummaries = async () => {
                             }
                         }
                     }
+
+                    console.log('main', main)
         
                     const extra = showExtra
                         ? extraKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
