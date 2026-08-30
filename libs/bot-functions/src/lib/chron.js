@@ -2831,6 +2831,15 @@ export const updateDeckTypeSummaries = async () => {
                     createdAt: {[Op.gte]: twelveHoursAgo}
                 }
             })
+            
+            const test = await DeckTypeSummary.findOne({
+                where: {
+                    formatId,
+                    deckTypeName,
+                }
+            })
+
+            console.log('test.createdAt', test.createdAt)
 
             if (alreadyAnalyzed) {
                 console.log(`already analyzed ${deckTypeName} for ${formatName}`)
