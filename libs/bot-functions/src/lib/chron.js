@@ -2808,6 +2808,7 @@ export const updateDeckTypeSummaries = async () => {
             '$event.isRepresentative$': true
         },
         attributes: ['id', 'deckTypeName', 'deckTypeId', 'formatName', 'formatId'],
+        include: { model: Event, attributes: ['id', 'isRepresentative']},
         order: [['formatName', 'ASC'], ['deckTypeName', 'ASC']]
     })
 
