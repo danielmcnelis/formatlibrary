@@ -2936,11 +2936,19 @@ export const updateDeckTypeSummaries = async () => {
                                 continue
                             }
         
-                            const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
-                            if (actualKonamiCode === artworkId) {
-                                console.log(`WARNING: actualKonamiCode ${actualKonamiCode} is the same as the artworkId ${artworkId} for a non-original art`)
-                                continue
-                            } else {
+                            const actualKonamiCode = artwork.card?.artworkId?.replace(/^0+/, '')
+                            // if (actualKonamiCode === artworkId) {
+                            //     console.log(`WARNING: actualKonamiCode ${actualKonamiCode} is the same as the artworkId ${artworkId} for a non-original art`)
+                                
+                            //     if (main[actualKonamiCode]) {
+                            //         main[actualKonamiCode] = main[actualKonamiCode] + count
+                            //     } else {
+                            //         main[actualKonamiCode] = count
+                            //     }
+
+                            //     delete main[konamiCode]
+                            //     continue
+                            // } else {
                                 if (main[actualKonamiCode]) {
                                     main[actualKonamiCode] = main[actualKonamiCode] + count
                                 } else {
@@ -2948,7 +2956,7 @@ export const updateDeckTypeSummaries = async () => {
                                 }
 
                                 delete main[konamiCode]
-                            }
+                            // }
                         }
                     }
 
