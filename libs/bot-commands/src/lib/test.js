@@ -7,7 +7,7 @@ import { s3FileExists } from '@fl/bot-functions'
 import { Card, Deck, Match, Tournament, Player, Server, Subscription, TriviaQuestion, Format } from '@fl/models'
 import axios from 'axios'
 import { assignTournamentRoles, recalculateAllStats } from '../../../bot-functions/src'
-import { Artwork, Format, Stats } from '../../../models/src'
+import { Artwork, DeckTypeSummary, Format, Stats } from '../../../models/src'
 // import { config } from '@fl/config'
 
 export default {
@@ -34,6 +34,13 @@ export default {
                 // await runNightlyTasks(client)
                 // updateCardLegality()
                 // await removeObsoleteArtworks()
+
+                const deckTypeSummaries = await DeckTypeSummary.findAll()
+                for (let i = 0; i < deckTypeSummaries.length; i++) {
+                    await deckTypeSummaries[i].destroy()
+                }
+
+                console.log('destroyed all deckTypeSummaries')
                 updateDeckTypeSummaries()
 
                 // const server = await Server.findOne({ where: { id: interaction.guildId }})

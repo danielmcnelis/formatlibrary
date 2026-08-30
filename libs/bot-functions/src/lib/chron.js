@@ -2822,7 +2822,6 @@ export const updateDeckTypeSummaries = async () => {
 
             const now = new Date()
             const twelveHoursAgo = new Date(now.setHours(now.getHours() - 12))
-            if (k === 0) console.log('twelveHoursAgo', twelveHoursAgo)
 
             const alreadyAnalyzed = await DeckTypeSummary.count({
                 where: {
@@ -2831,17 +2830,8 @@ export const updateDeckTypeSummaries = async () => {
                     createdAt: {[Op.gte]: twelveHoursAgo}
                 }
             })
-            
-            // const test = await DeckTypeSummary.findOne({
-            //     where: {
-            //         formatId,
-            //         deckTypeName,
-            //     }
-            // })
 
-            // if (test) console.log('test.createdAt', test.createdAt)
-
-            if (alreadyAnalyzed && deckTypeName !== 'Chaos Monarch') {
+            if (alreadyAnalyzed) {
                 console.log(`already analyzed ${deckTypeName} for ${formatName}`)
                 continue
             }
@@ -2868,8 +2858,6 @@ export const updateDeckTypeSummaries = async () => {
                     eventId: { [Op.not]: null }
                 }
             })
-
-            if (deckTypeName === 'Chaos Monarch' && formatName === 'Chaos Return') console.log('count', count)
 
             const format = await Format.findOne({
                 where: {
@@ -2920,7 +2908,6 @@ export const updateDeckTypeSummaries = async () => {
                     const main = mainKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
 
                     const mainEntries = Object.entries(main)
-                    if (deckTypeName === 'Chaos Monarch' && formatName === 'Chaos Return') console.log('mainEntries', mainEntries)
 
                     for (let i = 0; i < mainEntries.length; i++) {
                         const [konamiCode, count] = mainEntries[i]
@@ -2950,6 +2937,7 @@ export const updateDeckTypeSummaries = async () => {
                             const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
                             if (actualKonamiCode === artworkId) {
                                 console.log(`WARNING: actualKonamiCode ${actualKonamiCode} is the same as the artworkId ${artworkId} for a non-original art`)
+                                continue
                             } else {
                                 if (main[actualKonamiCode]) {
                                     main[actualKonamiCode] = main[actualKonamiCode] + count
@@ -2959,10 +2947,6 @@ export const updateDeckTypeSummaries = async () => {
 
                                 delete main[konamiCode]
                             }
-        
-                            if (deckTypeName === 'Chaos Monarch' && formatName === 'Chaos Return') console.log('main[actualKonamiCode]', main[actualKonamiCode])
-                            if (deckTypeName === 'Chaos Monarch' && formatName === 'Chaos Return') console.log('main[konamiCode]', main[konamiCode])
- 
                         }
                     }
         
@@ -2998,10 +2982,17 @@ export const updateDeckTypeSummaries = async () => {
         
                             const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
         
-                            if (extra[actualKonamiCode]) {
-                                extra[actualKonamiCode] = extra[actualKonamiCode] + count
+                            if (actualKonamiCode === artworkId) {
+                                console.log(`WARNING: actualKonamiCode ${actualKonamiCode} is the same as the artworkId ${artworkId} for a non-original art`)
+                                continue
                             } else {
-                                extra[actualKonamiCode] = count
+                                if (extra[actualKonamiCode]) {
+                                    extra[actualKonamiCode] = extra[actualKonamiCode] + count
+                                } else {
+                                    extra[actualKonamiCode] = count
+                                }
+
+                                delete extra[konamiCode]
                             }
 
                             delete extra[konamiCode]
@@ -3038,13 +3029,18 @@ export const updateDeckTypeSummaries = async () => {
         
                             const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
         
-                            if (side[actualKonamiCode]) {
-                                side[actualKonamiCode] = side[actualKonamiCode] + count
+                            if (actualKonamiCode === artworkId) {
+                                console.log(`WARNING: actualKonamiCode ${actualKonamiCode} is the same as the artworkId ${artworkId} for a non-original art`)
+                                continue
                             } else {
-                                side[actualKonamiCode] = count
+                                if (side[actualKonamiCode]) {
+                                    side[actualKonamiCode] = side[actualKonamiCode] + count
+                                } else {
+                                    side[actualKonamiCode] = count
+                                }
+
+                                delete side[konamiCode]
                             }
-        
-                            delete side[konamiCode]
                         }
                     }
         
