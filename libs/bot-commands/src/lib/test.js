@@ -34,8 +34,7 @@ export default {
                 // await runNightlyTasks(client)
                 // updateCardLegality()
                 // await removeObsoleteArtworks()
-
-                updateDeckTypeSummaries()
+                // updateDeckTypeSummaries()
 
                 // const server = await Server.findOne({ where: { id: interaction.guildId }})
                 // const guild = client.guilds.cache.get(server.id)
@@ -171,7 +170,7 @@ export default {
                 // updateGlobalNames()
                 // recalculateAllStats()
                 // purgeOldPrices()
-                // updateAvatars(client)
+                updateAvatars(client)
                 // updateMarketPrices()
                 // purgeDuplicatePrices()
                 // conductCensus(client)
