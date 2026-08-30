@@ -35,7 +35,7 @@ export default {
                 // updateCardLegality()
                 // await removeObsoleteArtworks()
 
-                const deckTypeSummaries = await DeckTypeSummary.findAll()
+                const deckTypeSummaries = await DeckTypeSummary.findAll({ attributes: ['id'] })
                 for (let i = 0; i < deckTypeSummaries.length; i++) {
                     await deckTypeSummaries[i].destroy()
                 }
