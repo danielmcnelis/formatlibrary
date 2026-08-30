@@ -2950,9 +2950,9 @@ export const updateDeckTypeSummaries = async () => {
                             if (actualKonamiCode === artworkId) console.log(`WARNING: actualKonamiCode ${actualKonamiCode} is the same as the artworkId ${artworkId} for a non-original art`)
         
                             if (main[actualKonamiCode]) {
-                                main[actualKonamiCode] = main[actualKonamiCode] + count
+                                main[actualKonamiCode] = main[actualKonamiCode] + 1
                             } else {
-                                main[actualKonamiCode] = count
+                                main[actualKonamiCode] = 1
                             }
                         
                             if (deckTypeName === 'Chaos Monarch' && formatName === 'Chaos Return') console.log('main[actualKonamiCode]', main[actualKonamiCode])
