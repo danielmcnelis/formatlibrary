@@ -2909,7 +2909,6 @@ export const updateDeckTypeSummaries = async () => {
                     const main = mainKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
 
                     const mainEntries = Object.entries(main)
-                    console.log('mainEntries', mainEntries)
         
                     for (let i = 0; i < mainEntries.length; i++) {
                         const [konamiCode, count] = mainEntries[i]
@@ -2948,8 +2947,6 @@ export const updateDeckTypeSummaries = async () => {
                             delete main[konamiCode]
                         }
                     }
-
-                    console.log('main', main)
         
                     const extra = showExtra
                         ? extraKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
@@ -3104,7 +3101,6 @@ export const updateDeckTypeSummaries = async () => {
             }
         
             const main = Object.entries(data.main)
-            console.log('main', main)
         
             for (let j = 0; j < main.length; j++) {
                 const e = main[j]
@@ -3236,7 +3232,7 @@ export const updateDeckTypeSummaries = async () => {
                 }
             }
 
-            console.log(`analyzed ${deckType.name} for ${format.name} format`)
+            console.log(`analyzed ${deckTypeName} for ${format.name} format`)
             b++
         } catch (err) {
             console.log(err)
