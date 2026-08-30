@@ -2945,7 +2945,7 @@ export const updateDeckTypeSummaries = async () => {
                             }
         
                             const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
-                            if (actualKonamiCode === artworkId) console.log('WARNING: actualKonamiCode is the same as the artworkId for a non-original art')
+                            if (actualKonamiCode === artworkId) console.log(`WARNING: actualKonamiCode ${actualKonamiCode} is the same as the artworkId ${artworkId} for a non-original art`)
         
                             if (main[actualKonamiCode]) {
                                 main[actualKonamiCode] = main[actualKonamiCode] + count
