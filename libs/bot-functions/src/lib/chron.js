@@ -2801,17 +2801,45 @@ export const updateDeckTypeSummaries = async () => {
     let b = 0
     let e = 0
 
-    const deckThumbs = await DeckThumb.findAll({ where: { deckTypeName: 'Stall Mill' }, include: DeckType })
-    for (let k = 0; k < deckThumbs.length; k++) {
+    const allDecks = await Deck.findAll({
+        where: {
+            origin: 'event',
+            eventId: { [Op.not]: null },
+            '$event.isRepresentative$': true
+        },
+        attributes: ['id', 'deckTypeName', 'deckTypeId', 'formatName', 'formatId'],
+        include: { model: deckType, attributes: ['id', 'name']},
+        order: [['formatName', 'ASC'], ['deckTypeName', 'ASC']]
+    })
+
+    for (let k = 0; k < decks.length; k++) {
         try {
-            const deckThumb = deckThumbs[k]
-            const deckType = deckThumb.deckType
-            const formatName = deckThumb.formatName
-            const formatId = deckThumb.formatId
+            let deck = allDecks[k]
+            const deckTypeId = deck.deckTypeId
+            const deckTypeName = deck.deckTypeName
+            const formatName = deck.formatName
+            const formatId = deck.formatId
+
+            const now = new Date()
+            const twelveHoursAgo = now.setHours(now.getHours() - 12)
+            if (k === 0) console.log('twelveHoursAgo', twelveHoursAgo)
+
+            const alreadyAnalyzed = await DeckTypeSummary.count({
+                where: {
+                    formatId,
+                    deckTypeName,
+                    createdAt: {[Op.gte]: twelveHoursAgo}
+                }
+            })
+
+            if (alreadyAnalyzed) {
+                console.log(`already analyzed ${deckTypeName} for ${formatName}`)
+                continue
+            }
         
             const decks = await Deck.findAll({
                 where: {
-                    deckTypeId: deckType.id,
+                    deckTypeId: deckTypeId,
                     formatId: formatId,
                     origin: 'event',
                     eventId: { [Op.not]: null },
@@ -2825,7 +2853,7 @@ export const updateDeckTypeSummaries = async () => {
         
             const count = await Deck.count({
                 where: {
-                    deckTypeId: deckType.id,
+                    deckTypeId: deckTypeId,
                     formatId: formatId,
                     origin: 'event',
                     eventId: { [Op.not]: null }
@@ -2851,7 +2879,7 @@ export const updateDeckTypeSummaries = async () => {
         
             for (let i = 0; i < decks.length; i++) {
                 try {
-                    const deck = decks[i]
+                    deck = decks[i]
                     data.analyzed++
                 
                     const mainKonamiCodes = deck.ydk
@@ -3065,7 +3093,7 @@ export const updateDeckTypeSummaries = async () => {
 
             const deckTypeSummaries = await DeckTypeSummary.findAll({
                 where: {
-                    deckTypeId: deckType.id,
+                    deckTypeId: deckTypeId,
                     formatId: formatId
                 }
             })
@@ -3105,8 +3133,8 @@ export const updateDeckTypeSummaries = async () => {
                     if (zeroCopyPercent < 0) zeroCopyPercent = 0
                         
                     await DeckTypeSummary.create({
-                        deckTypeName: deckType.name,
-                        deckTypeId: deckType.id,
+                        deckTypeName: deckTypeName,
+                        deckTypeId: deckTypeId,
                         cardName: card.name,
                         cardId: card.id,
                         formatName: formatName,
@@ -3149,8 +3177,8 @@ export const updateDeckTypeSummaries = async () => {
                     if (zeroCopyPercent < 0) zeroCopyPercent = 0
                         
                     await DeckTypeSummary.create({
-                        deckTypeName: deckType.name,
-                        deckTypeId: deckType.id,
+                        deckTypeName: deckTypeName,
+                        deckTypeId: deckTypeId,
                         cardName: card.name,
                         cardId: card.id,
                         formatName: formatName,
@@ -3193,8 +3221,8 @@ export const updateDeckTypeSummaries = async () => {
                     if (zeroCopyPercent < 0) zeroCopyPercent = 0
                         
                     await DeckTypeSummary.create({
-                        deckTypeName: deckType.name,
-                        deckTypeId: deckType.id,
+                        deckTypeName: deckTypeName,
+                        deckTypeId: deckTypeId,
                         cardName: card.name,
                         cardId: card.id,
                         formatName: formatName,
