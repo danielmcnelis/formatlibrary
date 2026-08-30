@@ -2920,7 +2920,8 @@ export const updateDeckTypeSummaries = async () => {
                     const main = mainKonamiCodes.reduce((acc, curr) => (acc[curr] ? acc[curr]++ : (acc[curr] = 1), acc), {})
 
                     const mainEntries = Object.entries(main)
-        
+                    if (deckTypeName === 'Chaos Monarch' && formatName === 'Chaos Return') console.log('mainEntries', mainEntries)
+
                     for (let i = 0; i < mainEntries.length; i++) {
                         const [konamiCode, count] = mainEntries[i]
                         const artworkId = konamiCode.replace(/^0+/, '')
@@ -2947,18 +2948,21 @@ export const updateDeckTypeSummaries = async () => {
                             }
         
                             const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
-                            if (actualKonamiCode === artworkId) console.log(`WARNING: actualKonamiCode ${actualKonamiCode} is the same as the artworkId ${artworkId} for a non-original art`)
-        
-                            if (main[actualKonamiCode]) {
-                                main[actualKonamiCode] = main[actualKonamiCode] + 1
+                            if (actualKonamiCode === artworkId) {
+                                console.log(`WARNING: actualKonamiCode ${actualKonamiCode} is the same as the artworkId ${artworkId} for a non-original art`)
                             } else {
-                                main[actualKonamiCode] = 1
+                                if (main[actualKonamiCode]) {
+                                    main[actualKonamiCode] = main[actualKonamiCode] + count
+                                } else {
+                                    main[actualKonamiCode] = count
+                                }
+
+                                delete main[konamiCode]
                             }
-                        
+        
                             if (deckTypeName === 'Chaos Monarch' && formatName === 'Chaos Return') console.log('main[actualKonamiCode]', main[actualKonamiCode])
                             if (deckTypeName === 'Chaos Monarch' && formatName === 'Chaos Return') console.log('main[konamiCode]', main[konamiCode])
-
-                            if (actualKonamiCode !== artworkId) delete main[konamiCode]
+ 
                         }
                     }
         
