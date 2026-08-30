@@ -2812,7 +2812,7 @@ export const updateDeckTypeSummaries = async () => {
         order: [['formatName', 'ASC'], ['deckTypeName', 'ASC']]
     })
 
-    for (let k = 0; k < decks.length; k++) {
+    for (let k = 0; k < allDecks.length; k++) {
         try {
             let deck = allDecks[k]
             const deckTypeId = deck.deckTypeId
