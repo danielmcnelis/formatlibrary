@@ -2975,9 +2975,7 @@ export const updateDeckTypeSummaries = async () => {
                                 console.log(`no alternate artwork found for artworkId:`, artworkId)
                                 continue
                             }
-        
-                            const actualKonamiCode = artwork.card?.konamiCode?.replace(/^0+/, '')
-                            
+                                    
                             const actualKonamiCode = artwork.card?.artworkId?.replace(/^0+/, '')
                             
                             if (extra[actualKonamiCode]) {
@@ -3017,7 +3015,6 @@ export const updateDeckTypeSummaries = async () => {
                                 console.log(`no alternate artwork found for artworkId:`, artworkId)
                                 continue
                             }
-        
                             
                             const actualKonamiCode = artwork.card?.artworkId?.replace(/^0+/, '')
                             
