@@ -2841,7 +2841,7 @@ export const updateDeckTypeSummaries = async () => {
 
             // if (test) console.log('test.createdAt', test.createdAt)
 
-            if (alreadyAnalyzed) {
+            if (alreadyAnalyzed && deckTypeName !== 'Chaos Monarch') {
                 console.log(`already analyzed ${deckTypeName} for ${formatName}`)
                 continue
             }
