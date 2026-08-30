@@ -35,12 +35,6 @@ export default {
                 // updateCardLegality()
                 // await removeObsoleteArtworks()
 
-                const deckTypeSummaries = await DeckTypeSummary.findAll({ attributes: ['id'] })
-                for (let i = 0; i < deckTypeSummaries.length; i++) {
-                    await deckTypeSummaries[i].destroy()
-                }
-
-                console.log('destroyed all deckTypeSummaries')
                 updateDeckTypeSummaries()
 
                 // const server = await Server.findOne({ where: { id: interaction.guildId }})

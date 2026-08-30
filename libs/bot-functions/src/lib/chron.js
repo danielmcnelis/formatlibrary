@@ -2805,6 +2805,8 @@ export const updateDeckTypeSummaries = async () => {
         where: {
             origin: 'event',
             eventId: { [Op.not]: null },
+            formatId: 6,
+            deckTypeId: 51,
             '$event.isRepresentative$': true
         },
         attributes: ['id', 'deckTypeName', 'deckTypeId', 'formatName', 'formatId'],
@@ -2831,10 +2833,10 @@ export const updateDeckTypeSummaries = async () => {
                 }
             })
 
-            if (alreadyAnalyzed) {
-                console.log(`already analyzed ${deckTypeName} for ${formatName}`)
-                continue
-            }
+            // if (alreadyAnalyzed) {
+            //     console.log(`already analyzed ${deckTypeName} for ${formatName}`)
+            //     continue
+            // }
         
             const decks = await Deck.findAll({
                 where: {
@@ -2921,7 +2923,7 @@ export const updateDeckTypeSummaries = async () => {
                         })
         
                         if (!isOriginalArt) {
-                            console.log('this is not the original artwork')
+                            console.log(`this is not the original artwork, artworkId: ${artworkId}`)
                             const artwork = await Artwork.findOne({
                                 where: {
                                     artworkId: artworkId
