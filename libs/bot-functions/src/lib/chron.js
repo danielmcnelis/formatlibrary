@@ -2821,7 +2821,7 @@ export const updateDeckTypeSummaries = async () => {
             const formatId = deck.formatId
 
             const now = new Date()
-            const twelveHoursAgo = now.setHours(now.getHours() - 12)
+            const twelveHoursAgo = new Date(now.setHours(now.getHours() - 12))
             if (k === 0) console.log('twelveHoursAgo', twelveHoursAgo)
 
             const alreadyAnalyzed = await DeckTypeSummary.count({
