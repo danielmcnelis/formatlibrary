@@ -9,7 +9,7 @@ import './LeaderBoard.css'
 
   // GET SEASON
   const getSeason = (month) => {
-      return month === 11 || month < 2 ? 'winter' : month < 5 ? 'spring' : month < 8 ? 'summer' : 'autumm'
+      return month === 11 || month < 2 ? 'winter' : month < 5 ? 'spring' : month < 8 ? 'summer' : 'autumn'
   }
 
 export const LeaderBoard = () => {
