@@ -873,11 +873,11 @@ export const recalculateFormatStats = async (format) => {
                 const winnerId = match.winnerId
                 const loserId = match.loserId
                 // const winnerStats = await Stats.findOne({ where: { playerId: winnerId, formatId: format.id } })
-                const winnerStats = allStats.find((s) => s.playerId === winnerId)
+                let winnerStats = allStats.find((s) => s.playerId === winnerId)
                 if (match.winnerId === 'fwHShAv8MNkPxK5f6PWt3H') console.log('winnerStats.seasonalWins in main fn', winnerStats.seasonalWins)
                 if (match.winnerId === 'fwHShAv8MNkPxK5f6PWt3H') console.log('winnerStats.seasonalElo in main fn', winnerStats.seasonalElo)
                 // const loserStats = await Stats.findOne({ where: { playerId: loserId, formatId: format.id } })
-                const loserStats = allStats.find((s) => s.playerId === loserId)
+                let loserStats = allStats.find((s) => s.playerId === loserId)
     
                 if (!winnerStats) {
                     const stats = await Stats.create({
@@ -930,6 +930,9 @@ export const recalculateFormatStats = async (format) => {
                             'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
                         ]
                     })
+
+                    winnerStats = allStats.find((s) => s.playerId === winnerId)
+                    loserStats = allStats.find((s) => s.playerId === loserId)
                 }
                 
                 if (match.isSeasonal && format.useSeasonalElo && (format.seasonResetDate < match.createdAt) && (nextSunday < match.createdAt)) {
@@ -945,6 +948,9 @@ export const recalculateFormatStats = async (format) => {
                             'classicElo', 'backupClassicElo', 'currentStreak', 'bestStreak', 'vanquished', 'playerName', 'playerId', 'serverId'
                         ]
                     })
+
+                    winnerStats = allStats.find((s) => s.playerId === winnerId)
+                    loserStats = allStats.find((s) => s.playerId === loserId)
                 }
 
                 await updateGeneralStats(winnerStats, loserStats)
