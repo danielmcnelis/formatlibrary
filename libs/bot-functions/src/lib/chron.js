@@ -805,7 +805,7 @@ export const recalculateFormatStats = async (format) => {
             order: [["createdAt", "ASC"]]
         })
 
-        const filteredMatches = await allMatches.filter((e) => e.winnerId === 'fwHShAv8MNkPxK5f6PWt3H' && !!e.isSeasonal && e.createdAt >= '2026-06-24 00:00:00+00')
+        const filteredMatches = await allMatches.filter((e) => e.winnerId === 'fwHShAv8MNkPxK5f6PWt3H' && e.isSeasonal && e.createdAt >= new Date('2026-06-24 00:00:00+00'))
         console.log('count filteredMatches', filteredMatches.length)
 
         if (!allMatches.length) { 
