@@ -805,7 +805,7 @@ export const recalculateFormatStats = async (format) => {
             order: [["createdAt", "ASC"]]
         })
 
-        const filteredMatches = allMatches.filter((e) => winnerId === 'fwHShAv8MNkPxK5f6PWt3H')
+        const filteredMatches = allMatches.filter((e) => e.winnerId === 'fwHShAv8MNkPxK5f6PWt3H')
         console.log('count filteredMatches', filteredMatches.length)
 
         if (!allMatches.length) { 
