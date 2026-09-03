@@ -872,8 +872,10 @@ export const recalculateFormatStats = async (format) => {
     
                 const winnerId = match.winnerId
                 const loserId = match.loserId
-                const winnerStats = allStats.find((s) => s.playerId === winnerId)
-                const loserStats = allStats.find((s) => s.playerId === loserId)
+                const winnerStats = await Stats.findOne({ where: { playerId: winnerId, formatId: format.id } })
+                // const winnerStats = allStats.find((s) => s.playerId === winnerId)
+                const loserStats = await Stats.findOne({ where: { playerId: loserId, formatId: format.id } })
+                // const loserStats = allStats.find((s) => s.playerId === loserId)
     
                 if (!winnerStats) {
                     const stats = await Stats.create({
