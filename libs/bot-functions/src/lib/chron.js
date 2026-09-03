@@ -805,13 +805,15 @@ export const recalculateFormatStats = async (format) => {
             order: [["createdAt", "ASC"]]
         })
 
-        const filteredMatches = await allMatches.filter((e) => e.winnerId === 'fwHShAv8MNkPxK5f6PWt3H' && e.isSeasonal && e.createdAt >= new Date('2026-06-24 00:00:00+00'))
-        console.log('count filteredMatches', filteredMatches.length)
+        // const filteredMatches = await allMatches.filter((e) => e.winnerId === 'fwHShAv8MNkPxK5f6PWt3H' && e.isSeasonal && e.createdAt >= new Date('2026-06-24 00:00:00+00'))
+        // console.log('count filteredMatches', filteredMatches.length)
 
-        if (!allMatches.length) { 
-            console.log(`No matches for ${format.name}.`)
-            continue
-        }
+        // if (!allMatches.length) { 
+        //     console.log(`No matches for ${format.name}.`)
+        //     continue
+        // }
+
+        let fungusCount = 0
 
         // const today = new Date()
         let currentDate = allMatches[0].createdAt
@@ -942,7 +944,16 @@ export const recalculateFormatStats = async (format) => {
                 }
 
                 await updateGeneralStats(winnerStats, loserStats)
-                if (match.isSeasonal && format.seasonResetDate < match.createdAt) await updateSeasonalStats(winnerStats, loserStats)
+                if (match.isSeasonal && format.seasonResetDate < match.createdAt) {
+                    if (match.winnerId === 'fwHShAv8MNkPxK5f6PWt3H') {
+                        await updateSeasonalStats(winnerStats, loserStats)
+                        console.log('winnerStats.seasonalWins', winnerStats.seasonalWins)
+                        fungusCount++
+                        console.log('fungusCount')
+                    } else {
+                        await updateSeasonalStats(winnerStats, loserStats)
+                    }
+                }
                 console.log(`${format.name} Match ${i+1}: ${winnerStats.playerName} > ${loserStats.playerName}`)
             } catch (err) {
                 console.log(err)
