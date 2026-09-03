@@ -1083,7 +1083,8 @@ export const updateSeasonalStats = async (winnerStats, loserStats) => {
     const classicDelta = getEloDelta(20, winnerStats.seasonalElo, loserStats.seasonalElo)
     
     if (winnerStats.playerId === 'fwHShAv8MNkPxK5f6PWt3H') console.log('winnerStats.seasonalWins before update', winnerStats.seasonalWins)
-    
+    if (winnerStats.playerId === 'fwHShAv8MNkPxK5f6PWt3H') console.log('winnerStats.seasonalElo before update', winnerStats.seasonalElo)
+
     await winnerStats.update({
         seasonalElo: winnerStats.seasonalElo + winnerDelta,
         backupSeasonalElo: winnerStats.seasonalElo,
@@ -1093,6 +1094,7 @@ export const updateSeasonalStats = async (winnerStats, loserStats) => {
     })
 
     if (winnerStats.playerId === 'fwHShAv8MNkPxK5f6PWt3H') console.log('winnerStats.seasonalWins after update', winnerStats.seasonalWins)
+    if (winnerStats.playerId === 'fwHShAv8MNkPxK5f6PWt3H') console.log('winnerStats.seasonalElo after update', winnerStats.seasonalElo)
 
     await loserStats.update({
         seasonalElo: loserStats.seasonalElo - loserDelta,

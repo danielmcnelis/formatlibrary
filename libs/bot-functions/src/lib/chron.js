@@ -875,6 +875,7 @@ export const recalculateFormatStats = async (format) => {
                 // const winnerStats = await Stats.findOne({ where: { playerId: winnerId, formatId: format.id } })
                 const winnerStats = allStats.find((s) => s.playerId === winnerId)
                 if (match.winnerId === 'fwHShAv8MNkPxK5f6PWt3H') console.log('winnerStats.seasonalWins in main fn', winnerStats.seasonalWins)
+                if (match.winnerId === 'fwHShAv8MNkPxK5f6PWt3H') console.log('winnerStats.seasonalElo in main fn', winnerStats.seasonalElo)
                 // const loserStats = await Stats.findOne({ where: { playerId: loserId, formatId: format.id } })
                 const loserStats = allStats.find((s) => s.playerId === loserId)
     
