@@ -949,7 +949,7 @@ export const recalculateFormatStats = async (format) => {
                         await updateSeasonalStats(winnerStats, loserStats)
                         console.log('winnerStats.seasonalWins', winnerStats.seasonalWins)
                         fungusCount++
-                        console.log('fungusCount')
+                        console.log('fungusCount', fungusCount)
                     } else {
                         await updateSeasonalStats(winnerStats, loserStats)
                     }
