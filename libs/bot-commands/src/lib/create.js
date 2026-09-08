@@ -45,14 +45,14 @@ export default {
                 .setCustomId('duration')
                 .setLabel('Live or Multi-Day? (L, M)')
                 .setStyle(TextInputStyle.Short)
-                .setDefaultValue('Live')
+                .setValue('Multi-Day')
                 .setRequired(false)
 
             const ranked = new TextInputBuilder()
                 .setCustomId('ranked')
                 .setLabel('Ranked or Unranked? (R, U)')
                 .setStyle(TextInputStyle.Short)
-                .setDefaultValue('Ranked')
+                .setValue('Ranked')
                 .setRequired(false)
 
             const nameRow = new ActionRowBuilder().addComponents(name)
@@ -67,7 +67,7 @@ export default {
                     .setStyle(TextInputStyle.Short)
                     .setRequired(true)
                 
-                channelName.setDefaultValue(interaction.channel.name)
+                channelName.setValue(interaction.channel.name)
                 const channelRow = new ActionRowBuilder().addComponents(channelName)
                 modal.addComponents(channelRow)
             } else if (!format) {
