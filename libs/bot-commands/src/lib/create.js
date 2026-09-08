@@ -45,14 +45,14 @@ export default {
                 .setCustomId('duration')
                 .setLabel('Live or Multi-Day? (L, M)')
                 .setStyle(TextInputStyle.Short)
-                .setValue('Multi-Day')
+                .setPlaceholder('Live')
                 .setRequired(false)
 
             const ranked = new TextInputBuilder()
                 .setCustomId('ranked')
                 .setLabel('Ranked or Unranked? (R, U)')
                 .setStyle(TextInputStyle.Short)
-                .setValue('Ranked')
+                .setPlaceholder('Ranked')
                 .setRequired(false)
 
             const nameRow = new ActionRowBuilder().addComponents(name)
