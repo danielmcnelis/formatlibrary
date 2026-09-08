@@ -294,7 +294,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             const isLive = interaction.fields.fields.get('duration') ? decipherDurationInput(interaction.fields.getTextInputValue('duration')) : true
             
             const formatName = interaction.fields.fields.get('formatName') ? interaction.fields.getTextInputValue('formatName') : null
-            const channelName = interaction.fields.fields.get('channelName') ? interaction.fields.getTextInputValue('channelName') ||  : null
+            const channelName = interaction.fields.fields.get('channelName') ? interaction.fields.getTextInputValue('channelName') : null
         
             return createTournament(interaction, formatName, name, abbreviation, tournament_type, channelName, isRated, isLive)
         } else if (interaction.customId?.includes('settings')) {
