@@ -65,10 +65,10 @@ export const runNightlyTasks = async (client) => {
         
         const tasks = [
             purgeEntries, purgeTournamentRoles, assignTournamentRoles,
-            assignSeasonalLadderRoles, purgeLocalsAndInternalDecks, recalculateAllStats, refreshExpiredTokens, 
-            updateSets, updateMarketPrices, downloadNewCards, removeObsoleteArtworks, updateCardLegality, 
-            downloadAltArtworks, downloadMissingCardImages, updateServers, updateTops, updateDecks, 
-            updateDeckTypes, conductCensus, updateBlogPosts, updateDeckTypeSummaries
+            assignSeasonalLadderRoles, purgeLocalsAndInternalDecks, updateDeckBuilderNames, recalculateAllStats, 
+            refreshExpiredTokens, updateSets, updateMarketPrices, downloadNewCards, removeObsoleteArtworks, 
+            updateCardLegality, downloadAltArtworks, downloadMissingCardImages, updateServers, updateTops, 
+            updateDecks, updateDeckTypes, conductCensus, updateBlogPosts, updateDeckTypeSummaries
         ]
     
         for (let i = 0; i < tasks.length; i++) {
@@ -363,6 +363,44 @@ export const conductCensus = async (client) => {
     })
 
     return console.log(`conductCensus() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+}
+
+
+
+// UPDATE DECK BUILDER NAMES
+export const updateDeckBuilderNames = async (client) => {
+    const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'conductCensus',
+        status: 'underway'
+    })
+
+    let b = 0
+    let e = 0
+    
+    const decks = await Deck.findAll({ include: { model: Player, as: 'builder' } })
+
+    for (let i = 0; i < decks.length; i++) {
+        try {
+            const deck = decks[i]
+            const globalName = deck.builder.globalName
+            if (globalName !== deck.builderName) {
+                await deck.update({ builderName: globalName })
+                b++
+            }   
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
+    console.log(`Updated ${b} deck builder names,  encountered ${e} errors.`)
+    return console.log(`updateDeckBuilderNames() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 

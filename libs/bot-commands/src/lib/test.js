@@ -1,6 +1,6 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
-import { updateDeckTypeSummaries, purgeOldPrices, recalculateFormatStats, removeObsoleteArtworks, updateBlogPosts, purgeDuplicatePrices, updateMinMedMaxRarities, assignSeasonalLadderRoles, downloadOriginalArtworks, purgeBetaCards, downloadMissingCardImages, recalculateStats, downloadNewCards, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckType, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runFrequentTasks, updateCardLegality } from '@fl/bot-functions'
+import { updateDeckBuilderNames, updateDeckTypeSummaries, purgeOldPrices, recalculateFormatStats, removeObsoleteArtworks, updateBlogPosts, purgeDuplicatePrices, updateMinMedMaxRarities, assignSeasonalLadderRoles, downloadOriginalArtworks, purgeBetaCards, downloadMissingCardImages, recalculateStats, downloadNewCards, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckType, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runFrequentTasks, updateCardLegality } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { s3FileExists } from '@fl/bot-functions'
@@ -33,6 +33,7 @@ export default {
                 // updateBlogPosts()
                 // await runNightlyTasks(client)
                 // updateCardLegality()
+                updateDeckBuilderNames()
                 // await removeObsoleteArtworks()
                 // updateDeckTypeSummaries()
 
@@ -184,7 +185,7 @@ export default {
                 // downloadOriginalArtworks(client)
                 // downloadMissingCardImages()
                 // lookForAllPotentialPairs(client)
-                runMonthlyTasks(client)
+                // runMonthlyTasks(client)
                 // assignTournamentRoles(client)
                 // assignSeasonalLadderRoles(client)
                 return await interaction.editReply('🧪')
