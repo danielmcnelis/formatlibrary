@@ -76,7 +76,7 @@ export const getRatedConfirmation = async (player, opponent, format, guild) => {
 
 // GET FIRST PLAYER RATED CONFIRMATION
 export const getFirstOfTwoRatedConfirmations = async (client, player, opponent, format) => {
-    console.log('getFirstOfTwoRatedConfirmations()')
+    console.log('getFirstOfTwoRatedConfirmations() l79')
     const guild = client.guilds.cache.get('414551319031054346')
     console.log('guild?.name rated.js 79', guild?.name)
     console.log('guild?.ownerId rated.js 79', guild?.ownerId)
