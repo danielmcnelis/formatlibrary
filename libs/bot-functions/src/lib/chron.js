@@ -65,9 +65,10 @@ export const runNightlyTasks = async (client) => {
         
         const tasks = [
             purgeEntries, purgeTournamentRoles, assignTournamentRoles,
-            assignSeasonalLadderRoles, purgeLocalsAndInternalDecks, updateDeckBuilderNames, recalculateAllStats, 
-            refreshExpiredTokens, updateSets, updateMarketPrices, downloadNewCards, removeObsoleteArtworks, 
-            updateCardLegality, downloadAltArtworks, downloadMissingCardImages, updateServers, updateTops, 
+            assignSeasonalLadderRoles, purgeLocalsAndInternalDecks, updateDeckBuilderNames, 
+            updateBlogpostWinnerNames, recalculateAllStats, refreshExpiredTokens, updateSets, 
+            updateMarketPrices, downloadNewCards, removeObsoleteArtworks, updateCardLegality, 
+            downloadAltArtworks, downloadMissingCardImages, updateServers, updateTops, 
             updateDecks, updateDeckTypes, conductCensus, updateBlogPosts, updateDeckTypeSummaries
         ]
     
@@ -402,6 +403,43 @@ export const updateDeckBuilderNames = async (client) => {
 
     console.log(`Updated ${b} deck builder names,  encountered ${e} errors.`)
     return console.log(`updateDeckBuilderNames() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+}
+
+// UPDATE DECK BUILDER NAMES
+export const updateBlogpostWinnerNames = async (client) => {
+    const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'conductCensus',
+        status: 'underway'
+    })
+
+    let b = 0
+    let e = 0
+    
+    const blogposts = await Blogpost.findAll({ include: { model: Player, as: 'winner' } })
+
+    for (let i = 0; i < blogposts.length; i++) {
+        try {
+            const blogpost = blogposts[i]
+            const globalName = blogpost.winner.globalName
+            if (globalName !== blogpost.winnerName) {
+                console.log(`updating blogpost winner name from ${blogpost.winnerName} to ${globalName}`)
+                await blogpost.update({ winnerName: globalName })
+                b++
+            }   
+        } catch (err) {
+            console.log(err)
+            e++
+        }
+    }
+
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
+    console.log(`Updated ${b} blogpost winner names,  encountered ${e} errors.`)
+    return console.log(`updateBlogpostWinnerNames() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
 
 
