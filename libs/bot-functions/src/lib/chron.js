@@ -388,7 +388,7 @@ export const updateDeckBuilderNames = async (client) => {
             const name = deck.builder.name
             if (!globalName) {
                 console.log(`updating deck builder name from ${deck.builderName} to ${name}`)
-                await deck.update({ builderName: name })
+                await deck.update({ builderName: globalName })
                 b++
             } else if (globalName !== deck.builderName) {
                 console.log(`updating deck builder name from ${deck.builderName} to ${globalName}`)
@@ -428,13 +428,13 @@ export const updateBlogpostWinnerNames = async (client) => {
             const blogpost = blogposts[i]
             const globalName = blogpost.winner.globalName
             const name = blogpost.winner.name
-            if (globalName !== blogpost.winnerName) {
-                console.log(`updating blogpost winner name from ${blogpost.winnerName} to ${globalName}`)
-                await blogpost.update({ winnerName: globalName })
-                b++
-            } else if (!globalName) {
+            if (!globalName) {
                 console.log(`updating blogpost winner name from ${blogpost.winnerName} to ${name}`)
                 await blogpost.update({ winnerName: name })
+                b++
+            } else if (globalName !== blogpost.winnerName) {
+                console.log(`updating blogpost winner name from ${blogpost.winnerName} to ${globalName}`)
+                await blogpost.update({ winnerName: globalName })
                 b++
             }
         } catch (err) {
