@@ -385,11 +385,16 @@ export const updateDeckBuilderNames = async (client) => {
         try {
             const deck = decks[i]
             const globalName = deck.builder.globalName
-            if (globalName !== deck.builderName) {
+            const name = deck.builder.name
+            if (!globalName) {
+                console.log(`updating deck builder name from ${deck.builderName} to ${name}`)
+                await deck.update({ builderName: name })
+                b++
+            } else if (globalName !== deck.builderName) {
                 console.log(`updating deck builder name from ${deck.builderName} to ${globalName}`)
                 await deck.update({ builderName: globalName })
                 b++
-            }   
+            }
         } catch (err) {
             console.log(err)
             e++

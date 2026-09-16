@@ -33,8 +33,8 @@ export default {
                 // updateBlogPosts()
                 // await runNightlyTasks(client)
                 // updateCardLegality()
-                // updateDeckBuilderNames()
-                updateBlogpostWinnerNames()
+                updateDeckBuilderNames()
+                // updateBlogpostWinnerNames()
                 // await removeObsoleteArtworks()
                 // updateDeckTypeSummaries()
 
