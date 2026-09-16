@@ -416,7 +416,7 @@ export const updateBlogpostWinnerNames = async (client) => {
     let b = 0
     let e = 0
     
-    const blogposts = await Blogpost.findAll({ include: { model: Player, as: 'winner' } })
+    const blogposts = await BlogPost.findAll({ include: { model: Player, as: 'winner' } })
 
     for (let i = 0; i < blogposts.length; i++) {
         try {
