@@ -384,15 +384,10 @@ export const updateDeckBuilderNames = async (client) => {
     for (let i = 0; i < decks.length; i++) {
         try {
             const deck = decks[i]
-            const globalName = deck.builder.globalName
             const name = deck.builder.name
-            if (!globalName) {
+            if (name !== deck.builderName) {
                 console.log(`updating deck builder name from ${deck.builderName} to ${name}`)
-                await deck.update({ builderName: globalName })
-                b++
-            } else if (globalName !== deck.builderName) {
-                console.log(`updating deck builder name from ${deck.builderName} to ${globalName}`)
-                await deck.update({ builderName: globalName })
+                await deck.update({ builderName: name })
                 b++
             }
         } catch (err) {
@@ -426,15 +421,10 @@ export const updateBlogpostWinnerNames = async (client) => {
     for (let i = 0; i < blogposts.length; i++) {
         try {
             const blogpost = blogposts[i]
-            const globalName = blogpost.winner.globalName
             const name = blogpost.winner.name
-            if (!globalName) {
+            if (name !== blogpost.winnerName) {
                 console.log(`updating blogpost winner name from ${blogpost.winnerName} to ${name}`)
                 await blogpost.update({ winnerName: name })
-                b++
-            } else if (globalName !== blogpost.winnerName) {
-                console.log(`updating blogpost winner name from ${blogpost.winnerName} to ${globalName}`)
-                await blogpost.update({ winnerName: globalName })
                 b++
             }
         } catch (err) {
