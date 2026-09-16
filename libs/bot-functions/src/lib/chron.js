@@ -422,11 +422,16 @@ export const updateBlogpostWinnerNames = async (client) => {
         try {
             const blogpost = blogposts[i]
             const globalName = blogpost.winner.globalName
+            const name = blogpost.winner.name
             if (globalName !== blogpost.winnerName) {
                 console.log(`updating blogpost winner name from ${blogpost.winnerName} to ${globalName}`)
                 await blogpost.update({ winnerName: globalName })
                 b++
-            }   
+            } else if (!globalName) {
+                console.log(`updating blogpost winner name from ${blogpost.winnerName} to ${name}`)
+                await blogpost.update({ winnerName: name })
+                b++
+            }
         } catch (err) {
             console.log(err)
             e++
