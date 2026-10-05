@@ -527,7 +527,8 @@ export const combinePlayers = async (oldPlayer, newPlayer) => {
     
         const decks = await Deck.findAll({
             where: {
-                builderId: oldPlayer.id
+                builderId: oldPlayer.id,
+                formatId: {[Op.not]: 197}
             }
         })
     
@@ -538,7 +539,8 @@ export const combinePlayers = async (oldPlayer, newPlayer) => {
     
         const events = await Event.findAll({
             where: {
-                winnerId: oldPlayer.id
+                winnerId: oldPlayer.id,
+                formatId: {[Op.not]: 197}
             }
         })
     
@@ -547,20 +549,21 @@ export const combinePlayers = async (oldPlayer, newPlayer) => {
             await event.update({ winnerId: newPlayer.id })
         }
     
-        const membership = await Membership.findOne({
-            where: {
-                playerId: oldPlayer.id
-            }
-        })
+        // const membership = await Membership.findOne({
+        //     where: {
+        //         playerId: oldPlayer.id
+        //     }
+        // })
     
-        if (membership) await membership.destroy()
+        // if (membership) await membership.destroy()
     
         const replays = await Replay.findAll({
             where: {
                 [Op.or]: [
                     { winnerId: oldPlayer.id },
                     { loserId: oldPlayer.id }
-                ]
+                ],
+                formatId: {[Op.not]: 197}
             }
         })
     
@@ -585,7 +588,8 @@ export const combinePlayers = async (oldPlayer, newPlayer) => {
                 [Op.or]: [
                     { playerAId: oldPlayer.id },
                     { playerBId: oldPlayer.id }
-                ]
+                ],
+                formatId: {[Op.not]: 197}
             }
         })
     
@@ -615,7 +619,8 @@ export const combinePlayers = async (oldPlayer, newPlayer) => {
                 [Op.or]: [
                     { winnerId: oldPlayer.id },
                     { loserId: oldPlayer.id }
-                ]
+                ],
+                formatId: {[Op.not]: 197}
             }
         })
     
