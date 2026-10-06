@@ -2561,6 +2561,7 @@ export const downloadNewCards = async () => {
     for (let i = 0; i < data.data.length; i++) {
         const datum = data.data[i]
         const id = datum.id.toString()
+        if (id === '149694341') continue
         const name = datum.name
         console.log('name', name)
         const cleanName = datum.name.replaceAll(/['"]/g, '').split(/[^A-Za-z0-9]/).filter((e) => e.length).join(' ')
