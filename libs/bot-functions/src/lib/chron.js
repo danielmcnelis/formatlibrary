@@ -69,7 +69,8 @@ export const runNightlyTasks = async (client) => {
             updateBlogpostWinnerNames, recalculateAllStats, refreshExpiredTokens, updateSets, 
             updateMarketPrices, downloadNewCards, removeObsoleteArtworks, updateCardLegality, 
             downloadAltArtworks, downloadMissingCardImages, updateServers, updateTops, 
-            updateDecks, updateDeckTypes, conductCensus, updateBlogPosts, updateDeckTypeSummaries
+            updateDecks, updateDeckTypes, updateMatchups, conductCensus, updateBlogPosts, 
+            updateDeckTypeSummaries
         ]
     
         for (let i = 0; i < tasks.length; i++) {
@@ -441,6 +442,70 @@ export const updateBlogpostWinnerNames = async (client) => {
     console.log(`Updated ${b} blogpost winner names,  encountered ${e} errors.`)
     return console.log(`updateBlogpostWinnerNames() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
 }
+
+// UPDATE MATCHUPS
+export const updateMatchups = async (client) => {
+    const start = Date.now()
+    const chronRecord = await ChronRecord.create({
+        function: 'updateMatchups',
+        status: 'underway'
+    })
+    
+    let count = 0
+    
+    try {
+        const matchups = await Matchup.findAll({
+            where: {
+                winningDeckId: {[Op.not]: null},
+                losingDeckId: {[Op.not]: null}
+            },
+            include: [
+                { model: Deck, as: 'winningDeck' },
+                { model: Deck, as: 'losingDeck' }
+            ]
+        })
+
+        for (let i = 0; i < matchups.length; i++) {
+            const matchup = matchups[i]
+            const winningDeck = matchup.winningDeck
+            const losingDeck = matchup.losingDeck
+
+            if (winningDeck.deckTypeId !== matchup.winningDeckTypeId || winningDeck.deckTypeName !== matchup.winningDeckTypeName) {
+                console.log(`updating matchup ${matchup.id} winning deck from ${matchup.winningDeckTypeName} (${matchup.winningDeckTypeId}) to ${winningDeck.deckTypeName} (${winningDeck.deckTypeId})`)
+                await matchup.update({
+                    winningDeckTypeId: winningDeck.deckTypeId,
+                    winningDeckTypeName: winningDeck.deckTypeName
+                })
+
+                count++
+            }
+
+            if (losingDeck.deckTypeId !== matchup.losingDeckTypeId || losingDeck.deckTypeName !== matchup.losingDeckTypeName) {
+                console.log(`updating matchup ${matchup.id} losing deck from ${matchup.losingDeckTypeName} (${matchup.losingDeckTypeId}) to ${losingDeck.deckTypeName} (${losingDeck.deckTypeId})`)
+                await matchup.update({
+                    losingDeckTypeId: losingDeck.deckTypeId,
+                    losingDeckTypeName: losingDeck.deckTypeName
+                })
+
+                count++
+            }
+
+        }
+
+    } catch (err) {
+        console.log(err)
+    }  
+
+    console.log(`updated ${count} deck types names and ids for the matchups data table`)
+
+    await chronRecord.update({
+        status: 'complete',
+        runTime: ((Date.now() - start)/(60 * 1000)).toFixed(5)
+    })
+
+    return console.log(`updateMatchups() runtime: ${((Date.now() - start)/(60 * 1000)).toFixed(5)} min`)
+}
+
 
 
 // UPDATE GLOBAL NAMES
@@ -1968,15 +2033,15 @@ export const updatePrints = async (set, groupId) => {
                         name.includes('Sarcophagus Tin') ||
                         name.includes('Collectors Tin') ||
                         name.includes('Collector\'s Tin') ||
-                        name.includes('2020 Tin') ||
-                        name.includes('2021 Tin') ||
-                        name.includes('2022 Tin') ||
-                        name.includes('2023 Tin') ||
-                        name.includes('2024 Tin') ||
-                        name.includes('2026 Tin') ||
-                        name.includes('2027 Tin') ||
-                        name.includes('2028 Tin') ||
-                        name.includes('2029 Tin') ||
+                        name.includes('0 Tin') ||
+                        name.includes('1 Tin') ||
+                        name.includes('2 Tin') ||
+                        name.includes('3 Tin') ||
+                        name.includes('4 Tin') ||
+                        name.includes('6 Tin') ||
+                        name.includes('7 Tin') ||
+                        name.includes('8 Tin') ||
+                        name.includes('9 Tin') ||
                         name.includes('Display Box') ||
                         name.includes('Academy Box') ||
                         name.includes('Devastator Box') ||

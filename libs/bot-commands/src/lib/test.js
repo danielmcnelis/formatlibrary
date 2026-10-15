@@ -1,6 +1,6 @@
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js'
-import { updateBlogpostWinnerNames, updateDeckBuilderNames, updateDeckTypeSummaries, purgeOldPrices, recalculateFormatStats, removeObsoleteArtworks, updateBlogPosts, purgeDuplicatePrices, updateMinMedMaxRarities, assignSeasonalLadderRoles, downloadOriginalArtworks, purgeBetaCards, downloadMissingCardImages, recalculateStats, downloadNewCards, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckType, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runFrequentTasks, updateCardLegality } from '@fl/bot-functions'
+import { updateMatchups, updateBlogpostWinnerNames, updateDeckBuilderNames, updateDeckTypeSummaries, purgeOldPrices, recalculateFormatStats, removeObsoleteArtworks, updateBlogPosts, purgeDuplicatePrices, updateMinMedMaxRarities, assignSeasonalLadderRoles, downloadOriginalArtworks, purgeBetaCards, downloadMissingCardImages, recalculateStats, downloadNewCards, lookForAllPotentialPairs, cleanUpPools, manageSubscriptions, updateGlobalNames, updateMarketPrices, conductCensus, calculateStandings, updateAvatars, updateDeckThumbs, updateDeckType, updateDecks, updateBlogPosts, isProgrammer, runMonthlyTasks, runNightlyTasks, updateServers, runFrequentTasks, updateCardLegality } from '@fl/bot-functions'
 import { emojis } from '@fl/bot-emojis'
 import { client } from '../client'
 import { s3FileExists } from '@fl/bot-functions'
@@ -33,7 +33,8 @@ export default {
                 // updateBlogPosts()
                 // await runNightlyTasks(client)
                 // updateCardLegality()
-                updateDeckBuilderNames()
+                // updateDeckBuilderNames()
+                updateMatchups()
                 // updateBlogpostWinnerNames()
                 // await removeObsoleteArtworks()
                 // updateDeckTypeSummaries()
