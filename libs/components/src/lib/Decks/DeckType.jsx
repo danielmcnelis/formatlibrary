@@ -29,11 +29,11 @@ const { Controller, Orb, Lock, Bow, Voltage, Volcano, Unicorn, Thinking } = emoj
 export const DeckType = (props) => {
     const accessToken = getCookie('access')
     const [summary, setSummary] = useState({})
-    console.log('summary', summary)
+    // console.log('summary', summary)
     const [winRateData, setWinRateData] = useState({})
-    console.log('winRateData', winRateData)
+    // console.log('winRateData', winRateData)
     const [matchups, setMatchups] = useState({})
-    console.log('matchups', matchups)
+    // console.log('matchups', matchups)
     const [banlist, setBanList] = useState({})
     const [id, setId] = useState(null)
     const { id: useParamsId } = useParams()
@@ -455,7 +455,8 @@ export const DeckType = (props) => {
                             <h2>Matchups</h2>
                             <div className="matchup-box">
                             {
-                                Object.entries(matchups).filter((m) => m[1].total >= 6).sort((a, b) => (b[1].wins / b[1].total) - (a[1].wins / a[1].total)).map((m) => <Matchup deckType={m[0]} wins={m[1].wins} losses={m[1].losses} total={m[1].total} format={format || summary.formatName}/>)
+                                // Object.entries(matchups).filter((m) => m[1].total >= 6).sort((a, b) => (b[1].wins / b[1].total) - (a[1].wins / a[1].total)).map((m) => <Matchup deckType={m[0]} wins={m[1].wins} losses={m[1].losses} total={m[1].total} format={format || summary.formatName}/>)
+                                Object.entries(matchups).sort((a, b) => (b[1].wins / b[1].total) - (a[1].wins / a[1].total)).slice(0, 100).map((m) => <Matchup deckType={m[0]} wins={m[1].wins} losses={m[1].losses} total={m[1].total} format={format || summary.formatName}/>)
                             }
                             </div>
                         </div>
