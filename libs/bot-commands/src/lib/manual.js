@@ -183,7 +183,7 @@ export default {
                 }
                     
                 if (tournaments.length) {
-                    const tournament = await selectTournament(interaction, tournaments, interaction.user.id)
+                    const tournament = await selectTournament(interaction, tournaments, interaction.member.user.id)
                     if (!tournament) return
                     if (tournament) {
                         isTournament = true

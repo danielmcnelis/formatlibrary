@@ -401,7 +401,7 @@ export const getFilm = async (interaction, tournamentId, discordId) => {
     // if (!elligibleToView) return await interaction.editReply({ content: `You do not have permission to do that.`})
 
     const elligibleToView = inspectingEntry || inspectingPlayer.isSubscriber || isModerator(server, interaction.member)
-    if (!elligibleToView) return await interaction.editReply({ content: `Sorry, you must be a tournament participant, a staff member, or a subscriber to view replays.`})
+    if (!elligibleToView) return await interaction.editReply({ content: `Sorry, you must be a tournament participant, a staff member, or a Format Library subscriber to view replays.`})
 
     const matches = [...await getMatches(server, tournament.id, 'complete', inspectedEntry.participantId)].map((el) => el.match)
     if (tournament.type === 'double elimination') matches.sort((a, b) => a.suggested_play_order - b.suggested_play_order)
