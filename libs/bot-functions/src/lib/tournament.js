@@ -2162,6 +2162,15 @@ export const calculateStandings = async (tournament, matches, participants) => {
             }
         })
 
+        let team
+        if (tournament.isTeamTournament) {
+            team = await Team.findOne({
+                where: {
+                    participantId: p.participant.id
+                }
+            })
+        }
+
         if (!entry) {
             console.log(`no entry:`, p.participant?.name)
             data[p.participant.id] = {
@@ -2193,7 +2202,7 @@ export const calculateStandings = async (tournament, matches, participants) => {
         } else {
             data[p.participant.id] = {
                 participantId: p.participant.id,
-                name: entry.playerName,
+                name: team?.name || entry.playerName,
                 rank: '',
                 wins: 0,
                 losses: 0,
@@ -2377,7 +2386,7 @@ export const calculateStandings = async (tournament, matches, participants) => {
         }
     }
 
-    // console.log('standings', standings)
+    console.log('standings', standings)
     return standings
 }
 
