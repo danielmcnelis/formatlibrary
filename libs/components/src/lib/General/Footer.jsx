@@ -6,7 +6,7 @@ import './Footer.css'
 export const Footer = () => (
   <div className="footer">
     <div className="left-flex">
-      <a href="https://discord.com/invite/formatlibrary" target="_blank" rel="noopener noreferrer">
+      <a href="https://discord.gg/33fASkqC7M" target="_blank" rel="noopener noreferrer">
         <div className="discord-link">
           <div className="discord-logo" />
           <p className="discord-desc">Join our Discord!</p>
