@@ -25,7 +25,7 @@ export const BlogPost = (props) => {
                         props.index === 0 ? (
                             <div className="ads">
                                 <a 
-                                    href="https://discord.com/invite/formatlibrary" 
+                                    href="https://discord.gg/33fASkqC7M" 
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     id="discord"
