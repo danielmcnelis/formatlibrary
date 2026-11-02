@@ -57,7 +57,8 @@ export default {
 
             const teamExists = await Team.count({
                 where: {
-                    name: teamName
+                    name: teamName,
+                    tournamentId: tournament.id
                 }
             })
 

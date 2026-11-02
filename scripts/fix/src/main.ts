@@ -3228,32 +3228,32 @@ const shuffleArray = (arr) => {
 
 
 
-;(async () => {
-    let b = 0
-    let e = 0
+// ;(async () => {
+//     let b = 0
+//     let e = 0
 
-    for (let i = 0; i < genesys_points.length; i++) {
-        const [cardName, genesysPoints] = genesys_points[i]
+//     for (let i = 0; i < genesys_points.length; i++) {
+//         const [cardName, genesysPoints] = genesys_points[i]
         
-        try {
-            const card = await Card.findOne({
-                where: {
-                    name: cardName
-                }
-            })
+//         try {
+//             const card = await Card.findOne({
+//                 where: {
+//                     name: cardName
+//                 }
+//             })
 
-            await card.update({ genesysPoints })
-            b++
+//             await card.update({ genesysPoints })
+//             b++
             
-        } catch (err) {
-            console.log(`error with ${cardName}, points ${genesysPoints}`)
-            console.log(err)
-            e++
-        }
-    }
+//         } catch (err) {
+//             console.log(`error with ${cardName}, points ${genesysPoints}`)
+//             console.log(err)
+//             e++
+//         }
+//     }
 
-    return console.log(`updated ${b} cards, encountered ${e} errors`)
-})()
+//     return console.log(`updated ${b} cards, encountered ${e} errors`)
+// })()
 
 // ;(async () => {
 //     let b = 0
